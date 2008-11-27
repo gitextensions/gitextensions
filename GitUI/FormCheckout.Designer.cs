@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCheckout));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Branch = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.Branch = new System.Windows.Forms.ComboBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -57,6 +58,15 @@
             this.splitContainer1.Size = new System.Drawing.Size(470, 286);
             this.splitContainer1.SplitterDistance = 49;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // Branch
+            // 
+            this.Branch.FormattingEnabled = true;
+            this.Branch.Location = new System.Drawing.Point(54, 13);
+            this.Branch.Name = "Branch";
+            this.Branch.Size = new System.Drawing.Size(265, 21);
+            this.Branch.TabIndex = 3;
+            this.Branch.SelectedIndexChanged += new System.EventHandler(this.Branch_SelectedIndexChanged);
             // 
             // Ok
             // 
@@ -86,23 +96,15 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // Branch
-            // 
-            this.Branch.FormattingEnabled = true;
-            this.Branch.Location = new System.Drawing.Point(54, 13);
-            this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(265, 21);
-            this.Branch.TabIndex = 3;
-            this.Branch.SelectedIndexChanged += new System.EventHandler(this.Branch_SelectedIndexChanged);
-            // 
             // FormCheckout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(470, 286);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCheckout";
-            this.Text = "FormCheckout";
+            this.Text = "Checkout";
             this.Load += new System.EventHandler(this.FormCheckout_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

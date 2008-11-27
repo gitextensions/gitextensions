@@ -106,6 +106,7 @@ namespace GitUI
 
         private void Revisions_SelectionChanged(object sender, EventArgs e)
         {
+            DiffFiles.DataSource = null;
             if (Revisions.SelectedRows.Count == 0) return;
 
             if (Revisions.SelectedRows[0].DataBoundItem is GitRevision)
@@ -115,6 +116,17 @@ namespace GitUI
                 //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
                 GitTree.Nodes.Clear();
                 LoadInTreeSingle(revision, GitTree.Nodes);
+            }
+
+            if (Revisions.SelectedRows.Count == 2)
+            {
+                if (Revisions.SelectedRows[0].DataBoundItem is GitRevision &&
+                    Revisions.SelectedRows[1].DataBoundItem is GitRevision)
+                {
+
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+
+                }
             }
         }
 
@@ -245,6 +257,17 @@ namespace GitUI
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Initialize();
+        }
+
+        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem is string)
+            {
+                string changedFile = (string)DiffFiles.SelectedItem;
+
+
+                //DiffText.Text = changedFile.PatchText;
+            }
         }
 
 

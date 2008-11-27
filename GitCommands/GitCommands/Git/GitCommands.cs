@@ -41,6 +41,15 @@ namespace GitCommands
             return output;
         }
 
+        static public List<string> GetDiffFiles(string from, string to)
+        {
+            string result = RunCmd(Settings.GitDir + "git.exe", "diff --name-only " + from + " " + to);
+
+            string[] files = result.Split('\n');
+
+            return files.ToList<string>();
+        }
+
         static public List<GitItemStatus> GitStatus()
         {
             string status = RunCmd(Settings.GitDir + "git.exe", "status --untracked=all");

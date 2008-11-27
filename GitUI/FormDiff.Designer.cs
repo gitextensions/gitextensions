@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDiff));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.To = new System.Windows.Forms.ComboBox();
+            this.From = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.From = new System.Windows.Forms.ComboBox();
-            this.To = new System.Windows.Forms.ComboBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -61,6 +62,23 @@
             this.splitContainer1.Size = new System.Drawing.Size(628, 401);
             this.splitContainer1.SplitterDistance = 70;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // To
+            // 
+            this.To.FormattingEnabled = true;
+            this.To.Location = new System.Drawing.Point(74, 45);
+            this.To.Name = "To";
+            this.To.Size = new System.Drawing.Size(293, 21);
+            this.To.TabIndex = 6;
+            // 
+            // From
+            // 
+            this.From.FormattingEnabled = true;
+            this.From.Location = new System.Drawing.Point(74, 17);
+            this.From.Name = "From";
+            this.From.Size = new System.Drawing.Size(293, 21);
+            this.From.TabIndex = 5;
+            this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -100,31 +118,15 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // From
-            // 
-            this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(74, 17);
-            this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(293, 21);
-            this.From.TabIndex = 5;
-            this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
-            // 
-            // To
-            // 
-            this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(74, 45);
-            this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(293, 21);
-            this.To.TabIndex = 6;
-            // 
             // FormDiff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(628, 401);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDiff";
-            this.Text = "FormDiff";
+            this.Text = "Diff";
             this.Load += new System.EventHandler(this.FormDiff_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

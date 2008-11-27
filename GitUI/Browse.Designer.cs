@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBrowse));
             this.GitTree = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -41,7 +42,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.FileText = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Diff = new System.Windows.Forms.RichTextBox();
+            this.DiffText = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -66,6 +67,8 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.DiffFiles = new System.Windows.Forms.ListBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -86,6 +89,9 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
             this.SuspendLayout();
             // 
             // GitTree
@@ -182,7 +188,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(437, 118);
+            this.tabPage4.Size = new System.Drawing.Size(437, 133);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "File changes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -202,7 +208,7 @@
             this.FileChanges.Name = "FileChanges";
             this.FileChanges.ReadOnly = true;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(431, 112);
+            this.FileChanges.Size = new System.Drawing.Size(431, 127);
             this.FileChanges.TabIndex = 0;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
@@ -241,7 +247,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.Diff);
+            this.tabPage2.Controls.Add(this.splitContainer4);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -250,14 +256,14 @@
             this.tabPage2.Text = "Diff";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // Diff
+            // DiffText
             // 
-            this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.Location = new System.Drawing.Point(3, 3);
-            this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(431, 253);
-            this.Diff.TabIndex = 0;
-            this.Diff.Text = "";
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(270, 253);
+            this.DiffText.TabIndex = 0;
+            this.DiffText.Text = "";
             // 
             // splitContainer2
             // 
@@ -455,6 +461,33 @@
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.DiffFiles);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.DiffText);
+            this.splitContainer4.Size = new System.Drawing.Size(431, 253);
+            this.splitContainer4.SplitterDistance = 157;
+            this.splitContainer4.TabIndex = 1;
+            // 
+            // DiffFiles
+            // 
+            this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.Location = new System.Drawing.Point(0, 0);
+            this.DiffFiles.Name = "DiffFiles";
+            this.DiffFiles.Size = new System.Drawing.Size(157, 251);
+            this.DiffFiles.TabIndex = 0;
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -462,8 +495,9 @@
             this.ClientSize = new System.Drawing.Size(673, 509);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormBrowse";
-            this.Text = "Form1";
+            this.Text = "Browse";
             this.Load += new System.EventHandler(this.Browse_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -487,6 +521,9 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -516,7 +553,7 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataGridView FileChanges;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
-        private System.Windows.Forms.RichTextBox Diff;
+        private System.Windows.Forms.RichTextBox DiffText;
         private System.Windows.Forms.ToolStripMenuItem viewDiffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem branchToolStripMenuItem;
@@ -531,5 +568,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn committerDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.ListBox DiffFiles;
     }
 }
