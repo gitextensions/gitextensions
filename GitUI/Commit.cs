@@ -66,6 +66,12 @@ namespace GitUI
 
         private void Commit_Click(object sender, EventArgs e)
         {
+            if (Message.Text.Length == 0)
+            {
+                MessageBox.Show("Please enter commit message");
+                return;
+            }
+
             try
             {
                 OutPut.Text = "";
