@@ -1,0 +1,442 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+	<data name="enAction">			<value xml:space="preserve">Action</value></data>
+	<data name="enAddins">			<value xml:space="preserve">Addins</value></data>
+	<data name="enBuild">			<value xml:space="preserve">Build</value></data>
+	<data name="enClass Diagram">	<value xml:space="preserve">Class Diagram</value></data>
+	<data name="enCommunity">		<value xml:space="preserve">Community</value></data>
+	<data name="enData">			<value xml:space="preserve">Data</value></data>
+	<data name="enDatabase">		<value xml:space="preserve">Database</value></data>
+	<data name="enDatabase Diagram"><value xml:space="preserve">Database Diagram</value></data>
+	<data name="enDebug">			<value xml:space="preserve">Debug</value></data>
+	<data name="enAnalyze">		<value xml:space="preserve">Analyze</value></data>
+	<data name="enDiagram">			<value xml:space="preserve">Diagram</value></data>
+	<data name="enEdit">			<value xml:space="preserve">Edit</value></data>
+	<data name="enFile">			<value xml:space="preserve">File</value></data>
+	<data name="enFormat">			<value xml:space="preserve">Format</value></data>
+	<data name="enFrames">			<value xml:space="preserve">Frames</value></data>
+	<data name="enHelp">			<value xml:space="preserve">Help</value></data>
+	<data name="enImage">			<value xml:space="preserve">Image</value></data>
+	<data name="enLayout">			<value xml:space="preserve">Layout</value></data>
+	<data name="enMacros">			<value xml:space="preserve">Macros</value></data>
+	<data name="enProject">			<value xml:space="preserve">Project</value></data>
+	<data name="enQuery">			<value xml:space="preserve">Query</value></data>
+	<data name="enQuery Designer">	<value xml:space="preserve">Query Designer</value></data>
+	<data name="enRefactor">		<value xml:space="preserve">Refactor</value></data>
+	<data name="enReport">			<value xml:space="preserve">Report</value></data>
+	<data name="enResources">		<value xml:space="preserve">Resources</value></data>
+	<data name="enSchema">			<value xml:space="preserve">Schema</value></data>
+	<data name="enStyles">			<value xml:space="preserve">Styles</value></data>
+	<data name="enTeam">			<value xml:space="preserve">Team</value></data>
+	<data name="enTable">			<value xml:space="preserve">Table</value></data>
+	<data name="enTable Designer">	<value xml:space="preserve">Table Designer</value></data>
+	<data name="enTest">			<value xml:space="preserve">Test</value></data>
+	<data name="enTools">			<value xml:space="preserve">Tools</value></data>
+	<data name="enView">			<value xml:space="preserve">View</value></data>
+	<data name="enWindow">			<value xml:space="preserve">Window</value></data>
+	<data name="enXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="jaAction">			<value xml:space="preserve">操作</value></data>
+	<data name="jaAddins">			<value xml:space="preserve">アドイン</value></data>
+	<data name="jaBuild">			<value xml:space="preserve">ビルド</value></data>
+	<data name="jaClass Diagram">	<value xml:space="preserve">クラス ダイアグラム</value></data>
+	<data name="jaCommunity">		<value xml:space="preserve">コミュニティ</value></data>
+	<data name="jaData">			<value xml:space="preserve">データ</value></data>
+	<data name="jaDatabase">		<value xml:space="preserve">データベース</value></data>
+	<data name="jaDatabase Diagram"><value xml:space="preserve">データベース ダイアグラム</value></data>
+	<data name="jaDebug">			<value xml:space="preserve">デバッグ</value></data>
+	<data name="jaAnalyze">			<value xml:space="preserve">分析</value></data>
+	<data name="jaDiagram">			<value xml:space="preserve">ダイアグラム</value></data>
+	<data name="jaEdit">			<value xml:space="preserve">編集</value></data>
+	<data name="jaFile">			<value xml:space="preserve">ファイル</value></data>
+	<data name="jaFormat">			<value xml:space="preserve">書式</value></data>
+	<data name="jaFrames">			<value xml:space="preserve">フレーム</value></data>
+	<data name="jaHelp">			<value xml:space="preserve">ヘルプ</value></data>
+	<data name="jaImage">			<value xml:space="preserve">イメージ</value></data>
+	<data name="jaLayout">			<value xml:space="preserve">レイアウト</value></data>
+	<data name="jaMacros">			<value xml:space="preserve">マクロ</value></data>
+	<data name="jaProject">			<value xml:space="preserve">プロジェクト</value></data>
+	<data name="jaQuery">			<value xml:space="preserve">クエリ</value></data>
+	<data name="jaQuery Designer">	<value xml:space="preserve">クエリ デザイナ</value></data>
+	<data name="jaRefactor">		<value xml:space="preserve">リファクタ</value></data>
+	<data name="jaReport">		<value xml:space="preserve">レポート</value></data>
+	<data name="jaResources">		<value xml:space="preserve">リソース</value></data>
+	<data name="jaSchema">			<value xml:space="preserve">スキーマ</value></data>
+	<data name="jaStyles">			<value xml:space="preserve">スタイル</value></data>
+	<data name="jaTeam">			<value xml:space="preserve">チーム</value></data>
+	<data name="jaTable">			<value xml:space="preserve">テーブル</value></data>
+	<data name="jaTable Designer">	<value xml:space="preserve">テーブル デザイナ</value></data>
+	<data name="jaTest">			<value xml:space="preserve">テスト</value></data>
+	<data name="jaTools">			<value xml:space="preserve">ツール</value></data>
+	<data name="jaView">			<value xml:space="preserve">表示</value></data>
+	<data name="jaWindow">			<value xml:space="preserve">ウィンドウ</value></data>
+	<data name="jaXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="deAction">			<value xml:space="preserve">Aktion</value></data>
+	<data name="deAddins">			<value xml:space="preserve">Add-Ins</value></data>
+	<data name="deBuild">			<value xml:space="preserve">Erstellen</value></data>
+	<data name="deClass Diagram">	<value xml:space="preserve">Klassendiagramm</value></data>
+	<data name="deCommunity">		<value xml:space="preserve">Community</value></data>
+	<data name="deData">			<value xml:space="preserve">Daten</value></data>
+	<data name="deDatabase">		<value xml:space="preserve">Datenbank</value></data>
+	<data name="deDatabase Diagram"><value xml:space="preserve">Datenbankdiagramm</value></data>
+	<data name="deDebug">			<value xml:space="preserve">Debuggen</value></data>
+	<data name="deAnalyze">			<value xml:space="preserve">Analyse</value></data>
+	<data name="deDiagram">			<value xml:space="preserve">Diagramm</value></data>
+	<data name="deEdit">			<value xml:space="preserve">Bearbeiten</value></data>
+	<data name="deFile">			<value xml:space="preserve">Datei</value></data>
+	<data name="deFormat">			<value xml:space="preserve">Format</value></data>
+	<data name="deFrames">			<value xml:space="preserve">Rahmen</value></data>
+	<data name="deHelp">			<value xml:space="preserve">Hilfe</value></data>
+	<data name="deImage">			<value xml:space="preserve">Bild</value></data>
+	<data name="deLayout">			<value xml:space="preserve">Layout</value></data>
+	<data name="deMacros">			<value xml:space="preserve">Makros</value></data>
+	<data name="deProject">			<value xml:space="preserve">Projekt</value></data>
+	<data name="deQuery">			<value xml:space="preserve">Query</value></data>
+	<data name="deQuery Designer">	<value xml:space="preserve">Abfrage-Designer</value></data>
+	<data name="deRefactor">		<value xml:space="preserve">Umgestalten</value></data>
+	<data name="deReport">		<value xml:space="preserve">Bericht</value></data>
+	<data name="deResources">		<value xml:space="preserve">Ressourcen</value></data>
+	<data name="deSchema">			<value xml:space="preserve">Schema</value></data>
+	<data name="deStyles">			<value xml:space="preserve">Formate</value></data>
+	<data name="deTeam">			<value xml:space="preserve">Team</value></data>
+	<data name="deTable">			<value xml:space="preserve">Tabelle</value></data>
+	<data name="deTable Designer">	<value xml:space="preserve">Tabellen-Designer</value></data>
+	<data name="deTest">			<value xml:space="preserve">Test</value></data>
+	<data name="deTools">			<value xml:space="preserve">Extras</value></data>
+	<data name="deView">			<value xml:space="preserve">Ansicht</value></data>
+	<data name="deWindow">			<value xml:space="preserve">Fenster</value></data>
+	<data name="deXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="esAction">			<value xml:space="preserve">Acción</value></data>
+	<data name="esAddins">			<value xml:space="preserve">Complementos</value></data>
+	<data name="esBuild">			<value xml:space="preserve">Generar</value></data>
+	<data name="esClass Diagram">	<value xml:space="preserve">Diagrama de clase</value></data>
+	<data name="esCommunity">		<value xml:space="preserve">Comunidad</value></data>
+	<data name="esData">			<value xml:space="preserve">Datos</value></data>
+	<data name="esDatabase">		<value xml:space="preserve">Base de datos</value></data>
+	<data name="esDatabase Diagram"><value xml:space="preserve">Diagrama de base de datos</value></data>
+	<data name="esDebug">			<value xml:space="preserve">Depurar</value></data>
+	<data name="esAnalyze">			<value xml:space="preserve">Analizar</value></data>
+	<data name="esDiagram">			<value xml:space="preserve">Diagrama</value></data>
+	<data name="esEdit">			<value xml:space="preserve">Editar</value></data>
+	<data name="esFile">			<value xml:space="preserve">Archivo</value></data>
+	<data name="esFormat">			<value xml:space="preserve">Formato</value></data>
+	<data name="esFrames">			<value xml:space="preserve">Marcos</value></data>
+	<data name="esHelp">			<value xml:space="preserve">Ayuda</value></data>
+	<data name="esImage">			<value xml:space="preserve">Imagen</value></data>
+	<data name="esLayout">			<value xml:space="preserve">Diseño</value></data>
+	<data name="esMacros">			<value xml:space="preserve">Macros</value></data>
+	<data name="esProject">			<value xml:space="preserve">Proyecto</value></data>
+	<data name="esQuery">			<value xml:space="preserve">Consulta</value></data>
+	<data name="esQuery Designer">	<value xml:space="preserve">Diseñador de consultas</value></data>
+	<data name="esRefactor">		<value xml:space="preserve">Refactorizar</value></data>
+	<data name="esReport">		<value xml:space="preserve">Informe</value></data>
+	<data name="esResources">		<value xml:space="preserve">Recursos</value></data>
+	<data name="esSchema">			<value xml:space="preserve">Esquema</value></data>
+	<data name="esStyles">			<value xml:space="preserve">Estilos</value></data>
+	<data name="esTeam">			<value xml:space="preserve">Equipo</value></data>
+	<data name="esTable">			<value xml:space="preserve">Tabla</value></data>
+	<data name="esTable Designer">	<value xml:space="preserve">Diseñador de tablas</value></data>
+	<data name="esTest">			<value xml:space="preserve">Prueba</value></data>
+	<data name="esTools">			<value xml:space="preserve">Herramientas</value></data>
+	<data name="esView">			<value xml:space="preserve">Ver</value></data>
+	<data name="esWindow">			<value xml:space="preserve">Ventana</value></data>
+	<data name="esXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="frAction">			<value xml:space="preserve">Action</value></data>
+	<data name="frAddins">			<value xml:space="preserve">Compléments</value></data>
+	<data name="frBuild">			<value xml:space="preserve">Générer</value></data>
+	<data name="frClass Diagram">	<value xml:space="preserve">Diagramme de classes</value></data>
+	<data name="frCommunity">		<value xml:space="preserve">Communauté</value></data>
+	<data name="frData">			<value xml:space="preserve">Données</value></data>
+	<data name="frDatabase">		<value xml:space="preserve">Base de données</value></data>
+	<data name="frDatabase Diagram"><value xml:space="preserve">Schéma de base de données</value></data>
+	<data name="frDebug">			<value xml:space="preserve">Déboguer</value></data>
+	<data name="frAnalyze">			<value xml:space="preserve">Analyser</value></data>
+	<data name="frDiagram">			<value xml:space="preserve">Schéma</value></data>
+	<data name="frEdit">			<value xml:space="preserve">Edition</value></data>
+	<data name="frFile">			<value xml:space="preserve">Fichier</value></data>
+	<data name="frFormat">			<value xml:space="preserve">Format</value></data>
+	<data name="frFrames">			<value xml:space="preserve">Frames</value></data>
+	<data name="frHelp">			<value xml:space="preserve">?</value></data>
+	<data name="frImage">			<value xml:space="preserve">Image</value></data>
+	<data name="frLayout">			<value xml:space="preserve">Disposition</value></data>
+	<data name="frMacros">			<value xml:space="preserve">Macros</value></data>
+	<data name="frProject">			<value xml:space="preserve">Projet</value></data>
+	<data name="frQuery">			<value xml:space="preserve">Requête</value></data>
+	<data name="frQuery Designer">	<value xml:space="preserve">Concepteur de requêtes</value></data>
+	<data name="frRefactor">		<value xml:space="preserve">Refactoriser</value></data>
+	<data name="frReport">		<value xml:space="preserve">Rapport</value></data>
+	<data name="frResources">		<value xml:space="preserve">Ressources</value></data>
+	<data name="frSchema">			<value xml:space="preserve">Schéma</value></data>
+	<data name="frStyles">			<value xml:space="preserve">Styles</value></data>
+	<data name="frTeam">			<value xml:space="preserve">équipe</value></data>
+	<data name="frTable">			<value xml:space="preserve">Tableau</value></data>
+	<data name="frTable Designer">	<value xml:space="preserve">Concepteur de tables</value></data>
+	<data name="frTest">			<value xml:space="preserve">Test</value></data>
+	<data name="frTools">			<value xml:space="preserve">Outils</value></data>
+	<data name="frView">			<value xml:space="preserve">Affichage</value></data>
+	<data name="frWindow">			<value xml:space="preserve">Fenêtre</value></data>
+	<data name="frXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="itAction">			<value xml:space="preserve">Azione</value></data>
+	<data name="itAddins">			<value xml:space="preserve">Componenti aggiuntivi</value></data>
+	<data name="itBuild">			<value xml:space="preserve">Genera</value></data>
+	<data name="itClass Diagram">	<value xml:space="preserve">Diagramma classi</value></data>
+	<data name="itCommunity">		<value xml:space="preserve">Comunità</value></data>
+	<data name="itData">			<value xml:space="preserve">Dati</value></data>
+	<data name="itDatabase">		<value xml:space="preserve">Database</value></data>
+	<data name="itDatabase Diagram"><value xml:space="preserve">Diagramma database</value></data>
+	<data name="itDebug">			<value xml:space="preserve">Debug</value></data>
+	<data name="itAnalyze">			<value xml:space="preserve">Analizza</value></data>
+	<data name="itDiagram">			<value xml:space="preserve">Diagramma</value></data>
+	<data name="itEdit">			<value xml:space="preserve">Modifica</value></data>
+	<data name="itFile">			<value xml:space="preserve">File</value></data>
+	<data name="itFormat">			<value xml:space="preserve">Formato</value></data>
+	<data name="itFrames">			<value xml:space="preserve">Frame</value></data>
+	<data name="itHelp">			<value xml:space="preserve">?</value></data>
+	<data name="itImage">			<value xml:space="preserve">Immagine</value></data>
+	<data name="itLayout">			<value xml:space="preserve">Layout</value></data>
+	<data name="itMacros">			<value xml:space="preserve">Macro</value></data>
+	<data name="itProject">			<value xml:space="preserve">Progetto</value></data>
+	<data name="itQuery">			<value xml:space="preserve">Query</value></data>
+	<data name="itQuery Designer">	<value xml:space="preserve">Progettazione query</value></data>
+	<data name="itRefactor">		<value xml:space="preserve">Effettua refactoring</value></data>
+	<data name="itReport">		<value xml:space="preserve">Report</value></data>
+	<data name="itResources">		<value xml:space="preserve">Risorse</value></data>
+	<data name="itSchema">			<value xml:space="preserve">Schema</value></data>
+	<data name="itStyles">			<value xml:space="preserve">Stili</value></data>
+	<data name="itTeam">			<value xml:space="preserve">Team</value></data>
+	<data name="itTable">			<value xml:space="preserve">Tabella</value></data>
+	<data name="itTable Designer">	<value xml:space="preserve">Progettazione tabelle</value></data>
+	<data name="itTest">			<value xml:space="preserve">Test</value></data>
+	<data name="itTools">			<value xml:space="preserve">Strumenti</value></data>
+	<data name="itView">			<value xml:space="preserve">Visualizza</value></data>
+	<data name="itWindow">			<value xml:space="preserve">Finestra</value></data>
+	<data name="itXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="koAction">			<value xml:space="preserve">작업</value></data>
+	<data name="koAddins">			<value xml:space="preserve">추가 기능</value></data>
+	<data name="koBuild">			<value xml:space="preserve">빌드</value></data>
+	<data name="koClass Diagram">	<value xml:space="preserve">클래스 다이어그램</value></data>
+	<data name="koCommunity">		<value xml:space="preserve">커뮤니티</value></data>
+	<data name="koData">			<value xml:space="preserve">데이터</value></data>
+	<data name="koDatabase">		<value xml:space="preserve">데이터베이스</value></data>
+	<data name="koDatabase Diagram"><value xml:space="preserve">데이터베이스 다이어그램</value></data>
+	<data name="koDebug">			<value xml:space="preserve">디버그</value></data>
+	<data name="koAnalyze">			<value xml:space="preserve">분석</value></data>
+	<data name="koDiagram">			<value xml:space="preserve">다이어그램</value></data>
+	<data name="koEdit">			<value xml:space="preserve">편집</value></data>
+	<data name="koFile">			<value xml:space="preserve">파일</value></data>
+	<data name="koFormat">			<value xml:space="preserve">서식</value></data>
+	<data name="koFrames">			<value xml:space="preserve">프레임</value></data>
+	<data name="koHelp">			<value xml:space="preserve">도움말</value></data>
+	<data name="koImage">			<value xml:space="preserve">이미지</value></data>
+	<data name="koLayout">			<value xml:space="preserve">레이아웃</value></data>
+	<data name="koMacros">			<value xml:space="preserve">매크로</value></data>
+	<data name="koProject">			<value xml:space="preserve">프로젝트</value></data>
+	<data name="koQuery">			<value xml:space="preserve">쿼리</value></data>
+	<data name="koQuery Designer">	<value xml:space="preserve">쿼리 디자이너</value></data>
+	<data name="koRefactor">		<value xml:space="preserve">리팩터링</value></data>
+	<data name="koReport">		<value xml:space="preserve">보고서</value></data>
+	<data name="koResources">		<value xml:space="preserve">리소스</value></data>
+	<data name="koSchema">			<value xml:space="preserve">스키마</value></data>
+	<data name="koStyles">			<value xml:space="preserve">스타일</value></data>
+	<data name="koTeam">			<value xml:space="preserve">팀</value></data>
+	<data name="koTable">			<value xml:space="preserve">테이블</value></data>
+	<data name="koTable Designer">	<value xml:space="preserve">테이블 디자이너</value></data>
+	<data name="koTest">			<value xml:space="preserve">테스트</value></data>
+	<data name="koTools">			<value xml:space="preserve">도구</value></data>
+	<data name="koView">			<value xml:space="preserve">보기</value></data>
+	<data name="koWindow">			<value xml:space="preserve">창</value></data>
+	<data name="koXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="zh-CHSAction">			<value xml:space="preserve">操作</value></data>
+	<data name="zh-CHSAddins">			<value xml:space="preserve">外接程序</value></data>
+	<data name="zh-CHSBuild">			<value xml:space="preserve">生成</value></data>
+	<data name="zh-CHSClass Diagram">	<value xml:space="preserve">类关系图</value></data>
+	<data name="zh-CHSCommunity">		<value xml:space="preserve">社区</value></data>
+	<data name="zh-CHSData">			<value xml:space="preserve">数据</value></data>
+	<data name="zh-CHSDatabase">		<value xml:space="preserve">数据库</value></data>
+	<data name="zh-CHSDatabase Diagram"><value xml:space="preserve">数据库关系图</value></data>
+	<data name="zh-CHSDebug">			<value xml:space="preserve">调试</value></data>
+	<data name="zh-CHSAnalyze">			<value xml:space="preserve">分析</value></data>
+	<data name="zh-CHSDiagram">			<value xml:space="preserve">关系图</value></data>
+	<data name="zh-CHSEdit">			<value xml:space="preserve">编辑</value></data>
+	<data name="zh-CHSFile">			<value xml:space="preserve">文件</value></data>
+	<data name="zh-CHSFormat">			<value xml:space="preserve">格式</value></data>
+	<data name="zh-CHSFrames">			<value xml:space="preserve">框架</value></data>
+	<data name="zh-CHSHelp">			<value xml:space="preserve">帮助</value></data>
+	<data name="zh-CHSImage">			<value xml:space="preserve">图像</value></data>
+	<data name="zh-CHSLayout">			<value xml:space="preserve">布局</value></data>
+	<data name="zh-CHSMacros">			<value xml:space="preserve">宏</value></data>
+	<data name="zh-CHSProject">			<value xml:space="preserve">项目</value></data>
+	<data name="zh-CHSQuery">			<value xml:space="preserve">查询</value></data>
+	<data name="zh-CHSQuery Designer">	<value xml:space="preserve">查询设计器</value></data>
+	<data name="zh-CHSRefactor">		<value xml:space="preserve">重构</value></data>
+	<data name="zh-CHSReport">		<value xml:space="preserve">报表</value></data>
+	<data name="zh-CHSResources">		<value xml:space="preserve">资源</value></data>
+	<data name="zh-CHSSchema">			<value xml:space="preserve">架构</value></data>
+	<data name="zh-CHSStyles">			<value xml:space="preserve">样式</value></data>
+	<data name="zh-CHSTeam">			<value xml:space="preserve">工作组</value></data>
+	<data name="zh-CHSTable">			<value xml:space="preserve">表</value></data>
+	<data name="zh-CHSTable Designer">	<value xml:space="preserve">表设计器</value></data>
+	<data name="zh-CHSTest">			<value xml:space="preserve">测试</value></data>
+	<data name="zh-CHSTools">			<value xml:space="preserve">工具</value></data>
+	<data name="zh-CHSView">			<value xml:space="preserve">视图</value></data>
+	<data name="zh-CHSWindow">			<value xml:space="preserve">窗口</value></data>
+	<data name="zh-CHSXML">				<value xml:space="preserve">XML</value></data>
+
+	<data name="zh-CHTAction">			<value xml:space="preserve">動作</value></data>
+	<data name="zh-CHTAddins">			<value xml:space="preserve">增益集</value></data>
+	<data name="zh-CHTBuild">			<value xml:space="preserve">建置</value></data>
+	<data name="zh-CHTClass Diagram">	<value xml:space="preserve">類別圖表</value></data>
+	<data name="zh-CHTCommunity">		<value xml:space="preserve">社群</value></data>
+	<data name="zh-CHTData">			<value xml:space="preserve">資料</value></data>
+	<data name="zh-CHTDatabase">		<value xml:space="preserve">資料庫</value></data>
+	<data name="zh-CHTDatabase Diagram"><value xml:space="preserve">資料庫圖表</value></data>
+	<data name="zh-CHTDebug">			<value xml:space="preserve">偵錯</value></data>
+	<data name="zh-CHTAnalyze">			<value xml:space="preserve">分析</value></data>
+	<data name="zh-CHTDiagram">			<value xml:space="preserve">圖表</value></data>
+	<data name="zh-CHTEdit">			<value xml:space="preserve">編輯</value></data>
+	<data name="zh-CHTFile">			<value xml:space="preserve">檔案</value></data>
+	<data name="zh-CHTFormat">			<value xml:space="preserve">格式</value></data>
+	<data name="zh-CHTFrames">			<value xml:space="preserve">框架</value></data>
+	<data name="zh-CHTHelp">			<value xml:space="preserve">說明</value></data>
+	<data name="zh-CHTImage">			<value xml:space="preserve">影像</value></data>
+	<data name="zh-CHTLayout">			<value xml:space="preserve">配置</value></data>
+	<data name="zh-CHTMacros">			<value xml:space="preserve">巨集</value></data>
+	<data name="zh-CHTProject">			<value xml:space="preserve">專案</value></data>
+	<data name="zh-CHTQuery">			<value xml:space="preserve">查詢</value></data>
+	<data name="zh-CHTQuery Designer">	<value xml:space="preserve">查詢設計工具</value></data>
+	<data name="zh-CHTRefactor">		<value xml:space="preserve">重整</value></data>
+	<data name="zh-CHTReport">		<value xml:space="preserve">報表</value></data>
+	<data name="zh-CHTResources">		<value xml:space="preserve">資源</value></data>
+	<data name="zh-CHTSchema">			<value xml:space="preserve">結構描述</value></data>
+	<data name="zh-CHTStyles">			<value xml:space="preserve">樣式</value></data>
+	<data name="zh-CHTTeam">			<value xml:space="preserve">小組</value></data>
+	<data name="zh-CHTTable">			<value xml:space="preserve">資料表</value></data>
+	<data name="zh-CHTTable Designer">	<value xml:space="preserve">資料表設計工具</value></data>
+	<data name="zh-CHTTest">			<value xml:space="preserve">測試</value></data>
+	<data name="zh-CHTTools">			<value xml:space="preserve">工具</value></data>
+	<data name="zh-CHTView">			<value xml:space="preserve">檢視</value></data>
+	<data name="zh-CHTWindow">			<value xml:space="preserve">視窗</value></data>
+	<data name="zh-CHTXML">				<value xml:space="preserve">XML</value></data>
+  
+</root>

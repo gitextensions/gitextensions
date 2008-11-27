@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="FileHashShell">
+</Property><Property Name="Solution File" Value="J:\GitAddon\GitShellEx\FileHashShell.sln">
+</Property><Property Name="Date" Value="woensdag 26 november 2008">
+</Property><Property Name="Time" Value="17:52:37">
+</Property></Properties><Event ErrorLevel="0" Project="FileHashShell" Source="FileHashShell.csproj" Description="Project file successfully backed up as J:\GitAddon\GitShellEx\Backup\FileHashShell.csproj">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ColumnConfig.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ColumnConfig.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="FileInformation.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\FileInformation.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="FileHashShellExt.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\FileHashShellExt.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="HashHelper.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\HashHelper.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Settings.Custom.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Settings.Custom.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellExt\Command.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellExt\Command.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellExt\Helpers.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellExt\Helpers.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellExt\ShellExtLib.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellExt\ShellExtLib.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellForm.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellForm.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellForm.Designer.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellForm.Designer.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Program.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Program.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\Resources.Designer.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\Resources.Designer.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\Settings.Designer.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellRegister.cs" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellRegister.cs">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="app.config" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\app.config">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="FileHashShellExt.snk" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\FileHashShellExt.snk">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="getFileHash.reg" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\getFileHash.reg">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\DataSources\FileInformation.datasource" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\DataSources\FileInformation.datasource">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\Settings.settings" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="register.bat" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\register.bat">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="unregister.bat" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\unregister.bat">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="Properties\Resources.resx" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="ShellForm.resx" Description="File successfully backed up as J:\GitAddon\GitShellEx\Backup\ShellForm.resx">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="FileHashShell.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="FileHashShell" Source="FileHashShell.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="FileHashShell" Source="FileHashShell.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

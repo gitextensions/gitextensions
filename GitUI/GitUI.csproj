@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GitUI</RootNamespace>
+    <AssemblyName>GitUI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>gituikey.snk.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Browse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Browse.Designer.cs">
+      <DependentUpon>Browse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Commit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Commit.Designer.cs">
+      <DependentUpon>Commit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBranch.Designer.cs">
+      <DependentUpon>FormBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCheckout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckout.Designer.cs">
+      <DependentUpon>FormCheckout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormClone.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormClone.Designer.cs">
+      <DependentUpon>FormClone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormDiff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDiff.Designer.cs">
+      <DependentUpon>FormDiff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormFileHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFileHistory.Designer.cs">
+      <DependentUpon>FormFileHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Browse.resx">
+      <DependentUpon>Browse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Commit.resx">
+      <DependentUpon>Commit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBranch.resx">
+      <DependentUpon>FormBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckout.resx">
+      <DependentUpon>FormCheckout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormClone.resx">
+      <DependentUpon>FormClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDiff.resx">
+      <DependentUpon>FormDiff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFileHistory.resx">
+      <DependentUpon>FormFileHistory.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GitCommands\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gituikey.snk.pfx" />
+    <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
