@@ -218,13 +218,12 @@ namespace GitUI
             {
                 Settings.WorkingDir = browseDialog.SelectedPath;
 
+                GitCommands.Init cmd = new GitCommands.Init(new GitCommands.InitDto());
+                cmd.Execute();
+                MessageBox.Show(cmd.Dto.Result);
+
                 Initialize();
             }
-
-            GitCommands.Init cmd = new GitCommands.Init(new GitCommands.InitDto());
-            cmd.Execute();
-            MessageBox.Show(cmd.Dto.Result);
-            Initialize();
         }
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)
