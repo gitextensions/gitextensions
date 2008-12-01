@@ -156,8 +156,6 @@ namespace GitUI
         {
             FormCheckout form = new FormCheckout();
             form.Show();
-            Initialize();
-
         }
 
         private void FileText_TextChanged(object sender, EventArgs e)
@@ -201,35 +199,30 @@ namespace GitUI
         {
             FormDiff diff = new FormDiff();
             diff.Show();
-            Initialize();
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormAddFiles addFiles = new FormAddFiles();
             addFiles.Show();
-            Initialize();
         }
 
         private void branchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormBranch form = new FormBranch();
             form.Show();
-            Initialize();
         }
 
         private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormClone form = new FormClone();
             form.Show();
-            Initialize();
         }
 
         private void commitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCommit form = new FormCommit();
             form.Show();
-            Initialize();
         }
 
         private void initNewRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -312,6 +305,12 @@ namespace GitUI
         {
             ApplyPatch applyPatch = new ApplyPatch();
             applyPatch.Show();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSettigns form = new FormSettigns();
+            form.Show();
         }
 
 

@@ -115,6 +115,12 @@
     <Compile Include="FormFileHistory.Designer.cs">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSettigns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSettigns.Designer.cs">
+      <DependentUpon>FormSettigns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSettigns.resx">
+      <DependentUpon>FormSettigns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

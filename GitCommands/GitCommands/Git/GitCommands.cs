@@ -57,6 +57,17 @@ namespace GitCommands
             return output;
         }
 
+        static public string GetSetting(string setting)
+        {
+            return GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --get " + setting);
+        }
+
+        static public void SetSetting(string setting, string value)
+        {
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --unset-all " + setting);
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value + "\"");
+        }
+
         static public Patch GetSingleDiff(string from, string to, string filter)
         {
             PatchManager patchManager = new PatchManager();
