@@ -40,6 +40,7 @@ namespace GitUI
                 IGitItem revision = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
 
                 View.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
+                View.Refresh();
             }
 
             if (FileChanges.SelectedRows.Count == 2)

@@ -45,6 +45,7 @@ namespace GitUI
                     diff.Execute();
 
                     OutPut.Text = dto.Result;
+                    OutPut.Refresh();
                 }
             }
             catch

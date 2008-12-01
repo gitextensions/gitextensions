@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Permissions;
 using System.IO;
+using PatchApply;
 
 namespace GitCommands
 {
@@ -54,6 +55,14 @@ namespace GitCommands
 
 
             return output;
+        }
+
+        static public List<Patch> GetDiff(string from, string to)
+        {
+            PatchManager patchManager = new PatchManager();
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff " + from + " " + to), false);
+
+            return patchManager.patches;
         }
 
         static public List<string> GetDiffFiles(string from)
@@ -136,12 +145,16 @@ namespace GitCommands
             for (int n = 0; n < itemsStrings.Count()-6;)
             {
                 GitRevision revision = new GitRevision();
-                revision.Guid = itemsStrings[n++];
+                revision.Guid = itemsStrings[n++].Trim('\0');
                 revision.Name = revision.TreeGuid = itemsStrings[n++].Substring(4).Trim();
                 while (itemsStrings[n].Contains("parent"))
                 {
                     //Add parent
                     revision.parentGuid = itemsStrings[n++].Substring(6).Trim();
+                }
+                if (string.IsNullOrEmpty(revision.parentGuid))
+                {
+                    revision.parentGuid = "0000000000000000000000000000000000000000";
                 }
                 revision.Author = itemsStrings[n++].Substring(6).Trim();
                 revision.Committer = itemsStrings[n++].Substring(9).Trim();
@@ -233,6 +246,7 @@ namespace GitCommands
                     item.ItemType = itemsString.Substring(7, 4);
                     item.Guid = itemsString.Substring(12, 40);
                     item.Name = itemsString.Substring(53).Trim();
+                    item.FileName = item.Name;
 
                     //if (item.ItemType == "tree")
                     //    item.SubItems = GetTree(item.Guid);

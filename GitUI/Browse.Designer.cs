@@ -40,10 +40,10 @@
             this.FileChanges = new System.Windows.Forms.DataGridView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
-            this.DiffText = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -61,8 +61,10 @@
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pushToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.committerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -70,8 +72,6 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -238,6 +238,15 @@
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // FileText
+            // 
+            this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileText.IsReadOnly = false;
+            this.FileText.Location = new System.Drawing.Point(3, 3);
+            this.FileText.Name = "FileText";
+            this.FileText.Size = new System.Drawing.Size(431, 253);
+            this.FileText.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer4);
@@ -268,22 +277,15 @@
             // 
             // DiffFiles
             // 
+            this.DiffFiles.DisplayMember = "Name";
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.FormattingEnabled = true;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
             this.DiffFiles.Size = new System.Drawing.Size(157, 251);
             this.DiffFiles.TabIndex = 0;
+            this.DiffFiles.ValueMember = "FileNameB";
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
-            // 
-            // DiffText
-            // 
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(270, 253);
-            this.DiffText.TabIndex = 0;
-            this.DiffText.Text = "";
             // 
             // splitContainer2
             // 
@@ -438,6 +440,13 @@
             this.pullToolStripMenuItem.Text = "Pull";
             this.pullToolStripMenuItem.Click += new System.EventHandler(this.pullToolStripMenuItem_Click);
             // 
+            // patchToolStripMenuItem
+            // 
+            this.patchToolStripMenuItem.Name = "patchToolStripMenuItem";
+            this.patchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.patchToolStripMenuItem.Text = "Patch";
+            this.patchToolStripMenuItem.Click += new System.EventHandler(this.patchToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -452,6 +461,15 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // DiffText
+            // 
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IsReadOnly = false;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(270, 253);
+            this.DiffText.TabIndex = 0;
             // 
             // messageDataGridViewTextBoxColumn
             // 
@@ -497,22 +515,6 @@
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
-            // 
-            // patchToolStripMenuItem
-            // 
-            this.patchToolStripMenuItem.Name = "patchToolStripMenuItem";
-            this.patchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.patchToolStripMenuItem.Text = "Patch";
-            this.patchToolStripMenuItem.Click += new System.EventHandler(this.patchToolStripMenuItem_Click);
-            // 
-            // FileText
-            // 
-            this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileText.IsReadOnly = false;
-            this.FileText.Location = new System.Drawing.Point(3, 3);
-            this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(431, 253);
-            this.FileText.TabIndex = 0;
             // 
             // FormBrowse
             // 
@@ -578,7 +580,6 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataGridView FileChanges;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
-        private System.Windows.Forms.RichTextBox DiffText;
         private System.Windows.Forms.ToolStripMenuItem viewDiffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem branchToolStripMenuItem;
@@ -599,5 +600,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem patchToolStripMenuItem;
         private ICSharpCode.TextEditor.TextEditorControl FileText;
+        private ICSharpCode.TextEditor.TextEditorControl DiffText;
     }
 }

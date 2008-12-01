@@ -219,9 +219,21 @@ namespace PatchApply
             }
         }
 
+        public void LoadPatch(string text, bool applyPatch)
+        {
+            StringReader stream = new StringReader(text);
+            LoadPatchStream(stream, applyPatch);
+        }
+
         public void LoadPatchFile()
         {
             StreamReader re = File.OpenText(PatchFileName);
+            LoadPatchStream(re, true);
+        }
+
+        public void LoadPatchStream(TextReader re, bool applyPatch)
+        {
+
             string input = null;
 
             patches = new List<Patch>();
@@ -250,6 +262,13 @@ namespace PatchApply
                     //index means -> no new and no delete, edit
                     if ((input = re.ReadLine()) != null)
                     {
+                        //WTF! No change
+                        if (input.StartsWith("diff --git "))
+                        {
+                            //No change? lets continue to the next line
+                            continue;
+                        }
+
                         //new file!
                         if (input.StartsWith("new file mode "))
                             patch.Type = Patch.PatchType.NewFile;
@@ -410,10 +429,13 @@ namespace PatchApply
 
             re.Close();
 
-            foreach (Patch patchApply in patches)
+            if (applyPatch)
             {
-                if (patchApply.Apply == true)
-                    ApplyPatch(patchApply);
+                foreach (Patch patchApply in patches)
+                {
+                    if (patchApply.Apply == true)
+                        ApplyPatch(patchApply);
+                }
             }
 
         }

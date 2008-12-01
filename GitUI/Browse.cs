@@ -24,10 +24,11 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
-                    EditorOptions.SetSyntax(FileText, item.Name);
+                    EditorOptions.SetSyntax(FileText, ((GitItem)item).FileName);
                     FileText.Text = GitCommands.GitCommands.GetFileText(item.Guid);
+                    FileText.Refresh();
 
-                    FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(item.Name);
+                    FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(((GitItem)item).FileName);
                 }
 
 
@@ -111,6 +112,8 @@ namespace GitUI
             DiffFiles.DataSource = null;
             if (Revisions.SelectedRows.Count == 0) return;
 
+            DiffFiles.DisplayMember = "FileNameB";
+
             if (Revisions.SelectedRows[0].DataBoundItem is GitRevision)
             {
                 IGitItem revision = (IGitItem)Revisions.SelectedRows[0].DataBoundItem;
@@ -120,7 +123,8 @@ namespace GitUI
                 LoadInTreeSingle(revision, GitTree.Nodes);
 
                 if (Revisions.SelectedRows.Count == 1)
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid);
+                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid);
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
             }
 
             if (Revisions.SelectedRows.Count == 2)
@@ -129,7 +133,8 @@ namespace GitUI
                     Revisions.SelectedRows[1].DataBoundItem is GitRevision)
                 {
 
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
 
                 }
             }
@@ -173,6 +178,7 @@ namespace GitUI
                 IGitItem revision = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
 
                 FileText.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
+                FileText.Refresh();
             }
         }
 
@@ -184,7 +190,7 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
-                    FormFileHistory form = new FormFileHistory(item.Name);
+                    FormFileHistory form = new FormFileHistory(((GitItem)item).FileName);
                     form.Show();
 
                 }
@@ -266,9 +272,16 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem is string)
+            if (DiffFiles.SelectedItem is Patch)
             {
-                string changedFile = (string)DiffFiles.SelectedItem;
+                {
+                    Patch patch = (Patch)DiffFiles.SelectedItem;
+                    DiffText.Text = patch.Text;
+                    DiffText.Refresh();
+                    EditorOptions.SetSyntax(DiffText, patch.FileNameB);
+                }
+
+                //string changedFile = (string)DiffFiles.SelectedItem;
 
 
                 //DiffText.Text = changedFile.PatchText;

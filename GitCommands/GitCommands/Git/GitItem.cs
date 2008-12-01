@@ -14,6 +14,7 @@ namespace GitCommands
         public string Guid { get; set; }
         public string ItemType{ get; set; }
         public string Name { get; set; }
+        public string FileName { get; set; }
         public string Mode { get; set; }
 
         protected List<IGitItem> subItems;
@@ -24,6 +25,11 @@ namespace GitCommands
                 if (subItems == null)
                 {
                     subItems = GitCommands.GetTree(Guid);
+
+                    foreach (GitItem item in subItems)
+                    {
+                        item.FileName = FileName + "\\" + item.FileName;
+                    }
                 }
 
                 return subItems;
