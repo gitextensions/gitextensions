@@ -44,15 +44,24 @@ namespace GitUI
             }
 
             if (FileChanges.SelectedRows.Count == 2)
-            if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
-            if (FileChanges.SelectedRows[1].DataBoundItem is IGitItem)
             {
-                IGitItem revision1 = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
-                IGitItem revision2 = (IGitItem)FileChanges.SelectedRows[1].DataBoundItem;
+                if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
+                    if (FileChanges.SelectedRows[1].DataBoundItem is IGitItem)
+                    {
+                        IGitItem revision1 = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
+                        IGitItem revision2 = (IGitItem)FileChanges.SelectedRows[1].DataBoundItem;
 
-                Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid));
-                diff.Execute();
-                Diff.Text = diff.Dto.Result;
+                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid));
+                        diff.Execute();
+                        EditorOptions.SetSyntax(Diff, FileName);
+                        Diff.Text = diff.Dto.Result;
+                        Diff.Refresh();
+                    }
+            }
+            else
+            {
+                Diff.Text = "You need to select 2 files to view diff.";
+                Diff.Refresh();
             }
         }
     }

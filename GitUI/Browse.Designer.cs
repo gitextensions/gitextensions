@@ -180,6 +180,7 @@
             this.Revisions.Location = new System.Drawing.Point(3, 3);
             this.Revisions.Name = "Revisions";
             this.Revisions.ReadOnly = true;
+            this.Revisions.RowHeadersVisible = false;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(431, 127);
             this.Revisions.TabIndex = 0;
@@ -210,6 +211,7 @@
             this.FileChanges.Location = new System.Drawing.Point(3, 3);
             this.FileChanges.Name = "FileChanges";
             this.FileChanges.ReadOnly = true;
+            this.FileChanges.RowHeadersVisible = false;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.FileChanges.Size = new System.Drawing.Size(431, 127);
             this.FileChanges.TabIndex = 0;

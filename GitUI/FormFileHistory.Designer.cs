@@ -37,9 +37,9 @@
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Diff = new System.Windows.Forms.RichTextBox();
             this.View = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -65,7 +65,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Size = new System.Drawing.Size(531, 489);
-            this.splitContainer1.SplitterDistance = 209;
+            this.splitContainer1.SplitterDistance = 123;
             this.splitContainer1.TabIndex = 0;
             // 
             // FileChanges
@@ -82,8 +82,9 @@
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
             this.FileChanges.ReadOnly = true;
+            this.FileChanges.RowHeadersVisible = false;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(531, 209);
+            this.FileChanges.Size = new System.Drawing.Size(531, 123);
             this.FileChanges.TabIndex = 1;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
@@ -116,7 +117,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(531, 276);
+            this.tabControl1.Size = new System.Drawing.Size(531, 362);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -125,30 +126,10 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(523, 250);
+            this.tabPage1.Size = new System.Drawing.Size(523, 336);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.Diff);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(523, 250);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Diff";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // Diff
-            // 
-            this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.Location = new System.Drawing.Point(3, 3);
-            this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(517, 244);
-            this.Diff.TabIndex = 0;
-            this.Diff.Text = "";
             // 
             // View
             // 
@@ -156,8 +137,28 @@
             this.View.IsReadOnly = false;
             this.View.Location = new System.Drawing.Point(3, 3);
             this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(517, 244);
+            this.View.Size = new System.Drawing.Size(517, 330);
             this.View.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Diff);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(523, 336);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Diff";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Diff
+            // 
+            this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Diff.IsReadOnly = false;
+            this.Diff.Location = new System.Drawing.Point(3, 3);
+            this.Diff.Name = "Diff";
+            this.Diff.Size = new System.Drawing.Size(517, 330);
+            this.Diff.TabIndex = 0;
             // 
             // FormFileHistory
             // 
@@ -191,7 +192,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.RichTextBox Diff;
         private ICSharpCode.TextEditor.TextEditorControl View;
+        private ICSharpCode.TextEditor.TextEditorControl Diff;
     }
 }
