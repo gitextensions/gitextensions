@@ -33,6 +33,12 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.GridChangedFiles = new System.Windows.Forms.DataGridView();
+            this.FileNameA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Apply = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ChangesList = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.FileToPatchEdit = new ICSharpCode.TextEditor.TextEditorControl();
@@ -51,12 +57,6 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.FileNameA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Apply = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -64,6 +64,7 @@
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -72,7 +73,6 @@
             this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).BeginInit();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -133,6 +133,49 @@
             this.GridChangedFiles.Size = new System.Drawing.Size(377, 120);
             this.GridChangedFiles.TabIndex = 0;
             this.GridChangedFiles.SelectionChanged += new System.EventHandler(this.GridChangedFiles_SelectionChanged);
+            // 
+            // FileNameA
+            // 
+            this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileNameA.DataPropertyName = "FileNameA";
+            this.FileNameA.HeaderText = "Filename";
+            this.FileNameA.Name = "FileNameA";
+            this.FileNameA.ReadOnly = true;
+            // 
+            // typeDataGridViewTextBoxColumn
+            // 
+            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
+            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
+            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.typeDataGridViewTextBoxColumn.Width = 70;
+            // 
+            // Rate
+            // 
+            this.Rate.DataPropertyName = "Rate";
+            this.Rate.HeaderText = "Rate";
+            this.Rate.Name = "Rate";
+            this.Rate.ReadOnly = true;
+            this.Rate.Width = 50;
+            // 
+            // File
+            // 
+            this.File.DataPropertyName = "File";
+            this.File.HeaderText = "Type";
+            this.File.Name = "File";
+            this.File.ReadOnly = true;
+            this.File.Width = 50;
+            // 
+            // Apply
+            // 
+            this.Apply.DataPropertyName = "Apply";
+            this.Apply.HeaderText = "Apply";
+            this.Apply.Name = "Apply";
+            this.Apply.Width = 50;
+            // 
+            // patchBindingSource
+            // 
+            this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
             // 
             // ChangesList
             // 
@@ -320,49 +363,6 @@
             this.toolStripButton3.Text = "toolStripButton3";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // patchBindingSource
-            // 
-            this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
-            // 
-            // FileNameA
-            // 
-            this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileNameA.DataPropertyName = "FileNameA";
-            this.FileNameA.HeaderText = "Filename";
-            this.FileNameA.Name = "FileNameA";
-            this.FileNameA.ReadOnly = true;
-            // 
-            // typeDataGridViewTextBoxColumn
-            // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
-            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
-            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
-            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
-            // 
-            // Rate
-            // 
-            this.Rate.DataPropertyName = "Rate";
-            this.Rate.HeaderText = "Rate";
-            this.Rate.Name = "Rate";
-            this.Rate.ReadOnly = true;
-            this.Rate.Width = 50;
-            // 
-            // File
-            // 
-            this.File.DataPropertyName = "File";
-            this.File.HeaderText = "Type";
-            this.File.Name = "File";
-            this.File.ReadOnly = true;
-            this.File.Width = 50;
-            // 
-            // Apply
-            // 
-            this.Apply.DataPropertyName = "Apply";
-            this.Apply.HeaderText = "Apply";
-            this.Apply.Name = "Apply";
-            this.Apply.Width = 50;
-            // 
             // ApplyPatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -373,6 +373,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ApplyPatch";
             this.Text = "ApplyPatch";
+            this.Load += new System.EventHandler(this.ApplyPatch_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyPatch_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -381,6 +382,7 @@
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -391,7 +393,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

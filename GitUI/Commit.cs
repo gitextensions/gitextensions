@@ -43,6 +43,7 @@ namespace GitUI
         {
             EditorOptions.SetSyntax(SelectedDiff, item.Name);
             SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name);
+            SelectedDiff.Refresh();
         }
 
         private void Tracked_SelectionChanged(object sender, EventArgs e)

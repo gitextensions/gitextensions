@@ -139,7 +139,8 @@ namespace GitCommands
 
         static public string GetCurrentChanges(string name)
         {
-            return RunCmd(Settings.GitDir + "git.exe", "diff --cached " + name);
+            //return RunCmd(Settings.GitDir + "git.exe", "diff --cached " + name);
+            return RunCmd(Settings.GitDir + "git.exe", "diff " + name);
         }
 
         static public List<GitRevision> GitRevisions()
