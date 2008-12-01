@@ -79,6 +79,12 @@
       <DependentUpon>Commit.cs</DependentUpon>
     </Compile>
     <Compile Include="EditorOptions.cs" />
+    <Compile Include="FormAddFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddFiles.Designer.cs">
+      <DependentUpon>FormAddFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAddFiles.resx">
+      <DependentUpon>FormAddFiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBranch.resx">
       <DependentUpon>FormBranch.cs</DependentUpon>

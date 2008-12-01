@@ -102,7 +102,7 @@
             this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(224, 448);
+            this.GitTree.Size = new System.Drawing.Size(208, 482);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
             this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
@@ -121,8 +121,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(673, 448);
-            this.splitContainer1.SplitterDistance = 224;
+            this.splitContainer1.Size = new System.Drawing.Size(750, 482);
+            this.splitContainer1.SplitterDistance = 208;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer3
@@ -139,8 +139,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer3.Size = new System.Drawing.Size(445, 448);
-            this.splitContainer3.SplitterDistance = 159;
+            this.splitContainer3.Size = new System.Drawing.Size(538, 482);
+            this.splitContainer3.SplitterDistance = 171;
             this.splitContainer3.TabIndex = 1;
             // 
             // tabControl2
@@ -151,7 +151,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(445, 159);
+            this.tabControl2.Size = new System.Drawing.Size(538, 171);
             this.tabControl2.TabIndex = 1;
             // 
             // Commits
@@ -192,7 +192,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(437, 133);
+            this.tabPage4.Size = new System.Drawing.Size(530, 145);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "File changes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -213,7 +213,7 @@
             this.FileChanges.ReadOnly = true;
             this.FileChanges.RowHeadersVisible = false;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(431, 127);
+            this.FileChanges.Size = new System.Drawing.Size(524, 139);
             this.FileChanges.TabIndex = 0;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
@@ -226,7 +226,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(445, 285);
+            this.tabControl1.Size = new System.Drawing.Size(538, 307);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -255,7 +255,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(437, 259);
+            this.tabPage2.Size = new System.Drawing.Size(530, 281);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Diff";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -273,8 +273,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer4.Size = new System.Drawing.Size(431, 253);
-            this.splitContainer4.SplitterDistance = 157;
+            this.splitContainer4.Size = new System.Drawing.Size(524, 275);
+            this.splitContainer4.SplitterDistance = 150;
             this.splitContainer4.TabIndex = 1;
             // 
             // DiffFiles
@@ -284,7 +284,7 @@
             this.DiffFiles.FormattingEnabled = true;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(157, 251);
+            this.DiffFiles.Size = new System.Drawing.Size(150, 264);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.ValueMember = "FileNameB";
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
@@ -305,7 +305,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(673, 485);
+            this.splitContainer2.Size = new System.Drawing.Size(750, 519);
             this.splitContainer2.SplitterDistance = 33;
             this.splitContainer2.TabIndex = 2;
             // 
@@ -335,7 +335,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(673, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(750, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -470,7 +470,7 @@
             this.DiffText.IsReadOnly = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(270, 253);
+            this.DiffText.Size = new System.Drawing.Size(370, 275);
             this.DiffText.TabIndex = 0;
             // 
             // messageDataGridViewTextBoxColumn
@@ -522,7 +522,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(673, 509);
+            this.ClientSize = new System.Drawing.Size(750, 543);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

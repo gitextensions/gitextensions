@@ -206,9 +206,8 @@ namespace GitUI
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitCommands.AddFiles cmd = new GitCommands.AddFiles(new GitCommands.AddFilesDto("."));
-            cmd.Execute();
-            MessageBox.Show(cmd.Dto.Result);
+            FormAddFiles addFiles = new FormAddFiles();
+            addFiles.Show();
             Initialize();
         }
 
