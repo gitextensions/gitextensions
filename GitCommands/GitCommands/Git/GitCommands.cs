@@ -57,6 +57,14 @@ namespace GitCommands
             return output;
         }
 
+        static public Patch GetSingleDiff(string from, string to, string filter)
+        {
+            PatchManager patchManager = new PatchManager();
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff " + from + " " + to + " " + filter), false);
+
+            return patchManager.patches.FirstOrDefault();
+        }
+
         static public List<Patch> GetDiff(string from, string to)
         {
             PatchManager patchManager = new PatchManager();

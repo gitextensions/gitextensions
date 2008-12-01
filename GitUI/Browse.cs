@@ -123,8 +123,8 @@ namespace GitUI
                 LoadInTreeSingle(revision, GitTree.Nodes);
 
                 if (Revisions.SelectedRows.Count == 1)
-                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid);
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
+                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
             }
 
             if (Revisions.SelectedRows.Count == 2)
@@ -133,8 +133,8 @@ namespace GitUI
                     Revisions.SelectedRows[1].DataBoundItem is GitRevision)
                 {
 
-                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
 
                 }
             }
@@ -285,6 +285,21 @@ namespace GitUI
 
 
                 //DiffText.Text = changedFile.PatchText;
+            }
+            else
+            if (DiffFiles.SelectedItem is string)
+            {
+                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid, (string)DiffFiles.SelectedItem);
+                if (selectedPatch != null)
+                {
+                    EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
+                    DiffText.Text = selectedPatch.Text;
+                }
+                else
+                {
+                    DiffText.Text = "";
+                }
+                DiffText.Refresh();
             }
         }
 
