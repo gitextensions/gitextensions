@@ -3,11 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Permissions;
+using System.IO;
 
 namespace GitCommands
 {
     public class GitCommands
     {
+        public static string FindGitWorkingDir(string startDir)
+        {
+            string dir = startDir + "\\";
+
+            while (dir.LastIndexOf('\\') > 0)
+            {
+                dir = dir.Substring(0, dir.LastIndexOf('\\'));
+
+                if (Directory.Exists(dir + "\\" + ".git"))
+                    return dir + "\\";
+            }
+            return startDir;
+        }
+
         public static string RunCmd(string cmd)
         {
             return RunCmd(cmd, "");
@@ -39,6 +54,15 @@ namespace GitCommands
 
 
             return output;
+        }
+
+        static public List<string> GetDiffFiles(string from)
+        {
+            string result = RunCmd(Settings.GitDir + "git.exe", "diff --name-only " + from);
+
+            string[] files = result.Split('\n');
+
+            return files.ToList<string>();
         }
 
         static public List<string> GetDiffFiles(string from, string to)

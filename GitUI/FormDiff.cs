@@ -16,6 +16,7 @@ namespace GitUI
         public FormDiff()
         {
             InitializeComponent();
+            EditorOptions.SetSyntax(OutPut, "output.cs");
         }
 
         private void label1_Click(object sender, EventArgs e)

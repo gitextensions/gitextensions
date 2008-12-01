@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.Text.RegularExpressions;
+using PatchApply;
 
 namespace GitUI
 {
@@ -23,6 +24,7 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
+                    EditorOptions.SetSyntax(FileText, item.Name);
                     FileText.Text = GitCommands.GitCommands.GetFileText(item.Guid);
 
                     FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(item.Name);
@@ -116,6 +118,9 @@ namespace GitUI
                 //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
                 GitTree.Nodes.Clear();
                 LoadInTreeSingle(revision, GitTree.Nodes);
+
+                if (Revisions.SelectedRows.Count == 1)
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid);
             }
 
             if (Revisions.SelectedRows.Count == 2)
@@ -173,7 +178,7 @@ namespace GitUI
 
         private void GitTree_DoubleClick(object sender, EventArgs e)
         {
-            if (!(GitTree.SelectedNode.Tag is IGitItem)) return;
+            if (GitTree.SelectedNode == null || !(GitTree.SelectedNode.Tag is IGitItem)) return;
 
             IGitItem item = (IGitItem)GitTree.SelectedNode.Tag;
             if (item is GitItem)
@@ -268,6 +273,18 @@ namespace GitUI
 
                 //DiffText.Text = changedFile.PatchText;
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox a = new AboutBox();
+            a.Show();
+        }
+
+        private void patchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyPatch applyPatch = new ApplyPatch();
+            applyPatch.Show();
         }
 
 

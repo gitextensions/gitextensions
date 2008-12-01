@@ -37,9 +37,9 @@
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.View = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.Diff = new System.Windows.Forms.RichTextBox();
+            this.View = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -130,15 +130,6 @@
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // View
-            // 
-            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Location = new System.Drawing.Point(3, 3);
-            this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(517, 244);
-            this.View.TabIndex = 0;
-            this.View.Text = "";
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.Diff);
@@ -158,6 +149,15 @@
             this.Diff.Size = new System.Drawing.Size(517, 244);
             this.Diff.TabIndex = 0;
             this.Diff.Text = "";
+            // 
+            // View
+            // 
+            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.IsReadOnly = false;
+            this.View.Location = new System.Drawing.Point(3, 3);
+            this.View.Name = "View";
+            this.View.Size = new System.Drawing.Size(517, 244);
+            this.View.TabIndex = 0;
             // 
             // FormFileHistory
             // 
@@ -191,7 +191,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.RichTextBox View;
         private System.Windows.Forms.RichTextBox Diff;
+        private ICSharpCode.TextEditor.TextEditorControl View;
     }
 }

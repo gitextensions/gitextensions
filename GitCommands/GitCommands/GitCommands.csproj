@@ -62,7 +62,8 @@
     <Compile Include="Git\GitItem.cs" />
     <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Init.cs" />
-    <Compile Include="PatchManager.cs" />
+    <Compile Include="Patch\Patch.cs" />
+    <Compile Include="Patch\PatchManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pull.cs" />
     <Compile Include="Push.cs" />

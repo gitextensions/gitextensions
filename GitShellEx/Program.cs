@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
 using GitUI;
+using System.IO;
 namespace FileHashShell
 {
     static class Program
@@ -18,6 +19,7 @@ namespace FileHashShell
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
             Application.Run(new FormBrowse());
             
         }

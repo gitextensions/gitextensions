@@ -19,6 +19,7 @@ using ShellExt;
 using System.Collections.Generic;
 using GitUI;
 using System.Windows.Forms;
+using PatchApply;
 namespace FileHashShell
 {
     [Guid("388C287C-2640-49ac-9FA6-AF4FCADB9485")]
@@ -62,7 +63,7 @@ namespace FileHashShell
                     id = PopulateMenu(hmnuPopup, idCmdFirst + id);
                 }
                 //else
-                //    return 0;
+                    //return 0;
 					
 				// Add the popup to the context menu
 				MENUITEMINFO mii = new MENUITEMINFO();
@@ -109,8 +110,9 @@ namespace FileHashShell
             AddMenuItem(hMenu, "Init", ++id, 7);
             if (fileNames.Count > 0)
                 AddMenuItem(hMenu, "File history", ++id, 8);
-            AddMenuItem(hMenu, "Push", ++id, 9);
-            AddMenuItem(hMenu, "Pull", ++id, 10);
+            AddMenuItem(hMenu, "Patch", ++id, 9);
+            AddMenuItem(hMenu, "Push", ++id, 10);
+            AddMenuItem(hMenu, "Pull", ++id, 11);
 
             /*// Add a separator
             MENUITEMINFO sep = new MENUITEMINFO();
@@ -238,20 +240,27 @@ namespace FileHashShell
                             }
                             break;
                         }
-                    case 9://Push
+                    case 9://Patch
+                        {
+                            ApplyPatch patchapply = new ApplyPatch();
+                            patchapply.Show();
+                            break;
+                        }
+                    case 10://Push
                         {
                             GitCommands.Push cmd = new GitCommands.Push(new GitCommands.PushDto());
                             cmd.Execute();
                             MessageBox.Show(cmd.Dto.Result);
                             break;
                         }
-                    case 10://Pull
+                    case 11://Pull
                         {
                             GitCommands.Pull cmd = new GitCommands.Pull(new GitCommands.PullDto());
                             cmd.Execute();
                             MessageBox.Show(cmd.Dto.Result);
                             break;
                         }
+
                 }
 
 			}

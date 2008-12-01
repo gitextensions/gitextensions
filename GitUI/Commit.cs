@@ -41,6 +41,7 @@ namespace GitUI
 
         protected void ShowChanges(GitItemStatus item)
         {
+            EditorOptions.SetSyntax(SelectedDiff, item.Name);
             SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name);
         }
 

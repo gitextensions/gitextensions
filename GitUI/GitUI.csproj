@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\SyntaxTest\Syntax\Syntax\bin\Debug\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -50,6 +54,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyPatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplyPatch.designer.cs">
+      <DependentUpon>ApplyPatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Browse.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +78,7 @@
     <Compile Include="Commit.Designer.cs">
       <DependentUpon>Commit.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditorOptions.cs" />
     <Compile Include="FormBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +112,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApplyPatch.resx">
+      <DependentUpon>ApplyPatch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Browse.resx">
       <DependentUpon>Browse.cs</DependentUpon>
     </EmbeddedResource>
@@ -126,6 +149,7 @@
   <ItemGroup>
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
+    <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />

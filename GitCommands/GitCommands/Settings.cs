@@ -16,10 +16,17 @@ namespace GitCommands
             }
         }
 
+        private static string workingdir;
         public static string WorkingDir
         {
-            get;
-            set;
+            get
+            {
+                return workingdir;
+            }
+            set
+            {
+                workingdir = GitCommands.FindGitWorkingDir(value);
+            }
         }
     }
 }

@@ -35,7 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.OutPut = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -112,11 +112,11 @@
             // OutPut
             // 
             this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OutPut.IsReadOnly = false;
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.Size = new System.Drawing.Size(628, 327);
             this.OutPut.TabIndex = 0;
-            this.OutPut.Text = "";
             // 
             // FormDiff
             // 
@@ -142,8 +142,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RichTextBox OutPut;
         private System.Windows.Forms.ComboBox To;
         private System.Windows.Forms.ComboBox From;
+        private ICSharpCode.TextEditor.TextEditorControl OutPut;
     }
 }

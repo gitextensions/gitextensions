@@ -22,6 +22,7 @@ namespace GitUI
 
         private void FormFileHistory_Load(object sender, EventArgs e)
         {
+            EditorOptions.SetSyntax(View, FileName);
             FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
         }
 
