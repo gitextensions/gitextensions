@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace GitCommands
+{
+    public class LanePoint
+    {
+        public LanePoint(int pointNumber)
+        {
+            PointNumber = pointNumber;
+            BranchFrom = null;
+        }
+
+        public int PointNumber { get; set; }
+        public string Guid { get; set; }
+        public Lane BranchFrom { get; set; }
+        public Lane Lane { get; set; }
+    }
+}

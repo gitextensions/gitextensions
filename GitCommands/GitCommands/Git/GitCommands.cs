@@ -156,7 +156,7 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisions()
         {
-            string tree = RunCmd(Settings.GitDir + "git.exe", "rev-list --all --header --date-order");
+            string tree = RunCmd(Settings.GitDir + "git.exe", "rev-list --all --header --topo-order");
             
             string[] itemsStrings = tree.Split('\n');
 
@@ -170,11 +170,11 @@ namespace GitCommands
                 while (itemsStrings[n].Contains("parent"))
                 {
                     //Add parent
-                    revision.parentGuid = itemsStrings[n++].Substring(6).Trim();
+                    revision.ParentGuids.Add( itemsStrings[n++].Substring(6).Trim());
                 }
-                if (string.IsNullOrEmpty(revision.parentGuid))
+                if (revision.ParentGuids.Count == 0)
                 {
-                    revision.parentGuid = "0000000000000000000000000000000000000000";
+                    revision.ParentGuids.Add("0000000000000000000000000000000000000000");
                 }
                 revision.Author = itemsStrings[n++].Substring(6).Trim();
                 revision.Committer = itemsStrings[n++].Substring(9).Trim();

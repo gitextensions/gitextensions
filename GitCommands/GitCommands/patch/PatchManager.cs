@@ -221,14 +221,26 @@ namespace PatchApply
 
         public void LoadPatch(string text, bool applyPatch)
         {
+            try{
             StringReader stream = new StringReader(text);
             LoadPatchStream(stream, applyPatch);
+            }
+            catch
+            {
+            }
+
         }
 
         public void LoadPatchFile()
         {
-            StreamReader re = File.OpenText(PatchFileName);
-            LoadPatchStream(re, true);
+            try
+            {
+                StreamReader re = File.OpenText(PatchFileName);
+                LoadPatchStream(re, true);
+            }
+            catch
+            {
+            }
         }
 
         public void LoadPatchStream(TextReader re, bool applyPatch)

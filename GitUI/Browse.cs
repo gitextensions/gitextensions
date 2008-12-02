@@ -40,6 +40,35 @@ namespace GitUI
             Initialize();
         }
 
+        public static Color GetLaneColor(Lane lane)
+        {
+            switch (lane.LaneNumber % 10)
+            {
+                case 0:
+                    return Color.Red;
+                case 1:
+                    return Color.Blue;
+                case 2:
+                    return Color.Yellow;
+                case 3:
+                    return Color.Green;
+                case 4:
+                    return Color.Purple;
+                case 5:
+                    return Color.Silver;
+                case 6:
+                    return Color.Azure;
+                case 7:
+                    return Color.Aqua;
+                case 8:
+                    return Color.Brown;
+                case 9:
+                    return Color.Chocolate;
+                default:
+                    return Color.Black;
+            }
+        }
+
         protected void Initialize()
         {
             GitTree.Nodes.Clear();
@@ -52,7 +81,53 @@ namespace GitUI
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads();
 
-            Revisions.DataSource = revisions;
+            {
+                Revisions.DataSource = revisions;
+                LaneGraph laneGraph = LaneGraphManager.CreateLaneGraph(revisions);
+
+
+                int grid = 20;
+
+                Bitmap graphImage = new Bitmap((laneGraph.Lanes.Count * grid) + grid, (laneGraph.Points.Count * grid) + grid);
+                Graphics graph = Graphics.FromImage(graphImage);
+
+                foreach (LanePoint lanePoint in laneGraph.Points)
+                {
+                    int top = lanePoint.PointNumber * grid;
+                    int bottom = (lanePoint.PointNumber * grid) + grid;
+                    int vcenter = bottom - (grid / 2);
+
+                    foreach (Lane lane in laneGraph.GetLanesForPointnumber(lanePoint.PointNumber))
+                    {
+                        int left = laneGraph.GetOptimalLaneNumber(lane) * grid;
+                        int right = left + grid;
+                        int hcenter = right - (grid / 2);
+
+                        bool drawPoint = false;
+
+                        if (lane.Points.Contains(lanePoint))
+                            drawPoint = true;
+
+                        if (lanePoint.BranchFrom == null || drawPoint == false)
+                            graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, top, hcenter, bottom);
+                        else
+                        {
+                            graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, vcenter, hcenter, bottom);
+                            graph.DrawLine(new Pen(GetLaneColor(lane)), (laneGraph.GetOptimalLaneNumber(lanePoint.BranchFrom) * grid) + (grid/2), vcenter, hcenter, vcenter);
+                        }
+
+                        if (drawPoint)
+                            graph.FillEllipse(new SolidBrush(GetLaneColor(lane)), hcenter - 3, vcenter - 3, 6, 6);
+
+
+                    }
+                }
+
+                //graph.DrawLine
+
+                graphImage.Save(@"c:\temp\graph.bmp");
+
+            }
         }
 
         protected void LoadInTreeSingle(IGitItem item, TreeNodeCollection node)
@@ -109,34 +184,41 @@ namespace GitUI
 
         private void Revisions_SelectionChanged(object sender, EventArgs e)
         {
-            DiffFiles.DataSource = null;
-            if (Revisions.SelectedRows.Count == 0) return;
-
-            DiffFiles.DisplayMember = "FileNameB";
-
-            if (Revisions.SelectedRows[0].DataBoundItem is GitRevision)
+            try
             {
-                IGitItem revision = (IGitItem)Revisions.SelectedRows[0].DataBoundItem;
+                DiffFiles.DataSource = null;
+                if (Revisions.SelectedRows.Count == 0) return;
 
-                //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
-                GitTree.Nodes.Clear();
-                LoadInTreeSingle(revision, GitTree.Nodes);
+                DiffFiles.DisplayMember = "FileNameB";
 
-                if (Revisions.SelectedRows.Count == 1)
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
-                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
-            }
-
-            if (Revisions.SelectedRows.Count == 2)
-            {
-                if (Revisions.SelectedRows[0].DataBoundItem is GitRevision &&
-                    Revisions.SelectedRows[1].DataBoundItem is GitRevision)
+                if (Revisions.SelectedRows[0].DataBoundItem is GitRevision)
                 {
+                    IGitItem revision = (IGitItem)Revisions.SelectedRows[0].DataBoundItem;
 
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
-                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                    //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
+                    GitTree.Nodes.Clear();
+                    LoadInTreeSingle(revision, GitTree.Nodes);
 
+                    if (Revisions.SelectedRows.Count == 1)
+                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).ParentGuids[0]);
+                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
                 }
+
+                if (Revisions.SelectedRows.Count == 2)
+                {
+                    if (Revisions.SelectedRows[0].DataBoundItem is GitRevision &&
+                        Revisions.SelectedRows[1].DataBoundItem is GitRevision)
+                    {
+
+                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+                        //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
+
+                    }
+                }
+
+            }
+            catch
+            { 
             }
         }
 
@@ -281,7 +363,7 @@ namespace GitUI
             else
             if (DiffFiles.SelectedItem is string)
             {
-                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid, (string)DiffFiles.SelectedItem);
+                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).ParentGuids[0], (string)DiffFiles.SelectedItem);
                 if (selectedPatch != null)
                 {
                     EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
