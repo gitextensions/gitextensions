@@ -71,7 +71,7 @@ namespace GitCommands
         static public Patch GetSingleDiff(string from, string to, string filter)
         {
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff " + from + " " + to + " " + filter), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff --ignore-submodules " + to + " " + from + " -- " + filter), false);
 
             return patchManager.patches.FirstOrDefault();
         }
@@ -156,7 +156,16 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisions()
         {
-            string tree = RunCmd(Settings.GitDir + "git.exe", "rev-list --all --header --topo-order");
+            return GitRevisions("");
+        }
+
+        static public List<GitRevision> GitRevisions(string filter)
+        {
+            string tree;
+            if (string.IsNullOrEmpty(filter))
+                tree = RunCmd(Settings.GitDir + "git.exe", "rev-list --all --header --date-order");
+            else
+                tree = RunCmd(Settings.GitDir + "git.exe", "rev-list --header --topo-order " + filter);
             
             string[] itemsStrings = tree.Split('\n');
 
@@ -195,7 +204,17 @@ namespace GitCommands
 
         static public List<GitHead> GetHeads()
         {
-            string tree = RunCmd(Settings.GitDir + "git.exe", "show-ref --dereference");
+            return GetHeads(true);
+        }
+
+
+        static public List<GitHead> GetHeads(bool tags)
+        {
+            string tree;
+            if (tags)
+                tree = RunCmd(Settings.GitDir + "git.exe", "show-ref --dereference");
+            else
+                tree = RunCmd(Settings.GitDir + "git.exe", "show-ref --dereference --heads");
             string[] itemsStrings = tree.Split('\n');
 
             List<GitHead> heads = new List<GitHead>();

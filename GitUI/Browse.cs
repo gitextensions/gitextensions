@@ -69,39 +69,54 @@ namespace GitUI
             }
         }
 
+        //protected Graphics graph;
+        protected Bitmap graphImage;
+
         protected void Initialize()
         {
             GitTree.Nodes.Clear();
 
-            List<GitRevision> revisions = GitCommands.GitCommands.GitRevisions();
+            Branches.DisplayMember = "Name";
+            Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+
+            ShowRevisions();
+        }
+
+        private void ShowRevisions()
+        {
+            List<GitRevision> revisions = GitCommands.GitCommands.GitRevisions(Branches.Text);
 
             if (revisions.Count > 0)
                 LoadInTreeSingle(revisions[0], GitTree.Nodes);
 
-            Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads();
-
             {
                 Revisions.DataSource = revisions;
+                Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
+
+                /*
                 LaneGraph laneGraph = LaneGraphManager.CreateLaneGraph(revisions);
 
 
-                int grid = 20;
+                int grid = 22;
 
-                Bitmap graphImage = new Bitmap((laneGraph.Lanes.Count * grid) + grid, (laneGraph.Points.Count * grid) + grid);
+                graphImage = new Bitmap((laneGraph.Lanes.Count * grid) + grid, (laneGraph.Points.Count * grid) + grid);
                 Graphics graph = Graphics.FromImage(graphImage);
+                graph.Clear(Color.White);
 
-                foreach (LanePoint lanePoint in laneGraph.Points)
+                for (int n = 0; n < laneGraph.Points.Count; n++ )
                 {
-                    int top = lanePoint.PointNumber * grid;
-                    int bottom = (lanePoint.PointNumber * grid) + grid;
+                    LanePoint lanePoint = laneGraph.Points[n];
+                    int top = n * grid;
+                    int bottom = (n * grid) + grid;
                     int vcenter = bottom - (grid / 2);
 
                     foreach (Lane lane in laneGraph.GetLanesForPointnumber(lanePoint.PointNumber))
                     {
-                        int left = laneGraph.GetOptimalLaneNumber(lane) * grid;
-                        int right = left + grid;
-                        int hcenter = right - (grid / 2);
+                        int with = 6;
+
+                        int left = laneGraph.GetOptimalLaneNumber(lane) * with;
+                        int right = left + with;
+                        int hcenter = right - (with / 2);
 
                         bool drawPoint = false;
 
@@ -109,11 +124,13 @@ namespace GitUI
                             drawPoint = true;
 
                         if (lanePoint.BranchFrom == null || drawPoint == false)
+                        {
                             graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, top, hcenter, bottom);
+                        }
                         else
                         {
                             graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, vcenter, hcenter, bottom);
-                            graph.DrawLine(new Pen(GetLaneColor(lane)), (laneGraph.GetOptimalLaneNumber(lanePoint.BranchFrom) * grid) + (grid/2), vcenter, hcenter, vcenter);
+                            //graph.DrawLine(new Pen(GetLaneColor(lane)), (laneGraph.GetOptimalLaneNumber(lanePoint.BranchFrom) * with) + (with / 2), vcenter, hcenter, vcenter);
                         }
 
                         if (drawPoint)
@@ -123,10 +140,27 @@ namespace GitUI
                     }
                 }
 
-                //graph.DrawLine
 
                 graphImage.Save(@"c:\temp\graph.bmp");
+                //graphImage.RotateFlip(RotateFlipType.Rotate180FlipY);
+                */
+            }
+        }
 
+        void Revisions_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
+            {
+                //Bitmap cellImage = new Bitmap(graph., e.CellBounds.Height, graph);
+
+
+                //e.Graphics.DrawImage(graphImage, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Y + e.CellBounds.Height);
+                //e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, e.RowIndex * 22, 100, 22), GraphicsUnit.Pixel);
+                //e.Handled = true;
+            }
+            else
+            {
+                //e.Handled = true;
             }
         }
 
@@ -173,12 +207,13 @@ namespace GitUI
         {
             if (Branches.SelectedItem is GitHead)
             {
-                GitHead head = (GitHead)Branches.SelectedItem;
+                //GitHead head = (GitHead)Branches.SelectedItem;
 
                 //List<GitItem> items = GitCommands.GitCommands.GetTree(head.Guid);
-                GitTree.Nodes.Clear();
+                //GitTree.Nodes.Clear();
 
-                LoadInTreeSingle(head, GitTree.Nodes);
+                //LoadInTreeSingle(head, GitTree.Nodes);
+                ShowRevisions();
             }
         }
 

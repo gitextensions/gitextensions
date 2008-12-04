@@ -14,6 +14,7 @@ namespace GitUI
         public FormClone()
         {
             InitializeComponent();
+            From.Text = Settings.WorkingDir;
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -31,6 +32,22 @@ namespace GitUI
             catch
             {
             }
+        }
+
+        private void FromBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+                From.Text = dialog.SelectedPath;
+
+        }
+
+        private void ToBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+                To.Text = dialog.SelectedPath;
+
         }
     }
 }

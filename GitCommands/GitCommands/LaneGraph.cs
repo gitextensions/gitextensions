@@ -21,7 +21,7 @@ namespace GitCommands
             List<Lane> lanes = new List<Lane>();
             foreach (Lane lane in Lanes)
             {
-                if (lane.Points[0].PointNumber <= pointNumber && lane.Points[lane.Points.Count-1].PointNumber >= pointNumber)
+                if (lane.Points.Count > 0 && lane.Points[0].PointNumber <= pointNumber && lane.Points[lane.Points.Count - 1].PointNumber >= pointNumber)
                     lanes.Add(lane);
 
             }
@@ -30,7 +30,8 @@ namespace GitCommands
 
         public int GetOptimalLaneNumber(Lane lane)
         {
-            return Math.Max(GetLanesForPointnumber(lane.Points[0].PointNumber).Count(), 0);
+            return lane.LaneNumber;
+            //return Math.Max(GetLanesForPointnumber(lane.Points[0].PointNumber).Count(), GetLanesForPointnumber(lane.Points[lane.Points.Count-1].PointNumber).Count()-1);
                             //GetLanesForPointnumber(lane.Points[lane.Points.Count-1].PointNumber).Count())-1;
         }
 
@@ -64,11 +65,11 @@ namespace GitCommands
             return lanes;
         }
 
-        public LanePoint AddPoint(Lane lane,string guid)
+        public LanePoint AddPoint(Lane lane, GitRevision revision)
         {
             LanePoint point = lane.AddPoint(lane, Points.Count);
             Points.Add(point);
-            point.Guid = guid;
+            point.Revision = revision;
             return point;
         }
     }

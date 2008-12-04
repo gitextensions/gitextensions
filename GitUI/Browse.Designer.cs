@@ -44,6 +44,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -62,9 +63,10 @@
             this.pushToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.committerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -72,7 +74,6 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -161,7 +162,7 @@
             this.Commits.Location = new System.Drawing.Point(4, 22);
             this.Commits.Name = "Commits";
             this.Commits.Padding = new System.Windows.Forms.Padding(3);
-            this.Commits.Size = new System.Drawing.Size(437, 133);
+            this.Commits.Size = new System.Drawing.Size(530, 145);
             this.Commits.TabIndex = 0;
             this.Commits.Text = "Commits";
             this.Commits.UseVisualStyleBackColor = true;
@@ -173,6 +174,7 @@
             this.Revisions.AutoGenerateColumns = false;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Graph,
             this.messageDataGridViewTextBoxColumn,
             this.authorDataGridViewTextBoxColumn,
             this.committerDataGridViewTextBoxColumn});
@@ -183,7 +185,7 @@
             this.Revisions.ReadOnly = true;
             this.Revisions.RowHeadersVisible = false;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Revisions.Size = new System.Drawing.Size(431, 127);
+            this.Revisions.Size = new System.Drawing.Size(524, 139);
             this.Revisions.TabIndex = 0;
             this.Revisions.SelectionChanged += new System.EventHandler(this.Revisions_SelectionChanged);
             // 
@@ -236,7 +238,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(437, 259);
+            this.tabPage1.Size = new System.Drawing.Size(530, 281);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -247,7 +249,7 @@
             this.FileText.IsReadOnly = false;
             this.FileText.Location = new System.Drawing.Point(3, 3);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(431, 253);
+            this.FileText.Size = new System.Drawing.Size(524, 275);
             this.FileText.TabIndex = 0;
             // 
             // tabPage2
@@ -290,6 +292,15 @@
             this.DiffFiles.ValueMember = "FileNameB";
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             // 
+            // DiffText
+            // 
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IsReadOnly = false;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(370, 275);
+            this.DiffText.TabIndex = 0;
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -313,7 +324,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(472, 10);
+            this.label1.Location = new System.Drawing.Point(11, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 1;
@@ -322,9 +333,9 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(522, 7);
+            this.Branches.Location = new System.Drawing.Point(61, 9);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(147, 21);
+            this.Branches.Size = new System.Drawing.Size(247, 21);
             this.Branches.TabIndex = 0;
             this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 
@@ -451,6 +462,13 @@
             this.patchToolStripMenuItem.Text = "Patch";
             this.patchToolStripMenuItem.Click += new System.EventHandler(this.patchToolStripMenuItem_Click);
             // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -466,14 +484,12 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // DiffText
+            // Graph
             // 
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IsReadOnly = false;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(370, 275);
-            this.DiffText.TabIndex = 0;
+            this.Graph.HeaderText = "Graph";
+            this.Graph.Name = "Graph";
+            this.Graph.ReadOnly = true;
+            this.Graph.Width = 50;
             // 
             // messageDataGridViewTextBoxColumn
             // 
@@ -519,13 +535,6 @@
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -600,9 +609,6 @@
         private System.Windows.Forms.ToolStripMenuItem pushToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pullToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn committerDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn;
         private System.Windows.Forms.SplitContainer splitContainer4;
@@ -613,5 +619,9 @@
         private ICSharpCode.TextEditor.TextEditorControl FileText;
         private ICSharpCode.TextEditor.TextEditorControl DiffText;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
+        private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn committerDataGridViewTextBoxColumn;
     }
 }

@@ -36,6 +36,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.FromBrowse = new System.Windows.Forms.Button();
+            this.ToBrowse = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -50,6 +52,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.ToBrowse);
+            this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.To);
             this.splitContainer1.Panel1.Controls.Add(this.From);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
@@ -97,7 +101,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(373, 12);
+            this.Ok.Location = new System.Drawing.Point(373, 17);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
@@ -113,6 +117,26 @@
             this.OutPut.Size = new System.Drawing.Size(460, 211);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
+            // 
+            // FromBrowse
+            // 
+            this.FromBrowse.Location = new System.Drawing.Point(263, 17);
+            this.FromBrowse.Name = "FromBrowse";
+            this.FromBrowse.Size = new System.Drawing.Size(75, 23);
+            this.FromBrowse.TabIndex = 5;
+            this.FromBrowse.Text = "Browse";
+            this.FromBrowse.UseVisualStyleBackColor = true;
+            this.FromBrowse.Click += new System.EventHandler(this.FromBrowse_Click);
+            // 
+            // ToBrowse
+            // 
+            this.ToBrowse.Location = new System.Drawing.Point(263, 44);
+            this.ToBrowse.Name = "ToBrowse";
+            this.ToBrowse.Size = new System.Drawing.Size(75, 23);
+            this.ToBrowse.TabIndex = 6;
+            this.ToBrowse.Text = "Browse";
+            this.ToBrowse.UseVisualStyleBackColor = true;
+            this.ToBrowse.Click += new System.EventHandler(this.ToBrowse_Click);
             // 
             // FormClone
             // 
@@ -140,5 +164,7 @@
         private System.Windows.Forms.RichTextBox OutPut;
         private System.Windows.Forms.TextBox To;
         private System.Windows.Forms.TextBox From;
+        private System.Windows.Forms.Button ToBrowse;
+        private System.Windows.Forms.Button FromBrowse;
     }
 }

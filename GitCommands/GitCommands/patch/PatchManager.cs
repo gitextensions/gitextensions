@@ -386,7 +386,7 @@ namespace PatchApply
                     }
 
                     //line starts with --- means, old file name
-                    if (input.StartsWith("--- ") && !input.StartsWith("--- /dev/null"))
+                    if (input.StartsWith("--- a/") && !input.StartsWith("--- /dev/null"))
                     {
                         if (!gitPatch)
                         {

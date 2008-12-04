@@ -28,7 +28,7 @@ namespace GitCommands
         {
             foreach (LanePoint point in Points)
             {
-                if (point.BranchFrom == null && point.Guid == guid)
+                if (point.BranchFrom == null && point.Revision.Guid == guid)
                     return true;
             }
             return false;
@@ -38,7 +38,7 @@ namespace GitCommands
         {
             if (Points.Count > 0)
             {
-                if (Points[Points.Count - 1].BranchFrom == null && Points[Points.Count - 1].Guid == guid)
+                if (Points[Points.Count - 1].BranchFrom == null && Points[Points.Count - 1].Revision.Guid == guid)
                     return true;
             }
             return false;
