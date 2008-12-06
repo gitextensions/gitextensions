@@ -78,8 +78,8 @@ namespace GitUI
             Output.Text = result;
             if (result.Contains("Patch failed"))
             {
-                EnableButtons();
             }
+            EnableButtons();
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -119,6 +119,22 @@ namespace GitUI
         {
             FormAddFiles form = new FormAddFiles();
             form.Show();
+        }
+
+        private void MergePatch_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            {
+                if (MessageBox.Show("You are in the middle of a patch apply. You need to resolve, skip or abort this patch.\nAre you sure to exit now?", "Exit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
     }
 }

@@ -152,6 +152,8 @@
             this.Controls.Add(this.BrowsePatch);
             this.Name = "MergePatch";
             this.Text = "Apply patch";
+            this.Load += new System.EventHandler(this.MergePatch_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergePatch_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

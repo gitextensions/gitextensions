@@ -226,31 +226,31 @@ namespace PatchApply
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to apply this patch?", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                patchManager.SavePatch();
-                MessageBox.Show("Patch applied!");
-                Clear();
-            }
+            //if (MessageBox.Show("Are you sure you want to apply this patch?", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            //{
+            //    patchManager.SavePatch();
+            //    MessageBox.Show("Patch applied!");
+            //    Clear();
+            //}
         }
 
         private void ApplyPatch_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (patchManager.patches.Count > 0)
-            {
-                DialogResult result = MessageBox.Show("There is a patch loaded. Do you want to apply this patch before exit?", "Close", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes)
-                {
-                    patchManager.SavePatch();
-                    MessageBox.Show("Patch applied!");
-                    Clear();
-                }
-                else
-                    if (result == DialogResult.Cancel)
-                    {
-                        e.Cancel = true;
-                    }
-            }
+            //if (patchManager.patches.Count > 0)
+            //{
+            //    DialogResult result = MessageBox.Show("There is a patch loaded. Do you want to apply this patch before exit?", "Close", MessageBoxButtons.YesNoCancel);
+            //    if (result == DialogResult.Yes)
+            //    {
+            //        patchManager.SavePatch();
+            //        MessageBox.Show("Patch applied!");
+            //        Clear();
+            //    }
+            //    else
+            //        if (result == DialogResult.Cancel)
+            //        {
+            //            e.Cancel = true;
+            //        }
+            //}
         }
 
         private void ApplyPatch_Load(object sender, EventArgs e)
