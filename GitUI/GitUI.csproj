@@ -121,6 +121,12 @@
     <Compile Include="FormSettigns.Designer.cs">
       <DependentUpon>FormSettigns.cs</DependentUpon>
     </Compile>
+    <Compile Include="MergePatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MergePatch.Designer.cs">
+      <DependentUpon>MergePatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MergePatch.resx">
+      <DependentUpon>MergePatch.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

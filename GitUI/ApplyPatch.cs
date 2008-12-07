@@ -11,9 +11,9 @@ using GitCommands;
 
 namespace PatchApply
 {
-    public partial class ApplyPatch : Form
+    public partial class ViewPatch : Form
     {
-        public ApplyPatch()
+        public ViewPatch()
         {
             InitializeComponent();
 
@@ -255,6 +255,11 @@ namespace PatchApply
         private void ApplyPatch_Load(object sender, EventArgs e)
         {
             ApplyToDirEdit.Text = Settings.WorkingDir;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

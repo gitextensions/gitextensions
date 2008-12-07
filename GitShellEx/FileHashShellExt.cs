@@ -107,7 +107,7 @@ namespace FileHashShell
             AddMenuItem(hMenu, "Clone", ++id, 4);
             AddMenuItem(hMenu, "Commit", ++id, 5);
             AddMenuItem(hMenu, "Diff", ++id, 6);
-            AddMenuItem(hMenu, "Init", ++id, 7);
+            AddMenuItem(hMenu, "Init new repository", ++id, 7);
             if (fileNames.Count > 0)
                 AddMenuItem(hMenu, "File history", ++id, 8);
             AddMenuItem(hMenu, "Patch", ++id, 9);
@@ -242,7 +242,7 @@ namespace FileHashShell
                         }
                     case 9://Patch
                         {
-                            ApplyPatch patchapply = new ApplyPatch();
+                            ViewPatch patchapply = new ViewPatch();
                             patchapply.Show();
                             break;
                         }

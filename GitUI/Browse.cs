@@ -77,7 +77,17 @@ namespace GitUI
             GitTree.Nodes.Clear();
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+            string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
+            CurrentBranch.Text = "Current branch: " + selectedHead;
+            List<GitHead> heads = GitCommands.GitCommands.GetHeads(false);
+            Branches.DataSource = heads;
+            foreach (GitHead head in heads)
+            {
+                if (head.Name == selectedHead)
+                    Branches.SelectedItem = head;
+
+            }
+            //Branches.SelectedText = 
 
             ShowRevisions();
         }
@@ -420,13 +430,19 @@ namespace GitUI
 
         private void patchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ApplyPatch applyPatch = new ApplyPatch();
+            ViewPatch applyPatch = new ViewPatch();
             applyPatch.Show();
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormSettigns form = new FormSettigns();
+            form.Show();
+        }
+
+        private void applyPatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MergePatch form = new MergePatch();
             form.Show();
         }
 

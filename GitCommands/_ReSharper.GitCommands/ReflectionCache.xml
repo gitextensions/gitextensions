@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Assemblies Version="1073741836">
+  <Assembly Name="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="e9153989-0465-400f-b4af-1bb2a7b912c0" Timestamp="633529680480000000" XmlDocIndexTimestamp="633490003300000000" />
+  <Assembly Name="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="9161015c-5be3-4a50-bb7a-62db277f8fb6" Timestamp="633529680480000000" XmlDocIndexTimestamp="633490003300000000" />
+  <Assembly Name="System.Data.DataSetExtensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="616bffb4-d053-48fa-b934-9fddd668d390" Timestamp="633529680480000000" XmlDocIndexTimestamp="633490003300000000" />
+  <Assembly Name="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Image="dd7fe5cd-6d30-47ec-919d-f3d12e6c0788" Timestamp="633530251220000000" />
+  <Assembly Name="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Image="43112a5a-f26d-404e-8289-251e158a7e6d" Timestamp="633213962340000000" />
+  <Assembly Name="JetBrains.Annotations, Version=4.1.933.3, Culture=neutral, PublicKeyToken=1010a0d8d6380325" Image="bcf1825f-aee4-4e90-9af5-0d722144ed3f" Timestamp="633559706920000000" XmlDocIndexTimestamp="633559706920000000" />
+</Assemblies>

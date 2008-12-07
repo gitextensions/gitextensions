@@ -29,6 +29,28 @@ namespace GitCommands
             return RunCmd(cmd, "");
         }
 
+        public static void RunRealCmd(string cmd, string arguments)
+        {
+            //process used to execute external commands
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.ErrorDialog = false;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
+
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.FileName = cmd;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+            process.WaitForExit();
+            
+        }
+
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
@@ -55,6 +77,42 @@ namespace GitCommands
 
 
             return output;
+        }
+
+        static public string Resolved()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "am --3way --resolved");
+
+            return result;
+        }
+
+        static public string Skip()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "am --3way --skip");
+
+            return result;
+        }
+
+        static public string Abort()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "am --3way --abort");
+
+            return result;
+        }
+
+        static public string Patch(string patchFile)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "am --3way --signoff " + patchFile);
+
+            return result;
         }
 
         static public string GetSetting(string setting)
@@ -207,6 +265,17 @@ namespace GitCommands
             return GetHeads(true);
         }
 
+        static public string GetSelectedBranch()
+        {
+            string branches = RunCmd(Settings.GitDir + "git.exe", "branch");
+            string[] branchStrings = branches.Split('\n');
+            foreach (string branch in branchStrings)
+            {
+                if (branch.IndexOf('*') > -1)
+                    return branch.Trim('*', ' ');
+            }
+            return "";
+        }
 
         static public List<GitHead> GetHeads(bool tags)
         {
@@ -226,6 +295,8 @@ namespace GitCommands
                     GitHead head = new GitHead();
                     head.Guid = itemsString.Substring(0, 40);
                     head.Name = itemsString.Substring(41).Trim();
+                    if (head.Name.Length > 0 && head.Name.LastIndexOf("/") >1)
+                        head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
 
                     heads.Add(head);
                 }
