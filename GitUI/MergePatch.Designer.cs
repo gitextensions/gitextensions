@@ -97,7 +97,7 @@
             // 
             // Skip
             // 
-            this.Skip.Location = new System.Drawing.Point(465, 172);
+            this.Skip.Location = new System.Drawing.Point(463, 172);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(103, 23);
             this.Skip.TabIndex = 6;
@@ -107,7 +107,7 @@
             // 
             // Abort
             // 
-            this.Abort.Location = new System.Drawing.Point(465, 201);
+            this.Abort.Location = new System.Drawing.Point(463, 201);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(104, 23);
             this.Abort.TabIndex = 7;
@@ -117,7 +117,7 @@
             // 
             // Resolved
             // 
-            this.Resolved.Location = new System.Drawing.Point(466, 143);
+            this.Resolved.Location = new System.Drawing.Point(464, 143);
             this.Resolved.Name = "Resolved";
             this.Resolved.Size = new System.Drawing.Size(103, 23);
             this.Resolved.TabIndex = 8;
@@ -127,7 +127,7 @@
             // 
             // AddFiles
             // 
-            this.AddFiles.Location = new System.Drawing.Point(466, 114);
+            this.AddFiles.Location = new System.Drawing.Point(464, 94);
             this.AddFiles.Name = "AddFiles";
             this.AddFiles.Size = new System.Drawing.Size(102, 23);
             this.AddFiles.TabIndex = 9;

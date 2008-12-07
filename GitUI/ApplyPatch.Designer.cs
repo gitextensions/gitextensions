@@ -34,11 +34,8 @@
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.GridChangedFiles = new System.Windows.Forms.DataGridView();
             this.FileNameA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Apply = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ChangesList = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.FileToPatchEdit = new ICSharpCode.TextEditor.TextEditorControl();
@@ -55,6 +52,10 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ApplyPatch = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,7 +63,6 @@
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -71,6 +71,7 @@
             this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).BeginInit();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -140,14 +141,6 @@
             this.FileNameA.Name = "FileNameA";
             this.FileNameA.ReadOnly = true;
             // 
-            // typeDataGridViewTextBoxColumn
-            // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
-            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
-            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
-            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
-            // 
             // Rate
             // 
             this.Rate.DataPropertyName = "Rate";
@@ -156,24 +149,12 @@
             this.Rate.ReadOnly = true;
             this.Rate.Width = 50;
             // 
-            // File
-            // 
-            this.File.DataPropertyName = "File";
-            this.File.HeaderText = "Type";
-            this.File.Name = "File";
-            this.File.ReadOnly = true;
-            this.File.Width = 50;
-            // 
             // Apply
             // 
             this.Apply.DataPropertyName = "Apply";
             this.Apply.HeaderText = "Apply";
             this.Apply.Name = "Apply";
             this.Apply.Width = 50;
-            // 
-            // patchBindingSource
-            // 
-            this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
             // 
             // ChangesList
             // 
@@ -235,6 +216,7 @@
             // 
             // splitContainer4.Panel1
             // 
+            this.splitContainer4.Panel1.Controls.Add(this.ApplyPatch);
             this.splitContainer4.Panel1.Controls.Add(this.ApplyToDir);
             this.splitContainer4.Panel1.Controls.Add(this.LoadButton);
             this.splitContainer4.Panel1.Controls.Add(this.BrowsePatch);
@@ -262,11 +244,11 @@
             // 
             // LoadButton
             // 
-            this.LoadButton.Location = new System.Drawing.Point(418, 55);
+            this.LoadButton.Location = new System.Drawing.Point(418, 56);
             this.LoadButton.Name = "LoadButton";
-            this.LoadButton.Size = new System.Drawing.Size(68, 23);
+            this.LoadButton.Size = new System.Drawing.Size(76, 23);
             this.LoadButton.TabIndex = 6;
-            this.LoadButton.Text = "Load";
+            this.LoadButton.Text = "Load patch";
             this.LoadButton.UseVisualStyleBackColor = true;
             this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
@@ -344,6 +326,36 @@
             this.toolStripButton2.Text = "toolStripButton2";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
+            // File
+            // 
+            this.File.DataPropertyName = "File";
+            this.File.HeaderText = "Type";
+            this.File.Name = "File";
+            this.File.ReadOnly = true;
+            this.File.Width = 50;
+            // 
+            // typeDataGridViewTextBoxColumn
+            // 
+            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
+            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
+            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.typeDataGridViewTextBoxColumn.Width = 70;
+            // 
+            // patchBindingSource
+            // 
+            this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
+            // 
+            // ApplyPatch
+            // 
+            this.ApplyPatch.Location = new System.Drawing.Point(500, 56);
+            this.ApplyPatch.Name = "ApplyPatch";
+            this.ApplyPatch.Size = new System.Drawing.Size(75, 23);
+            this.ApplyPatch.TabIndex = 9;
+            this.ApplyPatch.Text = "Apply patch";
+            this.ApplyPatch.UseVisualStyleBackColor = true;
+            this.ApplyPatch.Click += new System.EventHandler(this.ApplyPatch_Click);
+            // 
             // ViewPatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -363,7 +375,6 @@
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -374,6 +385,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,6 +419,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Rate;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Apply;
+        private System.Windows.Forms.Button ApplyPatch;
     }
 }
 

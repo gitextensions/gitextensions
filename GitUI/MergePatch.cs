@@ -18,6 +18,11 @@ namespace GitUI
             EnableButtons();
         }
 
+        public void SetPatchFile(string name)
+        {
+            PatchFile.Text = name;
+        }
+
         private void EnableButtons()
         {
             if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
@@ -25,6 +30,7 @@ namespace GitUI
                 BrowsePatch.Enabled = false;
                 Apply.Enabled = false;
                 PatchFile.ReadOnly = true;
+                AddFiles.Enabled = true;
                 Resolved.Enabled = true;
                 Mergetool.Enabled = true;
                 Skip.Enabled = true;
@@ -35,6 +41,7 @@ namespace GitUI
                 BrowsePatch.Enabled = true;
                 Apply.Enabled = true;
                 PatchFile.ReadOnly = false;
+                AddFiles.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;

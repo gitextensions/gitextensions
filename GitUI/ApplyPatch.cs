@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GitCommands;
+using GitUI;
 
 namespace PatchApply
 {
@@ -260,6 +261,13 @@ namespace PatchApply
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ApplyPatch_Click(object sender, EventArgs e)
+        {
+            MergePatch form = new MergePatch();
+            form.SetPatchFile(PatchFileNameEdit.Text);
+            form.Show();
         }
     }
 }
