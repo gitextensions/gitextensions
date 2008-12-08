@@ -267,7 +267,7 @@ namespace PatchApply
         {
             MergePatch form = new MergePatch();
             form.SetPatchFile(PatchFileNameEdit.Text);
-            form.Show();
+            form.ShowDialog();
         }
     }
 }

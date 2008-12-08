@@ -115,6 +115,18 @@
     <Compile Include="FormFileHistory.Designer.cs">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPull.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPull.Designer.cs">
+      <DependentUpon>FormPull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPush.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPush.Designer.cs">
+      <DependentUpon>FormPush.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSettigns.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +171,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPull.resx">
+      <DependentUpon>FormPull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPush.resx">
+      <DependentUpon>FormPush.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>

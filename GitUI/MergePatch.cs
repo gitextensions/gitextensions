@@ -74,6 +74,12 @@ namespace GitUI
 
         private void Apply_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(PatchFile.Text))
+            {
+                MessageBox.Show("Please select a patch file");
+                return;
+            }
+
             string result = GitCommands.GitCommands.Patch(PatchFile.Text);
             Output.Text = result;
             if (result.Contains("Patch failed"))
@@ -118,7 +124,7 @@ namespace GitUI
         private void AddFiles_Click(object sender, EventArgs e)
         {
             FormAddFiles form = new FormAddFiles();
-            form.Show();
+            form.ShowDialog();
         }
 
         private void MergePatch_Load(object sender, EventArgs e)

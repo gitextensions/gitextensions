@@ -90,6 +90,8 @@ namespace GitUI
             //Branches.SelectedText = 
 
             ShowRevisions();
+
+            Workingdir.Text = "Working dir: " + GitCommands.Settings.WorkingDir;
         }
 
         private void ShowRevisions()
@@ -282,7 +284,8 @@ namespace GitUI
         private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCheckout form = new FormCheckout();
-            form.Show();
+            form.ShowDialog();
+            Initialize();
         }
 
         private void FileText_TextChanged(object sender, EventArgs e)
@@ -316,7 +319,7 @@ namespace GitUI
                 if (((GitItem)item).ItemType == "blob")
                 {
                     FormFileHistory form = new FormFileHistory(((GitItem)item).FileName);
-                    form.Show();
+                    form.ShowDialog();
 
                 }
 
@@ -325,31 +328,34 @@ namespace GitUI
         private void viewDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormDiff diff = new FormDiff();
-            diff.Show();
+            diff.ShowDialog();
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormAddFiles addFiles = new FormAddFiles();
-            addFiles.Show();
+            addFiles.ShowDialog();
         }
 
         private void branchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormBranch form = new FormBranch();
-            form.Show();
+            form.ShowDialog();
+            Initialize();
         }
 
         private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormClone form = new FormClone();
-            form.Show();
+            form.ShowDialog();
+            Initialize();
         }
 
         private void commitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCommit form = new FormCommit();
-            form.Show();
+            form.ShowDialog();
+            Initialize();
         }
 
         private void initNewRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -370,17 +376,22 @@ namespace GitUI
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitCommands.Push cmd = new GitCommands.Push(new GitCommands.PushDto());
-            cmd.Execute();
-            MessageBox.Show(cmd.Dto.Result);
+            //GitCommands.Push cmd = new GitCommands.Push(new GitCommands.PushDto());
+            //cmd.Execute();
+            //MessageBox.Show(cmd.Dto.Result);
+            //Initialize();
+            new FormPush().ShowDialog();
             Initialize();
         }
 
         private void pullToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitCommands.Pull cmd = new GitCommands.Pull(new GitCommands.PullDto());
-            cmd.Execute();
-            MessageBox.Show(cmd.Dto.Result);
+            //GitCommands.Pull cmd = new GitCommands.Pull(new GitCommands.PullDto());
+            //cmd.Execute();
+            //MessageBox.Show(cmd.Dto.Result);
+            //Initialize();
+
+            new FormPull().ShowDialog();
             Initialize();
         }
 
@@ -425,25 +436,36 @@ namespace GitUI
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AboutBox a = new AboutBox();
-            a.Show();
+            a.ShowDialog();
         }
 
         private void patchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ViewPatch applyPatch = new ViewPatch();
-            applyPatch.Show();
+            applyPatch.ShowDialog();
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormSettigns form = new FormSettigns();
-            form.Show();
+            form.ShowDialog();
         }
 
         private void applyPatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MergePatch form = new MergePatch();
-            form.Show();
+            form.ShowDialog();
+        }
+
+        private void gitBashToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunBash();
+
+        }
+
+        private void gitGUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunGui();
         }
 
 

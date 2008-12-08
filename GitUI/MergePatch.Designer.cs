@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MergePatch));
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.PatchFile = new System.Windows.Forms.TextBox();
@@ -150,6 +151,7 @@
             this.Controls.Add(this.PatchFile);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BrowsePatch);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MergePatch";
             this.Text = "Apply patch";
             this.Load += new System.EventHandler(this.MergePatch_Load);

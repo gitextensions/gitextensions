@@ -110,9 +110,12 @@ namespace FileHashShell
             AddMenuItem(hMenu, "Init new repository", ++id, 7);
             if (fileNames.Count > 0)
                 AddMenuItem(hMenu, "File history", ++id, 8);
-            AddMenuItem(hMenu, "Patch", ++id, 9);
-            AddMenuItem(hMenu, "Push", ++id, 10);
-            AddMenuItem(hMenu, "Pull", ++id, 11);
+            AddMenuItem(hMenu, "View patch file", ++id, 9);
+            AddMenuItem(hMenu, "Apply patch", ++id, 10);
+            AddMenuItem(hMenu, "Push", ++id, 11);
+            AddMenuItem(hMenu, "Pull", ++id, 12);
+            AddMenuItem(hMenu, "Git bash", ++id, 13);
+            AddMenuItem(hMenu, "Git GUI", ++id, 14);
 
             /*// Add a separator
             MENUITEMINFO sep = new MENUITEMINFO();
@@ -240,27 +243,40 @@ namespace FileHashShell
                             }
                             break;
                         }
-                    case 9://Patch
+                    case 9://ViewPatch
                         {
                             ViewPatch patchapply = new ViewPatch();
                             patchapply.Show();
                             break;
                         }
-                    case 10://Push
+                    case 10://MergePatch
                         {
-                            GitCommands.Push cmd = new GitCommands.Push(new GitCommands.PushDto());
-                            cmd.Execute();
-                            MessageBox.Show(cmd.Dto.Result);
+                            MergePatch form = new MergePatch();
+                            form.Show();
                             break;
                         }
-                    case 11://Pull
+                    case 11://Push
                         {
-                            GitCommands.Pull cmd = new GitCommands.Pull(new GitCommands.PullDto());
-                            cmd.Execute();
-                            MessageBox.Show(cmd.Dto.Result);
+                            FormPush form = new FormPush();
+                            form.Show(); 
                             break;
                         }
-
+                    case 12://Pull
+                        {
+                            FormPull form = new FormPull();
+                            form.Show();
+                            break;
+                        }
+                    case 13://Bash
+                        {
+                            GitCommands.GitCommands.RunBash();
+                            break;
+                        }
+                    case 14://Gui
+                        {
+                            GitCommands.GitCommands.RunGui();
+                            break;
+                        }
                 }
 
 			}

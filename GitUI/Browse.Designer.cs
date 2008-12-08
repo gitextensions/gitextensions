@@ -37,15 +37,8 @@
             this.Commits = new System.Windows.Forms.TabPage();
             this.Revisions = new System.Windows.Forms.DataGridView();
             this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.committerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.FileChanges = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
@@ -72,10 +65,21 @@
             this.pushToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitBashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.committerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Workingdir = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -85,10 +89,8 @@
             this.tabControl2.SuspendLayout();
             this.Commits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -99,6 +101,8 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // GitTree
@@ -198,32 +202,6 @@
             this.Graph.ReadOnly = true;
             this.Graph.Width = 50;
             // 
-            // messageDataGridViewTextBoxColumn
-            // 
-            this.messageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
-            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
-            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
-            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // authorDataGridViewTextBoxColumn
-            // 
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
-            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
-            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // committerDataGridViewTextBoxColumn
-            // 
-            this.committerDataGridViewTextBoxColumn.DataPropertyName = "Committer";
-            this.committerDataGridViewTextBoxColumn.HeaderText = "Committer";
-            this.committerDataGridViewTextBoxColumn.Name = "committerDataGridViewTextBoxColumn";
-            this.committerDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // gitRevisionBindingSource
-            // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.FileChanges);
@@ -255,25 +233,6 @@
             this.FileChanges.TabIndex = 0;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // guidDataGridViewTextBoxColumn
-            // 
-            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
-            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // tabControl1
             // 
@@ -365,6 +324,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.Workingdir);
             this.splitContainer2.Panel1.Controls.Add(this.CurrentBranch);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             this.splitContainer2.Panel1.Controls.Add(this.Branches);
@@ -379,7 +339,7 @@
             // CurrentBranch
             // 
             this.CurrentBranch.AutoSize = true;
-            this.CurrentBranch.Location = new System.Drawing.Point(314, 14);
+            this.CurrentBranch.Location = new System.Drawing.Point(314, 12);
             this.CurrentBranch.Name = "CurrentBranch";
             this.CurrentBranch.Size = new System.Drawing.Size(0, 13);
             this.CurrentBranch.TabIndex = 2;
@@ -407,6 +367,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.commandsToolStripMenuItem,
+            this.gitToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -526,12 +487,42 @@
             this.patchToolStripMenuItem.Text = "View patch file";
             this.patchToolStripMenuItem.Click += new System.EventHandler(this.patchToolStripMenuItem_Click);
             // 
+            // applyPatchToolStripMenuItem
+            // 
+            this.applyPatchToolStripMenuItem.Name = "applyPatchToolStripMenuItem";
+            this.applyPatchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.applyPatchToolStripMenuItem.Text = "Apply patch";
+            this.applyPatchToolStripMenuItem.Click += new System.EventHandler(this.applyPatchToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // gitToolStripMenuItem
+            // 
+            this.gitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gitBashToolStripMenuItem,
+            this.gitGUIToolStripMenuItem});
+            this.gitToolStripMenuItem.Name = "gitToolStripMenuItem";
+            this.gitToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
+            this.gitToolStripMenuItem.Text = "Git";
+            // 
+            // gitBashToolStripMenuItem
+            // 
+            this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitBashToolStripMenuItem.Text = "Git bash";
+            this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
+            // 
+            // gitGUIToolStripMenuItem
+            // 
+            this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitGUIToolStripMenuItem.Text = "Git GUI";
+            this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -548,12 +539,60 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // applyPatchToolStripMenuItem
+            // messageDataGridViewTextBoxColumn
             // 
-            this.applyPatchToolStripMenuItem.Name = "applyPatchToolStripMenuItem";
-            this.applyPatchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.applyPatchToolStripMenuItem.Text = "Apply patch";
-            this.applyPatchToolStripMenuItem.Click += new System.EventHandler(this.applyPatchToolStripMenuItem_Click);
+            this.messageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
+            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
+            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
+            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // authorDataGridViewTextBoxColumn
+            // 
+            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
+            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
+            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // committerDataGridViewTextBoxColumn
+            // 
+            this.committerDataGridViewTextBoxColumn.DataPropertyName = "Committer";
+            this.committerDataGridViewTextBoxColumn.HeaderText = "Committer";
+            this.committerDataGridViewTextBoxColumn.Name = "committerDataGridViewTextBoxColumn";
+            this.committerDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // gitRevisionBindingSource
+            // 
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // guidDataGridViewTextBoxColumn
+            // 
+            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
+            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
+            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
+            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // gitItemBindingSource
+            // 
+            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // Workingdir
+            // 
+            this.Workingdir.AutoSize = true;
+            this.Workingdir.Location = new System.Drawing.Point(500, 12);
+            this.Workingdir.Name = "Workingdir";
+            this.Workingdir.Size = new System.Drawing.Size(10, 13);
+            this.Workingdir.TabIndex = 3;
+            this.Workingdir.Text = " ";
+            this.Workingdir.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // FormBrowse
             // 
@@ -575,10 +614,8 @@
             this.tabControl2.ResumeLayout(false);
             this.Commits.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
@@ -591,6 +628,8 @@
             this.splitContainer2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -644,5 +683,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn committerDataGridViewTextBoxColumn;
         private System.Windows.Forms.Label CurrentBranch;
         private System.Windows.Forms.ToolStripMenuItem applyPatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gitBashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gitGUIToolStripMenuItem;
+        private System.Windows.Forms.Label Workingdir;
     }
 }

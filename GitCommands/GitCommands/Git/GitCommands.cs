@@ -12,11 +12,13 @@ namespace GitCommands
     {
         public static string FindGitWorkingDir(string startDir)
         {
-            string dir = startDir + "\\";
+            string dir = startDir;
+            if (!dir.EndsWith("\\") && !dir.EndsWith("/"))
+                dir += "\\";
 
-            while (dir.LastIndexOf('\\') > 0)
+            while (dir.LastIndexOfAny(new char[]{'\\', '/'}) > 0)
             {
-                dir = dir.Substring(0, dir.LastIndexOf('\\'));
+                dir = dir.Substring(0, dir.LastIndexOfAny(new char[] { '\\', '/' }));
 
                 if (Directory.Exists(dir + "\\" + ".git"))
                     return dir + "\\";
@@ -48,8 +50,55 @@ namespace GitCommands
 
             process.Start();
             process.WaitForExit();
+            process.Close();
             
         }
+
+        public static void RunRealCmdDetatched(string cmd, string arguments)
+        {
+            //process used to execute external commands
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.ErrorDialog = false;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
+
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.FileName = cmd;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+
+
+        }
+
+        public static void Run(string cmd, string arguments)
+        {
+            //process used to execute external commands
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.ErrorDialog = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.FileName = cmd;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+            //process.WaitForExit();
+
+        }
+
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
@@ -61,6 +110,7 @@ namespace GitCommands
             process.StartInfo.ErrorDialog = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardError = true;
 
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.FileName = cmd;
@@ -71,12 +121,57 @@ namespace GitCommands
 
             process.Start();
 
-            string output = process.StandardOutput.ReadToEnd();
+            string output;
+            string error;
+                
+            output = process.StandardOutput.ReadToEnd();
+            error = process.StandardError.ReadToEnd();
+
             process.WaitForExit();
+            process.Close();
             // Read the output stream first and then wait. 
 
-
+            if (!string.IsNullOrEmpty(error))
+            {
+                output += "\n" + error;
+            }
+            
             return output;
+        }
+
+
+        static public void RunGui()
+        {
+            Run(Settings.GitDir + "git.exe", "gui");
+        }
+
+
+        static public void RunBash()
+        {
+            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
+        }
+
+        static public string Reset()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "reset --hard");
+        }
+
+        static public string Push(string path)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "push \"" + path + "\"");
+
+            return result;
+        }
+
+        static public string Pull(string path, string branch)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "pull \"" + path + "\" \"" + branch + "\"");
+
+            return result;
         }
 
         static public string Resolved()
