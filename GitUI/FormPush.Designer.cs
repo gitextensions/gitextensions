@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPush));
             this.Output = new System.Windows.Forms.RichTextBox();
             this.BrowseSource = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.TextBox();
@@ -89,8 +90,9 @@
             this.Controls.Add(this.BrowseSource);
             this.Controls.Add(this.PushDestination);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPush";
-            this.Text = "FormPush";
+            this.Text = "Push";
             this.ResumeLayout(false);
             this.PerformLayout();
 

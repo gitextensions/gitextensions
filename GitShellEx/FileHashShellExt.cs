@@ -48,10 +48,10 @@ namespace FileHashShell
 			// Create the popup to insert
 			uint hmnuPopup = Helpers.CreatePopupMenu();
 			int id = 1;
-			if ( (uFlags & 0xf) == 0 || (uFlags & (uint)CMF.CMF_EXPLORE) != 0)
+			//if ( (uFlags & 0xf) == 0 || (uFlags & (uint)CMF.CMF_EXPLORE) != 0)
 			{
 				uint nselected = Helpers.DragQueryFile(m_hDrop, 0xffffffff, null, 0);
-                //if (nselected > 0)
+                if (nselected > 0)
                 {
                     for (uint i = 0; i < nselected; i++)
                     {
@@ -60,12 +60,13 @@ namespace FileHashShell
                         fileNames.Add(sb.ToString());
                     }
                     // Populate the popup menu with file-specific items
-                    id = PopulateMenu(hmnuPopup, idCmdFirst + id);
                 }
                 //else
                     //return 0;
-					
-				// Add the popup to the context menu
+
+                id = PopulateMenu(hmnuPopup, idCmdFirst + id);
+
+                // Add the popup to the context menu
 				MENUITEMINFO mii = new MENUITEMINFO();
 				mii.cbSize = 48;
 				mii.fMask = (uint) MIIM.TYPE | (uint)MIIM.STATE | (uint) MIIM.SUBMENU;
@@ -172,10 +173,16 @@ namespace FileHashShell
 		
 		void IContextMenu.InvokeCommand (IntPtr pici)
 		{
-            if (fileNames.Count > 0)
-            {
+            if (fileNames.Count == 1)
+                if (Directory.Exists(fileNames[0]))
+                    GitCommands.Settings.WorkingDir = fileNames[0];
+
+            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir) && fileNames.Count > 0)
                 GitCommands.Settings.WorkingDir = fileNames[0].Substring(0, fileNames[0].LastIndexOf('\\'));
-            }
+
+            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
+                GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
+
 
 			try
 			{
@@ -184,11 +191,10 @@ namespace FileHashShell
 				switch (ici.verb-1)
 				{
                     case 0://Add file
-                    default:
                         {
-                            GitCommands.AddFiles cmd = new GitCommands.AddFiles(new GitCommands.AddFilesDto("."));
-                            cmd.Execute();
-                            MessageBox.Show(cmd.Dto.Result);
+                            FormAddFiles form = new FormAddFiles();
+                            form.Show();
+
                             break;
                         }
                     case 1://Branch
@@ -277,6 +283,9 @@ namespace FileHashShell
                             GitCommands.GitCommands.RunGui();
                             break;
                         }
+                    default:
+                        break;
+
                 }
 
 			}
@@ -330,26 +339,43 @@ namespace FileHashShell
 				RegistryKey rk;
 				root = Registry.LocalMachine;
 				rk = root.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", true);
-				rk.SetValue(guid.ToString(), "FileHash shell extension");
+                rk.SetValue(guid.ToString(), "GitExtensions shell extension");
                 approved = rk.ToString();
                 rk.Flush();
 				rk.Close();
 
                 // Set "*\\shellex\\ContextMenuHandlers\\FileHash" regkey to my guid
 				root = Registry.ClassesRoot;
-				rk = root.CreateSubKey("*\\shellex\\ContextMenuHandlers\\FileHash");
+				rk = root.CreateSubKey("*\\shellex\\ContextMenuHandlers\\GitExtensions");
                 rk.Flush();
 				rk.SetValue(null, guid.ToString());
                 contextMenu = rk.ToString();
                 rk.Flush();
 				rk.Close();
 
-                EventLog.WriteEntry("Application", "FileHashShellExt Registration Complete.\r\n" + approved + "\r\n" + contextMenu, EventLogEntryType.Information);
+                root = Registry.ClassesRoot;
+                rk = root.CreateSubKey("Directory\\shellex\\ContextMenuHandlers\\GitExtensions");
+                rk.Flush();
+                rk.SetValue(null, guid.ToString());
+                contextMenu = rk.ToString();
+                rk.Flush();
+                rk.Close();
+
+                root = Registry.ClassesRoot;
+                rk = root.CreateSubKey("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions");
+                rk.Flush();
+                rk.SetValue(null, guid.ToString());
+                contextMenu = rk.ToString();
+                rk.Flush();
+                rk.Close();
+
+
+                EventLog.WriteEntry("Application", "GitExtensions Registration Complete.\r\n" + approved + "\r\n" + contextMenu, EventLogEntryType.Information);
 
 			}
 			catch(Exception e)
 			{
-                EventLog.WriteEntry("Application", "FileHashShellExt Registration error.\r\n" + e.ToString(), EventLogEntryType.Error);
+                EventLog.WriteEntry("Application", "GitExtensions Registration error.\r\n" + e.ToString(), EventLogEntryType.Error);
             }
         }
 
@@ -373,13 +399,23 @@ namespace FileHashShell
 
 				// Delete  regkey
 				root = Registry.ClassesRoot;
-                contextMenu = "*\\shellex\\ContextMenuHandlers\\FileHash";
-                root.DeleteSubKey("*\\shellex\\ContextMenuHandlers\\FileHash");
-                EventLog.WriteEntry("Application", "FileHashShellExt Unregister Complete.\r\n" + approved + "\r\n" + contextMenu, EventLogEntryType.Information);
+                contextMenu = "*\\shellex\\ContextMenuHandlers\\GitExtensions";
+                root.DeleteSubKey("*\\shellex\\ContextMenuHandlers\\GitExtensions");
+
+                // Delete  regkey
+                root = Registry.ClassesRoot;
+                contextMenu = "Directory\\shellex\\ContextMenuHandlers\\GitExtensions";
+                root.DeleteSubKey("Directory\\shellex\\ContextMenuHandlers\\GitExtensions");
+                // Delete  regkey
+                root = Registry.ClassesRoot;
+                contextMenu = "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions";
+                root.DeleteSubKey("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions");
+
+                EventLog.WriteEntry("Application", "GitExtensions Unregister Complete.\r\n" + approved + "\r\n" + contextMenu, EventLogEntryType.Information);
             }
 			catch(Exception e)
 			{
-                EventLog.WriteEntry("Application", "FileHashShellExt Unregister error.\r\n" + e.ToString(), EventLogEntryType.Error);
+                EventLog.WriteEntry("Application", "GitExtensions Unregister error.\r\n" + e.ToString(), EventLogEntryType.Error);
             }
         }
 		#endregion

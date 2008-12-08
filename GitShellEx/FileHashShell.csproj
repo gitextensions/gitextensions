@@ -88,7 +88,6 @@
     </Compile>
     <None Include="app.config" />
     <None Include="FileHashShellExt.snk" />
-    <None Include="getFileHash.reg" />
     <None Include="Properties\DataSources\FileInformation.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

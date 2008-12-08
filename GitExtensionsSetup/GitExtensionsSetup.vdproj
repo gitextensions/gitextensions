@@ -248,6 +248,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    {
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -621,7 +634,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3260.40131, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3264.38293, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A425202F3D4B44DA8DEECBD3F31EE67E"
@@ -963,14 +976,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
-        "ProductCode" = "8:{B6083AA0-5A35-4810-8D1D-E147174A4FE8}"
-        "PackageCode" = "8:{58A6C10C-0ED0-4374-B08B-DED3A3BA1183}"
+        "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
+        "PackageCode" = "8:{EF0E9F10-C88E-4DD7-86F7-00B8BDDC924D}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:2.0.0"
         "Manufacturer" = "8:Henk"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
