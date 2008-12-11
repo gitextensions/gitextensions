@@ -105,57 +105,139 @@ namespace GitUI
                 Revisions.DataSource = revisions;
                 Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
 
-                /*
-                LaneGraph laneGraph = LaneGraphManager.CreateLaneGraph(revisions);
 
+                revisions = GitCommands.GitCommands.GitRevisionGraph();
 
-                int grid = 22;
-
-                graphImage = new Bitmap((laneGraph.Lanes.Count * grid) + grid, (laneGraph.Points.Count * grid) + grid);
+                graphImage = new Bitmap(500, 10000);
                 Graphics graph = Graphics.FromImage(graphImage);
                 graph.Clear(Color.White);
 
-                for (int n = 0; n < laneGraph.Points.Count; n++ )
+                int height = 22;
+                int width = 8;
+                int y = -height;
+
+                string lastLine = "";
+                string currentLine = "";
+                foreach (GitRevision revision in revisions)
                 {
-                    LanePoint lanePoint = laneGraph.Points[n];
-                    int top = n * grid;
-                    int bottom = (n * grid) + grid;
-                    int vcenter = bottom - (grid / 2);
-
-                    foreach (Lane lane in laneGraph.GetLanesForPointnumber(lanePoint.PointNumber))
+                    y += height;
+                    int nLine = 0;
+                    for (int n = 0; n < revision.GraphLines.Count; n++)
                     {
-                        int with = 6;
+                        if (revision.GraphLines[n] == currentLine)
+                            continue;
 
-                        int left = laneGraph.GetOptimalLaneNumber(lane) * with;
-                        int right = left + with;
-                        int hcenter = right - (with / 2);
+                        
+                        string nextLine = "";
 
-                        bool drawPoint = false;
+                        //if (n > 0)
+                        //    lastLine = revision.GraphLines[n-1];
+                        
+                        //currentLine = revision.GraphLines[n];
+                        
+                        //if (n+1 < revision.GraphLines.Count)
+                        //    nextLine = revision.GraphLines[n+1];
 
-                        if (lane.Points.Contains(lanePoint))
-                            drawPoint = true;
+                        nextLine = revision.GraphLines[n];
 
-                        if (lanePoint.BranchFrom == null || drawPoint == false)
+                        nLine++;
+
+                        int x = 0;
+                        for (int nc = 0; nc < currentLine.Length; nc++)
                         {
-                            graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, top, hcenter, bottom);
+                            if (currentLine.LastIndexOfAny(new char[] { '*', '\\', '/' }) < 0)
+                                break;
+                            x += width;
+
+                            char c = currentLine[nc];
+                            int top = y;
+                            int bottom = y+height;
+                            int left = x;
+                            int right = x+width;
+                            int hcenter = x + (width / 2);
+                            int vcenter = y + (height / 2);
+
+                            if (c == '*')
+                            {
+                                graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
+                            }
+                            if ((c == '|') && nLine != 1 || (c == '*'))
+                            {
+                                if (((lastLine.Length > nc && lastLine[nc] == '|') ||
+                                    (lastLine.Length > nc && lastLine[nc] == '*')) &&
+                                    (nc - 1 < 0 ||
+                                   ((nc-1 >= 0 && lastLine.Length > nc-1 && lastLine[nc-1] != '\\') ||
+                                    (lastLine.Length > nc+1 && lastLine[nc+1] != '/')))
+
+                                    )
+                                {
+                                    graph.DrawLine(new Pen(Color.Red), hcenter, top, hcenter, vcenter);
+                                }
+                                if (((nextLine.Length > nc && nextLine[nc] == '|') ||
+                                    (nextLine.Length > nc && nextLine[nc] == '*')) &&
+                                    (nc - 1 < 0 ||
+                                   ((nc-1 >= 0 && lastLine.Length > nc-1 && lastLine[nc-1] != '\\') ||
+                                    (lastLine.Length > nc+1 && lastLine[nc+1] != '/'))))                                   //(currentLine.Length > nc + 1 && currentLine[nc + 1] == '\\') ||
+                                    //(nc - 1 > 0 && currentLine.Length > nc - 1 && currentLine[nc - 1] == '/') ||
+                                    
+                                {
+                                    graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
+                                }
+
+                            }
+                            if (c == '\\')
+                            {
+                                if ((nextLine.Length > nc + 2 && nextLine[nc + 2] != '\\') || nextLine.Length <= nc + 2)
+                                {
+                                    //draw: 
+                                    //      \
+                                    graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom + (height / 2));
+                                }
+                                if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
+                                {
+                                    //draw: _
+                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                }
+                                else
+                                {
+                                    // draw: \_
+                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left, bottom);
+                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                }
+                            }
+                            if (c == '/')
+                            {
+                                if (lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2)
+                                {
+                                    //draw: /
+                                    //      
+                                    graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom - (height / 2));
+                                } 
+                                if (nc - 2 >= 0 && nextLine.Length > (nc - 2) && nextLine[nc - 2] == '/')
+                                {
+                                    //draw: _
+                                    //      
+                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                }
+                                else
+                                {
+                                    //draw:  _
+                                    //      /
+                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), bottom + (height / 2), left, bottom);
+                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                } 
+                                
+                                
+                                //graph.DrawLine(new Pen(Color.Red), right + (with / 2), vcenter, left - (with / 2), bottom);
+                            }                        
                         }
-                        else
-                        {
-                            graph.DrawLine(new Pen(GetLaneColor(lane)), hcenter, vcenter, hcenter, bottom);
-                            //graph.DrawLine(new Pen(GetLaneColor(lane)), (laneGraph.GetOptimalLaneNumber(lanePoint.BranchFrom) * with) + (with / 2), vcenter, hcenter, vcenter);
-                        }
-
-                        if (drawPoint)
-                            graph.FillEllipse(new SolidBrush(GetLaneColor(lane)), hcenter - 3, vcenter - 3, 6, 6);
-
-
+                        lastLine = currentLine;
+                        currentLine = nextLine;
                     }
                 }
 
-
                 graphImage.Save(@"c:\temp\graph.bmp");
                 //graphImage.RotateFlip(RotateFlipType.Rotate180FlipY);
-                */
             }
         }
 
@@ -163,12 +245,11 @@ namespace GitUI
         {
             if (e.ColumnIndex == 0 && e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
             {
-                //Bitmap cellImage = new Bitmap(graph., e.CellBounds.Height, graph);
+                //Bitmap cellImage = new Bitmapgraph, e.CellBounds.Height, graph);
 
-
-                //e.Graphics.DrawImage(graphImage, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Y + e.CellBounds.Height);
-                //e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, e.RowIndex * 22, 100, 22), GraphicsUnit.Pixel);
-                //e.Handled = true;
+                e.Graphics.DrawImage(graphImage, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Y + e.CellBounds.Height);
+                e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, e.RowIndex * 22, 200, 22), GraphicsUnit.Pixel);
+                e.Handled = true;
             }
             else
             {

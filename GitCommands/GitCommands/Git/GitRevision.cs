@@ -7,6 +7,11 @@ namespace GitCommands
 {
     public class GitRevision : IGitItem
     {
+        public GitRevision()
+        {
+            GraphLines = new List<string>();
+        }
+
         public string Guid { get; set; }
         public string Name { get; set; }
 
@@ -15,10 +20,12 @@ namespace GitCommands
 
         public List<String> ParentGuids = new List<string>();
 
+        public string Date { get; set; }
         public string Author { get; set; }
         public string Committer { get; set; }
 
         public string Message { get; set; }
+        public List<string> GraphLines { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems 

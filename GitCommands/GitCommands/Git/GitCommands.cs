@@ -201,7 +201,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmdAsync(Settings.GitDir + "git.exe", "push \"" + path + "\"");
+            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push \"" + path + "\"");
 
         }
 
@@ -358,6 +358,82 @@ namespace GitCommands
             //return RunCmd(Settings.GitDir + "git.exe", "diff --cached " + name);
             return RunCmd(Settings.GitDir + "git.exe", "diff " + name);
         }
+
+        static public List<GitRevision> GitRevisionGraph()
+        {
+            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph");
+
+            string[] itemsStrings = tree.Split('\n');
+            
+            List<GitRevision> revisions = new List<GitRevision>();
+
+            char[] graphChars = new char[]{'*','|','*','\\','/'};
+
+            for (int n = 0; n < itemsStrings.Count(); )
+            {
+                GitRevision revision = new GitRevision();
+
+                string line;
+
+                line = itemsStrings[n];
+
+                if (line.IndexOf("commit ") > 0)
+                {
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars)+1));
+                    revision.Guid = line.Substring(line.LastIndexOf("commit ") + 7);
+                    n++;
+                    if (itemsStrings.Count() == n) break;
+                }
+                line = itemsStrings[n];
+
+                if (line.IndexOf("Merge: ") > 0)
+                {
+                    //ignore
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                    n++;
+                }
+                line = itemsStrings[n];
+
+                if (line.IndexOf("Author: ") > 0)
+                {
+                    revision.Guid = line.Substring(line.LastIndexOf("Author: ") + 8);
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                    n++;
+                    if (itemsStrings.Count() == n) break;
+                }
+                line = itemsStrings[n];
+
+                if (line.IndexOf("Date:   ") > 0)
+                {
+                    revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8);
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                    n++;
+                    if (itemsStrings.Count() == n) break;
+                }
+                line = itemsStrings[n];
+
+                while (!(line.Length == line.LastIndexOf("commit ") + 7 + 40) || (line.LastIndexOf("commit ") < 0))
+                {
+                    revision.Message = line.Substring(line.LastIndexOfAny(graphChars)+1).Trim() + "\n";
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                    line = itemsStrings[n];
+                    n++;
+                    if (itemsStrings.Count() == n) break;
+                }
+                if (itemsStrings.Count() == n) break;
+                n--;
+
+                revisions.Add(revision);
+            }
+
+            return revisions;
+        }
+
 
         static public List<GitRevision> GitRevisions()
         {
