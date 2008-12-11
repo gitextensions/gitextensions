@@ -5,6 +5,7 @@ using System.Text;
 using System.Security.Permissions;
 using System.IO;
 using PatchApply;
+using System.Diagnostics;
 
 namespace GitCommands
 {
@@ -139,6 +140,30 @@ namespace GitCommands
             return output;
         }
 
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static Process RunCmdAsync(string cmd, string arguments)
+        {
+            //process used to execute external commands
+
+            Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.ErrorDialog = true;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
+            process.StartInfo.RedirectStandardError = false;
+
+            process.StartInfo.LoadUserProfile = true;
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.FileName = cmd;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+
+            return process;
+        }
 
         static public void RunGui()
         {
@@ -156,6 +181,13 @@ namespace GitCommands
             return RunCmd(Settings.GitDir + "git.exe", "reset --hard");
         }
 
+        public string FormatPatch(string from, string to, string output)
+        {
+            string result = RunCmd(Settings.GitDir + "git.exe", "format-patch -M -C -B " + from + ".." + to + " -o \"" + output + "\"");
+
+            return result;
+        }
+
         static public string Push(string path)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
@@ -164,6 +196,15 @@ namespace GitCommands
 
             return result;
         }
+
+        static public Process PushAsync(string path)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            return RunCmdAsync(Settings.GitDir + "git.exe", "push \"" + path + "\"");
+
+        }
+
 
         static public string Pull(string path, string branch)
         {
@@ -208,6 +249,17 @@ namespace GitCommands
             string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "am --3way --signoff " + patchFile);
 
             return result;
+        }
+
+        public string GetGlobalSetting(string setting)
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "config --global --get " + setting);
+        }
+
+        public void SetGlobalSetting(string setting, string value)
+        {
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global --unset-all " + setting);
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global " + setting + " \"" + value + "\"");
         }
 
         static public string GetSetting(string setting)

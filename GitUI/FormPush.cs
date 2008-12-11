@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GitUI
 {
@@ -32,7 +33,31 @@ namespace GitUI
                 return;
             }
 
-            Output.Text = GitCommands.GitCommands.Push(PushDestination.Text);
+            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text);
+//            process.BeginErrorReadLine();
+  //          process.BeginOutputReadLine();
+    //        process.ErrorDataReceived += new DataReceivedEventHandler(process_ErrorDataReceived);
+      //      process.OutputDataReceived += new DataReceivedEventHandler(process_OutputDataReceived);
+
+
+            process.WaitForExit();
+            
+        }
+
+        void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data == null) return;
+            string data = e.Data;
+            if (data.StartsWith("Enter passphrase"))
+                ((Process)sender).StandardInput.WriteLine("achttien");
+        }
+
+        void process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data == null) return;
+            string data = e.Data;
+            if (data.StartsWith("Enter passphrase"))
+                ((Process)sender).StandardInput.WriteLine("achttien");
         }
     }
 }

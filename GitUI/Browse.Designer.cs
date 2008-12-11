@@ -47,6 +47,7 @@
             this.DiffFiles = new System.Windows.Forms.ListBox();
             this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.Workingdir = new System.Windows.Forms.Label();
             this.CurrentBranch = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -79,7 +80,7 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Workingdir = new System.Windows.Forms.Label();
+            this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -336,6 +337,16 @@
             this.splitContainer2.SplitterDistance = 33;
             this.splitContainer2.TabIndex = 2;
             // 
+            // Workingdir
+            // 
+            this.Workingdir.AutoSize = true;
+            this.Workingdir.Location = new System.Drawing.Point(500, 12);
+            this.Workingdir.Name = "Workingdir";
+            this.Workingdir.Size = new System.Drawing.Size(10, 13);
+            this.Workingdir.TabIndex = 3;
+            this.Workingdir.Text = " ";
+            this.Workingdir.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // CurrentBranch
             // 
             this.CurrentBranch.AutoSize = true;
@@ -411,6 +422,7 @@
             this.pushToolStripMenuItem,
             this.pullToolStripMenuItem,
             this.patchToolStripMenuItem,
+            this.formatPatchToolStripMenuItem,
             this.applyPatchToolStripMenuItem,
             this.settingsToolStripMenuItem});
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
@@ -513,14 +525,14 @@
             // gitBashToolStripMenuItem
             // 
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
-            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
             this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
             // 
             // gitGUIToolStripMenuItem
             // 
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
-            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
             this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
             // 
@@ -584,15 +596,12 @@
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
-            // Workingdir
+            // formatPatchToolStripMenuItem
             // 
-            this.Workingdir.AutoSize = true;
-            this.Workingdir.Location = new System.Drawing.Point(500, 12);
-            this.Workingdir.Name = "Workingdir";
-            this.Workingdir.Size = new System.Drawing.Size(10, 13);
-            this.Workingdir.TabIndex = 3;
-            this.Workingdir.Text = " ";
-            this.Workingdir.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.formatPatchToolStripMenuItem.Name = "formatPatchToolStripMenuItem";
+            this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.formatPatchToolStripMenuItem.Text = "Format patch";
+            this.formatPatchToolStripMenuItem.Click += new System.EventHandler(this.formatPatchToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -687,5 +696,6 @@
         private System.Windows.Forms.ToolStripMenuItem gitBashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gitGUIToolStripMenuItem;
         private System.Windows.Forms.Label Workingdir;
+        private System.Windows.Forms.ToolStripMenuItem formatPatchToolStripMenuItem;
     }
 }

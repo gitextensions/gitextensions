@@ -115,6 +115,12 @@
     <Compile Include="FormFileHistory.Designer.cs">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormFormatPath.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFormatPath.Designer.cs">
+      <DependentUpon>FormFormatPath.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPull.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,9 @@
     <EmbeddedResource Include="FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormFormatPath.resx">
+      <DependentUpon>FormFormatPath.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
     </EmbeddedResource>
@@ -195,6 +204,7 @@
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
+    <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />

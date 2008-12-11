@@ -468,6 +468,11 @@ namespace GitUI
             GitCommands.GitCommands.RunGui();
         }
 
+        private void formatPatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormFormatPath().ShowDialog();
+        }
+
 
     }
 }
