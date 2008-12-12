@@ -111,9 +111,13 @@ namespace GitUI
                             {
                                 graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
 
-                                if (r == 0 && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
+                                if (/*r == 0 &&*/ nextRevision != null && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
                                 {
-                                    graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
+                                    if (r == 0)
+                                        graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
+                                    else
+                                        if (nextLine != null && nextLine.Length > nc && nextLine[nc] == '|')
+                                            graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom+(height/2));
                                 }
                             }
                             if (c != '|' && c != '*')

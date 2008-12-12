@@ -30,15 +30,21 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDiff));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.To = new System.Windows.Forms.ComboBox();
-            this.From = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.OutPut = new ICSharpCode.TextEditor.TextEditorControl();
+            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -50,88 +56,107 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.To);
-            this.splitContainer1.Panel1.Controls.Add(this.From);
-            this.splitContainer1.Panel1.Controls.Add(this.label2);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer1.Size = new System.Drawing.Size(628, 401);
-            this.splitContainer1.SplitterDistance = 70;
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer1.Size = new System.Drawing.Size(750, 529);
+            this.splitContainer1.SplitterDistance = 205;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // To
-            // 
-            this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(74, 45);
-            this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(293, 21);
-            this.To.TabIndex = 6;
-            // 
-            // From
-            // 
-            this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(74, 17);
-            this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(293, 21);
-            this.From.TabIndex = 5;
-            this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "To";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "From";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(541, 12);
+            this.button1.Location = new System.Drawing.Point(3, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 28);
             this.button1.TabIndex = 0;
             this.button1.Text = "Show";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // OutPut
+            // DiffText
             // 
-            this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OutPut.IsReadOnly = false;
-            this.OutPut.Location = new System.Drawing.Point(0, 0);
-            this.OutPut.Name = "OutPut";
-            this.OutPut.Size = new System.Drawing.Size(628, 327);
-            this.OutPut.TabIndex = 0;
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IsReadOnly = false;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(610, 320);
+            this.DiffText.TabIndex = 0;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.RevisionGrid);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.button1);
+            this.splitContainer2.Size = new System.Drawing.Size(750, 205);
+            this.splitContainer2.SplitterDistance = 664;
+            this.splitContainer2.TabIndex = 2;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.DiffFiles);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.DiffText);
+            this.splitContainer3.Size = new System.Drawing.Size(750, 320);
+            this.splitContainer3.SplitterDistance = 136;
+            this.splitContainer3.TabIndex = 1;
+            // 
+            // DiffFiles
+            // 
+            this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.Location = new System.Drawing.Point(0, 0);
+            this.DiffFiles.Name = "DiffFiles";
+            this.DiffFiles.Size = new System.Drawing.Size(136, 316);
+            this.DiffFiles.TabIndex = 0;
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(664, 205);
+            this.RevisionGrid.TabIndex = 1;
             // 
             // FormDiff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 401);
+            this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDiff";
             this.Text = "Diff";
             this.Load += new System.EventHandler(this.FormDiff_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -139,11 +164,11 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox To;
-        private System.Windows.Forms.ComboBox From;
-        private ICSharpCode.TextEditor.TextEditorControl OutPut;
+        private ICSharpCode.TextEditor.TextEditorControl DiffText;
+        private RevisionGrid RevisionGrid;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.ListBox DiffFiles;
     }
 }

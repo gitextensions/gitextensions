@@ -44,8 +44,6 @@ namespace GitUI
 
         protected void Initialize()
         {
-            GitTree.Nodes.Clear();
-
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = "Current branch: " + selectedHead;
 
@@ -57,6 +55,7 @@ namespace GitUI
         private void ShowRevisions()
         {
             RevisionGrid.RefreshRevisions();
+            GitTree.Nodes.Clear();
             if (RevisionGrid.GetRevisions().Count > 0)
                 LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
         }
@@ -104,33 +103,11 @@ namespace GitUI
         {
             try
             {
-                DiffFiles.DataSource = null;
-                if (RevisionGrid.GetRevisions().Count == 0) return;
+                IGitItem revision = RevisionGrid.GetRevisions()[0];
 
-                DiffFiles.DisplayMember = "FileNameB";
-
-                {
-                    IGitItem revision = RevisionGrid.GetRevisions()[0];
-
-                    //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
-                    GitTree.Nodes.Clear();
-                    LoadInTreeSingle(revision, GitTree.Nodes);
-
-                    if (RevisionGrid.GetRevisions().Count == 1)
-                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[0]).ParentGuids[0]);
-                    //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).parentGuid);
-                }
-
-                if (RevisionGrid.GetRevisions().Count == 2)
-                {
-                    {
-
-                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid);
-                        //DiffFiles.DataSource = GitCommands.GitCommands.GetDiff(((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid, ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid);
-
-                    }
-                }
-
+                //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
+                GitTree.Nodes.Clear();
+                LoadInTreeSingle(revision, GitTree.Nodes);
             }
             catch
             { 
@@ -268,39 +245,6 @@ namespace GitUI
             Initialize();
         }
 
-        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (DiffFiles.SelectedItem is Patch)
-            {
-                {
-                    Patch patch = (Patch)DiffFiles.SelectedItem;
-                    DiffText.Text = patch.Text;
-                    DiffText.Refresh();
-                    EditorOptions.SetSyntax(DiffText, patch.FileNameB);
-                }
-
-                //string changedFile = (string)DiffFiles.SelectedItem;
-
-
-                //DiffText.Text = changedFile.PatchText;
-            }
-            else
-            if (DiffFiles.SelectedItem is string)
-            {
-                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[0]).ParentGuids[0], (string)DiffFiles.SelectedItem);
-                if (selectedPatch != null)
-                {
-                    EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
-                    DiffText.Text = selectedPatch.Text;
-                }
-                else
-                {
-                    DiffText.Text = "";
-                }
-                DiffText.Refresh();
-            }
-        }
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AboutBox a = new AboutBox();
@@ -311,6 +255,7 @@ namespace GitUI
         {
             ViewPatch applyPatch = new ViewPatch();
             applyPatch.ShowDialog();
+            Initialize();
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -323,6 +268,7 @@ namespace GitUI
         {
             MergePatch form = new MergePatch();
             form.ShowDialog();
+            Initialize();
         }
 
         private void gitBashToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -344,6 +290,24 @@ namespace GitUI
         private void gitcommandLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new GitLogForm().ShowDialog();
+        }
+
+        private void RevisionGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void RevisionGrid_DoubleClick(object sender, EventArgs e)
+        {
+            FormDiff form = new FormDiff();
+            form.ShowDialog();
+        }
+
+        private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCheckoutBranck().ShowDialog();
+            Initialize();
+
         }
 
 

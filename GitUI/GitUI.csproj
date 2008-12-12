@@ -97,6 +97,12 @@
     <Compile Include="FormCheckout.Designer.cs">
       <DependentUpon>FormCheckout.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCheckoutBranck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckoutBranck.Designer.cs">
+      <DependentUpon>FormCheckoutBranck.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormClone.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCheckout.resx">
       <DependentUpon>FormCheckout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckoutBranck.resx">
+      <DependentUpon>FormCheckoutBranck.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormClone.resx">
       <DependentUpon>FormClone.cs</DependentUpon>

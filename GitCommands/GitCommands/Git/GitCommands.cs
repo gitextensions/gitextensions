@@ -213,14 +213,13 @@ namespace GitCommands
 
         }
 
-
         static public string Pull(string path, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "pull \"" + path + "\" \"" + branch + "\"");
+            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.exe pull \"" + path + "\" \"" + branch + "\"");
 
-            return result;
+            return "Done";
         }
 
         static public string Resolved()
@@ -371,7 +370,7 @@ namespace GitCommands
         {
             List<GitHead> heads = GetHeads(true);
 
-            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --all --date-order --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
+            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
 
             string[] itemsStrings = tree.Split('\n');
             
@@ -457,7 +456,8 @@ namespace GitCommands
 
                 while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
                 {
-                    revision.Message += line.Substring(graphIndex).Trim() + "\n";
+                    if (line.Length > graphIndex)
+                        revision.Message += line.Substring(graphIndex).Trim() + "\n";
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
