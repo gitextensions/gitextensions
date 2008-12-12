@@ -108,33 +108,53 @@ namespace GitUI
 
                 revisions = GitCommands.GitCommands.GitRevisionGraph();
 
-                graphImage = new Bitmap(500, 10000);
-                Graphics graph = Graphics.FromImage(graphImage);
-                graph.Clear(Color.White);
-
                 int height = 22;
                 int width = 8;
                 int y = -height;
 
+                graphImage = new Bitmap(500, (revisions.Count * height) + 50, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                Graphics graph = Graphics.FromImage(graphImage);
+                graph.Clear(Color.White);
+
+
                 string lastLine = "";
                 string currentLine = "";
-                foreach (GitRevision revision in revisions)
+                //foreach (GitRevision revision in revisions)
+                for (int r = 0 ; r < revisions.Count; r++)
                 {
+                    GitRevision revision = revisions[r];
+
+                    GitRevision prevRevision = null;
+                    GitRevision nextRevision = null;
+
+                    if (r > 0)
+                        prevRevision = revisions[r - 1];
+                    if (revisions.Count > r+1)
+                        nextRevision = revisions[r + 1];
+
                     y += height;
                     int nLine = 0;
+
+                    char[] calc = new char[100];
+
+                    for (int x = 0; x < 100; x++)
+                    {
+                        calc[x] = '|';
+                    }
+
                     for (int n = 0; n < revision.GraphLines.Count; n++)
                     {
-                        if (revision.GraphLines[n] == currentLine)
-                            continue;
+                        //if (revision.GraphLines[n] == currentLine)
+                        //    continue;
 
-                        
+
                         string nextLine = "";
 
                         //if (n > 0)
                         //    lastLine = revision.GraphLines[n-1];
-                        
+
                         //currentLine = revision.GraphLines[n];
-                        
+
                         //if (n+1 < revision.GraphLines.Count)
                         //    nextLine = revision.GraphLines[n+1];
 
@@ -145,15 +165,15 @@ namespace GitUI
                         int x = 0;
                         for (int nc = 0; nc < currentLine.Length; nc++)
                         {
-                            if (currentLine.LastIndexOfAny(new char[] { '*', '\\', '/' }) < 0)
-                                break;
+                            //if (currentLine.LastIndexOfAny(new char[] { '*', '\\', '/' }) < 0)
+                            //    break;
                             x += width;
 
                             char c = currentLine[nc];
                             int top = y;
-                            int bottom = y+height;
+                            int bottom = y + height;
                             int left = x;
-                            int right = x+width;
+                            int right = x + width;
                             int hcenter = x + (width / 2);
                             int vcenter = y + (height / 2);
 
@@ -161,29 +181,9 @@ namespace GitUI
                             {
                                 graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
                             }
-                            if ((c == '|') && nLine != 1 || (c == '*'))
+                            if (c != '|' && c != '*')
                             {
-                                if (((lastLine.Length > nc && lastLine[nc] == '|') ||
-                                    (lastLine.Length > nc && lastLine[nc] == '*')) &&
-                                    (nc - 1 < 0 ||
-                                   ((nc-1 >= 0 && lastLine.Length > nc-1 && lastLine[nc-1] != '\\') ||
-                                    (lastLine.Length > nc+1 && lastLine[nc+1] != '/')))
-
-                                    )
-                                {
-                                    graph.DrawLine(new Pen(Color.Red), hcenter, top, hcenter, vcenter);
-                                }
-                                if (((nextLine.Length > nc && nextLine[nc] == '|') ||
-                                    (nextLine.Length > nc && nextLine[nc] == '*')) &&
-                                    (nc - 1 < 0 ||
-                                   ((nc-1 >= 0 && lastLine.Length > nc-1 && lastLine[nc-1] != '\\') ||
-                                    (lastLine.Length > nc+1 && lastLine[nc+1] != '/'))))                                   //(currentLine.Length > nc + 1 && currentLine[nc + 1] == '\\') ||
-                                    //(nc - 1 > 0 && currentLine.Length > nc - 1 && currentLine[nc - 1] == '/') ||
-                                    
-                                {
-                                    graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
-                                }
-
+                                calc[nc] = ' ';
                             }
                             if (c == '\\')
                             {
@@ -207,36 +207,95 @@ namespace GitUI
                             }
                             if (c == '/')
                             {
-                                if (lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2)
+                                if ((lastLine.Length > nc && lastLine[nc] != '\\' || lastLine.Length <= nc))// ||
+                                    //(nextLine.Length > nc && lastLine[nc] != '\\' || lastLine.Length <= nc))
                                 {
-                                    //draw: /
-                                    //      
-                                    graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom - (height / 2));
-                                } 
-                                if (nc - 2 >= 0 && nextLine.Length > (nc - 2) && nextLine[nc - 2] == '/')
-                                {
-                                    //draw: _
-                                    //      
-                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
                                 }
                                 else
                                 {
-                                    //draw:  _
-                                    //      /
-                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), bottom + (height / 2), left, bottom);
-                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
-                                } 
-                                
-                                
+
+
+
+                                    if (lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2)
+                                    {
+                                        //draw: /
+                                        //      
+                                        graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom - (height / 2));
+                                    }
+                                    if (nc - 2 >= 0 && nextLine.Length > (nc - 2) && nextLine[nc - 2] == '/')
+                                    {
+                                        //draw: _
+                                        //      
+                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    }
+                                    else
+                                    {
+                                        //draw:  _
+                                        //      /
+                                        graph.DrawLine(new Pen(Color.Red), left - (width / 2), bottom + (height / 2), left, bottom);
+                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    }
+                                }
+
+
                                 //graph.DrawLine(new Pen(Color.Red), right + (with / 2), vcenter, left - (with / 2), bottom);
-                            }                        
+                            }
+
+                            if (n == revision.GraphLines.Count - 1)
+                            {
+                                char prevChar = ' ';
+                                char currentChar = calc[nc];//revision.GraphLines[n][nc];
+                                char nextChar = ' ';
+
+                                if (prevRevision != null && prevRevision.GraphLines[prevRevision.GraphLines.Count - 1].Length > nc)
+                                    prevChar = prevRevision.GraphLines[prevRevision.GraphLines.Count - 1][nc];
+
+                                if (nextRevision != null && nextRevision.GraphLines[0].Length > nc)
+                                    nextChar = nextRevision.GraphLines[0][nc];
+
+                                if ((prevChar == '|' && currentChar == '|') || (prevChar == '|' && currentChar == '*'))
+                                {
+                                    graph.DrawLine(new Pen(Color.Red), hcenter, top + (height / 2), hcenter, vcenter + (height / 2));
+                                }
+                                if ((nextChar == '|' && currentChar == '|') || (nextChar == '*' && currentChar == '|'))
+                                {
+                                    graph.DrawLine(new Pen(Color.Red), hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
+                                }
+
+                                //if ((c == '|') && nLine != 1 || (c == '*'))
+                                //{
+                                //    if (((lastLine.Length > nc && lastLine[nc] == '|') ||
+                                //        (lastLine.Length > nc && lastLine[nc] == '*')) &&
+                                //        (nc - 1 < 0 ||
+                                //       ((nc - 1 >= 0 && lastLine.Length > nc - 1 && lastLine[nc - 1] != '\\') ||
+                                //        (lastLine.Length > nc + 1 && lastLine[nc + 1] != '/')))
+
+                                //        )
+                                //    {
+                                //        graph.DrawLine(new Pen(Color.Red), hcenter, top, hcenter, vcenter);
+                                //    }
+                                //    if (((nextLine.Length > nc && nextLine[nc] == '|') ||
+                                //        (nextLine.Length > nc && nextLine[nc] == '*')) &&
+                                //        (nc - 1 < 0 ||
+                                //       ((nc - 1 >= 0 && lastLine.Length > nc - 1 && lastLine[nc - 1] != '\\') ||
+                                //        (lastLine.Length > nc + 1 && lastLine[nc + 1] != '/'))))                                   //(currentLine.Length > nc + 1 && currentLine[nc + 1] == '\\') ||
+                                //    //(nc - 1 > 0 && currentLine.Length > nc - 1 && currentLine[nc - 1] == '/') ||
+                                //    {
+                                //        graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
+                                //    }
+
+                                //}
+                            }
                         }
                         lastLine = currentLine;
                         currentLine = nextLine;
+
+
+
                     }
                 }
 
-                graphImage.Save(@"c:\temp\graph.bmp");
+                //graphImage.Save(@"c:\temp\graph.bmp");
                 //graphImage.RotateFlip(RotateFlipType.Rotate180FlipY);
             }
         }

@@ -361,7 +361,7 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisionGraph()
         {
-            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph");
+            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
 
             string[] itemsStrings = tree.Split('\n');
             
@@ -376,14 +376,24 @@ namespace GitCommands
                 string line;
 
                 line = itemsStrings[n];
-
-                if (line.IndexOf("commit ") > 0)
+                int graphIndex = 0;
+                if (line.IndexOf("Commit ") > 0)
                 {
+                    graphIndex = line.IndexOf("Commit ");
                     if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars)+1));
-                    revision.Guid = line.Substring(line.LastIndexOf("commit ") + 7);
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
+                    revision.Name = revision.Guid = line.Substring(line.LastIndexOf("Commit ") + 7);
                     n++;
                     if (itemsStrings.Count() == n) break;
+                }
+                line = itemsStrings[n];
+
+                if (line.IndexOf("Tree:   ") > 0)
+                {
+                    revision.TreeGuid = revision.Guid = line.Substring(line.LastIndexOf("Tree:   ") + 8);
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
+                    n++;
                 }
                 line = itemsStrings[n];
 
@@ -391,16 +401,16 @@ namespace GitCommands
                 {
                     //ignore
                     if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
                 }
                 line = itemsStrings[n];
 
                 if (line.IndexOf("Author: ") > 0)
                 {
-                    revision.Guid = line.Substring(line.LastIndexOf("Author: ") + 8);
+                    revision.Author = line.Substring(line.LastIndexOf("Author: ") + 8);
                     if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
                     if (itemsStrings.Count() == n) break;
                 }
@@ -410,23 +420,26 @@ namespace GitCommands
                 {
                     revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8);
                     if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
                     if (itemsStrings.Count() == n) break;
                 }
                 line = itemsStrings[n];
 
-                while (!(line.Length == line.LastIndexOf("commit ") + 7 + 40) || (line.LastIndexOf("commit ") < 0))
+                while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
                 {
-                    revision.Message = line.Substring(line.LastIndexOfAny(graphChars)+1).Trim() + "\n";
+                    revision.Message = line.Substring(graphIndex).Trim() + "\n";
                     if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, line.LastIndexOfAny(graphChars) + 1));
-                    line = itemsStrings[n];
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
-                    if (itemsStrings.Count() == n) break;
+                    if (itemsStrings.Count() == n)
+                    {
+                        break;
+                    }
+                    line = itemsStrings[n];
                 }
                 if (itemsStrings.Count() == n) break;
-                n--;
+                //n--;
 
                 revisions.Add(revision);
             }
