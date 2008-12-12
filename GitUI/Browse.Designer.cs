@@ -35,13 +35,8 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.Commits = new System.Windows.Forms.TabPage();
-            this.Revisions = new System.Windows.Forms.DataGridView();
-            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.FileChanges = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
@@ -77,10 +72,11 @@
             this.gitGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.committerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -89,11 +85,8 @@
             this.splitContainer3.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.Commits.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -104,6 +97,8 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // GitTree
@@ -165,7 +160,7 @@
             // 
             // Commits
             // 
-            this.Commits.Controls.Add(this.Revisions);
+            this.Commits.Controls.Add(this.RevisionGrid);
             this.Commits.Location = new System.Drawing.Point(4, 22);
             this.Commits.Name = "Commits";
             this.Commits.Padding = new System.Windows.Forms.Padding(3);
@@ -173,32 +168,6 @@
             this.Commits.TabIndex = 0;
             this.Commits.Text = "Commits";
             this.Commits.UseVisualStyleBackColor = true;
-            // 
-            // Revisions
-            // 
-            this.Revisions.AllowUserToAddRows = false;
-            this.Revisions.AllowUserToDeleteRows = false;
-            this.Revisions.AutoGenerateColumns = false;
-            this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Graph,
-            this.messageDataGridViewTextBoxColumn,
-            this.authorDataGridViewTextBoxColumn,
-            this.committerDataGridViewTextBoxColumn});
-            this.Revisions.DataSource = this.gitRevisionBindingSource;
-            this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Revisions.Location = new System.Drawing.Point(3, 3);
-            this.Revisions.Name = "Revisions";
-            this.Revisions.ReadOnly = true;
-            this.Revisions.RowHeadersVisible = false;
-            this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Revisions.Size = new System.Drawing.Size(524, 139);
-            this.Revisions.TabIndex = 0;
-            this.Revisions.SelectionChanged += new System.EventHandler(this.Revisions_SelectionChanged);
-            // 
-            // gitRevisionBindingSource
-            // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
             // tabPage4
             // 
@@ -231,25 +200,6 @@
             this.FileChanges.TabIndex = 0;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // guidDataGridViewTextBoxColumn
-            // 
-            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
-            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // tabControl1
             // 
@@ -574,33 +524,36 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // Graph
+            // gitRevisionBindingSource
             // 
-            this.Graph.HeaderText = "Graph";
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // messageDataGridViewTextBoxColumn
+            // nameDataGridViewTextBoxColumn
             // 
-            this.messageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
-            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
-            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
-            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // authorDataGridViewTextBoxColumn
+            // guidDataGridViewTextBoxColumn
             // 
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
-            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
-            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
+            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
+            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
+            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // committerDataGridViewTextBoxColumn
+            // gitItemBindingSource
             // 
-            this.committerDataGridViewTextBoxColumn.DataPropertyName = "Committer";
-            this.committerDataGridViewTextBoxColumn.HeaderText = "Committer";
-            this.committerDataGridViewTextBoxColumn.Name = "committerDataGridViewTextBoxColumn";
-            this.committerDataGridViewTextBoxColumn.ReadOnly = true;
+            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(524, 139);
+            this.RevisionGrid.TabIndex = 0;
             // 
             // FormBrowse
             // 
@@ -621,11 +574,8 @@
             this.splitContainer3.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.Commits.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
@@ -638,6 +588,8 @@
             this.splitContainer2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -654,7 +606,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridView Revisions;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -692,9 +643,6 @@
         private System.Windows.Forms.ToolStripMenuItem gitGUIToolStripMenuItem;
         private System.Windows.Forms.Label Workingdir;
         private System.Windows.Forms.ToolStripMenuItem formatPatchToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
-        private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn committerDataGridViewTextBoxColumn;
+        private RevisionGrid RevisionGrid;
     }
 }

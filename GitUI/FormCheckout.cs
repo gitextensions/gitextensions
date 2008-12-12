@@ -20,13 +20,17 @@ namespace GitUI
         {
             try
             {
-                OutPut.Text = "";
+                if (RevisionGrid.GetRevisions().Count != 1)
+                {
+                    MessageBox.Show("Select 1 revision to checkout.", "Checkout");
+                    return;
+                }
 
-                CheckoutDto dto = new CheckoutDto(Branch.Text);
+                CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
                 GitCommands.Checkout commit = new GitCommands.Checkout(dto);
                 commit.Execute();
 
-                OutPut.Text = "Command executed \n" + dto.Result;
+                MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
             }
             catch
             {
@@ -35,8 +39,7 @@ namespace GitUI
 
         private void FormCheckout_Load(object sender, EventArgs e)
         {
-            Branch.DisplayMember = "Name";
-            Branch.DataSource = GitCommands.GitCommands.GetHeads();
+
         }
 
         private void Branch_SelectedIndexChanged(object sender, EventArgs e)

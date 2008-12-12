@@ -364,6 +364,8 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisionGraph()
         {
+            List<GitHead> heads = GetHeads(true);
+
             string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
 
             string[] itemsStrings = tree.Split('\n');
@@ -393,7 +395,7 @@ namespace GitCommands
 
                 if (line.IndexOf("Tree:   ") > 0)
                 {
-                    revision.TreeGuid = revision.Guid = line.Substring(line.LastIndexOf("Tree:   ") + 8);
+                    revision.TreeGuid = line.Substring(line.LastIndexOf("Tree:   ") + 8);
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
@@ -439,9 +441,18 @@ namespace GitCommands
                 }
                 line = itemsStrings[n];
 
+                var foundHeads = from GitHead h in heads
+                                 where h.Guid == revision.Guid
+                                 select h;
+
+                foreach (var head in foundHeads)
+                {
+                    revision.Message += "[" + head.Name + "] ";
+                }
+
                 while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
                 {
-                    revision.Message = line.Substring(graphIndex).Trim() + "\n";
+                    revision.Message += line.Substring(graphIndex).Trim() + "\n";
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
