@@ -28,9 +28,6 @@ namespace GitUI
         {
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             SelectedBranch.Text = "Current branch: " + selectedHead;
-
-            List<GitRevision> revisions = GitCommands.GitCommands.GitRevisions(selectedHead);
-            Revisions.DataSource = revisions;
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
@@ -38,24 +35,17 @@ namespace GitUI
             string rev1 = "";
             string rev2 = "";
 
-            if (Revisions.SelectedRows.Count > 0)
+            if (RevisionGrid.GetRevisions().Count > 0)
             {
-                if (Revisions.SelectedRows[0].DataBoundItem is GitRevision)
                 {
-                    IGitItem revision = (IGitItem)Revisions.SelectedRows[0].DataBoundItem;
-
-                    rev1 = ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).ParentGuids[0];
-                    rev2 = ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).Guid;
+                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
+                    rev2 = RevisionGrid.GetRevisions()[0].Guid;
                 }
 
-                if (Revisions.SelectedRows.Count == 2)
+                if (RevisionGrid.GetRevisions().Count == 2)
                 {
-                    if (Revisions.SelectedRows[0].DataBoundItem is GitRevision &&
-                        Revisions.SelectedRows[1].DataBoundItem is GitRevision)
-                    {
-                        rev1 = ((GitRevision)Revisions.SelectedRows[0].DataBoundItem).ParentGuids[0];
-                        rev2 = ((GitRevision)Revisions.SelectedRows[1].DataBoundItem).Guid;
-                    }
+                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
+                    rev2 = RevisionGrid.GetRevisions()[1].Guid;
                 }
             }
             if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))

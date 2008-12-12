@@ -47,8 +47,6 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.Workingdir = new System.Windows.Forms.Label();
             this.CurrentBranch = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Branches = new System.Windows.Forms.ComboBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,11 +70,12 @@
             this.gitGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -97,8 +96,8 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // GitTree
@@ -293,8 +292,6 @@
             // 
             this.splitContainer2.Panel1.Controls.Add(this.Workingdir);
             this.splitContainer2.Panel1.Controls.Add(this.CurrentBranch);
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
-            this.splitContainer2.Panel1.Controls.Add(this.Branches);
             // 
             // splitContainer2.Panel2
             // 
@@ -306,7 +303,7 @@
             // Workingdir
             // 
             this.Workingdir.AutoSize = true;
-            this.Workingdir.Location = new System.Drawing.Point(500, 12);
+            this.Workingdir.Location = new System.Drawing.Point(198, 10);
             this.Workingdir.Name = "Workingdir";
             this.Workingdir.Size = new System.Drawing.Size(10, 13);
             this.Workingdir.TabIndex = 3;
@@ -316,28 +313,10 @@
             // CurrentBranch
             // 
             this.CurrentBranch.AutoSize = true;
-            this.CurrentBranch.Location = new System.Drawing.Point(314, 12);
+            this.CurrentBranch.Location = new System.Drawing.Point(12, 10);
             this.CurrentBranch.Name = "CurrentBranch";
             this.CurrentBranch.Size = new System.Drawing.Size(0, 13);
             this.CurrentBranch.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Branch";
-            // 
-            // Branches
-            // 
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(61, 9);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(247, 21);
-            this.Branches.TabIndex = 0;
-            this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 
             // menuStrip1
             // 
@@ -512,6 +491,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gitcommandLogToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -520,13 +500,17 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // gitRevisionBindingSource
+            // RevisionGrid
             // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(524, 139);
+            this.RevisionGrid.TabIndex = 0;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -547,13 +531,16 @@
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
-            // RevisionGrid
+            // gitRevisionBindingSource
             // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(524, 139);
-            this.RevisionGrid.TabIndex = 0;
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // gitcommandLogToolStripMenuItem
+            // 
+            this.gitcommandLogToolStripMenuItem.Name = "gitcommandLogToolStripMenuItem";
+            this.gitcommandLogToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.gitcommandLogToolStripMenuItem.Text = "Gitcommand log";
+            this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.gitcommandLogToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -588,8 +575,8 @@
             this.splitContainer2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -600,8 +587,6 @@
         private System.Windows.Forms.TreeView GitTree;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -644,5 +629,6 @@
         private System.Windows.Forms.Label Workingdir;
         private System.Windows.Forms.ToolStripMenuItem formatPatchToolStripMenuItem;
         private RevisionGrid RevisionGrid;
+        private System.Windows.Forms.ToolStripMenuItem gitcommandLogToolStripMenuItem;
     }
 }

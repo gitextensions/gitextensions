@@ -31,26 +31,22 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFormatPath));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.Revisions = new System.Windows.Forms.DataGridView();
+            this.Browse = new System.Windows.Forms.Button();
+            this.OutputPath = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.CurrentBranch = new System.Windows.Forms.Label();
             this.SelectedBranch = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.OutputPath = new System.Windows.Forms.TextBox();
-            this.Browse = new System.Windows.Forms.Button();
-            this.FormatPatch = new System.Windows.Forms.Button();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.FormatPatch = new System.Windows.Forms.Button();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Committer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -78,44 +74,31 @@
             this.splitContainer1.SplitterDistance = 76;
             this.splitContainer1.TabIndex = 0;
             // 
-            // splitContainer2
+            // Browse
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.Browse.Location = new System.Drawing.Point(663, 40);
+            this.Browse.Name = "Browse";
+            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.TabIndex = 8;
+            this.Browse.Text = "Browse";
+            this.Browse.UseVisualStyleBackColor = true;
+            this.Browse.Click += new System.EventHandler(this.Browse_Click);
             // 
-            // splitContainer2.Panel1
+            // OutputPath
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.Revisions);
+            this.OutputPath.Location = new System.Drawing.Point(108, 43);
+            this.OutputPath.Name = "OutputPath";
+            this.OutputPath.Size = new System.Drawing.Size(549, 20);
+            this.OutputPath.TabIndex = 7;
             // 
-            // splitContainer2.Panel2
+            // label2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.FormatPatch);
-            this.splitContainer2.Size = new System.Drawing.Size(750, 270);
-            this.splitContainer2.SplitterDistance = 232;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // Revisions
-            // 
-            this.Revisions.AllowUserToAddRows = false;
-            this.Revisions.AllowUserToDeleteRows = false;
-            this.Revisions.AutoGenerateColumns = false;
-            this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Message,
-            this.Author,
-            this.Committer});
-            this.Revisions.DataSource = this.gitRevisionBindingSource;
-            this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Revisions.Location = new System.Drawing.Point(0, 0);
-            this.Revisions.Name = "Revisions";
-            this.Revisions.ReadOnly = true;
-            this.Revisions.RowHeadersVisible = false;
-            this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Revisions.Size = new System.Drawing.Size(750, 232);
-            this.Revisions.TabIndex = 0;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 46);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Save patches in";
             // 
             // CurrentBranch
             // 
@@ -134,31 +117,28 @@
             this.SelectedBranch.TabIndex = 4;
             this.SelectedBranch.Text = "Branch";
             // 
-            // label2
+            // splitContainer2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 46);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Save patches in";
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // OutputPath
+            // splitContainer2.Panel1
             // 
-            this.OutputPath.Location = new System.Drawing.Point(108, 43);
-            this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(549, 20);
-            this.OutputPath.TabIndex = 7;
+            this.splitContainer2.Panel1.Controls.Add(this.RevisionGrid);
             // 
-            // Browse
+            // splitContainer2.Panel2
             // 
-            this.Browse.Location = new System.Drawing.Point(663, 40);
-            this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
-            this.Browse.TabIndex = 8;
-            this.Browse.Text = "Browse";
-            this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.splitContainer2.Panel2.Controls.Add(this.FormatPatch);
+            this.splitContainer2.Size = new System.Drawing.Size(750, 270);
+            this.splitContainer2.SplitterDistance = 232;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // gitRevisionBindingSource
+            // 
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
             // FormatPatch
             // 
@@ -170,35 +150,17 @@
             this.FormatPatch.UseVisualStyleBackColor = true;
             this.FormatPatch.Click += new System.EventHandler(this.FormatPatch_Click);
             // 
-            // gitRevisionBindingSource
-            // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
-            // Message
+            // RevisionGrid
             // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.DataPropertyName = "Message";
-            this.Message.HeaderText = "Message";
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            // 
-            // Author
-            // 
-            this.Author.DataPropertyName = "Author";
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            // 
-            // Committer
-            // 
-            this.Committer.DataPropertyName = "Committer";
-            this.Committer.HeaderText = "Committer";
-            this.Committer.Name = "Committer";
-            this.Committer.ReadOnly = true;
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(750, 232);
+            this.RevisionGrid.TabIndex = 0;
             // 
             // FormFormatPath
             // 
@@ -217,7 +179,6 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -228,7 +189,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.DataGridView Revisions;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.Label CurrentBranch;
@@ -237,8 +197,6 @@
         private System.Windows.Forms.TextBox OutputPath;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button FormatPatch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Committer;
+        private RevisionGrid RevisionGrid;
     }
 }

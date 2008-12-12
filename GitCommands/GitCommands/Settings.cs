@@ -28,5 +28,7 @@ namespace GitCommands
                 workingdir = GitCommands.FindGitWorkingDir(value);
             }
         }
+
+        public static string GitLog { get; set; }
     }
 }

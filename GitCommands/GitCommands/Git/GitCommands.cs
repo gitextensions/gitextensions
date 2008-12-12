@@ -34,6 +34,7 @@ namespace GitCommands
 
         public static void RunRealCmd(string cmd, string arguments)
         {
+            Settings.GitLog += cmd + " " + arguments + "\n";
             //process used to execute external commands
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -57,6 +58,7 @@ namespace GitCommands
 
         public static void RunRealCmdDetatched(string cmd, string arguments)
         {
+            Settings.GitLog += cmd + " " + arguments + "\n";
             //process used to execute external commands
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -79,6 +81,7 @@ namespace GitCommands
 
         public static void Run(string cmd, string arguments)
         {
+            Settings.GitLog += cmd + " " + arguments + "\n";
             //process used to execute external commands
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -104,6 +107,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
+            Settings.GitLog += cmd + " " + arguments + "\n";
             //process used to execute external commands
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -143,6 +147,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static Process RunCmdAsync(string cmd, string arguments)
         {
+            Settings.GitLog += cmd + " " + arguments + "\n";
             //process used to execute external commands
 
             Process process = new System.Diagnostics.Process();
@@ -366,7 +371,7 @@ namespace GitCommands
         {
             List<GitHead> heads = GetHeads(true);
 
-            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
+            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --all --date-order --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
 
             string[] itemsStrings = tree.Split('\n');
             

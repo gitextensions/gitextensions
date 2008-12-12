@@ -71,11 +71,11 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(411, 3);
+            this.Ok.Location = new System.Drawing.Point(592, 5);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 1;
-            this.Ok.Text = "Branch";
+            this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
@@ -83,7 +83,7 @@
             // 
             this.BName.Location = new System.Drawing.Point(72, 5);
             this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(204, 20);
+            this.BName.Size = new System.Drawing.Size(227, 20);
             this.BName.TabIndex = 0;
             // 
             // RevisionGrid

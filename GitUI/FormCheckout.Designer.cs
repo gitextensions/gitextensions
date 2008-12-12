@@ -52,15 +52,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(470, 286);
-            this.splitContainer1.SplitterDistance = 255;
+            this.splitContainer1.Size = new System.Drawing.Size(699, 456);
+            this.splitContainer1.SplitterDistance = 425;
             this.splitContainer1.TabIndex = 0;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(392, 3);
+            this.Ok.Location = new System.Drawing.Point(299, 4);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 20);
+            this.Ok.Size = new System.Drawing.Size(86, 20);
             this.Ok.TabIndex = 2;
             this.Ok.Text = "Checkout";
             this.Ok.UseVisualStyleBackColor = true;
@@ -71,18 +71,18 @@
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(470, 255);
+            this.RevisionGrid.Size = new System.Drawing.Size(699, 425);
             this.RevisionGrid.TabIndex = 0;
             // 
             // FormCheckout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(470, 286);
+            this.ClientSize = new System.Drawing.Size(699, 456);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCheckout";
-            this.Text = "Checkout";
+            this.Text = "Checkout revision";
             this.Load += new System.EventHandler(this.FormCheckout_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

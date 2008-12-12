@@ -46,18 +46,8 @@ namespace GitUI
         {
             GitTree.Nodes.Clear();
 
-            Branches.DisplayMember = "Name";
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = "Current branch: " + selectedHead;
-            List<GitHead> heads = GitCommands.GitCommands.GetHeads(false);
-            Branches.DataSource = heads;
-            foreach (GitHead head in heads)
-            {
-                if (head.Name == selectedHead)
-                    Branches.SelectedItem = head;
-
-            }
-            //Branches.SelectedText = 
 
             ShowRevisions();
 
@@ -108,20 +98,6 @@ namespace GitUI
             //item.SubItems = GitCommands.GitCommands.GetTree(item.Guid);
             LoadInTree(item.SubItems, e.Node.Nodes);
 
-        }
-
-        private void Branches_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Branches.SelectedItem is GitHead)
-            {
-                //GitHead head = (GitHead)Branches.SelectedItem;
-
-                //List<GitItem> items = GitCommands.GitCommands.GetTree(head.Guid);
-                //GitTree.Nodes.Clear();
-
-                //LoadInTreeSingle(head, GitTree.Nodes);
-                ShowRevisions();
-            }
         }
 
         private void RevisionGrid_SelectionChanged(object sender, EventArgs e)
@@ -363,6 +339,11 @@ namespace GitUI
         private void formatPatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormFormatPath().ShowDialog();
+        }
+
+        private void gitcommandLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new GitLogForm().ShowDialog();
         }
 
 
