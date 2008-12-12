@@ -180,6 +180,11 @@ namespace GitUI
                             if (c == '*')
                             {
                                 graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
+
+                                if (r == 0 && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
+                                {
+                                    graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
+                                }
                             }
                             if (c != '|' && c != '*')
                             {
@@ -187,29 +192,38 @@ namespace GitUI
                             }
                             if (c == '\\')
                             {
-                                if ((nextLine.Length > nc + 2 && nextLine[nc + 2] != '\\') || nextLine.Length <= nc + 2)
+                                if ((nextLine.Length > nc && nextLine[nc] == '/' || nextLine.Length <= nc) ||
+                                    (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc))
                                 {
-                                    //draw: 
-                                    //      \
-                                    graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom + (height / 2));
-                                }
-                                if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
-                                {
-                                    //draw: _
-                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
                                 }
                                 else
                                 {
-                                    // draw: \_
-                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left, bottom);
-                                    graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    if ((nextLine.Length > nc + 2 && nextLine[nc + 2] != '\\') || nextLine.Length <= nc + 2)
+                                    {
+                                        //draw: 
+                                        //      \
+                                        graph.DrawLine(new Pen(Color.Red), right, bottom, right + (width / 2), bottom + (height / 2));
+                                    }
+                                    if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
+                                    {
+                                        //draw: _
+                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    }
+                                    else
+                                    {
+                                        // draw: \_
+                                        graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left, bottom);
+                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                    }
                                 }
                             }
                             if (c == '/')
                             {
-                                if ((lastLine.Length > nc && lastLine[nc] != '\\' || lastLine.Length <= nc))// ||
-                                    //(nextLine.Length > nc && lastLine[nc] != '\\' || lastLine.Length <= nc))
+                                if ((nextLine.Length > nc && nextLine[nc] == '\\' || nextLine.Length <= nc) ||
+                                    (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc))
                                 {
+                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
                                 }
                                 else
                                 {
