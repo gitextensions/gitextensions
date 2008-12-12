@@ -188,10 +188,15 @@ namespace GitCommands
             return result;
         }
 
+        static public string Branch(string branchName, string revision)
+        {
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "branch \"" + branchName + "\" \"" + revision + "\"");
+
+            return result;
+        }
+
         static public string Push(string path)
         {
-            Directory.SetCurrentDirectory(Settings.WorkingDir);
-
             string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "push \"" + path + "\"");
 
             return result;
@@ -199,8 +204,6 @@ namespace GitCommands
 
         static public Process PushAsync(string path)
         {
-            Directory.SetCurrentDirectory(Settings.WorkingDir);
-
             return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push \"" + path + "\"");
 
         }
@@ -419,6 +422,16 @@ namespace GitCommands
                 if (line.IndexOf("Date:   ") > 0)
                 {
                     revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8);
+                    if (line.LastIndexOfAny(graphChars) >= 0)
+                        revision.GraphLines.Add(line.Substring(0, graphIndex));
+                    n++;
+                    if (itemsStrings.Count() == n) break;
+                }
+                line = itemsStrings[n];
+
+                if (line.IndexOf("Parents:") > 0)
+                {
+                    revision.ParentGuids = line.Substring(line.LastIndexOf("Parents:") + 8).Split(' ').ToList();
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;

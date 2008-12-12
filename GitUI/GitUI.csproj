@@ -146,6 +146,12 @@
       <DependentUpon>MergePatch.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevisionGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RevisionGrid.Designer.cs">
+      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutBox.resx">
@@ -192,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MergePatch.resx">
       <DependentUpon>MergePatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevisionGrid.resx">
+      <DependentUpon>RevisionGrid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

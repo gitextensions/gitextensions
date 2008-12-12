@@ -19,13 +19,16 @@ namespace GitUI
         {
             try
             {
-                OutPut.Text = "";
-                BranchDto dto = new BranchDto(BName.Text);
-                GitCommands.Branch commit = new GitCommands.Branch(dto);
-                commit.Execute();
 
-                OutPut.Text = "Command executed \n" + dto.Result;
-                
+                if (RevisionGrid.GetRevisions().Count != 1)
+                {
+                    MessageBox.Show("Select 1 revision to create the branch on.", "Branch");
+                    return;
+                }
+
+                MessageBox.Show("Command executed \n" + GitCommands.GitCommands.Branch(BName.Text, RevisionGrid.GetRevisions()[0].Guid), "Branch");
+
+                RevisionGrid.RefreshRevisions();
             }
             catch
             {

@@ -96,7 +96,7 @@ namespace GitUI
 
         private void ShowRevisions()
         {
-            List<GitRevision> revisions = GitCommands.GitCommands.GitRevisions(Branches.Text);
+            List<GitRevision> revisions = GitCommands.GitCommands.GitRevisionGraph();
 
             if (revisions.Count > 0)
                 LoadInTreeSingle(revisions[0], GitTree.Nodes);
@@ -106,7 +106,7 @@ namespace GitUI
                 Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
 
 
-                revisions = GitCommands.GitCommands.GitRevisionGraph();
+                //revisions = GitCommands.GitCommands.GitRevisionGraph();
 
                 int height = 22;
                 int width = 8;
@@ -276,29 +276,6 @@ namespace GitUI
                                     graph.DrawLine(new Pen(Color.Red), hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
                                 }
 
-                                //if ((c == '|') && nLine != 1 || (c == '*'))
-                                //{
-                                //    if (((lastLine.Length > nc && lastLine[nc] == '|') ||
-                                //        (lastLine.Length > nc && lastLine[nc] == '*')) &&
-                                //        (nc - 1 < 0 ||
-                                //       ((nc - 1 >= 0 && lastLine.Length > nc - 1 && lastLine[nc - 1] != '\\') ||
-                                //        (lastLine.Length > nc + 1 && lastLine[nc + 1] != '/')))
-
-                                //        )
-                                //    {
-                                //        graph.DrawLine(new Pen(Color.Red), hcenter, top, hcenter, vcenter);
-                                //    }
-                                //    if (((nextLine.Length > nc && nextLine[nc] == '|') ||
-                                //        (nextLine.Length > nc && nextLine[nc] == '*')) &&
-                                //        (nc - 1 < 0 ||
-                                //       ((nc - 1 >= 0 && lastLine.Length > nc - 1 && lastLine[nc - 1] != '\\') ||
-                                //        (lastLine.Length > nc + 1 && lastLine[nc + 1] != '/'))))                                   //(currentLine.Length > nc + 1 && currentLine[nc + 1] == '\\') ||
-                                //    //(nc - 1 > 0 && currentLine.Length > nc - 1 && currentLine[nc - 1] == '/') ||
-                                //    {
-                                //        graph.DrawLine(new Pen(Color.Red), hcenter, vcenter, hcenter, bottom);
-                                //    }
-
-                                //}
                             }
                         }
                         lastLine = currentLine;
@@ -308,9 +285,6 @@ namespace GitUI
 
                     }
                 }
-
-                //graphImage.Save(@"c:\temp\graph.bmp");
-                //graphImage.RotateFlip(RotateFlipType.Rotate180FlipY);
             }
         }
 
