@@ -170,7 +170,10 @@ namespace GitCommands
             return process;
         }
 
-
+        static public bool InTheMiddleOfConflictedMerge()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
+        }
 
         static public void RunGui()
         {
@@ -181,6 +184,11 @@ namespace GitCommands
         static public void RunBash()
         {
             RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
+        }
+
+        static public string GetCurrentCheckout()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "log -g -1 HEAD --pretty=format:%H");
         }
 
         static public string Stash()

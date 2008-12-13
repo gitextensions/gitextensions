@@ -45,6 +45,8 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
+            string currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
+
             List<GitRevision> revisions = GitCommands.GitCommands.GitRevisionGraph();
 
             {
@@ -118,7 +120,10 @@ namespace GitUI
 
                             if (c == '*')
                             {
-                                graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
+                                if (revision.Guid == currentCheckout)
+                                    graph.FillEllipse(new SolidBrush(Color.Blue), hcenter - 4, vcenter - 4, 8, 8);
+                                else
+                                    graph.FillEllipse(new SolidBrush(Color.Red), hcenter - 3, vcenter - 3, 6, 6);
 
                                 if (/*r == 0 &&*/ nextRevision != null && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
                                 {

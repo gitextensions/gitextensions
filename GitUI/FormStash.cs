@@ -112,6 +112,12 @@ namespace GitUI
         private void Apply_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
+
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                if (MessageBox.Show("There where mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
+            }
             Initialize();
         }
     }

@@ -90,7 +90,7 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool --tool=kdiff3");
+            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
 
             if (MessageBox.Show("Resolved all conflicts? Run resolved?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {

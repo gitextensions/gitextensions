@@ -50,6 +50,11 @@ namespace GitUI
             ShowRevisions();
 
             Workingdir.Text = "Working dir: " + GitCommands.Settings.WorkingDir;
+
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+                WarningText.Text = "There are unresolved merge conflicts!";
+            else
+                WarningText.Text = "";
         }
 
         private void ShowRevisions()
@@ -314,6 +319,28 @@ namespace GitUI
         {
             new FormStash().ShowDialog();
             Initialize();
+        }
+
+        private void runMergetoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
+            Initialize();
+        }
+
+        private void WarningText_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
+            Initialize();
+        }
+
+        private void Workingdir_Click(object sender, EventArgs e)
+        {
+            openToolStripMenuItem_Click(sender, e);
+        }
+
+        private void CurrentBranch_Click(object sender, EventArgs e)
+        {
+
         }
 
 
