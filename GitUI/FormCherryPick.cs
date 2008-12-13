@@ -26,7 +26,7 @@ namespace GitUI
 
 
 
-            MessageBox.Show("Command executed \n" + GitCommands.GitCommands.CherryPick(RevisionGrid.GetRevisions()[0].Guid), "Cherry pick");
+            MessageBox.Show("Command executed \n" + GitCommands.GitCommands.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {

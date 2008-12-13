@@ -32,8 +32,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
-            this.RevisionGrid = new GitUI.RevisionGrid();
             this.CherryPick = new System.Windows.Forms.Button();
+            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.AutoCommit = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -56,6 +57,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.AutoCommit);
             this.splitContainer1.Panel2.Controls.Add(this.CherryPick);
             this.splitContainer1.Size = new System.Drawing.Size(638, 387);
             this.splitContainer1.SplitterDistance = 351;
@@ -90,14 +92,6 @@
             this.label1.Text = "Select a commit you want to cherry pick. The commit will be recommitted on top of" +
                 " the current head.";
             // 
-            // RevisionGrid
-            // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(638, 322);
-            this.RevisionGrid.TabIndex = 0;
-            // 
             // CherryPick
             // 
             this.CherryPick.Location = new System.Drawing.Point(525, 3);
@@ -107,6 +101,26 @@
             this.CherryPick.Text = "Cherry pick";
             this.CherryPick.UseVisualStyleBackColor = true;
             this.CherryPick.Click += new System.EventHandler(this.CherryPick_Click);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(638, 322);
+            this.RevisionGrid.TabIndex = 0;
+            // 
+            // AutoCommit
+            // 
+            this.AutoCommit.AutoSize = true;
+            this.AutoCommit.Checked = true;
+            this.AutoCommit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoCommit.Location = new System.Drawing.Point(12, 7);
+            this.AutoCommit.Name = "AutoCommit";
+            this.AutoCommit.Size = new System.Drawing.Size(332, 17);
+            this.AutoCommit.TabIndex = 1;
+            this.AutoCommit.Text = "Automatically create a commit  when there are no merge conflicts";
+            this.AutoCommit.UseVisualStyleBackColor = true;
             // 
             // FormCherryPick
             // 
@@ -119,6 +133,7 @@
             this.Text = "Cherry pick";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
@@ -135,5 +150,6 @@
         private System.Windows.Forms.Label label1;
         private RevisionGrid RevisionGrid;
         private System.Windows.Forms.Button CherryPick;
+        private System.Windows.Forms.CheckBox AutoCommit;
     }
 }

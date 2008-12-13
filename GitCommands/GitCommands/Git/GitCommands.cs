@@ -186,9 +186,12 @@ namespace GitCommands
             RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
         }
 
-        static public string CherryPick(string cherry)
+        static public string CherryPick(string cherry, bool commit)
         {
-            return RunCmd(Settings.GitDir + "git.exe", "cherry-pick \"" + cherry + "\"");
+            if (commit)
+                return RunCmd(Settings.GitDir + "git.exe", "cherry-pick \"" + cherry + "\"");
+            else
+                return RunCmd(Settings.GitDir + "git.exe", "cherry-pick --no-commit \"" + cherry + "\"");
         }
 
 
@@ -303,7 +306,7 @@ namespace GitCommands
         public void SetGlobalSetting(string setting, string value)
         {
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global --unset-all " + setting);
-            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global " + setting + " \"" + value + "\"");
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global " + setting + " \"" + value.Trim() + "\"");
         }
 
         static public string GetSetting(string setting)
@@ -314,7 +317,7 @@ namespace GitCommands
         static public void SetSetting(string setting, string value)
         {
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --unset-all " + setting);
-            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value + "\"");
+            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value.Trim() + "\"");
         }
 
         static public List<Patch> GetStashedItems()
