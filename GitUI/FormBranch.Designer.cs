@@ -30,10 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBranch));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.Checkout = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -53,12 +54,21 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.Checkout);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
             this.splitContainer1.Panel2.Controls.Add(this.BName);
             this.splitContainer1.Size = new System.Drawing.Size(712, 484);
             this.splitContainer1.SplitterDistance = 445;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
+            this.RevisionGrid.TabIndex = 0;
             // 
             // label1
             // 
@@ -86,13 +96,15 @@
             this.BName.Size = new System.Drawing.Size(227, 20);
             this.BName.TabIndex = 0;
             // 
-            // RevisionGrid
+            // Checkout
             // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
-            this.RevisionGrid.TabIndex = 0;
+            this.Checkout.Location = new System.Drawing.Point(483, 5);
+            this.Checkout.Name = "Checkout";
+            this.Checkout.Size = new System.Drawing.Size(103, 23);
+            this.Checkout.TabIndex = 3;
+            this.Checkout.Text = "Checkout branch";
+            this.Checkout.UseVisualStyleBackColor = true;
+            this.Checkout.Click += new System.EventHandler(this.Checkout_Click);
             // 
             // FormBranch
             // 
@@ -118,5 +130,6 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.TextBox BName;
         private RevisionGrid RevisionGrid;
+        private System.Windows.Forms.Button Checkout;
     }
 }

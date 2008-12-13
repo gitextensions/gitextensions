@@ -37,7 +37,6 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.Commits = new System.Windows.Forms.TabPage();
-            this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.FileChanges = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -79,6 +78,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -192,16 +192,6 @@
             this.Commits.TabIndex = 0;
             this.Commits.Text = "Commits";
             this.Commits.UseVisualStyleBackColor = true;
-            // 
-            // RevisionGrid
-            // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(736, 182);
-            this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
-            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
             // 
             // tabPage4
             // 
@@ -353,10 +343,10 @@
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addFilesToolStripMenuItem,
             this.applyPatchToolStripMenuItem,
-            this.branchToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutToolStripMenuItem,
             this.cherryPickToolStripMenuItem,
+            this.branchToolStripMenuItem,
             this.deleteBranchToolStripMenuItem,
             this.cloneToolStripMenuItem,
             this.commitToolStripMenuItem,
@@ -392,7 +382,7 @@
             // 
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.branchToolStripMenuItem.Text = "Branch";
+            this.branchToolStripMenuItem.Text = "Create branch";
             this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
             // 
             // checkoutBranchToolStripMenuItem
@@ -557,6 +547,16 @@
             this.mergeBranchToolStripMenuItem.Text = "Merge branches";
             this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.mergeBranchToolStripMenuItem_Click);
             // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(736, 182);
+            this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
+            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -567,6 +567,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormBrowse";
             this.Text = "Browse";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Browse_Load);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
