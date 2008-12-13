@@ -139,6 +139,12 @@
     <Compile Include="FormFormatPath.Designer.cs">
       <DependentUpon>FormFormatPath.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMergeBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMergeBranch.Designer.cs">
+      <DependentUpon>FormMergeBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPull.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,6 +182,11 @@
       <DependentUpon>MergePatch.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RevisionGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -226,6 +237,9 @@
     <EmbeddedResource Include="FormFormatPath.resx">
       <DependentUpon>FormFormatPath.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormMergeBranch.resx">
+      <DependentUpon>FormMergeBranch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +257,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MergePatch.resx">
       <DependentUpon>MergePatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>

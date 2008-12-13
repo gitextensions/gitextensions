@@ -76,8 +76,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Clear);
-            this.splitContainer1.Size = new System.Drawing.Size(710, 407);
-            this.splitContainer1.SplitterDistance = 372;
+            this.splitContainer1.Size = new System.Drawing.Size(727, 499);
+            this.splitContainer1.SplitterDistance = 464;
             this.splitContainer1.TabIndex = 0;
             // 
             // Clear
@@ -123,8 +123,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.View);
-            this.splitContainer2.Size = new System.Drawing.Size(710, 372);
-            this.splitContainer2.SplitterDistance = 236;
+            this.splitContainer2.Size = new System.Drawing.Size(727, 464);
+            this.splitContainer2.SplitterDistance = 242;
             this.splitContainer2.TabIndex = 0;
             // 
             // splitContainer3
@@ -141,8 +141,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer3.Size = new System.Drawing.Size(236, 372);
-            this.splitContainer3.SplitterDistance = 172;
+            this.splitContainer3.Size = new System.Drawing.Size(242, 464);
+            this.splitContainer3.SplitterDistance = 214;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -160,7 +160,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Changes);
-            this.splitContainer4.Size = new System.Drawing.Size(236, 172);
+            this.splitContainer4.Size = new System.Drawing.Size(242, 214);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 0;
             // 
@@ -179,7 +179,7 @@
             this.Changes.FormattingEnabled = true;
             this.Changes.Location = new System.Drawing.Point(0, 0);
             this.Changes.Name = "Changes";
-            this.Changes.Size = new System.Drawing.Size(236, 134);
+            this.Changes.Size = new System.Drawing.Size(242, 173);
             this.Changes.TabIndex = 0;
             this.Changes.SelectedIndexChanged += new System.EventHandler(this.Changes_SelectedIndexChanged);
             // 
@@ -198,7 +198,7 @@
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Stashed);
-            this.splitContainer5.Size = new System.Drawing.Size(236, 196);
+            this.splitContainer5.Size = new System.Drawing.Size(242, 246);
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 0;
             // 
@@ -217,7 +217,7 @@
             this.Stashed.FormattingEnabled = true;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(236, 160);
+            this.Stashed.Size = new System.Drawing.Size(242, 212);
             this.Stashed.TabIndex = 0;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.Stashed_SelectedIndexChanged);
             // 
@@ -227,15 +227,14 @@
             this.View.IsReadOnly = false;
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(470, 372);
+            this.View.Size = new System.Drawing.Size(481, 464);
             this.View.TabIndex = 0;
-            this.View.Text = "textEditorControl1";
             // 
             // FormStash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 407);
+            this.ClientSize = new System.Drawing.Size(727, 499);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormStash";

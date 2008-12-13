@@ -37,10 +37,10 @@
             this.CurrentBranch = new System.Windows.Forms.Label();
             this.SelectedBranch = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.FormatPatch = new System.Windows.Forms.Button();
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.RevisionGrid = new GitUI.RevisionGrid();
+            this.FormatPatch = new System.Windows.Forms.Button();
+            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -136,24 +136,6 @@
             this.splitContainer2.SplitterDistance = 232;
             this.splitContainer2.TabIndex = 0;
             // 
-            // gitRevisionBindingSource
-            // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // FormatPatch
-            // 
-            this.FormatPatch.Location = new System.Drawing.Point(653, 4);
-            this.FormatPatch.Name = "FormatPatch";
-            this.FormatPatch.Size = new System.Drawing.Size(94, 23);
-            this.FormatPatch.TabIndex = 0;
-            this.FormatPatch.Text = "Create patches";
-            this.FormatPatch.UseVisualStyleBackColor = true;
-            this.FormatPatch.Click += new System.EventHandler(this.FormatPatch_Click);
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
-            // 
             // RevisionGrid
             // 
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -161,6 +143,24 @@
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(750, 232);
             this.RevisionGrid.TabIndex = 0;
+            // 
+            // FormatPatch
+            // 
+            this.FormatPatch.Location = new System.Drawing.Point(639, 4);
+            this.FormatPatch.Name = "FormatPatch";
+            this.FormatPatch.Size = new System.Drawing.Size(108, 23);
+            this.FormatPatch.TabIndex = 0;
+            this.FormatPatch.Text = "Create patch(es)";
+            this.FormatPatch.UseVisualStyleBackColor = true;
+            this.FormatPatch.Click += new System.EventHandler(this.FormatPatch_Click);
+            // 
+            // gitRevisionBindingSource
+            // 
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // gitItemBindingSource
+            // 
+            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // FormFormatPath
             // 

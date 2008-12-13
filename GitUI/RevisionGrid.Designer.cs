@@ -56,6 +56,8 @@
             this.Revisions.Name = "Revisions";
             this.Revisions.ReadOnly = true;
             this.Revisions.RowHeadersVisible = false;
+            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.TabIndex = 0;
@@ -92,7 +94,7 @@
             this.dateDataGridViewTextBoxColumn.HeaderText = "Date";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 150;
+            this.dateDataGridViewTextBoxColumn.Width = 180;
             // 
             // RevisionGrid
             // 

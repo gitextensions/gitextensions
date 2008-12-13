@@ -329,7 +329,17 @@ namespace GitUI
 
         private void WarningText_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                if (MessageBox.Show("There are unresolved mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
+                    if (MessageBox.Show("When all mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        new FormCommit().ShowDialog();
+                    }
+                }
+            } 
             Initialize();
         }
 
@@ -357,6 +367,12 @@ namespace GitUI
         private void cherryPickToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormCherryPick().ShowDialog();
+            Initialize();
+        }
+
+        private void mergeBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormMergeBranch().ShowDialog();
             Initialize();
         }
 

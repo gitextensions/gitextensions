@@ -131,6 +131,7 @@ namespace GitUI
                 if (MessageBox.Show("Are you really sure you want to DELETE all changes?", "WARNING! WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     OutPut.Text = GitCommands.GitCommands.Reset();
+                    Initialize();
                 }
             }
         }

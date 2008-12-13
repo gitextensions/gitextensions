@@ -35,5 +35,10 @@ namespace GitUI
             {
             }
         }
+
+        private void FormCheckoutBranck_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

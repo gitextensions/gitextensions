@@ -53,14 +53,13 @@ namespace GitUI
                 Revisions.DataSource = revisions;
                 Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
 
-                int height = 22;
+                int height = Revisions.RowTemplate.Height;
                 int width = 8;
                 int y = -height;
 
-                graphImage = new Bitmap(500, (revisions.Count * height) + 50, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                graphImage = new Bitmap(1000, (revisions.Count * height) + 50, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                 Graphics graph = Graphics.FromImage(graphImage);
-                graph.Clear(Color.White);
-
+                //graph.Clear(Color.White);
 
                 string lastlastLine = "";
                 string lastLine = "";
@@ -246,8 +245,14 @@ namespace GitUI
         {
             if (e.ColumnIndex == 0 && e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
             {
-                e.Graphics.DrawImage(graphImage, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Y + e.CellBounds.Height);
-                e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, e.RowIndex * 22, 100, 22), GraphicsUnit.Pixel);
+                //e.Graphics.DrawImage(graphImage, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Y + e.CellBounds.Height);
+                
+                if ((e.State & DataGridViewElementStates.Selected) != 0)
+                    e.Graphics.FillRectangle(new SolidBrush(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor), e.CellBounds);
+                else
+                    e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+
+                e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, e.RowIndex * Revisions.RowTemplate.Height, e.CellBounds.Width, Revisions.RowTemplate.Height), GraphicsUnit.Pixel);
                 e.Handled = true;
             }
         }

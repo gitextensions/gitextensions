@@ -72,6 +72,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCheckoutBranck";
             this.Text = "Checkout branch";
+            this.Load += new System.EventHandler(this.FormCheckoutBranck_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

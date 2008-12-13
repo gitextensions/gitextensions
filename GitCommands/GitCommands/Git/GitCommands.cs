@@ -685,5 +685,10 @@ namespace GitCommands
         {
             return RunCmd(Settings.GitDir + "git.exe", "cat-file blob " + id);
         }
+
+        public static string MergeBranch(string branch)
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "merge " + branch);
+        }
     }
 }
