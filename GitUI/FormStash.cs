@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using GitCommands;
+using PatchApply;
+
+namespace GitUI
+{
+    public partial class FormStash : Form
+    {
+        public FormStash()
+        {
+            InitializeComponent();
+        }
+
+        private void FormStash_Load(object sender, EventArgs e)
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus();
+
+            List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
+            List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
+            foreach (GitItemStatus itemStatus in itemStatusList)
+            {
+                if (itemStatus.IsTracked == false)
+                    untrackedItemStatus.Add(itemStatus);
+                else
+                    trackedItemStatus.Add(itemStatus);
+            }
+
+            Changes.DisplayMember = "Name";
+            Changes.DataSource = trackedItemStatus;
+
+            Stashed.DisplayMember = "FileNameA";
+            Stashed.DataSource = GitCommands.GitCommands.GetStashedItems();
+        }
+
+        private void Stashed_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Stashed.SelectedItem is Patch)
+            {
+                ShowPatch((Patch)Stashed.SelectedItem);
+            }
+        }
+
+        private void ShowPatch(Patch patch)
+        {
+            string syntax = "XML";
+            if ((patch.FileNameB.LastIndexOf('.') > 0))
+            {
+                string extension = patch.FileNameB.Substring(patch.FileNameB.LastIndexOf('.') + 1).ToUpper();
+
+                switch (extension)
+                {
+                    case "BAS":
+                    case "VBS":
+                    case "VB":
+                        syntax = "VBNET";
+                        break;
+                    case "CS":
+                        syntax = "C#";
+                        break;
+                    case "CMD":
+                    case "BAT":
+                        syntax = "BAT";
+                        break;
+                    case "C":
+                    case "RC":
+                    case "IDL":
+                    case "H":
+                    case "CPP":
+                        syntax = "C#";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            View.SetHighlighting(syntax);
+
+            View.Text = patch.Text;
+            View.Refresh();
+        }
+
+        private void Changes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EditorOptions.SetSyntax(View, ((GitItemStatus)Changes.SelectedItem).Name);
+            View.Text = GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name);
+            View.Refresh();
+        }
+
+        private void Stash_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
+            Initialize();
+        }
+
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
+            Initialize();
+        }
+
+        private void Apply_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
+            Initialize();
+        }
+    }
+}

@@ -145,6 +145,12 @@
     <Compile Include="FormSettigns.Designer.cs">
       <DependentUpon>FormSettigns.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormStash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormStash.Designer.cs">
+      <DependentUpon>FormStash.cs</DependentUpon>
+    </Compile>
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormStash.resx">
+      <DependentUpon>FormStash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GitLogForm.resx">
       <DependentUpon>GitLogForm.cs</DependentUpon>

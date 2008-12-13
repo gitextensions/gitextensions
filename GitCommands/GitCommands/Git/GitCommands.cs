@@ -170,6 +170,8 @@ namespace GitCommands
             return process;
         }
 
+
+
         static public void RunGui()
         {
             Run(Settings.GitDir + "git.exe", "gui");
@@ -180,6 +182,22 @@ namespace GitCommands
         {
             RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
         }
+
+        static public string Stash()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "stash save");
+        }
+
+        static public string StashApply()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "stash apply");
+        }
+
+        static public string StashClear()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "stash clear");
+        }
+
 
         static public string Reset()
         {
@@ -278,6 +296,14 @@ namespace GitCommands
         {
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --unset-all " + setting);
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value + "\"");
+        }
+
+        static public List<Patch> GetStashedItems()
+        {
+            PatchManager patchManager = new PatchManager();
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "stash show -p"), false);
+
+            return patchManager.patches;
         }
 
         static public Patch GetSingleDiff(string from, string to, string filter)

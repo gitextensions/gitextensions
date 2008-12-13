@@ -310,6 +310,12 @@ namespace GitUI
 
         }
 
+        private void stashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormStash().ShowDialog();
+            Initialize();
+        }
+
 
     }
 }

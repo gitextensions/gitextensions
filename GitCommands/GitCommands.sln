@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "..\GitUI\GitUI.csp
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GitExtensionsSetup", "..\GitExtensionsSetup\GitExtensionsSetup.vdproj", "{AEBEC9EA-5D24-411E-B1AA-858EB0995A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GitCommands.vsmdi
@@ -50,6 +52,10 @@ Global
 		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AEBEC9EA-5D24-411E-B1AA-858EB0995A49}.Debug|Any CPU.ActiveCfg = Debug
 		{AEBEC9EA-5D24-411E-B1AA-858EB0995A49}.Release|Any CPU.ActiveCfg = Release
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

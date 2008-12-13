@@ -85,11 +85,20 @@ namespace GitUI
                         calc[x] = '|';
                     }
 
-                    for (int n = 0; n < revision.GraphLines.Count; n++)
+                    for (int n = 0; n < revision.GraphLines.Count+1; n++)
                     {
                         string nextLine = "";
 
-                        nextLine = revision.GraphLines[n];
+                        if (n < revision.GraphLines.Count)
+                        {
+                            nextLine = revision.GraphLines[n];
+                        }
+                        else
+                        {
+                            if (nextRevision != null)
+                                nextLine = nextRevision.GraphLines[0];
+                        }
+
 
                         nLine++;
 
@@ -124,12 +133,16 @@ namespace GitUI
                             {
                                 calc[nc] = ' ';
                             }
-                            if (c == '\\')
+                            if (c == '\\' && nc % 2 == 1)
                             {
                                 if ((nextLine.Length > nc && nextLine[nc] == '/' || nextLine.Length <= nc) ||
                                     (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc))
                                 {
-                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
+                                    if (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc)
+                                    {
+                                        if (nextLine.Length > nc+1 && nextLine[nc+1] == '|' || nextLine.Length <= nc+1)
+                                            graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
+                                    }
                                 }
                                 else
                                 {
@@ -142,7 +155,7 @@ namespace GitUI
                                     if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
                                     {
                                         //draw: _
-                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                        graph.DrawLine(new Pen(Color.Red), left - width, bottom, right, bottom);
                                     }
                                     else
                                     {
@@ -152,12 +165,16 @@ namespace GitUI
                                     }
                                 }
                             }
-                            if (c == '/')
+                            if (c == '/' && nc % 2 == 1)
                             {
                                 if ((nextLine.Length > nc && nextLine[nc] == '\\' || nextLine.Length <= nc) ||
                                     (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc))
                                 {
-                                    graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
+                                    if (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc)
+                                    {
+                                        if (nextLine.Length > nc-1 && nextLine[nc-1] == '|' || nextLine.Length <= nc-1)
+                                            graph.DrawLine(new Pen(Color.Red), left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
+                                    }
                                 }
                                 else
                                 {
@@ -174,7 +191,7 @@ namespace GitUI
                                     {
                                         //draw: _
                                         //      
-                                        graph.DrawLine(new Pen(Color.Red), left, bottom, right, bottom);
+                                        graph.DrawLine(new Pen(Color.Red), left - width, bottom, right, bottom);
                                     }
                                     else
                                     {
