@@ -633,7 +633,7 @@ namespace GitCommands
                 {
                     item = new GitItem();
 
-                    item.Guid = itemsString.Substring(0, 40);
+                    item.CommitGuid = itemsString.Substring(0, 40);
                     item.Name = itemsString.Substring(41).Trim();
 
                     items.Add(item);

@@ -123,5 +123,20 @@ namespace GitUI
                     DiffText.Refresh();
                 }
         }
+
+        private void RevisionGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            button1_Click(sender, e);
+        }
+
+        private void DiffFiles_DoubleClick(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem is string)
+            {
+                {
+                    new FormFileHistory((string)DiffFiles.SelectedItem).ShowDialog();
+                }
+            }
+        }
     }
 }

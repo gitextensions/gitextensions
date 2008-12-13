@@ -62,6 +62,7 @@ namespace GitUI
                 graph.Clear(Color.White);
 
 
+                string lastlastLine = "";
                 string lastLine = "";
                 string currentLine = "";
 
@@ -186,7 +187,9 @@ namespace GitUI
 
 
 
-                                    if (lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2)
+                                    if ((lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2) ||
+                                        (lastLine.Length > nc + 2 && lastLine[nc + 2] == '/' &&
+                                         lastlastLine.Length > nc + 2 && lastlastLine[nc + 2] == '\\'))
                                     {
                                         //draw: /
                                         //      
@@ -231,6 +234,7 @@ namespace GitUI
 
                             }
                         }
+                        lastlastLine = lastLine;
                         lastLine = currentLine;
                         currentLine = nextLine;
                     }

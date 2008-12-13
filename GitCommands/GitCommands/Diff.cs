@@ -10,11 +10,13 @@ namespace GitCommands
         public string From { get; set; }
         public string To { get; set; }
         public string Result { get; set; }
+        public string FileName { get; set; }
 
-        public DiffDto(string from, string to)
+        public DiffDto(string from, string to, string fileName)
         {
             this.From = from;
             this.To= to;
+            this.FileName = fileName;
         }
     }
 
@@ -28,7 +30,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff " + Dto.From + " " + Dto.To);
+            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff " + Dto.From + ".." + Dto.To + " -- \"" + Dto.FileName + "\"");
         }
     }
 }

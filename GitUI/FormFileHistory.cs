@@ -45,18 +45,32 @@ namespace GitUI
 
             if (FileChanges.SelectedRows.Count == 2)
             {
-                if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
-                    if (FileChanges.SelectedRows[1].DataBoundItem is IGitItem)
+                if (FileChanges.SelectedRows[0].DataBoundItem is GitItem)
+                    if (FileChanges.SelectedRows[1].DataBoundItem is GitItem)
                     {
-                        IGitItem revision1 = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
-                        IGitItem revision2 = (IGitItem)FileChanges.SelectedRows[1].DataBoundItem;
+                        GitItem revision1 = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
+                        GitItem revision2 = (GitItem)FileChanges.SelectedRows[1].DataBoundItem;
 
-                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid));
+                        Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision2.CommitGuid, revision1.FileName));
                         diff.Execute();
                         EditorOptions.SetSyntax(Diff, FileName);
                         Diff.Text = diff.Dto.Result;
                         Diff.Refresh();
                     }
+            }
+            else
+            if (FileChanges.SelectedRows.Count == 1)
+            {
+                if (FileChanges.SelectedRows[0].DataBoundItem is GitItem)
+                {
+                    GitItem revision1 = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
+
+                    Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision1.CommitGuid + "^", FileName));
+                    diff.Execute();
+                    EditorOptions.SetSyntax(Diff, FileName);
+                    Diff.Text = diff.Dto.Result;
+                    Diff.Refresh();
+                }
             }
             else
             {
