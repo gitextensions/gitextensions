@@ -31,6 +31,8 @@ namespace GitUI
                 commit.Execute();
 
                 MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
+
+                RevisionGrid.RefreshRevisions();
             }
             catch
             {

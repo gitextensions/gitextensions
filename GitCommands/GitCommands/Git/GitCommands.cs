@@ -186,6 +186,17 @@ namespace GitCommands
             RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
         }
 
+        static public string CherryPick(string cherry)
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "cherry-pick \"" + cherry + "\"");
+        }
+
+
+        static public string DeleteBranch(string branchName)
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "branch -d \"" + branchName + "\"");
+        }
+
         static public string GetCurrentCheckout()
         {
             return RunCmd(Settings.GitDir + "git.exe", "log -g -1 HEAD --pretty=format:%H");

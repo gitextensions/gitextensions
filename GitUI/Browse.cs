@@ -340,7 +340,24 @@ namespace GitUI
 
         private void CurrentBranch_Click(object sender, EventArgs e)
         {
+            checkoutBranchToolStripMenuItem_Click(sender, e);
+        }
 
+        private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormDeleteBranch().ShowDialog();
+            Initialize();
+        }
+
+        private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void cherryPickToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCherryPick().ShowDialog();
+            Initialize();
         }
 
 

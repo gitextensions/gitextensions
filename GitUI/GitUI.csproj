@@ -103,11 +103,23 @@
     <Compile Include="FormCheckoutBranck.Designer.cs">
       <DependentUpon>FormCheckoutBranck.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCherryPick.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCherryPick.Designer.cs">
+      <DependentUpon>FormCherryPick.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormClone.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormClone.Designer.cs">
       <DependentUpon>FormClone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormDeleteBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDeleteBranch.Designer.cs">
+      <DependentUpon>FormDeleteBranch.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDiff.cs">
       <SubType>Form</SubType>
@@ -196,8 +208,14 @@
     <EmbeddedResource Include="FormCheckoutBranck.resx">
       <DependentUpon>FormCheckoutBranck.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormCherryPick.resx">
+      <DependentUpon>FormCherryPick.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormClone.resx">
       <DependentUpon>FormClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDeleteBranch.resx">
+      <DependentUpon>FormDeleteBranch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDiff.resx">
       <DependentUpon>FormDiff.cs</DependentUpon>

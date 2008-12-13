@@ -30,15 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBrowse));
-            this.GitTree = new System.Windows.Forms.TreeView();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.Commits = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.FileChanges = new System.Windows.Forms.DataGridView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.Workingdir = new System.Windows.Forms.Label();
             this.CurrentBranch = new System.Windows.Forms.Label();
@@ -70,12 +61,27 @@
             this.stashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WarningText = new System.Windows.Forms.Label();
             this.runMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.Commits = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.FileChanges = new System.Windows.Forms.DataGridView();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.GitTree = new System.Windows.Forms.TreeView();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.RevisionGrid = new GitUI.RevisionGrid();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.cherryPickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -83,131 +89,14 @@
             this.Commits.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // GitTree
-            // 
-            this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitTree.Location = new System.Drawing.Point(0, 0);
-            this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(225, 264);
-            this.GitTree.TabIndex = 0;
-            this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
-            this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
-            this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // splitContainer3
-            // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.Controls.Add(this.tabControl2);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(750, 482);
-            this.splitContainer3.SplitterDistance = 214;
-            this.splitContainer3.TabIndex = 1;
-            // 
-            // tabControl2
-            // 
-            this.tabControl2.Controls.Add(this.Commits);
-            this.tabControl2.Controls.Add(this.tabPage4);
-            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl2.Location = new System.Drawing.Point(0, 0);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(750, 214);
-            this.tabControl2.TabIndex = 1;
-            // 
-            // Commits
-            // 
-            this.Commits.Controls.Add(this.RevisionGrid);
-            this.Commits.Location = new System.Drawing.Point(4, 22);
-            this.Commits.Name = "Commits";
-            this.Commits.Padding = new System.Windows.Forms.Padding(3);
-            this.Commits.Size = new System.Drawing.Size(742, 188);
-            this.Commits.TabIndex = 0;
-            this.Commits.Text = "Commits";
-            this.Commits.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.FileChanges);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(530, 145);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "File changes";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // FileChanges
-            // 
-            this.FileChanges.AllowUserToAddRows = false;
-            this.FileChanges.AllowUserToDeleteRows = false;
-            this.FileChanges.AutoGenerateColumns = false;
-            this.FileChanges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.FileChanges.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn,
-            this.guidDataGridViewTextBoxColumn});
-            this.FileChanges.DataSource = this.gitItemBindingSource;
-            this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileChanges.Location = new System.Drawing.Point(3, 3);
-            this.FileChanges.Name = "FileChanges";
-            this.FileChanges.ReadOnly = true;
-            this.FileChanges.RowHeadersVisible = false;
-            this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(524, 139);
-            this.FileChanges.TabIndex = 0;
-            this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
-            this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(521, 264);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.FileText);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(513, 238);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "View";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // FileText
-            // 
-            this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileText.IsReadOnly = false;
-            this.FileText.Location = new System.Drawing.Point(3, 3);
-            this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(507, 232);
-            this.FileText.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -222,6 +111,7 @@
             this.splitContainer2.Panel1.Controls.Add(this.WarningText);
             this.splitContainer2.Panel1.Controls.Add(this.Workingdir);
             this.splitContainer2.Panel1.Controls.Add(this.CurrentBranch);
+            this.splitContainer2.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer2_Panel1_Paint);
             // 
             // splitContainer2.Panel2
             // 
@@ -294,6 +184,8 @@
             this.branchToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutToolStripMenuItem,
+            this.cherryPickToolStripMenuItem,
+            this.deleteBranchToolStripMenuItem,
             this.cloneToolStripMenuItem,
             this.commitToolStripMenuItem,
             this.formatPatchToolStripMenuItem,
@@ -479,6 +371,153 @@
             this.runMergetoolToolStripMenuItem.Text = "Run mergetool";
             this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.runMergetoolToolStripMenuItem_Click);
             // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.tabControl2);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
+            this.splitContainer3.Size = new System.Drawing.Size(750, 482);
+            this.splitContainer3.SplitterDistance = 214;
+            this.splitContainer3.TabIndex = 1;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.Commits);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(750, 214);
+            this.tabControl2.TabIndex = 1;
+            // 
+            // Commits
+            // 
+            this.Commits.Controls.Add(this.RevisionGrid);
+            this.Commits.Location = new System.Drawing.Point(4, 22);
+            this.Commits.Name = "Commits";
+            this.Commits.Padding = new System.Windows.Forms.Padding(3);
+            this.Commits.Size = new System.Drawing.Size(742, 188);
+            this.Commits.TabIndex = 0;
+            this.Commits.Text = "Commits";
+            this.Commits.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.FileChanges);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(742, 188);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "File changes";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // FileChanges
+            // 
+            this.FileChanges.AllowUserToAddRows = false;
+            this.FileChanges.AllowUserToDeleteRows = false;
+            this.FileChanges.AutoGenerateColumns = false;
+            this.FileChanges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.FileChanges.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.nameDataGridViewTextBoxColumn,
+            this.guidDataGridViewTextBoxColumn});
+            this.FileChanges.DataSource = this.gitItemBindingSource;
+            this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileChanges.Location = new System.Drawing.Point(3, 3);
+            this.FileChanges.Name = "FileChanges";
+            this.FileChanges.ReadOnly = true;
+            this.FileChanges.RowHeadersVisible = false;
+            this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.FileChanges.Size = new System.Drawing.Size(736, 182);
+            this.FileChanges.TabIndex = 0;
+            this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
+            this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.GitTree);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainer4.Size = new System.Drawing.Size(750, 264);
+            this.splitContainer4.SplitterDistance = 225;
+            this.splitContainer4.TabIndex = 1;
+            // 
+            // GitTree
+            // 
+            this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GitTree.Location = new System.Drawing.Point(0, 0);
+            this.GitTree.Name = "GitTree";
+            this.GitTree.Size = new System.Drawing.Size(225, 264);
+            this.GitTree.TabIndex = 0;
+            this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
+            this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
+            this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(521, 264);
+            this.tabControl1.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.FileText);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(513, 238);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "View file";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // FileText
+            // 
+            this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileText.IsReadOnly = false;
+            this.FileText.Location = new System.Drawing.Point(3, 3);
+            this.FileText.Name = "FileText";
+            this.FileText.Size = new System.Drawing.Size(507, 232);
+            this.FileText.TabIndex = 0;
+            // 
+            // deleteBranchToolStripMenuItem
+            // 
+            this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
+            this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.deleteBranchToolStripMenuItem.Text = "Delete branch";
+            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchToolStripMenuItem_Click);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.Size = new System.Drawing.Size(736, 182);
+            this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
+            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -502,32 +541,12 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // RevisionGrid
+            // cherryPickToolStripMenuItem
             // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(736, 182);
-            this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
-            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
-            // 
-            // splitContainer4
-            // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            // 
-            // splitContainer4.Panel1
-            // 
-            this.splitContainer4.Panel1.Controls.Add(this.GitTree);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer4.Size = new System.Drawing.Size(750, 264);
-            this.splitContainer4.SplitterDistance = 225;
-            this.splitContainer4.TabIndex = 1;
+            this.cherryPickToolStripMenuItem.Name = "cherryPickToolStripMenuItem";
+            this.cherryPickToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.cherryPickToolStripMenuItem.Text = "Cherry pick";
+            this.cherryPickToolStripMenuItem.Click += new System.EventHandler(this.cherryPickToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -540,6 +559,12 @@
             this.Name = "FormBrowse";
             this.Text = "Browse";
             this.Load += new System.EventHandler(this.Browse_Load);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -547,19 +572,13 @@
             this.Commits.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -613,5 +632,7 @@
         private System.Windows.Forms.Label WarningText;
         private System.Windows.Forms.ToolStripMenuItem runMergetoolToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cherryPickToolStripMenuItem;
     }
 }

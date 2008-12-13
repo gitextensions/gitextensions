@@ -115,7 +115,7 @@ namespace GitUI
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                if (MessageBox.Show("There where mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("There are unresolved mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
             }
             Initialize();
