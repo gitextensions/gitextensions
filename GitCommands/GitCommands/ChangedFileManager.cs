@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 
 namespace GitCommands
@@ -19,9 +19,17 @@ namespace GitCommands
 
         public ChangedFile AddFile(string fileName)
         {
-            var file = (from ChangedFile changedFile in ChangedFiles
-                        where changedFile.FileName == fileName
-                        select changedFile).FirstOrDefault();
+            //var file = (from ChangedFile changedFile in ChangedFiles
+            //            where changedFile.FileName == fileName
+            //            select changedFile).FirstOrDefault();
+
+            ChangedFile file = null;
+            foreach (ChangedFile changedFile in ChangedFiles)
+            {
+                if (changedFile.FileName == fileName)
+                    file = changedFile;
+
+            }
 
             if (file == null)
             {

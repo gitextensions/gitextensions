@@ -30,9 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStash));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Clear = new System.Windows.Forms.Button();
-            this.Apply = new System.Windows.Forms.Button();
-            this.Stash = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -42,6 +39,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
             this.View = new ICSharpCode.TextEditor.TextEditorControl();
+            this.Stash = new System.Windows.Forms.Button();
+            this.Apply = new System.Windows.Forms.Button();
+            this.Clear = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -79,36 +79,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(727, 499);
             this.splitContainer1.SplitterDistance = 464;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // Clear
-            // 
-            this.Clear.Location = new System.Drawing.Point(148, 3);
-            this.Clear.Name = "Clear";
-            this.Clear.Size = new System.Drawing.Size(139, 23);
-            this.Clear.TabIndex = 0;
-            this.Clear.Text = "Clear stash";
-            this.Clear.UseVisualStyleBackColor = true;
-            this.Clear.Click += new System.EventHandler(this.Clear_Click);
-            // 
-            // Apply
-            // 
-            this.Apply.Location = new System.Drawing.Point(293, 3);
-            this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(139, 23);
-            this.Apply.TabIndex = 1;
-            this.Apply.Text = "Apply stash to working dir";
-            this.Apply.UseVisualStyleBackColor = true;
-            this.Apply.Click += new System.EventHandler(this.Apply_Click);
-            // 
-            // Stash
-            // 
-            this.Stash.Location = new System.Drawing.Point(3, 3);
-            this.Stash.Name = "Stash";
-            this.Stash.Size = new System.Drawing.Size(139, 23);
-            this.Stash.TabIndex = 2;
-            this.Stash.Text = "Stash all changes";
-            this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(this.Stash_Click);
             // 
             // splitContainer2
             // 
@@ -229,6 +199,36 @@
             this.View.Name = "View";
             this.View.Size = new System.Drawing.Size(481, 464);
             this.View.TabIndex = 0;
+            // 
+            // Stash
+            // 
+            this.Stash.Location = new System.Drawing.Point(3, 3);
+            this.Stash.Name = "Stash";
+            this.Stash.Size = new System.Drawing.Size(139, 23);
+            this.Stash.TabIndex = 2;
+            this.Stash.Text = "Stash all changes";
+            this.Stash.UseVisualStyleBackColor = true;
+            this.Stash.Click += new System.EventHandler(this.Stash_Click);
+            // 
+            // Apply
+            // 
+            this.Apply.Location = new System.Drawing.Point(293, 3);
+            this.Apply.Name = "Apply";
+            this.Apply.Size = new System.Drawing.Size(139, 23);
+            this.Apply.TabIndex = 1;
+            this.Apply.Text = "Apply stash to working dir";
+            this.Apply.UseVisualStyleBackColor = true;
+            this.Apply.Click += new System.EventHandler(this.Apply_Click);
+            // 
+            // Clear
+            // 
+            this.Clear.Location = new System.Drawing.Point(148, 3);
+            this.Clear.Name = "Clear";
+            this.Clear.Size = new System.Drawing.Size(139, 23);
+            this.Clear.TabIndex = 0;
+            this.Clear.Text = "Clear stash";
+            this.Clear.UseVisualStyleBackColor = true;
+            this.Clear.Click += new System.EventHandler(this.Clear_Click);
             // 
             // FormStash
             // 

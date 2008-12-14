@@ -68,6 +68,11 @@ namespace GitUI
 
         private void Commit_Click(object sender, EventArgs e)
         {
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                MessageBox.Show("There are unresolved mergeconflicts, solve mergeconflicts before committing", "Merge conflicts");
+                return;
+            }
             if (Message.Text.Length == 0)
             {
                 MessageBox.Show("Please enter commit message");

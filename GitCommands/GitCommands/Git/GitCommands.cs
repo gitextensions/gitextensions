@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using System.Security.Permissions;
 using System.IO;
@@ -253,11 +253,23 @@ namespace GitCommands
 
         }
 
-        static public string Pull(string path, string branch)
+        static public string Fetch(string path, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.exe pull \"" + path + "\" \"" + branch + "\"");
+            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.exe fetch \"" + path + "\" \"" + branch + "\"");
+
+            return "Done";
+        }
+
+        static public string Pull(string path, string branch, bool rebase)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            if (rebase)
+                GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.exe pull --rebase \"" + path + "\" \"" + branch + "\"");
+            else
+                GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.exe pull \"" + path + "\" \"" + branch + "\"");
 
             return "Done";
         }
@@ -333,7 +345,10 @@ namespace GitCommands
             PatchManager patchManager = new PatchManager();
             patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.exe", "diff --ignore-submodules " + to + " " + from + " -- " + filter), false);
 
-            return patchManager.patches.FirstOrDefault();
+            if (patchManager.patches.Count > 0)
+                return patchManager.patches[0];
+
+            return null;
         }
 
         static public List<Patch> GetDiff(string from, string to)
@@ -350,7 +365,13 @@ namespace GitCommands
 
             string[] files = result.Split('\n');
 
-            return files.ToList<string>();
+            List<string> retVal = new List<string>();
+            foreach (string s in files)
+            {
+                retVal.Add(s);
+            }
+
+            return retVal;
         }
 
         static public List<string> GetDiffFiles(string from, string to)
@@ -359,7 +380,13 @@ namespace GitCommands
 
             string[] files = result.Split('\n');
 
-            return files.ToList<string>();
+            List<string> retVal = new List<string>();
+            foreach (string s in files)
+            {
+                retVal.Add(s);
+            }
+
+            return retVal;
         }
 
         static public List<GitItemStatus> GitStatus()
@@ -426,7 +453,7 @@ namespace GitCommands
 
             char[] graphChars = new char[]{'*','|','*','\\','/'};
 
-            for (int n = 0; n < itemsStrings.Count(); )
+            for (int n = 0; n < itemsStrings.Length; )
             {
                 GitRevision revision = new GitRevision();
 
@@ -441,7 +468,7 @@ namespace GitCommands
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     revision.Name = revision.Guid = line.Substring(line.LastIndexOf("Commit ") + 7);
                     n++;
-                    if (itemsStrings.Count() == n) break;
+                    if (itemsStrings.Length == n) break;
                 }
                 line = itemsStrings[n];
 
@@ -469,7 +496,7 @@ namespace GitCommands
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
-                    if (itemsStrings.Count() == n) break;
+                    if (itemsStrings.Length == n) break;
                 }
                 line = itemsStrings[n];
 
@@ -479,23 +506,35 @@ namespace GitCommands
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
-                    if (itemsStrings.Count() == n) break;
+                    if (itemsStrings.Length == n) break;
                 }
                 line = itemsStrings[n];
 
                 if (line.IndexOf("Parents:") > 0)
                 {
-                    revision.ParentGuids = line.Substring(line.LastIndexOf("Parents:") + 8).Split(' ').ToList();
+                    List<string> parentGuids = new List<string>();
+                    foreach (string s in line.Substring(line.LastIndexOf("Parents:") + 8).Split(' '))
+                    {
+                        parentGuids.Add(s);
+                    }
+
+                    revision.ParentGuids = parentGuids;
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
-                    if (itemsStrings.Count() == n) break;
+                    if (itemsStrings.Length == n) break;
                 }
                 line = itemsStrings[n];
 
-                var foundHeads = from GitHead h in heads
-                                 where h.Guid == revision.Guid
-                                 select h;
+                List<GitHead> foundHeads = new List<GitHead>();
+
+                foreach (GitHead h in heads)
+                {
+                    if (h.Guid == revision.Guid)
+                    {
+                        foundHeads.Add(h);
+                    }
+                }
 
                 foreach (var head in foundHeads)
                 {
@@ -509,13 +548,13 @@ namespace GitCommands
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
-                    if (itemsStrings.Count() == n)
+                    if (itemsStrings.Length == n)
                     {
                         break;
                     }
                     line = itemsStrings[n];
                 }
-                if (itemsStrings.Count() == n) break;
+                if (itemsStrings.Length == n) break;
                 //n--;
 
                 revisions.Add(revision);
@@ -542,7 +581,7 @@ namespace GitCommands
 
             List<GitRevision> revisions = new List<GitRevision>();
 
-            for (int n = 0; n < itemsStrings.Count()-6;)
+            for (int n = 0; n < itemsStrings.Length-6;)
             {
                 GitRevision revision = new GitRevision();
                 revision.Guid = itemsStrings[n++].Trim('\0');
@@ -560,7 +599,7 @@ namespace GitCommands
                 revision.Committer = itemsStrings[n++].Substring(9).Trim();
                 n++;
 
-                while (itemsStrings.Count() > n + 1 &&
+                while (itemsStrings.Length > n + 1 &&
                     itemsStrings[n].Length > 0 &&
                     itemsStrings[n][0] == ' ')
                 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -99,6 +99,12 @@ namespace GitUI
 
         private void Stash_Click(object sender, EventArgs e)
         {
+            if (GitCommands.GitCommands.GetStashedItems().Count > 0)
+            {
+                MessageBox.Show("There are allready stashed items.\nStashing now will overwrite current stash, aborting.", "Error");
+                return;
+            }            
+
             MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
             Initialize();
         }

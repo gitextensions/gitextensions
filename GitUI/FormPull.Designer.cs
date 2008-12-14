@@ -35,8 +35,13 @@
             this.Branches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.Pull = new System.Windows.Forms.Button();
-            this.Mergetool = new System.Windows.Forms.Button();
             this.Output = new System.Windows.Forms.RichTextBox();
+            this.Mergetool = new System.Windows.Forms.Button();
+            this.Merge = new System.Windows.Forms.RadioButton();
+            this.Rebase = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Fetch = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -95,9 +100,17 @@
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.Pull_Click);
             // 
+            // Output
+            // 
+            this.Output.Location = new System.Drawing.Point(8, 172);
+            this.Output.Name = "Output";
+            this.Output.Size = new System.Drawing.Size(442, 192);
+            this.Output.TabIndex = 10;
+            this.Output.Text = "";
+            // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(457, 73);
+            this.Mergetool.Location = new System.Drawing.Point(456, 341);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 11;
@@ -105,19 +118,58 @@
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
             // 
-            // Output
+            // Merge
             // 
-            this.Output.Location = new System.Drawing.Point(8, 73);
-            this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(442, 185);
-            this.Output.TabIndex = 10;
-            this.Output.Text = "";
+            this.Merge.AutoSize = true;
+            this.Merge.Checked = true;
+            this.Merge.Location = new System.Drawing.Point(7, 20);
+            this.Merge.Name = "Merge";
+            this.Merge.Size = new System.Drawing.Size(210, 17);
+            this.Merge.TabIndex = 0;
+            this.Merge.TabStop = true;
+            this.Merge.Text = "Merge remote branch to current branch";
+            this.Merge.UseVisualStyleBackColor = true;
+            // 
+            // Rebase
+            // 
+            this.Rebase.AutoSize = true;
+            this.Rebase.Location = new System.Drawing.Point(7, 41);
+            this.Rebase.Name = "Rebase";
+            this.Rebase.Size = new System.Drawing.Size(408, 17);
+            this.Rebase.TabIndex = 1;
+            this.Rebase.Text = "Rebase remote branch to current branch, creates linear history. (use with caution" +
+                ")";
+            this.Rebase.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.Fetch);
+            this.groupBox1.Controls.Add(this.Rebase);
+            this.groupBox1.Controls.Add(this.Merge);
+            this.groupBox1.Location = new System.Drawing.Point(12, 64);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 102);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Merge options";
+            // 
+            // Fetch
+            // 
+            this.Fetch.AutoSize = true;
+            this.Fetch.Location = new System.Drawing.Point(7, 62);
+            this.Fetch.Name = "Fetch";
+            this.Fetch.Size = new System.Drawing.Size(212, 17);
+            this.Fetch.TabIndex = 2;
+            this.Fetch.TabStop = true;
+            this.Fetch.Text = "Do not merge, only fetch remote branch";
+            this.Fetch.UseVisualStyleBackColor = true;
             // 
             // FormPull
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 274);
+            this.ClientSize = new System.Drawing.Size(565, 368);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Mergetool);
             this.Controls.Add(this.Output);
             this.Controls.Add(this.Pull);
@@ -129,6 +181,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPull";
             this.Text = "Pull";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,7 +196,11 @@
         private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Pull;
-        private System.Windows.Forms.Button Mergetool;
         private System.Windows.Forms.RichTextBox Output;
+        private System.Windows.Forms.Button Mergetool;
+        private System.Windows.Forms.RadioButton Merge;
+        private System.Windows.Forms.RadioButton Rebase;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton Fetch;
     }
 }

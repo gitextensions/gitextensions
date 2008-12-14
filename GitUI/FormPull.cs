@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+
 using System.Text;
 using System.Windows.Forms;
 
@@ -75,7 +75,12 @@ namespace GitUI
                 return;
             }
 
-            Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.SelectedText);
+            if (Fetch.Checked)
+                Output.Text = GitCommands.GitCommands.Fetch(PullSource.Text, Branches.SelectedText);
+            else if (Merge.Checked)
+                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.SelectedText, false);
+            else if (Rebase.Checked)
+                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.SelectedText, true);
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {

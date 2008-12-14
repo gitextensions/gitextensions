@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 
 namespace GitCommands
@@ -37,7 +37,7 @@ namespace GitCommands
 
         public Lane AddLane()
         {
-            Lane lane = new Lane(Lanes.Count());
+            Lane lane = new Lane(Lanes.Count);
             Lanes.Add(lane);
 
             return lane;

@@ -1,0 +1,31 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExt", "SimpleExt.vcproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release MinDependency|Win32 = Release MinDependency|Win32
+		Release MinSize|Win32 = Release MinSize|Win32
+		Unicode Debug|Win32 = Unicode Debug|Win32
+		Unicode Release MinDependency|Win32 = Unicode Release MinDependency|Win32
+		Unicode Release MinSize|Win32 = Unicode Release MinSize|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Debug|Win32.Build.0 = Debug|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinDependency|Win32.ActiveCfg = Release MinDependency|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinDependency|Win32.Build.0 = Release MinDependency|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinSize|Win32.ActiveCfg = Release MinSize|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinSize|Win32.Build.0 = Release MinSize|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinDependency|Win32.ActiveCfg = Unicode Release MinDependency|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinDependency|Win32.Build.0 = Unicode Release MinDependency|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Win32.ActiveCfg = Unicode Release MinSize|Win32
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

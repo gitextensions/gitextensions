@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using System.IO;
 using System.Diagnostics;
@@ -131,7 +131,12 @@ namespace PatchApply
 
             if (patch.Type == Patch.PatchType.ChangeFile)
             {
-                List<string> fileLines = LoadFile(patch.FileNameA).Split('\n').ToList<string>();
+                List<string> fileLines = new List<string>();
+                foreach (string s in LoadFile(patch.FileNameA).Split('\n'))
+                {
+                    fileLines.Add(s);
+                }
+
                 int lineNumber = 0;
                 foreach (string line in patchLines)
                 {
