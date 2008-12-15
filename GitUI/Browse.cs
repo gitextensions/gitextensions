@@ -40,22 +40,41 @@ namespace GitUI
         private void Browse_Load(object sender, EventArgs e)
         {
             Initialize();
+            RevisionGrid.Focus();
+
         }
+
+        private ToolStripItem warning;
 
         protected void Initialize()
         {
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            CurrentBranch.Text = "Current branch: " + selectedHead;
+            CurrentBranch.Text = selectedHead;
 
             ShowRevisions();
 
-            Workingdir.Text = "Working dir: " + GitCommands.Settings.WorkingDir;
+            Workingdir.Text = GitCommands.Settings.WorkingDir;
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-                WarningText.Text = "There are unresolved merge conflicts!";
+            {
+                if (warning == null)
+                {
+                    warning = ToolStrip.Items.Add("There are unresolved merge conflicts!");
+                    warning.BackColor = Color.Salmon;
+                    warning.Click += new EventHandler(warning_Click);
+                }
+            }
             else
-                WarningText.Text = "";
+            {
+                if (warning != null)
+                {
+                    warning.Click -= new EventHandler(warning_Click);
+                    ToolStrip.Items.Remove(warning);
+                    warning = null;
+                }
+            }
         }
+
 
         private void ShowRevisions()
         {
@@ -327,7 +346,7 @@ namespace GitUI
             Initialize();
         }
 
-        private void WarningText_Click(object sender, EventArgs e)
+        void warning_Click(object sender, EventArgs e)
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
@@ -339,8 +358,14 @@ namespace GitUI
                         new FormCommit().ShowDialog();
                     }
                 }
-            } 
+            }
             Initialize();
+        }
+
+
+        private void WarningText_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void Workingdir_Click(object sender, EventArgs e)
@@ -374,6 +399,41 @@ namespace GitUI
         {
             new FormMergeBranch().ShowDialog();
             Initialize();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            commitToolStripMenuItem_Click(sender, e);
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void Workingdir_Click_1(object sender, EventArgs e)
+        {
+            openToolStripMenuItem_Click(sender, e);
+        }
+
+        private void CurrentBranch_Click_1(object sender, EventArgs e)
+        {
+            checkoutBranchToolStripMenuItem_Click(sender, e);
+        }
+
+        private void AddFiles_Click(object sender, EventArgs e)
+        {
+            addFilesToolStripMenuItem_Click(sender, e);
+        }
+
+        private void CreateBranch_Click(object sender, EventArgs e)
+        {
+            branchToolStripMenuItem_Click(sender, e);
+        }
+
+        private void GitBash_Click(object sender, EventArgs e)
+        {
+            gitBashToolStripMenuItem_Click_1(sender, e);
         }
 
 
