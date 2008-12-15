@@ -67,6 +67,7 @@
             this.Revisions.RowHeadersVisible = false;
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.TabIndex = 0;
