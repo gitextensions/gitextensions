@@ -16,19 +16,32 @@ namespace GitUI
         public RevisionGrid()
         {
             InitializeComponent();
-            RefreshRevisions();
             Revisions.SelectionChanged += new EventHandler(Revisions_SelectionChanged);
 
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
-            
-
+            RefreshRevisions();
         }
 
         public Font NormalFont { get; set; }
         public Font HeadFont { get; set; }
 
         public event EventHandler SelectionChanged;
+
+        public void SetSelectedRevision(GitRevision revision)
+        {
+            Revisions.ClearSelection();
+
+            if (revision != null)
+                {
+                    foreach (DataGridViewRow row in Revisions.Rows)
+                    {
+                        if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
+                            row.Selected = true;
+                    }
+                }
+            Revisions.Select();
+        }
 
         void Revisions_SelectionChanged(object sender, EventArgs e)
         {
@@ -63,6 +76,7 @@ namespace GitUI
             {
                 Revisions.DataSource = revisions;
                 Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
+
 
                 int height = Revisions.RowTemplate.Height;
                 int width = 8;
@@ -293,6 +307,20 @@ namespace GitUI
                         }
                     }
             }
+
+        }
+
+        private void Revisions_DoubleClick(object sender, EventArgs e)
+        {
+            List<GitRevision> r = GetRevisions();
+            if (r.Count > 0)
+                new FormDiff(r[0]).ShowDialog();
+            else
+                new FormDiff().ShowDialog();
+        }
+
+        private void Revisions_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }

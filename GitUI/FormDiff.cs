@@ -20,6 +20,14 @@ namespace GitUI
             EditorOptions.SetSyntax(DiffText, "output.cs");
         }
 
+        public FormDiff(GitRevision revision)
+        {
+            InitializeComponent();
+            EditorOptions.SetSyntax(DiffText, "output.cs");
+
+            RevisionGrid.SetSelectedRevision( revision);
+        }
+
         private void label1_Click(object sender, EventArgs e)
         {
 

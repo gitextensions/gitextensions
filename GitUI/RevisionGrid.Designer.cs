@@ -71,6 +71,8 @@
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.TabIndex = 0;
+            this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
+            this.Revisions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContentClick);
             // 
             // Graph
             // 

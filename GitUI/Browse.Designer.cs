@@ -31,6 +31,16 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBrowse));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.ToolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.Workingdir = new System.Windows.Forms.ToolStripButton();
+            this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.AddFiles = new System.Windows.Forms.ToolStripButton();
+            this.CreateBranch = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.GitBash = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.Commits = new System.Windows.Forms.TabPage();
@@ -75,20 +85,11 @@
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ToolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.Workingdir = new System.Windows.Forms.ToolStripButton();
-            this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.RevisionGrid = new GitUI.RevisionGrid();
-            this.AddFiles = new System.Windows.Forms.ToolStripButton();
-            this.GitBash = new System.Windows.Forms.ToolStripButton();
-            this.CreateBranch = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.ToolStrip.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -104,7 +105,6 @@
             this.tabPage1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
-            this.ToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -127,6 +127,96 @@
             this.splitContainer2.SplitterDistance = 26;
             this.splitContainer2.TabIndex = 2;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
+            // 
+            // ToolStrip
+            // 
+            this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.Workingdir,
+            this.CurrentBranch,
+            this.toolStripSeparator1,
+            this.toolStripButton1,
+            this.AddFiles,
+            this.CreateBranch,
+            this.toolStripSeparator2,
+            this.GitBash});
+            this.ToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.ToolStrip.Name = "ToolStrip";
+            this.ToolStrip.Size = new System.Drawing.Size(750, 25);
+            this.ToolStrip.TabIndex = 4;
+            this.ToolStrip.Text = "toolStrip1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(0, 22);
+            // 
+            // Workingdir
+            // 
+            this.Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("Workingdir.Image")));
+            this.Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Workingdir.Name = "Workingdir";
+            this.Workingdir.Size = new System.Drawing.Size(87, 22);
+            this.Workingdir.Text = "WorkingDir";
+            this.Workingdir.Click += new System.EventHandler(this.Workingdir_Click_1);
+            // 
+            // CurrentBranch
+            // 
+            this.CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("CurrentBranch.Image")));
+            this.CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CurrentBranch.Name = "CurrentBranch";
+            this.CurrentBranch.Size = new System.Drawing.Size(64, 22);
+            this.CurrentBranch.Text = "Branch";
+            this.CurrentBranch.ToolTipText = "Current branch";
+            this.CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click_1);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
+            this.toolStripButton1.Text = "Commit";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // AddFiles
+            // 
+            this.AddFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddFiles.Image = ((System.Drawing.Image)(resources.GetObject("AddFiles.Image")));
+            this.AddFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(23, 22);
+            this.AddFiles.Text = "Add files";
+            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
+            // 
+            // CreateBranch
+            // 
+            this.CreateBranch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.CreateBranch.Image = ((System.Drawing.Image)(resources.GetObject("CreateBranch.Image")));
+            this.CreateBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CreateBranch.Name = "CreateBranch";
+            this.CreateBranch.Size = new System.Drawing.Size(23, 22);
+            this.CreateBranch.Text = "Create branch";
+            this.CreateBranch.Click += new System.EventHandler(this.CreateBranch_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // GitBash
+            // 
+            this.GitBash.Image = ((System.Drawing.Image)(resources.GetObject("GitBash.Image")));
+            this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.GitBash.Name = "GitBash";
+            this.GitBash.Size = new System.Drawing.Size(70, 22);
+            this.GitBash.Text = "Git bash";
+            this.GitBash.Click += new System.EventHandler(this.GitBash_Click);
             // 
             // splitContainer3
             // 
@@ -174,7 +264,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(742, 180);
+            this.tabPage4.Size = new System.Drawing.Size(742, 191);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "File changes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -195,7 +285,7 @@
             this.FileChanges.ReadOnly = true;
             this.FileChanges.RowHeadersVisible = false;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(736, 174);
+            this.FileChanges.Size = new System.Drawing.Size(736, 185);
             this.FileChanges.TabIndex = 0;
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
@@ -484,14 +574,14 @@
             // gitBashToolStripMenuItem
             // 
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
-            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
             this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
             // 
             // gitGUIToolStripMenuItem
             // 
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
-            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
             this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
             // 
@@ -522,62 +612,6 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // ToolStrip
-            // 
-            this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.Workingdir,
-            this.CurrentBranch,
-            this.toolStripSeparator1,
-            this.toolStripButton1,
-            this.AddFiles,
-            this.CreateBranch,
-            this.toolStripSeparator2,
-            this.GitBash});
-            this.ToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.ToolStrip.Name = "ToolStrip";
-            this.ToolStrip.Size = new System.Drawing.Size(750, 25);
-            this.ToolStrip.TabIndex = 4;
-            this.ToolStrip.Text = "toolStrip1";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(0, 22);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
-            this.toolStripButton1.Text = "Commit";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // Workingdir
-            // 
-            this.Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("Workingdir.Image")));
-            this.Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.Workingdir.Name = "Workingdir";
-            this.Workingdir.Size = new System.Drawing.Size(87, 22);
-            this.Workingdir.Text = "WorkingDir";
-            this.Workingdir.Click += new System.EventHandler(this.Workingdir_Click_1);
-            // 
-            // CurrentBranch
-            // 
-            this.CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("CurrentBranch.Image")));
-            this.CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CurrentBranch.Name = "CurrentBranch";
-            this.CurrentBranch.Size = new System.Drawing.Size(64, 22);
-            this.CurrentBranch.Text = "Branch";
-            this.CurrentBranch.ToolTipText = "Current branch";
-            this.CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click_1);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
             // RevisionGrid
             // 
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -589,40 +623,6 @@
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
             this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
-            // 
-            // AddFiles
-            // 
-            this.AddFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AddFiles.Image = ((System.Drawing.Image)(resources.GetObject("AddFiles.Image")));
-            this.AddFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(23, 22);
-            this.AddFiles.Text = "Add files";
-            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
-            // 
-            // GitBash
-            // 
-            this.GitBash.Image = ((System.Drawing.Image)(resources.GetObject("GitBash.Image")));
-            this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.GitBash.Name = "GitBash";
-            this.GitBash.Size = new System.Drawing.Size(70, 22);
-            this.GitBash.Text = "Git bash";
-            this.GitBash.Click += new System.EventHandler(this.GitBash_Click);
-            // 
-            // CreateBranch
-            // 
-            this.CreateBranch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CreateBranch.Image = ((System.Drawing.Image)(resources.GetObject("CreateBranch.Image")));
-            this.CreateBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CreateBranch.Name = "CreateBranch";
-            this.CreateBranch.Size = new System.Drawing.Size(23, 22);
-            this.CreateBranch.Text = "Create branch";
-            this.CreateBranch.Click += new System.EventHandler(this.CreateBranch_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // FormBrowse
             // 
@@ -640,6 +640,8 @@
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.ToolStrip.ResumeLayout(false);
+            this.ToolStrip.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -656,8 +658,6 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
-            this.ToolStrip.ResumeLayout(false);
-            this.ToolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

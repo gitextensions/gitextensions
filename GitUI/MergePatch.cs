@@ -136,7 +136,7 @@ namespace GitUI
         {
             if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
             {
-                if (MessageBox.Show("You are in the middle of a patch apply. You need to resolve, skip or abort this patch.\nAre you sure to exit now?", "Exit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("You are in the middle of a patch apply. You need to resolve, skip or abort this patch.\nAre you sure to exit now?", "Exit", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     e.Cancel = true;
                 }
