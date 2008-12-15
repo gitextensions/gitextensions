@@ -318,7 +318,9 @@ namespace GitCommands
         public void SetGlobalSetting(string setting, string value)
         {
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global --unset-all " + setting);
-            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global " + setting + " \"" + value.Trim() + "\"");
+
+            if (!string.IsNullOrEmpty(value))
+                GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --global " + setting + " \"" + value.Trim() + "\"");
         }
 
         static public string GetSetting(string setting)
@@ -329,7 +331,9 @@ namespace GitCommands
         static public void SetSetting(string setting, string value)
         {
             GitCommands.RunCmd(Settings.GitDir + "git.exe", "config --unset-all " + setting);
-            GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value.Trim() + "\"");
+
+            if (!string.IsNullOrEmpty(value))
+                GitCommands.RunCmd(Settings.GitDir + "git.exe", "config " + setting + " \"" + value.Trim() + "\"");
         }
 
         static public List<Patch> GetStashedItems()
@@ -538,7 +542,7 @@ namespace GitCommands
 
                 foreach (var head in foundHeads)
                 {
-                    revision.Message += "[" + head.Name + "] ";
+                    revision.Heads += "[" + head.Name + "] ";
                 }
 
                 while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))

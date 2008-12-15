@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Revisions = new System.Windows.Forms.DataGridView();
-            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -51,6 +52,14 @@
             this.authorDataGridViewTextBoxColumn,
             this.dateDataGridViewTextBoxColumn});
             this.Revisions.DataSource = this.gitRevisionBindingSource;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Revisions.DefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Revisions.Location = new System.Drawing.Point(0, 0);
             this.Revisions.Name = "Revisions";
@@ -61,10 +70,6 @@
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.TabIndex = 0;
-            // 
-            // gitRevisionBindingSource
-            // 
-            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
             // Graph
             // 
@@ -95,6 +100,10 @@
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
             this.dateDataGridViewTextBoxColumn.Width = 180;
+            // 
+            // gitRevisionBindingSource
+            // 
+            this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
             // RevisionGrid
             // 

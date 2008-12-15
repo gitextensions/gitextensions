@@ -14,6 +14,7 @@ namespace GitCommands
 
         public string Guid { get; set; }
         public string Name { get; set; }
+        public string Heads { get; set; }
 
         public string TreeGuid { get; set; }
         //public string parentGuid { get; set; }

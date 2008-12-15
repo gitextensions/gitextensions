@@ -22,7 +22,7 @@ STGMEDIUM stg = { TYMED_HGLOBAL };
 HDROP     hDrop;
 
     // Look for CF_HDROP data in the data object.
-    if ( FAILED( pDataObj->GetData ( &fmt, &stg ) ))
+    if ( pDataObj == NULL || FAILED( pDataObj->GetData ( &fmt, &stg ) ))
         {
         // Nope! Return an "invalid argument" error back to Explorer.
         return E_INVALIDARG;
@@ -159,21 +159,26 @@ USES_CONVERSION;
 
 void CSimpleShlExt::RunGitEx(const char * command)
 {
-	TCHAR szMsg[MAX_PATH];
-	wsprintf ( szMsg, _T("%s %s"), command, m_szFile);
+	CString szFile = m_szFile;
+	CString szCommandName = command;
+	CString args;
+
+	args += command;
+	args += " ";
+	args += m_szFile;
 
 	CString dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
 
-	//MessageBox ( NULL, dir, _T("path"),MB_ICONINFORMATION );
+	MessageBox ( NULL, args, _T("args"),MB_ICONINFORMATION );
 
-	ShellExecute(NULL, "open", "GitExtensions.exe", szMsg, dir, SW_SHOWNORMAL); 
+	ShellExecute(NULL, "open", "GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
 	//system(szMsg);
 }
 
 STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
 {
     // If lpVerb really points to a string, ignore this function call and bail out.
-    if ( 0 != HIWORD( pCmdInfo->lpVerb ) )
+    if ( pCmdInfo == NULL ||0 != HIWORD( pCmdInfo->lpVerb ) )
         return E_INVALIDARG;
 
 	int invokeId = LOWORD( pCmdInfo->lpVerb) - 1;
