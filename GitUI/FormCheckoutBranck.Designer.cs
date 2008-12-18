@@ -71,6 +71,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCheckoutBranck";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout branch";
             this.Load += new System.EventHandler(this.FormCheckoutBranck_Load);
             this.ResumeLayout(false);

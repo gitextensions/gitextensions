@@ -93,7 +93,7 @@ namespace GitUI
         private void Changes_SelectedIndexChanged(object sender, EventArgs e)
         {
             EditorOptions.SetSyntax(View, ((GitItemStatus)Changes.SelectedItem).Name);
-            View.Text = GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name);
+            View.Text = GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
             View.Refresh();
         }
 

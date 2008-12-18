@@ -238,6 +238,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormStash";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stash";
             this.Load += new System.EventHandler(this.FormStash_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

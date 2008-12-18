@@ -153,6 +153,7 @@
             this.Controls.Add(this.BrowsePatch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MergePatch";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
             this.Load += new System.EventHandler(this.MergePatch_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergePatch_FormClosing);

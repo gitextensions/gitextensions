@@ -186,6 +186,12 @@
     <Compile Include="MergePatch.Designer.cs">
       <DependentUpon>MergePatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenDirectory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenDirectory.Designer.cs">
+      <DependentUpon>OpenDirectory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -266,6 +272,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MergePatch.resx">
       <DependentUpon>MergePatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenDirectory.resx">
+      <DependentUpon>OpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

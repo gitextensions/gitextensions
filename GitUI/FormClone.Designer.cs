@@ -30,14 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.From = new System.Windows.Forms.ComboBox();
+            this.To = new System.Windows.Forms.ComboBox();
             this.ToBrowse = new System.Windows.Forms.Button();
             this.FromBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.To = new System.Windows.Forms.ComboBox();
-            this.From = new System.Windows.Forms.ComboBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -66,6 +66,24 @@
             this.splitContainer1.Size = new System.Drawing.Size(460, 312);
             this.splitContainer1.SplitterDistance = 97;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // From
+            // 
+            this.From.FormattingEnabled = true;
+            this.From.Location = new System.Drawing.Point(66, 17);
+            this.From.Name = "From";
+            this.From.Size = new System.Drawing.Size(191, 21);
+            this.From.TabIndex = 8;
+            this.From.DropDown += new System.EventHandler(this.From_DropDown);
+            // 
+            // To
+            // 
+            this.To.FormattingEnabled = true;
+            this.To.Location = new System.Drawing.Point(66, 45);
+            this.To.Name = "To";
+            this.To.Size = new System.Drawing.Size(190, 21);
+            this.To.TabIndex = 7;
+            this.To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
             // ToBrowse
             // 
@@ -124,24 +142,6 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // To
-            // 
-            this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(66, 45);
-            this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(190, 21);
-            this.To.TabIndex = 7;
-            this.To.DropDown += new System.EventHandler(this.To_DropDown);
-            // 
-            // From
-            // 
-            this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(66, 17);
-            this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(191, 21);
-            this.From.TabIndex = 8;
-            this.From.DropDown += new System.EventHandler(this.From_DropDown);
-            // 
             // FormClone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -150,6 +150,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormClone";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

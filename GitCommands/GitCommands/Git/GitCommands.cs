@@ -575,10 +575,12 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        static public string GetCurrentChanges(string name)
+        static public string GetCurrentChanges(string name, bool staged)
         {
-            //return RunCmd(Settings.GitDir + "git.exe", "diff --cached " + name);
-            return RunCmd(Settings.GitDir + "git.exe", "diff " + name);
+            if (staged)
+                return RunCmd(Settings.GitDir + "git.exe", "diff --cached " + name);
+            else
+                return RunCmd(Settings.GitDir + "git.exe", "diff " + name);
         }
 
         static public List<GitRevision> GitRevisionGraph()

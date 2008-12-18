@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCheckout));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Ok = new System.Windows.Forms.Button();
             this.RevisionGrid = new GitUI.RevisionGrid();
+            this.Ok = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -56,6 +56,16 @@
             this.splitContainer1.SplitterDistance = 425;
             this.splitContainer1.TabIndex = 0;
             // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RevisionGrid.Size = new System.Drawing.Size(699, 425);
+            this.RevisionGrid.TabIndex = 0;
+            // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(299, 4);
@@ -66,14 +76,6 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // RevisionGrid
-            // 
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(699, 425);
-            this.RevisionGrid.TabIndex = 0;
-            // 
             // FormCheckout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -82,6 +84,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCheckout";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
             this.Load += new System.EventHandler(this.FormCheckout_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

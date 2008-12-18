@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddFiles));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Output = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Filter = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.Filter = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.Output = new System.Windows.Forms.RichTextBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -60,32 +60,6 @@
             this.splitContainer1.SplitterDistance = 47;
             this.splitContainer1.TabIndex = 0;
             // 
-            // Output
-            // 
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(498, 284);
-            this.Output.TabIndex = 0;
-            this.Output.Text = "";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Filter";
-            // 
-            // Filter
-            // 
-            this.Filter.Location = new System.Drawing.Point(71, 9);
-            this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(176, 20);
-            this.Filter.TabIndex = 1;
-            this.Filter.Text = ".";
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(411, 9);
@@ -96,6 +70,32 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // Filter
+            // 
+            this.Filter.Location = new System.Drawing.Point(71, 9);
+            this.Filter.Name = "Filter";
+            this.Filter.Size = new System.Drawing.Size(176, 20);
+            this.Filter.TabIndex = 1;
+            this.Filter.Text = ".";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Filter";
+            // 
+            // Output
+            // 
+            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Output.Location = new System.Drawing.Point(0, 0);
+            this.Output.Name = "Output";
+            this.Output.Size = new System.Drawing.Size(498, 284);
+            this.Output.TabIndex = 0;
+            this.Output.Text = "";
+            // 
             // FormAddFiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -104,6 +104,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormAddFiles";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add files";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

@@ -168,6 +168,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormFileHistory";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
             this.Load += new System.EventHandler(this.FormFileHistory_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

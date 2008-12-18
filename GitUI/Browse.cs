@@ -140,14 +140,10 @@ namespace GitUI
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            Open open = new Open();
+            open.ShowDialog();
+            Initialize();
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
-            {
-                Settings.WorkingDir = browseDialog.SelectedPath;
-
-                Initialize();
-            }
         }
 
         private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)

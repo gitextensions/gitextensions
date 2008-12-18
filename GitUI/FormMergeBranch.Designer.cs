@@ -93,6 +93,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMergeBranch";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Merge branches";
             this.Load += new System.EventHandler(this.FormMergeBranch_Load);
             this.ResumeLayout(false);

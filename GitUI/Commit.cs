@@ -35,10 +35,10 @@ namespace GitUI
             Unstaged.DataSource = changedFiles;
         }
 
-        protected void ShowChanges(GitItemStatus item)
+        protected void ShowChanges(GitItemStatus item, bool staged)
         {
             EditorOptions.SetSyntax(SelectedDiff, item.Name);
-            SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name);
+            SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name, staged);
             SelectedDiff.Refresh();
         }
 
@@ -48,7 +48,7 @@ namespace GitUI
 
             if (Staged.SelectedRows[0].DataBoundItem is GitItemStatus)
             {
-                ShowChanges((GitItemStatus)Staged.SelectedRows[0].DataBoundItem);
+                ShowChanges((GitItemStatus)Staged.SelectedRows[0].DataBoundItem, true);
             }
         }
 
@@ -58,7 +58,7 @@ namespace GitUI
 
             if (Unstaged.SelectedRows[0].DataBoundItem is GitItemStatus)
             {
-                ShowChanges((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem);
+                ShowChanges((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem, false);
             }
         }
 
@@ -160,6 +160,16 @@ namespace GitUI
         private void splitContainer8_SplitterMoved(object sender, SplitterEventArgs e)
         {
 
+        }
+
+        private void Staged_Click(object sender, EventArgs e)
+        {
+            Tracked_SelectionChanged(sender, e);
+        }
+
+        private void Unstaged_Click(object sender, EventArgs e)
+        {
+            Untracked_SelectionChanged(sender, e);
         }
     }
 }

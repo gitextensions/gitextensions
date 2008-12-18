@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTag));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.GitRevisions = new GitUI.RevisionGrid();
-            this.CreateTag = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.Tagname = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CreateTag = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -70,15 +70,12 @@
             this.GitRevisions.Size = new System.Drawing.Size(734, 489);
             this.GitRevisions.TabIndex = 0;
             // 
-            // CreateTag
+            // Tagname
             // 
-            this.CreateTag.Location = new System.Drawing.Point(626, 2);
-            this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(105, 23);
-            this.CreateTag.TabIndex = 0;
-            this.CreateTag.Text = "Create tag";
-            this.CreateTag.UseVisualStyleBackColor = true;
-            this.CreateTag.Click += new System.EventHandler(this.CreateTag_Click);
+            this.Tagname.Location = new System.Drawing.Point(71, 5);
+            this.Tagname.Name = "Tagname";
+            this.Tagname.Size = new System.Drawing.Size(264, 20);
+            this.Tagname.TabIndex = 2;
             // 
             // label1
             // 
@@ -89,12 +86,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Tag name";
             // 
-            // Tagname
+            // CreateTag
             // 
-            this.Tagname.Location = new System.Drawing.Point(71, 5);
-            this.Tagname.Name = "Tagname";
-            this.Tagname.Size = new System.Drawing.Size(264, 20);
-            this.Tagname.TabIndex = 2;
+            this.CreateTag.Location = new System.Drawing.Point(626, 2);
+            this.CreateTag.Name = "CreateTag";
+            this.CreateTag.Size = new System.Drawing.Size(105, 23);
+            this.CreateTag.TabIndex = 0;
+            this.CreateTag.Text = "Create tag";
+            this.CreateTag.UseVisualStyleBackColor = true;
+            this.CreateTag.Click += new System.EventHandler(this.CreateTag_Click);
             // 
             // FormTag
             // 
@@ -104,6 +104,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormTag";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tag";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

@@ -30,36 +30,36 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.MergeTool = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.Editor = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.UserEmail = new System.Windows.Forms.TextBox();
             this.UserName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.GlobalMergeTool = new System.Windows.Forms.TextBox();
+            this.GlobalEditor = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.GlobalUserEmail = new System.Windows.Forms.TextBox();
+            this.GlobalUserName = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.GlobalUserName = new System.Windows.Forms.TextBox();
-            this.GlobalUserEmail = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.Editor = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.GlobalEditor = new System.Windows.Forms.TextBox();
-            this.GlobalMergeTool = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.MergeTool = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -81,6 +81,56 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Local settings";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // KeepMergeBackup
+            // 
+            this.KeepMergeBackup.AutoSize = true;
+            this.KeepMergeBackup.Location = new System.Drawing.Point(187, 126);
+            this.KeepMergeBackup.Name = "KeepMergeBackup";
+            this.KeepMergeBackup.Size = new System.Drawing.Size(15, 14);
+            this.KeepMergeBackup.TabIndex = 9;
+            this.KeepMergeBackup.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 126);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(156, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Keep backup (.orig) after merge";
+            // 
+            // MergeTool
+            // 
+            this.MergeTool.Location = new System.Drawing.Point(118, 94);
+            this.MergeTool.Name = "MergeTool";
+            this.MergeTool.Size = new System.Drawing.Size(159, 20);
+            this.MergeTool.TabIndex = 7;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 97);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(89, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Mergetool (kdiff3)";
+            // 
+            // Editor
+            // 
+            this.Editor.Location = new System.Drawing.Point(118, 67);
+            this.Editor.Name = "Editor";
+            this.Editor.Size = new System.Drawing.Size(159, 20);
+            this.Editor.TabIndex = 5;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 70);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(105, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Editor ( notepad.exe)";
             // 
             // UserEmail
             // 
@@ -127,6 +177,110 @@
             this.tabControl1.Size = new System.Drawing.Size(293, 262);
             this.tabControl1.TabIndex = 0;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.GlobalKeepMergeBackup);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.GlobalMergeTool);
+            this.tabPage2.Controls.Add(this.GlobalEditor);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.GlobalUserEmail);
+            this.tabPage2.Controls.Add(this.GlobalUserName);
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(285, 236);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Global settings";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // GlobalKeepMergeBackup
+            // 
+            this.GlobalKeepMergeBackup.AutoSize = true;
+            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(183, 125);
+            this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
+            this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
+            this.GlobalKeepMergeBackup.TabIndex = 9;
+            this.GlobalKeepMergeBackup.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 125);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(156, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "Keep backup (.orig) after merge";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 95);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(89, 13);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Mergetool (kdiff3)";
+            // 
+            // GlobalMergeTool
+            // 
+            this.GlobalMergeTool.Location = new System.Drawing.Point(113, 92);
+            this.GlobalMergeTool.Name = "GlobalMergeTool";
+            this.GlobalMergeTool.Size = new System.Drawing.Size(164, 20);
+            this.GlobalMergeTool.TabIndex = 6;
+            // 
+            // GlobalEditor
+            // 
+            this.GlobalEditor.Location = new System.Drawing.Point(113, 65);
+            this.GlobalEditor.Name = "GlobalEditor";
+            this.GlobalEditor.Size = new System.Drawing.Size(164, 20);
+            this.GlobalEditor.TabIndex = 5;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 68);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(102, 13);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Editor (notepad.exe)";
+            // 
+            // GlobalUserEmail
+            // 
+            this.GlobalUserEmail.Location = new System.Drawing.Point(113, 37);
+            this.GlobalUserEmail.Name = "GlobalUserEmail";
+            this.GlobalUserEmail.Size = new System.Drawing.Size(164, 20);
+            this.GlobalUserEmail.TabIndex = 3;
+            // 
+            // GlobalUserName
+            // 
+            this.GlobalUserName.Location = new System.Drawing.Point(113, 8);
+            this.GlobalUserName.Name = "GlobalUserName";
+            this.GlobalUserName.Size = new System.Drawing.Size(164, 20);
+            this.GlobalUserName.TabIndex = 2;
+            this.GlobalUserName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 39);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "User email";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "User name";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -156,160 +310,6 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.GlobalKeepMergeBackup);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.GlobalMergeTool);
-            this.tabPage2.Controls.Add(this.GlobalEditor);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.GlobalUserEmail);
-            this.tabPage2.Controls.Add(this.GlobalUserName);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(285, 236);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Global settings";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "User name";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 39);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "User email";
-            // 
-            // GlobalUserName
-            // 
-            this.GlobalUserName.Location = new System.Drawing.Point(113, 8);
-            this.GlobalUserName.Name = "GlobalUserName";
-            this.GlobalUserName.Size = new System.Drawing.Size(164, 20);
-            this.GlobalUserName.TabIndex = 2;
-            this.GlobalUserName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // GlobalUserEmail
-            // 
-            this.GlobalUserEmail.Location = new System.Drawing.Point(113, 37);
-            this.GlobalUserEmail.Name = "GlobalUserEmail";
-            this.GlobalUserEmail.Size = new System.Drawing.Size(164, 20);
-            this.GlobalUserEmail.TabIndex = 3;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 70);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(105, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Editor ( notepad.exe)";
-            // 
-            // Editor
-            // 
-            this.Editor.Location = new System.Drawing.Point(118, 67);
-            this.Editor.Name = "Editor";
-            this.Editor.Size = new System.Drawing.Size(159, 20);
-            this.Editor.TabIndex = 5;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 68);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(102, 13);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "Editor (notepad.exe)";
-            // 
-            // GlobalEditor
-            // 
-            this.GlobalEditor.Location = new System.Drawing.Point(113, 65);
-            this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(164, 20);
-            this.GlobalEditor.TabIndex = 5;
-            // 
-            // GlobalMergeTool
-            // 
-            this.GlobalMergeTool.Location = new System.Drawing.Point(113, 92);
-            this.GlobalMergeTool.Name = "GlobalMergeTool";
-            this.GlobalMergeTool.Size = new System.Drawing.Size(164, 20);
-            this.GlobalMergeTool.TabIndex = 6;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 95);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(89, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Mergetool (kdiff3)";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 97);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Mergetool (kdiff3)";
-            // 
-            // MergeTool
-            // 
-            this.MergeTool.Location = new System.Drawing.Point(118, 94);
-            this.MergeTool.Name = "MergeTool";
-            this.MergeTool.Size = new System.Drawing.Size(159, 20);
-            this.MergeTool.TabIndex = 7;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 126);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(156, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Keep backup (.orig) after merge";
-            // 
-            // KeepMergeBackup
-            // 
-            this.KeepMergeBackup.AutoSize = true;
-            this.KeepMergeBackup.Location = new System.Drawing.Point(187, 126);
-            this.KeepMergeBackup.Name = "KeepMergeBackup";
-            this.KeepMergeBackup.Size = new System.Drawing.Size(15, 14);
-            this.KeepMergeBackup.TabIndex = 9;
-            this.KeepMergeBackup.UseVisualStyleBackColor = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 125);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(156, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Keep backup (.orig) after merge";
-            // 
-            // GlobalKeepMergeBackup
-            // 
-            this.GlobalKeepMergeBackup.AutoSize = true;
-            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(183, 125);
-            this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
-            this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
-            this.GlobalKeepMergeBackup.TabIndex = 9;
-            this.GlobalKeepMergeBackup.UseVisualStyleBackColor = true;
-            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,15 +318,16 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettigns";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
