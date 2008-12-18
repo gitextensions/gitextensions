@@ -10,11 +10,12 @@ namespace GitCommands
         public GitRevision()
         {
             GraphLines = new List<string>();
+            Heads = new List<GitHead>();
         }
 
         public string Guid { get; set; }
         public string Name { get; set; }
-        public string Heads { get; set; }
+        public List<GitHead> Heads { get; set; }
 
         public string TreeGuid { get; set; }
         //public string parentGuid { get; set; }

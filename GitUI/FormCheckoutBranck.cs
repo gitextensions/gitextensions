@@ -17,7 +17,7 @@ namespace GitUI
             InitializeComponent();
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(true);
+            Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
         }
 
         private void Ok_Click(object sender, EventArgs e)

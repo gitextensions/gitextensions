@@ -13,6 +13,9 @@ namespace GitCommands
     {
         public static string FindGitWorkingDir(string startDir)
         {
+            if (string.IsNullOrEmpty(startDir))
+                return "";
+
             string dir = startDir;
             if (!dir.EndsWith("\\") && !dir.EndsWith("/"))
                 dir += "\\";
@@ -34,72 +37,91 @@ namespace GitCommands
 
         public static void RunRealCmd(string cmd, string arguments)
         {
-            Settings.GitLog += cmd + " " + arguments + "\n";
-            //process used to execute external commands
+            try
+            {
+                Settings.GitLog += cmd + " " + arguments + "\n";
+                //process used to execute external commands
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = true;
-            process.StartInfo.ErrorDialog = false;
-            process.StartInfo.RedirectStandardOutput = false;
-            process.StartInfo.RedirectStandardInput = false;
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.ErrorDialog = false;
+                process.StartInfo.RedirectStandardOutput = false;
+                process.StartInfo.RedirectStandardInput = false;
 
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
 
-            process.Start();
-            process.WaitForExit();
-            process.Close();
-            
+                process.Start();
+                process.WaitForExit();
+                process.Close();
+            }
+            catch
+            {
+            }
         }
 
         public static void RunRealCmdDetatched(string cmd, string arguments)
         {
-            Settings.GitLog += cmd + " " + arguments + "\n";
-            //process used to execute external commands
+            try
+            {
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = true;
-            process.StartInfo.ErrorDialog = false;
-            process.StartInfo.RedirectStandardOutput = false;
-            process.StartInfo.RedirectStandardInput = false;
+                Settings.GitLog += cmd + " " + arguments + "\n";
+                //process used to execute external commands
 
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.ErrorDialog = false;
+                process.StartInfo.RedirectStandardOutput = false;
+                process.StartInfo.RedirectStandardInput = false;
 
-            process.Start();
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+
+                process.Start();
+            }
+            catch
+            {
+            }
 
 
         }
 
         public static void Run(string cmd, string arguments)
         {
-            Settings.GitLog += cmd + " " + arguments + "\n";
-            //process used to execute external commands
+            try
+            {
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.ErrorDialog = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardError = true;
+                Settings.GitLog += cmd + " " + arguments + "\n";
+                //process used to execute external commands
 
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.ErrorDialog = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardError = true;
 
-            process.Start();
-            //process.WaitForExit();
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+
+                process.Start();
+                //process.WaitForExit();
+            }
+            catch
+            {
+            }
 
         }
 
@@ -107,72 +129,86 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
-            Settings.GitLog += cmd + " " + arguments + "\n";
-            //process used to execute external commands
-
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.ErrorDialog = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardError = true;
-
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
-
-            process.Start();
-
-            string output;
-            string error;
-                
-            output = process.StandardOutput.ReadToEnd();
-            error = process.StandardError.ReadToEnd();
-
-            process.WaitForExit();
-            process.Close();
-            // Read the output stream first and then wait. 
-
-            if (!string.IsNullOrEmpty(error))
+            string output = "";
+            try
             {
-                output += "\n" + error;
+                Settings.GitLog += cmd + " " + arguments + "\n";
+                //process used to execute external commands
+
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.ErrorDialog = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardError = true;
+
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+
+                process.Start();
+
+                
+                string error;
+
+                output = process.StandardOutput.ReadToEnd();
+                error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+                process.Close();
+                // Read the output stream first and then wait. 
+
+                if (!string.IsNullOrEmpty(error))
+                {
+                    output += "\n" + error;
+                }
             }
-            
+            catch
+            {
+            }
             return output;
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static Process RunCmdAsync(string cmd, string arguments)
         {
-            Settings.GitLog += cmd + " " + arguments + "\n";
-            //process used to execute external commands
+            Process process = new System.Diagnostics.Process(); 
+            try
+            {
+                Settings.GitLog += cmd + " " + arguments + "\n";
+                //process used to execute external commands
 
-            Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = true;
-            process.StartInfo.ErrorDialog = true;
-            process.StartInfo.RedirectStandardOutput = false;
-            process.StartInfo.RedirectStandardInput = false;
-            process.StartInfo.RedirectStandardError = false;
 
-            process.StartInfo.LoadUserProfile = true;
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.ErrorDialog = true;
+                process.StartInfo.RedirectStandardOutput = false;
+                process.StartInfo.RedirectStandardInput = false;
+                process.StartInfo.RedirectStandardError = false;
 
-            process.Start();
+                process.StartInfo.LoadUserProfile = true;
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+
+                process.Start();
+            }
+            catch
+            {
+            }
 
             return process;
         }
 
         static public bool InTheMiddleOfConflictedMerge()
         {
-            return RunCmd(Settings.GitDir + "git.exe", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
+            //return RunCmd(Settings.GitDir + "git.exe", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
+            return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.exe", "ls-files --unmerged --exclude-standard"));
         }
 
         static public void RunGui()
@@ -229,6 +265,13 @@ namespace GitCommands
         public string FormatPatch(string from, string to, string output)
         {
             string result = RunCmd(Settings.GitDir + "git.exe", "format-patch -M -C -B " + from + ".." + to + " -o \"" + output + "\"");
+
+            return result;
+        }
+
+        static public string Tag(string tagName, string revision)
+        {
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "tag \"" + tagName + "\" \"" + revision + "\"");
 
             return result;
         }
@@ -393,6 +436,99 @@ namespace GitCommands
             return retVal;
         }
 
+        static public List<GitItemStatus> GetUntrackedFiles()
+        {
+            string status = RunCmd(Settings.GitDir + "git.exe", "ls-files --others --directory --no-empty-directory --exclude-standard");
+
+            string[] statusStrings = status.Split('\n');
+
+            List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
+
+            foreach (string statusString in statusStrings)
+            {
+                if (string.IsNullOrEmpty(statusString.Trim()))
+                    continue;
+                GitItemStatus itemStatus = new GitItemStatus();
+                itemStatus.IsNew = true;
+                itemStatus.IsChanged = false;
+                itemStatus.IsDeleted = false;
+                itemStatus.IsTracked = false;
+                itemStatus.Name = statusString.Trim();
+                gitItemStatusList.Add(itemStatus);
+            }
+
+            return gitItemStatusList;
+        }
+
+        static public List<GitItemStatus> GetModifiedFiles()
+        {
+            string status = RunCmd(Settings.GitDir + "git.exe", "ls-files --modified --exclude-standard");
+
+            string[] statusStrings = status.Split('\n');
+
+            List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
+
+            foreach (string statusString in statusStrings)
+            {
+                if (string.IsNullOrEmpty(statusString.Trim()))
+                    continue;
+                GitItemStatus itemStatus = new GitItemStatus();
+                itemStatus.IsNew = false;
+                itemStatus.IsChanged = true;
+                itemStatus.IsDeleted = false;
+                itemStatus.IsTracked = true;
+                itemStatus.Name = statusString.Trim();
+                gitItemStatusList.Add(itemStatus);
+            }
+
+            return gitItemStatusList;
+        }
+
+        static public List<GitItemStatus> GetDeletedFiles()
+        {
+            string status = RunCmd(Settings.GitDir + "git.exe", "ls-files --deleted --exclude-standard");
+
+            string[] statusStrings = status.Split('\n');
+
+            List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
+
+            foreach (string statusString in statusStrings)
+            {
+                if (string.IsNullOrEmpty(statusString.Trim()))
+                    continue; 
+                GitItemStatus itemStatus = new GitItemStatus();
+                itemStatus.IsNew = false;
+                itemStatus.IsChanged = false;
+                itemStatus.IsDeleted = true;
+                itemStatus.IsTracked = true;
+                itemStatus.Name = statusString.Trim();
+                gitItemStatusList.Add(itemStatus);
+            }
+
+            return gitItemStatusList;
+        }
+
+        static public List<GitItemStatus> GetStagedFiles()
+        {
+            string status = RunCmd(Settings.GitDir + "git.exe", "diff --cached --name-only");
+
+            string[] statusStrings = status.Split('\n');
+
+            List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
+
+            foreach (string statusString in statusStrings)
+            {
+                if (string.IsNullOrEmpty(statusString.Trim()))
+                    continue; 
+                GitItemStatus itemStatus = new GitItemStatus();
+                itemStatus.IsTracked = true;
+                itemStatus.Name = statusString.Trim();
+                gitItemStatusList.Add(itemStatus);
+            }
+
+            return gitItemStatusList;
+        }
+
         static public List<GitItemStatus> GitStatus()
         {
             string status = RunCmd(Settings.GitDir + "git.exe", "status --untracked=all");
@@ -542,7 +678,7 @@ namespace GitCommands
 
                 foreach (var head in foundHeads)
                 {
-                    revision.Heads += "[" + head.Name + "] ";
+                    revision.Heads.Add( head );
                 }
 
                 while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
@@ -621,6 +757,30 @@ namespace GitCommands
             return GetHeads(true);
         }
 
+        static public string StageFiles(List<string> files)
+        {
+            string fileslist = "";
+            foreach (string file in files)
+            {
+                fileslist += " \"" + file + "\"";
+            }
+
+            return GitCommands.RunCmd(Settings.GitDir + "git.exe", "add" + fileslist);
+        }
+
+        static public string UnstageFiles(List<string> files)
+        {
+            if (files.Count == 0) return "No staged files selected to unstage";
+
+            string fileslist = "";
+            foreach (string file in files)
+            {
+                fileslist += " \"" + file + "\"";
+            }
+
+            return GitCommands.RunCmd(Settings.GitDir + "git.exe", "reset HEAD" + fileslist);
+        }
+
         static public string GetSelectedBranch()
         {
             string branches = RunCmd(Settings.GitDir + "git.exe", "branch");
@@ -651,8 +811,26 @@ namespace GitCommands
                     GitHead head = new GitHead();
                     head.Guid = itemsString.Substring(0, 40);
                     head.Name = itemsString.Substring(41).Trim();
-                    if (head.Name.Length > 0 && head.Name.LastIndexOf("/") >1)
-                        head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                    if (head.Name.Length > 0 && head.Name.LastIndexOf("/") > 1)
+                    {
+                        if (head.Name.Contains("refs/tags/"))
+                        {
+                            //we need the one containing ^{}, because it contains the reference
+                            if (head.Name.Contains("^{}"))
+                            {
+                                head.Name = head.Name.Substring(0, head.Name.Length - 3);
+                            }
+                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                            head.IsHead = false;
+                            head.IsTag = true;
+                        }
+                        else
+                        {
+                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                            head.IsHead = true;
+                            head.IsTag = false;
+                        }
+                    }
 
                     heads.Add(head);
                 }

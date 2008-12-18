@@ -168,6 +168,12 @@
     <Compile Include="FormStash.Designer.cs">
       <DependentUpon>FormStash.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormTag.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTag.Designer.cs">
+      <DependentUpon>FormTag.cs</DependentUpon>
+    </Compile>
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RepositoryHistory.cs" />
     <Compile Include="RevisionGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -250,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormStash.resx">
       <DependentUpon>FormStash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTag.resx">
+      <DependentUpon>FormTag.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GitLogForm.resx">
       <DependentUpon>GitLogForm.cs</DependentUpon>

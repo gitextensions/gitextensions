@@ -17,6 +17,17 @@ namespace GitCommands
 
         public string Name { get; set; }
 
+        public string ChangeString 
+        {
+            get
+            {
+                if (!IsTracked) return "Untracked";
+                if (IsDeleted) return "Deleted";
+                if (IsChanged) return "Modified";
+                if (IsNew) return "New";
+                return "";
+            }
+        }
 
         public bool IsTracked { get; set; }
         public bool IsDeleted { get; set; }

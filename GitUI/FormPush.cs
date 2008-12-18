@@ -33,12 +33,9 @@ namespace GitUI
                 return;
             }
 
-            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text);
-//            process.BeginErrorReadLine();
-  //          process.BeginOutputReadLine();
-    //        process.ErrorDataReceived += new DataReceivedEventHandler(process_ErrorDataReceived);
-      //      process.OutputDataReceived += new DataReceivedEventHandler(process_OutputDataReceived);
+            RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
+            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text);
 
             process.WaitForExit();
             
@@ -58,6 +55,11 @@ namespace GitUI
             string data = e.Data;
             if (data.StartsWith("Enter passphrase"))
                 ((Process)sender).StandardInput.WriteLine("achttien");
+        }
+
+        private void PushDestination_DropDown(object sender, EventArgs e)
+        {
+            PushDestination.DataSource = RepositoryHistory.MostRecentRepositories;
         }
     }
 }

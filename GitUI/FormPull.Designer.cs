@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPull));
             this.label1 = new System.Windows.Forms.Label();
-            this.PullSource = new System.Windows.Forms.TextBox();
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -41,6 +40,7 @@
             this.Rebase = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Fetch = new System.Windows.Forms.RadioButton();
+            this.PullSource = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,14 +52,6 @@
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Source";
-            // 
-            // PullSource
-            // 
-            this.PullSource.Location = new System.Drawing.Point(105, 10);
-            this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(345, 20);
-            this.PullSource.TabIndex = 3;
-            this.PullSource.TextChanged += new System.EventHandler(this.PullSource_TextChanged);
             // 
             // BrowseSource
             // 
@@ -164,11 +156,22 @@
             this.Fetch.Text = "Do not merge, only fetch remote branch";
             this.Fetch.UseVisualStyleBackColor = true;
             // 
+            // PullSource
+            // 
+            this.PullSource.FormattingEnabled = true;
+            this.PullSource.Location = new System.Drawing.Point(106, 9);
+            this.PullSource.Name = "PullSource";
+            this.PullSource.Size = new System.Drawing.Size(345, 21);
+            this.PullSource.TabIndex = 13;
+            this.PullSource.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.PullSource_DrawItem);
+            this.PullSource.DropDown += new System.EventHandler(this.PullSource_DropDown);
+            // 
             // FormPull
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 368);
+            this.Controls.Add(this.PullSource);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Mergetool);
             this.Controls.Add(this.Output);
@@ -176,11 +179,11 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.BrowseSource);
-            this.Controls.Add(this.PullSource);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPull";
             this.Text = "Pull";
+            this.Load += new System.EventHandler(this.FormPull_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -191,7 +194,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox PullSource;
         private System.Windows.Forms.Button BrowseSource;
         private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.Label label2;
@@ -202,5 +204,6 @@
         private System.Windows.Forms.RadioButton Rebase;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Fetch;
+        private System.Windows.Forms.ComboBox PullSource;
     }
 }

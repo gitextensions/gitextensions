@@ -290,10 +290,13 @@ namespace GitUI
                         if (e.Value is string)
                         {
                             GitRevision revision = (GitRevision)Revisions.Rows[e.RowIndex].DataBoundItem;
-                            e.Graphics.DrawString(revision.Heads, HeadFont, new SolidBrush(Color.DarkRed), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                            float offset = 0;
+                            foreach (GitHead h in revision.Heads)
+                            {
+                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, new SolidBrush(h.IsTag == true ? Color.DarkBlue : Color.DarkRed), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                            float offset = e.Graphics.MeasureString(revision.Heads, HeadFont).Width;
-
+                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
+                            }
                             string text = (string)e.Value;
                             e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                         }

@@ -26,7 +26,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "commit -a -m \"" + Dto.Message + "\"");
+            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "commit -m \"" + Dto.Message + "\"");
         }
     }
 }

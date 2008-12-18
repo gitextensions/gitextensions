@@ -23,6 +23,9 @@ namespace GitUI
             {
                 OutPut.Text = "";
 
+                RepositoryHistory.AddMostRecentRepository(From.Text);
+                RepositoryHistory.AddMostRecentRepository(To.Text);
+
                 CloneDto dto = new CloneDto(From.Text, To.Text);
                 GitCommands.Clone commit = new GitCommands.Clone(dto);
                 commit.Execute();
@@ -48,6 +51,16 @@ namespace GitUI
             if (dialog.ShowDialog() == DialogResult.OK)
                 To.Text = dialog.SelectedPath;
 
+        }
+
+        private void From_DropDown(object sender, EventArgs e)
+        {
+            From.DataSource = RepositoryHistory.MostRecentRepositories;
+        }
+
+        private void To_DropDown(object sender, EventArgs e)
+        {
+            To.DataSource = RepositoryHistory.MostRecentRepositories;
         }
     }
 }

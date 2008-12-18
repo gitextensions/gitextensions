@@ -75,6 +75,8 @@ namespace GitUI
                 return;
             }
 
+            RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+
             if (Fetch.Checked)
                 Output.Text = GitCommands.GitCommands.Fetch(PullSource.Text, Branches.SelectedText);
             else if (Merge.Checked)
@@ -88,6 +90,21 @@ namespace GitUI
                     GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.exe", "mergetool");
             }
 
+        }
+
+        private void FormPull_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PullSource_DrawItem(object sender, DrawItemEventArgs e)
+        {
+
+        }
+
+        private void PullSource_DropDown(object sender, EventArgs e)
+        {
+            PullSource.DataSource = RepositoryHistory.MostRecentRepositories;
         }
 
     }

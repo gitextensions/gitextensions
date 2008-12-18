@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPush));
             this.Output = new System.Windows.Forms.RichTextBox();
             this.BrowseSource = new System.Windows.Forms.Button();
-            this.PushDestination = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Push = new System.Windows.Forms.Button();
+            this.PushDestination = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // Output
@@ -54,13 +54,6 @@
             this.BrowseSource.UseVisualStyleBackColor = true;
             this.BrowseSource.Click += new System.EventHandler(this.BrowseSource_Click);
             // 
-            // PushDestination
-            // 
-            this.PushDestination.Location = new System.Drawing.Point(119, 20);
-            this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(247, 20);
-            this.PushDestination.TabIndex = 12;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -80,15 +73,24 @@
             this.Push.UseVisualStyleBackColor = true;
             this.Push.Click += new System.EventHandler(this.Push_Click);
             // 
+            // PushDestination
+            // 
+            this.PushDestination.FormattingEnabled = true;
+            this.PushDestination.Location = new System.Drawing.Point(109, 19);
+            this.PushDestination.Name = "PushDestination";
+            this.PushDestination.Size = new System.Drawing.Size(257, 21);
+            this.PushDestination.TabIndex = 16;
+            this.PushDestination.DropDown += new System.EventHandler(this.PushDestination_DropDown);
+            // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 285);
+            this.Controls.Add(this.PushDestination);
             this.Controls.Add(this.Push);
             this.Controls.Add(this.Output);
             this.Controls.Add(this.BrowseSource);
-            this.Controls.Add(this.PushDestination);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPush";
@@ -102,8 +104,8 @@
 
         private System.Windows.Forms.RichTextBox Output;
         private System.Windows.Forms.Button BrowseSource;
-        private System.Windows.Forms.TextBox PushDestination;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Push;
+        private System.Windows.Forms.ComboBox PushDestination;
     }
 }

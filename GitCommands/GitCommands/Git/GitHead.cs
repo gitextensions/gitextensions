@@ -17,6 +17,8 @@ namespace GitCommands
             Selected = false;
         }
 
+        public bool IsHead { get; set; }
+        public bool IsTag { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems

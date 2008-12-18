@@ -23,20 +23,16 @@ namespace GitUI
 
         private void Initialize()
         {
-            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus();
+            List<GitItemStatus> changedFiles = 
+                                  GitCommands.GitCommands.GetUntrackedFiles();
+            changedFiles.AddRange(GitCommands.GitCommands.GetModifiedFiles());
+            changedFiles.AddRange(GitCommands.GitCommands.GetDeletedFiles());
 
-            List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
-            List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
-            foreach (GitItemStatus itemStatus in itemStatusList)
-            {
-                if (itemStatus.IsTracked == false)
-                    untrackedItemStatus.Add(itemStatus);
-                else
-                    trackedItemStatus.Add(itemStatus);
-            }
+            List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
 
-            Tracked.DataSource = trackedItemStatus;
-            Untracked.DataSource = untrackedItemStatus;
+            Staged.DataSource = stagedFiles;
+
+            Unstaged.DataSource = changedFiles;
         }
 
         protected void ShowChanges(GitItemStatus item)
@@ -48,21 +44,21 @@ namespace GitUI
 
         private void Tracked_SelectionChanged(object sender, EventArgs e)
         {
-            if (Tracked.SelectedRows.Count == 0) return;
+            if (Staged.SelectedRows.Count == 0) return;
 
-            if (Tracked.SelectedRows[0].DataBoundItem is GitItemStatus)
+            if (Staged.SelectedRows[0].DataBoundItem is GitItemStatus)
             {
-                ShowChanges((GitItemStatus)Tracked.SelectedRows[0].DataBoundItem);
+                ShowChanges((GitItemStatus)Staged.SelectedRows[0].DataBoundItem);
             }
         }
 
         private void Untracked_SelectionChanged(object sender, EventArgs e)
         {
-            if (Untracked.SelectedRows.Count == 0) return;
+            if (Unstaged.SelectedRows.Count == 0) return;
 
-            if (Untracked.SelectedRows[0].DataBoundItem is GitItemStatus)
+            if (Unstaged.SelectedRows[0].DataBoundItem is GitItemStatus)
             {
-                ShowChanges((GitItemStatus)Untracked.SelectedRows[0].DataBoundItem);
+                ShowChanges((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem);
             }
         }
 
@@ -108,20 +104,18 @@ namespace GitUI
         {
 
             string result = "";
-            foreach (DataGridViewRow row in Untracked.SelectedRows)
+            List<string> files = new List<string>();
+            foreach (DataGridViewRow row in Unstaged.SelectedRows)
             {
                 if (row.DataBoundItem is GitItemStatus)
                 {
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                    AddFilesDto dto = new AddFilesDto(item.Name);
-                    AddFiles addFiles = new AddFiles(dto);
-                    addFiles.Execute();
-
-                    result += dto.Result + "\n";
-
+                    files.Add(item.Name);
                 }
             }
+
+            result = GitCommands.GitCommands.StageFiles(files);
 
             if (result.Length > 0)
                 OutPut.Text = result;
@@ -139,6 +133,33 @@ namespace GitUI
                     Initialize();
                 }
             }
+        }
+
+        private void UnstageFiles_Click(object sender, EventArgs e)
+        {
+            string result = "";
+            List<string> files = new List<string>();
+            foreach (DataGridViewRow row in Staged.SelectedRows)
+            {
+                if (row.DataBoundItem is GitItemStatus)
+                {
+                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+
+                    files.Add(item.Name);
+                }
+            }
+
+            result = GitCommands.GitCommands.UnstageFiles(files);
+
+            if (result.Length > 0)
+                OutPut.Text = result;
+
+            Initialize();
+        }
+
+        private void splitContainer8_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
         }
     }
 }

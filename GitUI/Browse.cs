@@ -436,6 +436,22 @@ namespace GitUI
             gitBashToolStripMenuItem_Click_1(sender, e);
         }
 
+        private void Settings_Click(object sender, EventArgs e)
+        {
+            settingsToolStripMenuItem_Click(sender, e);
+        }
+
+        private void tagToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormTag().ShowDialog();
+            Initialize();
+        }
+
+        private void RefreshButton_Click(object sender, EventArgs e)
+        {
+            refreshToolStripMenuItem_Click(sender, e);
+        }
+
 
     }
 }

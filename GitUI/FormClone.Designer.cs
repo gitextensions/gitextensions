@@ -30,14 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.To = new System.Windows.Forms.TextBox();
-            this.From = new System.Windows.Forms.TextBox();
+            this.ToBrowse = new System.Windows.Forms.Button();
+            this.FromBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.FromBrowse = new System.Windows.Forms.Button();
-            this.ToBrowse = new System.Windows.Forms.Button();
+            this.To = new System.Windows.Forms.ComboBox();
+            this.From = new System.Windows.Forms.ComboBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -52,10 +52,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.From);
+            this.splitContainer1.Panel1.Controls.Add(this.To);
             this.splitContainer1.Panel1.Controls.Add(this.ToBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
-            this.splitContainer1.Panel1.Controls.Add(this.To);
-            this.splitContainer1.Panel1.Controls.Add(this.From);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.Ok);
@@ -67,19 +67,25 @@
             this.splitContainer1.SplitterDistance = 97;
             this.splitContainer1.TabIndex = 0;
             // 
-            // To
+            // ToBrowse
             // 
-            this.To.Location = new System.Drawing.Point(66, 48);
-            this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(190, 20);
-            this.To.TabIndex = 4;
+            this.ToBrowse.Location = new System.Drawing.Point(263, 44);
+            this.ToBrowse.Name = "ToBrowse";
+            this.ToBrowse.Size = new System.Drawing.Size(75, 23);
+            this.ToBrowse.TabIndex = 6;
+            this.ToBrowse.Text = "Browse";
+            this.ToBrowse.UseVisualStyleBackColor = true;
+            this.ToBrowse.Click += new System.EventHandler(this.ToBrowse_Click);
             // 
-            // From
+            // FromBrowse
             // 
-            this.From.Location = new System.Drawing.Point(66, 17);
-            this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(190, 20);
-            this.From.TabIndex = 3;
+            this.FromBrowse.Location = new System.Drawing.Point(263, 17);
+            this.FromBrowse.Name = "FromBrowse";
+            this.FromBrowse.Size = new System.Drawing.Size(75, 23);
+            this.FromBrowse.TabIndex = 5;
+            this.FromBrowse.Text = "Browse";
+            this.FromBrowse.UseVisualStyleBackColor = true;
+            this.FromBrowse.Click += new System.EventHandler(this.FromBrowse_Click);
             // 
             // label2
             // 
@@ -118,25 +124,23 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // FromBrowse
+            // To
             // 
-            this.FromBrowse.Location = new System.Drawing.Point(263, 17);
-            this.FromBrowse.Name = "FromBrowse";
-            this.FromBrowse.Size = new System.Drawing.Size(75, 23);
-            this.FromBrowse.TabIndex = 5;
-            this.FromBrowse.Text = "Browse";
-            this.FromBrowse.UseVisualStyleBackColor = true;
-            this.FromBrowse.Click += new System.EventHandler(this.FromBrowse_Click);
+            this.To.FormattingEnabled = true;
+            this.To.Location = new System.Drawing.Point(66, 45);
+            this.To.Name = "To";
+            this.To.Size = new System.Drawing.Size(190, 21);
+            this.To.TabIndex = 7;
+            this.To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
-            // ToBrowse
+            // From
             // 
-            this.ToBrowse.Location = new System.Drawing.Point(263, 44);
-            this.ToBrowse.Name = "ToBrowse";
-            this.ToBrowse.Size = new System.Drawing.Size(75, 23);
-            this.ToBrowse.TabIndex = 6;
-            this.ToBrowse.Text = "Browse";
-            this.ToBrowse.UseVisualStyleBackColor = true;
-            this.ToBrowse.Click += new System.EventHandler(this.ToBrowse_Click);
+            this.From.FormattingEnabled = true;
+            this.From.Location = new System.Drawing.Point(66, 17);
+            this.From.Name = "From";
+            this.From.Size = new System.Drawing.Size(191, 21);
+            this.From.TabIndex = 8;
+            this.From.DropDown += new System.EventHandler(this.From_DropDown);
             // 
             // FormClone
             // 
@@ -162,9 +166,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.RichTextBox OutPut;
-        private System.Windows.Forms.TextBox To;
-        private System.Windows.Forms.TextBox From;
         private System.Windows.Forms.Button ToBrowse;
         private System.Windows.Forms.Button FromBrowse;
+        private System.Windows.Forms.ComboBox From;
+        private System.Windows.Forms.ComboBox To;
     }
 }

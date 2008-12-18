@@ -20,11 +20,22 @@ namespace GitExtensions
 
             string[] args = Environment.GetCommandLineArgs();
 
-            if (args.Length <= 1)
+            try
             {
-                Application.Run(new FormBrowse());
-                return;
+                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir8").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir7").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir6").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir5").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir4").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir3").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir2").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir1").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir0").ToString());
             }
+            catch
+            {
+            }
+
 
             if (args.Length == 3)
             {
@@ -36,84 +47,98 @@ namespace GitExtensions
 
                 if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
                     GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
-            }
+            } 
+            
+            if (args.Length <= 1)
+            {
+                Application.Run(new FormBrowse());
+
+            }else
 
             if (args.Length > 1 && args[1] == "browse")
             {
                 Application.Run(new FormBrowse());
-                return;
-            }
+                
+            }else
 
             if (args.Length > 1 && args[1] == "addfiles")
             {
                 Application.Run(new FormAddFiles());
-                return;
-            }
+                
+            }else
 
             if (args.Length > 1 && args[1] == "applypatch")
             {
                 Application.Run(new MergePatch());
-                return;
-            }
+                
+            }else
 
             if (args.Length > 1 && args[1] == "branch")
             {
                 Application.Run(new FormBranch());
-                return;
-            }
+                
+            }else
 
             if (args.Length > 1 && args[1] == "checkoutbranch")
             {
                 Application.Run(new FormCheckoutBranck());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "checkoutrevision")
             {
                 Application.Run(new FormCheckout());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "clone")
             {
                 Application.Run(new FormClone());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "commit")
             {
                 Application.Run(new FormCommit());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "filehistory")
             {
                 if (args.Length > 2)
                     Application.Run(new FormFileHistory(args[2]));
                 else
                     MessageBox.Show("No file selected");
-                return;
-            } 
+                
+            } else
             if (args.Length > 1 && args[1] == "formatpatch")
             {
                 Application.Run(new FormFormatPath());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "pull")
             {
                 Application.Run(new FormPull());
-                return;
-            }
+                
+            }else
             if (args.Length > 1 && args[1] == "push")
             {
                 Application.Run(new FormPush());
-                return;
-            }
+            }else
             if (args.Length > 1 && args[1] == "settings")
             {
                 Application.Run(new FormSettigns());
-                return;
-            }
+            } else
             if (args.Length > 1 && args[1] == "viewdiff")
             {
                 Application.Run(new FormDiff());
-                return;
+            }
+
+            try
+            {
+                for (int n = 0; n < RepositoryHistory.MostRecentRepositories.Count; n++)
+                {
+                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
+                }
+            }
+            catch
+            {
             }
         }
     }

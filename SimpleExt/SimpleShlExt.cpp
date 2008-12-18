@@ -169,8 +169,6 @@ void CSimpleShlExt::RunGitEx(const char * command)
 
 	CString dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
 
-	MessageBox ( NULL, args, _T("args"),MB_ICONINFORMATION );
-
 	ShellExecute(NULL, "open", "GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
 	//system(szMsg);
 }
