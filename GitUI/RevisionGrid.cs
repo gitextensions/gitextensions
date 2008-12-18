@@ -293,7 +293,9 @@ namespace GitUI
                             float offset = 0;
                             foreach (GitHead h in revision.Heads)
                             {
-                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, new SolidBrush(h.IsTag == true ? Color.DarkBlue : Color.DarkRed), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                SolidBrush brush = new SolidBrush(h.IsTag == true ? Color.DarkBlue : h.IsHead ? Color.DarkRed : h.IsRemote ? Color.Green : Color.Gray);
+
+                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
                                 offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
                             }

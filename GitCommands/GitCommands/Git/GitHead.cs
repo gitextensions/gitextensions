@@ -19,6 +19,8 @@ namespace GitCommands
 
         public bool IsHead { get; set; }
         public bool IsTag { get; set; }
+        public bool IsRemote { get; set; }
+        public bool IsOther { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems

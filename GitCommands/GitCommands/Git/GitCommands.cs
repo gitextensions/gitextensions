@@ -826,9 +826,11 @@ namespace GitCommands
                         }
                         else
                         {
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
-                            head.IsHead = true;
+                            head.IsHead = head.Name.Contains("refs/heads/");
+                            head.IsRemote = head.Name.Contains("refs/remotes/");
                             head.IsTag = false;
+                            head.IsOther = !head.IsHead && !head.IsRemote && !head.IsTag;
+                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
                         }
                     }
 

@@ -22,15 +22,15 @@ namespace GitExtensions
 
             try
             {
-                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir8").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir7").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir6").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir5").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir4").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir3").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir2").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir1").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir0").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir1").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir2").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir3").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir4").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir5").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir6").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir7").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.MostRecentRepositories.Add(Application.UserAppDataRegistry.GetValue("dir8").ToString());
             }
             catch
             {
