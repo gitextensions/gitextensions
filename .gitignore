@@ -9,7 +9,6 @@
 *.pch
 *.rgs
 *.vspscc
-*.txt
 *_i.c
 *_p.c
 *.ncb
@@ -26,7 +25,7 @@
 *.lib
 *.sbr
 [Ll]ib/
-[Rr]elease/
-[Dd]ebugInt/
+[Rr]elease*/
+[Dd]ebug*/
 UMM/UMM448/IActivaplanner.h
 [Tt]est[Rr]esults/

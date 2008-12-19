@@ -39,6 +39,8 @@ namespace GitCommands
         {
             try
             {
+                arguments = arguments.Replace('\\', '/');
+
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -68,6 +70,7 @@ namespace GitCommands
         {
             try
             {
+                arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
@@ -98,6 +101,7 @@ namespace GitCommands
         {
             try
             {
+                arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
@@ -132,6 +136,8 @@ namespace GitCommands
             string output = "";
             try
             {
+                arguments = arguments.Replace('\\', '/');
+
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -178,6 +184,8 @@ namespace GitCommands
             Process process = new System.Diagnostics.Process(); 
             try
             {
+                arguments = arguments.Replace('\\', '/');
+
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
