@@ -210,10 +210,10 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(9, 4);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(434, 13);
+            this.label11.Size = new System.Drawing.Size(550, 13);
             this.label11.TabIndex = 6;
             this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
-                " properly.";
+                " properly. (click on an item to fix it)";
             // 
             // GitFound
             // 

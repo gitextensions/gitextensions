@@ -111,16 +111,14 @@ namespace GitUI
         {
             try
             {
-                RegistryKey rk;
-                rk = root.OpenSubKey(subkey, false);
+                string reg;
+                value = value.Replace("\\", "\\\\");
+                reg = "Windows Registry Editor Version 5.00"+ Environment.NewLine+Environment.NewLine+"[" + root.ToString() + "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
 
-                if (rk != null)
-                {
-                    rk.SetValue(key, value);
-                    rk.Flush();
-                    rk.Close();
-                }
-
+                TextWriter tw = new StreamWriter(System.IO.Path.GetTempPath() + "GitExtensions.reg", false);
+                tw.Write(reg);
+                tw.Close();
+                GitCommands.GitCommands.RunCmd("regedit", System.IO.Path.GetTempPath() + "GitExtensions.reg");
             }
             catch(UnauthorizedAccessException ex)
             {
