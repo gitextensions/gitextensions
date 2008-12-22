@@ -492,6 +492,30 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
+        static public List<GitItemStatus> GetAllChangedFiles()
+        {
+            string status = RunCmd(Settings.GitDir + "git.exe", "ls-files --deleted --modified --others --directory --no-empty-directory --exclude-standard -t");
+
+            string[] statusStrings = status.Split('\n');
+
+            List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
+
+            foreach (string statusString in statusStrings)
+            {
+                if (string.IsNullOrEmpty(statusString.Trim()) || statusString.Length < 2)
+                    continue;
+                GitItemStatus itemStatus = new GitItemStatus();
+                itemStatus.IsNew = statusString[0] == '?';
+                itemStatus.IsChanged = statusString[0] == 'C';
+                itemStatus.IsDeleted = statusString[0] == 'R';
+                itemStatus.IsTracked = statusString[0] != '?';
+                itemStatus.Name = statusString.Substring(1).Trim();
+                gitItemStatusList.Add(itemStatus);
+            }
+
+            return gitItemStatusList;
+        }
+
         static public List<GitItemStatus> GetDeletedFiles()
         {
             string status = RunCmd(Settings.GitDir + "git.exe", "ls-files --deleted --exclude-standard");

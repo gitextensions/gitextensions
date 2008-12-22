@@ -22,6 +22,14 @@ namespace GitExtensions
 
             try
             {
+                if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
+                      Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
+                {
+                    FormSettigns settings = new FormSettigns();
+                    if (!settings.CheckSettings())
+                        settings.ShowDialog();
+                }
+
                 if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir0").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir1").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir2").ToString());

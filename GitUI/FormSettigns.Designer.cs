@@ -41,7 +41,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.GitFound = new System.Windows.Forms.Button();
+            this.DiffTool = new System.Windows.Forms.Button();
+            this.UserNameSet = new System.Windows.Forms.Button();
+            this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
+            this.GitExtensionsInstall = new System.Windows.Forms.Button();
+            this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
             this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -54,9 +61,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
+            this.CheckAtStartup = new System.Windows.Forms.CheckBox();
+            this.Rescan = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.GlobalSettingsPage.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -77,7 +87,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(285, 236);
+            this.tabPage1.Size = new System.Drawing.Size(655, 214);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Local settings";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -168,34 +178,127 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.GlobalSettingsPage);
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(293, 262);
+            this.tabControl1.Size = new System.Drawing.Size(663, 240);
             this.tabControl1.TabIndex = 0;
             // 
-            // tabPage2
+            // tabPage3
             // 
-            this.tabPage2.Controls.Add(this.GlobalKeepMergeBackup);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.GlobalMergeTool);
-            this.tabPage2.Controls.Add(this.GlobalEditor);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.GlobalUserEmail);
-            this.tabPage2.Controls.Add(this.GlobalUserName);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(285, 236);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Global settings";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage3.Controls.Add(this.Rescan);
+            this.tabPage3.Controls.Add(this.CheckAtStartup);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.GitFound);
+            this.tabPage3.Controls.Add(this.DiffTool);
+            this.tabPage3.Controls.Add(this.UserNameSet);
+            this.tabPage3.Controls.Add(this.ShellExtensionsRegistered);
+            this.tabPage3.Controls.Add(this.GitExtensionsInstall);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(655, 214);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Checklist";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 4);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(434, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
+                " properly.";
+            // 
+            // GitFound
+            // 
+            this.GitFound.FlatAppearance.BorderSize = 0;
+            this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitFound.Location = new System.Drawing.Point(8, 145);
+            this.GitFound.Name = "GitFound";
+            this.GitFound.Size = new System.Drawing.Size(631, 23);
+            this.GitFound.TabIndex = 5;
+            this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.GitFound.UseVisualStyleBackColor = true;
+            this.GitFound.Click += new System.EventHandler(this.GitFound_Click);
+            // 
+            // DiffTool
+            // 
+            this.DiffTool.FlatAppearance.BorderSize = 0;
+            this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DiffTool.Location = new System.Drawing.Point(8, 116);
+            this.DiffTool.Name = "DiffTool";
+            this.DiffTool.Size = new System.Drawing.Size(631, 23);
+            this.DiffTool.TabIndex = 4;
+            this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.DiffTool.UseVisualStyleBackColor = true;
+            this.DiffTool.Click += new System.EventHandler(this.DiffTool_Click);
+            // 
+            // UserNameSet
+            // 
+            this.UserNameSet.FlatAppearance.BorderSize = 0;
+            this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UserNameSet.Location = new System.Drawing.Point(8, 87);
+            this.UserNameSet.Name = "UserNameSet";
+            this.UserNameSet.Size = new System.Drawing.Size(631, 23);
+            this.UserNameSet.TabIndex = 3;
+            this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.UserNameSet.UseVisualStyleBackColor = true;
+            this.UserNameSet.Click += new System.EventHandler(this.UserNameSet_Click);
+            // 
+            // ShellExtensionsRegistered
+            // 
+            this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
+            this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(8, 58);
+            this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
+            this.ShellExtensionsRegistered.Size = new System.Drawing.Size(631, 23);
+            this.ShellExtensionsRegistered.TabIndex = 2;
+            this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ShellExtensionsRegistered.UseVisualStyleBackColor = true;
+            this.ShellExtensionsRegistered.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
+            // 
+            // GitExtensionsInstall
+            // 
+            this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
+            this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(8, 29);
+            this.GitExtensionsInstall.Name = "GitExtensionsInstall";
+            this.GitExtensionsInstall.Size = new System.Drawing.Size(631, 23);
+            this.GitExtensionsInstall.TabIndex = 1;
+            this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.GitExtensionsInstall.UseVisualStyleBackColor = true;
+            this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
+            // 
+            // GlobalSettingsPage
+            // 
+            this.GlobalSettingsPage.Controls.Add(this.GlobalKeepMergeBackup);
+            this.GlobalSettingsPage.Controls.Add(this.label10);
+            this.GlobalSettingsPage.Controls.Add(this.label7);
+            this.GlobalSettingsPage.Controls.Add(this.GlobalMergeTool);
+            this.GlobalSettingsPage.Controls.Add(this.GlobalEditor);
+            this.GlobalSettingsPage.Controls.Add(this.label6);
+            this.GlobalSettingsPage.Controls.Add(this.GlobalUserEmail);
+            this.GlobalSettingsPage.Controls.Add(this.GlobalUserName);
+            this.GlobalSettingsPage.Controls.Add(this.label4);
+            this.GlobalSettingsPage.Controls.Add(this.label3);
+            this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
+            this.GlobalSettingsPage.Name = "GlobalSettingsPage";
+            this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(655, 214);
+            this.GlobalSettingsPage.TabIndex = 1;
+            this.GlobalSettingsPage.Text = "Global settings";
+            this.GlobalSettingsPage.UseVisualStyleBackColor = true;
             // 
             // GlobalKeepMergeBackup
             // 
@@ -296,13 +399,13 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(293, 295);
-            this.splitContainer1.SplitterDistance = 262;
+            this.splitContainer1.Size = new System.Drawing.Size(663, 273);
+            this.splitContainer1.SplitterDistance = 240;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(215, 3);
+            this.Ok.Location = new System.Drawing.Point(584, 3);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
@@ -310,21 +413,45 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
+            // CheckAtStartup
+            // 
+            this.CheckAtStartup.AutoSize = true;
+            this.CheckAtStartup.Location = new System.Drawing.Point(384, 192);
+            this.CheckAtStartup.Name = "CheckAtStartup";
+            this.CheckAtStartup.Size = new System.Drawing.Size(182, 17);
+            this.CheckAtStartup.TabIndex = 7;
+            this.CheckAtStartup.Text = "Check settings at startup (slower)";
+            this.CheckAtStartup.UseVisualStyleBackColor = true;
+            this.CheckAtStartup.CheckedChanged += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
+            // 
+            // Rescan
+            // 
+            this.Rescan.Location = new System.Drawing.Point(576, 188);
+            this.Rescan.Name = "Rescan";
+            this.Rescan.Size = new System.Drawing.Size(75, 23);
+            this.Rescan.TabIndex = 8;
+            this.Rescan.Text = "Rescan";
+            this.Rescan.UseVisualStyleBackColor = true;
+            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 295);
+            this.ClientSize = new System.Drawing.Size(663, 273);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettigns";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.FormSettigns_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.GlobalSettingsPage.ResumeLayout(false);
+            this.GlobalSettingsPage.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -342,7 +469,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage GlobalSettingsPage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox GlobalUserName;
         private System.Windows.Forms.Label label4;
@@ -359,6 +486,15 @@
         private System.Windows.Forms.CheckBox KeepMergeBackup;
         private System.Windows.Forms.CheckBox GlobalKeepMergeBackup;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button GitExtensionsInstall;
+        private System.Windows.Forms.Button ShellExtensionsRegistered;
+        private System.Windows.Forms.Button UserNameSet;
+        private System.Windows.Forms.Button DiffTool;
+        private System.Windows.Forms.Button GitFound;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox CheckAtStartup;
+        private System.Windows.Forms.Button Rescan;
 
     }
 }

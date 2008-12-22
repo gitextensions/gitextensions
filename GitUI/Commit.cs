@@ -23,10 +23,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            List<GitItemStatus> changedFiles = 
-                                  GitCommands.GitCommands.GetUntrackedFiles();
-            changedFiles.AddRange(GitCommands.GitCommands.GetModifiedFiles());
-            changedFiles.AddRange(GitCommands.GitCommands.GetDeletedFiles());
+            List<GitItemStatus> changedFiles = GitCommands.GitCommands.GetAllChangedFiles();
 
             List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
 
