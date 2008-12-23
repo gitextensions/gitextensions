@@ -20,6 +20,8 @@ namespace GitUI
 
             CheckSettings();
 
+            MaxCommits.Value = GitCommands.Settings.MaxCommits;
+
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
@@ -67,6 +69,8 @@ namespace GitUI
                 gitCommands.SetGlobalSetting("merge.keepBackup", "true");
             else
                 gitCommands.SetGlobalSetting("merge.keepBackup", "false");
+
+            GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
 
             Close();
         }

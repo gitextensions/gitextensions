@@ -42,6 +42,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Rescan = new System.Windows.Forms.Button();
+            this.CheckAtStartup = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.GitFound = new System.Windows.Forms.Button();
             this.DiffTool = new System.Windows.Forms.Button();
@@ -61,8 +63,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
-            this.CheckAtStartup = new System.Windows.Forms.CheckBox();
-            this.Rescan = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label12 = new System.Windows.Forms.Label();
+            this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -70,6 +73,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -179,6 +184,7 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.GlobalSettingsPage);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -204,6 +210,27 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // Rescan
+            // 
+            this.Rescan.Location = new System.Drawing.Point(576, 188);
+            this.Rescan.Name = "Rescan";
+            this.Rescan.Size = new System.Drawing.Size(75, 23);
+            this.Rescan.TabIndex = 8;
+            this.Rescan.Text = "Rescan";
+            this.Rescan.UseVisualStyleBackColor = true;
+            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
+            // 
+            // CheckAtStartup
+            // 
+            this.CheckAtStartup.AutoSize = true;
+            this.CheckAtStartup.Location = new System.Drawing.Point(384, 192);
+            this.CheckAtStartup.Name = "CheckAtStartup";
+            this.CheckAtStartup.Size = new System.Drawing.Size(182, 17);
+            this.CheckAtStartup.TabIndex = 7;
+            this.CheckAtStartup.Text = "Check settings at startup (slower)";
+            this.CheckAtStartup.UseVisualStyleBackColor = true;
+            this.CheckAtStartup.CheckedChanged += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
             // 
             // label11
             // 
@@ -413,26 +440,47 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // CheckAtStartup
+            // tabPage2
             // 
-            this.CheckAtStartup.AutoSize = true;
-            this.CheckAtStartup.Location = new System.Drawing.Point(384, 192);
-            this.CheckAtStartup.Name = "CheckAtStartup";
-            this.CheckAtStartup.Size = new System.Drawing.Size(182, 17);
-            this.CheckAtStartup.TabIndex = 7;
-            this.CheckAtStartup.Text = "Check settings at startup (slower)";
-            this.CheckAtStartup.UseVisualStyleBackColor = true;
-            this.CheckAtStartup.CheckedChanged += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
+            this.tabPage2.Controls.Add(this.MaxCommits);
+            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(655, 214);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Git extensions";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // Rescan
+            // label12
             // 
-            this.Rescan.Location = new System.Drawing.Point(576, 188);
-            this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(75, 23);
-            this.Rescan.TabIndex = 8;
-            this.Rescan.Text = "Rescan";
-            this.Rescan.UseVisualStyleBackColor = true;
-            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(148, 26);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Limit number of commits in list \r\n(for performance)";
+            // 
+            // MaxCommits
+            // 
+            this.MaxCommits.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.MaxCommits.Location = new System.Drawing.Point(190, 16);
+            this.MaxCommits.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.MaxCommits.Name = "MaxCommits";
+            this.MaxCommits.Size = new System.Drawing.Size(114, 20);
+            this.MaxCommits.TabIndex = 2;
+            this.MaxCommits.Value = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
             // 
             // FormSettigns
             // 
@@ -455,6 +503,9 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -495,6 +546,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox CheckAtStartup;
         private System.Windows.Forms.Button Rescan;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown MaxCommits;
 
     }
 }

@@ -22,6 +22,15 @@ namespace GitExtensions
 
             try
             {
+                if (Application.UserAppDataRegistry.GetValue("maxcommits") != null)
+                {
+                    int result;
+                    if (int.TryParse(Application.UserAppDataRegistry.GetValue("maxcommits").ToString(), out result) == true)
+                    {
+                        GitCommands.Settings.MaxCommits = result;
+                    }
+                }
+
                 if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
                       Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
                 {
@@ -144,6 +153,8 @@ namespace GitExtensions
                 {
                     Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
                 }
+                Application.UserAppDataRegistry.SetValue("maxcommits", GitCommands.Settings.MaxCommits);
+                
             }
             catch
             {

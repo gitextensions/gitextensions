@@ -168,5 +168,11 @@ namespace GitUI
         {
             Untracked_SelectionChanged(sender, e);
         }
+
+        private void AddManyFiles_Click(object sender, EventArgs e)
+        {
+            new FormAddFiles().ShowDialog();
+            Initialize();
+        }
     }
 }

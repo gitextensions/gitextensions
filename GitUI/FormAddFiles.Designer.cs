@@ -76,7 +76,7 @@
             this.Filter.Name = "Filter";
             this.Filter.Size = new System.Drawing.Size(176, 20);
             this.Filter.TabIndex = 1;
-            this.Filter.Text = ".";
+            this.Filter.Text = "*.*";
             // 
             // label1
             // 

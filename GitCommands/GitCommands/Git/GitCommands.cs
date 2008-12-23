@@ -619,7 +619,7 @@ namespace GitCommands
         {
             List<GitHead> heads = GetHeads(true);
 
-            string tree = RunCmd(Settings.GitDir + "git.exe", "log --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
+            string tree = RunCmd(Settings.GitDir + "git.exe", "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\"");
 
             string[] itemsStrings = tree.Split('\n');
             

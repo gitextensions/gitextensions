@@ -16,6 +16,20 @@ namespace GitCommands
             }
         }
 
+        private static int maxCommits = 2000;
+        public static int MaxCommits
+        {
+            get
+            {
+                return maxCommits;
+            }
+            set
+            {
+                maxCommits = value;
+            }
+        }
+        
+
         private static string workingdir;
         public static string WorkingDir
         {

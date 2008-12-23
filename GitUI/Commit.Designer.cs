@@ -36,26 +36,27 @@
             this.label2 = new System.Windows.Forms.Label();
             this.AddFiles = new System.Windows.Forms.Button();
             this.Unstaged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.UnstageFiles = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.Staged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
+            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.Commit = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
             this.Scan = new System.Windows.Forms.Button();
-            this.Commit = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.Message = new System.Windows.Forms.RichTextBox();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
-            this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.Message = new System.Windows.Forms.RichTextBox();
+            this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.AddManyFiles = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -66,6 +67,7 @@
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -82,7 +84,6 @@
             this.splitContainer8.Panel1.SuspendLayout();
             this.splitContainer8.Panel2.SuspendLayout();
             this.splitContainer8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -101,7 +102,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(1006, 691);
-            this.splitContainer1.SplitterDistance = 296;
+            this.splitContainer1.SplitterDistance = 389;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -118,7 +119,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer2.Size = new System.Drawing.Size(296, 691);
+            this.splitContainer2.Size = new System.Drawing.Size(389, 691);
             this.splitContainer2.SplitterDistance = 306;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -138,7 +139,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Unstaged);
-            this.splitContainer4.Size = new System.Drawing.Size(296, 306);
+            this.splitContainer4.Size = new System.Drawing.Size(389, 306);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 1;
             // 
@@ -177,10 +178,29 @@
             this.Unstaged.ReadOnly = true;
             this.Unstaged.RowHeadersVisible = false;
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Unstaged.Size = new System.Drawing.Size(296, 277);
+            this.Unstaged.Size = new System.Drawing.Size(389, 277);
             this.Unstaged.TabIndex = 0;
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
             this.Unstaged.Click += new System.EventHandler(this.Unstaged_Click);
+            // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // ChangeString
+            // 
+            this.ChangeString.DataPropertyName = "ChangeString";
+            this.ChangeString.HeaderText = "Change";
+            this.ChangeString.Name = "ChangeString";
+            this.ChangeString.ReadOnly = true;
+            // 
+            // gitItemStatusBindingSource
+            // 
+            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
             // splitContainer5
             // 
@@ -198,7 +218,7 @@
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Staged);
-            this.splitContainer5.Size = new System.Drawing.Size(296, 381);
+            this.splitContainer5.Size = new System.Drawing.Size(389, 381);
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 1;
             // 
@@ -237,10 +257,18 @@
             this.Staged.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Staged.RowHeadersVisible = false;
             this.Staged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Staged.Size = new System.Drawing.Size(296, 352);
+            this.Staged.Size = new System.Drawing.Size(389, 352);
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // Ok
             // 
@@ -266,7 +294,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer3.Size = new System.Drawing.Size(706, 691);
+            this.splitContainer3.Size = new System.Drawing.Size(613, 691);
             this.splitContainer3.SplitterDistance = 414;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -276,8 +304,39 @@
             this.SelectedDiff.IsReadOnly = false;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(706, 414);
+            this.SelectedDiff.Size = new System.Drawing.Size(613, 414);
             this.SelectedDiff.TabIndex = 0;
+            // 
+            // splitContainer6
+            // 
+            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer6.Name = "splitContainer6";
+            // 
+            // splitContainer6.Panel1
+            // 
+            this.splitContainer6.Panel1.Controls.Add(this.AddManyFiles);
+            this.splitContainer6.Panel1.Controls.Add(this.Commit);
+            this.splitContainer6.Panel1.Controls.Add(this.Reset);
+            this.splitContainer6.Panel1.Controls.Add(this.Scan);
+            // 
+            // splitContainer6.Panel2
+            // 
+            this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
+            this.splitContainer6.Size = new System.Drawing.Size(613, 273);
+            this.splitContainer6.SplitterDistance = 134;
+            this.splitContainer6.TabIndex = 6;
+            // 
+            // Commit
+            // 
+            this.Commit.Location = new System.Drawing.Point(3, 3);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(129, 23);
+            this.Commit.TabIndex = 2;
+            this.Commit.Text = "Commit";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.Commit_Click);
             // 
             // Reset
             // 
@@ -299,64 +358,6 @@
             this.Scan.UseVisualStyleBackColor = true;
             this.Scan.Click += new System.EventHandler(this.Scan_Click);
             // 
-            // Commit
-            // 
-            this.Commit.Location = new System.Drawing.Point(3, 3);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(129, 23);
-            this.Commit.TabIndex = 2;
-            this.Commit.Text = "Commit";
-            this.Commit.UseVisualStyleBackColor = true;
-            this.Commit.Click += new System.EventHandler(this.Commit_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Commit message";
-            // 
-            // OutPut
-            // 
-            this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OutPut.Location = new System.Drawing.Point(0, 0);
-            this.OutPut.Name = "OutPut";
-            this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(568, 134);
-            this.OutPut.TabIndex = 0;
-            this.OutPut.Text = "";
-            // 
-            // Message
-            // 
-            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Location = new System.Drawing.Point(0, 0);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(568, 106);
-            this.Message.TabIndex = 0;
-            this.Message.Text = "";
-            // 
-            // splitContainer6
-            // 
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer6.Name = "splitContainer6";
-            // 
-            // splitContainer6.Panel1
-            // 
-            this.splitContainer6.Panel1.Controls.Add(this.Commit);
-            this.splitContainer6.Panel1.Controls.Add(this.Reset);
-            this.splitContainer6.Panel1.Controls.Add(this.Scan);
-            // 
-            // splitContainer6.Panel2
-            // 
-            this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(706, 273);
-            this.splitContainer6.SplitterDistance = 134;
-            this.splitContainer6.TabIndex = 6;
-            // 
             // splitContainer7
             // 
             this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -371,7 +372,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer7.Size = new System.Drawing.Size(568, 273);
+            this.splitContainer7.Size = new System.Drawing.Size(475, 273);
             this.splitContainer7.SplitterDistance = 135;
             this.splitContainer7.TabIndex = 0;
             // 
@@ -390,37 +391,48 @@
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.Message);
-            this.splitContainer8.Size = new System.Drawing.Size(568, 135);
+            this.splitContainer8.Size = new System.Drawing.Size(475, 135);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
             // 
-            // ChangeString
+            // label1
             // 
-            this.ChangeString.DataPropertyName = "ChangeString";
-            this.ChangeString.HeaderText = "Change";
-            this.ChangeString.Name = "ChangeString";
-            this.ChangeString.ReadOnly = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(86, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Commit message";
             // 
-            // nameDataGridViewTextBoxColumn1
+            // Message
             // 
-            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Message.Location = new System.Drawing.Point(0, 0);
+            this.Message.Name = "Message";
+            this.Message.Size = new System.Drawing.Size(475, 106);
+            this.Message.TabIndex = 0;
+            this.Message.Text = "";
             // 
-            // gitItemStatusBindingSource
+            // OutPut
             // 
-            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
+            this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OutPut.Location = new System.Drawing.Point(0, 0);
+            this.OutPut.Name = "OutPut";
+            this.OutPut.ReadOnly = true;
+            this.OutPut.Size = new System.Drawing.Size(475, 134);
+            this.OutPut.TabIndex = 0;
+            this.OutPut.Text = "";
             // 
-            // nameDataGridViewTextBoxColumn
+            // AddManyFiles
             // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.AddManyFiles.Location = new System.Drawing.Point(4, 103);
+            this.AddManyFiles.Name = "AddManyFiles";
+            this.AddManyFiles.Size = new System.Drawing.Size(127, 23);
+            this.AddManyFiles.TabIndex = 6;
+            this.AddManyFiles.Text = "Add many files";
+            this.AddManyFiles.UseVisualStyleBackColor = true;
+            this.AddManyFiles.Click += new System.EventHandler(this.AddManyFiles_Click);
             // 
             // FormCommit
             // 
@@ -431,6 +443,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCommit";
             this.Text = "Commit";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormCommit_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -443,6 +456,7 @@
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
@@ -461,7 +475,6 @@
             this.splitContainer8.Panel1.PerformLayout();
             this.splitContainer8.Panel2.ResumeLayout(false);
             this.splitContainer8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -496,5 +509,6 @@
         private System.Windows.Forms.SplitContainer splitContainer8;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn ChangeString;
+        private System.Windows.Forms.Button AddManyFiles;
     }
 }
