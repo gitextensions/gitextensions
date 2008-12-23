@@ -177,16 +177,16 @@
   <data name="AddFiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAgFJREFUOE+Nkl9I
-        k1EYxr/twpu8ErsoEvFGwdGQrkq7SJDphQiKf766EGW1tsgGaYF/GJtzI2RgCtLUge5C0BKK0LwQr4cl
-        hhuKMYYXji5iCAkKiezxPB/7jm7+oQMPvOd9fu9zDt93DErOavlYnme8YbQpMDQrRuWBZqeViGLAQvow
-        Pfmpdfs4d0bu277dtT1ZroA/9hyzqWEsYUoTa/bokbk0oHXR9MK6WoX5vyOYRwAzcCOEXk2s2aNHhmxW
-        CK/N9Ln9EUyfuBH8140PQta1h5pYs0ePDFnOyJCmLybn0OZThI8GMXbQhdGDl5r0pe/pkSHLGRnQ/NkU
-        Ce15MLrvxHDqmTxZD9BvQo8MWc7IgPqvd47Df3zwJTvhTbbLk3MLemTCKT84kxUQ+u2BK6GiP9FyZQA9
-        166KqaRbfMjSQxnQuFD2cyz+FgNxFd07DVJ60vkeGbKckQGW8eJB1/d2eH9Z8Spah66oRZO+9D09MmQ5
-        c/YrC5Vb6rIZ77d70BNthH29Grb1R1lijx4ZsoqYOf8W8qoDRZ6OlfsIbL1G76YKx48a+TdYs0ePDFkx
-        fPYOMkn5ld7b75jeF3kM34YdvpgDQzE7/BsOrUePjODzL3vOhoxhvvfmZqguWBwX755vH7UTJQn2hG/O
-        MGSvXLxagVCJUHlGrNm7cO3rgv7LOwURt79nggIZwAAAAABJRU5ErkJggg==
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAf9JREFUOE+NkktI
+        W0EYhW+ycFNXUhcWirixYDCIq1a7qCDqohQUH1cX0pI2TYpW8AVaCYkxQSTgA6S2BjSLgi9oKbYuxHWw
+        FcUERQnBhcGFBKGCgiI5nXPJHU184MCBf/7z/WeGe8egpK26uYIM4wOjVYGhVjEqzzQ7oQQVAxYSJ4mv
+        8/Xb5+kzct/wu9DatFQEb/g9vsWH8AuTmlizR4/MjQH1i6YPlpVSzP4bxix8mIYTfvRoYs0ePTJkU0J4
+        babPHA1j6sKJibMOfBayrD7XxJo9emTIckaG1PwwtQ1svkXgtB9jx60YPW7RpC99T48MWc7IgNrvpqB/
+        34XRozYMxd/Jk/UA/Sb0yJDljAx4+TPnPHDogSf2Bu5Yszw5vaBHJhD3gjMpAf4DFxxRFZ+idbcG0HPs
+        qZiMOcWHzD+RAdULTzbGIt3oi6jo2HklpSdd7ZEhyxkZUDGe2+/40wz3rgUfQ1VoDVVo0pe+p0eGLGcu
+        f+VDJUddMmNkuxOdoWrY1spgXXuRIvbokSGriJmrbyGjzPfY9Xr5KXxb7ejZVGH/Wy7/Bmv26JEhK4Yv
+        30EyKbPE/WiQ6b3BRnjWbfCE7RgI2+Bdt2s9emQEn3nTczYkDXNxV7a/aiI3It493z4qv+RF2RO+OcmQ
+        vXXxallCeUIFSbFm79q17wq6l/cf/Gy/XmhsJ+MAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="CreateBranch.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -223,6 +223,9 @@
         RK5CYII=
 </value>
   </data>
+  <metadata name="gitItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>322, 17</value>
+  </metadata>
   <metadata name="gitItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 17</value>
   </metadata>

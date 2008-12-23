@@ -39,6 +39,7 @@
             // 
             // Ok
             // 
+            this.Ok.ForeColor = System.Drawing.Color.Black;
             this.Ok.Location = new System.Drawing.Point(368, 75);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
@@ -58,6 +59,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
@@ -67,6 +69,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(37, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(327, 52);
