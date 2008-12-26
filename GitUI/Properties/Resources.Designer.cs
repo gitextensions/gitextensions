@@ -59,5 +59,12 @@ namespace GitUI.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap loadingpanel {
+            get {
+                object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -50,6 +50,9 @@
             this.UserNameSet = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.MaxCommits = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
             this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -63,18 +66,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
-            this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.GlobalSettingsPage.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -307,6 +307,50 @@
             this.GitExtensionsInstall.UseVisualStyleBackColor = true;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.MaxCommits);
+            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(655, 214);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Git extensions";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // MaxCommits
+            // 
+            this.MaxCommits.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.MaxCommits.Location = new System.Drawing.Point(315, 12);
+            this.MaxCommits.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.MaxCommits.Name = "MaxCommits";
+            this.MaxCommits.Size = new System.Drawing.Size(114, 20);
+            this.MaxCommits.TabIndex = 2;
+            this.MaxCommits.Value = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(285, 39);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Limit number of commits that will be loaded in list at startup.\r\nOther commits wi" +
+                "ll be loaded when needed. Lower number \r\nresult is shorter startup time, but slo" +
+                "wer scrolling.";
+            // 
             // GlobalSettingsPage
             // 
             this.GlobalSettingsPage.Controls.Add(this.GlobalKeepMergeBackup);
@@ -440,48 +484,6 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.MaxCommits);
-            this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(655, 214);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Git extensions";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 12);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(148, 26);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Limit number of commits in list \r\n(for performance)";
-            // 
-            // MaxCommits
-            // 
-            this.MaxCommits.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.MaxCommits.Location = new System.Drawing.Point(190, 16);
-            this.MaxCommits.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.MaxCommits.Name = "MaxCommits";
-            this.MaxCommits.Size = new System.Drawing.Size(114, 20);
-            this.MaxCommits.TabIndex = 2;
-            this.MaxCommits.Value = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -498,14 +500,14 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -39,7 +39,7 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
-            Initialize();
+            InternalInitialize(false);
             RevisionGrid.Focus();
 
         }
@@ -48,10 +48,16 @@ namespace GitUI
 
         protected void Initialize()
         {
+            InternalInitialize(true);
+        }
+
+        private void InternalInitialize(bool hard)
+        {
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = selectedHead;
 
-            ShowRevisions();
+            if (hard)
+                ShowRevisions();
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
 
@@ -127,6 +133,8 @@ namespace GitUI
         {
             try
             {
+                if (RevisionGrid.GetRevisions().Count == 0) 
+                    return;
                 IGitItem revision = RevisionGrid.GetRevisions()[0];
 
                 //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);

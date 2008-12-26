@@ -9,6 +9,8 @@ using GitCommands;
 
 namespace GitUI
 {
+    delegate void DoneCallback();
+
     public partial class FormCommit : Form
     {
         public FormCommit()
@@ -16,20 +18,61 @@ namespace GitUI
             InitializeComponent();
         }
 
+        ~FormCommit()  // destructor
+        {
+            gitGetUnstagedCommand.Kill();
+        }
+
         private void FormCommit_Load(object sender, EventArgs e)
         {
             Initialize();
         }
 
+        GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
+
+        private bool IsLoadingUnstagedFiles()
+        {
+            if (gitGetUnstagedCommand.Process == null) 
+                return false;
+
+            return !gitGetUnstagedCommand.Process.HasExited;
+        }
+
         private void Initialize()
         {
-            List<GitItemStatus> changedFiles = GitCommands.GitCommands.GetAllChangedFiles();
+            //Load unstaged files
+            gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
+            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.exe", GitCommands.GitCommands.GetAllChangedFilesCmd);
+            Loading.Visible = true;
+            AddFiles.Enabled = false;
 
+            //Load staged files
             List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
-
             Staged.DataSource = stagedFiles;
+        }
 
-            Unstaged.DataSource = changedFiles;
+        // This method is passed in to the SetTextCallBack delegate
+        // to set the Text property of textBox1.
+        private void LoadUnstagedOutput()
+        {
+            Unstaged.DataSource = GitCommands.GitCommands.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
+            Loading.Visible = false;
+            AddFiles.Enabled = true;
+        }
+
+        void gitCommands_Exited(object sender, EventArgs e)
+        {
+            if (Unstaged.InvokeRequired)
+            {
+                // It's on a different thread, so use Invoke.
+                DoneCallback d = new DoneCallback(LoadUnstagedOutput);
+                this.Invoke(d, new object[] {});
+            }
+            else
+            {
+                LoadUnstagedOutput();
+            }
+
         }
 
         protected void ShowChanges(GitItemStatus item, bool staged)
@@ -99,7 +142,7 @@ namespace GitUI
 
         private void Stage_Click(object sender, EventArgs e)
         {
-
+            Loading.Visible = true;
             string result = "";
             List<string> files = new List<string>();
             foreach (DataGridViewRow row in Unstaged.SelectedRows)
@@ -134,6 +177,7 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
+            Loading.Visible = true;
             string result = "";
             List<string> files = new List<string>();
             foreach (DataGridViewRow row in Staged.SelectedRows)
