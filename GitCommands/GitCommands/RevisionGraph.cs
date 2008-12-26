@@ -60,7 +60,7 @@ namespace GitCommands
             if (e.Data == null)
                 return;
             //First line found!
-            if (e.Data.IndexOf("Commit ") > 0)
+            if (e.Data.IndexOf("Commit ") > 0 && e.Data.IndexOf("*") >= 0)
             {
                 revision = new GitRevision();
                 Revisions.Add(revision);
