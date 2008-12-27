@@ -122,6 +122,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormInit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Initialize new repository";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

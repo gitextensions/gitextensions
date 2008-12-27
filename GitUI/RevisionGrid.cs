@@ -238,7 +238,7 @@ namespace GitUI
         private void DrawVisibleGraphPart()
         {
             int height = Revisions.RowTemplate.Height;
-            int width = 8;
+            int width = 6;
             int y = -height;
             int numberOfVisibleRows = Revisions.DisplayedRowCount(true);
             int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
@@ -264,7 +264,7 @@ namespace GitUI
             string lastLine = "";
             string currentLine = "";
 
-            Pen linePen = new Pen(Color.Red, 2);
+            Pen linePen = new Pen(Color.Red, 1);
             SolidBrush blueBrush = new SolidBrush(Color.Blue);
             SolidBrush redBrush = new SolidBrush(Color.Red);
             char[] calc = new char[100];
@@ -340,10 +340,10 @@ namespace GitUI
                             if (nextRevision != null && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
                             {
                                 if (r == 0)
-                                    graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom + 1);
+                                    graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom);
                                 else
                                     if (nextLine != null && nextLine.Length > nc && nextLine[nc] == '|')
-                                        graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom + (height / 2) + 1);
+                                        graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom + (height / 2));
                             }
                         }
                         if (c != '|' && c != '*')
@@ -358,7 +358,7 @@ namespace GitUI
                                 if (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc)
                                 {
                                     if (nextLine.Length > nc + 1 && nextLine[nc + 1] == '|' || nextLine.Length <= nc + 1)
-                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2) + 1);
+                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
                                 }
                             }
                             else
@@ -372,13 +372,13 @@ namespace GitUI
                                 if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
                                 {
                                     //draw: _
-                                    graph.DrawLine(linePen, left - width, bottom, right + 1, bottom);
+                                    graph.DrawLine(linePen, left - width, bottom, right, bottom);
                                 }
                                 else
                                 {
                                     // draw: \_
                                     graph.DrawLine(linePen, left - (width / 2), vcenter, left, bottom);
-                                    graph.DrawLine(linePen, left, bottom, right + 1, bottom);
+                                    graph.DrawLine(linePen, left, bottom, right, bottom);
                                 }
                             }
                         }
@@ -390,7 +390,7 @@ namespace GitUI
                                 if (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc)
                                 {
                                     if (nextLine.Length > nc - 1 && nextLine[nc - 1] == '|' || nextLine.Length <= nc - 1)
-                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2) + 1);
+                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
                                 }
                             }
                             else
@@ -410,14 +410,14 @@ namespace GitUI
                                 {
                                     //draw: _
                                     //      
-                                    graph.DrawLine(linePen, left - width, bottom, right + 1, bottom);
+                                    graph.DrawLine(linePen, left - width, bottom, right, bottom);
                                 }
                                 else
                                 {
                                     //draw:  _
                                     //      /
                                     graph.DrawLine(linePen, left - (width / 2), bottom + (height / 2), left, bottom);
-                                    graph.DrawLine(linePen, left, bottom, right + 1, bottom);
+                                    graph.DrawLine(linePen, left, bottom, right, bottom);
                                 }
                             }
                         }
@@ -436,11 +436,11 @@ namespace GitUI
 
                             if ((prevChar == '|' && currentChar == '|') || (prevChar == '|' && currentChar == '*'))
                             {
-                                graph.DrawLine(linePen, hcenter, top + (height / 2), hcenter, vcenter + (height / 2) + 1);
+                                graph.DrawLine(linePen, hcenter, top + (height / 2), hcenter, vcenter + (height / 2));
                             }
                             if ((nextChar == '|' && currentChar == '|') || (nextChar == '*' && currentChar == '|'))
                             {
-                                graph.DrawLine(linePen, hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2) + 1);
+                                graph.DrawLine(linePen, hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
                             }
 
                         }

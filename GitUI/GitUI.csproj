@@ -326,6 +326,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\77.png" />
+    <None Include="Icons\78.png" />
+    <None Include="Icons\76.png" />
+    <None Include="Icons\75.png" />
+    <None Include="Icons\9.png" />
+    <None Include="Icons\89.png" />
+    <None Include="Icons\46.png" />
+    <None Include="Icons\34.png" />
+    <None Include="Icons\36.png" />
+    <None Include="Icons\14.png" />
+    <None Include="Icons\7.png" />
+    <None Include="Icons\8.png" />
+    <None Include="Icons\71.png" />
+    <None Include="Icons\10.png" />
+    <None Include="Icons\11.png" />
+    <None Include="Icons\26.png" />
+    <None Include="Icons\27.png" />
+    <None Include="Resources\arrow_refresh.png" />
+    <None Include="Icons\40.png" />
+    <None Include="Icons\35.png" />
+    <None Include="Icons\33.png" />
+    <None Include="Icons\81.png" />
+    <None Include="Icons\21.png" />
+    <None Include="Icons\49.png" />
+    <None Include="Icons\53.png" />
     <None Include="Icons\4.png" />
     <None Include="Icons\3.png" />
     <None Include="Resources\error.png" />

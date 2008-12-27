@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Revisions = new System.Windows.Forms.DataGridView();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
             this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
@@ -56,14 +56,14 @@
             this.Message,
             this.Author,
             this.Date});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Revisions.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Revisions.DefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Revisions.Location = new System.Drawing.Point(0, 0);
             this.Revisions.Name = "Revisions";
@@ -74,37 +74,11 @@
             this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
+            this.Revisions.StandardTab = true;
             this.Revisions.TabIndex = 0;
             this.Revisions.Scroll += new System.Windows.Forms.ScrollEventHandler(this.Revisions_Scroll);
             this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
             this.Revisions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContentClick);
-            // 
-            // Graph
-            // 
-            this.Graph.HeaderText = "Graph";
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            // 
-            // Message
-            // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.HeaderText = "Message";
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            // 
-            // Author
-            // 
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.Width = 150;
-            // 
-            // Date
-            // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.Width = 180;
             // 
             // SelecctionTimer
             // 
@@ -143,6 +117,34 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // Graph
+            // 
+            this.Graph.HeaderText = "Graph";
+            this.Graph.Name = "Graph";
+            this.Graph.ReadOnly = true;
+            this.Graph.Width = 200;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Message.HeaderText = "Message";
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            // 
+            // Author
+            // 
+            this.Author.HeaderText = "Author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.Width = 150;
+            // 
+            // Date
+            // 
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            this.Date.Width = 180;
+            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -168,10 +170,10 @@
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelecctionTimer;
         private System.Windows.Forms.Timer ScrollTimer;
+        public System.Windows.Forms.PictureBox Error;
         private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        public System.Windows.Forms.PictureBox Error;
     }
 }
