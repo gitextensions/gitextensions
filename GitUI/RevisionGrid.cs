@@ -102,8 +102,9 @@ namespace GitUI
 
             LastRevision = 0;
             ScrollBarSet = false;
+            Revisions.ClearSelection();
             Revisions.VirtualMode = true;
-            Revisions.ScrollBars = ScrollBars.None;
+            //Revisions.ScrollBars = ScrollBars.None;
             Revisions.RowCount = GitCommands.Settings.MaxCommits;
                 
             currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
@@ -179,7 +180,7 @@ namespace GitUI
             if (!ScrollBarSet)
             {
                 ScrollBarSet = true;
-                
+                Revisions.SuspendLayout();
                 Revisions.ScrollBars = ScrollBars.None;
                 Revisions.RowCount = RevisionList.Count;
                 Revisions.ScrollBars = ScrollBars.Vertical;
@@ -190,6 +191,7 @@ namespace GitUI
                     gitCountCommitsCommand.CmdStartProcess(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.exe rev-list --all --abbrev-commit | wc -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
+                Revisions.ResumeLayout();
             }
 
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
