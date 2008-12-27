@@ -35,7 +35,7 @@ namespace GitUI
 
             RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
-            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text);
+            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text, Branch.Text, PushAllBranches.Checked);
 
             process.WaitForExit();
             
@@ -60,6 +60,12 @@ namespace GitUI
         private void PushDestination_DropDown(object sender, EventArgs e)
         {
             PushDestination.DataSource = RepositoryHistory.MostRecentRepositories;
+        }
+
+        private void Branch_DropDown(object sender, EventArgs e)
+        {
+            Branch.DisplayMember = "Name";
+            Branch.DataSource = GitCommands.GitCommands.GetHeads(false);
         }
     }
 }

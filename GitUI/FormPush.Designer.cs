@@ -34,19 +34,22 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Push = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Branch = new System.Windows.Forms.ComboBox();
+            this.PushAllBranches = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // Output
             // 
-            this.Output.Location = new System.Drawing.Point(22, 46);
+            this.Output.Location = new System.Drawing.Point(22, 97);
             this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(562, 222);
+            this.Output.Size = new System.Drawing.Size(562, 171);
             this.Output.TabIndex = 14;
             this.Output.Text = "";
             // 
             // BrowseSource
             // 
-            this.BrowseSource.Location = new System.Drawing.Point(372, 17);
+            this.BrowseSource.Location = new System.Drawing.Point(480, 18);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(104, 23);
             this.BrowseSource.TabIndex = 13;
@@ -65,7 +68,7 @@
             // 
             // Push
             // 
-            this.Push.Location = new System.Drawing.Point(482, 17);
+            this.Push.Location = new System.Drawing.Point(480, 68);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(104, 23);
             this.Push.TabIndex = 15;
@@ -78,15 +81,46 @@
             this.PushDestination.FormattingEnabled = true;
             this.PushDestination.Location = new System.Drawing.Point(109, 19);
             this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(257, 21);
+            this.PushDestination.Size = new System.Drawing.Size(365, 21);
             this.PushDestination.TabIndex = 16;
             this.PushDestination.DropDown += new System.EventHandler(this.PushDestination_DropDown);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(27, 50);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Branch to push";
+            // 
+            // Branch
+            // 
+            this.Branch.FormattingEnabled = true;
+            this.Branch.Location = new System.Drawing.Point(109, 43);
+            this.Branch.Name = "Branch";
+            this.Branch.Size = new System.Drawing.Size(365, 21);
+            this.Branch.TabIndex = 18;
+            this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
+            // 
+            // PushAllBranches
+            // 
+            this.PushAllBranches.AutoSize = true;
+            this.PushAllBranches.Location = new System.Drawing.Point(109, 72);
+            this.PushAllBranches.Name = "PushAllBranches";
+            this.PushAllBranches.Size = new System.Drawing.Size(110, 17);
+            this.PushAllBranches.TabIndex = 19;
+            this.PushAllBranches.Text = "Push all branches";
+            this.PushAllBranches.UseVisualStyleBackColor = true;
             // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 285);
+            this.Controls.Add(this.PushAllBranches);
+            this.Controls.Add(this.Branch);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.PushDestination);
             this.Controls.Add(this.Push);
             this.Controls.Add(this.Output);
@@ -108,5 +142,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Push;
         private System.Windows.Forms.ComboBox PushDestination;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox Branch;
+        private System.Windows.Forms.CheckBox PushAllBranches;
     }
 }

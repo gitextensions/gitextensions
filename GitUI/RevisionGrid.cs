@@ -103,6 +103,16 @@ namespace GitUI
             try
             {
                 Error.Visible = false;
+
+                if (!GitCommands.Settings.ValidWorkingDir())
+                {
+                    Revisions.RowCount = 0;
+                    Revisions.ScrollBars = ScrollBars.None;
+
+                    Loading.Visible = false;
+                    return;
+                }
+
                 if (revisionGraphCommand != null)
                 {
                     revisionGraphCommand.Kill();
@@ -502,7 +512,11 @@ namespace GitUI
         {
             List<GitRevision> r = GetRevisions();
             if (r.Count > 0)
-                new FormDiff(r[0]).ShowDialog();
+            {
+                FormDiffSmall form = new FormDiffSmall();
+                form.SetRevision(r[0]);
+                form.ShowDialog();
+            }
             else
                 new FormDiff().ShowDialog();
         }

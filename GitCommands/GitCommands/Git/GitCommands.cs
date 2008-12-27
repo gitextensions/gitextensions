@@ -406,10 +406,16 @@ namespace GitCommands
             return result;
         }
 
-        static public Process PushAsync(string path)
+        static public Process PushAsync(string path, string branch, bool all)
         {
-            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push \"" + path + "\"");
+            if (all)
+                return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push --all \"" + path + "\"");
+            else
+                if (!string.IsNullOrEmpty(branch))
+                    return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push \"" + path + "\" \"" + branch + "\"");
 
+
+            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.exe push \"" + path + "\"");
         }
 
         static public string Fetch(string path, string branch)

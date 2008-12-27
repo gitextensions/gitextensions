@@ -132,6 +132,12 @@
     <Compile Include="FormDiff.Designer.cs">
       <DependentUpon>FormDiff.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDiffSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDiffSmall.Designer.cs">
+      <DependentUpon>FormDiffSmall.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFileHistory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormDiff.resx">
       <DependentUpon>FormDiff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDiffSmall.resx">
+      <DependentUpon>FormDiffSmall.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>

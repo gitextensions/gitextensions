@@ -29,12 +29,7 @@ namespace GitUI
                     EditorOptions.SetSyntax(FileText, ((GitItem)item).FileName);
                     FileText.Text = GitCommands.GitCommands.GetFileText(item.Guid);
                     FileText.Refresh();
-
-                    FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(((GitItem)item).FileName);
                 }
-
-
-
         }
 
         private void Browse_Load(object sender, EventArgs e)
@@ -68,7 +63,7 @@ namespace GitUI
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
 
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            if (GitCommands.Settings.ValidWorkingDir() && GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
                 if (warning == null)
                 {
@@ -175,19 +170,6 @@ namespace GitUI
         private void FileChanges_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
-        }
-
-        private void FileChanges_SelectionChanged(object sender, EventArgs e)
-        {
-            if (FileChanges.SelectedRows.Count == 0) return;
-
-            if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
-            {
-                IGitItem revision = (IGitItem)FileChanges.SelectedRows[0].DataBoundItem;
-
-                FileText.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
-                FileText.Refresh();
-            }
         }
 
         private void GitTree_DoubleClick(object sender, EventArgs e)

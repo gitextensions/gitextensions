@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using System.Text;
+using System.IO;
 
 namespace GitCommands
 {
@@ -28,7 +29,11 @@ namespace GitCommands
                 maxCommits = value;
             }
         }
-        
+
+        public static bool ValidWorkingDir()
+        {
+            return Directory.Exists(WorkingDir + "\\" + ".git");
+        }
 
         private static string workingdir;
         public static string WorkingDir
