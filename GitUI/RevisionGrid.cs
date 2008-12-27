@@ -128,6 +128,7 @@ namespace GitUI
                 Revisions.ClearSelection();
                 Revisions.VirtualMode = true;
                 //Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = 0;
                 Revisions.RowCount = Math.Max(Revisions.DisplayedRowCount(true), GitCommands.Settings.MaxCommits);
                     
                 currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();

@@ -9,10 +9,12 @@ namespace GitCommands
     {
         public string Message { get; set; }
         public string Result { get; set; }
+        public bool Amend { get; set; }
 
-        public CommitDto(string message)
+        public CommitDto(string message, bool amend)
         {
             this.Message = message;
+            this.Amend = amend;
         }
     }
 
@@ -26,7 +28,10 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "commit -m \"" + Dto.Message + "\"");
+            if (Dto.Amend)
+                Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "commit --amend -m \"" + Dto.Message + "\"");
+            else
+                Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "commit -m \"" + Dto.Message + "\"");
         }
     }
 }

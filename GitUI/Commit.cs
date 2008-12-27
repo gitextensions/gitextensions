@@ -106,6 +106,11 @@ namespace GitUI
 
         private void Commit_Click(object sender, EventArgs e)
         {
+            DoCommit(false);
+        }
+
+        private void DoCommit(bool amend)
+        {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
                 MessageBox.Show("There are unresolved mergeconflicts, solve mergeconflicts before committing", "Merge conflicts");
@@ -121,7 +126,7 @@ namespace GitUI
             {
                 OutPut.Text = "";
 
-                CommitDto dto = new CommitDto(Message.Text);
+                CommitDto dto = new CommitDto(Message.Text, amend);
                 GitCommands.Commit commit = new GitCommands.Commit(dto);
                 commit.Execute();
 
@@ -129,9 +134,9 @@ namespace GitUI
                     OutPut.Text = "Command executed \n";
 
                 OutPut.Text += dto.Result;
-                
+
                 NeedRefresh = true;
-                
+
                 Initialize();
             }
             catch
@@ -221,6 +226,14 @@ namespace GitUI
         {
             new FormAddFiles().ShowDialog();
             Initialize();
+        }
+
+        private void Amend_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                DoCommit(true);
+            }
         }
     }
 }

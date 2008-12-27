@@ -24,7 +24,7 @@ namespace GitCommands
             {
                 dir = dir.Substring(0, dir.LastIndexOfAny(new char[] { '\\', '/' }));
 
-                if (Directory.Exists(dir + "\\" + ".git"))
+                if (Settings.ValidWorkingDir(dir + "\\" + ".git"))
                     return dir + "\\";
             }
             return startDir;
@@ -323,6 +323,17 @@ namespace GitCommands
         static public void RunBash()
         {
             RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
+        }
+
+        static public string Init(bool bare, bool shared)
+        {
+            if (bare && shared)
+                return RunCmd(Settings.GitDir + "git.exe", "init --bare --shared=all");
+            else 
+            if (bare)
+                return RunCmd(Settings.GitDir + "git.exe", "init --bare");
+            else
+                return RunCmd(Settings.GitDir + "git.exe", "init");
         }
 
         static public string CherryPick(string cherry, bool commit)

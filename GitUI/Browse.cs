@@ -223,18 +223,8 @@ namespace GitUI
 
         private void initNewRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-
-            if (browseDialog.ShowDialog() == DialogResult.OK)
-            {
-                Settings.WorkingDir = browseDialog.SelectedPath;
-
-                GitCommands.Init cmd = new GitCommands.Init(new GitCommands.InitDto());
-                cmd.Execute();
-                MessageBox.Show(cmd.Dto.Result);
-
-                Initialize();
-            }
+            new FormInit().ShowDialog();
+            Initialize();
         }
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)

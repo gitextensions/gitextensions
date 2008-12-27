@@ -28,14 +28,14 @@ namespace GitUI
             UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
             Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
             MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
-            KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("merge.keepBackup").Trim() == "true";
+            KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("mergetool.keepBackup").Trim() == "true";
             
 
             GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
             GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
             GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
-            GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("merge.keepBackup").Trim() == "true";
+            GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("mergetool.keepBackup").Trim() == "true";
         }
 
         private void UserName_TextChanged(object sender, EventArgs e)
@@ -55,9 +55,9 @@ namespace GitUI
             GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
             GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
             if (KeepMergeBackup.Checked)
-                GitCommands.GitCommands.SetSetting("merge.keepBackup", "true");
+                GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
             else
-                GitCommands.GitCommands.SetSetting("merge.keepBackup", "false");
+                GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
 
 
             gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
@@ -66,9 +66,9 @@ namespace GitUI
             gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
 
             if (GlobalKeepMergeBackup.Checked)
-                gitCommands.SetGlobalSetting("merge.keepBackup", "true");
+                gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
             else
-                gitCommands.SetGlobalSetting("merge.keepBackup", "false");
+                gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
             GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
 

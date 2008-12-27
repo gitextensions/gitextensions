@@ -32,7 +32,25 @@ namespace GitCommands
 
         public static bool ValidWorkingDir()
         {
-            return Directory.Exists(WorkingDir + "\\" + ".git");
+            return ValidWorkingDir(WorkingDir);
+        }
+
+        public static bool ValidWorkingDir(string dir)
+        {
+            if (string.IsNullOrEmpty(dir))
+                return false;
+
+            if (Directory.Exists(dir + "\\" + ".git"))
+                return true;
+
+            if (!dir.Contains(".git") &&
+                Directory.Exists(dir + "\\" + "info") &&
+                Directory.Exists(dir + "\\" + "objects") &&
+                Directory.Exists(dir + "\\" + "refs")
+                )
+                return true;
+
+            return false;
         }
 
         private static string workingdir;

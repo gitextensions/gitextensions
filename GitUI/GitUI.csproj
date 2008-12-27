@@ -150,6 +150,12 @@
     <Compile Include="FormFormatPath.Designer.cs">
       <DependentUpon>FormFormatPath.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormInit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormInit.Designer.cs">
+      <DependentUpon>FormInit.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMergeBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,6 +273,9 @@
     <EmbeddedResource Include="FormFormatPath.resx">
       <DependentUpon>FormFormatPath.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormInit.resx">
+      <DependentUpon>FormInit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
     </EmbeddedResource>
@@ -317,6 +326,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\4.png" />
+    <None Include="Icons\3.png" />
     <None Include="Resources\error.png" />
     <None Include="Resources\error_button.png" />
     <None Include="Resources\loading2.gif" />
