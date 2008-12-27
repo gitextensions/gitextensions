@@ -170,17 +170,23 @@ namespace GitCommands
 
         public void Kill()
         {
-            //If there was another process running, kill it
-            if (Process != null && !Process.HasExited)
+            try
             {
-                try
+                //If there was another process running, kill it
+                if (Process != null && !Process.HasExited)
                 {
-                    Process.Kill();
+                    try
+                    {
+                        Process.Kill();
+                    }
+                    catch
+                    {
+                    }
+                    Process.Close();
                 }
-                catch
-                {
-                }
-                Process.Close();
+            }
+            catch
+            {
             }
         }
 
@@ -304,7 +310,8 @@ namespace GitCommands
 
         static public void RunGitK()
         {
-            Run("gitk", "");
+            Run("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "gitk --all\"");
+            //Run(Settings.GitDir + "gitk", "");
         }
 
         static public void RunGui()
@@ -326,6 +333,10 @@ namespace GitCommands
                 return RunCmd(Settings.GitDir + "git.exe", "cherry-pick --no-commit \"" + cherry + "\"");
         }
 
+        static public string UserCommitCount()
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "shortlog -s -n");
+        }
 
         static public string DeleteBranch(string branchName)
         {

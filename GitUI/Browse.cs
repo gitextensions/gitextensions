@@ -48,7 +48,14 @@ namespace GitUI
 
         protected void Initialize()
         {
-            InternalInitialize(true);
+            try
+            {
+                InternalInitialize(true);
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void InternalInitialize(bool hard)
@@ -457,6 +464,16 @@ namespace GitUI
         private void RefreshButton_Click(object sender, EventArgs e)
         {
             refreshToolStripMenuItem_Click(sender, e);
+        }
+
+        private void commitcountPerUserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCommitCount().ShowDialog();
+        }
+
+        private void kGitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunGitK();
         }
 
 

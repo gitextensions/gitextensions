@@ -22,6 +22,16 @@ namespace GitUI
             HeadFont = new Font(NormalFont, FontStyle.Bold);
             //RefreshRevisions();
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
+            Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
+        }
+
+        void Revisions_SizeChanged(object sender, EventArgs e)
+        {
+            LoadRevisions();
+            ScrollTimer.Enabled = false;
+            ScrollTimer.Stop();
+            ScrollTimer.Enabled = true;
+            ScrollTimer.Start();
         }
 
         ~RevisionGrid()
@@ -90,26 +100,35 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
-            if (revisionGraphCommand != null)
+            try
             {
-                revisionGraphCommand.Kill();
-            }
+                Error.Visible = false;
+                if (revisionGraphCommand != null)
+                {
+                    revisionGraphCommand.Kill();
+                }
 
-            if (gitCountCommitsCommand != null)
+                if (gitCountCommitsCommand != null)
+                {
+                    gitCountCommitsCommand.Kill();
+                }
+
+                LastRevision = 0;
+                ScrollBarSet = false;
+                Revisions.ClearSelection();
+                Revisions.VirtualMode = true;
+                //Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = Math.Max(Revisions.DisplayedRowCount(true), GitCommands.Settings.MaxCommits);
+                    
+                currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
+
+                InternalRefresh();
+            }
+            catch (Exception exception)
             {
-                gitCountCommitsCommand.Kill();
+                Error.Visible = true;
+                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            LastRevision = 0;
-            ScrollBarSet = false;
-            Revisions.ClearSelection();
-            Revisions.VirtualMode = true;
-            //Revisions.ScrollBars = ScrollBars.None;
-            Revisions.RowCount = GitCommands.Settings.MaxCommits;
-                
-            currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
-
-            InternalRefresh();
         }
 
         private void SetRowCount()
@@ -212,7 +231,7 @@ namespace GitUI
             int y = -height;
             int numberOfVisibleRows = Revisions.DisplayedRowCount(true);
             int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
-            numberOfVisibleRows = Math.Min(20, RevisionList.Count);
+            numberOfVisibleRows = Math.Min(/*20*/numberOfVisibleRows, RevisionList.Count);
             if (firstVisibleRow < 1)
             {
                 skipFirst = false;
@@ -249,9 +268,6 @@ namespace GitUI
             for (int r = firstVisibleRow; r < Math.Min(RevisionList.Count, firstVisibleRow + numberOfVisibleRows); r++)
             {
                 revision = RevisionList[r];
-
-                
-                
 
                 if (r > 0)
                     prevRevision = RevisionList[r - 1];
