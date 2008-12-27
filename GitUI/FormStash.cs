@@ -97,6 +97,8 @@ namespace GitUI
             View.Refresh();
         }
 
+        public bool NeedRefresh = false;
+
         private void Stash_Click(object sender, EventArgs e)
         {
             if (GitCommands.GitCommands.GetStashedItems().Count > 0)
@@ -106,12 +108,14 @@ namespace GitUI
             }            
 
             MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
+            NeedRefresh = true;
             Initialize();
         }
 
         private void Clear_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
+            NeedRefresh = true;
             Initialize();
         }
 

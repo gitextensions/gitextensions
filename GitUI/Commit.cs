@@ -102,6 +102,8 @@ namespace GitUI
             }
         }
 
+        public bool NeedRefresh = false;
+
         private void Commit_Click(object sender, EventArgs e)
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
@@ -127,7 +129,9 @@ namespace GitUI
                     OutPut.Text = "Command executed \n";
 
                 OutPut.Text += dto.Result;
-
+                
+                NeedRefresh = true;
+                
                 Initialize();
             }
             catch

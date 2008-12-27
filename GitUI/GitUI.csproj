@@ -299,6 +299,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\loading2.gif" />
+    <None Include="Resources\loading.gif" />
     <None Include="Resources\loadingpanel.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

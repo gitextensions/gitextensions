@@ -28,6 +28,9 @@ namespace GitUI
         {
             if (revisionGraphCommand != null)
                 revisionGraphCommand.Kill();
+
+            if (gitCountCommitsCommand != null)
+                gitCountCommitsCommand.Kill();
         }
 
         protected override void OnCreateControl()
@@ -81,18 +84,52 @@ namespace GitUI
 
         protected Bitmap graphImage;
 
-        //GitCommands.GitCommands gitGetCommitsCommand = new GitCommands.GitCommands();
-        GitCommands.RevisionGraph revisionGraphCommand = new RevisionGraph();
+        GitCommands.GitCommands gitCountCommitsCommand = null;// = new GitCommands.GitCommands();
+        GitCommands.RevisionGraph revisionGraphCommand = null;//new RevisionGraph();
+        private bool ScrollBarSet;
 
         public void RefreshRevisions()
         {
+            if (revisionGraphCommand != null)
+            {
+                revisionGraphCommand.Kill();
+            }
+
+            if (gitCountCommitsCommand != null)
+            {
+                gitCountCommitsCommand.Kill();
+            }
+
             LastRevision = 0;
+            ScrollBarSet = false;
             Revisions.VirtualMode = true;
-            Revisions.RowCount = GitCommands.GitCommands.CommitCount();
+            Revisions.ScrollBars = ScrollBars.None;
+            Revisions.RowCount = GitCommands.Settings.MaxCommits;
                 
             currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
 
             InternalRefresh();
+        }
+
+        private void SetRowCount()
+        {
+            int count;
+            if (int.TryParse(gitCountCommitsCommand.Output.ToString(), out count))
+            {
+                ScrollBarSet = true;
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = count;
+                Revisions.ScrollBars = ScrollBars.Vertical;
+            }
+        }
+
+        private void gitCountCommitsCommand_Exited(object sender, EventArgs e)
+        {
+            if (Revisions.InvokeRequired)
+            {
+                DoneCallback d = new DoneCallback(SetRowCount);
+                this.Invoke(d, new object[] { });
+            }
         }
 
         private void InternalRefresh()
@@ -112,6 +149,7 @@ namespace GitUI
 
             Revisions.Enabled = false;
             Loading.Visible = true;
+            revisionGraphCommand = new RevisionGraph();
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
@@ -121,9 +159,12 @@ namespace GitUI
         {
             RevisionList = revisionGraphCommand.Revisions;
 
-            // It's on a different thread, so use Invoke.
-            DoneCallback d = new DoneCallback(LoadRevisions);
-            this.Invoke(d, new object[] { });
+            if (Revisions.InvokeRequired)
+            {
+                // It's on a different thread, so use Invoke.
+                DoneCallback d = new DoneCallback(LoadRevisions);
+                this.Invoke(d, new object[] { });
+            }
         }
 
         public string currentCheckout { get; set; }
@@ -134,6 +175,22 @@ namespace GitUI
         {
             if (RevisionList == null || RevisionList.Count == 0)
                 return;
+
+            if (!ScrollBarSet)
+            {
+                ScrollBarSet = true;
+                
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = RevisionList.Count;
+                Revisions.ScrollBars = ScrollBars.Vertical;
+                
+                if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
+                {
+                    gitCountCommitsCommand = new GitCommands.GitCommands();
+                    gitCountCommitsCommand.CmdStartProcess(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.exe rev-list --all --abbrev-commit | wc -l\"");
+                    gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
+                }
+            }
 
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
 
