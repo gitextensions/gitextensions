@@ -326,6 +326,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\Cow1.png" />
+    <None Include="Resources\Cow.png" />
     <None Include="Icons\77.png" />
     <None Include="Icons\78.png" />
     <None Include="Icons\76.png" />

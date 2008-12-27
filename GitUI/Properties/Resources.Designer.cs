@@ -277,6 +277,20 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Cow {
+            get {
+                object obj = ResourceManager.GetObject("Cow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Cow1 {
+            get {
+                object obj = ResourceManager.GetObject("Cow1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap error {
             get {
                 object obj = ResourceManager.GetObject("error", resourceCulture);
