@@ -15,38 +15,38 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
+        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_003AA43D935B4F8DA4130EC0304368B3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2C1DBBEE1E953550EBAA471631FEFC19"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C6060A351FA9CE454473F0D8F0D4FF4"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C6060A351FA9CE454473F0D8F0D4FF4"
-        "OwnerKey" = "8:_2C1DBBEE1E953550EBAA471631FEFC19"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6B1CF3E870717482A771B13498654313"
-        "OwnerKey" = "8:_2C1DBBEE1E953550EBAA471631FEFC19"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9AC172A85E904390ABAC6CD994495461"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
+        "OwnerKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C0E93D7D5BF545CA9D60024445106C8D"
+        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C0E93D7D5BF545CA9D60024445106C8D"
+        "OwnerKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -64,19 +64,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2C1DBBEE1E953550EBAA471631FEFC19"
+        "OwnerKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6B1CF3E870717482A771B13498654313"
+        "OwnerKey" = "8:_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C6060A351FA9CE454473F0D8F0D4FF4"
+        "OwnerKey" = "8:_C0E93D7D5BF545CA9D60024445106C8D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -184,34 +184,14 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_003AA43D935B4F8DA4130EC0304368B3"
-            {
-            "SourcePath" = "8:..\\cow-head.ico"
-            "TargetName" = "8:cow-head.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2C1DBBEE1E953550EBAA471631FEFC19"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_000A2A17B368E31C8184B9D156A2CB69"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2da19ef2af72bcc4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2C1DBBEE1E953550EBAA471631FEFC19"
+                    "_000A2A17B368E31C8184B9D156A2CB69"
                     {
                     "Name" = "8:GitUI.DLL"
                     "Attributes" = "3:516"
@@ -235,21 +215,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C6060A351FA9CE454473F0D8F0D4FF4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_003AA43D935B4F8DA4130EC0304368B3"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce7debbf8321c49b, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3C6060A351FA9CE454473F0D8F0D4FF4"
-                    {
-                    "Name" = "8:GitCommands.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:GitCommands.DLL"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\cow-head.ico"
+            "TargetName" = "8:cow-head.ico"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
@@ -263,17 +232,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6B1CF3E870717482A771B13498654313"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AC172A85E904390ABAC6CD994495461"
+            {
+            "SourcePath" = "8:..\\SimpleExt\\ReleaseMinDependency\\GitExtensionsShellEx.dll"
+            "TargetName" = "8:GitExtensionsShellEx.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:4"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6B1CF3E870717482A771B13498654313"
+                    "_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
                     {
                     "Name" = "8:ICSharpCode.TextEditor.DLL"
                     "Attributes" = "3:576"
@@ -297,10 +286,21 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AC172A85E904390ABAC6CD994495461"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C0E93D7D5BF545CA9D60024445106C8D"
             {
-            "SourcePath" = "8:..\\SimpleExt\\ReleaseMinDependency\\GitExtensionsShellEx.dll"
-            "TargetName" = "8:GitExtensionsShellEx.dll"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce7debbf8321c49b, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C0E93D7D5BF545CA9D60024445106C8D"
+                    {
+                    "Name" = "8:GitCommands.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:GitCommands.DLL"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
@@ -312,9 +312,9 @@
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
-            "Register" = "3:4"
+            "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F341A1E8640E462A825A2ACC56D6128A"
@@ -438,7 +438,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{53AE809B-1C80-405C-8399-93AA02772DE8}"
+        "PackageCode" = "8:{7C78507C-D78D-4E1A-83DB-6871CAB0EFB6}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

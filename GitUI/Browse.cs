@@ -448,6 +448,11 @@ namespace GitUI
             GitCommands.GitCommands.RunGitK();
         }
 
+        private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormDonate().ShowDialog();
+        }
+
 
     }
 }

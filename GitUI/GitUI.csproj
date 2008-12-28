@@ -138,6 +138,12 @@
     <Compile Include="FormDiffSmall.Designer.cs">
       <DependentUpon>FormDiffSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDonate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDonate.Designer.cs">
+      <DependentUpon>FormDonate.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFileHistory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,6 +273,9 @@
     <EmbeddedResource Include="FormDiffSmall.resx">
       <DependentUpon>FormDiffSmall.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormDonate.resx">
+      <DependentUpon>FormDonate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </EmbeddedResource>
@@ -326,6 +335,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\Donate.jpg" />
     <None Include="Resources\Cow1.png" />
     <None Include="Resources\Cow.png" />
     <None Include="Icons\77.png" />
