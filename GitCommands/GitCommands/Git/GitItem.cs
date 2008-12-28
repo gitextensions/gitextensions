@@ -15,6 +15,8 @@ namespace GitCommands
         public string CommitGuid { get; set; }
         public string ItemType{ get; set; }
         public string Name { get; set; }
+        public string Author { get; set; }
+        public string Date { get; set; }
         public string FileName { get; set; }
         public string Mode { get; set; }
 

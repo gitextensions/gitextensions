@@ -32,22 +32,30 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
+            this.Blame = new System.Windows.Forms.TabPage();
+            this.BlameText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.ViewTab.SuspendLayout();
+            this.DiffTab.SuspendLayout();
+            this.Blame.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -64,8 +72,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(531, 489);
-            this.splitContainer1.SplitterDistance = 123;
+            this.splitContainer1.Size = new System.Drawing.Size(750, 446);
+            this.splitContainer1.SplitterDistance = 112;
             this.splitContainer1.TabIndex = 0;
             // 
             // FileChanges
@@ -76,60 +84,44 @@
             this.FileChanges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.FileChanges.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameDataGridViewTextBoxColumn,
-            this.guidDataGridViewTextBoxColumn});
-            this.FileChanges.DataSource = this.gitItemBindingSource;
+            this.Author,
+            this.Date});
+            this.FileChanges.DataSource = this.gitItemBindingSource1;
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
             this.FileChanges.ReadOnly = true;
             this.FileChanges.RowHeadersVisible = false;
             this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FileChanges.Size = new System.Drawing.Size(531, 123);
+            this.FileChanges.Size = new System.Drawing.Size(750, 112);
             this.FileChanges.TabIndex = 1;
+            this.FileChanges.DoubleClick += new System.EventHandler(this.FileChanges_DoubleClick);
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
             // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // guidDataGridViewTextBoxColumn
-            // 
-            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
-            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
-            this.guidDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
-            // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.ViewTab);
+            this.tabControl1.Controls.Add(this.DiffTab);
+            this.tabControl1.Controls.Add(this.Blame);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(531, 362);
+            this.tabControl1.Size = new System.Drawing.Size(750, 330);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
-            // tabPage1
+            // ViewTab
             // 
-            this.tabPage1.Controls.Add(this.View);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(523, 336);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "View";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.ViewTab.Controls.Add(this.View);
+            this.ViewTab.Location = new System.Drawing.Point(4, 22);
+            this.ViewTab.Name = "ViewTab";
+            this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ViewTab.Size = new System.Drawing.Size(523, 336);
+            this.ViewTab.TabIndex = 0;
+            this.ViewTab.Text = "View";
+            this.ViewTab.UseVisualStyleBackColor = true;
             // 
             // View
             // 
@@ -140,16 +132,16 @@
             this.View.Size = new System.Drawing.Size(517, 330);
             this.View.TabIndex = 0;
             // 
-            // tabPage2
+            // DiffTab
             // 
-            this.tabPage2.Controls.Add(this.Diff);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(523, 336);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Diff";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.DiffTab.Controls.Add(this.Diff);
+            this.DiffTab.Location = new System.Drawing.Point(4, 22);
+            this.DiffTab.Name = "DiffTab";
+            this.DiffTab.Padding = new System.Windows.Forms.Padding(3);
+            this.DiffTab.Size = new System.Drawing.Size(742, 304);
+            this.DiffTab.TabIndex = 1;
+            this.DiffTab.Text = "Diff";
+            this.DiffTab.UseVisualStyleBackColor = true;
             // 
             // Diff
             // 
@@ -157,14 +149,71 @@
             this.Diff.IsReadOnly = false;
             this.Diff.Location = new System.Drawing.Point(3, 3);
             this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(517, 330);
+            this.Diff.Size = new System.Drawing.Size(736, 298);
             this.Diff.TabIndex = 0;
+            // 
+            // Blame
+            // 
+            this.Blame.Controls.Add(this.BlameText);
+            this.Blame.Location = new System.Drawing.Point(4, 22);
+            this.Blame.Name = "Blame";
+            this.Blame.Size = new System.Drawing.Size(523, 336);
+            this.Blame.TabIndex = 2;
+            this.Blame.Text = "Blame";
+            this.Blame.UseVisualStyleBackColor = true;
+            this.Blame.Click += new System.EventHandler(this.Blame_Click);
+            // 
+            // BlameText
+            // 
+            this.BlameText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlameText.IsReadOnly = false;
+            this.BlameText.Location = new System.Drawing.Point(0, 0);
+            this.BlameText.Name = "BlameText";
+            this.BlameText.Size = new System.Drawing.Size(523, 336);
+            this.BlameText.TabIndex = 0;
+            // 
+            // Author
+            // 
+            this.Author.DataPropertyName = "Author";
+            this.Author.HeaderText = "Author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.Width = 150;
+            // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            this.Date.Width = 180;
+            // 
+            // subItemsBindingSource
+            // 
+            this.subItemsBindingSource.DataMember = "SubItems";
+            this.subItemsBindingSource.DataSource = this.gitItemBindingSource1;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // gitItemBindingSource1
+            // 
+            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // gitItemBindingSource
+            // 
+            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 489);
+            this.ClientSize = new System.Drawing.Size(750, 446);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormFileHistory";
@@ -175,10 +224,13 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.ViewTab.ResumeLayout(false);
+            this.DiffTab.ResumeLayout(false);
+            this.Blame.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -187,13 +239,18 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView FileChanges;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage ViewTab;
+        private System.Windows.Forms.TabPage DiffTab;
         private ICSharpCode.TextEditor.TextEditorControl View;
         private ICSharpCode.TextEditor.TextEditorControl Diff;
+        private System.Windows.Forms.TabPage Blame;
+        private ICSharpCode.TextEditor.TextEditorControl BlameText;
+        private System.Windows.Forms.BindingSource gitItemBindingSource1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.BindingSource subItemsBindingSource;
     }
 }

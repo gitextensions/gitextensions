@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDiffSmall));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -54,16 +54,6 @@
             this.splitContainer1.SplitterDistance = 239;
             this.splitContainer1.TabIndex = 0;
             // 
-            // DiffText
-            // 
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IsReadOnly = false;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(474, 529);
-            this.DiffText.TabIndex = 0;
-            this.DiffText.Text = "textEditorControl1";
-            // 
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -74,6 +64,16 @@
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
+            // 
+            // DiffText
+            // 
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IsReadOnly = false;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(474, 529);
+            this.DiffText.TabIndex = 0;
+            this.DiffText.Text = "textEditorControl1";
             // 
             // FormDiffSmall
             // 

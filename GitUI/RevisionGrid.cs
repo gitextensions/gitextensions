@@ -132,7 +132,7 @@ namespace GitUI
                 Revisions.RowCount = Math.Max(Revisions.DisplayedRowCount(true), GitCommands.Settings.MaxCommits);
                     
                 currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
-
+                ScrollBarSet = false;
                 InternalRefresh();
             }
             catch (Exception exception)

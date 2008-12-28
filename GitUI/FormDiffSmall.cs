@@ -33,6 +33,15 @@ namespace GitUI
             DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
         }
 
+        public void SetRevision(string revision)
+        {
+            Revision = new GitRevision();
+            Revision.Guid = revision;
+            Revision.ParentGuids.Add(revision + "^");
+            SetRevision(Revision);
+        }
+
+
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem is Patch)

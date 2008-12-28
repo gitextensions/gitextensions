@@ -1010,31 +1010,43 @@ namespace GitCommands
             return heads;
         }
 
-        static public List<IGitItem> GetFileChanges(string file)
+        static public List<GitItem> GetFileChanges(string file)
         {
-            string tree = RunCmd(Settings.GitDir + "git.exe", "whatchanged --all --pretty=oneline " + file);
+            string tree = RunCmd(Settings.GitDir + "git.exe", "whatchanged --all " + file);
 
             string[] itemsStrings = tree.Split('\n');
 
-            List<IGitItem> items = new List<IGitItem>();
+            List<GitItem> items = new List<GitItem>();
 
             GitItem item = null;
             foreach (string itemsString in itemsStrings)
             {
-                if (itemsString.Length > 43 && itemsString[0] != ':')
+                if (itemsString.StartsWith("commit "))
                 {
                     item = new GitItem();
 
-                    item.CommitGuid = itemsString.Substring(0, 40);
-                    item.Name = itemsString.Substring(41).Trim();
-
+                    item.CommitGuid = itemsString.Substring(7).Trim();
                     items.Add(item);
+                }
+                else
+                if (itemsString.StartsWith("Author: "))
+                {
+                    item.Author = itemsString.Substring(7).Trim();
+                }
+                else
+                if (itemsString.StartsWith("Date:   "))
+                {
+                    item.Date = itemsString.Substring(7).Trim();
+                }
+                else
+                if (!itemsString.StartsWith(":"))
+                {
+                    item.Name += itemsString.Trim() + "\n";
                 }
                 else
                 {
                     if (item != null && itemsString.Length > 32)
                         item.Guid = itemsString.Substring(26, 7);
-                        //item.Guid = itemsString.Substring(15, 7);
                 }
             }
 
@@ -1071,6 +1083,11 @@ namespace GitCommands
             }
 
             return items;
+        }
+
+        public static string Blame(string filename, string from)
+        {
+            return RunCmd(Settings.GitDir + "git.exe", "blame " + from + " \"" + filename + "\"");
         }
 
         public static string GetFileText(string id)
