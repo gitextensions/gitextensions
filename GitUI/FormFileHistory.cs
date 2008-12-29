@@ -15,6 +15,7 @@ namespace GitUI
         public FormFileHistory(string fileName)
         {
             this.FileName = fileName;
+
             InitializeComponent();
         }
 
@@ -23,11 +24,12 @@ namespace GitUI
         private void FormFileHistory_Load(object sender, EventArgs e)
         {
             EditorOptions.SetSyntax(View, FileName);
-            EditorOptions.SetSyntax(BlameText, FileName);
-
-            BlameText.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
 
             FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
+
+            BlameGrid.RowTemplate.Height = 15;
+
+            this.Text = "File History (" + FileName + ")";
         }
 
         private void FileChanges_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -45,8 +47,7 @@ namespace GitUI
 
                 if (tabControl1.SelectedTab == Blame)
                 {
-                    BlameText.Text = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
-                    BlameText.Refresh();
+                    BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
                 }
                 if (tabControl1.SelectedTab == ViewTab)
                 {
@@ -127,6 +128,40 @@ namespace GitUI
             else
                 new FormDiff().ShowDialog();
 
+        }
+
+        private void textEditorControl1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void BlameGrid_DoubleClick(object sender, EventArgs e)
+        {
+            if (BlameGrid.SelectedRows.Count == 0)
+                return;
+
+            FormDiffSmall frm = new FormDiffSmall();
+            frm.SetRevision(((GitBlame)BlameGrid.SelectedRows[0].DataBoundItem).CommitGuid);
+            frm.ShowDialog();
+        }
+
+        private void BlameGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            
+        }
+
+        private void BlameGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
+            {
+                if (e.ColumnIndex == 0)
+                {
+                    e.Handled = true;
+                    GitBlame blame = ((GitBlame)BlameGrid.Rows[e.RowIndex].DataBoundItem);
+                    e.Graphics.FillRectangle(new SolidBrush(blame.color), e.CellBounds);
+                    e.Graphics.DrawString(blame.Author, BlameGrid.Font, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
+            }
         }
     }
 }

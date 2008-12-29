@@ -56,6 +56,7 @@
     <Compile Include="Clone.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="Diff.cs" />
+    <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitCommands.cs" />
     <Compile Include="Git\GitRevision.cs" />

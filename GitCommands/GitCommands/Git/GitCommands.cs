@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.IO;
 using PatchApply;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace GitCommands
 {
@@ -1029,6 +1030,11 @@ namespace GitCommands
                     items.Add(item);
                 }
                 else
+                if (item == null)
+                {
+                    continue;
+                }
+                else
                 if (itemsString.StartsWith("Author: "))
                 {
                     item.Author = itemsString.Substring(7).Trim();
@@ -1039,7 +1045,7 @@ namespace GitCommands
                     item.Date = itemsString.Substring(7).Trim();
                 }
                 else
-                if (!itemsString.StartsWith(":"))
+                if (!itemsString.StartsWith(":") && !string.IsNullOrEmpty(itemsString))
                 {
                     item.Name += itemsString.Trim() + "\n";
                 }
@@ -1085,9 +1091,58 @@ namespace GitCommands
             return items;
         }
 
-        public static string Blame(string filename, string from)
+        public static List<GitBlame> Blame(string filename, string from)
         {
-            return RunCmd(Settings.GitDir + "git.exe", "blame " + from + " \"" + filename + "\"");
+            string[] itemsStrings = RunCmd(Settings.GitDir + "git.exe", "blame -l " + from + " \"" + filename + "\"").Split('\n');
+
+            List<GitBlame> items = new List<GitBlame>();
+
+            GitBlame item = null;
+            string lastCommitGuid = "";
+
+            Color color1 = Color.Azure;
+            Color color2 = Color.Ivory;
+            Color currentColor = color1;
+
+            foreach (string itemsString in itemsStrings)
+            {
+                if (itemsString.Length > 50)
+                {
+                    string commitGuid = itemsString.Substring(0, 40).Trim();
+
+                    if (lastCommitGuid != commitGuid)
+                    {
+                        if (currentColor == color1)
+                            currentColor = color2;
+                        else
+                            currentColor = color1;
+                    }
+
+                    {
+                        item = new GitBlame();
+                        item.color = currentColor;
+                        item.CommitGuid = commitGuid;
+                        items.Add(item);
+                    }
+
+                    int codeIndex = itemsString.IndexOf(')', 41)+1;
+                    if (codeIndex > 41)
+                    {
+                        if (lastCommitGuid != commitGuid)
+                            item.Author = itemsString.Substring(41, codeIndex - 41).Trim();
+
+                        if (!string.IsNullOrEmpty(item.Text))
+                            item.Text += "\n";
+                        item.Text += itemsString.Substring(codeIndex);
+                    }
+                    
+                    lastCommitGuid = commitGuid;
+                }
+            }
+
+
+            return items;
+
         }
 
         public static string GetFileText(string id)

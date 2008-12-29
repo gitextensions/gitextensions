@@ -335,6 +335,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Resources\Donate.jpg" />
     <None Include="Resources\Cow1.png" />
     <None Include="Resources\Cow.png" />

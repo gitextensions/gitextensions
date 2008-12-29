@@ -32,30 +32,37 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new ICSharpCode.TextEditor.TextEditorControl();
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
             this.Blame = new System.Windows.Forms.TabPage();
-            this.BlameText = new ICSharpCode.TextEditor.TextEditorControl();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.BlameGrid = new System.Windows.Forms.DataGridView();
+            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.eventLog1 = new System.Diagnostics.EventLog();
+            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TextColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
             this.Blame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BlameGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -99,6 +106,34 @@
             this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
             this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
             // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Author
+            // 
+            this.Author.DataPropertyName = "Author";
+            this.Author.HeaderText = "Author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.Width = 150;
+            // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            this.Date.Width = 180;
+            // 
+            // gitItemBindingSource1
+            // 
+            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.ViewTab);
@@ -118,7 +153,7 @@
             this.ViewTab.Location = new System.Drawing.Point(4, 22);
             this.ViewTab.Name = "ViewTab";
             this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ViewTab.Size = new System.Drawing.Size(523, 336);
+            this.ViewTab.Size = new System.Drawing.Size(742, 304);
             this.ViewTab.TabIndex = 0;
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
@@ -129,7 +164,7 @@
             this.View.IsReadOnly = false;
             this.View.Location = new System.Drawing.Point(3, 3);
             this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(517, 330);
+            this.View.Size = new System.Drawing.Size(736, 298);
             this.View.TabIndex = 0;
             // 
             // DiffTab
@@ -154,60 +189,83 @@
             // 
             // Blame
             // 
-            this.Blame.Controls.Add(this.BlameText);
+            this.Blame.Controls.Add(this.BlameGrid);
             this.Blame.Location = new System.Drawing.Point(4, 22);
             this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(523, 336);
+            this.Blame.Size = new System.Drawing.Size(742, 304);
             this.Blame.TabIndex = 2;
             this.Blame.Text = "Blame";
             this.Blame.UseVisualStyleBackColor = true;
             this.Blame.Click += new System.EventHandler(this.Blame_Click);
-            // 
-            // BlameText
-            // 
-            this.BlameText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameText.IsReadOnly = false;
-            this.BlameText.Location = new System.Drawing.Point(0, 0);
-            this.BlameText.Name = "BlameText";
-            this.BlameText.Size = new System.Drawing.Size(523, 336);
-            this.BlameText.TabIndex = 0;
-            // 
-            // Author
-            // 
-            this.Author.DataPropertyName = "Author";
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.Width = 150;
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.Width = 180;
             // 
             // subItemsBindingSource
             // 
             this.subItemsBindingSource.DataMember = "SubItems";
             this.subItemsBindingSource.DataSource = this.gitItemBindingSource1;
             // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // gitItemBindingSource1
-            // 
-            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
-            // 
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // BlameGrid
+            // 
+            this.BlameGrid.AllowUserToAddRows = false;
+            this.BlameGrid.AllowUserToDeleteRows = false;
+            this.BlameGrid.AutoGenerateColumns = false;
+            this.BlameGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.BlameGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.BlameGrid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.BlameGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.BlameGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.BlameGrid.ColumnHeadersVisible = false;
+            this.BlameGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.authorDataGridViewTextBoxColumn,
+            this.TextColumn});
+            this.BlameGrid.DataSource = this.gitBlameBindingSource;
+            this.BlameGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlameGrid.GridColor = System.Drawing.SystemColors.Window;
+            this.BlameGrid.Location = new System.Drawing.Point(0, 0);
+            this.BlameGrid.MultiSelect = false;
+            this.BlameGrid.Name = "BlameGrid";
+            this.BlameGrid.ReadOnly = true;
+            this.BlameGrid.RowHeadersVisible = false;
+            this.BlameGrid.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.BlameGrid.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+            this.BlameGrid.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+            this.BlameGrid.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.BlameGrid.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.Black;
+            this.BlameGrid.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.BlameGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.BlameGrid.Size = new System.Drawing.Size(742, 304);
+            this.BlameGrid.TabIndex = 0;
+            this.BlameGrid.DoubleClick += new System.EventHandler(this.BlameGrid_DoubleClick);
+            this.BlameGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.BlameGrid_CellPainting);
+            // 
+            // gitBlameBindingSource
+            // 
+            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
+            // 
+            // eventLog1
+            // 
+            this.eventLog1.SynchronizingObject = this;
+            // 
+            // authorDataGridViewTextBoxColumn
+            // 
+            this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
+            this.authorDataGridViewTextBoxColumn.FillWeight = 193.0556F;
+            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
+            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            this.authorDataGridViewTextBoxColumn.Width = 250;
+            // 
+            // TextColumn
+            // 
+            this.TextColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TextColumn.DataPropertyName = "Text";
+            this.TextColumn.HeaderText = "Text";
+            this.TextColumn.Name = "TextColumn";
+            this.TextColumn.ReadOnly = true;
             // 
             // FormFileHistory
             // 
@@ -224,13 +282,16 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
             this.Blame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BlameGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -246,11 +307,15 @@
         private ICSharpCode.TextEditor.TextEditorControl View;
         private ICSharpCode.TextEditor.TextEditorControl Diff;
         private System.Windows.Forms.TabPage Blame;
-        private ICSharpCode.TextEditor.TextEditorControl BlameText;
         private System.Windows.Forms.BindingSource gitItemBindingSource1;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.BindingSource subItemsBindingSource;
+        private System.Windows.Forms.DataGridView BlameGrid;
+        private System.Windows.Forms.BindingSource gitBlameBindingSource;
+        private System.Diagnostics.EventLog eventLog1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TextColumn;
     }
 }
