@@ -25,7 +25,7 @@ namespace GitCommands
             {
                 dir = dir.Substring(0, dir.LastIndexOfAny(new char[] { '\\', '/' }));
 
-                if (Settings.ValidWorkingDir(dir + "\\" + ".git"))
+                if (Settings.ValidWorkingDir(dir))
                     return dir + "\\";
             }
             return startDir;
