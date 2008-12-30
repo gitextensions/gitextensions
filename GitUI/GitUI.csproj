@@ -43,12 +43,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -90,6 +84,12 @@
     <Compile Include="FormBranch.Designer.cs">
       <DependentUpon>FormBranch.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormBranchSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBranchSmall.Designer.cs">
+      <DependentUpon>FormBranchSmall.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormCheckout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +125,12 @@
     </Compile>
     <Compile Include="FormDeleteBranch.Designer.cs">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormDeleteTag.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDeleteTag.Designer.cs">
+      <DependentUpon>FormDeleteTag.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDiff.cs">
       <SubType>Form</SubType>
@@ -180,6 +186,12 @@
     <Compile Include="FormPush.Designer.cs">
       <DependentUpon>FormPush.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormResetCurrentBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormResetCurrentBranch.Designer.cs">
+      <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSettigns.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,6 +209,12 @@
     </Compile>
     <Compile Include="FormTag.Designer.cs">
       <DependentUpon>FormTag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTagSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTagSmall.Designer.cs">
+      <DependentUpon>FormTagSmall.cs</DependentUpon>
     </Compile>
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
@@ -249,6 +267,9 @@
     <EmbeddedResource Include="FormBranch.resx">
       <DependentUpon>FormBranch.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormBranchSmall.resx">
+      <DependentUpon>FormBranchSmall.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormCheckout.resx">
       <DependentUpon>FormCheckout.cs</DependentUpon>
     </EmbeddedResource>
@@ -266,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormDeleteBranch.resx">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDeleteTag.resx">
+      <DependentUpon>FormDeleteTag.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDiff.resx">
       <DependentUpon>FormDiff.cs</DependentUpon>
@@ -294,6 +318,9 @@
     <EmbeddedResource Include="FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormResetCurrentBranch.resx">
+      <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>
     </EmbeddedResource>
@@ -302,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormTag.resx">
       <DependentUpon>FormTag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTagSmall.resx">
+      <DependentUpon>FormTagSmall.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GitLogForm.resx">
       <DependentUpon>GitLogForm.cs</DependentUpon>

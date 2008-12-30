@@ -19,7 +19,7 @@ namespace GitUI
         private void FormDeleteBranch_Load(object sender, EventArgs e)
         {
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(true);
+            Branches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
         }
 
         private void Ok_Click(object sender, EventArgs e)

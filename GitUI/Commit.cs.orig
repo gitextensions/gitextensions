@@ -9,8 +9,6 @@ using GitCommands;
 
 namespace GitUI
 {
-    delegate void DoneCallback();
-
     public partial class FormCommit : Form
     {
         public FormCommit()
@@ -18,67 +16,38 @@ namespace GitUI
             InitializeComponent();
         }
 
-        ~FormCommit()  // destructor
-        {
-            gitGetUnstagedCommand.Kill();
-        }
-
         private void FormCommit_Load(object sender, EventArgs e)
         {
             Initialize();
         }
 
-        GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
-
-        private bool IsLoadingUnstagedFiles()
-        {
-            if (gitGetUnstagedCommand.Process == null) 
-                return false;
-
-            return !gitGetUnstagedCommand.Process.HasExited;
-        }
-
         private void Initialize()
         {
-            //Load unstaged files
-            gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
-            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.exe", GitCommands.GitCommands.GetAllChangedFilesCmd);
-            Loading.Visible = true;
-            AddFiles.Enabled = false;
+<<<<<<< HEAD:GitUI/Commit.cs
+            List<GitItemStatus> changedFiles = GitCommands.GitCommands.GetAllChangedFiles();
+=======
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-            //Load staged files
+            List<GitItemStatus> itemStatusList = gitCommands.GitStatus();
+>>>>>>> 7635c020626af394960ffa8d0d18e68a3c2bd632:GitUI/Commit.cs
+
             List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
+
             Staged.DataSource = stagedFiles;
-        }
 
-        // This method is passed in to the SetTextCallBack delegate
-        // to set the Text property of textBox1.
-        private void LoadUnstagedOutput()
-        {
-            Unstaged.DataSource = GitCommands.GitCommands.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
-            Loading.Visible = false;
-            AddFiles.Enabled = true;
-        }
-
-        void gitCommands_Exited(object sender, EventArgs e)
-        {
-            if (Unstaged.InvokeRequired)
-            {
-                // It's on a different thread, so use Invoke.
-                DoneCallback d = new DoneCallback(LoadUnstagedOutput);
-                this.Invoke(d, new object[] {});
-            }
-            else
-            {
-                LoadUnstagedOutput();
-            }
-
+            Unstaged.DataSource = changedFiles;
         }
 
         protected void ShowChanges(GitItemStatus item, bool staged)
         {
             EditorOptions.SetSyntax(SelectedDiff, item.Name);
+<<<<<<< HEAD:GitUI/Commit.cs
             SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name, staged);
+=======
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            SelectedDiff.Text = gitCommands.GetCurrentChanges(item.Name);
+>>>>>>> 7635c020626af394960ffa8d0d18e68a3c2bd632:GitUI/Commit.cs
             SelectedDiff.Refresh();
         }
 
@@ -102,14 +71,7 @@ namespace GitUI
             }
         }
 
-        public bool NeedRefresh = false;
-
         private void Commit_Click(object sender, EventArgs e)
-        {
-            DoCommit(false);
-        }
-
-        private void DoCommit(bool amend)
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
@@ -126,7 +88,7 @@ namespace GitUI
             {
                 OutPut.Text = "";
 
-                CommitDto dto = new CommitDto(Message.Text, amend);
+                CommitDto dto = new CommitDto(Message.Text);
                 GitCommands.Commit commit = new GitCommands.Commit(dto);
                 commit.Execute();
 
@@ -134,8 +96,6 @@ namespace GitUI
                     OutPut.Text = "Command executed \n";
 
                 OutPut.Text += dto.Result;
-
-                NeedRefresh = true;
 
                 Initialize();
             }
@@ -151,7 +111,7 @@ namespace GitUI
 
         private void Stage_Click(object sender, EventArgs e)
         {
-            Loading.Visible = true;
+
             string result = "";
             List<string> files = new List<string>();
             foreach (DataGridViewRow row in Unstaged.SelectedRows)
@@ -178,7 +138,8 @@ namespace GitUI
             {
                 if (MessageBox.Show("Are you really sure you want to DELETE all changes?", "WARNING! WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    OutPut.Text = GitCommands.GitCommands.ResetHard("");
+<<<<<<< HEAD:GitUI/Commit.cs
+                    OutPut.Text = GitCommands.GitCommands.Reset();
                     Initialize();
                 }
             }
@@ -186,7 +147,6 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
-            Loading.Visible = true;
             string result = "";
             List<string> files = new List<string>();
             foreach (DataGridViewRow row in Staged.SelectedRows)
@@ -196,6 +156,11 @@ namespace GitUI
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
                     files.Add(item.Name);
+=======
+                    GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+                    OutPut.Text = gitCommands.Reset();
+>>>>>>> 7635c020626af394960ffa8d0d18e68a3c2bd632:GitUI/Commit.cs
                 }
             }
 
@@ -226,14 +191,6 @@ namespace GitUI
         {
             new FormAddFiles().ShowDialog();
             Initialize();
-        }
-
-        private void Amend_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                DoCommit(true);
-            }
         }
     }
 }

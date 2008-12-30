@@ -82,6 +82,7 @@ namespace GitUI
         public List<GitRevision> GetRevisions()
         {
             List<GitRevision> retval = new List<GitRevision>();
+            
             if (RevisionList != null)
             foreach (DataGridViewRow row in Revisions.SelectedRows)
             {
@@ -562,6 +563,66 @@ namespace GitUI
             ScrollTimer.Stop();
             Revisions.InvalidateColumn(0);
             InternalRefresh();
+        }
+
+        private void createTagToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                FormTagSmall frm = new FormTagSmall();
+                frm.Revision = (GitRevision)RevisionList[LastRow];
+                frm.ShowDialog();
+                RefreshRevisions();
+
+            }
+        }
+
+        private void resetCurrentBranchToHereToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                FormResetCurrentBranch frm = new FormResetCurrentBranch((GitRevision)RevisionList[LastRow]);
+                frm.ShowDialog();
+                RefreshRevisions();
+
+            }
+        }
+
+        private void createNewBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                FormBranchSmall frm = new FormBranchSmall();
+                frm.Revision = (GitRevision)RevisionList[LastRow];
+                frm.ShowDialog();
+                RefreshRevisions();
+
+            }
+
+        }
+
+        private void Revisions_CellContextMenuStripChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        public int LastRow { get; set; }
+
+        private void Revisions_MouseClick(object sender, MouseEventArgs e)
+        {
+            System.Drawing.Point pt = Revisions.PointToClient(Cursor.Position);
+            DataGridView.HitTestInfo hti = Revisions.HitTest(pt.X, pt.Y);
+            LastRow = hti.RowIndex;
+        }
+
+        private void Revisions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            System.Drawing.Point pt = Revisions.PointToClient(Cursor.Position);
+            DataGridView.HitTestInfo hti = Revisions.HitTest(pt.X, pt.Y);
+            LastRow = hti.RowIndex;
+            Revisions.ClearSelection();
+            if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
+                Revisions.Rows[LastRow].Selected = true;
         }
     }
 }
