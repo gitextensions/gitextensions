@@ -750,7 +750,7 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisionGraph()
         {
-            return GetRevisionGraph(RunCmd(Settings.GitDir + "git.exe", "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %an%nDate:   %cd%nParents:%P%n%s\""));
+            return GetRevisionGraph(RunCmd(Settings.GitDir + "git.exe", "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %aN%nDate:   %cd%nParents:%P%n%s\""));
         }
 
         static public List<GitRevision> GetRevisionGraph(string tree)
