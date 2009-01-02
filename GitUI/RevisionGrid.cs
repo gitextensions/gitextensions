@@ -104,6 +104,7 @@ namespace GitUI
             try
             {
                 Error.Visible = false;
+                NoCommits.Visible = false;
 
                 if (!GitCommands.Settings.ValidWorkingDir())
                 {
@@ -206,7 +207,11 @@ namespace GitUI
         private void LoadRevisions()
         {
             if (RevisionList == null || RevisionList.Count == 0)
+            {
+                Loading.Visible = false;
+                NoCommits.Visible = true;
                 return;
+            }
 
             if (!ScrollBarSet)
             {
@@ -623,6 +628,24 @@ namespace GitUI
             Revisions.ClearSelection();
             if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
                 Revisions.Rows[LastRow].Selected = true;
+        }
+
+        private void AddFiles_Click(object sender, EventArgs e)
+        {
+            new FormAddFiles().ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void Commit_Click(object sender, EventArgs e)
+        {
+            new FormCommit().ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void GitIgnore_Click(object sender, EventArgs e)
+        {
+            new FormGitIgnore().ShowDialog();
+            RefreshRevisions();
         }
     }
 }

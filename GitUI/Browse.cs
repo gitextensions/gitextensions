@@ -34,9 +34,13 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
+            if (!GitCommands.Settings.ValidWorkingDir())
+            {
+                openToolStripMenuItem_Click(sender, e);
+            }
+
             InternalInitialize(false);
             RevisionGrid.Focus();
-
         }
 
         private ToolStripItem warning;
@@ -457,6 +461,11 @@ namespace GitUI
         {
             new FormDeleteTag().ShowDialog();
             Initialize();
+        }
+
+        private void editgitignoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormGitIgnore().ShowDialog();
         }
 
 

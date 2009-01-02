@@ -19,9 +19,9 @@ namespace GitUI
 
             MostRecentRepositories.Insert(0, repo);
 
-            if (MostRecentRepositories.Count > 8)
+            if (MostRecentRepositories.Count > 13)
             {
-                MostRecentRepositories.RemoveAt(5);
+                MostRecentRepositories.RemoveAt(13);
             }
         }
     }

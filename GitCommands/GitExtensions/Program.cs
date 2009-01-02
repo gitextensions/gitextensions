@@ -48,6 +48,11 @@ namespace GitExtensions
                 if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir6").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir7").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir8").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir9") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir9").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir10") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir10").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir11") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir11").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());
             }
             catch
             {

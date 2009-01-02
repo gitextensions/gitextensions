@@ -153,23 +153,25 @@ namespace GitUI
         {
             Loading.Visible = true;
             string result = "";
-            List<string> files = new List<string>();
+            progressBar.Visible = true;
+            progressBar.Maximum = Unstaged.SelectedRows.Count;
+            progressBar.Value = 0;
             foreach (DataGridViewRow row in Unstaged.SelectedRows)
             {
+                progressBar.Value = Math.Min(progressBar.Maximum-1, progressBar.Value + 1);
                 if (row.DataBoundItem is GitItemStatus)
                 {
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                    files.Add(item.Name);
+                    result = GitCommands.GitCommands.StageFile(item.Name);
+                    if (result.Length > 0)
+                        OutPut.Text += result;                    
                 }
             }
 
-            result = GitCommands.GitCommands.StageFiles(files);
-
-            if (result.Length > 0)
-                OutPut.Text = result;
 
             Initialize();
+            progressBar.Visible = false;
         }
 
         private void Reset_Click(object sender, EventArgs e)
@@ -188,23 +190,24 @@ namespace GitUI
         {
             Loading.Visible = true;
             string result = "";
-            List<string> files = new List<string>();
+            progressBar.Visible = true;
+            progressBar.Maximum = Staged.SelectedRows.Count;
+            progressBar.Value = 0;
             foreach (DataGridViewRow row in Staged.SelectedRows)
             {
+                progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
                 if (row.DataBoundItem is GitItemStatus)
                 {
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                    files.Add(item.Name);
+                    result = GitCommands.GitCommands.UnstageFile(item.Name);
+                    if (result.Length > 0)
+                        OutPut.Text += result;  
                 }
             }
-
-            result = GitCommands.GitCommands.UnstageFiles(files);
-
-            if (result.Length > 0)
-                OutPut.Text = result;
-
+           
             Initialize();
+            progressBar.Visible = false;
         }
 
         private void splitContainer8_SplitterMoved(object sender, SplitterEventArgs e)

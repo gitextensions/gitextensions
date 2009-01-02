@@ -138,6 +138,17 @@
   <metadata name="ScrollTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>345, 17</value>
   </metadata>
+  <data name="label1.Text" xml:space="preserve">
+    <value>There are no commits made to this repository yet.
+
+If this is a normal repository, these steps are recommended:
+- Make sure you have a proper .gitignore file in your repository
+- Then add files (using the "add files" function is much faster then using commit)
+- Commit the added files using commit
+
+If this is a central repository (bare repository without a working dir):
+- Push changes from another repository</value>
+  </data>
   <metadata name="gitRevisionBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

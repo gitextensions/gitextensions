@@ -34,15 +34,22 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
+            this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.UnstageFiles = new System.Windows.Forms.Button();
+            this.AddFiles = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.Staged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.Amend = new System.Windows.Forms.Button();
             this.AddManyFiles = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
@@ -52,13 +59,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.Loading = new System.Windows.Forms.PictureBox();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.UnstageFiles = new System.Windows.Forms.Button();
-            this.AddFiles = new System.Windows.Forms.Button();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Amend = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -68,7 +69,9 @@
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -85,8 +88,6 @@
             this.splitContainer8.Panel1.SuspendLayout();
             this.splitContainer8.Panel2.SuspendLayout();
             this.splitContainer8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -155,6 +156,19 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Working dir changes";
             // 
+            // Loading
+            // 
+            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            this.Loading.Location = new System.Drawing.Point(0, 0);
+            this.Loading.Name = "Loading";
+            this.Loading.Size = new System.Drawing.Size(389, 277);
+            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Loading.TabIndex = 2;
+            this.Loading.TabStop = false;
+            // 
             // Unstaged
             // 
             this.Unstaged.AllowUserToAddRows = false;
@@ -176,12 +190,24 @@
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
             this.Unstaged.Click += new System.EventHandler(this.Unstaged_Click);
             // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
             // ChangeString
             // 
             this.ChangeString.DataPropertyName = "ChangeString";
             this.ChangeString.HeaderText = "Change";
             this.ChangeString.Name = "ChangeString";
             this.ChangeString.ReadOnly = true;
+            // 
+            // gitItemStatusBindingSource
+            // 
+            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
             // splitContainer5
             // 
@@ -193,6 +219,7 @@
             // 
             // splitContainer5.Panel1
             // 
+            this.splitContainer5.Panel1.Controls.Add(this.progressBar);
             this.splitContainer5.Panel1.Controls.Add(this.UnstageFiles);
             this.splitContainer5.Panel1.Controls.Add(this.AddFiles);
             this.splitContainer5.Panel1.Controls.Add(this.label3);
@@ -203,6 +230,32 @@
             this.splitContainer5.Size = new System.Drawing.Size(389, 381);
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 1;
+            // 
+            // UnstageFiles
+            // 
+            this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
+            this.UnstageFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.UnstageFiles.Location = new System.Drawing.Point(124, 3);
+            this.UnstageFiles.Name = "UnstageFiles";
+            this.UnstageFiles.Size = new System.Drawing.Size(133, 23);
+            this.UnstageFiles.TabIndex = 1;
+            this.UnstageFiles.Text = "Unstage selected files";
+            this.UnstageFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UnstageFiles.UseVisualStyleBackColor = true;
+            this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
+            // 
+            // AddFiles
+            // 
+            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
+            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AddFiles.Location = new System.Drawing.Point(263, 3);
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(123, 23);
+            this.AddFiles.TabIndex = 4;
+            this.AddFiles.Text = "Stage selected files";
+            this.AddFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddFiles.UseVisualStyleBackColor = true;
+            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
             // 
             // label3
             // 
@@ -233,6 +286,14 @@
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // Ok
             // 
@@ -292,6 +353,16 @@
             this.splitContainer6.Size = new System.Drawing.Size(613, 273);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
+            // 
+            // Amend
+            // 
+            this.Amend.Location = new System.Drawing.Point(4, 29);
+            this.Amend.Name = "Amend";
+            this.Amend.Size = new System.Drawing.Size(127, 23);
+            this.Amend.TabIndex = 7;
+            this.Amend.Text = "Amend to last commit";
+            this.Amend.UseVisualStyleBackColor = true;
+            this.Amend.Click += new System.EventHandler(this.Amend_Click);
             // 
             // AddManyFiles
             // 
@@ -399,74 +470,13 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // Loading
+            // progressBar
             // 
-            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-            this.Loading.Location = new System.Drawing.Point(0, 0);
-            this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(389, 277);
-            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Loading.TabIndex = 2;
-            this.Loading.TabStop = false;
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // gitItemStatusBindingSource
-            // 
-            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
-            // 
-            // UnstageFiles
-            // 
-            this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
-            this.UnstageFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.UnstageFiles.Location = new System.Drawing.Point(124, 3);
-            this.UnstageFiles.Name = "UnstageFiles";
-            this.UnstageFiles.Size = new System.Drawing.Size(133, 23);
-            this.UnstageFiles.TabIndex = 1;
-            this.UnstageFiles.Text = "Unstage selected files";
-            this.UnstageFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.UnstageFiles.UseVisualStyleBackColor = true;
-            this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
-            // 
-            // AddFiles
-            // 
-            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
-            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddFiles.Location = new System.Drawing.Point(263, 3);
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(123, 23);
-            this.AddFiles.TabIndex = 4;
-            this.AddFiles.Text = "Stage selected files";
-            this.AddFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Amend
-            // 
-            this.Amend.Location = new System.Drawing.Point(4, 29);
-            this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(127, 23);
-            this.Amend.TabIndex = 7;
-            this.Amend.Text = "Amend to last commit";
-            this.Amend.UseVisualStyleBackColor = true;
-            this.Amend.Click += new System.EventHandler(this.Amend_Click);
+            this.progressBar.Location = new System.Drawing.Point(124, 3);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(262, 23);
+            this.progressBar.TabIndex = 1;
+            this.progressBar.Visible = false;
             // 
             // FormCommit
             // 
@@ -489,7 +499,9 @@
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
@@ -508,8 +520,6 @@
             this.splitContainer8.Panel1.PerformLayout();
             this.splitContainer8.Panel2.ResumeLayout(false);
             this.splitContainer8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -547,5 +557,6 @@
         private System.Windows.Forms.Button AddManyFiles;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Button Amend;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

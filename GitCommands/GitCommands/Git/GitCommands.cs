@@ -693,18 +693,39 @@ namespace GitCommands
         {
             string status = RunCmd(Settings.GitDir + "git.exe", "diff --cached --name-only");
 
-            string[] statusStrings = status.Split('\n');
-
             List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
 
-            foreach (string statusString in statusStrings)
+            if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
-                if (string.IsNullOrEmpty(statusString.Trim()))
-                    continue; 
-                GitItemStatus itemStatus = new GitItemStatus();
-                itemStatus.IsTracked = true;
-                itemStatus.Name = statusString.Trim();
-                gitItemStatusList.Add(itemStatus);
+                status = RunCmd(Settings.GitDir + "git.exe", "status --untracked-files=no");
+
+                string[] statusStrings = status.Split('\n');
+
+                foreach (string statusString in statusStrings)
+                {
+                    if (statusString.StartsWith("#\tnew file:"))
+                    {
+                        GitItemStatus itemStatus = new GitItemStatus();
+                        itemStatus.IsNew = true;
+                        itemStatus.IsTracked = true;
+                        itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
+                        gitItemStatusList.Add(itemStatus);
+                    }
+                }
+            }
+            else
+            {
+                string[] statusStrings = status.Split('\n');
+
+                foreach (string statusString in statusStrings)
+                {
+                    if (string.IsNullOrEmpty(statusString.Trim()))
+                        continue;
+                    GitItemStatus itemStatus = new GitItemStatus();
+                    itemStatus.IsTracked = true;
+                    itemStatus.Name = statusString.Trim();
+                    gitItemStatusList.Add(itemStatus);
+                }
             }
 
             return gitItemStatusList;
@@ -965,6 +986,18 @@ namespace GitCommands
             }
 
             return GitCommands.RunCmd(Settings.GitDir + "git.exe", "reset HEAD" + fileslist);
+        }
+
+        static public string StageFile(string file)
+        {
+
+            return GitCommands.RunCmd(Settings.GitDir + "git.exe", "update-index --add" + " \"" + file + "\"");
+        }
+
+        static public string UnstageFile(string file)
+        {
+            //return GitCommands.RunCmd(Settings.GitDir + "git.exe", "reset HEAD" + " \"" + file + "\"");
+            return GitCommands.RunCmd(Settings.GitDir + "git.exe", "rm --cached" + " \"" + file + "\"");
         }
 
         static public string GetSelectedBranch()

@@ -30,22 +30,29 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new System.Windows.Forms.DataGridView();
             this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
-            this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.CreateTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
+            this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
+            this.NoCommits = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.AddFiles = new System.Windows.Forms.Button();
+            this.Commit = new System.Windows.Forms.Button();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.GitIgnore = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
+            this.NoCommits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -117,15 +124,6 @@
             this.Date.ReadOnly = true;
             this.Date.Width = 180;
             // 
-            // SelecctionTimer
-            // 
-            this.SelecctionTimer.Interval = 200;
-            this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimer_Tick);
-            // 
-            // ScrollTimer
-            // 
-            this.ScrollTimer.Tick += new System.EventHandler(this.ScrollTimer_Tick);
-            // 
             // CreateTag
             // 
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -156,6 +154,56 @@
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchToHereToolStripMenuItem_Click);
             // 
+            // SelecctionTimer
+            // 
+            this.SelecctionTimer.Interval = 200;
+            this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimer_Tick);
+            // 
+            // ScrollTimer
+            // 
+            this.ScrollTimer.Tick += new System.EventHandler(this.ScrollTimer_Tick);
+            // 
+            // NoCommits
+            // 
+            this.NoCommits.Controls.Add(this.GitIgnore);
+            this.NoCommits.Controls.Add(this.Commit);
+            this.NoCommits.Controls.Add(this.AddFiles);
+            this.NoCommits.Controls.Add(this.label1);
+            this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NoCommits.Location = new System.Drawing.Point(0, 0);
+            this.NoCommits.Name = "NoCommits";
+            this.NoCommits.Size = new System.Drawing.Size(585, 204);
+            this.NoCommits.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(381, 117);
+            this.label1.TabIndex = 0;
+            this.label1.Text = resources.GetString("label1.Text");
+            // 
+            // AddFiles
+            // 
+            this.AddFiles.Location = new System.Drawing.Point(400, 39);
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(87, 23);
+            this.AddFiles.TabIndex = 1;
+            this.AddFiles.Text = "Add files";
+            this.AddFiles.UseVisualStyleBackColor = true;
+            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
+            // 
+            // Commit
+            // 
+            this.Commit.Location = new System.Drawing.Point(400, 68);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(87, 23);
+            this.Commit.TabIndex = 2;
+            this.Commit.Text = "Commit";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.Commit_Click);
+            // 
             // Error
             // 
             this.Error.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -184,10 +232,21 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // GitIgnore
+            // 
+            this.GitIgnore.Location = new System.Drawing.Point(401, 10);
+            this.GitIgnore.Name = "GitIgnore";
+            this.GitIgnore.Size = new System.Drawing.Size(86, 23);
+            this.GitIgnore.TabIndex = 3;
+            this.GitIgnore.Text = "Edit .gitignore";
+            this.GitIgnore.UseVisualStyleBackColor = true;
+            this.GitIgnore.Click += new System.EventHandler(this.GitIgnore_Click);
+            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.Revisions);
@@ -196,6 +255,8 @@
             this.Load += new System.EventHandler(this.RevisionGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
             this.CreateTag.ResumeLayout(false);
+            this.NoCommits.ResumeLayout(false);
+            this.NoCommits.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
@@ -219,5 +280,10 @@
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createNewBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
+        private System.Windows.Forms.Panel NoCommits;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button AddFiles;
+        private System.Windows.Forms.Button Commit;
+        private System.Windows.Forms.Button GitIgnore;
     }
 }
