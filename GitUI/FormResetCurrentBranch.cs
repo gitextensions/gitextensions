@@ -34,19 +34,19 @@ namespace GitUI
         {
             if (Soft.Checked)
             {
-                GitCommands.GitCommands.ResetSoft(Revision.Guid);
+                new FormProcess(GitCommands.GitCommands.ResetSoftCmd(Revision.Guid));
             }
             else
                 if (Mixed.Checked)
                 {
-                    GitCommands.GitCommands.ResetMixed(Revision.Guid);
+                    new FormProcess(GitCommands.GitCommands.ResetMixedCmd(Revision.Guid));
                 }
                 else
                     if (Hard.Checked)
                     {
                         if (MessageBox.Show("You are about to discard ALL local changes, are you sure?", "Reset branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            GitCommands.GitCommands.ResetHard(Revision.Guid);
+                            new FormProcess(GitCommands.GitCommands.ResetHardCmd(Revision.Guid));
                         }
                         else
                         {

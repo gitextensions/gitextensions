@@ -19,13 +19,7 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Output.Text = "";
-
-            AddFilesDto dto = new AddFilesDto(Filter.Text);
-            GitCommands.AddFiles cmd = new GitCommands.AddFiles(dto);
-            cmd.Execute();
-
-            Output.Text = "Command executed \n" + dto.Result;
+            new FormProcess("add " + Filter.Text);
         }
     }
 }

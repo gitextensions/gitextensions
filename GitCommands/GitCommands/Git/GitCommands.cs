@@ -405,6 +405,22 @@ namespace GitCommands
             return RunCmd(Settings.GitDir + "git.cmd", "reset --hard " + commit);
         }
 
+        static public string ResetSoftCmd(string commit)
+        {
+            return "reset --soft " + commit;
+        }
+
+        static public string ResetMixedCmd(string commit)
+        {
+            return "reset --mixed " + commit;
+        }
+
+        static public string ResetHardCmd(string commit)
+        {
+            return "reset --hard " + commit;
+        }
+
+
 
         public string FormatPatch(string from, string to, string output)
         {
@@ -787,7 +803,7 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisionGraph()
         {
-            return GetRevisionGraph(RunCmd(Settings.GitDir + "git.cmd", "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %aN%nDate:   %cd%nParents:%P%n%s\""));
+            return GetRevisionGraph(RunCmd(Settings.GitDir + "git.cmd", "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd%nParents:%P %n%s\""));
         }
 
         static public List<GitRevision> GetRevisionGraph(string tree)
@@ -813,7 +829,7 @@ namespace GitCommands
                     graphIndex = line.IndexOf("Commit ");
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    revision.Name = revision.Guid = line.Substring(line.LastIndexOf("Commit ") + 7);
+                    revision.Name = revision.Guid = line.Substring(line.LastIndexOf("Commit ") + 7).Trim();
                     n++;
                     if (itemsStrings.Length == n) break;
                 }
@@ -821,7 +837,7 @@ namespace GitCommands
 
                 if (line.IndexOf("Tree:   ") > 0)
                 {
-                    revision.TreeGuid = line.Substring(line.LastIndexOf("Tree:   ") + 8);
+                    revision.TreeGuid = line.Substring(line.LastIndexOf("Tree:   ") + 8).Trim();
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
@@ -839,7 +855,7 @@ namespace GitCommands
 
                 if (line.IndexOf("Author: ") > 0)
                 {
-                    revision.Author = line.Substring(line.LastIndexOf("Author: ") + 8);
+                    revision.Author = line.Substring(line.LastIndexOf("Author: ") + 8).Trim();
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
@@ -849,7 +865,7 @@ namespace GitCommands
 
                 if (line.IndexOf("Date:   ") > 0)
                 {
-                    revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8);
+                    revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8).Trim();
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
@@ -862,7 +878,7 @@ namespace GitCommands
                     List<string> parentGuids = new List<string>();
                     foreach (string s in line.Substring(line.LastIndexOf("Parents:") + 8).Split(' '))
                     {
-                        parentGuids.Add(s);
+                        parentGuids.Add(s.Trim());
                     }
 
                     revision.ParentGuids = parentGuids;

@@ -180,6 +180,12 @@
     <Compile Include="FormMergeBranch.Designer.cs">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProcess.Designer.cs">
+      <DependentUpon>FormProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPull.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -320,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProcess.resx">
+      <DependentUpon>FormProcess.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
