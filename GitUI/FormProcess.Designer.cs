@@ -92,8 +92,11 @@
             // ProgressBar
             // 
             this.ProgressBar.Location = new System.Drawing.Point(3, 5);
+            this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(470, 23);
+            this.ProgressBar.Step = 50;
+            this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
             // 
             // Output
@@ -101,6 +104,7 @@
             this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
             this.Output.Size = new System.Drawing.Size(564, 226);
             this.Output.TabIndex = 0;
             this.Output.Text = "";

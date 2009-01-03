@@ -20,6 +20,7 @@ namespace GitUI
         private void button1_Click(object sender, EventArgs e)
         {
             new FormProcess("add " + Filter.Text);
+            Close();
         }
     }
 }

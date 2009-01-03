@@ -44,9 +44,9 @@ namespace GitUI
 
         private void FormProcess_Load(object sender, EventArgs e)
         {
-            ProgressBar.Visible = false;
-
             AddOutput(ProcessString + " " + ProcessArguments);
+
+            ProgressBar.Visible = true;
 
             gitCommand = new GitCommands.GitCommands();
             gitCommand.CollectOutput = false;
@@ -65,7 +65,8 @@ namespace GitUI
             int progressValue;
             if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
             {
-                ProgressBar.Visible = true;
+                if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                    ProgressBar.Style = ProgressBarStyle.Blocks;
                 ProgressBar.Value = Math.Min(100, progressValue);
             }
         }
@@ -79,7 +80,7 @@ namespace GitUI
         void Done()
         {
             AddOutput("Done");
-
+            ProgressBar.Visible = false;
             Ok.Enabled = true;
         }
 

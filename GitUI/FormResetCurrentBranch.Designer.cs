@@ -35,11 +35,11 @@
             this.Message = new System.Windows.Forms.Label();
             this.Date = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Hard = new System.Windows.Forms.RadioButton();
+            this.Mixed = new System.Windows.Forms.RadioButton();
+            this.Soft = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
-            this.Soft = new System.Windows.Forms.RadioButton();
-            this.Mixed = new System.Windows.Forms.RadioButton();
-            this.Hard = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,6 +100,39 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Reset type";
             // 
+            // Hard
+            // 
+            this.Hard.AutoSize = true;
+            this.Hard.Location = new System.Drawing.Point(7, 68);
+            this.Hard.Name = "Hard";
+            this.Hard.Size = new System.Drawing.Size(451, 17);
+            this.Hard.TabIndex = 2;
+            this.Hard.Text = "Hard: reset working dir and index (discard ALL local changes, even uncommitted ch" +
+                "anges)";
+            this.Hard.UseVisualStyleBackColor = true;
+            // 
+            // Mixed
+            // 
+            this.Mixed.AutoSize = true;
+            this.Mixed.Checked = true;
+            this.Mixed.Location = new System.Drawing.Point(7, 44);
+            this.Mixed.Name = "Mixed";
+            this.Mixed.Size = new System.Drawing.Size(250, 17);
+            this.Mixed.TabIndex = 1;
+            this.Mixed.TabStop = true;
+            this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
+            this.Mixed.UseVisualStyleBackColor = true;
+            // 
+            // Soft
+            // 
+            this.Soft.AutoSize = true;
+            this.Soft.Location = new System.Drawing.Point(7, 20);
+            this.Soft.Name = "Soft";
+            this.Soft.Size = new System.Drawing.Size(233, 17);
+            this.Soft.TabIndex = 0;
+            this.Soft.Text = "Soft: leave working dir and index untouched";
+            this.Soft.UseVisualStyleBackColor = true;
+            // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(335, 239);
@@ -120,39 +153,6 @@
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
-            // Soft
-            // 
-            this.Soft.AutoSize = true;
-            this.Soft.Location = new System.Drawing.Point(7, 20);
-            this.Soft.Name = "Soft";
-            this.Soft.Size = new System.Drawing.Size(233, 17);
-            this.Soft.TabIndex = 0;
-            this.Soft.Text = "Soft: leave working dir and index untouched";
-            this.Soft.UseVisualStyleBackColor = true;
-            // 
-            // Mixed
-            // 
-            this.Mixed.AutoSize = true;
-            this.Mixed.Checked = true;
-            this.Mixed.Location = new System.Drawing.Point(7, 44);
-            this.Mixed.Name = "Mixed";
-            this.Mixed.Size = new System.Drawing.Size(250, 17);
-            this.Mixed.TabIndex = 1;
-            this.Mixed.TabStop = true;
-            this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
-            this.Mixed.UseVisualStyleBackColor = true;
-            // 
-            // Hard
-            // 
-            this.Hard.AutoSize = true;
-            this.Hard.Location = new System.Drawing.Point(7, 68);
-            this.Hard.Name = "Hard";
-            this.Hard.Size = new System.Drawing.Size(451, 17);
-            this.Hard.TabIndex = 2;
-            this.Hard.Text = "Hard: reset working dir and index (discard ALL local changes, even uncommitted ch" +
-                "anges)";
-            this.Hard.UseVisualStyleBackColor = true;
-            // 
             // FormResetCurrentBranch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -168,6 +168,7 @@
             this.Controls.Add(this.BranchInfo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormResetCurrentBranch";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Reset current branch";
             this.Load += new System.EventHandler(this.FormResetCurrentBranch_Load);
             this.groupBox1.ResumeLayout(false);
