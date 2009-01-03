@@ -188,16 +188,16 @@ namespace GitUI
                     DiffTool.Text = "There is a mergetool configured.";
                 }
 
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd("git.exe", "status")))
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd("git.cmd", "status")))
                 {
                     GitFound.BackColor = Color.LightSalmon;
-                    GitFound.Text = "Git.exe needs to be in the system path. To solve this problem you can add git.exe to the path or reinstall git.";
+                    GitFound.Text = "git.cmd needs to be in the system path. To solve this problem you can add git.cmd to the path or reinstall git.";
                     bValid = false;
                 }
                 else
                 {
                     GitFound.BackColor = Color.LightGreen;
-                    GitFound.Text = "Git.exe is found on your computer.";
+                    GitFound.Text = "git.cmd is found on your computer.";
                 }
             }
             catch
@@ -257,7 +257,7 @@ namespace GitUI
 
         private void GitFound_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This problem cannot be solved by GitExtensions.\nYou need to add git.exe to the path manually or reinstall Git.");
+            MessageBox.Show("This problem cannot be solved by GitExtensions.\nYou need to add git.cmd to the path manually or reinstall Git.");
         }
 
         private void FormSettigns_Load(object sender, EventArgs e)

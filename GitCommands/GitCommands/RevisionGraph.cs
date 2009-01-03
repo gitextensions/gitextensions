@@ -37,7 +37,7 @@ namespace GitCommands
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.exe", "log -n " + LimitRevisions + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %aN%nDate:   %cd%nParents:%P%n%s\"");
+            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " --graph --all --pretty=format:\"Commit %H%nTree:   %T%nAuthor: %aN%nDate:   %cd%nParents:%P%n%s\"");
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);

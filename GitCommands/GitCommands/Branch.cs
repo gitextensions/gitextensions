@@ -26,7 +26,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "branch " + Dto.Name);
+            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "branch " + Dto.Name);
         }
     }
 }

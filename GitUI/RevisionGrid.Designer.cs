@@ -43,16 +43,20 @@
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
             this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.AddFiles = new System.Windows.Forms.Button();
+            this.NoGit = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Init = new System.Windows.Forms.Button();
+            this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
+            this.AddFiles = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.GitIgnore = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
+            this.NoGit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -165,6 +169,7 @@
             // 
             // NoCommits
             // 
+            this.NoCommits.Controls.Add(this.NoGit);
             this.NoCommits.Controls.Add(this.GitIgnore);
             this.NoCommits.Controls.Add(this.Commit);
             this.NoCommits.Controls.Add(this.AddFiles);
@@ -175,14 +180,54 @@
             this.NoCommits.Size = new System.Drawing.Size(585, 204);
             this.NoCommits.TabIndex = 3;
             // 
-            // label1
+            // NoGit
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(381, 117);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.NoGit.Controls.Add(this.label2);
+            this.NoGit.Controls.Add(this.Init);
+            this.NoGit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NoGit.Location = new System.Drawing.Point(0, 0);
+            this.NoGit.Name = "NoGit";
+            this.NoGit.Size = new System.Drawing.Size(585, 204);
+            this.NoGit.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(218, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "The current working dir is not a git repository.";
+            // 
+            // Init
+            // 
+            this.Init.Location = new System.Drawing.Point(329, 5);
+            this.Init.Name = "Init";
+            this.Init.Size = new System.Drawing.Size(143, 23);
+            this.Init.TabIndex = 0;
+            this.Init.Text = "Initialize new repository";
+            this.Init.UseVisualStyleBackColor = true;
+            this.Init.Click += new System.EventHandler(this.Init_Click);
+            // 
+            // GitIgnore
+            // 
+            this.GitIgnore.Location = new System.Drawing.Point(401, 10);
+            this.GitIgnore.Name = "GitIgnore";
+            this.GitIgnore.Size = new System.Drawing.Size(86, 23);
+            this.GitIgnore.TabIndex = 3;
+            this.GitIgnore.Text = "Edit .gitignore";
+            this.GitIgnore.UseVisualStyleBackColor = true;
+            this.GitIgnore.Click += new System.EventHandler(this.GitIgnore_Click);
+            // 
+            // Commit
+            // 
+            this.Commit.Location = new System.Drawing.Point(400, 68);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(87, 23);
+            this.Commit.TabIndex = 2;
+            this.Commit.Text = "Commit";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.Commit_Click);
             // 
             // AddFiles
             // 
@@ -194,15 +239,14 @@
             this.AddFiles.UseVisualStyleBackColor = true;
             this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
             // 
-            // Commit
+            // label1
             // 
-            this.Commit.Location = new System.Drawing.Point(400, 68);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(87, 23);
-            this.Commit.TabIndex = 2;
-            this.Commit.Text = "Commit";
-            this.Commit.UseVisualStyleBackColor = true;
-            this.Commit.Click += new System.EventHandler(this.Commit_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(381, 117);
+            this.label1.TabIndex = 0;
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // Error
             // 
@@ -232,16 +276,6 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // GitIgnore
-            // 
-            this.GitIgnore.Location = new System.Drawing.Point(401, 10);
-            this.GitIgnore.Name = "GitIgnore";
-            this.GitIgnore.Size = new System.Drawing.Size(86, 23);
-            this.GitIgnore.TabIndex = 3;
-            this.GitIgnore.Text = "Edit .gitignore";
-            this.GitIgnore.UseVisualStyleBackColor = true;
-            this.GitIgnore.Click += new System.EventHandler(this.GitIgnore_Click);
-            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -257,6 +291,8 @@
             this.CreateTag.ResumeLayout(false);
             this.NoCommits.ResumeLayout(false);
             this.NoCommits.PerformLayout();
+            this.NoGit.ResumeLayout(false);
+            this.NoGit.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
@@ -285,5 +321,8 @@
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
+        private System.Windows.Forms.Panel NoGit;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button Init;
     }
 }

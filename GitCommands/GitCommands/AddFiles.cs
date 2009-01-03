@@ -26,7 +26,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.exe", "add " +  Dto.Filter);
+            Dto.Result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add " +  Dto.Filter);
 
             if (string.IsNullOrEmpty(Dto.Result))
             {

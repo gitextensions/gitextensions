@@ -42,7 +42,7 @@ namespace GitUI
         {
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
-            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.exe", GitCommands.GitCommands.GetAllChangedFilesCmd);
+            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd);
             Loading.Visible = true;
             AddFiles.Enabled = false;
 

@@ -105,12 +105,17 @@ namespace GitUI
             {
                 Error.Visible = false;
                 NoCommits.Visible = false;
+                NoGit.Visible = false;
+                Revisions.Visible = true;
 
                 if (!GitCommands.Settings.ValidWorkingDir())
                 {
                     Revisions.RowCount = 0;
                     Revisions.ScrollBars = ScrollBars.None;
+                    Revisions.Visible = false;
 
+                    NoCommits.Visible = true;
+                    NoGit.Visible = true;
                     Loading.Visible = false;
                     return;
                 }
@@ -167,6 +172,23 @@ namespace GitUI
 
         private void InternalRefresh()
         {
+            Error.Visible = false;
+            NoCommits.Visible = false;
+            NoGit.Visible = false;
+            Revisions.Visible = true;
+
+            if (!GitCommands.Settings.ValidWorkingDir())
+            {
+                Revisions.RowCount = 0;
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.Visible = false;
+
+                NoCommits.Visible = true;
+                NoGit.Visible = true;
+                Loading.Visible = false;
+                return;
+            }
+
             int numberOfVisibleRows = Revisions.DisplayedRowCount(true) + 1;
             int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
 
@@ -206,10 +228,16 @@ namespace GitUI
 
         private void LoadRevisions()
         {
-            if (RevisionList == null || RevisionList.Count == 0)
+            if (RevisionList == null)
+            {
+                return;
+            }
+
+            if (RevisionList != null && RevisionList.Count == 0)
             {
                 Loading.Visible = false;
                 NoCommits.Visible = true;
+                Revisions.Visible = false;
                 return;
             }
 
@@ -224,7 +252,7 @@ namespace GitUI
                 if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
                 {
                     gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.exe rev-list --all --abbrev-commit | wc -l\"");
+                    gitCountCommitsCommand.CmdStartProcess(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.cmd rev-list --all --abbrev-commit | wc -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
                 Revisions.ResumeLayout();
@@ -645,6 +673,12 @@ namespace GitUI
         private void GitIgnore_Click(object sender, EventArgs e)
         {
             new FormGitIgnore().ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void Init_Click(object sender, EventArgs e)
+        {
+            new FormInit().ShowDialog();
             RefreshRevisions();
         }
     }

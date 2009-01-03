@@ -55,7 +55,7 @@ namespace GitCommands
                 }
             }
 
-            //f:\dev>git.exe log --topo-order --no-color --parents --boundary -z --pretty="for
+            //f:\dev>git.cmd log --topo-order --no-color --parents --boundary -z --pretty="for
             //mat:%m%HX%PX%n%an<%ae>%n%at%n%s%n" master
 
 

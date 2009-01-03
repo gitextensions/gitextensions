@@ -25,8 +25,8 @@ namespace GitUI
         {
             Loading.Visible = true;
             cmd.Exited += new EventHandler(cmd_Exited);
-            //cmd.CmdStartProcess(GitCommands.Settings.GitDir + "git.exe", "shortlog -s -n");
-            cmd.CmdStartProcess(GitCommands.Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.exe log --pretty=short | git.exe shortlog -s -n\"");
+            //cmd.CmdStartProcess(GitCommands.Settings.GitDir + "git.cmd", "shortlog -s -n");
+            cmd.CmdStartProcess(GitCommands.Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.cmd log --pretty=short | git.cmd shortlog -s -n\"");
             
            
         }
