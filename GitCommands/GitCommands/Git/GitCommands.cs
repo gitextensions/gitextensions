@@ -317,7 +317,7 @@ namespace GitCommands
 
         static public void RunGui()
         {
-            Run(Settings.GitDir + "git.cmd", "gui");
+            Run("C:\\Windows\\System32\\cmd.exe", "/c \"git.cmd gui\"");
         }
 
 
