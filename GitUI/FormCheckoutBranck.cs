@@ -24,12 +24,12 @@ namespace GitUI
         {
             try
             {
+                new FormProcess("checkout \"" + Branches.Text + "\"");
+                //CheckoutDto dto = new CheckoutDto(Branches.Text);
 
-                CheckoutDto dto = new CheckoutDto(Branches.Text);
-
-                GitCommands.Checkout commit = new GitCommands.Checkout(dto);
-                commit.Execute();
-                MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
+                //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
+                //commit.Execute();
+                //MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
             }
             catch
             {

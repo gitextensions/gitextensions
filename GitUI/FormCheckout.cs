@@ -26,11 +26,13 @@ namespace GitUI
                     return;
                 }
 
-                CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
-                GitCommands.Checkout commit = new GitCommands.Checkout(dto);
-                commit.Execute();
+                new FormProcess("checkout \"" + RevisionGrid.GetRevisions()[0].Guid + "\"");
 
-                MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
+                //CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
+                //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
+                //commit.Execute();
+
+                //MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
 
                 RevisionGrid.RefreshRevisions();
             }

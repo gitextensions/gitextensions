@@ -402,7 +402,10 @@ namespace GitCommands
 
         static public string ResetHard(string commit)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "reset --hard \"" + commit + "\"");
+            if (string.IsNullOrEmpty(commit))
+                return RunCmd(Settings.GitDir + "git.cmd", "reset --hard");
+            else
+                return RunCmd(Settings.GitDir + "git.cmd", "reset --hard \"" + commit + "\"");
         }
 
         static public string ResetSoftCmd(string commit)
