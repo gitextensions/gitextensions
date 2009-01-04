@@ -76,9 +76,11 @@ namespace GitUI
             Output.Text += text + "\n";
         }
 
+        StringBuilder outputString = new StringBuilder();
 
         void Done()
         {
+            AddOutput(outputString.ToString());
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
@@ -102,7 +104,7 @@ namespace GitUI
                 }
             } else
             {
-                if (Output.InvokeRequired)
+                /*if (Output.InvokeRequired)
                 {
                     // It's on a different thread, so use Invoke.
                     DataCallback d = new DataCallback(AddOutput);
@@ -110,7 +112,9 @@ namespace GitUI
                 } else
                 {
                     AddOutput(e.Data);
-                }
+                }*/
+                outputString.Append(e.Data);
+                outputString.Append("\n");
             }
         }
 
