@@ -40,11 +40,11 @@
             this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.UnstageFiles = new System.Windows.Forms.Button();
             this.AddFiles = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.Staged = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
@@ -59,7 +59,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -231,6 +232,14 @@
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 1;
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(124, 3);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(262, 23);
+            this.progressBar.TabIndex = 1;
+            this.progressBar.Visible = false;
+            // 
             // UnstageFiles
             // 
             this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
@@ -273,7 +282,8 @@
             this.Staged.AutoGenerateColumns = false;
             this.Staged.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Staged.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn});
+            this.nameDataGridViewTextBoxColumn,
+            this.ChangeString2});
             this.Staged.DataSource = this.gitItemStatusBindingSource;
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Staged.Location = new System.Drawing.Point(0, 0);
@@ -286,14 +296,6 @@
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // Ok
             // 
@@ -470,13 +472,20 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // progressBar
+            // nameDataGridViewTextBoxColumn
             // 
-            this.progressBar.Location = new System.Drawing.Point(124, 3);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(262, 23);
-            this.progressBar.TabIndex = 1;
-            this.progressBar.Visible = false;
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // ChangeString2
+            // 
+            this.ChangeString2.DataPropertyName = "ChangeString";
+            this.ChangeString2.HeaderText = "Change";
+            this.ChangeString2.Name = "ChangeString2";
+            this.ChangeString2.ReadOnly = true;
             // 
             // FormCommit
             // 
@@ -547,7 +556,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn isDeletedDataGridViewCheckBoxColumn1;
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isChangedDataGridViewCheckBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button UnstageFiles;
         private System.Windows.Forms.SplitContainer splitContainer6;
         private System.Windows.Forms.SplitContainer splitContainer7;
@@ -558,5 +566,7 @@
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Button Amend;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ChangeString2;
     }
 }

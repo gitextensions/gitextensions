@@ -22,10 +22,10 @@ namespace GitCommands
             get
             {
                 if (!IsTracked) return "Untracked";
-                if (IsDeleted) return "Deleted";
-                if (IsChanged) return "Modified";
-                if (IsNew) return "New";
-                return "";
+                else if (IsDeleted) return "Deleted";
+                else if (IsChanged) return "Modified";
+                else if (IsNew) return "New";
+                else return "";
             }
         }
 

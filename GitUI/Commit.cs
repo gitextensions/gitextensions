@@ -124,16 +124,18 @@ namespace GitUI
 
             try
             {
-                OutPut.Text = "";
+                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text, amend));
 
-                CommitDto dto = new CommitDto(Message.Text, amend);
-                GitCommands.Commit commit = new GitCommands.Commit(dto);
-                commit.Execute();
+                //OutPut.Text = "";
 
-                if (OutPut.Text.Length == 0)
-                    OutPut.Text = "Command executed \n";
+                //CommitDto dto = new CommitDto(Message.Text, amend);
+                //GitCommands.Commit commit = new GitCommands.Commit(dto);
+                //commit.Execute();
 
-                OutPut.Text += dto.Result;
+                //if (OutPut.Text.Length == 0)
+                //    OutPut.Text = "Command executed \n";
+
+                //OutPut.Text += dto.Result;
 
                 NeedRefresh = true;
 
@@ -163,7 +165,11 @@ namespace GitUI
                 {
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                    result = GitCommands.GitCommands.StageFile(item.Name);
+                    if (item.IsDeleted)
+                        result = GitCommands.GitCommands.StageFileToRemove(item.Name);
+                    else
+                        result = GitCommands.GitCommands.StageFile(item.Name);
+
                     if (result.Length > 0)
                         OutPut.Text += result;                    
                 }
@@ -200,7 +206,10 @@ namespace GitUI
                 {
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                    result = GitCommands.GitCommands.UnstageFile(item.Name);
+                    if (!item.IsNew)
+                        result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
+                    else
+                        result = GitCommands.GitCommands.UnstageFile(item.Name);
                     if (result.Length > 0)
                         OutPut.Text += result;  
                 }
