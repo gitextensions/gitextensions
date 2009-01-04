@@ -44,7 +44,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(3, 5);
+            this.Ok.Location = new System.Drawing.Point(9, 0);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
@@ -68,7 +68,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(564, 261);
-            this.splitContainer1.SplitterDistance = 226;
+            this.splitContainer1.SplitterDistance = 232;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
@@ -85,16 +85,17 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Ok);
-            this.splitContainer2.Size = new System.Drawing.Size(564, 31);
+            this.splitContainer2.Size = new System.Drawing.Size(564, 25);
             this.splitContainer2.SplitterDistance = 476;
             this.splitContainer2.TabIndex = 0;
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(3, 5);
+            this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProgressBar.Location = new System.Drawing.Point(0, 0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(470, 23);
+            this.ProgressBar.Size = new System.Drawing.Size(476, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
@@ -105,7 +106,7 @@
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(564, 226);
+            this.Output.Size = new System.Drawing.Size(564, 232);
             this.Output.TabIndex = 0;
             this.Output.Text = "";
             // 

@@ -22,5 +22,10 @@ namespace GitUI
             new FormProcess("add " + Filter.Text);
             Close();
         }
+
+        private void FormAddFiles_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
