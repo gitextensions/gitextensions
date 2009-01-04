@@ -12,6 +12,8 @@ namespace GitUI
 
         public static void AddMostRecentRepository(string repo)
         {
+            repo = repo.Trim();
+
             if (MostRecentRepositories.IndexOf(repo) > -1)
             {
                 MostRecentRepositories.Remove(repo);

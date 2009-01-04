@@ -459,14 +459,14 @@ namespace GitCommands
                     return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push \"" + path.Trim() + "\" \"" + branch + "\"");
 
 
-            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push \"" + path + "\"");
+            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push \"" + path.Trim() + "\"");
         }
 
         static public string Fetch(string path, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd fetch \"" + path + "\" \"" + branch + "\"");
+            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd fetch \"" + path.Trim() + "\" \"" + branch + "\"");
 
             return "Done";
         }
