@@ -69,37 +69,36 @@ STDMETHODIMP CSimpleShlExt::QueryContextMenu  (
 	int id = 1;
 
 	HMENU popupMenu = CreateMenu();
-	//HMENU popupMenu = CreatePopupMenu();
 
 	id = PopulateMenu(popupMenu, uidFirstCmd + id);
 
 
 	MENUITEMINFO mii;
-	memset(&mii, 0, sizeof(MENUITEMINFO));
-	mii.cbSize = 48;
-	mii.fMask = 0x00000004|0x00000010|0x00000001;//MIIM_STRING | MIIM_FTYPE;
-	mii.fType = 0x00000000;
+	memset(&mii, 0, sizeof(mii));
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_SUBMENU | MIIM_ID | MIIM_TYPE | MIIM_STATE; // 0x00000004|0x00000010|0x00000001;//MIIM_STRING | MIIM_FTYPE;
+	mii.fState = MFS_ENABLED;
 	mii.hSubMenu = popupMenu;
+	mii.fType = MFT_STRING;
 	mii.dwTypeData = TEXT("Git Extensions");
-	mii.fState = 0x00000000;
-	//mii.wID = uMenuIndex;
+	mii.wID = ++id;
 
-	InsertMenuItem (hmenu, uMenuIndex, TRUE, (LPCMENUITEMINFO) &mii);
+	InsertMenuItem (hmenu, uMenuIndex, TRUE, &mii);
 
-    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id );
+    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id-uidFirstCmd );
 }
 
 void CSimpleShlExt::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
 {
 	MENUITEMINFO mii;
-	memset(&mii, 0, sizeof(MENUITEMINFO));
-	mii.cbSize = sizeof(MENUITEMINFO);
+	memset(&mii, 0, sizeof(mii));
+	mii.cbSize = sizeof(mii);
 	mii.fMask = 0x00000010|0x00000002|0x00000001;//MIIM_STRING | MIIM_FTYPE;
 	mii.wID	= id;
 	mii.fType = 0x00000000;
 	mii.dwTypeData	= text;
 	mii.fState = (UINT)0x00000000;
-	InsertMenuItem(hMenu, position, TRUE, (LPCMENUITEMINFO) &mii);
+	InsertMenuItem(hMenu, position, TRUE, &mii);
 
 	//InsertMenu(hMenu, position, MF_BYPOSITION, id, _T("test"));
 }
@@ -125,7 +124,7 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
 }
 
 STDMETHODIMP CSimpleShlExt::GetCommandString (
-    UINT idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax )
+    UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax )
 {
 USES_CONVERSION;
 
