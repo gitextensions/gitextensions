@@ -20,16 +20,23 @@ namespace GitUI
 
             CheckSettings();
 
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
             MaxCommits.Value = GitCommands.Settings.MaxCommits;
 
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            GitPath.Text = GitCommands.Settings.GitDir;
 
             UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
             UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
             Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
             MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
             KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("mergetool.keepBackup").Trim() == "true";
-            
+
 
             GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
@@ -49,6 +56,9 @@ namespace GitUI
         private void Ok_Click(object sender, EventArgs e)
         {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            GitCommands.Settings.GitDir = GitPath.Text;
+
 
             GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
             GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
@@ -188,7 +198,7 @@ namespace GitUI
                     DiffTool.Text = "There is a mergetool configured.";
                 }
 
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd("git.cmd", "status")))
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                 {
                     GitFound.BackColor = Color.LightSalmon;
                     GitFound.Text = "git.cmd needs to be in the system path. To solve this problem you can add git.cmd to the path or reinstall git.";
@@ -239,7 +249,7 @@ namespace GitUI
                     fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' })) + "\\GitExtensionsShellEx.dll";
 
                     if (File.Exists(fileName))
-                        GitCommands.GitCommands.RunCmd("regsvr32", fileName);
+                        GitCommands.GitCommands.RunCmd("regsvr32", "\"" + fileName + "\"");
                 }
 
             CheckSettings();
@@ -257,7 +267,18 @@ namespace GitUI
 
         private void GitFound_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This problem cannot be solved by GitExtensions.\nYou need to add git.cmd to the path manually or reinstall Git.");
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
+            {
+                GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
+                {
+                    GitCommands.Settings.GitDir = "";
+                    tabControl1.SelectTab("TabPageGitExtensions");
+                    return;
+                }
+            }
+
+            MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitDir + "git.cmd", "Locate git.cmd");
         }
 
         private void FormSettigns_Load(object sender, EventArgs e)
@@ -276,6 +297,27 @@ namespace GitUI
         private void Rescan_Click(object sender, EventArgs e)
         {
             CheckSettings();
+        }
+
+        private void BrowseGitPath_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+
+            if (browseDialog.ShowDialog() == DialogResult.OK)
+            {
+                GitPath.Text = browseDialog.SelectedPath;
+            }
+        }
+
+        private void TabPageGitExtensions_Click(object sender, EventArgs e)
+        {
+            GitPath.Text = GitCommands.Settings.GitDir;
+        }
+
+        private void GitPath_TextChanged(object sender, EventArgs e)
+        {
+            GitCommands.Settings.GitDir = GitPath.Text;
+            LoadSettings();
         }
     }
 }

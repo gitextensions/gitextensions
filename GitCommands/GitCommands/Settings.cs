@@ -8,12 +8,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static string gitDir = "";
         public static string GitDir 
         {
             get
             {
-                return "";
-                //return @"c:\msysgit\bin\";
+                return gitDir;
+}
+            set
+            {
+                gitDir = value;
+                if (gitDir.Length > 0 && gitDir[gitDir.Length - 1] != '\\')
+                    gitDir += "\\";
+
             }
         }
 

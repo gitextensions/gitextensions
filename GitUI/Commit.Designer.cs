@@ -45,6 +45,8 @@
             this.AddFiles = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.Staged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
@@ -59,8 +61,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -297,6 +297,21 @@
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
             // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // ChangeString2
+            // 
+            this.ChangeString2.DataPropertyName = "ChangeString";
+            this.ChangeString2.HeaderText = "Change";
+            this.ChangeString2.Name = "ChangeString2";
+            this.ChangeString2.ReadOnly = true;
+            // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(334, 10);
@@ -472,21 +487,6 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // ChangeString2
-            // 
-            this.ChangeString2.DataPropertyName = "ChangeString";
-            this.ChangeString2.HeaderText = "Change";
-            this.ChangeString2.Name = "ChangeString2";
-            this.ChangeString2.ReadOnly = true;
-            // 
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -496,7 +496,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCommit";
             this.Text = "Commit";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormCommit_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

@@ -39,6 +39,7 @@ namespace GitExtensions
                         settings.ShowDialog();
                 }
 
+                if (Application.UserAppDataRegistry.GetValue("gitdir") != null) GitCommands.Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir0").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir1").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir2").ToString());
@@ -159,6 +160,7 @@ namespace GitExtensions
                     Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
                 }
                 Application.UserAppDataRegistry.SetValue("maxcommits", GitCommands.Settings.MaxCommits);
+                Application.UserAppDataRegistry.SetValue("gitdir", GitCommands.Settings.GitDir);
                 
             }
             catch

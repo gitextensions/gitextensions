@@ -50,7 +50,7 @@
             this.UserNameSet = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
@@ -66,10 +66,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.GitPath = new System.Windows.Forms.TextBox();
+            this.BrowseGitPath = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.GlobalSettingsPage.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -184,7 +187,7 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.TabPageGitExtensions);
             this.tabControl1.Controls.Add(this.GlobalSettingsPage);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -307,16 +310,20 @@
             this.GitExtensionsInstall.UseVisualStyleBackColor = true;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
-            // tabPage2
+            // TabPageGitExtensions
             // 
-            this.tabPage2.Controls.Add(this.MaxCommits);
-            this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(655, 214);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Git extensions";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.TabPageGitExtensions.Controls.Add(this.BrowseGitPath);
+            this.TabPageGitExtensions.Controls.Add(this.GitPath);
+            this.TabPageGitExtensions.Controls.Add(this.label13);
+            this.TabPageGitExtensions.Controls.Add(this.MaxCommits);
+            this.TabPageGitExtensions.Controls.Add(this.label12);
+            this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
+            this.TabPageGitExtensions.Name = "TabPageGitExtensions";
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(655, 214);
+            this.TabPageGitExtensions.TabIndex = 3;
+            this.TabPageGitExtensions.Text = "Git extensions";
+            this.TabPageGitExtensions.UseVisualStyleBackColor = true;
+            this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
             // MaxCommits
             // 
@@ -325,7 +332,7 @@
             0,
             0,
             0});
-            this.MaxCommits.Location = new System.Drawing.Point(315, 12);
+            this.MaxCommits.Location = new System.Drawing.Point(314, 46);
             this.MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -343,7 +350,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 12);
+            this.label12.Location = new System.Drawing.Point(8, 46);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 39);
             this.label12.TabIndex = 0;
@@ -484,6 +491,33 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 10);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(44, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Git path";
+            // 
+            // GitPath
+            // 
+            this.GitPath.Location = new System.Drawing.Point(163, 10);
+            this.GitPath.Name = "GitPath";
+            this.GitPath.Size = new System.Drawing.Size(265, 20);
+            this.GitPath.TabIndex = 4;
+            this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
+            // 
+            // BrowseGitPath
+            // 
+            this.BrowseGitPath.Location = new System.Drawing.Point(452, 6);
+            this.BrowseGitPath.Name = "BrowseGitPath";
+            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitPath.TabIndex = 5;
+            this.BrowseGitPath.Text = "Browse";
+            this.BrowseGitPath.UseVisualStyleBackColor = true;
+            this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,8 +534,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.TabPageGitExtensions.ResumeLayout(false);
+            this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
@@ -548,9 +582,12 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox CheckAtStartup;
         private System.Windows.Forms.Button Rescan;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage TabPageGitExtensions;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown MaxCommits;
+        private System.Windows.Forms.Button BrowseGitPath;
+        private System.Windows.Forms.TextBox GitPath;
+        private System.Windows.Forms.Label label13;
 
     }
 }

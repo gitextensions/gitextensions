@@ -468,6 +468,12 @@ namespace GitUI
             new FormGitIgnore().ShowDialog();
         }
 
+        private void FormBrowse_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+
+        }
+
 
     }
 }

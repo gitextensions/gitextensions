@@ -65,10 +65,11 @@
             this.cherryPickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editgitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,7 +88,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.editgitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -340,7 +340,7 @@
             // 
             this.openToolStripMenuItem.Image = global::GitUI.Properties.Resources._40;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -348,7 +348,7 @@
             // 
             this.refreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
@@ -366,21 +366,21 @@
             // 
             this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources._26;
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
-            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
             this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
             // 
             // gitGUIToolStripMenuItem
             // 
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
-            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
             this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
             // 
             // kGitToolStripMenuItem
             // 
             this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
-            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.kGitToolStripMenuItem.Text = "GitK";
             this.kGitToolStripMenuItem.Click += new System.EventHandler(this.kGitToolStripMenuItem_Click);
             // 
@@ -467,6 +467,22 @@
             this.tagToolStripMenuItem.Text = "Create tag";
             this.tagToolStripMenuItem.Click += new System.EventHandler(this.tagToolStripMenuItem_Click);
             // 
+            // commitToolStripMenuItem
+            // 
+            this.commitToolStripMenuItem.Image = global::GitUI.Properties.Resources._10;
+            this.commitToolStripMenuItem.Name = "commitToolStripMenuItem";
+            this.commitToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.commitToolStripMenuItem.Text = "Commit";
+            this.commitToolStripMenuItem.Click += new System.EventHandler(this.commitToolStripMenuItem_Click);
+            // 
+            // cloneToolStripMenuItem
+            // 
+            this.cloneToolStripMenuItem.Image = global::GitUI.Properties.Resources._46;
+            this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
+            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.cloneToolStripMenuItem.Text = "Clone repository";
+            this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
+            // 
             // deleteBranchToolStripMenuItem
             // 
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
@@ -481,21 +497,12 @@
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
             this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
-            // cloneToolStripMenuItem
+            // editgitignoreToolStripMenuItem
             // 
-            this.cloneToolStripMenuItem.Image = global::GitUI.Properties.Resources._46;
-            this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.cloneToolStripMenuItem.Text = "Clone repository";
-            this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
-            // 
-            // commitToolStripMenuItem
-            // 
-            this.commitToolStripMenuItem.Image = global::GitUI.Properties.Resources._10;
-            this.commitToolStripMenuItem.Name = "commitToolStripMenuItem";
-            this.commitToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.commitToolStripMenuItem.Text = "Commit";
-            this.commitToolStripMenuItem.Click += new System.EventHandler(this.commitToolStripMenuItem_Click);
+            this.editgitignoreToolStripMenuItem.Name = "editgitignoreToolStripMenuItem";
+            this.editgitignoreToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.editgitignoreToolStripMenuItem.Text = "Edit .gitignore";
+            this.editgitignoreToolStripMenuItem.Click += new System.EventHandler(this.editgitignoreToolStripMenuItem_Click);
             // 
             // formatPatchToolStripMenuItem
             // 
@@ -627,13 +634,6 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // editgitignoreToolStripMenuItem
-            // 
-            this.editgitignoreToolStripMenuItem.Name = "editgitignoreToolStripMenuItem";
-            this.editgitignoreToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.editgitignoreToolStripMenuItem.Text = "Edit .gitignore";
-            this.editgitignoreToolStripMenuItem.Click += new System.EventHandler(this.editgitignoreToolStripMenuItem_Click);
-            // 
             // RevisionGrid
             // 
             this.RevisionGrid.currentCheckout = "\nfatal: Not a git repository\n";
@@ -652,14 +652,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(750, 543);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormBrowse";
             this.Text = "Browse";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Browse_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowse_FormClosing);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);

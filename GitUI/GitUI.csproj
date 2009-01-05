@@ -37,7 +37,7 @@
   <ItemGroup>
     <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\SyntaxTest\Syntax\Syntax\bin\Debug\ICSharpCode.TextEditor.dll</HintPath>
+      <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />

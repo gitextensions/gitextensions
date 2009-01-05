@@ -28,7 +28,8 @@ namespace GitCommands
 
         public void Execute()
         {
-            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"");
+            GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"\"");
+            //GitCommands.RunRealCmd(Settings.GitDir + "git.cmd", "clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"");
             Dto.Result = "Done";
         }
     }

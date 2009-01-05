@@ -78,11 +78,11 @@ namespace GitUI
             RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
             if (Fetch.Checked)
-                Output.Text = GitCommands.GitCommands.Fetch(PullSource.Text, Branches.SelectedText);
+                Output.Text = GitCommands.GitCommands.Fetch(PullSource.Text, Branches.Text);
             else if (Merge.Checked)
-                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.SelectedText, false);
+                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.Text, false);
             else if (Rebase.Checked)
-                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.SelectedText, true);
+                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.Text, true);
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {

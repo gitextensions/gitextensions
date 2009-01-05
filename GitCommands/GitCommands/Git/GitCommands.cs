@@ -52,7 +52,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardInput = false;
 
                 process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = cmd;
+                process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -83,7 +83,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardInput = false;
 
                 process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = cmd;
+                process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -115,7 +115,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardError = true;
 
                 process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cmd;
+                process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -148,7 +148,7 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardError = true;
 
             Process.StartInfo.CreateNoWindow = true;
-            Process.StartInfo.FileName = cmd;
+            Process.StartInfo.FileName = "\"" + cmd + "\"";
             Process.StartInfo.Arguments = arguments;
             Process.StartInfo.WorkingDirectory = Settings.WorkingDir;
             Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -239,7 +239,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardError = true;
 
                 process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cmd;
+                process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -288,7 +288,7 @@ namespace GitCommands
 
                 process.StartInfo.LoadUserProfile = true;
                 process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = cmd;
+                process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -311,19 +311,19 @@ namespace GitCommands
 
         static public void RunGitK()
         {
-            Run("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "gitk --all\"");
+            Run("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "gitk\" --all\"");
             //Run(Settings.GitDir + "gitk", "");
         }
 
         static public void RunGui()
         {
-            Run("C:\\Windows\\System32\\cmd.exe", "/c \"git.cmd gui\"");
+            Run("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" gui\"");
         }
 
 
         static public void RunBash()
         {
-            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"" + Settings.GitDir + "sh.exe\" --login -i");
+            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c sh.exe --login -i");
         }
 
         static public string Init(bool bare, bool shared)
@@ -368,7 +368,7 @@ namespace GitCommands
         static public int CommitCount()
         {
             int count;
-            if (int.TryParse(RunCmd(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"git.cmd rev-list --all --abbrev-commit | wc -l\""), out count))
+            if (int.TryParse(RunCmd(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list --all --abbrev-commit | wc -l\""), out count))
                 return count;
 
             return 0;
@@ -456,20 +456,20 @@ namespace GitCommands
         static public Process PushAsync(string path, string branch, bool all)
         {
             if (all)
-                return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push --all \"" + path.Trim() + "\"");
+                return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push --all \"" + path.Trim() + "\"\"");
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push \"" + path.Trim() + "\" \"" + branch + "\"");
+                    return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\" \"" + branch + "\"\"");
 
 
-            return RunCmdAsync(Settings.GitDir + "cmd.exe", " /k git.cmd push \"" + path.Trim() + "\"");
+            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\"\"");
         }
 
         static public string Fetch(string path, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd fetch \"" + path.Trim() + "\" \"" + branch + "\"");
+            GitCommands.RunRealCmd( "cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" fetch \"" + path.Trim() + "\" \"" + branch + "\"\"");
 
             return "Done";
         }
@@ -479,9 +479,9 @@ namespace GitCommands
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
             if (rebase)
-                GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd pull --rebase \"" + path.Trim() + "\" \"" + branch + "\"");
+                GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull --rebase \"" + path.Trim() + "\" \"" + branch + "\"\"");
             else
-                GitCommands.RunRealCmd(Settings.GitDir + "cmd.exe", " /k git.cmd pull \"" + path.Trim() + "\" \"" + branch + "\"");
+                GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull \"" + path.Trim() + "\" \"" + branch + "\"\"");
 
             return "Done";
         }
