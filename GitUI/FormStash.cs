@@ -107,21 +107,24 @@ namespace GitUI
                 return;
             }            
 
-            MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
+            //MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
+            new FormProcess("stash save");
             NeedRefresh = true;
             Initialize();
         }
 
         private void Clear_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
+            //MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
+            new FormProcess("stash clear");
             NeedRefresh = true;
             Initialize();
         }
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
+            new FormProcess("stash apply");
+            //MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
