@@ -1,9 +1,9 @@
 *.obj
 *.exe
-*.dll
 *.html
 *.exp
 *.pdb
+*.dll
 *.user
 *.aps
 *.pch
@@ -28,3 +28,6 @@
 [Dd]ebug*/
 UMM/UMM448/IActivaplanner.h
 [Tt]est[Rr]esults/
+
+
+!/Bin/ICSharpCode.TextEditor.dll
