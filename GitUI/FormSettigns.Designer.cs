@@ -332,14 +332,14 @@
             0,
             0,
             0});
-            this.MaxCommits.Location = new System.Drawing.Point(314, 46);
+            this.MaxCommits.Location = new System.Drawing.Point(305, 46);
             this.MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.MaxCommits.Name = "MaxCommits";
-            this.MaxCommits.Size = new System.Drawing.Size(114, 20);
+            this.MaxCommits.Size = new System.Drawing.Size(123, 20);
             this.MaxCommits.TabIndex = 2;
             this.MaxCommits.Value = new decimal(new int[] {
             2000,
@@ -494,23 +494,23 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 10);
+            this.label13.Location = new System.Drawing.Point(8, 14);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(44, 13);
+            this.label13.Size = new System.Drawing.Size(273, 13);
             this.label13.TabIndex = 3;
-            this.label13.Text = "Git path";
+            this.label13.Text = "Path to git.cmd (leave empty when git.cmd is in the path)";
             // 
             // GitPath
             // 
-            this.GitPath.Location = new System.Drawing.Point(163, 10);
+            this.GitPath.Location = new System.Drawing.Point(305, 10);
             this.GitPath.Name = "GitPath";
-            this.GitPath.Size = new System.Drawing.Size(265, 20);
+            this.GitPath.Size = new System.Drawing.Size(242, 20);
             this.GitPath.TabIndex = 4;
             this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
             // 
             // BrowseGitPath
             // 
-            this.BrowseGitPath.Location = new System.Drawing.Point(452, 6);
+            this.BrowseGitPath.Location = new System.Drawing.Point(571, 6);
             this.BrowseGitPath.Name = "BrowseGitPath";
             this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
             this.BrowseGitPath.TabIndex = 5;

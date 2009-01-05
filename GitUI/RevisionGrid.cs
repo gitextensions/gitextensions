@@ -650,12 +650,15 @@ namespace GitUI
 
         private void Revisions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            System.Drawing.Point pt = Revisions.PointToClient(Cursor.Position);
-            DataGridView.HitTestInfo hti = Revisions.HitTest(pt.X, pt.Y);
-            LastRow = hti.RowIndex;
-            Revisions.ClearSelection();
-            if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
-                Revisions.Rows[LastRow].Selected = true;
+            if (e.Button == MouseButtons.Right)
+            {
+                System.Drawing.Point pt = Revisions.PointToClient(Cursor.Position);
+                DataGridView.HitTestInfo hti = Revisions.HitTest(pt.X, pt.Y);
+                LastRow = hti.RowIndex;
+                Revisions.ClearSelection();
+                if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
+                    Revisions.Rows[LastRow].Selected = true;
+            }
         }
 
         private void AddFiles_Click(object sender, EventArgs e)

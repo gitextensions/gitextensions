@@ -34,27 +34,39 @@ namespace GitUI
         {
             string rev1 = "";
             string rev2 = "";
+            string result = "";
 
             if (RevisionGrid.GetRevisions().Count > 0)
             {
+                if (RevisionGrid.GetRevisions().Count == 1)
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[0].Guid;
+                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text);
                 }
 
                 if (RevisionGrid.GetRevisions().Count == 2)
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[1].Guid;
+                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text);
                 }
-            }
+
+                if (RevisionGrid.GetRevisions().Count > 2)
+                {
+                    foreach (GitRevision revision in RevisionGrid.GetRevisions())
+                    {
+                        rev1 = revision.ParentGuids[0];
+                        rev2 = revision.Guid;
+                        result += new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text);
+                    }
+                }
+            } else
             if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
             {
                 MessageBox.Show("You need to select 2 revisions", "Patch error");
                 return;
             }
-
-            string result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text);
 
             MessageBox.Show(result, "Patch result");
         }
