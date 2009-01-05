@@ -122,7 +122,7 @@ namespace GitUI
                 TextWriter tw = new StreamWriter(System.IO.Path.GetTempPath() + "GitExtensions.reg", false);
                 tw.Write(reg);
                 tw.Close();
-                GitCommands.GitCommands.RunCmd("regedit", System.IO.Path.GetTempPath() + "GitExtensions.reg");
+                GitCommands.GitCommands.RunCmd("regedit", "\"" + System.IO.Path.GetTempPath() + "GitExtensions.reg" + "\"");
             }
             catch(UnauthorizedAccessException ex)
             {
