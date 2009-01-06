@@ -38,7 +38,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +52,7 @@
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(514, 3);
+            this.Save.Location = new System.Drawing.Point(753, 271);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 23);
             this.Save.TabIndex = 3;
@@ -76,7 +75,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(601, 258);
+            this.splitContainer1.Size = new System.Drawing.Size(831, 300);
             this.splitContainer1.SplitterDistance = 25;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -91,12 +90,8 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.revisionGrid1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.Save);
-            this.splitContainer2.Size = new System.Drawing.Size(601, 229);
-            this.splitContainer2.SplitterDistance = 193;
+            this.splitContainer2.Size = new System.Drawing.Size(831, 271);
+            this.splitContainer2.SplitterDistance = 235;
             this.splitContainer2.TabIndex = 0;
             // 
             // revisionGrid1
@@ -108,14 +103,15 @@
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";
             this.revisionGrid1.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.revisionGrid1.Size = new System.Drawing.Size(601, 193);
+            this.revisionGrid1.Size = new System.Drawing.Size(831, 235);
             this.revisionGrid1.TabIndex = 0;
             // 
             // FormArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(601, 258);
+            this.ClientSize = new System.Drawing.Size(831, 300);
+            this.Controls.Add(this.Save);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormArchive";
@@ -126,7 +122,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 
