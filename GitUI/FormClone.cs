@@ -55,12 +55,12 @@ namespace GitUI
 
         private void From_DropDown(object sender, EventArgs e)
         {
-            From.DataSource = RepositoryHistory.MostRecentRepositories;
+            From.DataSource = RepositoryHistory.MostRecentRepositories.ToArray();
         }
 
         private void To_DropDown(object sender, EventArgs e)
         {
-            To.DataSource = RepositoryHistory.MostRecentRepositories;
+            To.DataSource = RepositoryHistory.MostRecentRepositories.ToArray();
         }
     }
 }
