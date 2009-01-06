@@ -36,5 +36,9 @@ namespace GitUI
 
             Close();
         }
+
+        private void Directory_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
     }
 }

@@ -19,13 +19,18 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new FormProcess("add " + Filter.Text);
+            new FormProcess("add \"" + Filter.Text + "\"");
             Close();
         }
 
         private void FormAddFiles_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void ShowFiles_Click(object sender, EventArgs e)
+        {
+            new FormProcess("add --dry-run \"" + Filter.Text + "\"");
         }
     }
 }
