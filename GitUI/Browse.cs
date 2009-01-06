@@ -270,11 +270,6 @@ namespace GitUI
             Initialize();
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormSettigns form = new FormSettigns();
-            form.ShowDialog();
-        }
 
         private void applyPatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -428,7 +423,7 @@ namespace GitUI
 
         private void Settings_Click(object sender, EventArgs e)
         {
-            settingsToolStripMenuItem_Click(sender, e);
+            settingsToolStripMenuItem2_Click(sender, e);
         }
 
         private void tagToolStripMenuItem_Click(object sender, EventArgs e)
@@ -463,15 +458,26 @@ namespace GitUI
             Initialize();
         }
 
-        private void editgitignoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormGitIgnore().ShowDialog();
-        }
-
         private void FormBrowse_FormClosing(object sender, FormClosingEventArgs e)
         {
             
 
+        }
+
+        private void editgitignoreToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            new FormGitIgnore().ShowDialog();
+        }
+
+        private void settingsToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            FormSettigns form = new FormSettigns();
+            form.ShowDialog();
+        }
+
+        private void archiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormArchive().ShowDialog();
         }
 
 

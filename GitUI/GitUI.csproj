@@ -78,6 +78,12 @@
     <Compile Include="FormAddFiles.Designer.cs">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormArchive.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormArchive.Designer.cs">
+      <DependentUpon>FormArchive.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -275,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddFiles.resx">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormArchive.resx">
+      <DependentUpon>FormArchive.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBranch.resx">
       <DependentUpon>FormBranch.cs</DependentUpon>
