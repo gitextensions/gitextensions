@@ -124,7 +124,7 @@ namespace GitUI
 
             try
             {
-                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text, amend));
+                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "\\\""), amend));
 
                 //OutPut.Text = "";
 
