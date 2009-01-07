@@ -107,5 +107,10 @@ namespace GitUI
             PullSource.DataSource = RepositoryHistory.MostRecentRepositories;
         }
 
+        private void Stash_Click(object sender, EventArgs e)
+        {
+            new FormStash().ShowDialog();
+        }
+
     }
 }

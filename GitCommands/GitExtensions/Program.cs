@@ -112,6 +112,13 @@ namespace GitExtensions
                 Application.Run(new FormCheckout());
                 
             }else
+            if (args.Length > 1 && args[1] == "init")
+            {
+                FormInit frm = new FormInit(args[2]);
+                Application.Run(frm);
+
+            }
+            else 
             if (args.Length > 1 && args[1] == "clone")
             {
                 Application.Run(new FormClone());

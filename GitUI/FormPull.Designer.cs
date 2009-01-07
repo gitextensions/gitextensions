@@ -41,6 +41,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Fetch = new System.Windows.Forms.RadioButton();
             this.PullSource = new System.Windows.Forms.ComboBox();
+            this.Stash = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -166,11 +167,22 @@
             this.PullSource.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.PullSource_DrawItem);
             this.PullSource.DropDown += new System.EventHandler(this.PullSource_DropDown);
             // 
+            // Stash
+            // 
+            this.Stash.Location = new System.Drawing.Point(456, 312);
+            this.Stash.Name = "Stash";
+            this.Stash.Size = new System.Drawing.Size(104, 23);
+            this.Stash.TabIndex = 14;
+            this.Stash.Text = "Stash changes";
+            this.Stash.UseVisualStyleBackColor = true;
+            this.Stash.Click += new System.EventHandler(this.Stash_Click);
+            // 
             // FormPull
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 368);
+            this.Controls.Add(this.Stash);
             this.Controls.Add(this.PullSource);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Mergetool);
@@ -206,5 +218,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Fetch;
         private System.Windows.Forms.ComboBox PullSource;
+        private System.Windows.Forms.Button Stash;
     }
 }

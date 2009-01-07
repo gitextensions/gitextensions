@@ -60,6 +60,14 @@ namespace GitCommands
             return false;
         }
 
+        public static bool IsBareRepository()
+        {
+            if (Directory.Exists(WorkingDir + "\\" + ".git"))
+                return false;
+
+            return true;
+        }
+
         private static string workingdir;
         public static string WorkingDir
         {

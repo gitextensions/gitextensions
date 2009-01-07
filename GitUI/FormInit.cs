@@ -10,6 +10,12 @@ namespace GitUI
 {
     public partial class FormInit : Form
     {
+        public FormInit(string dir)
+        {
+            InitializeComponent();
+            Directory.Text = dir;
+        }
+
         public FormInit()
         {
             InitializeComponent();

@@ -180,6 +180,12 @@
     <Compile Include="FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMailMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMailMap.Designer.cs">
+      <DependentUpon>FormMailMap.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMergeBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -332,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormInit.resx">
       <DependentUpon>FormInit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMailMap.resx">
+      <DependentUpon>FormMailMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>

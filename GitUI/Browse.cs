@@ -480,6 +480,11 @@ namespace GitUI
             new FormArchive().ShowDialog();
         }
 
+        private void editmailmapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormMailMap().ShowDialog();
+        }
+
 
     }
 }

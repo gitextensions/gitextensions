@@ -42,5 +42,14 @@ namespace GitUI
             tw.Close();
 
         }
+
+        private void FormGitIgnore_Load(object sender, EventArgs e)
+        {
+            if (Settings.IsBareRepository())
+            {
+                MessageBox.Show(".gitignore is only supported when there is a working dir.");
+                Close();
+            }
+        }
     }
 }

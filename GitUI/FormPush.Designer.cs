@@ -37,19 +37,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Branch = new System.Windows.Forms.ComboBox();
             this.PushAllBranches = new System.Windows.Forms.CheckBox();
+            this.Pull = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Output
             // 
             this.Output.Location = new System.Drawing.Point(22, 97);
             this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(562, 171);
+            this.Output.Size = new System.Drawing.Size(452, 171);
             this.Output.TabIndex = 14;
             this.Output.Text = "";
             // 
             // BrowseSource
             // 
-            this.BrowseSource.Location = new System.Drawing.Point(480, 18);
+            this.BrowseSource.Location = new System.Drawing.Point(480, 17);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(104, 23);
             this.BrowseSource.TabIndex = 13;
@@ -68,7 +69,7 @@
             // 
             // Push
             // 
-            this.Push.Location = new System.Drawing.Point(480, 68);
+            this.Push.Location = new System.Drawing.Point(480, 42);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(104, 23);
             this.Push.TabIndex = 15;
@@ -113,11 +114,22 @@
             this.PushAllBranches.Text = "Push all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
             // 
+            // Pull
+            // 
+            this.Pull.Location = new System.Drawing.Point(480, 245);
+            this.Pull.Name = "Pull";
+            this.Pull.Size = new System.Drawing.Size(104, 23);
+            this.Pull.TabIndex = 20;
+            this.Pull.Text = "Pull";
+            this.Pull.UseVisualStyleBackColor = true;
+            this.Pull.Click += new System.EventHandler(this.Pull_Click);
+            // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 285);
+            this.Controls.Add(this.Pull);
             this.Controls.Add(this.PushAllBranches);
             this.Controls.Add(this.Branch);
             this.Controls.Add(this.label2);
@@ -145,5 +157,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox Branch;
         private System.Windows.Forms.CheckBox PushAllBranches;
+        private System.Windows.Forms.Button Pull;
     }
 }

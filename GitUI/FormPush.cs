@@ -67,5 +67,10 @@ namespace GitUI
             Branch.DisplayMember = "Name";
             Branch.DataSource = GitCommands.GitCommands.GetHeads(false);
         }
+
+        private void Pull_Click(object sender, EventArgs e)
+        {
+            new FormPull().ShowDialog();
+        }
     }
 }

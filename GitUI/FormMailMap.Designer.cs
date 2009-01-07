@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormGitIgnore
+    partial class FormMailMap
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMailMap));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.GitIgnoreEdit = new ICSharpCode.TextEditor.TextEditorControl();
+            this.MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
             this.Save = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -41,37 +41,36 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.GitIgnoreEdit);
+            this.splitContainer1.Panel1.Controls.Add(this.MailMapText);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.Save);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(634, 473);
-            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.Panel2.Controls.Add(this.Save);
+            this.splitContainer1.Size = new System.Drawing.Size(634, 474);
+            this.splitContainer1.SplitterDistance = 381;
             this.splitContainer1.TabIndex = 0;
             // 
-            // GitIgnoreEdit
+            // MailMapText
             // 
-            this.GitIgnoreEdit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitIgnoreEdit.IsReadOnly = false;
-            this.GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
-            this.GitIgnoreEdit.Name = "GitIgnoreEdit";
-            this.GitIgnoreEdit.Size = new System.Drawing.Size(400, 473);
-            this.GitIgnoreEdit.TabIndex = 0;
+            this.MailMapText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MailMapText.IsReadOnly = false;
+            this.MailMapText.Location = new System.Drawing.Point(0, 0);
+            this.MailMapText.Name = "MailMapText";
+            this.MailMapText.Size = new System.Drawing.Size(381, 474);
+            this.MailMapText.TabIndex = 0;
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(143, 438);
+            this.Save.Location = new System.Drawing.Point(162, 439);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 23);
-            this.Save.TabIndex = 1;
+            this.Save.TabIndex = 0;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
@@ -81,21 +80,21 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(203, 390);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.label1.Size = new System.Drawing.Size(233, 78);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Edit the mailmap.\r\nThis file is meant to correct usernames.\r\n\r\nExample:\r\nHenk Wes" +
+                "thuis <Henk@.(none)>\r\nHenk Westhuis <henk_westhuis@hotmail.com>";
             // 
-            // FormGitIgnore
+            // FormMailMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 473);
+            this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FormGitIgnore";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Edit .gitignore";
-            this.Load += new System.EventHandler(this.FormGitIgnore_Load);
+            this.Name = "FormMailMap";
+            this.Text = "Edit .mailmap";
+            this.Load += new System.EventHandler(this.FormMailMap_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -107,9 +106,8 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl GitIgnoreEdit;
-        private System.Windows.Forms.Label label1;
+        private ICSharpCode.TextEditor.TextEditorControl MailMapText;
         private System.Windows.Forms.Button Save;
-
+        private System.Windows.Forms.Label label1;
     }
 }
