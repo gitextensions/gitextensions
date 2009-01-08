@@ -251,13 +251,13 @@
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ResetChanges});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(153, 48);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(169, 48);
             // 
             // ResetChanges
             // 
             this.ResetChanges.Name = "ResetChanges";
-            this.ResetChanges.Size = new System.Drawing.Size(152, 22);
-            this.ResetChanges.Text = "Reset changes";
+            this.ResetChanges.Size = new System.Drawing.Size(168, 22);
+            this.ResetChanges.Text = "Reset file changes";
             this.ResetChanges.Click += new System.EventHandler(this.ResetSoft_Click);
             // 
             // AddFiles

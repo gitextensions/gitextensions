@@ -485,6 +485,21 @@ namespace GitUI
             new FormMailMap().ShowDialog();
         }
 
+        private void compressGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess("gc");
+        }
+
+        private void verifyGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess("fsck-objects");
+        }
+
+        private void removeDanglingObjecsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess("prune");
+        }
+
 
     }
 }
