@@ -72,5 +72,10 @@ namespace GitUI
         {
             new FormPull().ShowDialog();
         }
+
+        private void FormPush_Load(object sender, EventArgs e)
+        {
+            this.Text = "Push (" + GitCommands.Settings.WorkingDir + ")";
+        }
     }
 }

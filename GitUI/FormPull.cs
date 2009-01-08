@@ -94,7 +94,7 @@ namespace GitUI
 
         private void FormPull_Load(object sender, EventArgs e)
         {
-
+            this.Text = "Pull (" + GitCommands.Settings.WorkingDir + ")";
         }
 
         private void PullSource_DrawItem(object sender, DrawItemEventArgs e)

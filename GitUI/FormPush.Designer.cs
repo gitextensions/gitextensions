@@ -142,6 +142,7 @@
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
+            this.Load += new System.EventHandler(this.FormPush_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

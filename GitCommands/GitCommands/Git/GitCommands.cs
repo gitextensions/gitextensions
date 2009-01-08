@@ -392,20 +392,56 @@ namespace GitCommands
 
         static public string ResetSoft(string commit)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "reset --soft \"" + commit + "\"");
+            return ResetSoft(commit, "");
         }
 
         static public string ResetMixed(string commit)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "reset --mixed \"" + commit + "\"");
+            return ResetMixed(commit, "");
         }
 
         static public string ResetHard(string commit)
         {
-            if (string.IsNullOrEmpty(commit))
-                return RunCmd(Settings.GitDir + "git.cmd", "reset --hard");
-            else
-                return RunCmd(Settings.GitDir + "git.cmd", "reset --hard \"" + commit + "\"");
+            return ResetHard(commit, "");
+        }
+
+        static public string ResetSoft(string commit, string file)
+        {
+            string args = "reset --soft";
+
+            if (!string.IsNullOrEmpty(commit))
+                args += " \"" + commit + "\"";
+
+            if (!string.IsNullOrEmpty(file))
+                args += " -- \"" + file + "\"";
+
+            return RunCmd(Settings.GitDir + "git.cmd", args);
+        }
+
+        static public string ResetMixed(string commit, string file)
+        {
+            string args = "reset --mixed";
+
+            if (!string.IsNullOrEmpty(commit))
+                args += " \"" + commit + "\"";
+
+            if (!string.IsNullOrEmpty(file))
+                args += " -- \"" + file + "\"";
+
+            return RunCmd(Settings.GitDir + "git.cmd", args);
+        }
+
+        static public string ResetHard(string commit, string file)
+        {
+            string args = "reset --hard";
+            
+            if (!string.IsNullOrEmpty(commit))
+                args +=  " \"" + commit + "\"";
+
+            if (!string.IsNullOrEmpty(file))
+                args += " -- \"" + file + "\"";
+
+            return RunCmd(Settings.GitDir + "git.cmd", args);
         }
 
         static public string ResetSoftCmd(string commit)
@@ -423,6 +459,10 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
+        static public string ResetFile(string file)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "checkout-index --index --force -- \"" + file + "\"");
+        }
 
 
         public string FormatPatch(string from, string to, string output)

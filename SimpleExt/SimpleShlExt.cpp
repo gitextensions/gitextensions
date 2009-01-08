@@ -164,8 +164,9 @@ void CSimpleShlExt::RunGitEx(const char * command)
 	CString args;
 
 	args += command;
-	args += " ";
+	args += " \"";
 	args += m_szFile;
+	args += "\"";
 
 	CString dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
 

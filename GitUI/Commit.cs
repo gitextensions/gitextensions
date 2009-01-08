@@ -26,6 +26,7 @@ namespace GitUI
         private void FormCommit_Load(object sender, EventArgs e)
         {
             Initialize();
+            this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
@@ -245,6 +246,35 @@ namespace GitUI
             if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
+            }
+        }
+
+        private void ResetSoft_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0 && MessageBox.Show("Are you sure you want to reset the changes of this?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                string output = GitCommands.GitCommands.ResetFile(item.Name);
+
+                if (!string.IsNullOrEmpty(output))
+                    MessageBox.Show(output, "Reset changes");
+
+                Initialize();
+            }
+        }
+
+        int LastRow;
+
+        private void Unstaged_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                System.Drawing.Point pt = Unstaged.PointToClient(Cursor.Position);
+                DataGridView.HitTestInfo hti = Unstaged.HitTest(pt.X, pt.Y);
+                LastRow = hti.RowIndex;
+                Unstaged.ClearSelection();
+                if (LastRow >= 0 && Unstaged.Rows.Count > LastRow)
+                    Unstaged.Rows[LastRow].Selected = true;
             }
         }
     }

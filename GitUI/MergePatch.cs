@@ -129,7 +129,7 @@ namespace GitUI
 
         private void MergePatch_Load(object sender, EventArgs e)
         {
-
+            this.Text = "Apply patch (" + GitCommands.Settings.WorkingDir + ")";
         }
 
         private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
