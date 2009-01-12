@@ -350,9 +350,12 @@ namespace GitCommands
             return RunCmd(Settings.GitDir + "git.cmd", "shortlog -s -n");
         }
 
-        static public string DeleteBranch(string branchName)
+        static public string DeleteBranch(string branchName, bool force)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "branch -d \"" + branchName + "\"");
+            if (force)
+                return RunCmd(Settings.GitDir + "git.cmd", "branch -D \"" + branchName + "\"");
+            else
+                return RunCmd(Settings.GitDir + "git.cmd", "branch -d \"" + branchName + "\"");
         }
 
         static public string DeleteTag(string tagName)
@@ -505,23 +508,57 @@ namespace GitCommands
             return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\"\"");
         }
 
-        static public string Fetch(string path, string branch)
+        static public string Fetch(string remote, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            GitCommands.RunRealCmd( "cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" fetch \"" + path.Trim() + "\" \"" + branch + "\"\"");
+
+            string localbranch;
+
+            if (string.IsNullOrEmpty(branch))
+                localbranch = "";
+            else
+                localbranch = "\"refs/heads/" + branch + "\"";
+
+            string remotebranch;
+            if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
+                remotebranch = "";
+            else
+                remotebranch = ":" + "\"refs/remotes/" + remote.Trim() + "/" + branch + "\"";
+
+
+
+            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" fetch \"" + remote.Trim() + "\" " + localbranch + remotebranch + "\"");
 
             return "Done";
         }
 
-        static public string Pull(string path, string branch, bool rebase)
+
+
+        static public string Pull(string remote, string branch, bool rebase)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
+            string rebaseOption = "";
             if (rebase)
-                GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull --rebase \"" + path.Trim() + "\" \"" + branch + "\"\"");
+                rebaseOption = "--rebase ";
+
+            string localbranch;
+
+            if (string.IsNullOrEmpty(branch))
+                localbranch = "";
             else
-                GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull \"" + path.Trim() + "\" \"" + branch + "\"\"");
+                localbranch = "\"refs/heads/" + branch + "\"";
+
+            string remotebranch;
+            if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
+                remotebranch = "";
+            else
+                remotebranch = ":" + "\"refs/remotes/" + remote.Trim() + "/" + branch + "\"";
+            
+                
+
+            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull " + rebaseOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch + "\"");
 
             return "Done";
         }
@@ -573,6 +610,32 @@ namespace GitCommands
             string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "am --3way --signoff \"" + patchFile + "\"");
 
             return result;
+        }
+
+        public static string RemoveRemote(string name)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "remote rm \"" + name + "\"");
+        }
+
+        public static string RenameRemote(string name, string newname)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "remote rename \"" + name + "\" \"" + newname + "\"");
+        }
+
+        public static string AddRemote(string name, string location)
+        {
+            if (string.IsNullOrEmpty(name))
+                return "Please enter a name.";
+
+            if (string.IsNullOrEmpty(location))
+                return RunCmd(Settings.GitDir + "git.cmd", "remote add \"" + name + "\" \"\"");
+            else
+                return RunCmd(Settings.GitDir + "git.cmd", "remote add \"" + name + "\" \"" + location + "\"");
+        }
+
+        public static string[] GetRemotes()
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "remote show").Split('\n');
         }
 
         public string GetGlobalSetting(string setting)
@@ -1153,7 +1216,13 @@ namespace GitCommands
                             head.IsRemote = head.Name.Contains("refs/remotes/");
                             head.IsTag = false;
                             head.IsOther = !head.IsHead && !head.IsRemote && !head.IsTag;
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                            if (head.IsHead)
+                                head.Name = head.Name.Substring(head.Name.LastIndexOf("heads/") + 6);
+                            else
+                            if (head.IsRemote)
+                                head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
+                            else
+                                head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
                         }
                     }
 

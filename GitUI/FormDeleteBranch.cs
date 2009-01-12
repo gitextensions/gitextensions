@@ -28,7 +28,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!", "Delete branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    MessageBox.Show("Command executed \n" + GitCommands.GitCommands.DeleteBranch(Branches.Text), "Delete branch");
+                    MessageBox.Show("Command executed \n" + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), "Delete branch");
                 }
             }
             catch

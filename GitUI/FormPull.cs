@@ -47,7 +47,8 @@ namespace GitUI
 
         private void Branches_DropDown(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PullSource.Text))
+            if ((PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text)) &&
+                (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text)))
             {
                 Branches.DataSource = null;
                 return;
@@ -57,9 +58,21 @@ namespace GitUI
 
             try
             {
-                GitCommands.Settings.WorkingDir = PullSource.Text;
+                if (PullFromUrl.Checked)
+                {
+                    GitCommands.Settings.WorkingDir = PullSource.Text;
+                }
+                else
+                {
+                    GitCommands.Settings.WorkingDir = GitCommands.GitCommands.GetSetting("remote." + Remotes.Text + ".url");
+                }
                 Branches.DisplayMember = "Name";
-                Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+                List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false);
+                
+                GitCommands.GitHead allHead = new GitCommands.GitHead();
+                allHead.Name = "*";
+                heads.Insert(0, allHead);
+                Branches.DataSource = heads;
             }
             finally
             {
@@ -69,20 +82,35 @@ namespace GitUI
 
         private void Pull_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PullSource.Text))
+            if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
             {
                 MessageBox.Show("Please select a source directory");
                 return;
             }
-
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
+            {
+                MessageBox.Show("Please select a remote repository");
+                return;
+            }
             RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
+            string source;
+
+            if (PullFromUrl.Checked)
+                source = PullSource.Text;
+            else
+                source = Remotes.Text;
+
+
             if (Fetch.Checked)
-                Output.Text = GitCommands.GitCommands.Fetch(PullSource.Text, Branches.Text);
+                /*Output.Text = */
+                GitCommands.GitCommands.Fetch(source, Branches.Text);
             else if (Merge.Checked)
-                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.Text, false);
+                /*Output.Text = */
+                GitCommands.GitCommands.Pull(source, Branches.Text, false);
             else if (Rebase.Checked)
-                Output.Text = GitCommands.GitCommands.Pull(PullSource.Text, Branches.Text, true);
+                /*Output.Text = */
+                GitCommands.GitCommands.Pull(source, Branches.Text, true);
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
@@ -94,6 +122,9 @@ namespace GitUI
 
         private void FormPull_Load(object sender, EventArgs e)
         {
+            string branch = GitCommands.GitCommands.GetSelectedBranch();
+            Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
+
             this.Text = "Pull (" + GitCommands.Settings.WorkingDir + ")";
         }
 
@@ -110,6 +141,38 @@ namespace GitUI
         private void Stash_Click(object sender, EventArgs e)
         {
             new FormStash().ShowDialog();
+        }
+
+        private void Remotes_DropDown(object sender, EventArgs e)
+        {
+            Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
+        }
+
+        private void PullFromRemote_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PullFromRemote.Checked)
+            {
+                PullSource.Enabled = false;
+                BrowseSource.Enabled = false;
+                Remotes.Enabled = true;
+                AddRemote.Enabled = true;
+            }
+        }
+
+        private void PullFromUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PullFromUrl.Checked)
+            {
+                PullSource.Enabled = true;
+                BrowseSource.Enabled = true;
+                Remotes.Enabled = false;
+                AddRemote.Enabled = false;
+            }
+        }
+
+        private void AddRemote_Click(object sender, EventArgs e)
+        {
+            new FormRemotes().ShowDialog();
         }
 
     }

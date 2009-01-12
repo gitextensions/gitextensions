@@ -34,6 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ForceDelete = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +73,7 @@
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(37, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(327, 52);
+            this.label2.Size = new System.Drawing.Size(333, 52);
             this.label2.TabIndex = 6;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -86,11 +87,22 @@
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
+            // ForceDelete
+            // 
+            this.ForceDelete.AutoSize = true;
+            this.ForceDelete.Location = new System.Drawing.Point(86, 104);
+            this.ForceDelete.Name = "ForceDelete";
+            this.ForceDelete.Size = new System.Drawing.Size(85, 17);
+            this.ForceDelete.TabIndex = 8;
+            this.ForceDelete.Text = "Force delete";
+            this.ForceDelete.UseVisualStyleBackColor = true;
+            // 
             // FormDeleteBranch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 124);
+            this.ClientSize = new System.Drawing.Size(457, 153);
+            this.Controls.Add(this.ForceDelete);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Ok);
@@ -113,5 +125,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox ForceDelete;
     }
 }

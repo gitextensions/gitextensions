@@ -29,49 +29,39 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPush));
-            this.Output = new System.Windows.Forms.RichTextBox();
             this.BrowseSource = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.Push = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.Branch = new System.Windows.Forms.ComboBox();
             this.PushAllBranches = new System.Windows.Forms.CheckBox();
             this.Pull = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.PullFromUrl = new System.Windows.Forms.RadioButton();
+            this.PullFromRemote = new System.Windows.Forms.RadioButton();
+            this.AddRemote = new System.Windows.Forms.Button();
+            this.Remotes = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Output
-            // 
-            this.Output.Location = new System.Drawing.Point(22, 97);
-            this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(452, 171);
-            this.Output.TabIndex = 14;
-            this.Output.Text = "";
             // 
             // BrowseSource
             // 
-            this.BrowseSource.Location = new System.Drawing.Point(480, 17);
+            this.BrowseSource.Enabled = false;
+            this.BrowseSource.Location = new System.Drawing.Point(431, 45);
             this.BrowseSource.Name = "BrowseSource";
-            this.BrowseSource.Size = new System.Drawing.Size(104, 23);
+            this.BrowseSource.Size = new System.Drawing.Size(101, 23);
             this.BrowseSource.TabIndex = 13;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
             this.BrowseSource.Click += new System.EventHandler(this.BrowseSource_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Destination";
-            // 
             // Push
             // 
-            this.Push.Location = new System.Drawing.Point(480, 42);
+            this.Push.Location = new System.Drawing.Point(448, 179);
             this.Push.Name = "Push";
-            this.Push.Size = new System.Drawing.Size(104, 23);
+            this.Push.Size = new System.Drawing.Size(101, 23);
             this.Push.TabIndex = 15;
             this.Push.Text = "Push";
             this.Push.UseVisualStyleBackColor = true;
@@ -79,17 +69,18 @@
             // 
             // PushDestination
             // 
+            this.PushDestination.Enabled = false;
             this.PushDestination.FormattingEnabled = true;
-            this.PushDestination.Location = new System.Drawing.Point(109, 19);
+            this.PushDestination.Location = new System.Drawing.Point(128, 46);
             this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(365, 21);
+            this.PushDestination.Size = new System.Drawing.Size(297, 21);
             this.PushDestination.TabIndex = 16;
             this.PushDestination.DropDown += new System.EventHandler(this.PushDestination_DropDown);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(27, 50);
+            this.label2.Location = new System.Drawing.Point(6, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 13);
             this.label2.TabIndex = 17;
@@ -98,16 +89,16 @@
             // Branch
             // 
             this.Branch.FormattingEnabled = true;
-            this.Branch.Location = new System.Drawing.Point(109, 43);
+            this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(365, 21);
+            this.Branch.Size = new System.Drawing.Size(297, 21);
             this.Branch.TabIndex = 18;
             this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
             // 
             // PushAllBranches
             // 
             this.PushAllBranches.AutoSize = true;
-            this.PushAllBranches.Location = new System.Drawing.Point(109, 72);
+            this.PushAllBranches.Location = new System.Drawing.Point(127, 51);
             this.PushAllBranches.Name = "PushAllBranches";
             this.PushAllBranches.Size = new System.Drawing.Size(110, 17);
             this.PushAllBranches.TabIndex = 19;
@@ -116,48 +107,120 @@
             // 
             // Pull
             // 
-            this.Pull.Location = new System.Drawing.Point(480, 245);
+            this.Pull.Location = new System.Drawing.Point(13, 179);
             this.Pull.Name = "Pull";
-            this.Pull.Size = new System.Drawing.Size(104, 23);
+            this.Pull.Size = new System.Drawing.Size(101, 23);
             this.Pull.TabIndex = 20;
             this.Pull.Text = "Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.Pull_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.PullFromUrl);
+            this.groupBox2.Controls.Add(this.PullFromRemote);
+            this.groupBox2.Controls.Add(this.AddRemote);
+            this.groupBox2.Controls.Add(this.Remotes);
+            this.groupBox2.Controls.Add(this.BrowseSource);
+            this.groupBox2.Controls.Add(this.PushDestination);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(541, 80);
+            this.groupBox2.TabIndex = 21;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Push to";
+            // 
+            // PullFromUrl
+            // 
+            this.PullFromUrl.AutoSize = true;
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
+            this.PullFromUrl.Name = "PullFromUrl";
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.TabIndex = 19;
+            this.PullFromUrl.Text = "Url";
+            this.PullFromUrl.UseVisualStyleBackColor = true;
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
+            // 
+            // PullFromRemote
+            // 
+            this.PullFromRemote.AutoSize = true;
+            this.PullFromRemote.Checked = true;
+            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
+            this.PullFromRemote.Name = "PullFromRemote";
+            this.PullFromRemote.Size = new System.Drawing.Size(110, 17);
+            this.PullFromRemote.TabIndex = 18;
+            this.PullFromRemote.TabStop = true;
+            this.PullFromRemote.Text = "Remote repository";
+            this.PullFromRemote.UseVisualStyleBackColor = true;
+            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
+            // 
+            // AddRemote
+            // 
+            this.AddRemote.Location = new System.Drawing.Point(431, 18);
+            this.AddRemote.Name = "AddRemote";
+            this.AddRemote.Size = new System.Drawing.Size(101, 23);
+            this.AddRemote.TabIndex = 17;
+            this.AddRemote.Text = "Add remote";
+            this.AddRemote.UseVisualStyleBackColor = true;
+            this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
+            // 
+            // Remotes
+            // 
+            this.Remotes.FormattingEnabled = true;
+            this.Remotes.Location = new System.Drawing.Point(128, 19);
+            this.Remotes.Name = "Remotes";
+            this.Remotes.Size = new System.Drawing.Size(297, 21);
+            this.Remotes.TabIndex = 16;
+            this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.Branch);
+            this.groupBox1.Controls.Add(this.PushAllBranches);
+            this.groupBox1.Location = new System.Drawing.Point(13, 99);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(540, 74);
+            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Branch";
+            // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 285);
-            this.Controls.Add(this.Pull);
-            this.Controls.Add(this.PushAllBranches);
-            this.Controls.Add(this.Branch);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.PushDestination);
+            this.ClientSize = new System.Drawing.Size(561, 213);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Push);
-            this.Controls.Add(this.Output);
-            this.Controls.Add(this.BrowseSource);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.Pull);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
             this.Load += new System.EventHandler(this.FormPush_Load);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox Output;
         private System.Windows.Forms.Button BrowseSource;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Push;
         private System.Windows.Forms.ComboBox PushDestination;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox Branch;
         private System.Windows.Forms.CheckBox PushAllBranches;
         private System.Windows.Forms.Button Pull;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton PullFromUrl;
+        private System.Windows.Forms.RadioButton PullFromRemote;
+        private System.Windows.Forms.Button AddRemote;
+        private System.Windows.Forms.ComboBox Remotes;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

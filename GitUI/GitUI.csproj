@@ -40,6 +40,7 @@
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Windows.Forms" />
@@ -210,6 +211,12 @@
     <Compile Include="FormPush.Designer.cs">
       <DependentUpon>FormPush.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormRemotes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRemotes.Designer.cs">
+      <DependentUpon>FormRemotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormResetCurrentBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -353,6 +360,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRemotes.resx">
+      <DependentUpon>FormRemotes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>

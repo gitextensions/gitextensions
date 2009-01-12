@@ -500,6 +500,11 @@ namespace GitUI
             new FormProcess("prune");
         }
 
+        private void manageRemoteRepositoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormRemotes().ShowDialog();
+        }
+
 
     }
 }

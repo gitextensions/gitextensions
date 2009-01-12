@@ -75,7 +75,42 @@ namespace GitUI
 
         private void FormPush_Load(object sender, EventArgs e)
         {
+            string branch = GitCommands.GitCommands.GetSelectedBranch();
+            Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
+
             this.Text = "Push (" + GitCommands.Settings.WorkingDir + ")";
+        }
+
+        private void AddRemote_Click(object sender, EventArgs e)
+        {
+            new FormRemotes().ShowDialog();
+        }
+
+        private void Remotes_DropDown(object sender, EventArgs e)
+        {
+            Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
+        }
+
+        private void PullFromRemote_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PullFromRemote.Checked)
+            {
+                PushDestination.Enabled = false;
+                BrowseSource.Enabled = false;
+                Remotes.Enabled = true;
+                AddRemote.Enabled = true;
+            }
+        }
+
+        private void PullFromUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PullFromUrl.Checked)
+            {
+                PushDestination.Enabled = true;
+                BrowseSource.Enabled = true;
+                Remotes.Enabled = false;
+                AddRemote.Enabled = false;
+            }
         }
     }
 }
