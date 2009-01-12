@@ -27,15 +27,25 @@ namespace GitUI
 
         private void Push_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PushDestination.Text))
+            if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show("Please select a destination directory");
+                return;
+            }
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
+            {
+                MessageBox.Show("Please select a remote repository");
                 return;
             }
 
             RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
-            Process process = GitCommands.GitCommands.PushAsync(PushDestination.Text, Branch.Text, PushAllBranches.Checked);
+            Process process;
+
+            if (PullFromUrl.Checked)
+                process = GitCommands.GitCommands.PushAsync(PushDestination.Text, Branch.Text, PushAllBranches.Checked);
+            else
+                process = GitCommands.GitCommands.PushAsync(Remotes.Text, Branch.Text, PushAllBranches.Checked);
 
             process.WaitForExit();
             
