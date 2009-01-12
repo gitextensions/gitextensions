@@ -53,6 +53,7 @@
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -133,9 +134,10 @@
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createTagToolStripMenuItem,
             this.createNewBranchToolStripMenuItem,
-            this.resetCurrentBranchToHereToolStripMenuItem});
+            this.resetCurrentBranchToHereToolStripMenuItem,
+            this.ShowRemoteBranches});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 70);
+            this.CreateTag.Size = new System.Drawing.Size(224, 114);
             // 
             // createTagToolStripMenuItem
             // 
@@ -276,6 +278,15 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // ShowRemoteBranches
+            // 
+            this.ShowRemoteBranches.Checked = true;
+            this.ShowRemoteBranches.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowRemoteBranches.Name = "ShowRemoteBranches";
+            this.ShowRemoteBranches.Size = new System.Drawing.Size(223, 22);
+            this.ShowRemoteBranches.Text = "Show remote branches";
+            this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranches_Click);
+            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -324,5 +335,6 @@
         private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Init;
+        private System.Windows.Forms.ToolStripMenuItem ShowRemoteBranches;
     }
 }

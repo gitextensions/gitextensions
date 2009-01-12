@@ -517,11 +517,14 @@ namespace GitUI
                             float offset = 0;
                             foreach (GitHead h in revision.Heads)
                             {
-                                SolidBrush brush = new SolidBrush(h.IsTag == true ? Color.DarkBlue : h.IsHead ? Color.DarkRed : h.IsRemote ? Color.Green : Color.Gray);
+                                if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
+                                {
+                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Color.DarkBlue : h.IsHead ? Color.DarkRed : h.IsRemote ? Color.Green : Color.Gray);
 
-                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                    e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
+                                    offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
+                                }
                             }
                             string text = (string)revision.Message;
                             e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
@@ -683,6 +686,12 @@ namespace GitUI
         {
             new FormInit().ShowDialog();
             RefreshRevisions();
+        }
+
+        private void ShowRemoteBranches_Click(object sender, EventArgs e)
+        {
+            ShowRemoteBranches.Checked = !ShowRemoteBranches.Checked;
+            Revisions.Invalidate();
         }
     }
 }
