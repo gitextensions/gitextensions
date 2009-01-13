@@ -28,14 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStash));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.Refresh = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Changes = new System.Windows.Forms.ListBox();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.StashMessage = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.Stashes = new System.Windows.Forms.ComboBox();
+            this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
             this.View = new ICSharpCode.TextEditor.TextEditorControl();
@@ -57,6 +63,7 @@
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -76,8 +83,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Clear);
-            this.splitContainer1.Size = new System.Drawing.Size(727, 499);
-            this.splitContainer1.SplitterDistance = 464;
+            this.splitContainer1.Size = new System.Drawing.Size(708, 520);
+            this.splitContainer1.SplitterDistance = 485;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -93,8 +100,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.View);
-            this.splitContainer2.Size = new System.Drawing.Size(727, 464);
-            this.splitContainer2.SplitterDistance = 242;
+            this.splitContainer2.Size = new System.Drawing.Size(708, 485);
+            this.splitContainer2.SplitterDistance = 251;
             this.splitContainer2.TabIndex = 0;
             // 
             // splitContainer3
@@ -111,8 +118,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer3.Size = new System.Drawing.Size(242, 464);
-            this.splitContainer3.SplitterDistance = 214;
+            this.splitContainer3.Size = new System.Drawing.Size(251, 485);
+            this.splitContainer3.SplitterDistance = 206;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -125,14 +132,25 @@
             // 
             // splitContainer4.Panel1
             // 
+            this.splitContainer4.Panel1.Controls.Add(this.Refresh);
             this.splitContainer4.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Changes);
-            this.splitContainer4.Size = new System.Drawing.Size(242, 214);
+            this.splitContainer4.Size = new System.Drawing.Size(251, 206);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 0;
+            // 
+            // Refresh
+            // 
+            this.Refresh.Location = new System.Drawing.Point(173, 0);
+            this.Refresh.Name = "Refresh";
+            this.Refresh.Size = new System.Drawing.Size(75, 23);
+            this.Refresh.TabIndex = 1;
+            this.Refresh.Text = "Refresh";
+            this.Refresh.UseVisualStyleBackColor = true;
+            this.Refresh.Click += new System.EventHandler(this.Refresh_Click);
             // 
             // label1
             // 
@@ -149,7 +167,7 @@
             this.Changes.FormattingEnabled = true;
             this.Changes.Location = new System.Drawing.Point(0, 0);
             this.Changes.Name = "Changes";
-            this.Changes.Size = new System.Drawing.Size(242, 173);
+            this.Changes.Size = new System.Drawing.Size(251, 173);
             this.Changes.TabIndex = 0;
             this.Changes.SelectedIndexChanged += new System.EventHandler(this.Changes_SelectedIndexChanged);
             // 
@@ -163,23 +181,60 @@
             // 
             // splitContainer5.Panel1
             // 
+            this.splitContainer5.Panel1.Controls.Add(this.StashMessage);
+            this.splitContainer5.Panel1.Controls.Add(this.label3);
+            this.splitContainer5.Panel1.Controls.Add(this.Stashes);
             this.splitContainer5.Panel1.Controls.Add(this.label2);
             // 
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Stashed);
-            this.splitContainer5.Size = new System.Drawing.Size(242, 246);
-            this.splitContainer5.SplitterDistance = 25;
+            this.splitContainer5.Size = new System.Drawing.Size(251, 275);
+            this.splitContainer5.SplitterDistance = 81;
             this.splitContainer5.TabIndex = 0;
+            // 
+            // StashMessage
+            // 
+            this.StashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.StashMessage.Location = new System.Drawing.Point(52, 29);
+            this.StashMessage.Name = "StashMessage";
+            this.StashMessage.ReadOnly = true;
+            this.StashMessage.Size = new System.Drawing.Size(196, 49);
+            this.StashMessage.TabIndex = 3;
+            this.StashMessage.Text = "";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1, 29);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Message:";
+            // 
+            // Stashes
+            // 
+            this.Stashes.DataSource = this.gitStashBindingSource;
+            this.Stashes.DisplayMember = "Name";
+            this.Stashes.FormattingEnabled = true;
+            this.Stashes.Location = new System.Drawing.Point(52, 3);
+            this.Stashes.Name = "Stashes";
+            this.Stashes.Size = new System.Drawing.Size(196, 21);
+            this.Stashes.TabIndex = 1;
+            this.Stashes.SelectedIndexChanged += new System.EventHandler(this.Stashes_SelectedIndexChanged);
+            // 
+            // gitStashBindingSource
+            // 
+            this.gitStashBindingSource.DataSource = typeof(GitCommands.GitStash);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 3);
+            this.label2.Location = new System.Drawing.Point(1, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 13);
+            this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Stashed changes";
+            this.label2.Text = "Stash:";
             // 
             // Stashed
             // 
@@ -187,7 +242,7 @@
             this.Stashed.FormattingEnabled = true;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(242, 212);
+            this.Stashed.Size = new System.Drawing.Size(251, 186);
             this.Stashed.TabIndex = 0;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.Stashed_SelectedIndexChanged);
             // 
@@ -197,7 +252,7 @@
             this.View.IsReadOnly = false;
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(481, 464);
+            this.View.Size = new System.Drawing.Size(453, 485);
             this.View.TabIndex = 0;
             // 
             // Stash
@@ -214,9 +269,9 @@
             // 
             this.Apply.Location = new System.Drawing.Point(293, 3);
             this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(139, 23);
+            this.Apply.Size = new System.Drawing.Size(185, 23);
             this.Apply.TabIndex = 1;
-            this.Apply.Text = "Apply stash to working dir";
+            this.Apply.Text = "Apply selected stash to working dir";
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.Apply_Click);
             // 
@@ -226,7 +281,7 @@
             this.Clear.Name = "Clear";
             this.Clear.Size = new System.Drawing.Size(139, 23);
             this.Clear.TabIndex = 0;
-            this.Clear.Text = "Clear stash";
+            this.Clear.Text = "Drop selected stash";
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.Clear_Click);
             // 
@@ -234,7 +289,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(727, 499);
+            this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormStash";
@@ -258,6 +313,7 @@
             this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -277,5 +333,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox Stashed;
         private ICSharpCode.TextEditor.TextEditorControl View;
+        private System.Windows.Forms.ComboBox Stashes;
+        private System.Windows.Forms.BindingSource gitStashBindingSource;
+        private System.Windows.Forms.RichTextBox StashMessage;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button Refresh;
     }
 }

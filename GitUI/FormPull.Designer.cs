@@ -43,8 +43,8 @@
             this.Remotes = new System.Windows.Forms.ComboBox();
             this.AddRemote = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
+            this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -183,7 +183,7 @@
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 23);
             this.AddRemote.TabIndex = 17;
-            this.AddRemote.Text = "Add remote";
+            this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
             // 
@@ -202,6 +202,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
             // 
+            // PullFromUrl
+            // 
+            this.PullFromUrl.AutoSize = true;
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
+            this.PullFromUrl.Name = "PullFromUrl";
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.TabIndex = 19;
+            this.PullFromUrl.Text = "Url";
+            this.PullFromUrl.UseVisualStyleBackColor = true;
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
+            // 
             // PullFromRemote
             // 
             this.PullFromRemote.AutoSize = true;
@@ -214,17 +225,6 @@
             this.PullFromRemote.Text = "Remote repository";
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
-            // 
-            // PullFromUrl
-            // 
-            this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
-            this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
-            this.PullFromUrl.TabIndex = 19;
-            this.PullFromUrl.Text = "Url";
-            this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
             // 
             // groupBox3
             // 

@@ -160,7 +160,7 @@
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 23);
             this.AddRemote.TabIndex = 17;
-            this.AddRemote.Text = "Add remote";
+            this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
             // 

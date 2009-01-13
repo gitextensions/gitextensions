@@ -689,12 +689,35 @@ namespace GitCommands
                 GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
         }
 
-        static public List<Patch> GetStashedItems()
+        static public List<Patch> GetStashedItems(string stashName)
         {
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "stash show -p"), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "stash show -p " + stashName), false);
 
             return patchManager.patches;
+        }
+
+        static public List<GitStash> GetStashes()
+        {
+            string [] list = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "stash list").Split('\n');
+
+
+            List<GitStash> stashes = new List<GitStash>();
+            foreach (string stashString in list)
+            {
+                if (stashString.IndexOf(':') > 0)
+                {
+                    GitStash stash = new GitStash();
+                    stash.Name = stashString.Substring(0, stashString.IndexOf(':')).Trim();
+
+                    if (stashString.IndexOf(':') + 1 < stashString.Length)
+                        stash.Message = stashString.Substring(stashString.IndexOf(':') + 1).Trim();
+
+                    stashes.Add(stash);
+                }
+            }
+
+            return stashes;
         }
 
         static public Patch GetSingleDiff(string from, string to, string filter)
@@ -905,7 +928,16 @@ namespace GitCommands
 
         static public List<GitItemStatus> GitStatus()
         {
-            string status = RunCmd(Settings.GitDir + "git.cmd", "status --untracked=all");
+            return GitStatus(true);
+        }
+
+        static public List<GitItemStatus> GitStatus(bool untracked)
+        {
+            string status;
+            if (untracked)
+                status = RunCmd(Settings.GitDir + "git.cmd", "status --untracked=all");
+            else
+                status = RunCmd(Settings.GitDir + "git.cmd", "status");
 
             string[] statusStrings = status.Split('\n');
 

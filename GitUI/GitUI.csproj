@@ -414,6 +414,7 @@
     <None Include="Icons\82.png" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
+    <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
     <None Include="Resources\Donate.jpg" />
     <None Include="Resources\Cow1.png" />
     <None Include="Resources\Cow.png" />

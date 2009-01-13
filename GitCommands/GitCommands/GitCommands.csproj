@@ -56,6 +56,7 @@
     <Compile Include="Git\GitRevision.cs" />
     <Compile Include="Git\GitHead.cs" />
     <Compile Include="Git\GitItem.cs" />
+    <Compile Include="Git\GitStash.cs" />
     <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Lane.cs" />

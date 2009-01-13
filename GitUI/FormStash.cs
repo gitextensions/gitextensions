@@ -21,27 +21,45 @@ namespace GitUI
         private void FormStash_Load(object sender, EventArgs e)
         {
             Initialize();
+            InitializeTracked();
+
         }
 
         private void Initialize()
         {
-            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus();
+            Stashes.Text = "";
+            StashMessage.Text = "";
+            Stashes.SelectedItem = null;
+            Stashes.DataSource = GitCommands.GitCommands.GetStashes();
+            Stashes.DisplayMember = "Name";
+            if (Stashes.Items.Count > 0)
+                Stashes.SelectedIndex = 0;
 
-            List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
+            InitializeSoft();
+        }
+
+        private void InitializeSoft()
+        {
+            Stashed.DisplayMember = "FileNameA";
+            Stashed.DataSource = GitCommands.GitCommands.GetStashedItems(Stashes.Text);
+        }
+
+        private void InitializeTracked()
+        {
+            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus(false);
+
+            //List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
             List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
             foreach (GitItemStatus itemStatus in itemStatusList)
             {
-                if (itemStatus.IsTracked == false)
-                    untrackedItemStatus.Add(itemStatus);
-                else
-                    trackedItemStatus.Add(itemStatus);
+                //if (itemStatus.IsTracked == false)
+                //    untrackedItemStatus.Add(itemStatus);
+                //else
+                trackedItemStatus.Add(itemStatus);
             }
 
             Changes.DisplayMember = "Name";
             Changes.DataSource = trackedItemStatus;
-
-            Stashed.DisplayMember = "FileNameA";
-            Stashed.DataSource = GitCommands.GitCommands.GetStashedItems();
         }
 
         private void Stashed_SelectedIndexChanged(object sender, EventArgs e)
@@ -101,29 +119,33 @@ namespace GitUI
 
         private void Stash_Click(object sender, EventArgs e)
         {
+            /*
             if (GitCommands.GitCommands.GetStashedItems().Count > 0)
             {
                 MessageBox.Show("There are allready stashed items.\nStashing now will overwrite current stash, aborting.", "Error");
                 return;
             }            
+            */
 
             //MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
             new FormProcess("stash save");
             NeedRefresh = true;
             Initialize();
+            InitializeTracked();
+
         }
 
         private void Clear_Click(object sender, EventArgs e)
         {
             //MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
-            new FormProcess("stash clear");
+            new FormProcess("stash drop " + Stashes.Text);
             NeedRefresh = true;
             Initialize();
         }
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            new FormProcess("stash apply");
+            new FormProcess("stash apply " + Stashes.Text);
             //MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
@@ -138,6 +160,23 @@ namespace GitUI
                 }
             }
             Initialize();
+            InitializeTracked();
+
+        }
+
+        private void Stashes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            InitializeSoft();
+            if (Stashes.SelectedItem != null)
+            {
+                StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
+            }
+        }
+
+        private void Refresh_Click(object sender, EventArgs e)
+        {
+            Initialize();
+            InitializeTracked();
         }
     }
 }
