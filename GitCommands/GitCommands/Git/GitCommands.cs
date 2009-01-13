@@ -309,6 +309,16 @@ namespace GitCommands
             return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));
         }
 
+        static public string GetMergeMessage()
+        {
+            string file = Settings.WorkingDir + ".git\\MERGE_MSG";
+
+            if (File.Exists(file))
+                return File.ReadAllText(file);
+
+            return "";
+        }
+
         static public void RunGitK()
         {
             Run("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "gitk\" --all\"");
@@ -616,6 +626,12 @@ namespace GitCommands
             return result;
         }
 
+        public static Process UpdateRemotes()
+        {
+            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" remote update\"");
+        }
+
+
         public static string RemoveRemote(string name)
         {
             return RunCmd(Settings.GitDir + "git.cmd", "remote rm \"" + name + "\"");
@@ -660,9 +676,14 @@ namespace GitCommands
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --get \"" + setting + "\"").Trim();
         }
 
-        static public void SetSetting(string setting, string value)
+        static public void UnSetSetting(string setting)
         {
             GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --unset-all \"" + setting + "\"").Trim();
+        }
+
+        static public void SetSetting(string setting, string value)
+        {
+            UnSetSetting(setting);
 
             if (!string.IsNullOrEmpty(value))
                 GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config \"" + setting + "\" \"" + value.Trim() + "\"").Trim();

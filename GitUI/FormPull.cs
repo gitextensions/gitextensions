@@ -68,10 +68,13 @@ namespace GitUI
                 }
                 Branches.DisplayMember = "Name";
                 List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false);
-                
+
                 GitCommands.GitHead allHead = new GitCommands.GitHead();
                 allHead.Name = "*";
                 heads.Insert(0, allHead);
+                GitCommands.GitHead noHead = new GitCommands.GitHead();
+                noHead.Name = "";
+                heads.Insert(0, noHead);
                 Branches.DataSource = heads;
             }
             finally

@@ -27,6 +27,7 @@ namespace GitUI
         {
             Initialize();
             this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
+            Message.Text = GitCommands.GitCommands.GetMergeMessage();
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GitUI
 {
@@ -18,11 +19,26 @@ namespace GitUI
         private void FormRemotes_Load(object sender, EventArgs e)
         {
             Initialize();
-            RemoteBranches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
+            List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false, true);
+            RemoteBranches.DataSource = heads;
             foreach (object item in GitCommands.GitCommands.GetRemotes())
             {
                 RemoteCombo.Items.Add(item);
             }
+            mergeWithDataGridViewTextBoxColumn.Items.Add("");
+            foreach (GitCommands.GitHead head in heads)
+            {
+                mergeWithDataGridViewTextBoxColumn.Items.Add(head.Name);
+            }
+            RemoteBranches.DataError += new DataGridViewDataErrorEventHandler(RemoteBranches_DataError);
+        }
+
+        void RemoteBranches_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
+            MessageBox.Show(string.Format("Invalid ´{1}´ found for branch ´{0}´.\nValue has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText));
+
+            RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }
 
         private void Initialize()
@@ -99,6 +115,12 @@ namespace GitUI
             }
 
             Initialize();
+        }
+
+        private void UpdateBranch_Click(object sender, EventArgs e)
+        {
+            Process process = GitCommands.GitCommands.UpdateRemotes();
+            process.WaitForExit();
         }
     }
 }

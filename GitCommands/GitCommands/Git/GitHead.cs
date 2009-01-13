@@ -30,7 +30,40 @@ namespace GitCommands
             }
             set
             {
-                GitCommands.SetSetting("branch." + Name + ".remote", value);
+                if (string.IsNullOrEmpty(value))
+                {
+                    GitCommands.UnSetSetting("branch." + Name + ".remote");
+                }
+                else
+                {
+                    GitCommands.SetSetting("branch." + Name + ".remote", value);
+
+                    if (MergeWith == "")
+                        MergeWith = Name;
+                }
+            }
+        }
+
+        public string MergeWith
+        {
+            get
+            {
+                string merge = GitCommands.GetSetting("branch." + Name + ".merge");
+                if (merge.StartsWith("refs/heads/"))
+                    return merge.Substring(11);
+
+                return merge;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    GitCommands.UnSetSetting("branch." + Name + ".merge");
+                }
+                else
+                {
+                    GitCommands.SetSetting("branch." + Name + ".merge", "refs/heads/" + value);
+                }
             }
         }
 
