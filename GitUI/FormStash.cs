@@ -48,13 +48,13 @@ namespace GitUI
         {
             List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus(false);
 
-            //List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
+            List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
             List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
             foreach (GitItemStatus itemStatus in itemStatusList)
             {
-                //if (itemStatus.IsTracked == false)
-                //    untrackedItemStatus.Add(itemStatus);
-                //else
+                if (itemStatus.IsTracked == false)
+                    untrackedItemStatus.Add(itemStatus);
+                else
                 trackedItemStatus.Add(itemStatus);
             }
 

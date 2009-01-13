@@ -44,16 +44,16 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.RemoteBranches = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UpdateBranch = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.RemoteBranches = new System.Windows.Forms.DataGridView();
             this.BranchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RemoteCombo = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.UpdateBranch = new System.Windows.Forms.Button();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -61,10 +61,10 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -220,54 +220,6 @@
             this.tabPage2.Text = "Default pull behaviour (fetch & merge)";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // RemoteBranches
-            // 
-            this.RemoteBranches.AllowUserToAddRows = false;
-            this.RemoteBranches.AllowUserToDeleteRows = false;
-            this.RemoteBranches.AutoGenerateColumns = false;
-            this.RemoteBranches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.RemoteBranches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.RemoteBranches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.BranchName,
-            this.RemoteCombo,
-            this.mergeWithDataGridViewTextBoxColumn});
-            this.RemoteBranches.DataSource = this.gitHeadBindingSource;
-            this.RemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RemoteBranches.Location = new System.Drawing.Point(0, 0);
-            this.RemoteBranches.Name = "RemoteBranches";
-            this.RemoteBranches.Size = new System.Drawing.Size(592, 174);
-            this.RemoteBranches.TabIndex = 0;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Branch";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // BName
-            // 
-            this.BName.DataPropertyName = "Name";
-            this.BName.HeaderText = "Name";
-            this.BName.Name = "BName";
-            this.BName.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // UpdateBranch
-            // 
-            this.UpdateBranch.Location = new System.Drawing.Point(425, 3);
-            this.UpdateBranch.Name = "UpdateBranch";
-            this.UpdateBranch.Size = new System.Drawing.Size(167, 23);
-            this.UpdateBranch.TabIndex = 10;
-            this.UpdateBranch.Text = "Update all remote branch info";
-            this.UpdateBranch.UseVisualStyleBackColor = true;
-            this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranch_Click);
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -287,9 +239,23 @@
             this.splitContainer2.SplitterDistance = 174;
             this.splitContainer2.TabIndex = 11;
             // 
-            // gitHeadBindingSource
+            // RemoteBranches
             // 
-            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
+            this.RemoteBranches.AllowUserToAddRows = false;
+            this.RemoteBranches.AllowUserToDeleteRows = false;
+            this.RemoteBranches.AutoGenerateColumns = false;
+            this.RemoteBranches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.RemoteBranches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.RemoteBranches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.BranchName,
+            this.RemoteCombo,
+            this.mergeWithDataGridViewTextBoxColumn});
+            this.RemoteBranches.DataSource = this.gitHeadBindingSource;
+            this.RemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RemoteBranches.Location = new System.Drawing.Point(0, 0);
+            this.RemoteBranches.Name = "RemoteBranches";
+            this.RemoteBranches.Size = new System.Drawing.Size(592, 174);
+            this.RemoteBranches.TabIndex = 0;
             // 
             // BranchName
             // 
@@ -318,6 +284,40 @@
             this.mergeWithDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.mergeWithDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // gitHeadBindingSource
+            // 
+            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
+            // 
+            // UpdateBranch
+            // 
+            this.UpdateBranch.Location = new System.Drawing.Point(425, 3);
+            this.UpdateBranch.Name = "UpdateBranch";
+            this.UpdateBranch.Size = new System.Drawing.Size(167, 23);
+            this.UpdateBranch.TabIndex = 10;
+            this.UpdateBranch.Text = "Update all remote branch info";
+            this.UpdateBranch.UseVisualStyleBackColor = true;
+            this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranch_Click);
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Branch";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // BName
+            // 
+            this.BName.DataPropertyName = "Name";
+            this.BName.HeaderText = "Name";
+            this.BName.Name = "BName";
+            this.BName.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -337,10 +337,10 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).EndInit();
             this.ResumeLayout(false);
 
