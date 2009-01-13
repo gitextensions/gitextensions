@@ -498,11 +498,13 @@ namespace GitCommands
 
         static public Process PushAsync(string path, string branch, bool all)
         {
+            branch = branch.Replace(" ", "");
+
             if (all)
                 return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push --all \"" + path.Trim() + "\"\"");
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\" \"" + branch + "\"\"");
+                    return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\" " + branch + "\"");
 
 
             return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\"\"");
@@ -511,20 +513,20 @@ namespace GitCommands
         static public string Fetch(string remote, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
-
+            branch = branch.Replace(" ", "");
 
             string localbranch;
 
             if (string.IsNullOrEmpty(branch))
                 localbranch = "";
             else
-                localbranch = "\"refs/heads/" + branch + "\"";
+                localbranch = "+refs/heads/" + branch + "";
 
             string remotebranch;
             if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
                 remotebranch = "";
             else
-                remotebranch = ":" + "\"refs/remotes/" + remote.Trim() + "/" + branch + "\"";
+                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
 
 
 
@@ -538,6 +540,8 @@ namespace GitCommands
         static public string Pull(string remote, string branch, bool rebase)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
+            
+            branch = branch.Replace(" ", "");
 
             string rebaseOption = "";
             if (rebase)
@@ -548,13 +552,13 @@ namespace GitCommands
             if (string.IsNullOrEmpty(branch))
                 localbranch = "";
             else
-                localbranch = "\"refs/heads/" + branch + "\"";
+                localbranch = "+refs/heads/" + branch + "";
 
             string remotebranch;
             if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
                 remotebranch = "";
             else
-                remotebranch = ":" + "\"refs/remotes/" + remote.Trim() + "/" + branch + "\"";
+                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
             
                 
 

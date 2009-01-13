@@ -22,6 +22,18 @@ namespace GitCommands
         public bool IsRemote { get; set; }
         public bool IsOther { get; set; }
 
+        public string Remote 
+        {
+            get
+            {
+                return GitCommands.GetSetting("branch." + Name + ".remote");
+            }
+            set
+            {
+                GitCommands.SetSetting("branch." + Name + ".remote", value);
+            }
+        }
+
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems
         {

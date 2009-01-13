@@ -18,6 +18,11 @@ namespace GitUI
         private void FormRemotes_Load(object sender, EventArgs e)
         {
             Initialize();
+            RemoteBranches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
+            foreach (object item in GitCommands.GitCommands.GetRemotes())
+            {
+                RemoteCombo.Items.Add(item);
+            }
         }
 
         private void Initialize()

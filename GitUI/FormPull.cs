@@ -92,6 +92,12 @@ namespace GitUI
                 MessageBox.Show("Please select a remote repository");
                 return;
             }
+            if (!Fetch.Checked && Branches.Text == "*")
+            {
+                MessageBox.Show("You can only fetch all remote branches (*) whithout merge or rebase.\nIf you want to fetch all remote branches, choose fetch.\nIf you want to fetch and merge a branch, choose a specific branch.");
+                return;                
+            }
+
             RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
             string source;
