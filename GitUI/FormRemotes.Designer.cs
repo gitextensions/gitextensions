@@ -48,12 +48,12 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UpdateBranch = new System.Windows.Forms.Button();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.BranchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RemoteCombo = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.UpdateBranch = new System.Windows.Forms.Button();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,10 +62,10 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -217,7 +217,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(598, 214);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Remote branches";
+            this.tabPage2.Text = "Default pull behaviour (fetch & merge)";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // RemoteBranches
@@ -258,37 +258,6 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
-            // BranchName
-            // 
-            this.BranchName.DataPropertyName = "Name";
-            this.BranchName.HeaderText = "Branch name";
-            this.BranchName.Name = "BranchName";
-            this.BranchName.ReadOnly = true;
-            // 
-            // RemoteCombo
-            // 
-            this.RemoteCombo.DataPropertyName = "Remote";
-            this.RemoteCombo.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.RemoteCombo.DisplayStyleForCurrentCellOnly = true;
-            this.RemoteCombo.HeaderText = "Remote repository";
-            this.RemoteCombo.Name = "RemoteCombo";
-            this.RemoteCombo.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.RemoteCombo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // mergeWithDataGridViewTextBoxColumn
-            // 
-            this.mergeWithDataGridViewTextBoxColumn.DataPropertyName = "MergeWith";
-            this.mergeWithDataGridViewTextBoxColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.mergeWithDataGridViewTextBoxColumn.DisplayStyleForCurrentCellOnly = true;
-            this.mergeWithDataGridViewTextBoxColumn.HeaderText = "Default merge with";
-            this.mergeWithDataGridViewTextBoxColumn.Name = "mergeWithDataGridViewTextBoxColumn";
-            this.mergeWithDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.mergeWithDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // gitHeadBindingSource
-            // 
-            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
-            // 
             // UpdateBranch
             // 
             this.UpdateBranch.Location = new System.Drawing.Point(425, 3);
@@ -318,6 +287,37 @@
             this.splitContainer2.SplitterDistance = 174;
             this.splitContainer2.TabIndex = 11;
             // 
+            // gitHeadBindingSource
+            // 
+            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
+            // 
+            // BranchName
+            // 
+            this.BranchName.DataPropertyName = "Name";
+            this.BranchName.HeaderText = "Local branch name";
+            this.BranchName.Name = "BranchName";
+            this.BranchName.ReadOnly = true;
+            // 
+            // RemoteCombo
+            // 
+            this.RemoteCombo.DataPropertyName = "Remote";
+            this.RemoteCombo.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.RemoteCombo.DisplayStyleForCurrentCellOnly = true;
+            this.RemoteCombo.HeaderText = "Remote repository";
+            this.RemoteCombo.Name = "RemoteCombo";
+            this.RemoteCombo.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.RemoteCombo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // mergeWithDataGridViewTextBoxColumn
+            // 
+            this.mergeWithDataGridViewTextBoxColumn.DataPropertyName = "MergeWith";
+            this.mergeWithDataGridViewTextBoxColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.mergeWithDataGridViewTextBoxColumn.DisplayStyleForCurrentCellOnly = true;
+            this.mergeWithDataGridViewTextBoxColumn.HeaderText = "Default merge with";
+            this.mergeWithDataGridViewTextBoxColumn.Name = "mergeWithDataGridViewTextBoxColumn";
+            this.mergeWithDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.mergeWithDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -338,10 +338,10 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -367,10 +367,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Button UpdateBranch;
         private System.Windows.Forms.DataGridViewTextBoxColumn BranchName;
         private System.Windows.Forms.DataGridViewComboBoxColumn RemoteCombo;
         private System.Windows.Forms.DataGridViewComboBoxColumn mergeWithDataGridViewTextBoxColumn;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Button UpdateBranch;
     }
 }
