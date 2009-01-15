@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using System.Text.RegularExpressions;
 using PatchApply;
+using System.IO;
 
 namespace GitUI
 {
@@ -44,6 +45,7 @@ namespace GitUI
         }
 
         private ToolStripItem warning;
+        private ToolStripItem rebase;
 
         protected void Initialize()
         {
@@ -67,7 +69,26 @@ namespace GitUI
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
 
-            if (GitCommands.Settings.ValidWorkingDir() && GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            if (GitCommands.Settings.ValidWorkingDir() && Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            {
+                if (rebase == null)
+                {
+                    rebase = ToolStrip.Items.Add("You are in the middle of a rebase");
+                    rebase.BackColor = Color.Salmon;
+                    rebase.Click += new EventHandler(rebase_Click);
+                }
+            }
+            else
+            {
+                if (rebase != null)
+                {
+                    rebase.Click -= new EventHandler(warning_Click);
+                    ToolStrip.Items.Remove(rebase);
+                    rebase = null;
+                }
+            }
+
+            if (GitCommands.Settings.ValidWorkingDir() && GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
             {
                 if (warning == null)
                 {
@@ -85,6 +106,13 @@ namespace GitUI
                     warning = null;
                 }
             }
+
+        }
+
+        void rebase_Click(object sender, EventArgs e)
+        {
+            new FormRebase().ShowDialog();
+            Initialize();
         }
 
 
@@ -325,26 +353,14 @@ namespace GitUI
 
         private void runMergetoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
+            new FormResolveConflicts().ShowDialog();
             Initialize();
         }
 
         void warning_Click(object sender, EventArgs e)
         {
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-            {
-                if (MessageBox.Show("There are unresolved mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
-                    if (MessageBox.Show("When all mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        FormCommit frm = new FormCommit();
-                        frm.ShowDialog();
-                    }
-                    Initialize();
-                }
-            }
-            
+            if (MergeConflictHandler.HandleMergeConflicts())
+                Initialize();
         }
 
 

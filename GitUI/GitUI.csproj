@@ -229,6 +229,12 @@
     <Compile Include="FormResetCurrentBranch.Designer.cs">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormResolveConflicts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormResolveConflicts.Designer.cs">
+      <DependentUpon>FormResolveConflicts.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSettigns.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -259,6 +265,7 @@
     <Compile Include="GitLogForm.Designer.cs">
       <DependentUpon>GitLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="MergePatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -375,6 +382,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormResolveConflicts.resx">
+      <DependentUpon>FormResolveConflicts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>

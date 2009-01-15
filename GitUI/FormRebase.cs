@@ -32,7 +32,7 @@ namespace GitUI
             if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
             {
                 Branches.Enabled = false;
-                Ok.Enabled = true;
+                Ok.Enabled = false;
                 AddFiles.Enabled = true;
                 Resolved.Enabled = true;
                 Mergetool.Enabled = true;
@@ -42,26 +42,59 @@ namespace GitUI
             else
             {
                 Branches.Enabled = true;
-                Ok.Enabled = false;
+                Ok.Enabled = true;
                 AddFiles.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
             }
+
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                if (MessageBox.Show("There are mergeconflicts and a rebase is progress, solve conflicts?", "Solve conflics", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Mergetool_Click(null, null);
+                }
+            }
+            else
+                if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+                {
+                    if (MessageBox.Show("There are no mergeconflicts and a rebase is progress, continue rebase?\n\nIf you get this dialog a few times, choose no and read output.", "Continue rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Resolved_Click(null, null);
+                    }
+                }
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
 
-            if (MessageBox.Show("Resolved all conflicts? Continue rebase?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                Output.Text += "\n";
-                Output.Text += GitCommands.GitCommands.Resolved();
+                if (MessageBox.Show("You have resolved all conflicts! Continue rebase?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Output.Text += "\n";
+                    Output.Text += GitCommands.GitCommands.ContinueRebase();
+                    EnableButtons();
+                }
+            }
+            else
+            {
+                StringBuilder msg = new StringBuilder();
+                msg.Append("Not all mergeconflicts are solved, please solve the following files manually:\n");
+
+                foreach(GitCommands.GitItem file in GitCommands.GitCommands.GetConflictedFiles())
+                {
+                    msg.Append(file.FileName);
+                    msg.Append("\n");
+                }
+
+                MessageBox.Show(msg.ToString(), "Unsolved conflicts", MessageBoxButtons.OK);
+                new FormResolveConflicts().ShowDialog();
                 EnableButtons();
             }
-
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
@@ -89,6 +122,24 @@ namespace GitUI
             Output.Text += "\n";
             Output.Text += GitCommands.GitCommands.AbortRebase();
             EnableButtons();
+        }
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(Branches.Text))
+            {
+                MessageBox.Show("Please select a branch");
+                return;
+            }
+
+            string result = GitCommands.GitCommands.Rebase(Branches.Text);
+            Output.Text = result;
+            if (result.Contains("Rebase failed"))
+            {
+            }
+            EnableButtons();
+
+
         }
     }
 }

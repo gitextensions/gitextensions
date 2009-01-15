@@ -309,6 +309,30 @@ namespace GitCommands
             return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));
         }
 
+        static public List<GitItem> GetConflictedFiles()
+        {
+            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard").Split('\n');
+
+            List<GitItem> unmergedFiles = new List<GitItem>();
+
+            string fileName = "";
+            foreach (string file in unmerged)
+            {
+                if (file.LastIndexOfAny(new char[] { ' ', '\t' })> 0)
+                {
+                    if (file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1) != fileName)
+                    {
+                        fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
+                        GitItem gitFile = new GitItem();
+                        gitFile.FileName = fileName;
+                        unmergedFiles.Add(gitFile);
+                    }
+                }
+            }
+
+            return unmergedFiles;
+        } 
+
         static public string GetMergeMessage()
         {
             string file = Settings.WorkingDir + ".git\\MERGE_MSG";
@@ -594,6 +618,16 @@ namespace GitCommands
 
             return result;
         }
+
+        static public string Rebase(string branch)
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase \"" + branch + "\"");
+
+            return result;
+        }
+
 
         static public string AbortRebase()
         {

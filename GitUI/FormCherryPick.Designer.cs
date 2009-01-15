@@ -32,9 +32,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
-            this.CherryPick = new System.Windows.Forms.Button();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
+            this.CherryPick = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -60,7 +60,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.AutoCommit);
             this.splitContainer1.Panel2.Controls.Add(this.CherryPick);
             this.splitContainer1.Size = new System.Drawing.Size(638, 387);
-            this.splitContainer1.SplitterDistance = 351;
+            this.splitContainer1.SplitterDistance = 352;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -78,7 +78,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.RevisionGrid);
-            this.splitContainer2.Size = new System.Drawing.Size(638, 351);
+            this.splitContainer2.Size = new System.Drawing.Size(638, 352);
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -92,22 +92,16 @@
             this.label1.Text = "Select a commit you want to cherry pick. The commit will be recommitted on top of" +
                 " the current head.";
             // 
-            // CherryPick
-            // 
-            this.CherryPick.Location = new System.Drawing.Point(525, 3);
-            this.CherryPick.Name = "CherryPick";
-            this.CherryPick.Size = new System.Drawing.Size(110, 23);
-            this.CherryPick.TabIndex = 0;
-            this.CherryPick.Text = "Cherry pick";
-            this.CherryPick.UseVisualStyleBackColor = true;
-            this.CherryPick.Click += new System.EventHandler(this.CherryPick_Click);
-            // 
             // RevisionGrid
             // 
+            this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(638, 322);
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RevisionGrid.Size = new System.Drawing.Size(638, 323);
             this.RevisionGrid.TabIndex = 0;
             // 
             // AutoCommit
@@ -121,6 +115,16 @@
             this.AutoCommit.TabIndex = 1;
             this.AutoCommit.Text = "Automatically create a commit  when there are no merge conflicts";
             this.AutoCommit.UseVisualStyleBackColor = true;
+            // 
+            // CherryPick
+            // 
+            this.CherryPick.Location = new System.Drawing.Point(525, 3);
+            this.CherryPick.Name = "CherryPick";
+            this.CherryPick.Size = new System.Drawing.Size(110, 23);
+            this.CherryPick.TabIndex = 0;
+            this.CherryPick.Text = "Cherry pick";
+            this.CherryPick.UseVisualStyleBackColor = true;
+            this.CherryPick.Click += new System.EventHandler(this.CherryPick_Click);
             // 
             // FormCherryPick
             // 
