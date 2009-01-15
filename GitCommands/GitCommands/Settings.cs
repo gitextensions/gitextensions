@@ -8,6 +8,20 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static bool showAllBranches = true;
+        public static bool ShowAllBranches
+        {
+            get
+            {
+                return showAllBranches;
+            }
+            set
+            {
+                showAllBranches = value;
+            }
+        }
+
+
         private static string gitDir = "";
         public static string GitDir 
         {
@@ -23,6 +37,23 @@ namespace GitCommands
 
             }
         }
+
+        private static string gitBinDir = "";
+        public static string GitBinDir
+        {
+            get
+            {
+                return gitBinDir;
+            }
+            set
+            {
+                gitBinDir = value;
+                if (gitBinDir.Length > 0 && gitBinDir[gitBinDir.Length - 1] != '\\')
+                    gitBinDir += "\\";
+
+            }
+        }
+
 
         private static int maxCommits = 2000;
         public static int MaxCommits

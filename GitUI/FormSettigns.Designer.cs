@@ -51,6 +51,9 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.BrowseGitPath = new System.Windows.Forms.Button();
+            this.GitPath = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
@@ -66,9 +69,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
-            this.GitPath = new System.Windows.Forms.TextBox();
-            this.BrowseGitPath = new System.Windows.Forms.Button();
+            this.BrowseGitBinPath = new System.Windows.Forms.Button();
+            this.GitBinPath = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.GitBinFound = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -194,11 +198,12 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(663, 240);
+            this.tabControl1.Size = new System.Drawing.Size(663, 266);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.GitBinFound);
             this.tabPage3.Controls.Add(this.Rescan);
             this.tabPage3.Controls.Add(this.CheckAtStartup);
             this.tabPage3.Controls.Add(this.label11);
@@ -209,25 +214,25 @@
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(655, 214);
+            this.tabPage3.Size = new System.Drawing.Size(655, 240);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // Rescan
             // 
-            this.Rescan.Location = new System.Drawing.Point(576, 188);
+            this.Rescan.Location = new System.Drawing.Point(549, 214);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(75, 23);
+            this.Rescan.Size = new System.Drawing.Size(100, 23);
             this.Rescan.TabIndex = 8;
-            this.Rescan.Text = "Rescan";
+            this.Rescan.Text = "Rescan and save";
             this.Rescan.UseVisualStyleBackColor = true;
             this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
             // 
             // CheckAtStartup
             // 
             this.CheckAtStartup.AutoSize = true;
-            this.CheckAtStartup.Location = new System.Drawing.Point(384, 192);
+            this.CheckAtStartup.Location = new System.Drawing.Point(368, 218);
             this.CheckAtStartup.Name = "CheckAtStartup";
             this.CheckAtStartup.Size = new System.Drawing.Size(182, 17);
             this.CheckAtStartup.TabIndex = 7;
@@ -247,71 +252,79 @@
             // 
             // GitFound
             // 
+            this.GitFound.BackColor = System.Drawing.Color.Gray;
             this.GitFound.FlatAppearance.BorderSize = 0;
             this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitFound.Location = new System.Drawing.Point(8, 145);
+            this.GitFound.Location = new System.Drawing.Point(9, 29);
             this.GitFound.Name = "GitFound";
             this.GitFound.Size = new System.Drawing.Size(631, 23);
             this.GitFound.TabIndex = 5;
             this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.GitFound.UseVisualStyleBackColor = true;
+            this.GitFound.UseVisualStyleBackColor = false;
             this.GitFound.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // DiffTool
             // 
+            this.DiffTool.BackColor = System.Drawing.Color.Gray;
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(8, 116);
+            this.DiffTool.Location = new System.Drawing.Point(9, 144);
             this.DiffTool.Name = "DiffTool";
             this.DiffTool.Size = new System.Drawing.Size(631, 23);
             this.DiffTool.TabIndex = 4;
             this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DiffTool.UseVisualStyleBackColor = true;
+            this.DiffTool.UseVisualStyleBackColor = false;
             this.DiffTool.Click += new System.EventHandler(this.DiffTool_Click);
             // 
             // UserNameSet
             // 
+            this.UserNameSet.BackColor = System.Drawing.Color.Gray;
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UserNameSet.Location = new System.Drawing.Point(8, 87);
+            this.UserNameSet.Location = new System.Drawing.Point(9, 115);
             this.UserNameSet.Name = "UserNameSet";
             this.UserNameSet.Size = new System.Drawing.Size(631, 23);
             this.UserNameSet.TabIndex = 3;
             this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.UserNameSet.UseVisualStyleBackColor = true;
+            this.UserNameSet.UseVisualStyleBackColor = false;
             this.UserNameSet.Click += new System.EventHandler(this.UserNameSet_Click);
             // 
             // ShellExtensionsRegistered
             // 
+            this.ShellExtensionsRegistered.BackColor = System.Drawing.Color.Gray;
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(8, 58);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 86);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
             this.ShellExtensionsRegistered.Size = new System.Drawing.Size(631, 23);
             this.ShellExtensionsRegistered.TabIndex = 2;
             this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ShellExtensionsRegistered.UseVisualStyleBackColor = true;
+            this.ShellExtensionsRegistered.UseVisualStyleBackColor = false;
             this.ShellExtensionsRegistered.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
             // GitExtensionsInstall
             // 
+            this.GitExtensionsInstall.BackColor = System.Drawing.Color.Gray;
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(8, 29);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 173);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
             this.GitExtensionsInstall.Size = new System.Drawing.Size(631, 23);
             this.GitExtensionsInstall.TabIndex = 1;
             this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.GitExtensionsInstall.UseVisualStyleBackColor = true;
+            this.GitExtensionsInstall.UseVisualStyleBackColor = false;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.BrowseGitBinPath);
+            this.TabPageGitExtensions.Controls.Add(this.GitBinPath);
+            this.TabPageGitExtensions.Controls.Add(this.label14);
             this.TabPageGitExtensions.Controls.Add(this.BrowseGitPath);
             this.TabPageGitExtensions.Controls.Add(this.GitPath);
             this.TabPageGitExtensions.Controls.Add(this.label13);
@@ -325,6 +338,33 @@
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // BrowseGitPath
+            // 
+            this.BrowseGitPath.Location = new System.Drawing.Point(571, 6);
+            this.BrowseGitPath.Name = "BrowseGitPath";
+            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitPath.TabIndex = 5;
+            this.BrowseGitPath.Text = "Browse";
+            this.BrowseGitPath.UseVisualStyleBackColor = true;
+            this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
+            // 
+            // GitPath
+            // 
+            this.GitPath.Location = new System.Drawing.Point(305, 10);
+            this.GitPath.Name = "GitPath";
+            this.GitPath.Size = new System.Drawing.Size(242, 20);
+            this.GitPath.TabIndex = 4;
+            this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 14);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(273, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Path to git.cmd (leave empty when git.cmd is in the path)";
+            // 
             // MaxCommits
             // 
             this.MaxCommits.Increment = new decimal(new int[] {
@@ -332,7 +372,7 @@
             0,
             0,
             0});
-            this.MaxCommits.Location = new System.Drawing.Point(305, 46);
+            this.MaxCommits.Location = new System.Drawing.Point(305, 82);
             this.MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -350,7 +390,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 46);
+            this.label12.Location = new System.Drawing.Point(8, 82);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 39);
             this.label12.TabIndex = 0;
@@ -477,8 +517,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(663, 273);
-            this.splitContainer1.SplitterDistance = 240;
+            this.splitContainer1.Size = new System.Drawing.Size(663, 299);
+            this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -491,38 +531,50 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // label13
+            // BrowseGitBinPath
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 14);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(273, 13);
-            this.label13.TabIndex = 3;
-            this.label13.Text = "Path to git.cmd (leave empty when git.cmd is in the path)";
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(571, 32);
+            this.BrowseGitBinPath.Name = "BrowseGitBinPath";
+            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitBinPath.TabIndex = 8;
+            this.BrowseGitBinPath.Text = "Browse";
+            this.BrowseGitBinPath.UseVisualStyleBackColor = true;
             // 
-            // GitPath
+            // GitBinPath
             // 
-            this.GitPath.Location = new System.Drawing.Point(305, 10);
-            this.GitPath.Name = "GitPath";
-            this.GitPath.Size = new System.Drawing.Size(242, 20);
-            this.GitPath.TabIndex = 4;
-            this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
+            this.GitBinPath.Location = new System.Drawing.Point(305, 36);
+            this.GitBinPath.Name = "GitBinPath";
+            this.GitBinPath.Size = new System.Drawing.Size(242, 20);
+            this.GitBinPath.TabIndex = 7;
             // 
-            // BrowseGitPath
+            // label14
             // 
-            this.BrowseGitPath.Location = new System.Drawing.Point(571, 6);
-            this.BrowseGitPath.Name = "BrowseGitPath";
-            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
-            this.BrowseGitPath.TabIndex = 5;
-            this.BrowseGitPath.Text = "Browse";
-            this.BrowseGitPath.UseVisualStyleBackColor = true;
-            this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 40);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(267, 13);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "Path to git.exe (leave empty when git.exe is in the path)";
+            // 
+            // GitBinFound
+            // 
+            this.GitBinFound.BackColor = System.Drawing.Color.Gray;
+            this.GitBinFound.FlatAppearance.BorderSize = 0;
+            this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitBinFound.Location = new System.Drawing.Point(9, 58);
+            this.GitBinFound.Name = "GitBinFound";
+            this.GitBinFound.Size = new System.Drawing.Size(631, 23);
+            this.GitBinFound.TabIndex = 9;
+            this.GitBinFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.GitBinFound.UseVisualStyleBackColor = false;
+            this.GitBinFound.Click += new System.EventHandler(this.GitBinFound_Click);
             // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 273);
+            this.ClientSize = new System.Drawing.Size(663, 299);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettigns";
@@ -588,6 +640,10 @@
         private System.Windows.Forms.Button BrowseGitPath;
         private System.Windows.Forms.TextBox GitPath;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button BrowseGitBinPath;
+        private System.Windows.Forms.TextBox GitBinPath;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button GitBinFound;
 
     }
 }

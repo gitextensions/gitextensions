@@ -211,6 +211,12 @@
     <Compile Include="FormPush.Designer.cs">
       <DependentUpon>FormPush.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormRebase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRebase.Designer.cs">
+      <DependentUpon>FormRebase.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRemotes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -360,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRebase.resx">
+      <DependentUpon>FormRebase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRemotes.resx">
       <DependentUpon>FormRemotes.cs</DependentUpon>

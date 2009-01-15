@@ -30,6 +30,7 @@ namespace GitUI
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             GitPath.Text = GitCommands.Settings.GitDir;
+            GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
             UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
             UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
@@ -55,10 +56,17 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
+            Save();
+
+            Close();
+        }
+
+        private void Save()
+        {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             GitCommands.Settings.GitDir = GitPath.Text;
-
+            GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
             GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
             GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
@@ -81,8 +89,6 @@ namespace GitUI
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
             GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
-
-            Close();
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -201,7 +207,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                 {
                     GitFound.BackColor = Color.LightSalmon;
-                    GitFound.Text = "git.cmd needs to be in the system path. To solve this problem you can add git.cmd to the path or reinstall git.";
+                    GitFound.Text = "git.cmd not found. To solve this problem you can set the correct path in settings.";
                     bValid = false;
                 }
                 else
@@ -209,6 +215,19 @@ namespace GitUI
                     GitFound.BackColor = Color.LightGreen;
                     GitFound.Text = "git.cmd is found on your computer.";
                 }
+
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+                {
+                    GitBinFound.BackColor = Color.LightSalmon;
+                    GitBinFound.Text = "git.exe not found. To solve this problem you can set the correct path in settings.";
+                    bValid = false;
+                }
+                else
+                {
+                    GitBinFound.BackColor = Color.LightGreen;
+                    GitBinFound.Text = "git.exe is found on your computer.";
+                }
+
             }
             catch
             {
@@ -279,6 +298,7 @@ namespace GitUI
             }
 
             MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitDir + "git.cmd", "Locate git.cmd");
+            GitPath.Text = GitCommands.Settings.GitDir;
         }
 
         private void FormSettigns_Load(object sender, EventArgs e)
@@ -296,6 +316,7 @@ namespace GitUI
 
         private void Rescan_Click(object sender, EventArgs e)
         {
+            Save();
             CheckSettings();
         }
 
@@ -318,6 +339,29 @@ namespace GitUI
         {
             GitCommands.Settings.GitDir = GitPath.Text;
             LoadSettings();
+        }
+
+        private void GitBinFound_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+            {
+                GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+                {
+                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
+                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
+                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+                    {
+                        GitCommands.Settings.GitBinDir = "";
+                        tabControl1.SelectTab("TabPageGitExtensions");
+                        return;
+                    }
+                }
+            }
+
+            MessageBox.Show("Command git.exe can be runned using: " + GitCommands.Settings.GitBinDir + "git.exe", "Locate git.exe");
+            GitBinPath.Text = GitCommands.Settings.GitBinDir;
+
         }
     }
 }

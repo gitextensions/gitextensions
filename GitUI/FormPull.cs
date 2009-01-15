@@ -6,6 +6,7 @@ using System.Drawing;
 
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GitUI
 {
@@ -120,6 +121,13 @@ namespace GitUI
             else if (Rebase.Checked)
                 /*Output.Text = */
                 GitCommands.GitCommands.Pull(source, Branches.Text, true);
+
+            //Rebase failed -> special 'rebase' merge conflict
+            if (Rebase.Checked && Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            {
+                new FormRebase().ShowDialog();
+                return;
+            }
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {

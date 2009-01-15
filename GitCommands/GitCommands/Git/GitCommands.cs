@@ -333,7 +333,7 @@ namespace GitCommands
 
         static public void RunBash()
         {
-            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c sh.exe --login -i");
+            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh.exe\" --login -i\"");
         }
 
         static public string Init(bool bare, bool shared)
@@ -575,6 +575,33 @@ namespace GitCommands
             GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull " + rebaseOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch + "\"");
 
             return "Done";
+        }
+
+        static public string ContinueRebase()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --continue");
+
+            return result;
+        }
+
+        static public string SkipRebase()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --skip");
+
+            return result;
+        }
+
+        static public string AbortRebase()
+        {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --abort");
+
+            return result;
         }
 
         static public string Resolved()

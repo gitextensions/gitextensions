@@ -505,6 +505,12 @@ namespace GitUI
             new FormRemotes().ShowDialog();
         }
 
+        private void rebaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormRebase().ShowDialog();
+            Initialize();
+        }
+
 
     }
 }

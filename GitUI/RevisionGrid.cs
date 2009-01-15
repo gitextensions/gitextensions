@@ -23,7 +23,11 @@ namespace GitUI
             //RefreshRevisions();
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
+
+            SetShowBranches();
         }
+
+        public string LogParam = "HEAD --all --boundary";
 
         void Revisions_SizeChanged(object sender, EventArgs e)
         {
@@ -103,6 +107,8 @@ namespace GitUI
         {
             try
             {
+                
+
                 Error.Visible = false;
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
@@ -205,6 +211,7 @@ namespace GitUI
             Revisions.Enabled = false;
             Loading.Visible = true;
             revisionGraphCommand = new RevisionGraph();
+            revisionGraphCommand.LogParam = LogParam;
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
@@ -252,7 +259,7 @@ namespace GitUI
                 if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
                 {
                     gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list --all --abbrev-commit | wc -l\"");
+                    gitCountCommitsCommand.CmdStartProcess("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + LogParam + " --abbrev-commit | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
                 Revisions.ResumeLayout();
@@ -692,6 +699,23 @@ namespace GitUI
         {
             ShowRemoteBranches.Checked = !ShowRemoteBranches.Checked;
             Revisions.Invalidate();
+        }
+
+        private void showAllBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showAllBranchesToolStripMenuItem.Checked = !showAllBranchesToolStripMenuItem.Checked;
+            Settings.ShowAllBranches = showAllBranchesToolStripMenuItem.Checked;
+            SetShowBranches();
+            RefreshRevisions();
+        }
+
+        private void SetShowBranches()
+        {
+            if (Settings.ShowAllBranches)
+                LogParam = "HEAD --all --boundary";
+            else
+                LogParam = "HEAD";
+
         }
     }
 }

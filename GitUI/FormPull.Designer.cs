@@ -118,10 +118,10 @@
             this.Rebase.AutoSize = true;
             this.Rebase.Location = new System.Drawing.Point(7, 41);
             this.Rebase.Name = "Rebase";
-            this.Rebase.Size = new System.Drawing.Size(408, 17);
+            this.Rebase.Size = new System.Drawing.Size(458, 30);
             this.Rebase.TabIndex = 1;
-            this.Rebase.Text = "Rebase remote branch to current branch, creates linear history. (use with caution" +
-                ")";
+            this.Rebase.Text = "Rebase remote branch to current branch, creates linear history. It is recommeded " +
+                "to choose \r\na remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -139,7 +139,7 @@
             // Fetch
             // 
             this.Fetch.AutoSize = true;
-            this.Fetch.Location = new System.Drawing.Point(7, 62);
+            this.Fetch.Location = new System.Drawing.Point(7, 75);
             this.Fetch.Name = "Fetch";
             this.Fetch.Size = new System.Drawing.Size(212, 17);
             this.Fetch.TabIndex = 2;

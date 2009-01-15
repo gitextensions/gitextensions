@@ -28,6 +28,7 @@ namespace GitCommands
         private char[] graphChars = new char[] { '*', '|', '*', '\\', '/' };
         public int LimitRevisions { get; set; }
 
+        public string LogParam = "HEAD --all";
 
         public void Execute()
         {
@@ -37,7 +38,7 @@ namespace GitCommands
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " --graph --all --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
+            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " --graph " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);
