@@ -279,5 +279,16 @@ namespace GitUI
                     Unstaged.Rows[LastRow].Selected = true;
             }
         }
+
+        private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0 && MessageBox.Show("Are you sure you want delete this file?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                Initialize();
+            }
+
+        }
     }
 }
