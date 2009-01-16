@@ -27,6 +27,20 @@ namespace GitUI
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
 
 
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                StringBuilder msg = new StringBuilder();
+                msg.Append("Not all mergeconflicts are solved, please solve the following files manually:\n");
+
+                foreach (GitCommands.GitItem file in GitCommands.GitCommands.GetConflictedFiles())
+                {
+                    msg.Append(file.FileName);
+                    msg.Append("\n");
+                }
+
+                MessageBox.Show(msg.ToString(), "Unsolved conflicts", MessageBoxButtons.OK);
+                new FormResolveConflicts().ShowDialog();
+            }
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
@@ -43,9 +57,9 @@ namespace GitUI
                 new FormResolveConflicts().ShowDialog();
             }
 
-            if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                if (MessageBox.Show("You are in the middle of a rebase, continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("You are in the middle of a rebase (or patch apply), continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormRebase().ShowDialog();
                 }

@@ -64,6 +64,7 @@
     <Compile Include="LaneGraphManager.cs" />
     <Compile Include="LanePoint.cs" />
     <Compile Include="Patch\Patch.cs" />
+    <Compile Include="Patch\PatchFile.cs" />
     <Compile Include="Patch\PatchManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pull.cs" />

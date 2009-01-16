@@ -278,6 +278,12 @@
     <Compile Include="OpenDirectory.Designer.cs">
       <DependentUpon>OpenDirectory.cs</DependentUpon>
     </Compile>
+    <Compile Include="PatchGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatchGrid.Designer.cs">
+      <DependentUpon>PatchGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -407,6 +413,9 @@
     <EmbeddedResource Include="OpenDirectory.resx">
       <DependentUpon>OpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PatchGrid.resx">
+      <DependentUpon>PatchGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -434,6 +443,7 @@
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
+    <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
     <None Include="Resources\Donate.jpg" />
     <None Include="Resources\Cow1.png" />
     <None Include="Resources\Cow.png" />

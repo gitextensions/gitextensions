@@ -236,12 +236,12 @@ namespace PatchApply
 
         }
 
-        public void LoadPatchFile()
+        public void LoadPatchFile(bool applyPatch)
         {
             try
             {
                 StreamReader re = File.OpenText(PatchFileName);
-                LoadPatchStream(re, true);
+                LoadPatchStream(re, applyPatch);
             }
             catch
             {

@@ -25,7 +25,7 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 BrowsePatch.Enabled = false;
                 Apply.Enabled = false;
@@ -134,7 +134,7 @@ namespace GitUI
 
         private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 if (MessageBox.Show("You are in the middle of a patch apply. You need to resolve, skip or abort this patch.\nAre you sure to exit now?", "Exit", MessageBoxButtons.YesNo) == DialogResult.No)
                 {

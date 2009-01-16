@@ -148,17 +148,8 @@ namespace GitUI
             new FormProcess("stash apply " + Stashes.Text);
             //MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
 
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-            {
-                if (MessageBox.Show("There are unresolved mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
-                    if (MessageBox.Show("When all mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        new FormCommit().ShowDialog();
-                    }
-                }
-            }
+            MergeConflictHandler.HandleMergeConflicts();
+
             Initialize();
             InitializeTracked();
 

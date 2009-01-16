@@ -14,6 +14,11 @@ namespace GitUI
         public FormRebase()
         {
             InitializeComponent();
+
+            if (!GitCommands.GitCommands.InTheMiddleOfRebase())
+            {
+                this.Height = 110;
+            }
         }
 
         private void FormRebase_Load(object sender, EventArgs e)
@@ -29,13 +34,19 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+
+
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
+                if (this.Height < 200)
+                    this.Height = 500;
+
                 Branches.Enabled = false;
                 Ok.Enabled = false;
+
                 AddFiles.Enabled = true;
-                Resolved.Enabled = true;
-                Mergetool.Enabled = true;
+                Resolved.Enabled = !GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
             }
@@ -58,7 +69,7 @@ namespace GitUI
                 }
             }
             else
-                if (Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+                if (GitCommands.GitCommands.InTheMiddleOfRebase())
                 {
                     if (MessageBox.Show("There are no mergeconflicts and a rebase is progress, continue rebase?\n\nIf you get this dialog a few times, choose no and read output.", "Continue rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
@@ -69,32 +80,8 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
-
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-            {
-                if (MessageBox.Show("You have resolved all conflicts! Continue rebase?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    Output.Text += "\n";
-                    Output.Text += GitCommands.GitCommands.ContinueRebase();
-                    EnableButtons();
-                }
-            }
-            else
-            {
-                StringBuilder msg = new StringBuilder();
-                msg.Append("Not all mergeconflicts are solved, please solve the following files manually:\n");
-
-                foreach(GitCommands.GitItem file in GitCommands.GitCommands.GetConflictedFiles())
-                {
-                    msg.Append(file.FileName);
-                    msg.Append("\n");
-                }
-
-                MessageBox.Show(msg.ToString(), "Unsolved conflicts", MessageBoxButtons.OK);
-                new FormResolveConflicts().ShowDialog();
-                EnableButtons();
-            }
+            new FormResolveConflicts().ShowDialog();
+            EnableButtons();
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
@@ -108,6 +95,7 @@ namespace GitUI
             Output.Text += "\n";
             Output.Text += GitCommands.GitCommands.ContinueRebase();
             EnableButtons();
+            patchGrid1.Initialize();
         }
 
         private void Skip_Click(object sender, EventArgs e)
@@ -115,6 +103,7 @@ namespace GitUI
             Output.Text += "\n";
             Output.Text += GitCommands.GitCommands.SkipRebase();
             EnableButtons();
+            patchGrid1.Initialize();
         }
 
         private void Abort_Click(object sender, EventArgs e)
@@ -122,6 +111,7 @@ namespace GitUI
             Output.Text += "\n";
             Output.Text += GitCommands.GitCommands.AbortRebase();
             EnableButtons();
+            patchGrid1.Initialize();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -133,13 +123,13 @@ namespace GitUI
             }
 
             string result = GitCommands.GitCommands.Rebase(Branches.Text);
-            Output.Text = result;
-            if (result.Contains("Rebase failed"))
-            {
-            }
+            if (result.Trim() == "Current branch a is up to date.")
+                MessageBox.Show("Current branch a is up to date.\nNothing to rebase.", "Rebase");
+            else
+                Output.Text = result;
+
             EnableButtons();
-
-
+            patchGrid1.Initialize();
         }
     }
 }

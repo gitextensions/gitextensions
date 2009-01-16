@@ -46,6 +46,7 @@
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.AutoStash = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -237,11 +238,23 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
             // 
+            // AutoStash
+            // 
+            this.AutoStash.AutoSize = true;
+            this.AutoStash.Location = new System.Drawing.Point(235, 269);
+            this.AutoStash.Name = "AutoStash";
+            this.AutoStash.Size = new System.Drawing.Size(202, 17);
+            this.AutoStash.TabIndex = 20;
+            this.AutoStash.Text = "Auto stash before pull, apply after pull";
+            this.AutoStash.UseVisualStyleBackColor = true;
+            this.AutoStash.CheckedChanged += new System.EventHandler(this.AutoStash_CheckedChanged);
+            // 
             // FormPull
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 295);
+            this.Controls.Add(this.AutoStash);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Stash);
@@ -260,6 +273,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -282,5 +296,6 @@
         private System.Windows.Forms.RadioButton PullFromUrl;
         private System.Windows.Forms.RadioButton PullFromRemote;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox AutoStash;
     }
 }

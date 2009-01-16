@@ -619,6 +619,89 @@ namespace GitCommands
             return result;
         }
 
+        static public string GetRebaseDir()
+        {
+            if (Directory.Exists(Settings.WorkingDir + ".git\\rebase-apply\\")) return Settings.WorkingDir + ".git\\rebase-apply\\";
+            if (Directory.Exists(Settings.WorkingDir + ".git\\rebase\\")) return Settings.WorkingDir + ".git\\rebase\\";
+            return "";
+
+        }
+
+        static public bool InTheMiddleOfRebase()
+        {
+            if (Directory.Exists(GetRebaseDir())) return true;
+
+            return false;
+        }
+
+        static public string GetNextRebasePatch()
+        {
+            string file = GetRebaseDir() + "next";
+            if (File.Exists(file))
+                return File.ReadAllText(file).Trim();
+
+            return "";
+        }
+
+        static public List<PatchFile> GetRebasePatchFiles()
+        {
+            List<PatchFile> patchFiles = new List<PatchFile>();
+
+            string nextFile = GetNextRebasePatch();
+
+            int next = 0;
+            int.TryParse(nextFile, out next);
+
+
+            string[] files = new string[0];
+            if (Directory.Exists(GetRebaseDir()))
+                files = Directory.GetFiles(GetRebaseDir());
+
+            foreach (string fullFileName in files)
+            {
+                int n = 0;
+                string file = fullFileName.Substring(fullFileName.LastIndexOf('\\') + 1);
+                if (int.TryParse(file, out n))
+                {
+                    PatchFile patchFile = new PatchFile();
+                    patchFile.Name = file;
+                    patchFile.FullName = fullFileName;
+                    patchFile.IsNext = n == next;
+                    patchFile.IsSkipped = n < next;
+
+                    if (File.Exists(GetRebaseDir() + file))
+                    {
+                        foreach (string line in File.ReadAllLines(GetRebaseDir() + file))
+                        {
+                            if (line.StartsWith("From: "))
+                                if (line.IndexOf('<') > 0 && line.IndexOf('<') < line.Length)
+                                    patchFile.Author = line.Substring(6, line.IndexOf('<') - 6).Trim();
+                                else
+                                    patchFile.Author = line.Substring(6).Trim();
+
+                            if (line.StartsWith("Date: ")) 
+                                if (line.IndexOf('+') > 0 && line.IndexOf('<') < line.Length)
+                                    patchFile.Date = line.Substring(6, line.IndexOf('+') - 6).Trim();
+                                else
+                                    patchFile.Date = line.Substring(6).Trim();
+
+
+                            if (line.StartsWith("Subject: ")) patchFile.Subject = line.Substring(9).Trim();
+
+                            if (!string.IsNullOrEmpty(patchFile.Author) &&
+                                !string.IsNullOrEmpty(patchFile.Date) &&
+                                !string.IsNullOrEmpty(patchFile.Subject))
+                                break;
+                        }
+                    }
+
+                    patchFiles.Add(patchFile);
+                }
+            }
+
+            return patchFiles;
+        }
+
         static public string Rebase(string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);

@@ -111,6 +111,12 @@ namespace GitUI
             else
                 source = Remotes.Text;
 
+            bool stashed = false;
+            if (AutoStash.Checked && GitCommands.GitCommands.GitStatus(false).Count > 0)
+            {
+                new FormProcess("stash save");
+                stashed = true;
+            }
 
             if (Fetch.Checked)
                 /*Output.Text = */
@@ -123,16 +129,20 @@ namespace GitUI
                 GitCommands.GitCommands.Pull(source, Branches.Text, true);
 
             //Rebase failed -> special 'rebase' merge conflict
-            if (Rebase.Checked && Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 new FormRebase().ShowDialog();
                 return;
             }
 
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            MergeConflictHandler.HandleMergeConflicts();
+
+            if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                if (MessageBox.Show("There where mergeconflicts, run mergetool now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
+                if (MessageBox.Show("Apply stashed items to working dir again?", "Auto stash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    new FormProcess("stash pop");
+                }
             }
 
         }
@@ -190,6 +200,11 @@ namespace GitUI
         private void AddRemote_Click(object sender, EventArgs e)
         {
             new FormRemotes().ShowDialog();
+        }
+
+        private void AutoStash_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

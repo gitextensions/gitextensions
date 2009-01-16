@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using System.IO;
 
 namespace GitUI
 {
@@ -123,7 +124,7 @@ namespace GitUI
                 MessageBox.Show("Please enter commit message");
                 return;
             }
-
+            
             try
             {
                 new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "\\\""), amend));

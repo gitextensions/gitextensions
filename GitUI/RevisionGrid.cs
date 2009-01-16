@@ -703,14 +703,15 @@ namespace GitUI
 
         private void showAllBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showAllBranchesToolStripMenuItem.Checked = !showAllBranchesToolStripMenuItem.Checked;
-            Settings.ShowAllBranches = showAllBranchesToolStripMenuItem.Checked;
+            Settings.ShowAllBranches = !showAllBranchesToolStripMenuItem.Checked;
+
             SetShowBranches();
             RefreshRevisions();
         }
 
         private void SetShowBranches()
         {
+            showAllBranchesToolStripMenuItem.Checked = Settings.ShowAllBranches;
             if (Settings.ShowAllBranches)
                 LogParam = "HEAD --all --boundary";
             else
