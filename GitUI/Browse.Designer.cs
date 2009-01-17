@@ -64,19 +64,19 @@
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pushToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -417,8 +417,8 @@
             this.checkoutBranchToolStripMenuItem,
             this.checkoutToolStripMenuItem,
             this.cherryPickToolStripMenuItem,
-            this.commitToolStripMenuItem,
             this.cloneToolStripMenuItem,
+            this.commitToolStripMenuItem,
             this.branchToolStripMenuItem,
             this.tagToolStripMenuItem,
             this.deleteBranchToolStripMenuItem,
@@ -474,22 +474,6 @@
             this.cherryPickToolStripMenuItem.Text = "Cherry pick";
             this.cherryPickToolStripMenuItem.Click += new System.EventHandler(this.cherryPickToolStripMenuItem_Click);
             // 
-            // branchToolStripMenuItem
-            // 
-            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
-            this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
-            this.branchToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.branchToolStripMenuItem.Text = "Create branch";
-            this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
-            // 
-            // tagToolStripMenuItem
-            // 
-            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources._352;
-            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.tagToolStripMenuItem.Text = "Create tag";
-            this.tagToolStripMenuItem.Click += new System.EventHandler(this.tagToolStripMenuItem_Click);
-            // 
             // commitToolStripMenuItem
             // 
             this.commitToolStripMenuItem.Image = global::GitUI.Properties.Resources._10;
@@ -505,6 +489,22 @@
             this.cloneToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.cloneToolStripMenuItem.Text = "Clone repository";
             this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
+            // 
+            // branchToolStripMenuItem
+            // 
+            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
+            this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
+            this.branchToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.branchToolStripMenuItem.Text = "Create branch";
+            this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
+            // 
+            // tagToolStripMenuItem
+            // 
+            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources._352;
+            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
+            this.tagToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.tagToolStripMenuItem.Text = "Create tag";
+            this.tagToolStripMenuItem.Click += new System.EventHandler(this.tagToolStripMenuItem_Click);
             // 
             // deleteBranchToolStripMenuItem
             // 
@@ -550,13 +550,6 @@
             this.pullToolStripMenuItem.Text = "Pull";
             this.pullToolStripMenuItem.Click += new System.EventHandler(this.pullToolStripMenuItem_Click);
             // 
-            // runMergetoolToolStripMenuItem
-            // 
-            this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
-            this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.runMergetoolToolStripMenuItem.Text = "Solve mergeconflicts";
-            this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.runMergetoolToolStripMenuItem_Click);
-            // 
             // pushToolStripMenuItem
             // 
             this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources._7;
@@ -571,6 +564,13 @@
             this.rebaseToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.rebaseToolStripMenuItem.Text = "Rebase";
             this.rebaseToolStripMenuItem.Click += new System.EventHandler(this.rebaseToolStripMenuItem_Click);
+            // 
+            // runMergetoolToolStripMenuItem
+            // 
+            this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
+            this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.runMergetoolToolStripMenuItem.Text = "Solve mergeconflicts";
+            this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.runMergetoolToolStripMenuItem_Click);
             // 
             // stashToolStripMenuItem
             // 
