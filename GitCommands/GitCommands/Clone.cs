@@ -10,9 +10,11 @@ namespace GitCommands
         public string Source { get; set; }
         public string Destination { get; set; }
         public string Result { get; set; }
+        public bool Bare { get; set; }
 
-        public CloneDto(string source, string destination)
+        public CloneDto(string source, string destination, bool bare)
         {
+            this.Bare = bare;
             this.Source = source;
             this.Destination = destination;
         }
@@ -28,7 +30,10 @@ namespace GitCommands
 
         public void Execute()
         {
-            GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"\"");
+            if (Dto.Bare)
+                GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" clone --bare --shared \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"\"");
+            else
+                GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"\"");
             //GitCommands.RunRealCmd(Settings.GitDir + "git.cmd", "clone \"" + Dto.Source.Trim() + "\" \"" + Dto.Destination.Trim() + "\"");
             Dto.Result = "Done";
         }

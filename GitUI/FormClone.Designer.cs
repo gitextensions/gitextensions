@@ -38,9 +38,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.Central = new System.Windows.Forms.RadioButton();
+            this.Personal = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.CentralRepository = new System.Windows.Forms.RadioButton();
+            this.PersonalRepository = new System.Windows.Forms.RadioButton();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -52,6 +58,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.From);
             this.splitContainer1.Panel1.Controls.Add(this.To);
             this.splitContainer1.Panel1.Controls.Add(this.ToBrowse);
@@ -59,12 +66,13 @@
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.Ok);
+            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.OutPut);
             this.splitContainer1.Size = new System.Drawing.Size(460, 312);
-            this.splitContainer1.SplitterDistance = 97;
+            this.splitContainer1.SplitterDistance = 146;
             this.splitContainer1.TabIndex = 0;
             // 
             // From
@@ -72,7 +80,7 @@
             this.From.FormattingEnabled = true;
             this.From.Location = new System.Drawing.Point(66, 17);
             this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(191, 21);
+            this.From.Size = new System.Drawing.Size(208, 21);
             this.From.TabIndex = 8;
             this.From.DropDown += new System.EventHandler(this.From_DropDown);
             // 
@@ -81,13 +89,13 @@
             this.To.FormattingEnabled = true;
             this.To.Location = new System.Drawing.Point(66, 45);
             this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(190, 21);
+            this.To.Size = new System.Drawing.Size(208, 21);
             this.To.TabIndex = 7;
             this.To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
             // ToBrowse
             // 
-            this.ToBrowse.Location = new System.Drawing.Point(263, 44);
+            this.ToBrowse.Location = new System.Drawing.Point(280, 45);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(75, 23);
             this.ToBrowse.TabIndex = 6;
@@ -97,7 +105,7 @@
             // 
             // FromBrowse
             // 
-            this.FromBrowse.Location = new System.Drawing.Point(263, 17);
+            this.FromBrowse.Location = new System.Drawing.Point(280, 17);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(75, 23);
             this.FromBrowse.TabIndex = 5;
@@ -125,7 +133,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(373, 17);
+            this.Ok.Location = new System.Drawing.Point(373, 115);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
@@ -138,9 +146,64 @@
             this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
-            this.OutPut.Size = new System.Drawing.Size(460, 211);
+            this.OutPut.Size = new System.Drawing.Size(460, 162);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
+            // 
+            // Central
+            // 
+            this.Central.AutoSize = true;
+            this.Central.Location = new System.Drawing.Point(6, 42);
+            this.Central.Name = "Central";
+            this.Central.Size = new System.Drawing.Size(274, 17);
+            this.Central.TabIndex = 1;
+            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.Central.UseVisualStyleBackColor = true;
+            // 
+            // Personal
+            // 
+            this.Personal.AutoSize = true;
+            this.Personal.Checked = true;
+            this.Personal.Location = new System.Drawing.Point(6, 19);
+            this.Personal.Name = "Personal";
+            this.Personal.Size = new System.Drawing.Size(114, 17);
+            this.Personal.TabIndex = 0;
+            this.Personal.TabStop = true;
+            this.Personal.Text = "Personal repository";
+            this.Personal.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.CentralRepository);
+            this.groupBox1.Controls.Add(this.PersonalRepository);
+            this.groupBox1.Location = new System.Drawing.Point(3, 73);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(352, 68);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Repository type";
+            // 
+            // CentralRepository
+            // 
+            this.CentralRepository.AutoSize = true;
+            this.CentralRepository.Location = new System.Drawing.Point(6, 42);
+            this.CentralRepository.Name = "CentralRepository";
+            this.CentralRepository.Size = new System.Drawing.Size(274, 17);
+            this.CentralRepository.TabIndex = 1;
+            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.CentralRepository.UseVisualStyleBackColor = true;
+            // 
+            // PersonalRepository
+            // 
+            this.PersonalRepository.AutoSize = true;
+            this.PersonalRepository.Checked = true;
+            this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
+            this.PersonalRepository.Name = "PersonalRepository";
+            this.PersonalRepository.Size = new System.Drawing.Size(114, 17);
+            this.PersonalRepository.TabIndex = 0;
+            this.PersonalRepository.TabStop = true;
+            this.PersonalRepository.Text = "Personal repository";
+            this.PersonalRepository.UseVisualStyleBackColor = true;
             // 
             // FormClone
             // 
@@ -156,6 +219,8 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -171,5 +236,10 @@
         private System.Windows.Forms.Button FromBrowse;
         private System.Windows.Forms.ComboBox From;
         private System.Windows.Forms.ComboBox To;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton CentralRepository;
+        private System.Windows.Forms.RadioButton PersonalRepository;
+        private System.Windows.Forms.RadioButton Central;
+        private System.Windows.Forms.RadioButton Personal;
     }
 }

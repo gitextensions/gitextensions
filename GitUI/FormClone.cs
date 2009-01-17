@@ -26,7 +26,7 @@ namespace GitUI
                 RepositoryHistory.AddMostRecentRepository(From.Text);
                 RepositoryHistory.AddMostRecentRepository(To.Text);
 
-                CloneDto dto = new CloneDto(From.Text, To.Text);
+                CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
                 GitCommands.Clone commit = new GitCommands.Clone(dto);
                 commit.Execute();
 
@@ -61,6 +61,11 @@ namespace GitUI
         private void To_DropDown(object sender, EventArgs e)
         {
             To.DataSource = RepositoryHistory.MostRecentRepositories.ToArray();
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
