@@ -54,7 +54,8 @@ namespace GitUI
             {
                 remote = (string)Remotes.SelectedItem;
                 RemoteName.Text = remote;
-                Url.Text = GitCommands.GitCommands.GetSetting("remote." + remote + ".url"); 
+                Url.Text = GitCommands.GitCommands.GetSetting("remote." + remote + ".url");
+                PuttySshKey.Text = GitCommands.GitCommands.GetSetting("remote." + RemoteName.Text + ".puttykeyfile");
             }
         }
 
@@ -87,6 +88,7 @@ namespace GitUI
                 }
 
                 GitCommands.GitCommands.SetSetting("remote." + RemoteName.Text + ".url", Url.Text);
+                GitCommands.GitCommands.SetSetting("remote." + RemoteName.Text + ".puttykeyfile", PuttySshKey.Text);
             }
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Delete");
@@ -119,8 +121,18 @@ namespace GitUI
 
         private void UpdateBranch_Click(object sender, EventArgs e)
         {
-            Process process = GitCommands.GitCommands.UpdateRemotes();
-            process.WaitForExit();
+            string output = GitCommands.GitCommands.UpdateRemotes();
+            MessageBox.Show(output, "Update remote info");
+        }
+
+        private void SshBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "All files (*.*)|*.*";
+            dialog.InitialDirectory = ".";
+            dialog.Title = "Select ssh key file";
+            if (dialog.ShowDialog() == DialogResult.OK)
+                PuttySshKey.Text = dialog.FileName;
         }
     }
 }

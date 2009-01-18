@@ -47,6 +47,7 @@
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AutoStash = new System.Windows.Forms.CheckBox();
+            this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -94,7 +95,7 @@
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(125, 265);
+            this.Mergetool.Location = new System.Drawing.Point(217, 265);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 11;
@@ -176,6 +177,8 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
+            this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
             this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
             // 
             // AddRemote
@@ -241,25 +244,38 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(235, 269);
+            this.AutoStash.Location = new System.Drawing.Point(122, 269);
             this.AutoStash.Name = "AutoStash";
-            this.AutoStash.Size = new System.Drawing.Size(202, 17);
+            this.AutoStash.Size = new System.Drawing.Size(76, 17);
             this.AutoStash.TabIndex = 20;
-            this.AutoStash.Text = "Auto stash before pull, apply after pull";
+            this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             this.AutoStash.CheckedChanged += new System.EventHandler(this.AutoStash_CheckedChanged);
+            // 
+            // LoadSSHKey
+            // 
+            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LoadSSHKey.Location = new System.Drawing.Point(327, 265);
+            this.LoadSSHKey.Name = "LoadSSHKey";
+            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
+            this.LoadSSHKey.TabIndex = 24;
+            this.LoadSSHKey.Text = "Load SSH key";
+            this.LoadSSHKey.UseVisualStyleBackColor = true;
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
             // 
             // FormPull
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 295);
+            this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.AutoStash);
             this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.Mergetool);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Stash);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Mergetool);
             this.Controls.Add(this.Pull);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPull";
@@ -297,5 +313,6 @@
         private System.Windows.Forms.RadioButton PullFromRemote;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox AutoStash;
+        private System.Windows.Forms.Button LoadSSHKey;
     }
 }

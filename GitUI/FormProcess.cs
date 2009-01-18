@@ -44,9 +44,12 @@ namespace GitUI
 
         private void FormProcess_Load(object sender, EventArgs e)
         {
+            Output.Text = "";
             AddOutput(ProcessString + " " + ProcessArguments);
 
             ProgressBar.Visible = true;
+            
+            outputString = new StringBuilder();
 
             gitCommand = new GitCommands.GitCommands();
             gitCommand.CollectOutput = false;
@@ -76,7 +79,7 @@ namespace GitUI
             Output.Text += text + "\n";
         }
 
-        StringBuilder outputString = new StringBuilder();
+        public StringBuilder outputString;
 
         void Done()
         {
@@ -84,6 +87,32 @@ namespace GitUI
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
+            //An error occured!
+            if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
+            {
+                ErrorImage.Visible = true;
+                SuccessImage.Visible = false;
+                if (GitCommands.GitCommands.GetSsh().Contains("plink"))
+                {
+                    if (ProcessArguments.Contains("pull") ||
+                        ProcessArguments.Contains("push") ||
+                        ProcessArguments.Contains("clone"))
+                    {
+                        if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
+                        {
+                            if (MessageBox.Show("This error usually means that the PuTTY authentication agent is not running.\nor that the correct private key is not (yet) loaded.\n\nWhen the key is loaded, you can press retry. If not, cancel", "Authentication error", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
+                            {
+                                FormProcess_Load(null, null);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ErrorImage.Visible = false;
+                SuccessImage.Visible = true;
+            }
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)

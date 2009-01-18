@@ -527,6 +527,16 @@ namespace GitUI
             Initialize();
         }
 
+        private void startAuthenticationAgentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.Run(GitCommands.Settings.Pageant, "");
+        }
+
+        private void generateOrImportKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {   
+            GitCommands.GitCommands.Run(GitCommands.Settings.Puttygen, "");
+        }
+
 
     }
 }

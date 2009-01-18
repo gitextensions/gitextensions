@@ -40,31 +40,15 @@ namespace GitUI
 
             RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
-            Process process;
+            FormProcess form;
 
             if (PullFromUrl.Checked)
-                process = GitCommands.GitCommands.PushAsync(PushDestination.Text, Branch.Text, PushAllBranches.Checked);
+                form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked));
             else
-                process = GitCommands.GitCommands.PushAsync(Remotes.Text, Branch.Text, PushAllBranches.Checked);
-
-            process.WaitForExit();
-            
-        }
-
-        void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data == null) return;
-            string data = e.Data;
-            if (data.StartsWith("Enter passphrase"))
-                ((Process)sender).StandardInput.WriteLine("achttien");
-        }
-
-        void process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data == null) return;
-            string data = e.Data;
-            if (data.StartsWith("Enter passphrase"))
-                ((Process)sender).StandardInput.WriteLine("achttien");
+            {
+                GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                form = new FormProcess(GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked));
+            }
         }
 
         private void PushDestination_DropDown(object sender, EventArgs e)
@@ -87,6 +71,7 @@ namespace GitUI
         {
             string branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
+            EnableLoadSSHButton();
 
             this.Text = "Push (" + GitCommands.Settings.WorkingDir + ")";
         }
@@ -121,6 +106,33 @@ namespace GitUI
                 Remotes.Enabled = false;
                 AddRemote.Enabled = false;
             }
+        }
+
+        private void Remotes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableLoadSSHButton();
+        }
+
+        private void EnableLoadSSHButton()
+        {
+            if (!string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text)))
+            {
+                LoadSSHKey.Enabled = true;
+            }
+            else
+            {
+                LoadSSHKey.Enabled = false;
+            }
+        }
+
+        private void LoadSSHKey_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+        }
+
+        private void Remotes_Validated(object sender, EventArgs e)
+        {
+            EnableLoadSSHButton();
         }
     }
 }

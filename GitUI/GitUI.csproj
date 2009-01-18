@@ -439,6 +439,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\success1.gif" />
+    <None Include="Resources\success.gif" />
+    <None Include="Resources\puttygen.ico" />
+    <None Include="Resources\pageant.ico" />
+    <None Include="Resources\putty.ico" />
     <None Include="Icons\82.png" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />

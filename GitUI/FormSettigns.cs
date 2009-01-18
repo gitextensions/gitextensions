@@ -18,9 +18,8 @@ namespace GitUI
         {
             InitializeComponent();
 
-            CheckSettings();
-
             LoadSettings();
+            CheckSettings();
         }
 
         private void LoadSettings()
@@ -44,6 +43,21 @@ namespace GitUI
             GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
             GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
             GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("mergetool.keepBackup").Trim() == "true";
+
+            PlinkPath.Text = GitCommands.Settings.Plink;
+            PuttygenPath.Text = GitCommands.Settings.Puttygen;
+            PageantPath.Text = GitCommands.Settings.Pageant;
+            AutostartPageant.Checked = GitCommands.Settings.AutoStartPageant;
+
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
+                OpenSSH.Checked = true;
+            else
+                if (GitCommands.GitCommands.GetSsh().Contains("plink.exe"))
+                    Putty.Checked = true;
+                else
+                    Other.Checked = true;
+
+            EnableSshOptions();
         }
 
         private void UserName_TextChanged(object sender, EventArgs e)
@@ -89,6 +103,21 @@ namespace GitUI
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
             GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
+
+            GitCommands.Settings.Plink = PlinkPath.Text;
+            GitCommands.Settings.Puttygen = PuttygenPath.Text;
+            GitCommands.Settings.Pageant = PageantPath.Text;
+            GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
+
+            if (OpenSSH.Checked)
+                GitCommands.GitCommands.UnSetSsh();
+            
+            if (Putty.Checked)
+                GitCommands.GitCommands.SetSsh(PlinkPath.Text);
+            
+            if (Other.Checked)
+                GitCommands.GitCommands.SetSsh(OtherSsh.Text);
+
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -227,6 +256,28 @@ namespace GitUI
                     GitBinFound.BackColor = Color.LightGreen;
                     GitBinFound.Text = "git.exe is found on your computer.";
                 }
+                if (GitCommands.GitCommands.GetSsh().Contains("plink.exe"))
+                {
+                    if (!File.Exists(PlinkPath.Text) || !File.Exists(PuttygenPath.Text) || !File.Exists(PageantPath.Text))
+                    {
+                        SshConfig.BackColor = Color.LightSalmon;
+                        SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                        bValid = false;
+                    }
+                    else
+                    {
+                        SshConfig.BackColor = Color.LightGreen;
+                        SshConfig.Text = "SSH client PuTTY is configured properly";
+                    }
+                }
+                else
+                {
+                    SshConfig.BackColor = Color.LightGreen;
+                    if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
+                        SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
+                    else
+                        SshConfig.Text = "Unknown SSH client configured: " + GitCommands.GitCommands.GetSsh();
+                }
 
             }
             catch
@@ -291,9 +342,13 @@ namespace GitUI
                 GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                 {
-                    GitCommands.Settings.GitDir = "";
-                    tabControl1.SelectTab("TabPageGitExtensions");
-                    return;
+                    GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
+                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
+                    {
+                        GitCommands.Settings.GitDir = "";
+                        tabControl1.SelectTab("TabPageGitExtensions");
+                        return;
+                    }
                 }
             }
 
@@ -352,9 +407,13 @@ namespace GitUI
                     GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
                     {
-                        GitCommands.Settings.GitBinDir = "";
-                        tabControl1.SelectTab("TabPageGitExtensions");
-                        return;
+                        GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+                        {
+                            GitCommands.Settings.GitBinDir = "";
+                            tabControl1.SelectTab("TabPageGitExtensions");
+                            return;
+                        }
                     }
                 }
             }
@@ -362,6 +421,122 @@ namespace GitUI
             MessageBox.Show("Command git.exe can be runned using: " + GitCommands.Settings.GitBinDir + "git.exe", "Locate git.exe");
             GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
+        }
+
+        private void OpenSSH_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableSshOptions();
+        }
+
+        private void Putty_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Putty.Checked)
+            {
+                AutoFindPuttyPaths();
+            }
+            EnableSshOptions();
+        }
+
+        private bool AutoFindPuttyPaths()
+        {
+            if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
+            if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1", "InstallLocation"))) return true;
+            if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir") + "\\PuTTY\\")) return true;
+
+            return false;
+        }
+
+        private bool AutoFindPuttyPathsInDir(string installdir)
+        {
+            if (!installdir.EndsWith("\\"))
+                installdir += "\\";
+
+            if (string.IsNullOrEmpty(PlinkPath.Text))
+            {
+                PlinkPath.Text = installdir + "plink.exe";
+                if (!File.Exists(PlinkPath.Text))
+                    PlinkPath.Text = "";
+            }
+
+            if (string.IsNullOrEmpty(PuttygenPath.Text))
+            {
+                PuttygenPath.Text = installdir + "puttygen.exe";
+                if (!File.Exists(PuttygenPath.Text))
+                    PuttygenPath.Text = "";
+            }
+
+            if (string.IsNullOrEmpty(PageantPath.Text))
+            {
+                PageantPath.Text = installdir + "pageant.exe";
+                if (!File.Exists(PageantPath.Text))
+                    PageantPath.Text = "";
+            }
+
+            if (File.Exists(PageantPath.Text) &&
+                File.Exists(PuttygenPath.Text) &&
+                File.Exists(PlinkPath.Text))
+                return true;
+            else 
+                return false;
+        }
+
+        private string SelectFile(string initialDirectory, string filter, string prev)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = filter;
+            dialog.InitialDirectory = initialDirectory;
+            dialog.Title = "Select file";
+            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OtherSsh.Text = SelectFile(".", "Executable file (*.exe)|*.exe", OtherSsh.Text);
+        }
+
+        private void Other_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableSshOptions();
+        }
+
+        private void EnableSshOptions()
+        {
+            OtherSsh.Enabled = Other.Checked;
+            OtherSshBrowse.Enabled = Other.Checked;
+
+            PlinkPath.Enabled = Putty.Checked;
+            PuttygenPath.Enabled = Putty.Checked;
+            PageantPath.Enabled = Putty.Checked;
+            PlinkBrowse.Enabled = Putty.Checked;
+            PuttygenBrowse.Enabled = Putty.Checked;
+            PageantBrowse.Enabled = Putty.Checked;
+            AutostartPageant.Enabled = Putty.Checked;
+        }
+
+        private void PuttyBrowse_Click(object sender, EventArgs e)
+        {
+            PlinkPath.Text = SelectFile(".", "Plink.exe (plink.exe)|plink.exe", PlinkPath.Text);
+        }
+
+        private void PuttygenBrowse_Click(object sender, EventArgs e)
+        {
+            PuttygenPath.Text = SelectFile(".", "puttygen.exe (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
+        }
+
+        private void PageantBrowse_Click(object sender, EventArgs e)
+        {
+            PageantPath.Text = SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
+        }
+
+        private void SshConfig_Click(object sender, EventArgs e)
+        {
+            if (Putty.Checked)
+            {
+                if (AutoFindPuttyPaths())
+                    MessageBox.Show("All paths needed for PuTTY could be automaticly found and are set.", "PuTTY");
+                else
+                    tabControl1.SelectTab("ssh");
+            }
         }
     }
 }

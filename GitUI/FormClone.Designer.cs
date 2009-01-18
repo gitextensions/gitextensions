@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.CentralRepository = new System.Windows.Forms.RadioButton();
+            this.PersonalRepository = new System.Windows.Forms.RadioButton();
             this.From = new System.Windows.Forms.ComboBox();
             this.To = new System.Windows.Forms.ComboBox();
             this.ToBrowse = new System.Windows.Forms.Button();
@@ -40,9 +43,6 @@
             this.OutPut = new System.Windows.Forms.RichTextBox();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.CentralRepository = new System.Windows.Forms.RadioButton();
-            this.PersonalRepository = new System.Windows.Forms.RadioButton();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -75,12 +75,45 @@
             this.splitContainer1.SplitterDistance = 146;
             this.splitContainer1.TabIndex = 0;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.CentralRepository);
+            this.groupBox1.Controls.Add(this.PersonalRepository);
+            this.groupBox1.Location = new System.Drawing.Point(3, 73);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(352, 68);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Repository type";
+            // 
+            // CentralRepository
+            // 
+            this.CentralRepository.AutoSize = true;
+            this.CentralRepository.Location = new System.Drawing.Point(6, 42);
+            this.CentralRepository.Name = "CentralRepository";
+            this.CentralRepository.Size = new System.Drawing.Size(274, 17);
+            this.CentralRepository.TabIndex = 1;
+            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.CentralRepository.UseVisualStyleBackColor = true;
+            // 
+            // PersonalRepository
+            // 
+            this.PersonalRepository.AutoSize = true;
+            this.PersonalRepository.Checked = true;
+            this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
+            this.PersonalRepository.Name = "PersonalRepository";
+            this.PersonalRepository.Size = new System.Drawing.Size(114, 17);
+            this.PersonalRepository.TabIndex = 0;
+            this.PersonalRepository.TabStop = true;
+            this.PersonalRepository.Text = "Personal repository";
+            this.PersonalRepository.UseVisualStyleBackColor = true;
+            // 
             // From
             // 
             this.From.FormattingEnabled = true;
             this.From.Location = new System.Drawing.Point(66, 17);
             this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(208, 21);
+            this.From.Size = new System.Drawing.Size(289, 21);
             this.From.TabIndex = 8;
             this.From.DropDown += new System.EventHandler(this.From_DropDown);
             // 
@@ -89,13 +122,13 @@
             this.To.FormattingEnabled = true;
             this.To.Location = new System.Drawing.Point(66, 45);
             this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(208, 21);
+            this.To.Size = new System.Drawing.Size(289, 21);
             this.To.TabIndex = 7;
             this.To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
             // ToBrowse
             // 
-            this.ToBrowse.Location = new System.Drawing.Point(280, 45);
+            this.ToBrowse.Location = new System.Drawing.Point(373, 45);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(75, 23);
             this.ToBrowse.TabIndex = 6;
@@ -105,7 +138,7 @@
             // 
             // FromBrowse
             // 
-            this.FromBrowse.Location = new System.Drawing.Point(280, 17);
+            this.FromBrowse.Location = new System.Drawing.Point(373, 17);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(75, 23);
             this.FromBrowse.TabIndex = 5;
@@ -171,39 +204,6 @@
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.CentralRepository);
-            this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(3, 73);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(352, 68);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Repository type";
-            // 
-            // CentralRepository
-            // 
-            this.CentralRepository.AutoSize = true;
-            this.CentralRepository.Location = new System.Drawing.Point(6, 42);
-            this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(274, 17);
-            this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared=all)";
-            this.CentralRepository.UseVisualStyleBackColor = true;
-            // 
-            // PersonalRepository
-            // 
-            this.PersonalRepository.AutoSize = true;
-            this.PersonalRepository.Checked = true;
-            this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
-            this.PersonalRepository.Name = "PersonalRepository";
-            this.PersonalRepository.Size = new System.Drawing.Size(114, 17);
-            this.PersonalRepository.TabIndex = 0;
-            this.PersonalRepository.TabStop = true;
-            this.PersonalRepository.Text = "Personal repository";
-            this.PersonalRepository.UseVisualStyleBackColor = true;
             // 
             // FormClone
             // 

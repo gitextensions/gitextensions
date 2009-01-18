@@ -109,7 +109,10 @@ namespace GitUI
             if (PullFromUrl.Checked)
                 source = PullSource.Text;
             else
+            {
+                GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 source = Remotes.Text;
+            }
 
             bool stashed = false;
             if (AutoStash.Checked && GitCommands.GitCommands.GitStatus(false).Count > 0)
@@ -118,15 +121,16 @@ namespace GitUI
                 stashed = true;
             }
 
+            FormProcess process;
             if (Fetch.Checked)
                 /*Output.Text = */
-                GitCommands.GitCommands.Fetch(source, Branches.Text);
+                process = new FormProcess(GitCommands.GitCommands.FetchCmd(source, Branches.Text));
             else if (Merge.Checked)
                 /*Output.Text = */
-                GitCommands.GitCommands.Pull(source, Branches.Text, false);
+                process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, false));
             else if (Rebase.Checked)
                 /*Output.Text = */
-                GitCommands.GitCommands.Pull(source, Branches.Text, true);
+                process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, true));
 
             //Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
@@ -205,6 +209,33 @@ namespace GitUI
         private void AutoStash_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void EnableLoadSSHButton()
+        {
+            if (!string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text)))
+            {
+                LoadSSHKey.Enabled = true;
+            }
+            else
+            {
+                LoadSSHKey.Enabled = false;
+            }
+        }
+
+        private void LoadSSHKey_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+        }
+
+        private void Remotes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableLoadSSHButton();
+        }
+
+        private void Remotes_Validated(object sender, EventArgs e)
+        {
+            EnableLoadSSHButton();
         }
 
     }

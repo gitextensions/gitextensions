@@ -113,5 +113,57 @@ namespace GitCommands
         }
 
         public static string GitLog { get; set; }
+
+        private static string plink = "";
+        public static string Plink
+        {
+            get
+            {
+                return plink;
+            }
+            set
+            {
+                plink = value;
+            }
+        }
+
+        private static string puttygen = "";
+        public static string Puttygen
+        {
+            get
+            {
+                return puttygen;
+            }
+            set
+            {
+                puttygen = value;
+            }
+        }
+
+        private static string pageant = "";
+        public static string Pageant
+        {
+            get
+            {
+                return pageant;
+            }
+            set
+            {
+                pageant = value;
+            }
+        }
+
+        private static bool autoStartPageant = true;
+        public static bool AutoStartPageant
+        {
+            get
+            {
+                return autoStartPageant;
+            }
+            set
+            {
+                autoStartPageant = value;
+            }
+        }    
     }
 }

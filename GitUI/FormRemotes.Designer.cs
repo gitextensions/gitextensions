@@ -54,6 +54,9 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.SshBrowse = new System.Windows.Forms.Button();
+            this.PuttySshKey = new System.Windows.Forms.TextBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -85,8 +88,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.Delete);
             this.splitContainer1.Panel2.Controls.Add(this.New);
             this.splitContainer1.Panel2.Controls.Add(this.Save);
-            this.splitContainer1.Size = new System.Drawing.Size(592, 208);
-            this.splitContainer1.SplitterDistance = 164;
+            this.splitContainer1.Size = new System.Drawing.Size(642, 208);
+            this.splitContainer1.SplitterDistance = 177;
             this.splitContainer1.TabIndex = 0;
             // 
             // Remotes
@@ -95,12 +98,15 @@
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(0, 0);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(164, 199);
+            this.Remotes.Size = new System.Drawing.Size(177, 199);
             this.Remotes.TabIndex = 0;
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.PuttySshKey);
+            this.groupBox1.Controls.Add(this.SshBrowse);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.RemoteName);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
@@ -108,16 +114,16 @@
             this.groupBox1.Controls.Add(this.Browse);
             this.groupBox1.Location = new System.Drawing.Point(2, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(412, 168);
+            this.groupBox1.Size = new System.Drawing.Size(454, 168);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
             // 
             // RemoteName
             // 
-            this.RemoteName.Location = new System.Drawing.Point(101, 19);
+            this.RemoteName.Location = new System.Drawing.Point(121, 19);
             this.RemoteName.Name = "RemoteName";
-            this.RemoteName.Size = new System.Drawing.Size(221, 20);
+            this.RemoteName.Size = new System.Drawing.Size(246, 20);
             this.RemoteName.TabIndex = 1;
             // 
             // label1
@@ -132,7 +138,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 48);
+            this.label2.Location = new System.Drawing.Point(13, 51);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(20, 13);
             this.label2.TabIndex = 2;
@@ -141,15 +147,15 @@
             // Url
             // 
             this.Url.FormattingEnabled = true;
-            this.Url.Location = new System.Drawing.Point(101, 48);
+            this.Url.Location = new System.Drawing.Point(121, 48);
             this.Url.Name = "Url";
-            this.Url.Size = new System.Drawing.Size(221, 21);
+            this.Url.Size = new System.Drawing.Size(246, 21);
             this.Url.TabIndex = 3;
             this.Url.DropDown += new System.EventHandler(this.Url_DropDown);
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(328, 46);
+            this.Browse.Location = new System.Drawing.Point(373, 46);
             this.Browse.Name = "Browse";
             this.Browse.Size = new System.Drawing.Size(75, 23);
             this.Browse.TabIndex = 4;
@@ -159,7 +165,7 @@
             // 
             // Delete
             // 
-            this.Delete.Location = new System.Drawing.Point(177, 177);
+            this.Delete.Location = new System.Drawing.Point(213, 177);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(75, 23);
             this.Delete.TabIndex = 7;
@@ -169,7 +175,7 @@
             // 
             // New
             // 
-            this.New.Location = new System.Drawing.Point(258, 177);
+            this.New.Location = new System.Drawing.Point(294, 177);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(75, 23);
             this.New.TabIndex = 6;
@@ -179,7 +185,7 @@
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(339, 177);
+            this.Save.Location = new System.Drawing.Point(375, 177);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 23);
             this.Save.TabIndex = 5;
@@ -195,7 +201,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(606, 240);
+            this.tabControl1.Size = new System.Drawing.Size(656, 240);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -204,7 +210,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(598, 214);
+            this.tabPage1.Size = new System.Drawing.Size(648, 214);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Remote repositories";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -215,7 +221,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(598, 214);
+            this.tabPage2.Size = new System.Drawing.Size(648, 214);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Default pull behaviour (fetch & merge)";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -235,7 +241,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.UpdateBranch);
-            this.splitContainer2.Size = new System.Drawing.Size(592, 208);
+            this.splitContainer2.Size = new System.Drawing.Size(642, 208);
             this.splitContainer2.SplitterDistance = 174;
             this.splitContainer2.TabIndex = 11;
             // 
@@ -254,7 +260,7 @@
             this.RemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RemoteBranches.Location = new System.Drawing.Point(0, 0);
             this.RemoteBranches.Name = "RemoteBranches";
-            this.RemoteBranches.Size = new System.Drawing.Size(592, 174);
+            this.RemoteBranches.Size = new System.Drawing.Size(642, 174);
             this.RemoteBranches.TabIndex = 0;
             // 
             // BranchName
@@ -290,7 +296,7 @@
             // 
             // UpdateBranch
             // 
-            this.UpdateBranch.Location = new System.Drawing.Point(425, 3);
+            this.UpdateBranch.Location = new System.Drawing.Point(470, 4);
             this.UpdateBranch.Name = "UpdateBranch";
             this.UpdateBranch.Size = new System.Drawing.Size(167, 23);
             this.UpdateBranch.TabIndex = 10;
@@ -318,11 +324,37 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 82);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(102, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "PuTTY SSH key file";
+            // 
+            // SshBrowse
+            // 
+            this.SshBrowse.Location = new System.Drawing.Point(373, 77);
+            this.SshBrowse.Name = "SshBrowse";
+            this.SshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.SshBrowse.TabIndex = 6;
+            this.SshBrowse.Text = "Browse";
+            this.SshBrowse.UseVisualStyleBackColor = true;
+            this.SshBrowse.Click += new System.EventHandler(this.SshBrowse_Click);
+            // 
+            // PuttySshKey
+            // 
+            this.PuttySshKey.Location = new System.Drawing.Point(121, 79);
+            this.PuttySshKey.Name = "PuttySshKey";
+            this.PuttySshKey.Size = new System.Drawing.Size(246, 20);
+            this.PuttySshKey.TabIndex = 7;
+            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 240);
+            this.ClientSize = new System.Drawing.Size(656, 240);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRemotes";
@@ -372,5 +404,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BranchName;
         private System.Windows.Forms.DataGridViewComboBoxColumn RemoteCombo;
         private System.Windows.Forms.DataGridViewComboBoxColumn mergeWithDataGridViewTextBoxColumn;
+        private System.Windows.Forms.TextBox PuttySshKey;
+        private System.Windows.Forms.Button SshBrowse;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -40,24 +40,28 @@ namespace GitExtensions
                 }
 
 
+                if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.GitCommands.SetSsh( Application.UserAppDataRegistry.GetValue("gitssh").ToString() );
+                if (Application.UserAppDataRegistry.GetValue("plink") != null) GitCommands.Settings.Plink = Application.UserAppDataRegistry.GetValue("plink").ToString();
+                if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
+                if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) GitCommands.Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("gitdir") != null) GitCommands.Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) GitCommands.Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
-                if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir0").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir1").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir2").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir3").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir4").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir5").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir6").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir7").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir8").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir9") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir9").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir10") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir10").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir11") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir11").ToString());
-                if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir11") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir11").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir10") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir10").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir9") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir9").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir8").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir7").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir6").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir5").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir4").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir3").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir2").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir1").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir0").ToString());
             }
             catch
             {
@@ -174,6 +178,12 @@ namespace GitExtensions
                 Application.UserAppDataRegistry.SetValue("gitdir", GitCommands.Settings.GitDir);
                 Application.UserAppDataRegistry.SetValue("gitbindir", GitCommands.Settings.GitBinDir);
                 Application.UserAppDataRegistry.SetValue("showallbranches", GitCommands.Settings.ShowAllBranches);
+
+                Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());
+
+                Application.UserAppDataRegistry.SetValue("plink", GitCommands.Settings.Plink);
+                Application.UserAppDataRegistry.SetValue("puttygen", GitCommands.Settings.Puttygen);
+                Application.UserAppDataRegistry.SetValue("pageant", GitCommands.Settings.Pageant);
             }
             catch
             {

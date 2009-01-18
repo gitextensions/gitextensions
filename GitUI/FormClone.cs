@@ -26,11 +26,18 @@ namespace GitUI
                 RepositoryHistory.AddMostRecentRepository(From.Text);
                 RepositoryHistory.AddMostRecentRepository(To.Text);
 
-                CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
-                GitCommands.Clone commit = new GitCommands.Clone(dto);
-                commit.Execute();
+                //CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
+                //GitCommands.Clone commit = new GitCommands.Clone(dto);
+                //commit.Execute();
 
-                OutPut.Text = "Command executed \n" + dto.Result;
+                FormProcess fromProcess;
+
+                if (CentralRepository.Checked)
+                    fromProcess = new FormProcess("clone --bare --shared=all \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                else
+                    fromProcess = new FormProcess("clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+
+                OutPut.Text = "Command executed \n" + fromProcess.outputString.ToString();
             }
             catch
             {

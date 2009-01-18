@@ -137,6 +137,23 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
+            arguments = arguments.Replace('\\', '/');
+
+            bool ssh = false;
+            if ( !GetSsh().Contains("plink") &&
+                (
+                (arguments.Contains("@") && arguments.Contains("://")) ||
+                (arguments.Contains("@") && arguments.Contains(":")) ||
+                (arguments.Contains("ssh://")) ||
+                (arguments.Contains("http://")) ||
+                (arguments.Contains("git://")) ||
+                (arguments.Contains("push")) ||
+                (arguments.Contains("pull"))
+                )
+                )
+                ssh = true;
+
+
             Kill();
 
             //process used to execute external commands
@@ -147,7 +164,7 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.RedirectStandardError = true;
 
-            Process.StartInfo.CreateNoWindow = true;
+            Process.StartInfo.CreateNoWindow = !ssh;
             Process.StartInfo.FileName = "\"" + cmd + "\"";
             Process.StartInfo.Arguments = arguments;
             Process.StartInfo.WorkingDirectory = Settings.WorkingDir;
@@ -523,6 +540,26 @@ namespace GitCommands
             return result;
         }
 
+        static public void UnSetSsh()
+        {
+            Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
+        }
+
+        static public void SetSsh(string path)
+        {
+            Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
+        }
+
+        static public string GetSsh()
+        {
+            string ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
+            
+            if (ssh == null)
+                return "";
+            
+            return ssh;
+        }
+
         static public string Push(string path)
         {
             string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "push \"" + path.Trim() + "\"");
@@ -532,21 +569,59 @@ namespace GitCommands
 
         static public Process PushAsync(string path, string branch, bool all)
         {
+            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all) + "\"");
+        }
+
+
+        static public bool StartPageantForRemote(string remote)
+        {
+            string sshKeyFile = GetPuttyKeyFileForRemote(remote);
+            if (!string.IsNullOrEmpty(sshKeyFile))
+            {
+                GitCommands.Run(Settings.Pageant, sshKeyFile);
+                return true;
+            }
+            return false;
+        }
+
+        public static string GetPuttyKeyFileForRemote(string remote)
+        {
+            if (!string.IsNullOrEmpty(remote) && 
+                !string.IsNullOrEmpty(Settings.Pageant) && 
+                Settings.AutoStartPageant && 
+                GetSsh().Contains("plink.exe"))
+            {
+                return GetSetting("remote." + remote + ".puttykeyfile");
+            }
+            return "";
+        }
+
+        public static string PushCmd(string path, string branch, bool all)
+        {
             branch = branch.Replace(" ", "");
 
             if (all)
-                return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push --all \"" + path.Trim() + "\"\"");
+                return "push --all \"" + path.Trim() + "\"";
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\" " + branch + "\"");
+                    return "push \"" + path.Trim() + "\" " + branch;
 
 
-            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" push \"" + path.Trim() + "\"\"");
+            return "push \"" + path.Trim() + "\"";
         }
 
         static public string Fetch(string remote, string branch)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
+            branch = FetchCmd(remote, branch);
+
+            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + FetchCmd(remote, branch) + "\"");
+
+            return "Done";
+        }
+
+        public static string FetchCmd(string remote, string branch)
+        {
             branch = branch.Replace(" ", "");
 
             string localbranch;
@@ -563,10 +638,7 @@ namespace GitCommands
                 remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
 
 
-
-            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" fetch \"" + remote.Trim() + "\" " + localbranch + remotebranch + "\"");
-
-            return "Done";
+            return "fetch \"" + remote.Trim() + "\" " + localbranch + remotebranch;
         }
 
 
@@ -574,7 +646,14 @@ namespace GitCommands
         static public string Pull(string remote, string branch, bool rebase)
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
-            
+
+            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PullCmd(remote, branch, rebase) + "\"");
+
+            return "Done";
+        }
+
+        public static string PullCmd(string remote, string branch, bool rebase)
+        {
             branch = branch.Replace(" ", "");
 
             string rebaseOption = "";
@@ -593,12 +672,9 @@ namespace GitCommands
                 remotebranch = "";
             else
                 remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
-            
-                
 
-            GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" pull " + rebaseOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch + "\"");
 
-            return "Done";
+            return "pull " + rebaseOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
         }
 
         static public string ContinueRebase()
@@ -770,9 +846,9 @@ namespace GitCommands
             return result;
         }
 
-        public static Process UpdateRemotes()
+        public static string UpdateRemotes()
         {
-            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" remote update\"");
+            return RunCmd(Settings.GitDir + "git.cmd", "remote update");
         }
 
 

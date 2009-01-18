@@ -42,6 +42,7 @@
             this.AddRemote = new System.Windows.Forms.Button();
             this.Remotes = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -171,6 +172,8 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
+            this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
             this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
             // 
             // groupBox1
@@ -185,11 +188,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Branch";
             // 
+            // LoadSSHKey
+            // 
+            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LoadSSHKey.Location = new System.Drawing.Point(314, 179);
+            this.LoadSSHKey.Name = "LoadSSHKey";
+            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
+            this.LoadSSHKey.TabIndex = 23;
+            this.LoadSSHKey.Text = "Load SSH key";
+            this.LoadSSHKey.UseVisualStyleBackColor = true;
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(561, 213);
+            this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Push);
@@ -222,5 +238,6 @@
         private System.Windows.Forms.Button AddRemote;
         private System.Windows.Forms.ComboBox Remotes;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button LoadSSHKey;
     }
 }

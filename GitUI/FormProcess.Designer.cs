@@ -31,15 +31,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProcess));
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Output = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
-            this.Output = new System.Windows.Forms.RichTextBox();
+            this.SuccessImage = new System.Windows.Forms.PictureBox();
+            this.ErrorImage = new System.Windows.Forms.PictureBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SuccessImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorImage)).BeginInit();
             this.SuspendLayout();
             // 
             // Ok
@@ -62,6 +66,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.SuccessImage);
+            this.splitContainer1.Panel1.Controls.Add(this.ErrorImage);
             this.splitContainer1.Panel1.Controls.Add(this.Output);
             // 
             // splitContainer1.Panel2
@@ -70,6 +76,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(564, 261);
             this.splitContainer1.SplitterDistance = 232;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // Output
+            // 
+            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Output.Location = new System.Drawing.Point(0, 0);
+            this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
+            this.Output.Size = new System.Drawing.Size(564, 232);
+            this.Output.TabIndex = 0;
+            this.Output.Text = "";
             // 
             // splitContainer2
             // 
@@ -100,15 +116,25 @@
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
             // 
-            // Output
+            // SuccessImage
             // 
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(564, 232);
-            this.Output.TabIndex = 0;
-            this.Output.Text = "";
+            this.SuccessImage.Image = global::GitUI.Properties.Resources.success1;
+            this.SuccessImage.Location = new System.Drawing.Point(516, 3);
+            this.SuccessImage.Name = "SuccessImage";
+            this.SuccessImage.Size = new System.Drawing.Size(47, 46);
+            this.SuccessImage.TabIndex = 2;
+            this.SuccessImage.TabStop = false;
+            this.SuccessImage.Visible = false;
+            // 
+            // ErrorImage
+            // 
+            this.ErrorImage.Image = global::GitUI.Properties.Resources.error;
+            this.ErrorImage.Location = new System.Drawing.Point(516, 3);
+            this.ErrorImage.Name = "ErrorImage";
+            this.ErrorImage.Size = new System.Drawing.Size(45, 44);
+            this.ErrorImage.TabIndex = 1;
+            this.ErrorImage.TabStop = false;
+            this.ErrorImage.Visible = false;
             // 
             // FormProcess
             // 
@@ -128,6 +154,8 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SuccessImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -139,5 +167,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.RichTextBox Output;
+        private System.Windows.Forms.PictureBox ErrorImage;
+        private System.Windows.Forms.PictureBox SuccessImage;
     }
 }
