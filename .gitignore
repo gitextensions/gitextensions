@@ -31,3 +31,6 @@ UMM/UMM448/IActivaplanner.h
 
 
 !/Bin/ICSharpCode.TextEditor.dll
+!/Bin/plink.exe
+!/Bin/pageant.exe
+!/Bin/puttygen.exe
