@@ -117,11 +117,11 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text)))
             {
-                LoadSSHKey.Enabled = true;
+                LoadSSHKey.Visible = true;
             }
             else
             {
-                LoadSSHKey.Enabled = false;
+                LoadSSHKey.Visible = false;
             }
         }
 

@@ -537,6 +537,11 @@ namespace GitUI
             GitCommands.GitCommands.Run(GitCommands.Settings.Puttygen, "");
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new FormClone().ShowDialog();
+        }
+
 
     }
 }

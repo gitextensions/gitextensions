@@ -119,7 +119,7 @@
             // SuccessImage
             // 
             this.SuccessImage.Image = global::GitUI.Properties.Resources.success1;
-            this.SuccessImage.Location = new System.Drawing.Point(516, 3);
+            this.SuccessImage.Location = new System.Drawing.Point(487, 3);
             this.SuccessImage.Name = "SuccessImage";
             this.SuccessImage.Size = new System.Drawing.Size(47, 46);
             this.SuccessImage.TabIndex = 2;
@@ -129,7 +129,7 @@
             // ErrorImage
             // 
             this.ErrorImage.Image = global::GitUI.Properties.Resources.error;
-            this.ErrorImage.Location = new System.Drawing.Point(516, 3);
+            this.ErrorImage.Location = new System.Drawing.Point(488, 3);
             this.ErrorImage.Name = "ErrorImage";
             this.ErrorImage.Size = new System.Drawing.Size(45, 44);
             this.ErrorImage.TabIndex = 1;

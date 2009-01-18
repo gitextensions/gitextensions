@@ -21,8 +21,6 @@ namespace GitUI
         {
             try
             {
-                OutPut.Text = "";
-
                 RepositoryHistory.AddMostRecentRepository(From.Text);
                 RepositoryHistory.AddMostRecentRepository(To.Text);
 
@@ -32,12 +30,12 @@ namespace GitUI
 
                 FormProcess fromProcess;
 
+
                 if (CentralRepository.Checked)
                     fromProcess = new FormProcess("clone --bare --shared=all \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
                 else
-                    fromProcess = new FormProcess("clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
-
-                OutPut.Text = "Command executed \n" + fromProcess.outputString.ToString();
+                    fromProcess = new FormProcess("C:\\Windows\\System32\\cmd.exe", " /c \"\"" + Settings.GitDir + "git.cmd\" clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"\"");
+                    //fromProcess = new FormProcess("clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
             }
             catch
             {
@@ -73,6 +71,17 @@ namespace GitUI
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void LoadSSHKey_Click(object sender, EventArgs e)
+        {
+            new FormLoadPuttySSHKey().ShowDialog();
+        }
+
+        private void FormClone_Load(object sender, EventArgs e)
+        {
+            if (!GitCommands.GitCommands.GetSsh().Contains("plink"))
+                LoadSSHKey.Visible = false;
         }
     }
 }

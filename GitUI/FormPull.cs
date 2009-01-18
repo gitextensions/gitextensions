@@ -157,6 +157,7 @@ namespace GitUI
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
 
             this.Text = "Pull (" + GitCommands.Settings.WorkingDir + ")";
+            EnableLoadSSHButton();
         }
 
         private void PullSource_DrawItem(object sender, DrawItemEventArgs e)
@@ -215,11 +216,11 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text)))
             {
-                LoadSSHKey.Enabled = true;
+                LoadSSHKey.Visible = true;
             }
             else
             {
-                LoadSSHKey.Enabled = false;
+                LoadSSHKey.Visible = false;
             }
         }
 

@@ -55,7 +55,10 @@ namespace GitUI
                 if (GitCommands.GitCommands.GetSsh().Contains("plink.exe"))
                     Putty.Checked = true;
                 else
+                {
+                    OtherSsh.Text = GitCommands.GitCommands.GetSsh();
                     Other.Checked = true;
+                }
 
             EnableSshOptions();
         }
@@ -451,25 +454,22 @@ namespace GitUI
             if (!installdir.EndsWith("\\"))
                 installdir += "\\";
 
-            if (string.IsNullOrEmpty(PlinkPath.Text))
+            if (!File.Exists(PlinkPath.Text))
             {
-                PlinkPath.Text = installdir + "plink.exe";
-                if (!File.Exists(PlinkPath.Text))
-                    PlinkPath.Text = "";
+                if (File.Exists(installdir + "plink.exe"))
+                    PlinkPath.Text = installdir + "plink.exe";
             }
 
-            if (string.IsNullOrEmpty(PuttygenPath.Text))
+            if (!File.Exists(PuttygenPath.Text))
             {
-                PuttygenPath.Text = installdir + "puttygen.exe";
-                if (!File.Exists(PuttygenPath.Text))
-                    PuttygenPath.Text = "";
+                if (File.Exists(installdir + "puttygen.exe"))
+                    PuttygenPath.Text = installdir + "puttygen.exe";
             }
 
-            if (string.IsNullOrEmpty(PageantPath.Text))
+            if (!File.Exists(PageantPath.Text))
             {
-                PageantPath.Text = installdir + "pageant.exe";
-                if (!File.Exists(PageantPath.Text))
-                    PageantPath.Text = "";
+                if (File.Exists(installdir + "pageant.exe"))
+                    PageantPath.Text = installdir + "pageant.exe";
             }
 
             if (File.Exists(PageantPath.Text) &&

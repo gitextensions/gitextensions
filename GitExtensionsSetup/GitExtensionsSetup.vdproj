@@ -45,6 +45,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_692872B1DD114DC28B27329FB00D1FD8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7E57C78A59AF41F2BF779DF83827EABF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_86F0ECA201E04185A17208ABF277D125"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -64,6 +76,12 @@
         "Entry"
         {
         "MsmKey" = "8:_9AC172A85E904390ABAC6CD994495461"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9D2BB4B8E79C48C6ACEB282F45BB4D05"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -148,36 +166,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C016F84D735B4E51936169EB8510C89D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_331E12700CA4CF7C5D0715BC5128EF63"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B69F3C7DC17475F47F5F0863B51FE856"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -191,6 +179,36 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C0E93D7D5BF545CA9D60024445106C8D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C016F84D735B4E51936169EB8510C89D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B69F3C7DC17475F47F5F0863B51FE856"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_331E12700CA4CF7C5D0715BC5128EF63"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -400,11 +418,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_692872B1DD114DC28B27329FB00D1FD8"
+            {
+            "SourcePath" = "8:..\\Bin\\pageant.exe"
+            "TargetName" = "8:pageant.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_982A7198DF544986A9CF1EA39E9E9E92"
+            "Condition" = "8:SSH_CLIENT=2"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7E57C78A59AF41F2BF779DF83827EABF"
+            {
+            "SourcePath" = "8:..\\Bin\\plink.exe"
+            "TargetName" = "8:plink.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_982A7198DF544986A9CF1EA39E9E9E92"
+            "Condition" = "8:SSH_CLIENT=2"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_86F0ECA201E04185A17208ABF277D125"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3294.36093, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3305.30454, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -487,6 +545,26 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:4"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D2BB4B8E79C48C6ACEB282F45BB4D05"
+            {
+            "SourcePath" = "8:..\\Bin\\puttygen.exe"
+            "TargetName" = "8:puttygen.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_982A7198DF544986A9CF1EA39E9E9E92"
+            "Condition" = "8:SSH_CLIENT=2"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
@@ -577,7 +655,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3294.36093, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3305.30454, Culture=neutral, PublicKeyToken=a93241b7ecb8af87, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -832,6 +910,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_982A7198DF544986A9CF1EA39E9E9E92"
+                    {
+                    "Name" = "8:PuTTY"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:SSH_CLIENT=2"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_BDC9413B129F4AC084125579D418E27F"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -851,7 +940,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{2BABF1BB-BE4D-4282-A994-932ADE544187}"
+        "PackageCode" = "8:{B5A3E91A-7A04-4746-8DDC-905BBE79904D}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -942,6 +1031,74 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_4D416CDB33A84CFCA91FEFAD5F7A7DEA"
+                                    {
+                                    "Name" = "8:GitExtensions"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_CEFF0E704F5743338B466BFFA1F42956"
+                                            {
+                                            "Name" = "8:1.0.0.0"
+                                            "Condition" = "8:SSH_CLIENT=2"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1A876A09DA134D4283F29B7F172C5D10"
+                                                    {
+                                                    "Name" = "8:pageant"
+                                                    "Condition" = "8:SSH_CLIENT=2"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:pageant.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_37EB8F9A9DE64EF5A874E2BE74A609A4"
+                                                    {
+                                                    "Name" = "8:puttygen"
+                                                    "Condition" = "8:SSH_CLIENT=2"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:puttygen.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4C2FEB90358E4B5FA627A23FB3BE4C3A"
+                                                    {
+                                                    "Name" = "8:plink"
+                                                    "Condition" = "8:SSH_CLIENT=2"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:plink.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DEB45D0ABE514554B4D08CDC2460590C"
+                                                    {
+                                                    "Name" = "8:gitssh"
+                                                    "Condition" = "8:SSH_CLIENT=2"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:plink.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EE75144E36504421BA3704DC3E36158E"
+                                                    {
+                                                    "Name" = "8:gitssh"
+                                                    "Condition" = "8:SSH_CLIENT=1"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
                                 }
                                 "Values"
                                 {
@@ -1217,6 +1374,132 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_6C0B1CC4A129494B903062A57CB8E0C9"
+                    {
+                    "Sequence" = "3:310"
+                    "DisplayName" = "8:RadioButtons   (2 buttons)"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdCustom2ButtonDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BannerText"
+                            {
+                            "Name" = "8:BannerText"
+                            "DisplayName" = "8:#1014"
+                            "Description" = "8:#1114"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Select SSH client"
+                            "DefaultValue" = "8:#1214"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BodyText"
+                            {
+                            "Name" = "8:BodyText"
+                            "DisplayName" = "8:#1015"
+                            "Description" = "8:#1115"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Select the SSH client that will be used by Git Extensions. PuTTY has better intergration on Windows. OpenSSH is the Git default."
+                            "DefaultValue" = "8:#1215"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button1Label"
+                            {
+                            "Name" = "8:Button1Label"
+                            "DisplayName" = "8:#1022"
+                            "Description" = "8:#1122"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:OpenSSH"
+                            "DefaultValue" = "8:#1222"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button1Value"
+                            {
+                            "Name" = "8:Button1Value"
+                            "DisplayName" = "8:#1018"
+                            "Description" = "8:#1118"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:1"
+                            "DefaultValue" = "8:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button2Label"
+                            {
+                            "Name" = "8:Button2Label"
+                            "DisplayName" = "8:#1023"
+                            "Description" = "8:#1123"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:PuTTY (plink.exe)"
+                            "DefaultValue" = "8:#1223"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button2Value"
+                            {
+                            "Name" = "8:Button2Value"
+                            "DisplayName" = "8:#1019"
+                            "Description" = "8:#1119"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:2"
+                            "DefaultValue" = "8:2"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "ButtonProperty"
+                            {
+                            "Name" = "8:ButtonProperty"
+                            "DisplayName" = "8:#1017"
+                            "Description" = "8:#1117"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:SSH_CLIENT"
+                            "DefaultValue" = "8:BUTTON2"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "DefaultValue"
+                            {
+                            "Name" = "8:DefaultValue"
+                            "DisplayName" = "8:#1016"
+                            "Description" = "8:#1116"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:2"
+                            "DefaultValue" = "8:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_90AED41238A744DCB55A5AD710141C06"
                     {
                     "Sequence" = "3:200"
@@ -1254,7 +1537,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_94AD0DECA4FE4C8B8DA1F54599858A6E"
                     {
-                    "Sequence" = "3:400"
+                    "Sequence" = "3:300"
                     "DisplayName" = "8:Checkboxes   (A)"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -1558,7 +1841,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_A6C7CBF4689D4A428BDC0A63B4DA8658"
                     {
-                    "Sequence" = "3:410"
+                    "Sequence" = "3:400"
                     "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"

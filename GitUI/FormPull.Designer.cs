@@ -95,7 +95,7 @@
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(217, 265);
+            this.Mergetool.Location = new System.Drawing.Point(12, 265);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 11;
@@ -162,7 +162,7 @@
             // 
             // Stash
             // 
-            this.Stash.Location = new System.Drawing.Point(12, 265);
+            this.Stash.Location = new System.Drawing.Point(122, 265);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
             this.Stash.TabIndex = 14;
@@ -244,7 +244,7 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(122, 269);
+            this.AutoStash.Location = new System.Drawing.Point(232, 269);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(76, 17);
             this.AutoStash.TabIndex = 20;

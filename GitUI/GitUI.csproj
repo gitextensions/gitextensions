@@ -181,6 +181,12 @@
     <Compile Include="FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormLoadPuttySSHKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLoadPuttySSHKey.Designer.cs">
+      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMailMap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +216,12 @@
     </Compile>
     <Compile Include="FormPush.Designer.cs">
       <DependentUpon>FormPush.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPuttyError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPuttyError.Designer.cs">
+      <DependentUpon>FormPuttyError.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRebase.cs">
       <SubType>Form</SubType>
@@ -365,6 +377,9 @@
     <EmbeddedResource Include="FormInit.resx">
       <DependentUpon>FormInit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormLoadPuttySSHKey.resx">
+      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMailMap.resx">
       <DependentUpon>FormMailMap.cs</DependentUpon>
     </EmbeddedResource>
@@ -379,6 +394,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPuttyError.resx">
+      <DependentUpon>FormPuttyError.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRebase.resx">
       <DependentUpon>FormRebase.cs</DependentUpon>

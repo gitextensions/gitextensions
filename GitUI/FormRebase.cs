@@ -126,7 +126,15 @@ namespace GitUI
             if (result.Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date.\nNothing to rebase.", "Rebase");
             else
-                Output.Text = result;
+                if (string.IsNullOrEmpty(result))
+                {
+                    MessageBox.Show("Done.", "Rebase");
+                }
+                else
+                    {
+                        if (this.Height < 200)
+                            this.Height = 500;
+                    }
 
             EnableButtons();
             patchGrid1.Initialize();

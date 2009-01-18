@@ -69,7 +69,6 @@
             this.remotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageRemoteRepositoriesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.RevisionGrid = new GitUI.RevisionGrid();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.Workingdir = new System.Windows.Forms.ToolStripButton();
             this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
@@ -103,6 +102,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -489,20 +489,6 @@
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(219, 6);
             // 
-            // RevisionGrid
-            // 
-            this.RevisionGrid.currentCheckout = "\nfatal: Not a git repository\n";
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.RevisionGrid.LastRow = 0;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RevisionGrid.Size = new System.Drawing.Size(849, 230);
-            this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
-            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
-            // 
             // RefreshButton
             // 
             this.RefreshButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -772,6 +758,20 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.currentCheckout = "\nfatal: Not a git repository\n";
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RevisionGrid.LastRow = 0;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RevisionGrid.Size = new System.Drawing.Size(849, 230);
+            this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
+            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
             // 
             // FormBrowse
             // 

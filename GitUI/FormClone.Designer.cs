@@ -40,9 +40,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
-            this.OutPut = new System.Windows.Forms.RichTextBox();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
+            this.LoadSSHKey = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -65,14 +65,14 @@
             this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Controls.Add(this.Ok);
             this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer1.Size = new System.Drawing.Size(460, 312);
-            this.splitContainer1.SplitterDistance = 146;
+            this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
+            this.splitContainer1.Panel2.Controls.Add(this.Ok);
+            this.splitContainer1.Size = new System.Drawing.Size(460, 176);
+            this.splitContainer1.SplitterDistance = 147;
             this.splitContainer1.TabIndex = 0;
             // 
             // groupBox1
@@ -166,22 +166,13 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(373, 115);
+            this.Ok.Location = new System.Drawing.Point(373, 2);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
-            // 
-            // OutPut
-            // 
-            this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OutPut.Location = new System.Drawing.Point(0, 0);
-            this.OutPut.Name = "OutPut";
-            this.OutPut.Size = new System.Drawing.Size(460, 162);
-            this.OutPut.TabIndex = 0;
-            this.OutPut.Text = "";
             // 
             // Central
             // 
@@ -205,16 +196,29 @@
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
             // 
+            // LoadSSHKey
+            // 
+            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
+            this.LoadSSHKey.Name = "LoadSSHKey";
+            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
+            this.LoadSSHKey.TabIndex = 25;
+            this.LoadSSHKey.Text = "Load SSH key";
+            this.LoadSSHKey.UseVisualStyleBackColor = true;
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            // 
             // FormClone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 312);
+            this.ClientSize = new System.Drawing.Size(460, 176);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
+            this.Load += new System.EventHandler(this.FormClone_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -231,7 +235,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.RichTextBox OutPut;
         private System.Windows.Forms.Button ToBrowse;
         private System.Windows.Forms.Button FromBrowse;
         private System.Windows.Forms.ComboBox From;
@@ -241,5 +244,6 @@
         private System.Windows.Forms.RadioButton PersonalRepository;
         private System.Windows.Forms.RadioButton Central;
         private System.Windows.Forms.RadioButton Personal;
+        private System.Windows.Forms.Button LoadSSHKey;
     }
 }

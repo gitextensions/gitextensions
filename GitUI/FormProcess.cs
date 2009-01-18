@@ -100,7 +100,9 @@ namespace GitUI
                     {
                         if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
                         {
-                            if (MessageBox.Show("This error usually means that the PuTTY authentication agent is not running.\nor that the correct private key is not (yet) loaded.\n\nWhen the key is loaded, you can press retry. If not, cancel", "Authentication error", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
+                            FormPuttyError puttyError = new FormPuttyError();
+                            puttyError.ShowDialog();
+                            if (puttyError.RetryProcess)
                             {
                                 FormProcess_Load(null, null);
                             }

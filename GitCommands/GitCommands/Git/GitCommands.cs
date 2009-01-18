@@ -578,10 +578,15 @@ namespace GitCommands
             string sshKeyFile = GetPuttyKeyFileForRemote(remote);
             if (!string.IsNullOrEmpty(sshKeyFile))
             {
-                GitCommands.Run(Settings.Pageant, sshKeyFile);
+                StartPageantWithKey(sshKeyFile);
                 return true;
             }
             return false;
+        }
+
+        public static void StartPageantWithKey(string sshKeyFile)
+        {
+            GitCommands.Run(Settings.Pageant, sshKeyFile);
         }
 
         public static string GetPuttyKeyFileForRemote(string remote)

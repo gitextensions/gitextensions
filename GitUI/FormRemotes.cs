@@ -128,7 +128,7 @@ namespace GitUI
         private void SshBrowse_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "All files (*.*)|*.*";
+            dialog.Filter = "Private key (*.ppk)|*.ppk";
             dialog.InitialDirectory = ".";
             dialog.Title = "Select ssh key file";
             if (dialog.ShowDialog() == DialogResult.OK)
