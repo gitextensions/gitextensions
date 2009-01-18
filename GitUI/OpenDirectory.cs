@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using System.IO;
 
 namespace GitUI
 {
@@ -30,11 +31,18 @@ namespace GitUI
 
         private void Load_Click(object sender, EventArgs e)
         {
-            Settings.WorkingDir = Directory.Text;
+            if (System.IO.Directory.Exists(Directory.Text))
+            {
+                Settings.WorkingDir = Directory.Text;
 
-            RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 
-            Close();
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Directory does not exist.", "Error");
+            }
         }
 
         private void Directory_KeyPress(object sender, KeyPressEventArgs e)

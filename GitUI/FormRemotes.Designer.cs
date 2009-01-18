@@ -33,6 +33,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Remotes = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.PuttySshKey = new System.Windows.Forms.TextBox();
+            this.SshBrowse = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.RemoteName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,9 +57,6 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label3 = new System.Windows.Forms.Label();
-            this.SshBrowse = new System.Windows.Forms.Button();
-            this.PuttySshKey = new System.Windows.Forms.TextBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -118,6 +118,32 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
+            // 
+            // PuttySshKey
+            // 
+            this.PuttySshKey.Location = new System.Drawing.Point(121, 79);
+            this.PuttySshKey.Name = "PuttySshKey";
+            this.PuttySshKey.Size = new System.Drawing.Size(246, 20);
+            this.PuttySshKey.TabIndex = 7;
+            // 
+            // SshBrowse
+            // 
+            this.SshBrowse.Location = new System.Drawing.Point(373, 77);
+            this.SshBrowse.Name = "SshBrowse";
+            this.SshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.SshBrowse.TabIndex = 6;
+            this.SshBrowse.Text = "Browse";
+            this.SshBrowse.UseVisualStyleBackColor = true;
+            this.SshBrowse.Click += new System.EventHandler(this.SshBrowse_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 82);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(102, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "PuTTY SSH key file";
             // 
             // RemoteName
             // 
@@ -323,32 +349,6 @@
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 82);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(102, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "PuTTY SSH key file";
-            // 
-            // SshBrowse
-            // 
-            this.SshBrowse.Location = new System.Drawing.Point(373, 77);
-            this.SshBrowse.Name = "SshBrowse";
-            this.SshBrowse.Size = new System.Drawing.Size(75, 23);
-            this.SshBrowse.TabIndex = 6;
-            this.SshBrowse.Text = "Browse";
-            this.SshBrowse.UseVisualStyleBackColor = true;
-            this.SshBrowse.Click += new System.EventHandler(this.SshBrowse_Click);
-            // 
-            // PuttySshKey
-            // 
-            this.PuttySshKey.Location = new System.Drawing.Point(121, 79);
-            this.PuttySshKey.Name = "PuttySshKey";
-            this.PuttySshKey.Size = new System.Drawing.Size(246, 20);
-            this.PuttySshKey.TabIndex = 7;
             // 
             // FormRemotes
             // 

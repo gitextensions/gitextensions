@@ -32,7 +32,7 @@ namespace GitUI
 
 
                 if (CentralRepository.Checked)
-                    fromProcess = new FormProcess("clone --bare --shared=all \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                    fromProcess = new FormProcess("clone --bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
                 else
                     fromProcess = new FormProcess("C:\\Windows\\System32\\cmd.exe", " /c \"\"" + Settings.GitDir + "git.cmd\" clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"\"");
                     //fromProcess = new FormProcess("clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");

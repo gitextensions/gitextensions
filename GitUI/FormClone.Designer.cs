@@ -39,10 +39,10 @@
             this.FromBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.LoadSSHKey = new System.Windows.Forms.Button();
             this.Ok = new System.Windows.Forms.Button();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
-            this.LoadSSHKey = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -91,9 +91,9 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(274, 17);
+            this.CentralRepository.Size = new System.Drawing.Size(258, 17);
             this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository
@@ -164,6 +164,18 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "From";
             // 
+            // LoadSSHKey
+            // 
+            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
+            this.LoadSSHKey.Name = "LoadSSHKey";
+            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
+            this.LoadSSHKey.TabIndex = 25;
+            this.LoadSSHKey.Text = "Load SSH key";
+            this.LoadSSHKey.UseVisualStyleBackColor = true;
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(373, 2);
@@ -195,18 +207,6 @@
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
-            // 
-            // LoadSSHKey
-            // 
-            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
-            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
-            this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
-            this.LoadSSHKey.TabIndex = 25;
-            this.LoadSSHKey.Text = "Load SSH key";
-            this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
             // 
             // FormClone
             // 

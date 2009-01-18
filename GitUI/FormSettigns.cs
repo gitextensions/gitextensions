@@ -261,7 +261,7 @@ namespace GitUI
                 }
                 if (GitCommands.GitCommands.GetSsh().Contains("plink.exe"))
                 {
-                    if (!File.Exists(PlinkPath.Text) || !File.Exists(PuttygenPath.Text) || !File.Exists(PageantPath.Text))
+                    if (!File.Exists(GitCommands.Settings.Plink) || !File.Exists(GitCommands.Settings.Puttygen) || !File.Exists(GitCommands.Settings.Pageant))
                     {
                         SshConfig.BackColor = Color.LightSalmon;
                         SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";

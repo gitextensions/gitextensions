@@ -279,8 +279,10 @@ namespace GitCommands
                     output += "\n" + error;
                 }
             }
-            catch
+            catch(Exception e)
             {
+                string error = e.Message;
+                return error;
             }
             return output;
         }

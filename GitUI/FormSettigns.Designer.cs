@@ -42,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.SshConfig = new System.Windows.Forms.Button();
             this.GitBinFound = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
             this.CheckAtStartup = new System.Windows.Forms.CheckBox();
@@ -71,42 +72,41 @@
             this.GlobalUserName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Ok = new System.Windows.Forms.Button();
             this.Ssh = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Putty = new System.Windows.Forms.RadioButton();
-            this.OpenSSH = new System.Windows.Forms.RadioButton();
-            this.PlinkPath = new System.Windows.Forms.TextBox();
-            this.PlinkBrowse = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.PuttygenPath = new System.Windows.Forms.TextBox();
-            this.PuttygenBrowse = new System.Windows.Forms.Button();
+            this.AutostartPageant = new System.Windows.Forms.CheckBox();
             this.PageantPath = new System.Windows.Forms.TextBox();
             this.PageantBrowse = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.Other = new System.Windows.Forms.RadioButton();
-            this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
-            this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
+            this.PuttygenPath = new System.Windows.Forms.TextBox();
+            this.PuttygenBrowse = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.PlinkPath = new System.Windows.Forms.TextBox();
+            this.PlinkBrowse = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.OtherSsh = new System.Windows.Forms.TextBox();
             this.OtherSshBrowse = new System.Windows.Forms.Button();
-            this.SshConfig = new System.Windows.Forms.Button();
-            this.AutostartPageant = new System.Windows.Forms.CheckBox();
+            this.Other = new System.Windows.Forms.RadioButton();
+            this.label18 = new System.Windows.Forms.Label();
+            this.OpenSSH = new System.Windows.Forms.RadioButton();
+            this.Putty = new System.Windows.Forms.RadioButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Ok = new System.Windows.Forms.Button();
+            this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
+            this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.GlobalSettingsPage.SuspendLayout();
+            this.Ssh.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.Ssh.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -245,6 +245,20 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // SshConfig
+            // 
+            this.SshConfig.BackColor = System.Drawing.Color.Gray;
+            this.SshConfig.FlatAppearance.BorderSize = 0;
+            this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SshConfig.Location = new System.Drawing.Point(9, 202);
+            this.SshConfig.Name = "SshConfig";
+            this.SshConfig.Size = new System.Drawing.Size(631, 23);
+            this.SshConfig.TabIndex = 10;
+            this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SshConfig.UseVisualStyleBackColor = false;
+            this.SshConfig.Click += new System.EventHandler(this.SshConfig_Click);
             // 
             // GitBinFound
             // 
@@ -568,6 +582,206 @@
             this.label3.Text = "User name";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // Ssh
+            // 
+            this.Ssh.Controls.Add(this.groupBox2);
+            this.Ssh.Controls.Add(this.groupBox1);
+            this.Ssh.Location = new System.Drawing.Point(4, 22);
+            this.Ssh.Name = "Ssh";
+            this.Ssh.Padding = new System.Windows.Forms.Padding(3);
+            this.Ssh.Size = new System.Drawing.Size(655, 255);
+            this.Ssh.TabIndex = 4;
+            this.Ssh.Text = "Ssh";
+            this.Ssh.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.AutostartPageant);
+            this.groupBox2.Controls.Add(this.PageantPath);
+            this.groupBox2.Controls.Add(this.PageantBrowse);
+            this.groupBox2.Controls.Add(this.label17);
+            this.groupBox2.Controls.Add(this.PuttygenPath);
+            this.groupBox2.Controls.Add(this.PuttygenBrowse);
+            this.groupBox2.Controls.Add(this.label16);
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Controls.Add(this.PlinkPath);
+            this.groupBox2.Controls.Add(this.PlinkBrowse);
+            this.groupBox2.Location = new System.Drawing.Point(8, 123);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(639, 126);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Configure PuTTY";
+            // 
+            // AutostartPageant
+            // 
+            this.AutostartPageant.AutoSize = true;
+            this.AutostartPageant.Checked = true;
+            this.AutostartPageant.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutostartPageant.Location = new System.Drawing.Point(118, 103);
+            this.AutostartPageant.Name = "AutostartPageant";
+            this.AutostartPageant.Size = new System.Drawing.Size(416, 17);
+            this.AutostartPageant.TabIndex = 11;
+            this.AutostartPageant.Text = "Automaticly start authentication client when a private key is configured for a re" +
+                "mote";
+            this.AutostartPageant.UseVisualStyleBackColor = true;
+            // 
+            // PageantPath
+            // 
+            this.PageantPath.Location = new System.Drawing.Point(118, 76);
+            this.PageantPath.Name = "PageantPath";
+            this.PageantPath.Size = new System.Drawing.Size(323, 20);
+            this.PageantPath.TabIndex = 9;
+            // 
+            // PageantBrowse
+            // 
+            this.PageantBrowse.Location = new System.Drawing.Point(463, 75);
+            this.PageantBrowse.Name = "PageantBrowse";
+            this.PageantBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PageantBrowse.TabIndex = 10;
+            this.PageantBrowse.Text = "Browse";
+            this.PageantBrowse.UseVisualStyleBackColor = true;
+            this.PageantBrowse.Click += new System.EventHandler(this.PageantBrowse_Click);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(8, 79);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(83, 13);
+            this.label17.TabIndex = 8;
+            this.label17.Text = "Path to pageant";
+            // 
+            // PuttygenPath
+            // 
+            this.PuttygenPath.Location = new System.Drawing.Point(118, 46);
+            this.PuttygenPath.Name = "PuttygenPath";
+            this.PuttygenPath.Size = new System.Drawing.Size(323, 20);
+            this.PuttygenPath.TabIndex = 6;
+            // 
+            // PuttygenBrowse
+            // 
+            this.PuttygenBrowse.Location = new System.Drawing.Point(463, 45);
+            this.PuttygenBrowse.Name = "PuttygenBrowse";
+            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PuttygenBrowse.TabIndex = 7;
+            this.PuttygenBrowse.Text = "Browse";
+            this.PuttygenBrowse.UseVisualStyleBackColor = true;
+            this.PuttygenBrowse.Click += new System.EventHandler(this.PuttygenBrowse_Click);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(8, 49);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(85, 13);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "Path to puttygen";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(8, 20);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(86, 13);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "Path to plink.exe";
+            // 
+            // PlinkPath
+            // 
+            this.PlinkPath.Location = new System.Drawing.Point(118, 17);
+            this.PlinkPath.Name = "PlinkPath";
+            this.PlinkPath.Size = new System.Drawing.Size(323, 20);
+            this.PlinkPath.TabIndex = 2;
+            // 
+            // PlinkBrowse
+            // 
+            this.PlinkBrowse.Location = new System.Drawing.Point(463, 16);
+            this.PlinkBrowse.Name = "PlinkBrowse";
+            this.PlinkBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PlinkBrowse.TabIndex = 3;
+            this.PlinkBrowse.Text = "Browse";
+            this.PlinkBrowse.UseVisualStyleBackColor = true;
+            this.PlinkBrowse.Click += new System.EventHandler(this.PuttyBrowse_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.OtherSsh);
+            this.groupBox1.Controls.Add(this.OtherSshBrowse);
+            this.groupBox1.Controls.Add(this.Other);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.OpenSSH);
+            this.groupBox1.Controls.Add(this.Putty);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(639, 111);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Specify which ssh client to use";
+            // 
+            // OtherSsh
+            // 
+            this.OtherSsh.Location = new System.Drawing.Point(118, 80);
+            this.OtherSsh.Name = "OtherSsh";
+            this.OtherSsh.Size = new System.Drawing.Size(323, 20);
+            this.OtherSsh.TabIndex = 4;
+            // 
+            // OtherSshBrowse
+            // 
+            this.OtherSshBrowse.Location = new System.Drawing.Point(463, 79);
+            this.OtherSshBrowse.Name = "OtherSshBrowse";
+            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.OtherSshBrowse.TabIndex = 5;
+            this.OtherSshBrowse.Text = "Browse";
+            this.OtherSshBrowse.UseVisualStyleBackColor = true;
+            this.OtherSshBrowse.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // Other
+            // 
+            this.Other.AutoSize = true;
+            this.Other.Location = new System.Drawing.Point(9, 81);
+            this.Other.Name = "Other";
+            this.Other.Size = new System.Drawing.Size(98, 17);
+            this.Other.TabIndex = 3;
+            this.Other.Text = "Other ssh client";
+            this.Other.UseVisualStyleBackColor = true;
+            this.Other.CheckedChanged += new System.EventHandler(this.Other_CheckedChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.BackColor = System.Drawing.SystemColors.Info;
+            this.label18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label18.Location = new System.Drawing.Point(118, 19);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(518, 54);
+            this.label18.TabIndex = 2;
+            this.label18.Text = resources.GetString("label18.Text");
+            // 
+            // OpenSSH
+            // 
+            this.OpenSSH.AutoSize = true;
+            this.OpenSSH.Location = new System.Drawing.Point(9, 50);
+            this.OpenSSH.Name = "OpenSSH";
+            this.OpenSSH.Size = new System.Drawing.Size(73, 17);
+            this.OpenSSH.TabIndex = 1;
+            this.OpenSSH.Text = "OpenSSH";
+            this.OpenSSH.UseVisualStyleBackColor = true;
+            this.OpenSSH.CheckedChanged += new System.EventHandler(this.OpenSSH_CheckedChanged);
+            // 
+            // Putty
+            // 
+            this.Putty.AutoSize = true;
+            this.Putty.Checked = true;
+            this.Putty.Location = new System.Drawing.Point(9, 20);
+            this.Putty.Name = "Putty";
+            this.Putty.Size = new System.Drawing.Size(59, 17);
+            this.Putty.TabIndex = 0;
+            this.Putty.TabStop = true;
+            this.Putty.Text = "PuTTY";
+            this.Putty.UseVisualStyleBackColor = true;
+            this.Putty.CheckedChanged += new System.EventHandler(this.Putty_CheckedChanged);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -597,177 +811,6 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // Ssh
-            // 
-            this.Ssh.Controls.Add(this.groupBox2);
-            this.Ssh.Controls.Add(this.groupBox1);
-            this.Ssh.Location = new System.Drawing.Point(4, 22);
-            this.Ssh.Name = "Ssh";
-            this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(655, 255);
-            this.Ssh.TabIndex = 4;
-            this.Ssh.Text = "Ssh";
-            this.Ssh.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.OtherSsh);
-            this.groupBox1.Controls.Add(this.OtherSshBrowse);
-            this.groupBox1.Controls.Add(this.Other);
-            this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.OpenSSH);
-            this.groupBox1.Controls.Add(this.Putty);
-            this.groupBox1.Location = new System.Drawing.Point(8, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(639, 111);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Specify which ssh client to use";
-            // 
-            // Putty
-            // 
-            this.Putty.AutoSize = true;
-            this.Putty.Location = new System.Drawing.Point(9, 20);
-            this.Putty.Name = "Putty";
-            this.Putty.Size = new System.Drawing.Size(59, 17);
-            this.Putty.TabIndex = 0;
-            this.Putty.TabStop = true;
-            this.Putty.Text = "PuTTY";
-            this.Putty.UseVisualStyleBackColor = true;
-            this.Putty.CheckedChanged += new System.EventHandler(this.Putty_CheckedChanged);
-            // 
-            // OpenSSH
-            // 
-            this.OpenSSH.AutoSize = true;
-            this.OpenSSH.Location = new System.Drawing.Point(9, 50);
-            this.OpenSSH.Name = "OpenSSH";
-            this.OpenSSH.Size = new System.Drawing.Size(73, 17);
-            this.OpenSSH.TabIndex = 1;
-            this.OpenSSH.TabStop = true;
-            this.OpenSSH.Text = "OpenSSH";
-            this.OpenSSH.UseVisualStyleBackColor = true;
-            this.OpenSSH.CheckedChanged += new System.EventHandler(this.OpenSSH_CheckedChanged);
-            // 
-            // PlinkPath
-            // 
-            this.PlinkPath.Location = new System.Drawing.Point(118, 17);
-            this.PlinkPath.Name = "PlinkPath";
-            this.PlinkPath.Size = new System.Drawing.Size(323, 20);
-            this.PlinkPath.TabIndex = 2;
-            // 
-            // PlinkBrowse
-            // 
-            this.PlinkBrowse.Location = new System.Drawing.Point(463, 16);
-            this.PlinkBrowse.Name = "PlinkBrowse";
-            this.PlinkBrowse.Size = new System.Drawing.Size(75, 23);
-            this.PlinkBrowse.TabIndex = 3;
-            this.PlinkBrowse.Text = "Browse";
-            this.PlinkBrowse.UseVisualStyleBackColor = true;
-            this.PlinkBrowse.Click += new System.EventHandler(this.PuttyBrowse_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.AutostartPageant);
-            this.groupBox2.Controls.Add(this.PageantPath);
-            this.groupBox2.Controls.Add(this.PageantBrowse);
-            this.groupBox2.Controls.Add(this.label17);
-            this.groupBox2.Controls.Add(this.PuttygenPath);
-            this.groupBox2.Controls.Add(this.PuttygenBrowse);
-            this.groupBox2.Controls.Add(this.label16);
-            this.groupBox2.Controls.Add(this.label15);
-            this.groupBox2.Controls.Add(this.PlinkPath);
-            this.groupBox2.Controls.Add(this.PlinkBrowse);
-            this.groupBox2.Location = new System.Drawing.Point(8, 123);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(639, 126);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Configure PuTTY";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(8, 20);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(86, 13);
-            this.label15.TabIndex = 4;
-            this.label15.Text = "Path to plink.exe";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(8, 49);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(85, 13);
-            this.label16.TabIndex = 5;
-            this.label16.Text = "Path to puttygen";
-            // 
-            // PuttygenPath
-            // 
-            this.PuttygenPath.Location = new System.Drawing.Point(118, 46);
-            this.PuttygenPath.Name = "PuttygenPath";
-            this.PuttygenPath.Size = new System.Drawing.Size(323, 20);
-            this.PuttygenPath.TabIndex = 6;
-            // 
-            // PuttygenBrowse
-            // 
-            this.PuttygenBrowse.Location = new System.Drawing.Point(463, 45);
-            this.PuttygenBrowse.Name = "PuttygenBrowse";
-            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 23);
-            this.PuttygenBrowse.TabIndex = 7;
-            this.PuttygenBrowse.Text = "Browse";
-            this.PuttygenBrowse.UseVisualStyleBackColor = true;
-            this.PuttygenBrowse.Click += new System.EventHandler(this.PuttygenBrowse_Click);
-            // 
-            // PageantPath
-            // 
-            this.PageantPath.Location = new System.Drawing.Point(118, 76);
-            this.PageantPath.Name = "PageantPath";
-            this.PageantPath.Size = new System.Drawing.Size(323, 20);
-            this.PageantPath.TabIndex = 9;
-            // 
-            // PageantBrowse
-            // 
-            this.PageantBrowse.Location = new System.Drawing.Point(463, 75);
-            this.PageantBrowse.Name = "PageantBrowse";
-            this.PageantBrowse.Size = new System.Drawing.Size(75, 23);
-            this.PageantBrowse.TabIndex = 10;
-            this.PageantBrowse.Text = "Browse";
-            this.PageantBrowse.UseVisualStyleBackColor = true;
-            this.PageantBrowse.Click += new System.EventHandler(this.PageantBrowse_Click);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(8, 79);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(83, 13);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Path to pageant";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.BackColor = System.Drawing.SystemColors.Info;
-            this.label18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label18.Location = new System.Drawing.Point(118, 19);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(518, 54);
-            this.label18.TabIndex = 2;
-            this.label18.Text = resources.GetString("label18.Text");
-            // 
-            // Other
-            // 
-            this.Other.AutoSize = true;
-            this.Other.Location = new System.Drawing.Point(9, 81);
-            this.Other.Name = "Other";
-            this.Other.Size = new System.Drawing.Size(98, 17);
-            this.Other.TabIndex = 3;
-            this.Other.TabStop = true;
-            this.Other.Text = "Other ssh client";
-            this.Other.UseVisualStyleBackColor = true;
-            this.Other.CheckedChanged += new System.EventHandler(this.Other_CheckedChanged);
-            // 
             // directorySearcher1
             // 
             this.directorySearcher1.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
@@ -779,50 +822,6 @@
             this.directorySearcher2.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
-            // 
-            // OtherSsh
-            // 
-            this.OtherSsh.Location = new System.Drawing.Point(118, 80);
-            this.OtherSsh.Name = "OtherSsh";
-            this.OtherSsh.Size = new System.Drawing.Size(323, 20);
-            this.OtherSsh.TabIndex = 4;
-            // 
-            // OtherSshBrowse
-            // 
-            this.OtherSshBrowse.Location = new System.Drawing.Point(463, 79);
-            this.OtherSshBrowse.Name = "OtherSshBrowse";
-            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 23);
-            this.OtherSshBrowse.TabIndex = 5;
-            this.OtherSshBrowse.Text = "Browse";
-            this.OtherSshBrowse.UseVisualStyleBackColor = true;
-            this.OtherSshBrowse.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // SshConfig
-            // 
-            this.SshConfig.BackColor = System.Drawing.Color.Gray;
-            this.SshConfig.FlatAppearance.BorderSize = 0;
-            this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SshConfig.Location = new System.Drawing.Point(9, 202);
-            this.SshConfig.Name = "SshConfig";
-            this.SshConfig.Size = new System.Drawing.Size(631, 23);
-            this.SshConfig.TabIndex = 10;
-            this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SshConfig.UseVisualStyleBackColor = false;
-            this.SshConfig.Click += new System.EventHandler(this.SshConfig_Click);
-            // 
-            // AutostartPageant
-            // 
-            this.AutostartPageant.AutoSize = true;
-            this.AutostartPageant.Checked = true;
-            this.AutostartPageant.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutostartPageant.Location = new System.Drawing.Point(118, 103);
-            this.AutostartPageant.Name = "AutostartPageant";
-            this.AutostartPageant.Size = new System.Drawing.Size(416, 17);
-            this.AutostartPageant.TabIndex = 11;
-            this.AutostartPageant.Text = "Automaticly start authentication client when a private key is configured for a re" +
-                "mote";
-            this.AutostartPageant.UseVisualStyleBackColor = true;
             // 
             // FormSettigns
             // 
@@ -845,14 +844,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
+            this.Ssh.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.Ssh.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }

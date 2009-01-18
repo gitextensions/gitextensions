@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
 
 namespace GitUI
 {
@@ -46,7 +47,10 @@ namespace GitUI
                 form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked));
             else
             {
-                GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                if (!File.Exists(GitCommands.Settings.Pageant))
+                    MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                else
+                    GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 form = new FormProcess(GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked));
             }
         }
@@ -127,7 +131,10 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+            if (!File.Exists(GitCommands.Settings.Pageant))
+                MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+            else
+                GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
         }
 
         private void Remotes_Validated(object sender, EventArgs e)

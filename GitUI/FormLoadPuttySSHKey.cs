@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GitUI
 {
@@ -22,8 +23,13 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
-            GitCommands.GitCommands.StartPageantWithKey(PrivateKeypath.Text);
+            if (!File.Exists(GitCommands.Settings.Pageant))
+                MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+            else
+            {
+                RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
+                GitCommands.GitCommands.StartPageantWithKey(PrivateKeypath.Text);
+            }
         }
 
         private void Browse_Click(object sender, EventArgs e)
