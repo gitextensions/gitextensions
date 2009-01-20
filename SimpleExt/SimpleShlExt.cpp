@@ -171,11 +171,11 @@ void CSimpleShlExt::RunGitEx(const char * command)
 	CString dir = "";
 
 	if (dir.GetLength() == 0)
-		dir = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions", "InstallDir");
+		dir = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
 	if (dir.GetLength() == 0)
-		dir = GetRegistryValue(HKEY_USERS, "SOFTWARE\\GitExtensions", "InstallDir");
+		dir = GetRegistryValue(HKEY_USERS, "SOFTWARE\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
 	if (dir.GetLength() == 0)
-		dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
+		dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
 
 	ShellExecute(NULL, "open", "GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
 	//system(szMsg);
