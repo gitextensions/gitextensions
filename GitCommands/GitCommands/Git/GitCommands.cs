@@ -959,7 +959,7 @@ namespace GitCommands
         static public Patch GetSingleDiff(string from, string to, string filter)
         {
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff --ignore-submodules \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff --ignore-submodules \"" + from + "\" \"" + to + "\" -- \"" + filter + "\""), false);
 
             if (patchManager.patches.Count > 0)
                 return patchManager.patches[0];

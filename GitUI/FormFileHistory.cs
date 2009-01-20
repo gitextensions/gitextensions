@@ -83,7 +83,7 @@ namespace GitUI
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision1.CommitGuid + "^", FileName));
+                        Diff diff = new Diff(new DiffDto(revision1.CommitGuid + "^", revision1.CommitGuid, FileName));
                         diff.Execute();
                         EditorOptions.SetSyntax(Diff, FileName);
                         Diff.Text = diff.Dto.Result;
