@@ -42,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.GitlibexecFound = new System.Windows.Forms.Button();
             this.SshConfig = new System.Windows.Forms.Button();
             this.GitBinFound = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
@@ -53,6 +54,9 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.GitLibexecPathBrowse = new System.Windows.Forms.Button();
+            this.GitLibexecPath = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -95,10 +99,6 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.GitLibexecPathBrowse = new System.Windows.Forms.Button();
-            this.GitLibexecPath = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.GitlibexecFound = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -251,6 +251,20 @@
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // GitlibexecFound
+            // 
+            this.GitlibexecFound.BackColor = System.Drawing.Color.Gray;
+            this.GitlibexecFound.FlatAppearance.BorderSize = 0;
+            this.GitlibexecFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GitlibexecFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitlibexecFound.Location = new System.Drawing.Point(9, 87);
+            this.GitlibexecFound.Name = "GitlibexecFound";
+            this.GitlibexecFound.Size = new System.Drawing.Size(631, 23);
+            this.GitlibexecFound.TabIndex = 11;
+            this.GitlibexecFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.GitlibexecFound.UseVisualStyleBackColor = false;
+            this.GitlibexecFound.Click += new System.EventHandler(this.GitlibexecFound_Click);
+            // 
             // SshConfig
             // 
             this.SshConfig.BackColor = System.Drawing.Color.Gray;
@@ -292,11 +306,11 @@
             // CheckAtStartup
             // 
             this.CheckAtStartup.AutoSize = true;
-            this.CheckAtStartup.Location = new System.Drawing.Point(359, 277);
+            this.CheckAtStartup.Location = new System.Drawing.Point(174, 277);
             this.CheckAtStartup.Name = "CheckAtStartup";
-            this.CheckAtStartup.Size = new System.Drawing.Size(182, 17);
+            this.CheckAtStartup.Size = new System.Drawing.Size(360, 17);
             this.CheckAtStartup.TabIndex = 7;
-            this.CheckAtStartup.Text = "Check settings at startup (slower)";
+            this.CheckAtStartup.Text = "Check settings at startup (disables automaticly if all settings are correct)";
             this.CheckAtStartup.UseVisualStyleBackColor = true;
             this.CheckAtStartup.CheckedChanged += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
             // 
@@ -400,6 +414,32 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // GitLibexecPathBrowse
+            // 
+            this.GitLibexecPathBrowse.Location = new System.Drawing.Point(571, 58);
+            this.GitLibexecPathBrowse.Name = "GitLibexecPathBrowse";
+            this.GitLibexecPathBrowse.Size = new System.Drawing.Size(75, 23);
+            this.GitLibexecPathBrowse.TabIndex = 11;
+            this.GitLibexecPathBrowse.Text = "Browse";
+            this.GitLibexecPathBrowse.UseVisualStyleBackColor = true;
+            this.GitLibexecPathBrowse.Click += new System.EventHandler(this.GitLibexecPathBrowse_Click);
+            // 
+            // GitLibexecPath
+            // 
+            this.GitLibexecPath.Location = new System.Drawing.Point(305, 62);
+            this.GitLibexecPath.Name = "GitLibexecPath";
+            this.GitLibexecPath.Size = new System.Drawing.Size(242, 20);
+            this.GitLibexecPath.TabIndex = 10;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(8, 66);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(252, 13);
+            this.label19.TabIndex = 9;
+            this.label19.Text = "Path to git-clone.exe (leave empty when in the path)";
             // 
             // BrowseGitBinPath
             // 
@@ -831,46 +871,6 @@
             this.directorySearcher2.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
-            // 
-            // GitLibexecPathBrowse
-            // 
-            this.GitLibexecPathBrowse.Location = new System.Drawing.Point(571, 58);
-            this.GitLibexecPathBrowse.Name = "GitLibexecPathBrowse";
-            this.GitLibexecPathBrowse.Size = new System.Drawing.Size(75, 23);
-            this.GitLibexecPathBrowse.TabIndex = 11;
-            this.GitLibexecPathBrowse.Text = "Browse";
-            this.GitLibexecPathBrowse.UseVisualStyleBackColor = true;
-            this.GitLibexecPathBrowse.Click += new System.EventHandler(this.GitLibexecPathBrowse_Click);
-            // 
-            // GitLibexecPath
-            // 
-            this.GitLibexecPath.Location = new System.Drawing.Point(305, 62);
-            this.GitLibexecPath.Name = "GitLibexecPath";
-            this.GitLibexecPath.Size = new System.Drawing.Size(242, 20);
-            this.GitLibexecPath.TabIndex = 10;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(8, 66);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(252, 13);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "Path to git-clone.exe (leave empty when in the path)";
-            // 
-            // GitlibexecFound
-            // 
-            this.GitlibexecFound.BackColor = System.Drawing.Color.Gray;
-            this.GitlibexecFound.FlatAppearance.BorderSize = 0;
-            this.GitlibexecFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.GitlibexecFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitlibexecFound.Location = new System.Drawing.Point(9, 87);
-            this.GitlibexecFound.Name = "GitlibexecFound";
-            this.GitlibexecFound.Size = new System.Drawing.Size(631, 23);
-            this.GitlibexecFound.TabIndex = 11;
-            this.GitlibexecFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.GitlibexecFound.UseVisualStyleBackColor = false;
-            this.GitlibexecFound.Click += new System.EventHandler(this.GitlibexecFound_Click);
             // 
             // FormSettigns
             // 
