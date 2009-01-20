@@ -32,10 +32,9 @@ namespace GitUI
 
 
                 if (CentralRepository.Checked)
-                    fromProcess = new FormProcess("clone --bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                    fromProcess = new FormProcess(Settings.GitBinDir + "git-clone.exe", "--bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
                 else
-                    fromProcess = new FormProcess("C:\\Windows\\System32\\cmd.exe", " /c \"\"" + Settings.GitDir + "git.cmd\" clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"\"");
-                    //fromProcess = new FormProcess("clone \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                    fromProcess = new FormProcess(Settings.GitBinDir + "git-clone.exe", "\"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
             }
             catch
             {
@@ -80,7 +79,7 @@ namespace GitUI
 
         private void FormClone_Load(object sender, EventArgs e)
         {
-            if (!GitCommands.GitCommands.GetSsh().Contains("plink"))
+            if (!GitCommands.GitCommands.Plink())
                 LoadSSHKey.Visible = false;
         }
     }

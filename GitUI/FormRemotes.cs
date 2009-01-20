@@ -16,21 +16,12 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private bool IsDirty = false;
+
         private void FormRemotes_Load(object sender, EventArgs e)
         {
             Initialize();
-            List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false, true);
-            RemoteBranches.DataSource = heads;
-            foreach (object item in GitCommands.GitCommands.GetRemotes())
-            {
-                RemoteCombo.Items.Add(item);
-            }
-            mergeWithDataGridViewTextBoxColumn.Items.Add("");
-            foreach (GitCommands.GitHead head in heads)
-            {
-                mergeWithDataGridViewTextBoxColumn.Items.Add(head.Name);
-            }
-            RemoteBranches.DataError += new DataGridViewDataErrorEventHandler(RemoteBranches_DataError);
+
         }
 
         void RemoteBranches_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -44,6 +35,24 @@ namespace GitUI
         private void Initialize()
         {
             Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
+
+            List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false, true);
+            RemoteBranches.DataSource = heads;
+            foreach (object item in GitCommands.GitCommands.GetRemotes())
+            {
+                RemoteCombo.Items.Add(item);
+            }
+            mergeWithDataGridViewTextBoxColumn.Items.Add("");
+            foreach (GitCommands.GitHead head in heads)
+            {
+                mergeWithDataGridViewTextBoxColumn.Items.Add(head.Name);
+            }
+            RemoteBranches.DataError += new DataGridViewDataErrorEventHandler(RemoteBranches_DataError);
+
+            if (GitCommands.GitCommands.Plink())
+                PuTTYSSH.Visible = true;
+            else
+                PuTTYSSH.Visible = false;
         }
         
         string remote = "";
@@ -133,6 +142,31 @@ namespace GitUI
             dialog.Title = "Select ssh key file";
             if (dialog.ShowDialog() == DialogResult.OK)
                 PuttySshKey.Text = dialog.FileName;
+        }
+
+        private void RemoteName_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void Url_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void PuttySshKey_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void LoadSSHKey_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(PuttySshKey.Text))
+                MessageBox.Show("No SSH key file entered");
+            else
+                GitCommands.GitCommands.StartPageantWithKey(PuttySshKey.Text);
+        }
+
+        private void TestConnection_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" -T \"" + Url.Text + "\"\"");
         }
     }
 }

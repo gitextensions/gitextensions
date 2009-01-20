@@ -12,6 +12,17 @@ namespace GitUI
     delegate void DataCallback(string text);
     public partial class FormProcess : Form
     {
+        public FormProcess(string process, string arguments, string remote)
+        {
+            InitializeComponent();
+
+            ProcessString = process;
+            ProcessArguments = arguments;
+            Remote = remote;
+
+            ShowDialog();
+        }
+
         public FormProcess(string process, string arguments)
         {
             InitializeComponent();
@@ -32,6 +43,8 @@ namespace GitUI
             ShowDialog();
         }
 
+        private bool restart = false;
+        public string Remote { get; set; }
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
         public Process Process { get; set; }
@@ -44,11 +57,19 @@ namespace GitUI
 
         private void FormProcess_Load(object sender, EventArgs e)
         {
+            Start();
+        }
+
+        private void Start()
+        {
+            restart = false;
             Output.Text = "";
             AddOutput(ProcessString + " " + ProcessArguments);
 
+            Plink = GitCommands.GitCommands.Plink();
+
             ProgressBar.Visible = true;
-            
+
             outputString = new StringBuilder();
 
             gitCommand = new GitCommands.GitCommands();
@@ -61,6 +82,7 @@ namespace GitUI
             Ok.Enabled = false;
         }
 
+        public bool Plink { get; set; }
 
         void SetProgress(string text)
         {
@@ -72,6 +94,7 @@ namespace GitUI
                     ProgressBar.Style = ProgressBarStyle.Blocks;
                 ProgressBar.Value = Math.Min(100, progressValue);
             }
+            this.Text = text;
         }
 
         void AddOutput(string text)
@@ -83,6 +106,12 @@ namespace GitUI
 
         void Done()
         {
+            if (restart)
+            {
+                Start();
+                return;
+            }
+
             AddOutput(outputString.ToString());
             AddOutput("Done");
             ProgressBar.Visible = false;
@@ -92,12 +121,19 @@ namespace GitUI
             {
                 ErrorImage.Visible = true;
                 SuccessImage.Visible = false;
-                if (GitCommands.GitCommands.GetSsh().Contains("plink"))
+                if (Plink)
                 {
                     if (ProcessArguments.Contains("pull") ||
                         ProcessArguments.Contains("push") ||
+                        ProcessArguments.Contains("plink") ||
                         ProcessArguments.Contains("clone"))
                     {
+                        if (Output.Text.Contains("successfully authenticated"))
+                        {
+                            SuccessImage.Visible = true;
+                            ErrorImage.Visible = false;
+                        }
+
                         if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
                         {
                             FormPuttyError puttyError = new FormPuttyError();
@@ -122,7 +158,7 @@ namespace GitUI
             if (e.Data == null)
                 return;
 
-            if (e.Data.Contains("%"))
+            if (e.Data.Contains("%") || e.Data.StartsWith("remote: Counting objects"))
             {
                 if (ProgressBar.InvokeRequired)
                 {
@@ -146,6 +182,33 @@ namespace GitUI
                 }*/
                 outputString.Append(e.Data);
                 outputString.Append("\n");
+            }
+
+
+            if (Plink)
+            {
+                if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
+                {
+                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY.\nThis causes this process to hang, and that why it is automaticly stopped.\n\nWhen te connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered.\nYou could also manually add the host's fingerprint or run Test Connection from the remotes dialog.\n\nDo you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
+
+                        if (string.IsNullOrEmpty(remoteUrl))
+                            GitCommands.GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
+                        else
+                            GitCommands.GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
+
+                        restart = true;
+                    }
+
+                    try
+                    {
+                        gitCommand.Process.Kill();
+                    }
+                    catch
+                    {
+                    }
+                }
             }
         }
 

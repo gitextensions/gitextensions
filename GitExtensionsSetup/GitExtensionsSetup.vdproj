@@ -940,7 +940,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{B5A3E91A-7A04-4746-8DDC-905BBE79904D}"
+        "PackageCode" = "8:{84E3CB6D-A33F-431B-88A9-BB2AD186185E}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1058,7 +1058,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:pageant.exe"
+                                                    "Value" = "8:[TARGETDIR]pageant.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_37EB8F9A9DE64EF5A874E2BE74A609A4"
                                                     {
@@ -1066,7 +1066,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:puttygen.exe"
+                                                    "Value" = "8:[TARGETDIR]puttygen.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4C2FEB90358E4B5FA627A23FB3BE4C3A"
                                                     {
@@ -1074,7 +1074,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:plink.exe"
+                                                    "Value" = "8:[TARGETDIR]plink.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DEB45D0ABE514554B4D08CDC2460590C"
                                                     {
@@ -1082,7 +1082,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:plink.exe"
+                                                    "Value" = "8:[TARGETDIR]plink.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EE75144E36504421BA3704DC3E36158E"
                                                     {

@@ -39,6 +39,7 @@ namespace GitExtensions
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) GitCommands.Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("gitdir") != null) GitCommands.Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) GitCommands.Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
+                if (Application.UserAppDataRegistry.GetValue("gitlibexecdir") != null) GitCommands.Settings.GitLibexecDir = Application.UserAppDataRegistry.GetValue("gitlibexecdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir11") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir11").ToString());
@@ -176,6 +177,7 @@ namespace GitExtensions
                 Application.UserAppDataRegistry.SetValue("maxcommits", GitCommands.Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", GitCommands.Settings.GitDir);
                 Application.UserAppDataRegistry.SetValue("gitbindir", GitCommands.Settings.GitBinDir);
+                Application.UserAppDataRegistry.SetValue("gitlibexecdir", GitCommands.Settings.GitLibexecDir);
                 Application.UserAppDataRegistry.SetValue("showallbranches", GitCommands.Settings.ShowAllBranches);
 
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());

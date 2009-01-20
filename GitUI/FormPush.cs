@@ -51,7 +51,9 @@ namespace GitUI
                     MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
                 else
                     GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
-                form = new FormProcess(GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked));
+
+                form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
+                //form = new FormProcess(GitCommands.Settings.GitLibexecDir + "git-push.exe", "\"" + Remotes.Text.Trim() + "\" " + Branch.Text);
             }
         }
 

@@ -54,6 +54,21 @@ namespace GitCommands
             }
         }
 
+        private static string gitLibexecDir = "";
+        public static string GitLibexecDir
+        {
+            get
+            {
+                return gitLibexecDir;
+            }
+            set
+            {
+                gitLibexecDir = value;
+                if (gitLibexecDir.Length > 0 && gitLibexecDir[gitLibexecDir.Length - 1] != '\\')
+                    gitLibexecDir += "\\";
+
+            }
+        }
 
         private static int maxCommits = 2000;
         public static int MaxCommits

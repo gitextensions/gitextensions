@@ -140,16 +140,19 @@ namespace GitCommands
             arguments = arguments.Replace('\\', '/');
 
             bool ssh = false;
-            if ( !GetSsh().Contains("plink") &&
-                (
-                (arguments.Contains("@") && arguments.Contains("://")) ||
-                (arguments.Contains("@") && arguments.Contains(":")) ||
-                (arguments.Contains("ssh://")) ||
-                (arguments.Contains("http://")) ||
-                (arguments.Contains("git://")) ||
-                (arguments.Contains("push")) ||
-                (arguments.Contains("pull"))
-                )
+            if (
+                    (!Plink() &&
+                        (
+                        (arguments.Contains("@") && arguments.Contains("://")) ||
+                        (arguments.Contains("@") && arguments.Contains(":")) ||
+                        (arguments.Contains("ssh://")) ||
+                        (arguments.Contains("http://")) ||
+                        (arguments.Contains("git://")) ||
+                        (arguments.Contains("push")) ||
+                        (arguments.Contains("pull"))
+                        )
+                    ) ||
+                    arguments.Contains("plink")
                 )
                 ssh = true;
 
@@ -279,10 +282,9 @@ namespace GitCommands
                     output += "\n" + error;
                 }
             }
-            catch(Exception e)
+            catch
             {
-                string error = e.Message;
-                return error;
+                return "";
             }
             return output;
         }
@@ -552,6 +554,13 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
+        static public bool Plink()
+        {
+            string sshString = GetSsh();
+            return string.Compare(sshString, sshString.LastIndexOfAny(new char[] { '\\', '/' }) + 1, "plink.exe", 0, 9, true) == 0;
+            //return GetSsh().Contains("plink");
+        }
+
         static public string GetSsh()
         {
             string ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
@@ -595,8 +604,8 @@ namespace GitCommands
         {
             if (!string.IsNullOrEmpty(remote) && 
                 !string.IsNullOrEmpty(Settings.Pageant) && 
-                Settings.AutoStartPageant && 
-                GetSsh().Contains("plink.exe"))
+                Settings.AutoStartPageant &&
+                Plink())
             {
                 return GetSetting("remote." + remote + ".puttykeyfile");
             }
