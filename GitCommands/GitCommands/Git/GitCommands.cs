@@ -697,18 +697,28 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --continue");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", ContinueRebaseCmd());
 
             return result;
+        }
+
+        public static string ContinueRebaseCmd()
+        {
+            return "rebase --continue";
         }
 
         static public string SkipRebase()
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --skip");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", SkipRebaseCmd());
 
             return result;
+        }
+
+        public static string SkipRebaseCmd()
+        {
+            return "rebase --skip";
         }
 
         static public string GetRebaseDir()
@@ -798,9 +808,14 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase \"" + branch + "\"");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", RebaseCmd(branch));
 
             return result;
+        }
+
+        public static string RebaseCmd(string branch)
+        {
+            return "rebase \"" + branch + "\"";
         }
 
 
@@ -808,18 +823,28 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rebase --abort");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", AbortRebaseCmd());
 
             return result;
+        }
+
+        public static string AbortRebaseCmd()
+        {
+            return "rebase --abort";
         }
 
         static public string Resolved()
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "am --3way --resolved");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", ResolvedCmd());
 
             return result;
+        }
+
+        private static string ResolvedCmd()
+        {
+            return "am --3way --resolved";
         }
 
         static public string Skip()

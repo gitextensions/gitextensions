@@ -39,11 +39,11 @@
             this.Abort = new System.Windows.Forms.Button();
             this.Skip = new System.Windows.Forms.Button();
             this.Mergetool = new System.Windows.Forms.Button();
-            this.Output = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.patchGrid1 = new GitUI.PatchGrid();
+            this.label3 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -102,7 +102,7 @@
             // 
             // AddFiles
             // 
-            this.AddFiles.Location = new System.Drawing.Point(2, 130);
+            this.AddFiles.Location = new System.Drawing.Point(3, 152);
             this.AddFiles.Name = "AddFiles";
             this.AddFiles.Size = new System.Drawing.Size(102, 23);
             this.AddFiles.TabIndex = 14;
@@ -112,7 +112,7 @@
             // 
             // Resolved
             // 
-            this.Resolved.Location = new System.Drawing.Point(2, 179);
+            this.Resolved.Location = new System.Drawing.Point(3, 199);
             this.Resolved.Name = "Resolved";
             this.Resolved.Size = new System.Drawing.Size(102, 23);
             this.Resolved.TabIndex = 13;
@@ -122,7 +122,7 @@
             // 
             // Abort
             // 
-            this.Abort.Location = new System.Drawing.Point(2, 237);
+            this.Abort.Location = new System.Drawing.Point(3, 257);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(102, 23);
             this.Abort.TabIndex = 12;
@@ -132,7 +132,7 @@
             // 
             // Skip
             // 
-            this.Skip.Location = new System.Drawing.Point(2, 208);
+            this.Skip.Location = new System.Drawing.Point(3, 228);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(102, 23);
             this.Skip.TabIndex = 11;
@@ -142,22 +142,13 @@
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(2, 79);
+            this.Mergetool.Location = new System.Drawing.Point(2, 98);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(102, 23);
             this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
-            // 
-            // Output
-            // 
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(542, 159);
-            this.Output.TabIndex = 15;
-            this.Output.Text = "";
             // 
             // splitContainer1
             // 
@@ -178,7 +169,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.Abort);
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
-            this.splitContainer1.Size = new System.Drawing.Size(653, 459);
+            this.splitContainer1.Size = new System.Drawing.Size(653, 280);
             this.splitContainer1.SplitterDistance = 542;
             this.splitContainer1.TabIndex = 17;
             // 
@@ -200,26 +191,28 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(542, 459);
+            this.splitContainer2.Size = new System.Drawing.Size(542, 280);
             this.splitContainer2.SplitterDistance = 74;
             this.splitContainer2.TabIndex = 0;
             // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer3.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.patchGrid1);
+            this.splitContainer3.Panel1.Controls.Add(this.label3);
+            this.splitContainer3.Panel1MinSize = 10;
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.Output);
-            this.splitContainer3.Size = new System.Drawing.Size(542, 381);
-            this.splitContainer3.SplitterDistance = 218;
+            this.splitContainer3.Panel2.Controls.Add(this.patchGrid1);
+            this.splitContainer3.Size = new System.Drawing.Size(542, 202);
+            this.splitContainer3.SplitterDistance = 16;
             this.splitContainer3.TabIndex = 0;
             // 
             // patchGrid1
@@ -227,14 +220,23 @@
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(542, 218);
+            this.patchGrid1.Size = new System.Drawing.Size(542, 182);
             this.patchGrid1.TabIndex = 16;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 1);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(101, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Commits to re-apply:";
             // 
             // FormRebase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 459);
+            this.ClientSize = new System.Drawing.Size(653, 280);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRebase";
@@ -249,6 +251,7 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -266,11 +269,11 @@
         private System.Windows.Forms.Button Abort;
         private System.Windows.Forms.Button Skip;
         private System.Windows.Forms.Button Mergetool;
-        private System.Windows.Forms.RichTextBox Output;
         private System.Windows.Forms.ComboBox Branches;
         private PatchGrid patchGrid1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.Label label3;
     }
 }

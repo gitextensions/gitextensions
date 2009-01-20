@@ -14,11 +14,6 @@ namespace GitUI
         public FormRebase()
         {
             InitializeComponent();
-
-            if (!GitCommands.GitCommands.InTheMiddleOfRebase())
-            {
-                this.Height = 110;
-            }
         }
 
         private void FormRebase_Load(object sender, EventArgs e)
@@ -92,24 +87,27 @@ namespace GitUI
 
         private void Resolved_Click(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.ContinueRebase();
+            //Output.Text += "\n";
+            //Output.Text += GitCommands.GitCommands.ContinueRebase();
+            new FormProcess(GitCommands.GitCommands.ContinueRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
         }
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.SkipRebase();
+            //Output.Text += "\n";
+            //Output.Text += GitCommands.GitCommands.SkipRebase();
+            new FormProcess(GitCommands.GitCommands.SkipRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
         }
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.AbortRebase();
+            //Output.Text += "\n";
+            //Output.Text += GitCommands.GitCommands.AbortRebase();
+            new FormProcess(GitCommands.GitCommands.AbortRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
         }
@@ -122,19 +120,14 @@ namespace GitUI
                 return;
             }
 
-            string result = GitCommands.GitCommands.Rebase(Branches.Text);
-            if (result.Trim() == "Current branch a is up to date.")
+            FormProcess form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
+            if (form.outputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date.\nNothing to rebase.", "Rebase");
             else
-                if (string.IsNullOrEmpty(result))
+                if (string.IsNullOrEmpty(form.outputString.ToString()))
                 {
                     MessageBox.Show("Done.", "Rebase");
                 }
-                else
-                    {
-                        if (this.Height < 200)
-                            this.Height = 500;
-                    }
 
             EnableButtons();
             patchGrid1.Initialize();
