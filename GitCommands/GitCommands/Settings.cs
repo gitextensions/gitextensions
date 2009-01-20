@@ -3,11 +3,26 @@ using System.Collections.Generic;
 
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
     public class Settings
     {
+        public static string GetInstallDir()
+        {
+            if (Application.UserAppDataRegistry.GetValue("InstallDir") != null)
+                return Application.UserAppDataRegistry.GetValue("InstallDir").ToString();
+
+            return "";
+        }
+
+        public static void SetInstallDir(string dir)
+        {
+            Application.UserAppDataRegistry.SetValue("InstallDir", dir);
+        }
+
+
         private static bool showAllBranches = true;
         public static bool ShowAllBranches
         {

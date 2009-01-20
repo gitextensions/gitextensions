@@ -940,7 +940,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{84E3CB6D-A33F-431B-88A9-BB2AD186185E}"
+        "PackageCode" = "8:{30A0F614-E7F7-48C6-809A-BA8365F91107}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -971,42 +971,6 @@
             {
                 "Keys"
                 {
-                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_A2DF8E1396D94EFC9C98EB8DE75F313A"
-                    {
-                    "Name" = "8:Software"
-                    "Condition" = "8:"
-                    "AlwaysCreate" = "11:FALSE"
-                    "DeleteAtUninstall" = "11:FALSE"
-                    "Transitive" = "11:FALSE"
-                        "Keys"
-                        {
-                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_C72E3C4DB381462D92F23E8D09EB40FF"
-                            {
-                            "Name" = "8:GitExtensions"
-                            "Condition" = "8:"
-                            "AlwaysCreate" = "11:FALSE"
-                            "DeleteAtUninstall" = "11:FALSE"
-                            "Transitive" = "11:FALSE"
-                                "Keys"
-                                {
-                                }
-                                "Values"
-                                {
-                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_5AD89BB747EE4FE593EDCE8BA1D7C236"
-                                    {
-                                    "Name" = "8:InstallDir"
-                                    "Condition" = "8:"
-                                    "Transitive" = "11:FALSE"
-                                    "ValueTypes" = "3:2"
-                                    "Value" = "8:[TARGETDIR]"
-                                    }
-                                }
-                            }
-                        }
-                        "Values"
-                        {
-                        }
-                    }
                 }
             }
             "HKCU"
@@ -1058,7 +1022,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR]pageant.exe"
+                                                    "Value" = "8:[TARGETDIR]PuTTY\\pageant.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_37EB8F9A9DE64EF5A874E2BE74A609A4"
                                                     {
@@ -1066,7 +1030,7 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR]puttygen.exe"
+                                                    "Value" = "8:[TARGETDIR]PuTTY\\puttygen.exe"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4C2FEB90358E4B5FA627A23FB3BE4C3A"
                                                     {
@@ -1074,7 +1038,15 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR]plink.exe"
+                                                    "Value" = "8:[TARGETDIR]PuTTY\\plink.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D122C746C6E2424983EFB7F37163B690"
+                                                    {
+                                                    "Name" = "8:InstallDir"
+                                                    "Condition" = "8:"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:[TARGETDIR]"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DEB45D0ABE514554B4D08CDC2460590C"
                                                     {
@@ -1082,7 +1054,15 @@
                                                     "Condition" = "8:SSH_CLIENT=2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR]plink.exe"
+                                                    "Value" = "8:[TARGETDIR]PuTTY\\plink.exe"
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EB70F77F2192423C9B5FCEC0E138140C"
+                                                    {
+                                                    "Name" = "8:checksettings"
+                                                    "Condition" = "8:"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:true"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EE75144E36504421BA3704DC3E36158E"
                                                     {

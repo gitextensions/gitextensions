@@ -168,7 +168,14 @@ void CSimpleShlExt::RunGitEx(const char * command)
 	args += m_szFile;
 	args += "\"";
 
-	CString dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
+	CString dir = "";
+
+	if (dir.GetLength() == 0)
+		dir = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions", "InstallDir");
+	if (dir.GetLength() == 0)
+		dir = GetRegistryValue(HKEY_USERS, "SOFTWARE\\GitExtensions", "InstallDir");
+	if (dir.GetLength() == 0)
+		dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions", "InstallDir");
 
 	ShellExecute(NULL, "open", "GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
 	//system(szMsg);

@@ -185,10 +185,10 @@ namespace GitUI
             bool bValid = true;
             try
             {
-                if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir")) || !File.Exists(GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir") + "\\GitExtensions.exe"))
+                if (string.IsNullOrEmpty(GitCommands.Settings.GetInstallDir()))
                 {
                     GitExtensionsInstall.BackColor = Color.LightSalmon;
-                    GitExtensionsInstall.Text = "Registry entry missing [HKEY_LOCAL_MACHINE\\SOFTWARE\\GitExtensions\\InstallDir].";
+                    GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
                     bValid = false;
                 }
                 else
@@ -300,6 +300,7 @@ namespace GitUI
             catch
             {
             }
+
             if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
                   Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
             {
@@ -311,6 +312,12 @@ namespace GitUI
             }
 
 
+            if (bValid && CheckAtStartup.Checked)
+            {
+                Application.UserAppDataRegistry.SetValue("checksettings", false);
+                CheckAtStartup.Checked = false;
+            }
+
             return bValid;
         }
 
@@ -320,7 +327,7 @@ namespace GitUI
             fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[]{'\\', '/'}));
 
             if (File.Exists(fileName+"\\GitExtensions.exe"))
-                SetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir", fileName);
+                GitCommands.Settings.SetInstallDir(fileName);
 
             CheckSettings();
         }
@@ -328,8 +335,8 @@ namespace GitUI
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
 
-            if (File.Exists(GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir") + "\\GitExtensionsShellEx.dll"))
-                GitCommands.GitCommands.RunCmd("regsvr32", "\"" + GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir") + "\\GitExtensionsShellEx.dll\"");
+            if (File.Exists(GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll"))
+                GitCommands.GitCommands.RunCmd("regsvr32", "\"" + GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll\"");
             else
                 {
                     string fileName = Assembly.GetAssembly(GetType()).Location;
@@ -458,7 +465,7 @@ namespace GitUI
         {
             if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
             if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1", "InstallLocation"))) return true;
-            if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "Software\\GitExtensions", "InstallDir") + "\\PuTTY\\")) return true;
+            if (AutoFindPuttyPathsInDir(GitCommands.Settings.GetInstallDir() + "\\PuTTY\\")) return true;
 
             return false;
         }
