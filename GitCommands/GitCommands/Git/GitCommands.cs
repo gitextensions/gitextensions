@@ -36,10 +36,16 @@ namespace GitCommands
             return RunCmd(cmd, "");
         }
 
+        public static void SetEnvironmentVariable()
+        {
+        }
+
         public static void RunRealCmd(string cmd, string arguments)
         {
             try
             {
+                SetEnvironmentVariable();
+
                 arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
@@ -71,6 +77,7 @@ namespace GitCommands
         {
             try
             {
+                SetEnvironmentVariable();
                 arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
@@ -102,6 +109,7 @@ namespace GitCommands
         {
             try
             {
+                SetEnvironmentVariable();
                 arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
@@ -137,6 +145,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
+            SetEnvironmentVariable();
             arguments = arguments.Replace('\\', '/');
 
             bool ssh = false;
@@ -246,6 +255,7 @@ namespace GitCommands
             string output = "";
             try
             {
+                SetEnvironmentVariable();
                 arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
@@ -295,6 +305,7 @@ namespace GitCommands
             Process process = new System.Diagnostics.Process(); 
             try
             {
+                SetEnvironmentVariable();
                 arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";

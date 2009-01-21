@@ -30,11 +30,10 @@ namespace GitUI
 
                 FormProcess fromProcess;
 
-
                 if (CentralRepository.Checked)
-                    fromProcess = new FormProcess(Settings.GitBinDir + "git-clone.exe", "--bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                    fromProcess = new FormProcess(Settings.GitDir + "git.cmd", " clone -v --bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
                 else
-                    fromProcess = new FormProcess(Settings.GitBinDir + "git-clone.exe", "\"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                    fromProcess = new FormProcess(Settings.GitDir + "git.cmd", "clone -v \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
             }
             catch
             {

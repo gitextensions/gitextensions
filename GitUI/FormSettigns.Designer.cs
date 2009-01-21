@@ -42,7 +42,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.GitlibexecFound = new System.Windows.Forms.Button();
             this.SshConfig = new System.Windows.Forms.Button();
             this.GitBinFound = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
@@ -54,9 +53,6 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
-            this.GitLibexecPathBrowse = new System.Windows.Forms.Button();
-            this.GitLibexecPath = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -233,7 +229,6 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.GitlibexecFound);
             this.tabPage3.Controls.Add(this.SshConfig);
             this.tabPage3.Controls.Add(this.GitBinFound);
             this.tabPage3.Controls.Add(this.Rescan);
@@ -251,27 +246,13 @@
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // GitlibexecFound
-            // 
-            this.GitlibexecFound.BackColor = System.Drawing.Color.Gray;
-            this.GitlibexecFound.FlatAppearance.BorderSize = 0;
-            this.GitlibexecFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.GitlibexecFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitlibexecFound.Location = new System.Drawing.Point(9, 87);
-            this.GitlibexecFound.Name = "GitlibexecFound";
-            this.GitlibexecFound.Size = new System.Drawing.Size(631, 23);
-            this.GitlibexecFound.TabIndex = 11;
-            this.GitlibexecFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.GitlibexecFound.UseVisualStyleBackColor = false;
-            this.GitlibexecFound.Click += new System.EventHandler(this.GitlibexecFound_Click);
-            // 
             // SshConfig
             // 
             this.SshConfig.BackColor = System.Drawing.Color.Gray;
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SshConfig.Location = new System.Drawing.Point(9, 232);
+            this.SshConfig.Location = new System.Drawing.Point(9, 203);
             this.SshConfig.Name = "SshConfig";
             this.SshConfig.Size = new System.Drawing.Size(631, 23);
             this.SshConfig.TabIndex = 10;
@@ -344,7 +325,7 @@
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(9, 174);
+            this.DiffTool.Location = new System.Drawing.Point(9, 145);
             this.DiffTool.Name = "DiffTool";
             this.DiffTool.Size = new System.Drawing.Size(631, 23);
             this.DiffTool.TabIndex = 4;
@@ -358,7 +339,7 @@
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UserNameSet.Location = new System.Drawing.Point(9, 145);
+            this.UserNameSet.Location = new System.Drawing.Point(9, 116);
             this.UserNameSet.Name = "UserNameSet";
             this.UserNameSet.Size = new System.Drawing.Size(631, 23);
             this.UserNameSet.TabIndex = 3;
@@ -372,7 +353,7 @@
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 116);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 87);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
             this.ShellExtensionsRegistered.Size = new System.Drawing.Size(631, 23);
             this.ShellExtensionsRegistered.TabIndex = 2;
@@ -386,7 +367,7 @@
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 203);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 174);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
             this.GitExtensionsInstall.Size = new System.Drawing.Size(631, 23);
             this.GitExtensionsInstall.TabIndex = 1;
@@ -396,9 +377,6 @@
             // 
             // TabPageGitExtensions
             // 
-            this.TabPageGitExtensions.Controls.Add(this.GitLibexecPathBrowse);
-            this.TabPageGitExtensions.Controls.Add(this.GitLibexecPath);
-            this.TabPageGitExtensions.Controls.Add(this.label19);
             this.TabPageGitExtensions.Controls.Add(this.BrowseGitBinPath);
             this.TabPageGitExtensions.Controls.Add(this.GitBinPath);
             this.TabPageGitExtensions.Controls.Add(this.label14);
@@ -414,32 +392,6 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
-            // 
-            // GitLibexecPathBrowse
-            // 
-            this.GitLibexecPathBrowse.Location = new System.Drawing.Point(571, 58);
-            this.GitLibexecPathBrowse.Name = "GitLibexecPathBrowse";
-            this.GitLibexecPathBrowse.Size = new System.Drawing.Size(75, 23);
-            this.GitLibexecPathBrowse.TabIndex = 11;
-            this.GitLibexecPathBrowse.Text = "Browse";
-            this.GitLibexecPathBrowse.UseVisualStyleBackColor = true;
-            this.GitLibexecPathBrowse.Click += new System.EventHandler(this.GitLibexecPathBrowse_Click);
-            // 
-            // GitLibexecPath
-            // 
-            this.GitLibexecPath.Location = new System.Drawing.Point(305, 62);
-            this.GitLibexecPath.Name = "GitLibexecPath";
-            this.GitLibexecPath.Size = new System.Drawing.Size(242, 20);
-            this.GitLibexecPath.TabIndex = 10;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(8, 66);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(252, 13);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "Path to git-clone.exe (leave empty when in the path)";
             // 
             // BrowseGitBinPath
             // 
@@ -501,7 +453,7 @@
             0,
             0,
             0});
-            this.MaxCommits.Location = new System.Drawing.Point(305, 100);
+            this.MaxCommits.Location = new System.Drawing.Point(305, 64);
             this.MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -519,7 +471,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 100);
+            this.label12.Location = new System.Drawing.Point(8, 64);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 39);
             this.label12.TabIndex = 0;
@@ -973,10 +925,6 @@
         private System.DirectoryServices.DirectorySearcher directorySearcher2;
         private System.Windows.Forms.Button SshConfig;
         private System.Windows.Forms.CheckBox AutostartPageant;
-        private System.Windows.Forms.Button GitLibexecPathBrowse;
-        private System.Windows.Forms.TextBox GitLibexecPath;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button GitlibexecFound;
 
     }
 }

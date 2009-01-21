@@ -126,6 +126,7 @@ namespace GitUI
                     if (ProcessArguments.Contains("pull") ||
                         ProcessArguments.Contains("push") ||
                         ProcessArguments.Contains("plink") ||
+                        ProcessString.Contains("clone") ||
                         ProcessArguments.Contains("clone"))
                     {
                         if (Output.Text.Contains("successfully authenticated"))

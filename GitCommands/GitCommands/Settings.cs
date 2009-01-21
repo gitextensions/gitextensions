@@ -66,21 +66,8 @@ namespace GitCommands
                 if (gitBinDir.Length > 0 && gitBinDir[gitBinDir.Length - 1] != '\\')
                     gitBinDir += "\\";
 
-            }
-        }
-
-        private static string gitLibexecDir = "";
-        public static string GitLibexecDir
-        {
-            get
-            {
-                return gitLibexecDir;
-            }
-            set
-            {
-                gitLibexecDir = value;
-                if (gitLibexecDir.Length > 0 && gitLibexecDir[gitLibexecDir.Length - 1] != '\\')
-                    gitLibexecDir += "\\";
+                if (!string.IsNullOrEmpty(gitBinDir))
+                    Environment.SetEnvironmentVariable("path", Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" + gitBinDir, EnvironmentVariableTarget.Process);
 
             }
         }

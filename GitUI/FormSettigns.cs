@@ -30,7 +30,6 @@ namespace GitUI
 
             GitPath.Text = GitCommands.Settings.GitDir;
             GitBinPath.Text = GitCommands.Settings.GitBinDir;
-            GitLibexecPath.Text = GitCommands.Settings.GitLibexecDir;
 
             UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
             UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
@@ -85,7 +84,6 @@ namespace GitUI
 
             GitCommands.Settings.GitDir = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
-            GitCommands.Settings.GitLibexecDir = GitLibexecPath.Text;
 
             GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
             GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
@@ -248,18 +246,6 @@ namespace GitUI
                 {
                     GitFound.BackColor = Color.LightGreen;
                     GitFound.Text = "git.cmd is found on your computer.";
-                }
-
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitLibexecDir + "git-clone.exe", "")))
-                {
-                    GitlibexecFound.BackColor = Color.LightSalmon;
-                    GitlibexecFound.Text = "git-clone.exe not found. To solve this problem you can set the correct path in settings.";
-                    bValid = false;
-                }
-                else
-                {
-                    GitlibexecFound.BackColor = Color.LightGreen;
-                    GitlibexecFound.Text = "git-clone.exe is found on your computer.";
                 }
 
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
@@ -560,16 +546,6 @@ namespace GitUI
             }
         }
 
-        private void GitLibexecPathBrowse_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-
-            if (browseDialog.ShowDialog() == DialogResult.OK)
-            {
-                GitLibexecPath.Text = browseDialog.SelectedPath;
-            }
-        }
-
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
@@ -580,30 +556,5 @@ namespace GitUI
             }
         }
 
-        private void GitlibexecFound_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitLibexecDir + "git-clone.exe", "")))
-            {
-                GitCommands.Settings.GitLibexecDir = @"c:\Program Files\Git\libexec\git-core\";
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitLibexecDir + "git-clone.exe", "")))
-                {
-                    GitCommands.Settings.GitLibexecDir = GitCommands.Settings.GitDir;
-                    GitCommands.Settings.GitLibexecDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\libexec\\git-core\\");
-                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitLibexecDir + "git-clone.exe", "")))
-                    {
-                        GitCommands.Settings.GitLibexecDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\libexec\\git-core\\";
-                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitLibexecDir + "git-clone.exe", "")))
-                        {
-                            GitCommands.Settings.GitLibexecDir = "";
-                            tabControl1.SelectTab("TabPageGitExtensions");
-                            return;
-                        }
-                    }
-                }
-            }
-
-            MessageBox.Show("Command git-clone.exe can be runned using: " + GitCommands.Settings.GitLibexecDir + "git-clone.exe", "Locate git-clone.exe");
-            GitLibexecPath.Text = GitCommands.Settings.GitLibexecDir;
-        }
     }
 }
