@@ -50,6 +50,7 @@
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(236, 21);
             this.Branches.TabIndex = 1;
+            this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 
             // Ok
             // 

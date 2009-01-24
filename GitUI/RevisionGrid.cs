@@ -718,5 +718,16 @@ namespace GitUI
                 LogParam = "HEAD";
 
         }
+
+        private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                FormRevertCommitSmall frm = new FormRevertCommitSmall((GitRevision)RevisionList[LastRow]);
+                frm.ShowDialog();
+                RefreshRevisions();
+
+            }
+        }
     }
 }

@@ -247,6 +247,12 @@
     <Compile Include="FormResolveConflicts.Designer.cs">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormRevertCommitSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRevertCommitSmall.Designer.cs">
+      <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSettigns.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -409,6 +415,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormResolveConflicts.resx">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRevertCommitSmall.resx">
+      <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">
       <DependentUpon>FormSettigns.cs</DependentUpon>

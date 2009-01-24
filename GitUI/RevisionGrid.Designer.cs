@@ -40,7 +40,9 @@
             this.createTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAllBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
             this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
@@ -54,8 +56,8 @@
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.showAllBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -136,12 +138,14 @@
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createTagToolStripMenuItem,
             this.createNewBranchToolStripMenuItem,
+            this.toolStripSeparator2,
             this.resetCurrentBranchToHereToolStripMenuItem,
+            this.revertCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.ShowRemoteBranches,
             this.showAllBranchesToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 120);
+            this.CreateTag.Size = new System.Drawing.Size(224, 170);
             // 
             // createTagToolStripMenuItem
             // 
@@ -164,6 +168,11 @@
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchToHereToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(220, 6);
+            // 
             // ShowRemoteBranches
             // 
             this.ShowRemoteBranches.Checked = true;
@@ -172,6 +181,15 @@
             this.ShowRemoteBranches.Size = new System.Drawing.Size(223, 22);
             this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranches_Click);
+            // 
+            // showAllBranchesToolStripMenuItem
+            // 
+            this.showAllBranchesToolStripMenuItem.Checked = true;
+            this.showAllBranchesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
+            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
+            this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
             // 
             // SelecctionTimer
             // 
@@ -291,19 +309,17 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // showAllBranchesToolStripMenuItem
+            // revertCommitToolStripMenuItem
             // 
-            this.showAllBranchesToolStripMenuItem.Checked = true;
-            this.showAllBranchesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
-            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
-            this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
+            this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
+            this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.revertCommitToolStripMenuItem.Text = "Revert commit";
+            this.revertCommitToolStripMenuItem.Click += new System.EventHandler(this.revertCommitToolStripMenuItem_Click);
             // 
-            // toolStripSeparator1
+            // toolStripSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
             // 
             // RevisionGrid
             // 
@@ -356,5 +372,7 @@
         private System.Windows.Forms.ToolStripMenuItem ShowRemoteBranches;
         private System.Windows.Forms.ToolStripMenuItem showAllBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
     }
 }

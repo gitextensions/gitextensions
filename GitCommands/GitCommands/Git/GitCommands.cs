@@ -458,6 +458,14 @@ namespace GitCommands
             return RunCmd(Settings.GitDir + "git.cmd", "stash clear");
         }
 
+        static public string RevertCmd(string commit, bool autoCommit)
+        {
+            if (autoCommit)
+                return "revert " + commit;
+            else
+                return "revert --no-commit " + commit;
+        }
+
 
         static public string ResetSoft(string commit)
         {
@@ -548,11 +556,19 @@ namespace GitCommands
             return result;
         }
 
-        static public string Branch(string branchName, string revision)
+        static public string Branch(string branchName, string revision, bool checkout)
         {
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "branch \"" + branchName.Trim() + "\" \"" + revision + "\"");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", BranchCmd(branchName, revision, checkout));
 
             return result;
+        }
+
+        public static string BranchCmd(string branchName, string revision, bool checkout)
+        {
+            if (checkout)
+                return "checkout -b \"" + branchName.Trim() + "\" \"" + revision + "\"";
+            else
+                return "branch \"" + branchName.Trim() + "\" \"" + revision + "\"";
         }
 
         static public void UnSetSsh()
@@ -883,6 +899,8 @@ namespace GitCommands
 
         static public string CommitCmd(string message, bool amend)
         {
+            //message = message.Replace('\"', '\'');
+
             if (amend)
                 return "commit --amend -m \"" + message + "\"";
             else

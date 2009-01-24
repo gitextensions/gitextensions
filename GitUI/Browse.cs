@@ -359,8 +359,9 @@ namespace GitUI
 
         void warning_Click(object sender, EventArgs e)
         {
-            if (MergeConflictHandler.HandleMergeConflicts())
-                Initialize();
+            new FormResolveConflicts().ShowDialog();
+            //if (MergeConflictHandler.HandleMergeConflicts())
+            Initialize();
         }
 
 

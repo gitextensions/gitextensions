@@ -26,7 +26,7 @@ namespace GitUI
                     return;
                 }
 
-                MessageBox.Show("Command executed \n" + GitCommands.GitCommands.Branch(BName.Text, RevisionGrid.GetRevisions()[0].Guid), "Branch");
+                new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, ChechoutAfterCreate.Checked));
 
                 RevisionGrid.RefreshRevisions();
             }
@@ -38,6 +38,7 @@ namespace GitUI
         private void Checkout_Click(object sender, EventArgs e)
         {
             new FormCheckoutBranck().ShowDialog();
+            MergeConflictHandler.HandleMergeConflicts();
             RevisionGrid.RefreshRevisions();
         }
     }

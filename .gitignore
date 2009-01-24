@@ -28,7 +28,7 @@
 [Dd]ebug*/
 UMM/UMM448/IActivaplanner.h
 [Tt]est[Rr]esults/
-
+*.orig
 
 !/Bin/ICSharpCode.TextEditor.dll
 !/Bin/plink.exe

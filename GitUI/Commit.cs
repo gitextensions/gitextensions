@@ -29,6 +29,7 @@ namespace GitUI
             Initialize();
             this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
+
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
@@ -43,6 +44,8 @@ namespace GitUI
 
         private void Initialize()
         {
+            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
             gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd);
@@ -127,7 +130,7 @@ namespace GitUI
             
             try
             {
-                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "\\\""), amend));
+                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "'"), amend));
 
                 //OutPut.Text = "";
 
@@ -289,6 +292,12 @@ namespace GitUI
                 Initialize();
             }
 
+        }
+
+        private void SolveMergeconflicts_Click(object sender, EventArgs e)
+        {
+            new FormResolveConflicts().ShowDialog();
+            Initialize();
         }
     }
 }

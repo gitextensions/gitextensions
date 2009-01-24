@@ -30,9 +30,8 @@ namespace GitUI
                 }
                 else
                 {
-                    string s = GitCommands.GitCommands.Branch(BName.Text, Revision.Guid);
-                    if (!string.IsNullOrEmpty(s))
-                        MessageBox.Show(s, "Branch");
+                    new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, Revision.Guid, ChechoutAfterCreate.Checked));
+
                     Close();
                 }
             }

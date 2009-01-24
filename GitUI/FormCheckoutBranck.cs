@@ -40,5 +40,10 @@ namespace GitUI
         {
 
         }
+
+        private void Branches_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

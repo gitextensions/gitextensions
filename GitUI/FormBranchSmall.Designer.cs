@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
+            this.ChechoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -45,7 +46,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(321, 4);
+            this.Ok.Location = new System.Drawing.Point(317, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 4;
@@ -57,14 +58,27 @@
             // 
             this.BName.Location = new System.Drawing.Point(88, 6);
             this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(227, 20);
+            this.BName.Size = new System.Drawing.Size(223, 20);
             this.BName.TabIndex = 3;
+            // 
+            // ChechoutAfterCreate
+            // 
+            this.ChechoutAfterCreate.AutoSize = true;
+            this.ChechoutAfterCreate.Checked = true;
+            this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChechoutAfterCreate.Location = new System.Drawing.Point(88, 32);
+            this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
+            this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.ChechoutAfterCreate.TabIndex = 6;
+            this.ChechoutAfterCreate.Text = "Chechout after create";
+            this.ChechoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // FormBranchSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 36);
+            this.ClientSize = new System.Drawing.Size(435, 58);
+            this.Controls.Add(this.ChechoutAfterCreate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.BName);
@@ -81,5 +95,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.TextBox BName;
+        private System.Windows.Forms.CheckBox ChechoutAfterCreate;
     }
 }

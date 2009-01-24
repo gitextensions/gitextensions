@@ -31,10 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBranch));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
+            this.Checkout = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
-            this.Checkout = new System.Windows.Forms.Button();
+            this.ChechoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -54,6 +55,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.ChechoutAfterCreate);
             this.splitContainer1.Panel2.Controls.Add(this.Checkout);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
@@ -64,11 +66,25 @@
             // 
             // RevisionGrid
             // 
+            this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
             this.RevisionGrid.TabIndex = 0;
+            // 
+            // Checkout
+            // 
+            this.Checkout.Location = new System.Drawing.Point(483, 5);
+            this.Checkout.Name = "Checkout";
+            this.Checkout.Size = new System.Drawing.Size(103, 23);
+            this.Checkout.TabIndex = 3;
+            this.Checkout.Text = "Checkout branch";
+            this.Checkout.UseVisualStyleBackColor = true;
+            this.Checkout.Click += new System.EventHandler(this.Checkout_Click);
             // 
             // label1
             // 
@@ -96,15 +112,17 @@
             this.BName.Size = new System.Drawing.Size(227, 20);
             this.BName.TabIndex = 0;
             // 
-            // Checkout
+            // ChechoutAfterCreate
             // 
-            this.Checkout.Location = new System.Drawing.Point(483, 5);
-            this.Checkout.Name = "Checkout";
-            this.Checkout.Size = new System.Drawing.Size(103, 23);
-            this.Checkout.TabIndex = 3;
-            this.Checkout.Text = "Checkout branch";
-            this.Checkout.UseVisualStyleBackColor = true;
-            this.Checkout.Click += new System.EventHandler(this.Checkout_Click);
+            this.ChechoutAfterCreate.AutoSize = true;
+            this.ChechoutAfterCreate.Checked = true;
+            this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChechoutAfterCreate.Location = new System.Drawing.Point(322, 8);
+            this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
+            this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.ChechoutAfterCreate.TabIndex = 4;
+            this.ChechoutAfterCreate.Text = "Chechout after create";
+            this.ChechoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // FormBranch
             // 
@@ -131,5 +149,6 @@
         private System.Windows.Forms.TextBox BName;
         private RevisionGrid RevisionGrid;
         private System.Windows.Forms.Button Checkout;
+        private System.Windows.Forms.CheckBox ChechoutAfterCreate;
     }
 }
