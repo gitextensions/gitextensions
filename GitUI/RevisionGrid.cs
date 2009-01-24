@@ -259,7 +259,7 @@ namespace GitUI
                 if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
                 {
                     gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + LogParam + " --abbrev-commit | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
+                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + LogParam + " --abbrev-commit | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
                 Revisions.ResumeLayout();

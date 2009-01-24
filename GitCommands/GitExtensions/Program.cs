@@ -91,13 +91,13 @@ namespace GitExtensions
                 
             }else
 
-            if (args.Length > 1 && args[1] == "addfiles")
+            if (args.Length > 1 && (args[1] == "addfiles" || args[1] == "add"))
             {
                 Application.Run(new FormAddFiles());
                 
             }else
 
-            if (args.Length > 1 && args[1] == "applypatch")
+            if (args.Length > 1 && (args[1] == "applypatch" || args[1] == "apply"))
             {
                 Application.Run(new MergePatch());
                 
@@ -109,7 +109,7 @@ namespace GitExtensions
                 
             }else
 
-            if (args.Length > 1 && args[1] == "checkoutbranch")
+            if (args.Length > 1 && (args[1] == "checkoutbranch" || args[1] == "checkout"))
             {
                 Application.Run(new FormCheckoutBranck());
                 
@@ -165,7 +165,34 @@ namespace GitExtensions
             if (args.Length > 1 && args[1] == "viewdiff")
             {
                 Application.Run(new FormDiff());
+            } else
+            if (args.Length > 1 && args[1] == "rebase")
+            {
+                Application.Run(new FormRebase());
             }
+            else
+            if (args.Length > 1 && args[1] == "merge")
+            {
+                Application.Run(new FormMergeBranch());
+            } else
+            if (args.Length > 1 && args[1] == "cherry")
+            {
+                Application.Run(new FormCherryPick());
+            } else
+            if (args.Length > 1 && args[1] == "tag")
+            {
+                Application.Run(new FormTag());
+            }
+            else
+                if (args.Length > 1 && args[1] == "stash")
+                {
+                    Application.Run(new FormStash());
+                }
+                else
+                    if (args.Length > 1)
+                    {
+                        Application.Run(new FormCommandlineHelp());
+                    }
 
             try
             {
