@@ -15,11 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitPlugin", "..\GitPlugin\G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "..\GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GitExtensionsSetup", "..\GitExtensionsSetup\GitExtensionsSetup.vdproj", "{AEBEC9EA-5D24-411E-B1AA-858EB0995A49}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GitExtensionsSetupSmall", "..\GitExtensionsSetup\GitExtensionsSetup.vdproj", "{AEBEC9EA-5D24-411E-B1AA-858EB0995A49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExt", "..\SimpleExt\SimpleExt.vcproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GitExtensionsSetup", "..\GitExtensionsSetupComplete\GitExtensionsSetupComplete.vdproj", "{65BAE751-3722-4D9C-813F-114AC0EC0B56}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -299,6 +301,48 @@ Global
 		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Mixed Platforms.Build.0 = Unicode Release MinSize|Win32
 		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Win32.ActiveCfg = Unicode Release MinSize|Win32
 		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Any CPU.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Any CPU.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Mixed Platforms.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Win32.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Debug|Win32.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Any CPU.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Any CPU.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Mixed Platforms.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Mixed Platforms.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Win32.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinDependency|Win32.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Any CPU.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Any CPU.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Mixed Platforms.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Mixed Platforms.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Win32.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release MinSize|Win32.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Any CPU.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Any CPU.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Mixed Platforms.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Mixed Platforms.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Win32.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Release|Win32.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Any CPU.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Any CPU.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Mixed Platforms.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Mixed Platforms.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Win32.ActiveCfg = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Debug|Win32.Build.0 = Debug
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Any CPU.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Any CPU.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Mixed Platforms.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Mixed Platforms.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Win32.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinDependency|Win32.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Any CPU.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Any CPU.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Mixed Platforms.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Win32.ActiveCfg = Release
+		{65BAE751-3722-4D9C-813F-114AC0EC0B56}.Unicode Release MinSize|Win32.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

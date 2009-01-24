@@ -34,3 +34,5 @@ UMM/UMM448/IActivaplanner.h
 !/Bin/plink.exe
 !/Bin/pageant.exe
 !/Bin/puttygen.exe
+!/Bin/kdiff3*.exe
+!/Bin/Git-1*.exe
