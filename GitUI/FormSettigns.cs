@@ -35,6 +35,7 @@ namespace GitUI
             UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
             Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
             MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
+
             KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("mergetool.keepBackup").Trim() == "true";
 
 
@@ -42,6 +43,10 @@ namespace GitUI
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
             GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
             GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
+
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
+
             GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("mergetool.keepBackup").Trim() == "true";
 
             PlinkPath.Text = GitCommands.Settings.Plink;
@@ -89,6 +94,10 @@ namespace GitUI
             GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
             GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
             GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
+
+
+            
+
             if (KeepMergeBackup.Checked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
             else
@@ -99,6 +108,9 @@ namespace GitUI
             gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
             gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
             gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
+
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
 
             if (GlobalKeepMergeBackup.Checked)
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
@@ -232,8 +244,26 @@ namespace GitUI
                 }
                 else
                 {
-                    DiffTool.BackColor = Color.LightGreen;
-                    DiffTool.Text = "There is a mergetool configured.";
+                    if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        string p = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
+                        if (string.IsNullOrEmpty(p) || !File.Exists(p))
+                        {
+                            DiffTool.BackColor = Color.LightSalmon;
+                            DiffTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
+                            bValid = false;
+                        }
+                        else
+                        {
+                            DiffTool.BackColor = Color.LightGreen;
+                            DiffTool.Text = "KDiff3 is configured as mergetool.";
+                        }
+                    }
+                    else
+                    {
+                        DiffTool.BackColor = Color.LightGreen;
+                        DiffTool.Text = "There is a mergetool configured.";
+                    }
                 }
 
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
@@ -342,7 +372,45 @@ namespace GitUI
 
         private void DiffTool_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectTab("GlobalSettingsPage");
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("merge.tool")))
+            {
+                if (MessageBox.Show("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?\nSelect no if you want to configure a different mergetool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    gitCommands.SetGlobalSetting("merge.tool", "kdiff3");
+                    GlobalMergeTool.Text = "kdiff3";
+                }
+                else
+                {
+                    tabControl1.SelectTab("GlobalSettingsPage");
+                    return;
+                }
+            }
+
+            if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string kdiff3path = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
+                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                {
+                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
+                    if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                    {
+                        kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                        if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                        {
+                            kdiff3path = "";
+                            MessageBox.Show("Path to kdiff3 could not be found automatically.\nPlease make sure KDiff3 is installed or set path manually.");
+                            tabControl1.SelectTab("GlobalSettingsPage");
+                            return;
+
+                        }
+                    }
+                    MessageBox.Show("KDiff3 located here: " + kdiff3path, "Locate KDiff3");
+                }
+                gitCommands.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
+                MergetoolPath.Text = kdiff3path;
+            }
         }
 
         private void GitFound_Click(object sender, EventArgs e)
@@ -356,6 +424,9 @@ namespace GitUI
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                     {
                         GitCommands.Settings.GitDir = "";
+
+                        MessageBox.Show("The path to git.cmd could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
+
                         tabControl1.SelectTab("TabPageGitExtensions");
                         return;
                     }
@@ -421,6 +492,7 @@ namespace GitUI
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
                         {
                             GitCommands.Settings.GitBinDir = "";
+                            MessageBox.Show("The path to git.exe could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
                             tabControl1.SelectTab("TabPageGitExtensions");
                             return;
                         }
@@ -554,6 +626,16 @@ namespace GitUI
             {
                 GitBinPath.Text = browseDialog.SelectedPath;
             }
+        }
+
+        private void BrowseMergeTool_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
+            else
+                MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
         }
 
     }
