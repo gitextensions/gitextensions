@@ -166,7 +166,7 @@ namespace GitUI
 
         private void TestConnection_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" -T \"" + Url.Text + "\"\"");
+            GitCommands.GitCommands.RunRealCmdDetatched("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" -T \"" + Url.Text + "\"\"");
         }
     }
 }

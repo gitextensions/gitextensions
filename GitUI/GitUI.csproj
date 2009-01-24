@@ -121,6 +121,12 @@
     <Compile Include="FormClone.Designer.cs">
       <DependentUpon>FormClone.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCommandlineHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCommandlineHelp.Designer.cs">
+      <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormCommitCount.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormClone.resx">
       <DependentUpon>FormClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCommandlineHelp.resx">
+      <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCommitCount.resx">
       <DependentUpon>FormCommitCount.cs</DependentUpon>

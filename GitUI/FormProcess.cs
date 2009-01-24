@@ -195,9 +195,9 @@ namespace GitUI
                         string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            GitCommands.GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
+                            GitCommands.GitCommands.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
                         else
-                            GitCommands.GitCommands.RunRealCmd("C:\\Windows\\System32\\cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
+                            GitCommands.GitCommands.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }

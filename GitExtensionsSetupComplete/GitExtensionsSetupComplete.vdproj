@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2534402FDBD444778DE6A8B85ECEFE93"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_331E12700CA4CF7C5D0715BC5128EF63"
         "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
         "MsmSig" = "8:_UNDEFINED"
@@ -351,6 +357,26 @@
             {
             "SourcePath" = "8:..\\cow-head.ico"
             "TargetName" = "8:cow-head.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2534402FDBD444778DE6A8B85ECEFE93"
+            {
+            "SourcePath" = "8:..\\Bin\\gitex.cmd"
+            "TargetName" = "8:gitex.cmd"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
@@ -940,7 +966,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{153C731B-5040-4A6E-9599-57FCB50487E2}"
+        "PackageCode" = "8:{8C383C9C-5F41-4A18-87F5-CE62935A0B79}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

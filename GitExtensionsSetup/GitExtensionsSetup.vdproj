@@ -105,6 +105,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A4BDB9CE222B47888F5D85827C45BE11"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
         "OwnerKey" = "8:_000A2A17B368E31C8184B9D156A2CB69"
         "MsmSig" = "8:_UNDEFINED"
@@ -669,6 +675,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A4BDB9CE222B47888F5D85827C45BE11"
+            {
+            "SourcePath" = "8:..\\Bin\\gitex.cmd"
+            "TargetName" = "8:gitex.cmd"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A5F5AFC1C0A1B469BDFDF6D94D4F6504"
             {
             "AssemblyRegister" = "3:1"
@@ -1031,7 +1057,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{C47A6384-7D73-47A2-A618-4CDBE0CBC1D7}"
+        "PackageCode" = "8:{27951C4B-786F-4001-91EB-CFAE7E0092E7}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

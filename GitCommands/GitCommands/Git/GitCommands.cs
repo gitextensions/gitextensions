@@ -377,19 +377,19 @@ namespace GitCommands
 
         static public void RunGitK()
         {
-            Run("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "gitk\" --all\"");
+            Run("cmd.exe", "/c \"\"" + Settings.GitDir + "gitk\" --all\"");
             //Run(Settings.GitDir + "gitk", "");
         }
 
         static public void RunGui()
         {
-            Run("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" gui\"");
+            Run("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" gui\"");
         }
 
 
         static public void RunBash()
         {
-            RunRealCmdDetatched("C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh.exe\" --login -i\"");
+            RunRealCmdDetatched("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh.exe\" --login -i\"");
         }
 
         static public string Init(bool bare, bool shared)
@@ -437,7 +437,7 @@ namespace GitCommands
         static public int CommitCount()
         {
             int count;
-            if (int.TryParse(RunCmd(Settings.GitDir + "C:\\Windows\\System32\\cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list --all --abbrev-commit | wc -l\""), out count))
+            if (int.TryParse(RunCmd(Settings.GitDir + "cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list --all --abbrev-commit | wc -l\""), out count))
                 return count;
 
             return 0;
