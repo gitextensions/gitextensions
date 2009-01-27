@@ -57,9 +57,19 @@ namespace GitUI
                 new FormResolveConflicts().ShowDialog();
             }
 
+            
+
+            if (GitCommands.GitCommands.InTheMiddleOfPatch())
+            {
+                if (MessageBox.Show("You are in the middle of a patch apply, continue patch apply?", "Patch apply", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    new MergePatch().ShowDialog();
+                }
+            }
+            else
             if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                if (MessageBox.Show("You are in the middle of a rebase (or patch apply), continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormRebase().ShowDialog();
                 }

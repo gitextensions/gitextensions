@@ -69,11 +69,15 @@ namespace GitUI
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
 
-            if (GitCommands.Settings.ValidWorkingDir() && Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (GitCommands.Settings.ValidWorkingDir() && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
             {
                 if (rebase == null)
                 {
-                    rebase = ToolStrip.Items.Add("You are in the middle of a rebase");
+                    if (GitCommands.GitCommands.InTheMiddleOfRebase())
+                        rebase = ToolStrip.Items.Add("You are in the middle of a rebase");
+                    else
+                        rebase = ToolStrip.Items.Add("You are in the middle of a patch apply");
+
                     rebase.BackColor = Color.Salmon;
                     rebase.Click += new EventHandler(rebase_Click);
                 }
@@ -111,7 +115,10 @@ namespace GitUI
 
         void rebase_Click(object sender, EventArgs e)
         {
-            new FormRebase().ShowDialog();
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+                new FormRebase().ShowDialog();
+            else
+                new MergePatch().ShowDialog();
             Initialize();
         }
 

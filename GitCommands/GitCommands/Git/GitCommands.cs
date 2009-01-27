@@ -760,10 +760,20 @@ namespace GitCommands
 
         static public bool InTheMiddleOfRebase()
         {
-            if (Directory.Exists(GetRebaseDir())) return true;
+            if (!File.Exists(GetRebaseDir() + "applying") &&
+                 Directory.Exists(GetRebaseDir())) return true;
 
             return false;
         }
+
+        static public bool InTheMiddleOfPatch()
+        {
+            if (!File.Exists(GetRebaseDir() + "rebasing") &&
+                 Directory.Exists(GetRebaseDir())) return true;
+
+            return false;
+        }
+
 
         static public string GetNextRebasePatch()
         {

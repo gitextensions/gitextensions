@@ -25,29 +25,54 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+            if (GitCommands.GitCommands.InTheMiddleOfPatch())
             {
-                BrowsePatch.Enabled = false;
                 Apply.Enabled = false;
-                PatchFile.ReadOnly = true;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = true;
-                Mergetool.Enabled = true;
+                Resolved.Enabled = !GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
+
+                PatchFile.Enabled = false;
+                PatchFile.ReadOnly = false;
+                BrowsePatch.Enabled = false;
+                PatchDir.Enabled = false;
+                PatchDir.ReadOnly = false;
+                BrowseDir.Enabled = false;
             }
             else
             {
-                BrowsePatch.Enabled = true;
+                PatchFile.Enabled = PatchFileMode.Checked;
+                PatchFile.ReadOnly = !PatchFileMode.Checked;
+                BrowsePatch.Enabled = PatchFileMode.Checked;
+                PatchDir.Enabled = PatchDirMode.Checked;
+                PatchDir.ReadOnly = !PatchDirMode.Checked;
+                BrowseDir.Enabled = PatchDirMode.Checked;
+
                 Apply.Enabled = true;
-                PatchFile.ReadOnly = false;
                 AddFiles.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
             }
+
             patchGrid1.Initialize();
+
+            Resolved.Text = "Conflicts resolved";
+            Mergetool.Text = "Solve conflicts";
+
+            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            {
+                Mergetool.Text = ">Solve conflicts<";
+            }
+            else
+                if (GitCommands.GitCommands.InTheMiddleOfPatch())
+                {
+                    Resolved.Text = ">Conflicts resolved<";
+                }
+
         }
 
         
@@ -75,26 +100,24 @@ namespace GitUI
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PatchFile.Text))
+            if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
-                MessageBox.Show("Please select a patch file");
+                MessageBox.Show("Please select a patch to apply");
                 return;
             }
 
-            new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text));
+            if (PatchFileMode.Checked)
+                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text));
+            else
+                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchDir.Text + "\\*.patch"));
 
             EnableButtons();
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
-
-            if (MessageBox.Show("Resolved all conflicts? Run resolved?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                new FormProcess(GitCommands.GitCommands.ResolvedCmd());
-                EnableButtons();
-            }
+            new FormResolveConflicts().ShowDialog();
+            EnableButtons();
         }
 
         private void Skip_Click(object sender, EventArgs e)
@@ -129,13 +152,27 @@ namespace GitUI
 
         private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+        }
+
+        private void BrowseDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+
+            if (browseDialog.ShowDialog() == DialogResult.OK)
             {
-                if (MessageBox.Show("You are in the middle of a patch apply. You need to resolve, skip or abort this patch.\nAre you sure to exit now?", "Exit", MessageBoxButtons.YesNo) == DialogResult.No)
-                {
-                    e.Cancel = true;
-                }
+                PatchDir.Text = browseDialog.SelectedPath;
             }
+
+        }
+
+        private void PatchFileMode_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableButtons();
+        }
+
+        private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
