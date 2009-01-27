@@ -44,8 +44,8 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.patchGrid1 = new GitUI.PatchGrid();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.patchGrid1 = new GitUI.PatchGrid();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -83,7 +83,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(3, 47);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(102, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 7;
             this.Ok.Text = "Rebase";
             this.Ok.UseVisualStyleBackColor = true;
@@ -110,7 +110,7 @@
             // 
             this.AddFiles.Location = new System.Drawing.Point(3, 152);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(102, 23);
+            this.AddFiles.Size = new System.Drawing.Size(108, 23);
             this.AddFiles.TabIndex = 14;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -120,7 +120,7 @@
             // 
             this.Resolved.Location = new System.Drawing.Point(3, 199);
             this.Resolved.Name = "Resolved";
-            this.Resolved.Size = new System.Drawing.Size(102, 23);
+            this.Resolved.Size = new System.Drawing.Size(108, 23);
             this.Resolved.TabIndex = 13;
             this.Resolved.Text = "Continue rebase";
             this.Resolved.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             // 
             this.Abort.Location = new System.Drawing.Point(3, 257);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(102, 23);
+            this.Abort.Size = new System.Drawing.Size(108, 23);
             this.Abort.TabIndex = 12;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
@@ -140,7 +140,7 @@
             // 
             this.Skip.Location = new System.Drawing.Point(3, 228);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(102, 23);
+            this.Skip.Size = new System.Drawing.Size(108, 23);
             this.Skip.TabIndex = 11;
             this.Skip.Text = "Skip this commit";
             this.Skip.UseVisualStyleBackColor = true;
@@ -150,7 +150,7 @@
             // 
             this.Mergetool.Location = new System.Drawing.Point(2, 98);
             this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(102, 23);
+            this.Mergetool.Size = new System.Drawing.Size(108, 23);
             this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
@@ -160,7 +160,6 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -177,7 +176,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
             this.splitContainer1.Size = new System.Drawing.Size(675, 368);
-            this.splitContainer1.SplitterDistance = 564;
+            this.splitContainer1.SplitterDistance = 557;
             this.splitContainer1.TabIndex = 17;
             // 
             // splitContainer2
@@ -199,7 +198,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(564, 368);
+            this.splitContainer2.Size = new System.Drawing.Size(557, 368);
             this.splitContainer2.SplitterDistance = 74;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -220,7 +219,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.patchGrid1);
-            this.splitContainer3.Size = new System.Drawing.Size(564, 290);
+            this.splitContainer3.Size = new System.Drawing.Size(557, 290);
             this.splitContainer3.SplitterDistance = 16;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -252,14 +251,6 @@
             this.splitContainer4.SplitterDistance = 80;
             this.splitContainer4.TabIndex = 18;
             // 
-            // patchGrid1
-            // 
-            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
-            this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(564, 270);
-            this.patchGrid1.TabIndex = 16;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
@@ -271,6 +262,14 @@
             this.pictureBox1.Size = new System.Drawing.Size(80, 368);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // patchGrid1
+            // 
+            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
+            this.patchGrid1.Name = "patchGrid1";
+            this.patchGrid1.Size = new System.Drawing.Size(557, 270);
+            this.patchGrid1.TabIndex = 16;
             // 
             // FormRebase
             // 

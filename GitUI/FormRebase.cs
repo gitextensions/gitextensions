@@ -57,21 +57,20 @@ namespace GitUI
                 Abort.Enabled = false;
             }
 
+            Resolved.Text = "Continue rebase";
+            Mergetool.Text = "Solve conflicts";
+
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                if (MessageBox.Show("There are mergeconflicts and a rebase is progress, solve conflicts?", "Solve conflics", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    Mergetool_Click(null, null);
-                }
+                Mergetool.Text = ">Solve conflicts<";
             }
             else
                 if (GitCommands.GitCommands.InTheMiddleOfRebase())
                 {
-                    if (MessageBox.Show("There are no mergeconflicts and a rebase is progress, continue rebase?\n\nIf you get this dialog a few times, choose no and read output.", "Continue rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        Resolved_Click(null, null);
-                    }
+                    Resolved.Text = ">Continue rebase<";
                 }
+
+            
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -124,11 +123,6 @@ namespace GitUI
             FormProcess form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
             if (form.outputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date.\nNothing to rebase.", "Rebase");
-            else
-                if (string.IsNullOrEmpty(form.outputString.ToString()))
-                {
-                    MessageBox.Show("Done.", "Rebase");
-                }
 
             EnableButtons();
             patchGrid1.Initialize();
