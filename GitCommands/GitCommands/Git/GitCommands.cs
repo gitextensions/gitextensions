@@ -258,6 +258,8 @@ namespace GitCommands
                 SetEnvironmentVariable();
                 arguments = arguments.Replace('\\', '/');
 
+                arguments = arguments.Replace("$QUOTE$", "\\\"");
+
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -869,7 +871,7 @@ namespace GitCommands
             return result;
         }
 
-        private static string ResolvedCmd()
+        public static string ResolvedCmd()
         {
             return "am --3way --resolved";
         }
@@ -878,18 +880,28 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "am --3way --skip");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", SkipCmd());
 
             return result;
+        }
+
+        public static string SkipCmd()
+        {
+            return "am --3way --skip";
         }
 
         static public string Abort()
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "am --3way --abort");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", AbortCmd());
 
             return result;
+        }
+
+        public static string AbortCmd()
+        {
+            return "am --3way --abort";
         }
 
         static public string Commit(string message, bool amend)
@@ -911,9 +923,14 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "am --3way --signoff \"" + patchFile + "\"");
+            string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", PatchCmd(patchFile));
 
             return result;
+        }
+
+        public static string PatchCmd(string patchFile)
+        {
+            return "am --3way --signoff \"" + patchFile + "\"";
         }
 
         public static string UpdateRemotes()
@@ -958,25 +975,40 @@ namespace GitCommands
             GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global --unset-all \"" + setting + "\"").Trim();
 
             if (!string.IsNullOrEmpty(value))
+            {
+                value = value.Replace("\"", "$QUOTE$");
                 GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+            }
         }
 
         static public string GetSetting(string setting)
         {
-            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --get \"" + setting + "\"").Trim();
+            string configFileName = Settings.WorkingDirGitDir() + "\\config";
+            if (!File.Exists(configFileName))
+                return "";
+
+            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --file \"" + configFileName + "\" --get \"" + setting + "\"").Trim();
         }
 
         static public void UnSetSetting(string setting)
         {
-            GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --unset-all \"" + setting + "\"").Trim();
+            string configFileName = Settings.WorkingDirGitDir() + "\\config";
+            GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --file \"" + configFileName + "\" --unset-all \"" + setting + "\"").Trim();
         }
 
         static public void SetSetting(string setting, string value)
         {
+            string configFileName = Settings.WorkingDirGitDir() + "\\config";
+            if (!File.Exists(configFileName))
+                return;
+
             UnSetSetting(setting);
 
             if (!string.IsNullOrEmpty(value))
-                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+            {
+                value = value.Replace("\"", "$QUOTE$");
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --file \"" + configFileName + "\" \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+            }
         }
 
         static public List<Patch> GetStashedItems(string stashName)
@@ -1721,7 +1753,12 @@ namespace GitCommands
 
         public static string MergeBranch(string branch)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "merge \"" + branch + "\"");
+            return RunCmd(Settings.GitDir + "git.cmd", MergeBranchCmd(branch));
+        }
+
+        public static string MergeBranchCmd(string branch)
+        {
+            return "merge \"" + branch + "\"";
         }
     }
 }

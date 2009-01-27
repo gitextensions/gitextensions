@@ -47,6 +47,7 @@ namespace GitUI
                 Skip.Enabled = false;
                 Abort.Enabled = false;
             }
+            patchGrid1.Initialize();
         }
 
         
@@ -80,11 +81,8 @@ namespace GitUI
                 return;
             }
 
-            string result = GitCommands.GitCommands.Patch(PatchFile.Text);
-            Output.Text = result;
-            if (result.Contains("Patch failed"))
-            {
-            }
+            new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text));
+
             EnableButtons();
         }
 
@@ -94,30 +92,27 @@ namespace GitUI
 
             if (MessageBox.Show("Resolved all conflicts? Run resolved?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                Output.Text += "\n";
-                Output.Text += GitCommands.GitCommands.Resolved();
+                new FormProcess(GitCommands.GitCommands.ResolvedCmd());
                 EnableButtons();
             }
         }
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.Skip();
+            
+            new FormProcess(GitCommands.GitCommands.SkipCmd());
             EnableButtons();
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.Resolved();
+            new FormProcess(GitCommands.GitCommands.ResolvedCmd());
             EnableButtons();
         }
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            Output.Text += "\n";
-            Output.Text += GitCommands.GitCommands.Abort();
+            new FormProcess(GitCommands.GitCommands.AbortCmd());
             EnableButtons();
         }
 

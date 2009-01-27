@@ -46,6 +46,8 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
 
             GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("mergetool.keepBackup").Trim() == "true";
 
@@ -111,6 +113,8 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
 
             if (GlobalKeepMergeBackup.Checked)
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
@@ -261,8 +265,28 @@ namespace GitUI
                     }
                     else
                     {
-                        DiffTool.BackColor = Color.LightGreen;
-                        DiffTool.Text = "There is a mergetool configured.";
+                        string mergetool = gitCommands.GetGlobalSetting("merge.tool");
+                        if (mergetool.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
+                            mergetool.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            string p = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+                            if (string.IsNullOrEmpty(p))
+                            {
+                                DiffTool.BackColor = Color.LightSalmon;
+                                DiffTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
+                                bValid = false;
+                            }
+                            else
+                            {
+                                DiffTool.BackColor = Color.LightGreen;
+                                DiffTool.Text = "There is a custom configured: " + mergetool;
+                            }
+                        }
+                        else
+                        {
+                            DiffTool.BackColor = Color.LightGreen;
+                            DiffTool.Text = "There is a mergetool configured.";
+                        }
                     }
                 }
 
@@ -396,20 +420,30 @@ namespace GitUI
                     kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
                     if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                     {
-                        kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
                         if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                         {
-                            kdiff3path = "";
-                            MessageBox.Show("Path to kdiff3 could not be found automatically.\nPlease make sure KDiff3 is installed or set path manually.");
-                            tabControl1.SelectTab("GlobalSettingsPage");
-                            return;
+                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                            {
+                                kdiff3path = "";
+                                MessageBox.Show("Path to kdiff3 could not be found automatically.\nPlease make sure KDiff3 is installed or set path manually.");
+                                tabControl1.SelectTab("GlobalSettingsPage");
+                                return;
 
+                            }
                         }
                     }
                     MessageBox.Show("KDiff3 located here: " + kdiff3path, "Locate KDiff3");
                 }
                 gitCommands.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
                 MergetoolPath.Text = kdiff3path;
+            } else
+            if (gitCommands.GetGlobalSetting("merge.tool").Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
+                gitCommands.GetGlobalSetting("merge.tool").Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                AutoConfigMergeToolcmd();
+                gitCommands.SetGlobalSetting("mergetool." + gitCommands.GetGlobalSetting("merge.tool") + ".cmd", MergeToolCmd.Text);
             }
         }
 
@@ -420,15 +454,19 @@ namespace GitUI
                 GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                 {
-                    GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
+                    GitCommands.Settings.GitDir = @"c:\Program Files (x86)\Git\cmd\";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
                     {
-                        GitCommands.Settings.GitDir = "";
+                        GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
+                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "status")))
+                        {
+                            GitCommands.Settings.GitDir = "";
 
-                        MessageBox.Show("The path to git.cmd could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
+                            MessageBox.Show("The path to git.cmd could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
 
-                        tabControl1.SelectTab("TabPageGitExtensions");
-                        return;
+                            tabControl1.SelectTab("TabPageGitExtensions");
+                            return;
+                        }
                     }
                 }
             }
@@ -484,17 +522,21 @@ namespace GitUI
                 GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
                 {
-                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
-                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
+                    GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
                     {
-                        GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
+                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
                         {
-                            GitCommands.Settings.GitBinDir = "";
-                            MessageBox.Show("The path to git.exe could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
-                            tabControl1.SelectTab("TabPageGitExtensions");
-                            return;
+                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "status")))
+                            {
+                                GitCommands.Settings.GitBinDir = "";
+                                MessageBox.Show("The path to git.exe could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
+                                tabControl1.SelectTab("TabPageGitExtensions");
+                                return;
+                            }
                         }
                     }
                 }
@@ -522,6 +564,7 @@ namespace GitUI
         private bool AutoFindPuttyPaths()
         {
             if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
+            if (AutoFindPuttyPathsInDir("c:\\Program Files (x86)\\PuTTY\\")) return true;
             if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1", "InstallLocation"))) return true;
             if (AutoFindPuttyPathsInDir(GitCommands.Settings.GetInstallDir() + "\\PuTTY\\")) return true;
 
@@ -632,10 +675,73 @@ namespace GitUI
         {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-            if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
             else
+                if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
+                MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
+            else
+               if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+                MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe", MergetoolPath.Text);
+            else
                 MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                MessageBox.Show("KDiff3 is supported by Git, you can leave mergetool cmd empty.", "Suggest mergetool cmd");
+                MergeToolCmd.Text = "";
+                return;
+            }
+            AutoConfigMergeToolcmd();
+
+        }
+
+        private void AutoConfigMergeToolcmd()
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = @"c:\Program Files\Perforce\p4merge.exe";
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to p4merge.exe and press suggest again.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
+                return;
+            }
+
+            if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("p4merge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = @"c:\Program Files\TortoiseSVN\bin\TortoiseMerge.exe";
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to TortoiseMerge.exe and press suggest again.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                MergeToolCmd.Text = "\"TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
+                return;
+            }
         }
 
     }
