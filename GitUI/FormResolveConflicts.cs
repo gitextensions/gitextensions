@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GitUI
 {
@@ -17,6 +18,7 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
+            Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
             Initialize();
         }

@@ -47,10 +47,16 @@
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AutoStash = new System.Windows.Forms.CheckBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.PullImage = new System.Windows.Forms.PictureBox();
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PullImage)).BeginInit();
             this.SuspendLayout();
             // 
             // BrowseSource
@@ -85,7 +91,7 @@
             // 
             // Pull
             // 
-            this.Pull.Location = new System.Drawing.Point(456, 265);
+            this.Pull.Location = new System.Drawing.Point(447, 256);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
             this.Pull.TabIndex = 7;
@@ -95,7 +101,7 @@
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(12, 265);
+            this.Mergetool.Location = new System.Drawing.Point(3, 256);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 11;
@@ -114,6 +120,7 @@
             this.Merge.TabStop = true;
             this.Merge.Text = "Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
+            this.Merge.CheckedChanged += new System.EventHandler(this.Merge_CheckedChanged);
             // 
             // Rebase
             // 
@@ -125,13 +132,14 @@
             this.Rebase.Text = "Rebase remote branch to current branch, creates linear history. It is recommeded " +
                 "to choose \r\na remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
+            this.Rebase.CheckedChanged += new System.EventHandler(this.Rebase_CheckedChanged);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Fetch);
             this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Controls.Add(this.Merge);
-            this.groupBox1.Location = new System.Drawing.Point(12, 157);
+            this.groupBox1.Location = new System.Drawing.Point(3, 148);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
             this.groupBox1.TabIndex = 12;
@@ -148,6 +156,7 @@
             this.Fetch.TabStop = true;
             this.Fetch.Text = "Do not merge, only fetch remote branch";
             this.Fetch.UseVisualStyleBackColor = true;
+            this.Fetch.CheckedChanged += new System.EventHandler(this.Fetch_CheckedChanged);
             // 
             // PullSource
             // 
@@ -162,7 +171,7 @@
             // 
             // Stash
             // 
-            this.Stash.Location = new System.Drawing.Point(122, 265);
+            this.Stash.Location = new System.Drawing.Point(113, 256);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
             this.Stash.TabIndex = 14;
@@ -199,7 +208,7 @@
             this.groupBox2.Controls.Add(this.Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
             this.groupBox2.Controls.Add(this.PullSource);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(541, 80);
             this.groupBox2.TabIndex = 18;
@@ -234,7 +243,7 @@
             // 
             this.groupBox3.Controls.Add(this.Branches);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(12, 99);
+            this.groupBox3.Location = new System.Drawing.Point(3, 90);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(541, 52);
             this.groupBox3.TabIndex = 19;
@@ -244,7 +253,7 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(232, 269);
+            this.AutoStash.Location = new System.Drawing.Point(223, 260);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(76, 17);
             this.AutoStash.TabIndex = 20;
@@ -252,11 +261,49 @@
             this.AutoStash.UseVisualStyleBackColor = true;
             this.AutoStash.CheckedChanged += new System.EventHandler(this.AutoStash_CheckedChanged);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.PullImage);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
+            this.splitContainer1.Panel2.Controls.Add(this.Pull);
+            this.splitContainer1.Panel2.Controls.Add(this.AutoStash);
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
+            this.splitContainer1.Panel2.Controls.Add(this.Stash);
+            this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
+            this.splitContainer1.Size = new System.Drawing.Size(640, 290);
+            this.splitContainer1.SplitterDistance = 80;
+            this.splitContainer1.TabIndex = 25;
+            // 
+            // PullImage
+            // 
+            this.PullImage.BackColor = System.Drawing.Color.White;
+            this.PullImage.BackgroundImage = global::GitUI.Properties.Resources.merge;
+            this.PullImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PullImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PullImage.Location = new System.Drawing.Point(0, 0);
+            this.PullImage.Name = "PullImage";
+            this.PullImage.Size = new System.Drawing.Size(80, 290);
+            this.PullImage.TabIndex = 0;
+            this.PullImage.TabStop = false;
+            // 
             // LoadSSHKey
             // 
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(327, 265);
+            this.LoadSSHKey.Location = new System.Drawing.Point(318, 256);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
             this.LoadSSHKey.TabIndex = 24;
@@ -268,15 +315,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 295);
-            this.Controls.Add(this.LoadSSHKey);
-            this.Controls.Add(this.AutoStash);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.Mergetool);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.Stash);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Pull);
+            this.ClientSize = new System.Drawing.Size(640, 290);
+            this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -288,8 +328,12 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PullImage)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -314,5 +358,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox AutoStash;
         private System.Windows.Forms.Button LoadSSHKey;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.PictureBox PullImage;
     }
 }

@@ -156,6 +156,8 @@ namespace GitUI
 
         private void FormPull_Load(object sender, EventArgs e)
         {
+            Pull.Select();
+
             string branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
 
@@ -243,6 +245,21 @@ namespace GitUI
         private void Remotes_Validated(object sender, EventArgs e)
         {
             EnableLoadSSHButton();
+        }
+
+        private void Merge_CheckedChanged(object sender, EventArgs e)
+        {
+            PullImage.BackgroundImage = GitUI.Properties.Resources.merge;
+        }
+
+        private void Rebase_CheckedChanged(object sender, EventArgs e)
+        {
+            PullImage.BackgroundImage = GitUI.Properties.Resources.Rebase;
+        }
+
+        private void Fetch_CheckedChanged(object sender, EventArgs e)
+        {
+            PullImage.BackgroundImage = GitUI.Properties.Resources.fetch;
         }
 
     }

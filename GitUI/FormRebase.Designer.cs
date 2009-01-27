@@ -42,8 +42,10 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.patchGrid1 = new GitUI.PatchGrid();
             this.label3 = new System.Windows.Forms.Label();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.patchGrid1 = new GitUI.PatchGrid();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -53,6 +55,10 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -154,6 +160,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -169,14 +176,15 @@
             this.splitContainer1.Panel2.Controls.Add(this.Abort);
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
-            this.splitContainer1.Size = new System.Drawing.Size(653, 280);
-            this.splitContainer1.SplitterDistance = 542;
+            this.splitContainer1.Size = new System.Drawing.Size(675, 368);
+            this.splitContainer1.SplitterDistance = 564;
             this.splitContainer1.TabIndex = 17;
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -191,7 +199,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(542, 280);
+            this.splitContainer2.Size = new System.Drawing.Size(564, 368);
             this.splitContainer2.SplitterDistance = 74;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -199,6 +207,7 @@
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -211,17 +220,9 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.patchGrid1);
-            this.splitContainer3.Size = new System.Drawing.Size(542, 202);
+            this.splitContainer3.Size = new System.Drawing.Size(564, 290);
             this.splitContainer3.SplitterDistance = 16;
             this.splitContainer3.TabIndex = 0;
-            // 
-            // patchGrid1
-            // 
-            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
-            this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(542, 182);
-            this.patchGrid1.TabIndex = 16;
             // 
             // label3
             // 
@@ -232,12 +233,52 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer4.IsSplitterFixed = true;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.pictureBox1);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.splitContainer1);
+            this.splitContainer4.Size = new System.Drawing.Size(759, 368);
+            this.splitContainer4.SplitterDistance = 80;
+            this.splitContainer4.TabIndex = 18;
+            // 
+            // patchGrid1
+            // 
+            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
+            this.patchGrid1.Name = "patchGrid1";
+            this.patchGrid1.Size = new System.Drawing.Size(564, 270);
+            this.patchGrid1.TabIndex = 16;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
+            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.Rebase;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(80, 368);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // FormRebase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 280);
-            this.Controls.Add(this.splitContainer1);
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ClientSize = new System.Drawing.Size(759, 368);
+            this.Controls.Add(this.splitContainer4);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -254,6 +295,10 @@
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -275,5 +320,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

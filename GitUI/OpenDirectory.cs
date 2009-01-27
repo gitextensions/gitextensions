@@ -17,6 +17,9 @@ namespace GitUI
             InitializeComponent();
 
             Directory.DataSource = RepositoryHistory.MostRecentRepositories;
+
+            Load.Select();
+
         }
 
         private void Browse_Click(object sender, EventArgs e)
@@ -48,5 +51,6 @@ namespace GitUI
         private void Directory_KeyPress(object sender, KeyPressEventArgs e)
         {
         }
+
     }
 }

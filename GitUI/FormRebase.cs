@@ -23,6 +23,7 @@ namespace GitUI
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
+            Branches.Select();
 
             EnableButtons();
         }

@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label20 = new System.Windows.Forms.Label();
+            this.MergeTool = new System.Windows.Forms.ComboBox();
             this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -61,6 +63,10 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.BrowseMergeTool = new System.Windows.Forms.Button();
+            this.GlobalMergeTool = new System.Windows.Forms.ComboBox();
+            this.PathToKDiff3 = new System.Windows.Forms.Label();
+            this.MergetoolPath = new System.Windows.Forms.TextBox();
             this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -93,12 +99,9 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.PathToKDiff3 = new System.Windows.Forms.Label();
-            this.MergetoolPath = new System.Windows.Forms.TextBox();
-            this.GlobalMergeTool = new System.Windows.Forms.ComboBox();
-            this.MergeTool = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.BrowseMergeTool = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.MergeToolCmd = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -133,6 +136,29 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Local settings";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.BackColor = System.Drawing.SystemColors.Info;
+            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label20.Location = new System.Drawing.Point(335, 8);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(145, 54);
+            this.label20.TabIndex = 11;
+            this.label20.Text = "You only need local settings\r\nif you wan to override the \r\nglobal settings for th" +
+                "e current\r\nrepository.";
+            // 
+            // MergeTool
+            // 
+            this.MergeTool.FormattingEnabled = true;
+            this.MergeTool.Items.AddRange(new object[] {
+            "kdiff3",
+            "p4merge"});
+            this.MergeTool.Location = new System.Drawing.Point(118, 94);
+            this.MergeTool.Name = "MergeTool";
+            this.MergeTool.Size = new System.Drawing.Size(159, 21);
+            this.MergeTool.TabIndex = 10;
             // 
             // KeepMergeBackup
             // 
@@ -479,6 +505,9 @@
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.button1);
+            this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
+            this.GlobalSettingsPage.Controls.Add(this.label19);
             this.GlobalSettingsPage.Controls.Add(this.BrowseMergeTool);
             this.GlobalSettingsPage.Controls.Add(this.GlobalMergeTool);
             this.GlobalSettingsPage.Controls.Add(this.PathToKDiff3);
@@ -500,10 +529,48 @@
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
             // 
+            // BrowseMergeTool
+            // 
+            this.BrowseMergeTool.Location = new System.Drawing.Point(466, 117);
+            this.BrowseMergeTool.Name = "BrowseMergeTool";
+            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseMergeTool.TabIndex = 13;
+            this.BrowseMergeTool.Text = "Browse";
+            this.BrowseMergeTool.UseVisualStyleBackColor = true;
+            this.BrowseMergeTool.Click += new System.EventHandler(this.BrowseMergeTool_Click);
+            // 
+            // GlobalMergeTool
+            // 
+            this.GlobalMergeTool.FormattingEnabled = true;
+            this.GlobalMergeTool.Items.AddRange(new object[] {
+            "kdiff3",
+            "p4merge",
+            "TortoiseMerge"});
+            this.GlobalMergeTool.Location = new System.Drawing.Point(113, 92);
+            this.GlobalMergeTool.Name = "GlobalMergeTool";
+            this.GlobalMergeTool.Size = new System.Drawing.Size(164, 21);
+            this.GlobalMergeTool.TabIndex = 12;
+            // 
+            // PathToKDiff3
+            // 
+            this.PathToKDiff3.AutoSize = true;
+            this.PathToKDiff3.Location = new System.Drawing.Point(9, 124);
+            this.PathToKDiff3.Name = "PathToKDiff3";
+            this.PathToKDiff3.Size = new System.Drawing.Size(90, 13);
+            this.PathToKDiff3.TabIndex = 11;
+            this.PathToKDiff3.Text = "Path to mergetool";
+            // 
+            // MergetoolPath
+            // 
+            this.MergetoolPath.Location = new System.Drawing.Point(113, 120);
+            this.MergetoolPath.Name = "MergetoolPath";
+            this.MergetoolPath.Size = new System.Drawing.Size(347, 20);
+            this.MergetoolPath.TabIndex = 10;
+            // 
             // GlobalKeepMergeBackup
             // 
             this.GlobalKeepMergeBackup.AutoSize = true;
-            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(182, 153);
+            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(183, 179);
             this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
             this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
             this.GlobalKeepMergeBackup.TabIndex = 9;
@@ -512,7 +579,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 153);
+            this.label10.Location = new System.Drawing.Point(9, 179);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(156, 13);
             this.label10.TabIndex = 8;
@@ -521,7 +588,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 95);
+            this.label7.Location = new System.Drawing.Point(10, 95);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(54, 13);
             this.label7.TabIndex = 7;
@@ -537,7 +604,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 68);
+            this.label6.Location = new System.Drawing.Point(9, 68);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 4;
@@ -818,63 +885,36 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
-            // PathToKDiff3
+            // label19
             // 
-            this.PathToKDiff3.AutoSize = true;
-            this.PathToKDiff3.Location = new System.Drawing.Point(7, 123);
-            this.PathToKDiff3.Name = "PathToKDiff3";
-            this.PathToKDiff3.Size = new System.Drawing.Size(90, 13);
-            this.PathToKDiff3.TabIndex = 11;
-            this.PathToKDiff3.Text = "Path to mergetool";
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(9, 151);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(103, 13);
+            this.label19.TabIndex = 14;
+            this.label19.Text = "Mergetool command";
             // 
-            // MergetoolPath
+            // MergeToolCmd
             // 
-            this.MergetoolPath.Location = new System.Drawing.Point(113, 120);
-            this.MergetoolPath.Name = "MergetoolPath";
-            this.MergetoolPath.Size = new System.Drawing.Size(266, 20);
-            this.MergetoolPath.TabIndex = 10;
+            this.MergeToolCmd.FormattingEnabled = true;
+            this.MergeToolCmd.Items.AddRange(new object[] {
+            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
+            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
+                " /theirs:\"$REMOTE\" /merged:\"$MERGED\""});
+            this.MergeToolCmd.Location = new System.Drawing.Point(113, 147);
+            this.MergeToolCmd.Name = "MergeToolCmd";
+            this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
+            this.MergeToolCmd.TabIndex = 15;
             // 
-            // GlobalMergeTool
+            // button1
             // 
-            this.GlobalMergeTool.FormattingEnabled = true;
-            this.GlobalMergeTool.Items.AddRange(new object[] {
-            "kdiff3"});
-            this.GlobalMergeTool.Location = new System.Drawing.Point(113, 92);
-            this.GlobalMergeTool.Name = "GlobalMergeTool";
-            this.GlobalMergeTool.Size = new System.Drawing.Size(164, 21);
-            this.GlobalMergeTool.TabIndex = 12;
-            // 
-            // MergeTool
-            // 
-            this.MergeTool.FormattingEnabled = true;
-            this.MergeTool.Items.AddRange(new object[] {
-            "kdiff3"});
-            this.MergeTool.Location = new System.Drawing.Point(118, 94);
-            this.MergeTool.Name = "MergeTool";
-            this.MergeTool.Size = new System.Drawing.Size(159, 21);
-            this.MergeTool.TabIndex = 10;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.BackColor = System.Drawing.SystemColors.Info;
-            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label20.Location = new System.Drawing.Point(335, 8);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(145, 54);
-            this.label20.TabIndex = 11;
-            this.label20.Text = "You only need local settings\r\nif you wan to override the \r\nglobal settings for th" +
-                "e current\r\nrepository.";
-            // 
-            // BrowseMergeTool
-            // 
-            this.BrowseMergeTool.Location = new System.Drawing.Point(385, 118);
-            this.BrowseMergeTool.Name = "BrowseMergeTool";
-            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 23);
-            this.BrowseMergeTool.TabIndex = 13;
-            this.BrowseMergeTool.Text = "Browse";
-            this.BrowseMergeTool.UseVisualStyleBackColor = true;
-            this.BrowseMergeTool.Click += new System.EventHandler(this.BrowseMergeTool_Click);
+            this.button1.Location = new System.Drawing.Point(466, 145);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Suggest command";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // FormSettigns
             // 
@@ -981,6 +1021,9 @@
         private System.Windows.Forms.ComboBox MergeTool;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button BrowseMergeTool;
+        private System.Windows.Forms.ComboBox MergeToolCmd;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button button1;
 
     }
 }

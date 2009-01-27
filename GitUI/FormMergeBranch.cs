@@ -23,11 +23,12 @@ namespace GitUI
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
+            Branches.Select();
         }
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Command executed \n" + GitCommands.GitCommands.MergeBranch(Branches.Text), "Merge");
+            new FormProcess(GitCommands.GitCommands.MergeBranchCmd(Branches.Text));
 
             MergeConflictHandler.HandleMergeConflicts();
         }
