@@ -74,7 +74,7 @@ namespace GitUI
 
             gitCommand = new GitCommands.GitCommands();
             gitCommand.CollectOutput = false;
-            gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+            Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
 
             gitCommand.Exited += new EventHandler(gitCommand_Exited);
             gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
@@ -116,41 +116,49 @@ namespace GitUI
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
-            //An error occured!
-            if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
+            try
             {
-                ErrorImage.Visible = true;
-                SuccessImage.Visible = false;
-                if (Plink)
+                //An error occured!
+                if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
                 {
-                    if (ProcessArguments.Contains("pull") ||
-                        ProcessArguments.Contains("push") ||
-                        ProcessArguments.Contains("plink") ||
-                        ProcessString.Contains("clone") ||
-                        ProcessArguments.Contains("clone"))
+                    ErrorImage.Visible = true;
+                    SuccessImage.Visible = false;
+                    if (Plink)
                     {
-                        if (Output.Text.Contains("successfully authenticated"))
+                        if (ProcessArguments.Contains("pull") ||
+                            ProcessArguments.Contains("push") ||
+                            ProcessArguments.Contains("plink") ||
+                            ProcessString.Contains("clone") ||
+                            ProcessArguments.Contains("clone"))
                         {
-                            SuccessImage.Visible = true;
-                            ErrorImage.Visible = false;
-                        }
-
-                        if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
-                        {
-                            FormPuttyError puttyError = new FormPuttyError();
-                            puttyError.ShowDialog();
-                            if (puttyError.RetryProcess)
+                            if (Output.Text.Contains("successfully authenticated"))
                             {
-                                FormProcess_Load(null, null);
+                                SuccessImage.Visible = true;
+                                ErrorImage.Visible = false;
+                            }
+
+                            if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
+                            {
+                                FormPuttyError puttyError = new FormPuttyError();
+                                puttyError.ShowDialog();
+                                if (puttyError.RetryProcess)
+                                {
+                                    FormProcess_Load(null, null);
+                                }
                             }
                         }
                     }
                 }
+                else
+                {
+                    ErrorImage.Visible = false;
+                    SuccessImage.Visible = true;
+                }
             }
-            else
+            catch
             {
-                ErrorImage.Visible = false;
-                SuccessImage.Visible = true;
+                ErrorImage.Visible = true;
+                SuccessImage.Visible = false;
             }
         }
 
@@ -227,6 +235,22 @@ namespace GitUI
             {
                 Done();
             }
+        }
+
+        private void Abort_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Process != null)
+                {
+                    Process.Kill();
+                    outputString.Append("\nAborted");
+                    Done();
+                }
+            }
+            catch
+            {
+            }            
         }
     }
 }
