@@ -15,6 +15,7 @@ namespace GitUI
         public FormResolveConflicts()
         {
             InitializeComponent();
+            ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -23,6 +24,8 @@ namespace GitUI
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
             Initialize();
         }
+
+        public bool ThereWhereMergeConflicts { get; set; }
 
         private void FormResolveConflicts_Load(object sender, EventArgs e)
         {
@@ -33,6 +36,15 @@ namespace GitUI
         {
             ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
             InitMergetool();
+
+            if (!GitCommands.GitCommands.InTheMiddleOfPatch() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            {
+                if (MessageBox.Show("All mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    FormCommit frm = new FormCommit();
+                    frm.ShowDialog();
+                }
+            }
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -78,15 +90,15 @@ namespace GitUI
             else
             {
                 FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated();
-                if (file1 && file2 && !file3)
+                if ((file1 && file2 && !file3) || (file1 && !file2 && file3))
                 {
                     frm.Label.Text = "Use modified or deleted file?";
                     frm.Created.Text = "Modified";
                 }
                 else
-                    if (file1 && !file2 && file3)
+                    if (!file1)
                     {
-                        frm.Label.Text = "Use created or deleted file?";
+                        frm.Label.Text = "Use created or delete file?";
                     }
                     else
                     {

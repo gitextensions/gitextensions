@@ -304,7 +304,7 @@
             this.Rescan.Name = "Rescan";
             this.Rescan.Size = new System.Drawing.Size(100, 23);
             this.Rescan.TabIndex = 8;
-            this.Rescan.Text = "Rescan and save";
+            this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
             this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
             // 

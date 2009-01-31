@@ -44,12 +44,7 @@ namespace GitUI
                     new FormRebase().ShowDialog();
                 }
             }
-            else
-                if (MessageBox.Show("When all mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    FormCommit frm = new FormCommit();
-                    frm.ShowDialog();
-                }
+      
         }
 
     }
