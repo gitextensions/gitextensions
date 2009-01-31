@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -204,6 +204,12 @@
     </Compile>
     <Compile Include="FormMergeBranch.Designer.cs">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormModifiedDeletedCreated.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormModifiedDeletedCreated.Designer.cs">
+      <DependentUpon>FormModifiedDeletedCreated.cs</DependentUpon>
     </Compile>
     <Compile Include="FormProcess.cs">
       <SubType>Form</SubType>
@@ -426,6 +432,9 @@
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormModifiedDeletedCreated.resx">
+      <DependentUpon>FormModifiedDeletedCreated.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormProcess.resx">
       <DependentUpon>FormProcess.cs</DependentUpon>
