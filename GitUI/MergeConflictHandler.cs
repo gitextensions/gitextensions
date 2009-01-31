@@ -24,40 +24,10 @@ namespace GitUI
 
         public static void SolveMergeConflicts()
         {
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
-
-
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                StringBuilder msg = new StringBuilder();
-                msg.Append("Not all mergeconflicts are solved, please solve the following files manually:\n");
-
-                foreach (GitCommands.GitItem file in GitCommands.GitCommands.GetConflictedFiles())
-                {
-                    msg.Append(file.FileName);
-                    msg.Append("\n");
-                }
-
-                MessageBox.Show(msg.ToString(), "Unsolved conflicts", MessageBoxButtons.OK);
                 new FormResolveConflicts().ShowDialog();
             }
-
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-            {
-                StringBuilder msg = new StringBuilder();
-                msg.Append("Not all mergeconflicts are solved, please solve the following files manually:\n");
-
-                foreach (GitCommands.GitItem file in GitCommands.GitCommands.GetConflictedFiles())
-                {
-                    msg.Append(file.FileName);
-                    msg.Append("\n");
-                }
-
-                MessageBox.Show(msg.ToString(), "Unsolved conflicts", MessageBoxButtons.OK);
-                new FormResolveConflicts().ShowDialog();
-            }
-
-            
 
             if (GitCommands.GitCommands.InTheMiddleOfPatch())
             {

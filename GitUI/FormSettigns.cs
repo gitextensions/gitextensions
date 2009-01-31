@@ -696,7 +696,30 @@ namespace GitUI
             {
                 MessageBox.Show("KDiff3 is supported by Git, you can leave mergetool cmd empty.", "Suggest mergetool cmd");
                 MergeToolCmd.Text = "";
-                return;
+
+                string kdiff3path = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
+                if (!kdiff3path.Contains("kdiff3.exe"))
+                    kdiff3path = "";
+                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                {
+                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
+                    if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                    {
+                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
+                        if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                        {
+                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                            {
+                                kdiff3path = MergetoolPath.Text;
+                                if (!kdiff3path.Contains("kdiff3.exe"))
+                                    kdiff3path = "";
+                            }
+                        }
+                    }
+
+                }
+                MergetoolPath.Text = kdiff3path;
             }
             AutoConfigMergeToolcmd();
 
@@ -742,6 +765,13 @@ namespace GitUI
                 MergeToolCmd.Text = "\"TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                 return;
             }
+        }
+
+        private void GlobalMergeTool_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
+            MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
         }
 
     }

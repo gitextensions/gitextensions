@@ -63,6 +63,9 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.MergeToolCmd = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.BrowseMergeTool = new System.Windows.Forms.Button();
             this.GlobalMergeTool = new System.Windows.Forms.ComboBox();
             this.PathToKDiff3 = new System.Windows.Forms.Label();
@@ -99,9 +102,6 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.label19 = new System.Windows.Forms.Label();
-            this.MergeToolCmd = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -529,6 +529,37 @@
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(466, 145);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Suggest command";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // MergeToolCmd
+            // 
+            this.MergeToolCmd.FormattingEnabled = true;
+            this.MergeToolCmd.Items.AddRange(new object[] {
+            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
+            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
+                " /theirs:\"$REMOTE\" /merged:\"$MERGED\""});
+            this.MergeToolCmd.Location = new System.Drawing.Point(113, 147);
+            this.MergeToolCmd.Name = "MergeToolCmd";
+            this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
+            this.MergeToolCmd.TabIndex = 15;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(9, 151);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(103, 13);
+            this.label19.TabIndex = 14;
+            this.label19.Text = "Mergetool command";
+            // 
             // BrowseMergeTool
             // 
             this.BrowseMergeTool.Location = new System.Drawing.Point(466, 117);
@@ -550,6 +581,7 @@
             this.GlobalMergeTool.Name = "GlobalMergeTool";
             this.GlobalMergeTool.Size = new System.Drawing.Size(164, 21);
             this.GlobalMergeTool.TabIndex = 12;
+            this.GlobalMergeTool.SelectedIndexChanged += new System.EventHandler(this.GlobalMergeTool_SelectedIndexChanged);
             // 
             // PathToKDiff3
             // 
@@ -884,37 +916,6 @@
             this.directorySearcher2.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(9, 151);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 13);
-            this.label19.TabIndex = 14;
-            this.label19.Text = "Mergetool command";
-            // 
-            // MergeToolCmd
-            // 
-            this.MergeToolCmd.FormattingEnabled = true;
-            this.MergeToolCmd.Items.AddRange(new object[] {
-            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
-                " /theirs:\"$REMOTE\" /merged:\"$MERGED\""});
-            this.MergeToolCmd.Location = new System.Drawing.Point(113, 147);
-            this.MergeToolCmd.Name = "MergeToolCmd";
-            this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
-            this.MergeToolCmd.TabIndex = 15;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(466, 145);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Suggest command";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // FormSettigns
             // 

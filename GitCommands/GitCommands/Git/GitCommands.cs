@@ -369,7 +369,37 @@ namespace GitCommands
             }
 
             return unmergedFiles;
-        } 
+        }
+
+        static public string GetConflictedFiles(string filename)
+        {
+            filename = FixPath(filename);
+            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard \"" + filename + "\"").Split('\n');
+
+            foreach (string file in unmerged)
+            {
+                string[] fileline = file.Split(new char[] { ' ', '\t' });
+                if (fileline.Length < 3)
+                    continue;
+                if (fileline[2].Trim() == "1")
+                {
+                    string newFileName = filename + ".BASE";
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                }
+                if (fileline[2].Trim() == "2")
+                {
+                    string newFileName = filename + ".LOCAL";
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                }
+                if (fileline[2].Trim() == "3")
+                {
+                    string newFileName = filename + ".REMOTE";
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                }
+            }
+
+            return filename;
+        }
 
         static public string GetMergeMessage()
         {
@@ -1025,9 +1055,13 @@ namespace GitCommands
             {
                 value = value.Replace("\"", "$QUOTE$");
                 value = FixPath(value);
-                value = value.Replace("$QUOTE$", "\"");
+                value = value.Replace("$QUOTE$", "\\\"");
 
-                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --replace-all --global \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global --replace-all \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+            }
+            else
+            {
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global --unset-all \"" + setting + "\"").Trim();
             }
         }
 
@@ -1059,6 +1093,10 @@ namespace GitCommands
                 value = value.Replace("$QUOTE$", "\"");
 
                 GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --replace-all --file \"" + configFileName + "\" \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+            }
+            else
+            {
+                UnSetSetting(setting);
             }
         }
 

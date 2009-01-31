@@ -34,9 +34,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
-            this.Mergetool = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
+            this.Mergetool = new System.Windows.Forms.Button();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -60,11 +62,14 @@
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConflictedFiles.Location = new System.Drawing.Point(0, 0);
+            this.ConflictedFiles.MultiSelect = false;
             this.ConflictedFiles.Name = "ConflictedFiles";
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
+            this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ConflictedFiles.Size = new System.Drawing.Size(441, 226);
             this.ConflictedFiles.TabIndex = 0;
+            this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
             // 
             // splitContainer1
             // 
@@ -79,6 +84,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.Rescan);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
             this.splitContainer1.Size = new System.Drawing.Size(576, 255);
@@ -113,6 +119,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Unresolved merge conflicts";
             // 
+            // Rescan
+            // 
+            this.Rescan.Location = new System.Drawing.Point(3, 75);
+            this.Rescan.Name = "Rescan";
+            this.Rescan.Size = new System.Drawing.Size(125, 23);
+            this.Rescan.TabIndex = 1;
+            this.Rescan.Text = "Rescan mergeconflicts";
+            this.Rescan.UseVisualStyleBackColor = true;
+            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
+            // 
             // Mergetool
             // 
             this.Mergetool.Location = new System.Drawing.Point(3, 4);
@@ -123,19 +139,19 @@
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
             // 
-            // Rescan
-            // 
-            this.Rescan.Location = new System.Drawing.Point(3, 29);
-            this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(125, 23);
-            this.Rescan.TabIndex = 1;
-            this.Rescan.Text = "Rescan mergeconflicts";
-            this.Rescan.UseVisualStyleBackColor = true;
-            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
-            // 
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(4, 29);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(124, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Solve selected conflict";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Namex
             // 
@@ -177,6 +193,8 @@
         private System.Windows.Forms.Button Mergetool;
         private System.Windows.Forms.Button Rescan;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
     }
 }
