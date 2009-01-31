@@ -29,11 +29,7 @@ namespace GitUI
                 //commit.Execute();
 
                 FormProcess fromProcess;
-
-                if (CentralRepository.Checked)
-                    fromProcess = new FormProcess(Settings.GitDir + "git.cmd", " clone -v --bare --shared \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
-                else
-                    fromProcess = new FormProcess(Settings.GitDir + "git.cmd", "clone -v \"" + From.Text.Trim() + "\" \"" + To.Text.Trim() + "\"");
+                fromProcess = new FormProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.CloneCmd(From.Text, To.Text, CentralRepository.Checked));
             }
             catch
             {

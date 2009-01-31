@@ -48,7 +48,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(9, 0);
+            this.Ok.Location = new System.Drawing.Point(3, 2);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
@@ -122,7 +122,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Ok);
             this.splitContainer2.Size = new System.Drawing.Size(564, 25);
-            this.splitContainer2.SplitterDistance = 476;
+            this.splitContainer2.SplitterDistance = 480;
             this.splitContainer2.TabIndex = 0;
             // 
             // ProgressBar
@@ -131,7 +131,7 @@
             this.ProgressBar.Location = new System.Drawing.Point(0, 0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(476, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(480, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;

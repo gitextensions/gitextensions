@@ -46,8 +46,6 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                arguments = arguments.Replace('\\', '/');
-
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -73,13 +71,22 @@ namespace GitCommands
             }
         }
 
+        private static string FixPath(string path)
+        {
+            path = path.Trim();
+
+            if (path.StartsWith("\\\\"))
+                return path;
+
+            return path.Replace('\\', '/');
+        }
+
         public static void RunRealCmdDetatched(string cmd, string arguments)
         {
             try
             {
                 SetEnvironmentVariable();
-                arguments = arguments.Replace('\\', '/');
-
+                
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -110,7 +117,6 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                arguments = arguments.Replace('\\', '/');
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
@@ -146,8 +152,7 @@ namespace GitCommands
         public Process CmdStartProcess(string cmd, string arguments)
         {
             SetEnvironmentVariable();
-            arguments = arguments.Replace('\\', '/');
-
+            
             bool ssh = false;
             if (
                     (!Plink() &&
@@ -191,6 +196,7 @@ namespace GitCommands
 
             Process.Exited += new EventHandler(process_Exited);
             Process.Start();
+            
 
             Process.BeginErrorReadLine();
             Process.BeginOutputReadLine();
@@ -256,8 +262,7 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                arguments = arguments.Replace('\\', '/');
-
+                
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 Settings.GitLog += cmd + " " + arguments + "\n";
@@ -308,8 +313,7 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                arguments = arguments.Replace('\\', '/');
-
+                
                 Settings.GitLog += cmd + " " + arguments + "\n";
                 //process used to execute external commands
 
@@ -538,14 +542,29 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
+        static public string CloneCmd(string from, string to, bool central)
+        {
+            from = FixPath(from);
+            to = FixPath(to);
+
+            if (central)
+                return "clone -v --bare --shared \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
+            else
+                return "clone -v \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
+
+        }
+
         static public string ResetFile(string file)
         {
+            file = FixPath(file);
             return RunCmd(Settings.GitDir + "git.cmd", "checkout-index --index --force -- \"" + file + "\"");
         }
 
 
         public string FormatPatch(string from, string to, string output)
         {
+            output = FixPath(output);
+
             string result = RunCmd(Settings.GitDir + "git.cmd", "format-patch -M -C -B \"" + from + "\"..\"" + to + "\" -o \"" + output + "\"");
 
             return result;
@@ -602,6 +621,8 @@ namespace GitCommands
 
         static public string Push(string path)
         {
+            path = FixPath(path);
+
             string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", "push \"" + path.Trim() + "\"");
 
             return result;
@@ -609,6 +630,8 @@ namespace GitCommands
 
         static public Process PushAsync(string path, string branch, bool all)
         {
+            path = FixPath(path);
+
             return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all) + "\"");
         }
 
@@ -643,6 +666,8 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
+            path = FixPath(path);
+
             branch = branch.Replace(" ", "");
 
             if (all)
@@ -657,6 +682,8 @@ namespace GitCommands
 
         static public string Fetch(string remote, string branch)
         {
+            remote = FixPath(remote);
+
             Directory.SetCurrentDirectory(Settings.WorkingDir);
             branch = FetchCmd(remote, branch);
 
@@ -667,6 +694,8 @@ namespace GitCommands
 
         public static string FetchCmd(string remote, string branch)
         {
+            remote = FixPath(remote);
+
             branch = branch.Replace(" ", "");
 
             string localbranch;
@@ -690,6 +719,8 @@ namespace GitCommands
 
         static public string Pull(string remote, string branch, bool rebase)
         {
+            remote = FixPath(remote);
+
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
             GitCommands.RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PullCmd(remote, branch, rebase) + "\"");
@@ -699,6 +730,8 @@ namespace GitCommands
 
         public static string PullCmd(string remote, string branch, bool rebase)
         {
+            remote = FixPath(remote);
+
             branch = branch.Replace(" ", "");
 
             string rebaseOption = "";
@@ -931,6 +964,8 @@ namespace GitCommands
 
         static public string Patch(string patchFile)
         {
+            patchFile = FixPath(patchFile);
+
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
             string result = GitCommands.RunCmd(Settings.GitDir + "git.cmd", PatchCmd(patchFile));
@@ -940,6 +975,8 @@ namespace GitCommands
 
         public static string PatchCmd(string patchFile)
         {
+            patchFile = FixPath(patchFile);
+
             return "am --3way --signoff \"" + patchFile + "\"";
         }
 
@@ -961,6 +998,8 @@ namespace GitCommands
 
         public static string AddRemote(string name, string location)
         {
+            location = FixPath(location);
+
             if (string.IsNullOrEmpty(name))
                 return "Please enter a name.";
 
@@ -982,12 +1021,13 @@ namespace GitCommands
 
         public void SetGlobalSetting(string setting, string value)
         {
-            GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global --unset-all \"" + setting + "\"").Trim();
-
             if (!string.IsNullOrEmpty(value))
             {
                 value = value.Replace("\"", "$QUOTE$");
-                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --global \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+                value = FixPath(value);
+                value = value.Replace("$QUOTE$", "\"");
+
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --replace-all --global \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
             }
         }
 
@@ -1012,12 +1052,13 @@ namespace GitCommands
             if (!File.Exists(configFileName))
                 return;
 
-            UnSetSetting(setting);
-
             if (!string.IsNullOrEmpty(value))
             {
                 value = value.Replace("\"", "$QUOTE$");
-                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --file \"" + configFileName + "\" \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+                value = FixPath(value);
+                value = value.Replace("$QUOTE$", "\"");
+
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --replace-all --file \"" + configFileName + "\" \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
             }
         }
 
@@ -1054,6 +1095,10 @@ namespace GitCommands
 
         static public Patch GetSingleDiff(string from, string to, string filter)
         {
+            filter = FixPath(filter);
+            from = FixPath(from);
+            to = FixPath(to);
+
             PatchManager patchManager = new PatchManager();
             patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff --ignore-submodules \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
 
@@ -1315,6 +1360,7 @@ namespace GitCommands
 
         static public string GetCurrentChanges(string name, bool staged)
         {
+            name = FixPath(name);
             if (staged)
                 return RunCmd(Settings.GitDir + "git.cmd", "diff --cached -- \"" + name + "\"");
             else
@@ -1454,6 +1500,7 @@ namespace GitCommands
 
         static public List<GitRevision> GitRevisions(string filter)
         {
+            filter = FixPath(filter);
             string tree;
             if (string.IsNullOrEmpty(filter))
                 tree = RunCmd(Settings.GitDir + "git.cmd", "rev-list --all --header --date-order");
@@ -1505,7 +1552,7 @@ namespace GitCommands
             string fileslist = "";
             foreach (string file in files)
             {
-                fileslist += " \"" + file + "\"";
+                fileslist += " \"" + FixPath(file) + "\"";
             }
 
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "update-index --add" + fileslist);
@@ -1518,7 +1565,7 @@ namespace GitCommands
             string fileslist = "";
             foreach (string file in files)
             {
-                fileslist += " \"" + file + "\"";
+                fileslist += " \"" + FixPath(file) + "\"";
             }
 
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "reset HEAD" + fileslist);
@@ -1526,22 +1573,26 @@ namespace GitCommands
 
         static public string StageFile(string file)
         {
+            file = FixPath(file);
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "update-index --add" + " \"" + file + "\"");
         }
 
         static public string StageFileToRemove(string file)
         {
+            file = FixPath(file);
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "update-index --remove" + " \"" + file + "\"");
         }
 
 
         static public string UnstageFile(string file)
         {
+            file = FixPath(file);
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rm" + " --cached \"" + file + "\"");
         }
 
         static public string UnstageFileToRemove(string file)
         {
+            file = FixPath(file);
             return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "reset HEAD --" + " \"" + file + "\"");
         }
 
@@ -1624,6 +1675,7 @@ namespace GitCommands
 
         static public List<GitItem> GetFileChanges(string file)
         {
+            file = FixPath(file);
             string tree = RunCmd(Settings.GitDir + "git.cmd", "whatchanged --all \"" + file + "\"");
 
             string[] itemsStrings = tree.Split('\n');
@@ -1704,6 +1756,8 @@ namespace GitCommands
 
         public static List<GitBlame> Blame(string filename, string from)
         {
+            from = FixPath(from);
+            filename = FixPath(filename);
             string[] itemsStrings = RunCmd(Settings.GitDir + "git.cmd", "blame -l \"" + from + "\" \"" + filename + "\"").Split('\n');
 
             List<GitBlame> items = new List<GitBlame>();
