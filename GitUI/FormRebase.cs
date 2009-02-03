@@ -56,6 +56,8 @@ namespace GitUI
                 Skip.Enabled = false;
                 Abort.Enabled = false;
             }
+            
+            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = "Continue rebase";
             Mergetool.Text = "Solve conflicts";
@@ -126,6 +128,11 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+        }
+
+        private void SolveMergeconflicts_Click(object sender, EventArgs e)
+        {
+            Mergetool_Click(sender, e);
         }
     }
 }

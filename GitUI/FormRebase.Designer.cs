@@ -43,9 +43,10 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
+            this.patchGrid1 = new GitUI.PatchGrid();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.patchGrid1 = new GitUI.PatchGrid();
+            this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -169,6 +170,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
             this.splitContainer1.Panel2.Controls.Add(this.AddFiles);
@@ -232,6 +234,14 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
+            // patchGrid1
+            // 
+            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
+            this.patchGrid1.Name = "patchGrid1";
+            this.patchGrid1.Size = new System.Drawing.Size(557, 270);
+            this.patchGrid1.TabIndex = 16;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -263,13 +273,18 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // patchGrid1
+            // SolveMergeconflicts
             // 
-            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(0, 0);
-            this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(557, 270);
-            this.patchGrid1.TabIndex = 16;
+            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
+            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(2, 307);
+            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(107, 49);
+            this.SolveMergeconflicts.TabIndex = 19;
+            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeconflicts.Visible = false;
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
             // 
             // FormRebase
             // 
@@ -321,5 +336,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button SolveMergeconflicts;
     }
 }

@@ -160,27 +160,25 @@ namespace GitUI
         private void Stage_Click(object sender, EventArgs e)
         {
             Loading.Visible = true;
-            string result = "";
             progressBar.Visible = true;
-            progressBar.Maximum = Unstaged.SelectedRows.Count;
+            progressBar.Maximum = Unstaged.SelectedRows.Count * 2;
             progressBar.Value = 0;
+
+            List<GitItemStatus> files = new List<GitItemStatus>();
+
             foreach (DataGridViewRow row in Unstaged.SelectedRows)
             {
-                progressBar.Value = Math.Min(progressBar.Maximum-1, progressBar.Value + 1);
                 if (row.DataBoundItem is GitItemStatus)
                 {
+                    progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
                     GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-
-                    if (item.IsDeleted)
-                        result = GitCommands.GitCommands.StageFileToRemove(item.Name);
-                    else
-                        result = GitCommands.GitCommands.StageFile(item.Name);
-
-                    if (result.Length > 0)
-                        OutPut.Text += result;                    
+                    files.Add(item);
                 }
             }
 
+            OutPut.Text = GitCommands.GitCommands.StageFiles(files);
+
+            progressBar.Value = progressBar.Maximum;
 
             Initialize();
             progressBar.Visible = false;
@@ -200,6 +198,40 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
+
+            Loading.Visible = true;
+            progressBar.Visible = true;
+            progressBar.Maximum = Staged.SelectedRows.Count * 2;
+            progressBar.Value = 0;
+
+            List<GitItemStatus> files = new List<GitItemStatus>();
+            string result = "";
+            foreach (DataGridViewRow row in Staged.SelectedRows)
+            {
+                if (row.DataBoundItem is GitItemStatus)
+                {
+                    progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                    if (!item.IsNew)
+                    {
+                        progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                        result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+            }
+
+            OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
+
+            progressBar.Value = progressBar.Maximum;
+
+            Initialize();
+            progressBar.Visible = false;
+
+            /*
             Loading.Visible = true;
             string result = "";
             progressBar.Visible = true;
@@ -222,7 +254,7 @@ namespace GitUI
             }
            
             Initialize();
-            progressBar.Visible = false;
+            progressBar.Visible = false;*/
         }
 
         private void splitContainer8_SplitterMoved(object sender, SplitterEventArgs e)

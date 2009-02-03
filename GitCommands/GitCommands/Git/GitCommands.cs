@@ -1585,28 +1585,100 @@ namespace GitCommands
             return GetHeads(true);
         }
 
-        static public string StageFiles(List<string> files)
+        static public string StageFiles(List<GitItemStatus> files)
         {
-            string fileslist = "";
-            foreach (string file in files)
+            GitCommands gitCommand = new GitCommands();
+
+            string output = "";
+
+            Process process1 = null;
+            foreach (GitItemStatus file in files)
             {
-                fileslist += " \"" + FixPath(file) + "\"";
+                if (!file.IsDeleted)
+                {
+                    if (process1 == null)
+                        process1 = gitCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "update-index --add --stdin");
+
+                    process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                }
+            }
+            if (process1 != null)
+            {
+                process1.StandardInput.Close();
+                process1.WaitForExit();
             }
 
-            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "update-index --add" + fileslist);
+            if (gitCommand.Output != null)
+                output = gitCommand.Output.ToString();
+
+            Process process2 = null;
+            foreach (GitItemStatus file in files)
+            {
+                if (file.IsDeleted)
+                {
+                    if (process2 == null)
+                        process2 = gitCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "update-index --remove --stdin");
+                    process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                }
+            }
+            if (process2 != null)
+            {
+                process2.StandardInput.Close();
+                process2.WaitForExit();
+            }
+
+            if (gitCommand.Output != null)
+                output += gitCommand.Output.ToString();
+
+            return output; 
         }
 
-        static public string UnstageFiles(List<string> files)
+        static public string UnstageFiles(List<GitItemStatus> files)
         {
-            if (files.Count == 0) return "No staged files selected to unstage";
+            GitCommands gitCommand = new GitCommands();
 
-            string fileslist = "";
-            foreach (string file in files)
+            string output = "";
+
+            Process process1 = null;
+            foreach (GitItemStatus file in files)
             {
-                fileslist += " \"" + FixPath(file) + "\"";
+                if (!file.IsNew)
+                {
+                    if (process1 == null)
+                        process1 = gitCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "update-index --info-only --index-info");
+
+                    process1.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) + "\"");
+                }
+            }
+            if (process1 != null)
+            {
+                process1.StandardInput.Close();
+                process1.WaitForExit();
             }
 
-            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", "reset HEAD" + fileslist);
+            if (gitCommand.Output != null)
+                output = gitCommand.Output.ToString();
+
+            Process process2 = null;
+            foreach (GitItemStatus file in files)
+            {
+                if (file.IsNew)
+                {
+                    if (process2 == null)
+                        process2 = gitCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "update-index --force-remove --stdin");
+                    process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                }
+            }
+            if (process2 != null)
+            {
+                process2.StandardInput.Close();
+                process2.WaitForExit();
+            }
+
+            if (gitCommand.Output != null)
+                output += gitCommand.Output.ToString();
+
+            return output; 
         }
 
         static public string StageFile(string file)
