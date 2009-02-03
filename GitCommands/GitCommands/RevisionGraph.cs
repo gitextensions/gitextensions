@@ -38,7 +38,7 @@ namespace GitCommands
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " --graph " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
+            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log --graph -n " + LimitRevisions + " " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);
@@ -61,7 +61,7 @@ namespace GitCommands
             if (e.Data == null)
                 return;
             //First line found!
-            if (e.Data.IndexOf("Commit ") > 0 && e.Data.IndexOf("*") >= 0)
+            if (e.Data.IndexOf("Commit ") > 0 && e.Data.IndexOf("*") >= 0 || (e.Data.IndexOf("Commit ") == 0))
             {
                 revision = new GitRevision();
                 Revisions.Add(revision);
@@ -83,35 +83,35 @@ namespace GitCommands
 
             }
             else
-            if (e.Data.IndexOf("Tree:   ", graphIndex) > 0)
+            if (e.Data.IndexOf("Tree:   ", graphIndex) >= 0)
             {
                 revision.TreeGuid = e.Data.Substring(e.Data.IndexOf("Tree:   ", graphIndex) + 8).Trim();
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
             }
             else
-            if (e.Data.IndexOf("Merge: ", graphIndex) > 0)
+            if (e.Data.IndexOf("Merge: ", graphIndex) >= 0)
             {
                 //ignore
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex).Trim());
             }
             else
-            if (e.Data.IndexOf("Author: ", graphIndex) > 0)
+            if (e.Data.IndexOf("Author: ", graphIndex) >= 0)
             {
                 revision.Author = e.Data.Substring(e.Data.IndexOf("Author: ", graphIndex) + 8).Trim();
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
             }
             else
-            if (e.Data.IndexOf("Date:   ", graphIndex) > 0)
+            if (e.Data.IndexOf("Date:   ", graphIndex) >= 0)
             {
                 revision.Date = e.Data.Substring(e.Data.IndexOf("Date:   ", graphIndex) + 8).Trim();
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
             }
             else
-            if (e.Data.IndexOf("Parents:", graphIndex) > 0)
+            if (e.Data.IndexOf("Parents:", graphIndex) >= 0)
             {
                 List<string> parentGuids = new List<string>();
                 foreach (string s in e.Data.Substring(e.Data.IndexOf("Parents:", graphIndex) + 8).Split(' '))

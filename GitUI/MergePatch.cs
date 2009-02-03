@@ -60,6 +60,8 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
+            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+
             Resolved.Text = "Conflicts resolved";
             Mergetool.Text = "Solve conflicts";
 
@@ -173,6 +175,11 @@ namespace GitUI
         private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void SolveMergeconflicts_Click(object sender, EventArgs e)
+        {
+            Mergetool_Click(sender, e);
         }
     }
 }
