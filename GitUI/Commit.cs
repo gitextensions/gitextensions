@@ -199,35 +199,40 @@ namespace GitUI
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
 
-            Loading.Visible = true;
-            progressBar.Visible = true;
-            progressBar.Maximum = Staged.SelectedRows.Count * 2;
-            progressBar.Value = 0;
-
-            List<GitItemStatus> files = new List<GitItemStatus>();
-            string result = "";
-            foreach (DataGridViewRow row in Staged.SelectedRows)
+            if (Staged.SelectedRows.Count == Staged.RowCount)
             {
-                if (row.DataBoundItem is GitItemStatus)
+                OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
+            } else
+            {
+                Loading.Visible = true;
+                progressBar.Visible = true;
+                progressBar.Maximum = Staged.SelectedRows.Count * 2;
+                progressBar.Value = 0;
+
+                List<GitItemStatus> files = new List<GitItemStatus>();
+                string result = "";
+                foreach (DataGridViewRow row in Staged.SelectedRows)
                 {
-                    progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-                    if (!item.IsNew)
+                    if (row.DataBoundItem is GitItemStatus)
                     {
                         progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                        result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
-                    }
-                    else
-                    {
-                        files.Add(item);
+                        GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                        if (!item.IsNew)
+                        {
+                            progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                            result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
+                        }
+                        else
+                        {
+                            files.Add(item);
+                        }
                     }
                 }
+
+                OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
+
+                progressBar.Value = progressBar.Maximum;
             }
-
-            OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
-
-            progressBar.Value = progressBar.Maximum;
-
             Initialize();
             progressBar.Visible = false;
 
