@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewPatch));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.GridChangedFiles = new System.Windows.Forms.DataGridView();
+            this.FileNameA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ChangesList = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -39,9 +42,7 @@
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.FileNameA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -93,6 +94,30 @@
             this.GridChangedFiles.TabIndex = 0;
             this.GridChangedFiles.SelectionChanged += new System.EventHandler(this.GridChangedFiles_SelectionChanged);
             // 
+            // FileNameA
+            // 
+            this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileNameA.DataPropertyName = "FileNameA";
+            this.FileNameA.HeaderText = "Filename";
+            this.FileNameA.Name = "FileNameA";
+            this.FileNameA.ReadOnly = true;
+            // 
+            // typeDataGridViewTextBoxColumn
+            // 
+            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
+            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
+            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.typeDataGridViewTextBoxColumn.Width = 70;
+            // 
+            // File
+            // 
+            this.File.DataPropertyName = "File";
+            this.File.HeaderText = "Type";
+            this.File.Name = "File";
+            this.File.ReadOnly = true;
+            this.File.Width = 50;
+            // 
             // patchBindingSource
             // 
             this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
@@ -116,6 +141,7 @@
             // 
             // splitContainer4.Panel1
             // 
+            this.splitContainer4.Panel1.Controls.Add(this.button1);
             this.splitContainer4.Panel1.Controls.Add(this.BrowsePatch);
             this.splitContainer4.Panel1.Controls.Add(this.PatchFileNameEdit);
             this.splitContainer4.Panel1.Controls.Add(this.label1);
@@ -154,29 +180,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Patch";
             // 
-            // FileNameA
+            // button1
             // 
-            this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileNameA.DataPropertyName = "FileNameA";
-            this.FileNameA.HeaderText = "Filename";
-            this.FileNameA.Name = "FileNameA";
-            this.FileNameA.ReadOnly = true;
-            // 
-            // typeDataGridViewTextBoxColumn
-            // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
-            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
-            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
-            this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
-            // 
-            // File
-            // 
-            this.File.DataPropertyName = "File";
-            this.File.HeaderText = "Type";
-            this.File.Name = "File";
-            this.File.ReadOnly = true;
-            this.File.Width = 50;
+            this.button1.Location = new System.Drawing.Point(430, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Load";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ViewPatch
             // 
@@ -188,6 +200,7 @@
             this.Name = "ViewPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View patch file";
+            this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -217,6 +230,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameA;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
+        private System.Windows.Forms.Button button1;
     }
 }
 

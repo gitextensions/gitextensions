@@ -445,6 +445,7 @@ namespace GitUI
                 AutoConfigMergeToolcmd();
                 gitCommands.SetGlobalSetting("mergetool." + gitCommands.GetGlobalSetting("merge.tool") + ".cmd", MergeToolCmd.Text);
             }
+            Rescan_Click(null, null);
         }
 
         private void GitFound_Click(object sender, EventArgs e)
@@ -473,6 +474,7 @@ namespace GitUI
 
             MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitDir + "git.cmd", "Locate git.cmd");
             GitPath.Text = GitCommands.Settings.GitDir;
+            Rescan_Click(null, null);
         }
 
         private void FormSettigns_Load(object sender, EventArgs e)
@@ -544,7 +546,7 @@ namespace GitUI
 
             MessageBox.Show("Command git.exe can be runned using: " + GitCommands.Settings.GitBinDir + "git.exe", "Locate git.exe");
             GitBinPath.Text = GitCommands.Settings.GitBinDir;
-
+            Rescan_Click(null, null);
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
