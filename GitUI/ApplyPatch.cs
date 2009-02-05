@@ -43,38 +43,7 @@ namespace PatchApply
 
             try
             {
-                string syntax = "XML";
-                if (patch.FileNameB.LastIndexOf('.') > 0)
-                {
-                    string extension = patch.FileNameB.Substring(patch.FileNameB.LastIndexOf('.') + 1).ToUpper();
-
-                    switch (extension)
-                    {
-                        case "BAS":
-                        case "VBS":
-                        case "VB":
-                            syntax = "VBNET";
-                            break;
-                        case "CS":
-                            syntax = "C#";
-                            break;
-                        case "CMD":
-                        case "BAT":
-                            syntax = "BAT";
-                            break;
-                        case "C":
-                        case "RC":
-                        case "IDL":
-                        case "H":
-                        case "CPP":
-                            syntax = "C#";
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                ChangesList.SetHighlighting(syntax);
+                ChangesList.SetHighlighting("Patch");
                 ChangesList.Refresh();
                 ChangesList.IsReadOnly = true;
             }
@@ -120,6 +89,16 @@ namespace PatchApply
         private void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ViewPatch_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LoadButton_Click(sender, e);
         }
     }
 }

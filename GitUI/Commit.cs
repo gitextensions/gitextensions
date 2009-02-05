@@ -83,7 +83,12 @@ namespace GitUI
 
         protected void ShowChanges(GitItemStatus item, bool staged)
         {
-            EditorOptions.SetSyntax(SelectedDiff, item.Name);
+            
+
+            //EditorOptions.SetSyntax(SelectedDiff, item.Name);
+            SelectedDiff.SetHighlighting("Patch");
+            //ICSharpCode.TextEditor.Highlight h = new ICSharpCode.TextEditor.Highlight(new ICSharpCode.TextEditor.TextLocation(1, 10), new ICSharpCode.TextEditor.TextLocation(1, 15));
+            
             SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name, staged);
             SelectedDiff.Refresh();
         }

@@ -48,9 +48,11 @@ namespace GitUI
             {
                 {
                     Patch patch = (Patch)DiffFiles.SelectedItem;
+                    DiffText.SetHighlighting("Patch");
                     DiffText.Text = patch.Text;
                     DiffText.Refresh();
-                    EditorOptions.SetSyntax(DiffText, patch.FileNameB);
+                    
+                    //EditorOptions.SetSyntax(DiffText, patch.FileNameB);
                 }
 
             }
@@ -60,7 +62,8 @@ namespace GitUI
                     Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
                     if (selectedPatch != null)
                     {
-                        EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
+                        //EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
+                        DiffText.SetHighlighting("Patch");
                         DiffText.Text = selectedPatch.Text;
                     }
                     else

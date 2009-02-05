@@ -24,7 +24,7 @@ namespace GitUI
         private void FormFileHistory_Load(object sender, EventArgs e)
         {
             EditorOptions.SetSyntax(View, FileName);
-
+            
             FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
 
             BlameGrid.RowTemplate.Height = 15;
@@ -68,7 +68,8 @@ namespace GitUI
                         {
                             Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision2.CommitGuid, revision1.FileName));
                             diff.Execute();
-                            EditorOptions.SetSyntax(Diff, FileName);
+                            ///EditorOptions.SetSyntax(Diff, FileName);
+                            Diff.SetHighlighting("Patch");
                             Diff.Text = diff.Dto.Result;
                             Diff.Refresh();
                         }
@@ -85,7 +86,8 @@ namespace GitUI
                     {
                         Diff diff = new Diff(new DiffDto(revision1.CommitGuid + "^", revision1.CommitGuid, FileName));
                         diff.Execute();
-                        EditorOptions.SetSyntax(Diff, FileName);
+                        //EditorOptions.SetSyntax(Diff, FileName);
+                        Diff.SetHighlighting("Patch");
                         Diff.Text = diff.Dto.Result;
                         Diff.Refresh();
                     }
