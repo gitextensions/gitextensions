@@ -28,6 +28,12 @@ namespace GitUI
 
         private void Init_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(Directory.Text))
+            {
+                MessageBox.Show("Please choose a directory");
+                return;
+            }
+
             GitCommands.Settings.WorkingDir = Directory.Text;
 
             if (!System.IO.Directory.Exists(GitCommands.Settings.WorkingDir))
