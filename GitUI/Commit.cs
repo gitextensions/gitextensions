@@ -118,7 +118,6 @@ namespace GitUI
         private void Commit_Click(object sender, EventArgs e)
         {
             DoCommit(false);
-            Close();
         }
 
         private void DoCommit(bool amend)
@@ -151,7 +150,7 @@ namespace GitUI
 
                 NeedRefresh = true;
 
-                Initialize();
+                Close();
             }
             catch
             {

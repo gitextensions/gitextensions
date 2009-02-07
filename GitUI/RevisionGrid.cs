@@ -25,9 +25,12 @@ namespace GitUI
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
 
             SetShowBranches();
+            Filter = "";
         }
 
         public string LogParam = "HEAD --all --boundary";
+
+        public string Filter { get; set; }
 
         void Revisions_SizeChanged(object sender, EventArgs e)
         {
@@ -211,7 +214,12 @@ namespace GitUI
             Revisions.Enabled = false;
             Loading.Visible = true;
             revisionGraphCommand = new RevisionGraph();
-            revisionGraphCommand.LogParam = LogParam;
+            string grep = "";
+            if (!string.IsNullOrEmpty(Filter))
+                grep = " --grep=\"" + Filter + "\" ";
+
+
+            revisionGraphCommand.LogParam = LogParam + grep;
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
@@ -240,7 +248,7 @@ namespace GitUI
                 return;
             }
 
-            if (RevisionList != null && RevisionList.Count == 0)
+            if (RevisionList != null && (RevisionList.Count == 0 && string.IsNullOrEmpty(Filter)))
             {
                 Loading.Visible = false;
                 NoCommits.Visible = true;
@@ -258,8 +266,12 @@ namespace GitUI
                 
                 if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
                 {
+                    string grep = "";
+                    if (!string.IsNullOrEmpty(Filter))
+                        grep = " --grep=\"" + Filter + "\" ";
+
                     gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + LogParam + " --abbrev-commit | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
+                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
                 Revisions.ResumeLayout();
@@ -728,6 +740,11 @@ namespace GitUI
                 RefreshRevisions();
 
             }
+        }
+
+        private void Clone_Click(object sender, EventArgs e)
+        {
+            new FormClone().ShowDialog();
         }
     }
 }

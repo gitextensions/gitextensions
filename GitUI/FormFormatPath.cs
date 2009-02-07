@@ -69,6 +69,7 @@ namespace GitUI
             }
 
             MessageBox.Show(result, "Patch result");
+            Close();
         }
     }
 }

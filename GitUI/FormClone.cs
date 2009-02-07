@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using System.IO;
 
 namespace GitUI
 {
@@ -14,24 +15,29 @@ namespace GitUI
         public FormClone()
         {
             InitializeComponent();
-            From.Text = Settings.WorkingDir;
+            //From.Text = Settings.WorkingDir;
         }
 
         private void Ok_Click(object sender, EventArgs e)
         {
             try
             {
+                string dirTo = To.Text;
+                if (!dirTo.EndsWith("\\") && !dirTo.EndsWith("/"))
+                    dirTo += "\\";
+
+                dirTo += NewDirectory.Text;
+
                 RepositoryHistory.AddMostRecentRepository(From.Text);
-                RepositoryHistory.AddMostRecentRepository(To.Text);
+                RepositoryHistory.AddMostRecentRepository(dirTo);
 
                 //CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
                 //GitCommands.Clone commit = new GitCommands.Clone(dto);
                 //commit.Execute();
 
                 FormProcess fromProcess;
-                fromProcess = new FormProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.CloneCmd(From.Text, To.Text, CentralRepository.Checked));
-
-                if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
+                fromProcess = new FormProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.CloneCmd(From.Text, dirTo, CentralRepository.Checked));
+                if (!fromProcess.ErrorOccured() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
                     Close();
             }
             catch
@@ -79,6 +85,76 @@ namespace GitUI
         {
             if (!GitCommands.GitCommands.Plink())
                 LoadSSHKey.Visible = false;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void From_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            From_TextUpdate(sender, e);
+        }
+
+        private void From_TextUpdate(object sender, EventArgs e)
+        {
+            string path = From.Text;
+            path = path.TrimEnd(new char[] { '\\', '/' });
+            
+            if (path.EndsWith(".git"))
+                path = path.Replace(".git", "");
+
+            if (path.Contains("\\") || path.Contains("/"))
+                NewDirectory.Text = path.Substring(path.LastIndexOfAny(new char[] { '\\', '/' }) + 1);
+
+            To_TextUpdate(sender, e);
+        }
+
+        private void To_TextUpdate(object sender, EventArgs e)
+        {
+            string destinationPath ="";
+
+            Info.Text = "The repository will be cloned to a new directory located here:\n";
+            if (string.IsNullOrEmpty(To.Text))
+                destinationPath += "[destination]";
+            else
+                destinationPath += To.Text.TrimEnd(new char[] { '\\', '/' }); ;
+            destinationPath += "\\";
+
+            if (string.IsNullOrEmpty(NewDirectory.Text))
+                destinationPath += "[directory]";
+            else
+                destinationPath += NewDirectory.Text;
+
+            Info.Text += "     " + destinationPath;
+
+            if (destinationPath.Contains("[") || destinationPath.Contains("]"))
+            {
+                Info.ForeColor = Color.Red;
+            }
+            else
+            {
+                if (Directory.Exists(destinationPath))
+                {
+                    Info.Text += " (directory already exists)";
+                    Info.ForeColor = Color.Red;
+                }
+                else
+                {
+                    Info.ForeColor = Color.Black;
+                }
+            }
+        }
+
+        private void NewDirectory_TextChanged(object sender, EventArgs e)
+        {
+            To_TextUpdate(sender, e);
+        }
+
+        private void To_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            To_TextUpdate(sender, e);
         }
     }
 }

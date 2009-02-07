@@ -50,6 +50,11 @@ namespace GitUI
         public Process Process { get; set; }
         private GitCommands.GitCommands gitCommand;
 
+        public bool ErrorOccured()
+        {
+            return ErrorImage.Visible == true;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Close();
