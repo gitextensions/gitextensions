@@ -30,6 +30,7 @@ namespace GitUI
                 //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
                 //commit.Execute();
                 //MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
+                Close();
             }
             catch
             {

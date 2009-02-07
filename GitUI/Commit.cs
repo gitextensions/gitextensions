@@ -118,6 +118,7 @@ namespace GitUI
         private void Commit_Click(object sender, EventArgs e)
         {
             DoCommit(false);
+            Close();
         }
 
         private void DoCommit(bool amend)
@@ -293,6 +294,7 @@ namespace GitUI
             if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
+                Close();
             }
         }
 
