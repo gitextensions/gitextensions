@@ -40,6 +40,7 @@ namespace GitUI
             TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false);
             tw.Write(GitIgnoreFile);
             tw.Close();
+            Close();
 
         }
 

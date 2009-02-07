@@ -28,7 +28,8 @@ namespace GitUI
 
                 new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, ChechoutAfterCreate.Checked));
 
-                RevisionGrid.RefreshRevisions();
+                Close();
+
             }
             catch
             {

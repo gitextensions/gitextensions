@@ -128,6 +128,9 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
+                Close();
         }
 
         private void SolveMergeconflicts_Click(object sender, EventArgs e)

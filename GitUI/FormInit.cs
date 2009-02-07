@@ -36,6 +36,8 @@ namespace GitUI
             MessageBox.Show(GitCommands.GitCommands.Init(Central.Checked, Central.Checked), "Initialize new repository");
 
             RepositoryHistory.AddMostRecentRepository(Directory.Text);
+            
+            Close();
         }
 
         private void Browse_Click(object sender, EventArgs e)

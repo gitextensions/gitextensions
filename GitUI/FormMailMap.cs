@@ -38,6 +38,7 @@ namespace GitUI
             TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false);
             tw.Write(MailMapFile);
             tw.Close();
+            Close();
         }
 
         private void FormMailMap_Load(object sender, EventArgs e)
