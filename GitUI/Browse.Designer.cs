@@ -44,7 +44,6 @@
             this.GitBash = new System.Windows.Forms.ToolStripButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -103,6 +102,10 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -154,12 +157,16 @@
             this.CreateBranch,
             this.toolStripSeparator2,
             this.GitBash,
-            this.EditSettings});
+            this.EditSettings,
+            this.toolStripSeparator5,
+            this.toolStripLabel2,
+            this.toolStripTextBoxFilter});
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Size = new System.Drawing.Size(796, 25);
             this.ToolStrip.TabIndex = 4;
             this.ToolStrip.Text = "toolStrip1";
+            this.ToolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ToolStrip_ItemClicked);
             // 
             // RefreshButton
             // 
@@ -269,20 +276,6 @@
             this.splitContainer3.Size = new System.Drawing.Size(796, 519);
             this.splitContainer3.SplitterDistance = 230;
             this.splitContainer3.TabIndex = 1;
-            // 
-            // RevisionGrid
-            // 
-            this.RevisionGrid.currentCheckout = "\nfatal: Not a git repository\n";
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.RevisionGrid.LastRow = 0;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RevisionGrid.Size = new System.Drawing.Size(796, 230);
-            this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
-            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
             // 
             // splitContainer4
             // 
@@ -773,6 +766,40 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // toolStripTextBoxFilter
+            // 
+            this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
+            this.toolStripTextBoxFilter.Size = new System.Drawing.Size(150, 25);
+            this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
+            this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel2.Text = "Filter:";
+            this.toolStripLabel2.Click += new System.EventHandler(this.toolStripLabel2_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // RevisionGrid
+            // 
+            this.RevisionGrid.currentCheckout = "\nfatal: Not a git repository\n";
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Filter = "";
+            this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RevisionGrid.LastRow = 0;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RevisionGrid.Size = new System.Drawing.Size(796, 230);
+            this.RevisionGrid.TabIndex = 0;
+            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
+            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -884,5 +911,8 @@
         private System.Windows.Forms.ToolStripMenuItem PuTTYToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startAuthenticationAgentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateOrImportKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
     }
 }

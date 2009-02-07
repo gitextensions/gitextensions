@@ -146,8 +146,8 @@
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(145, 54);
             this.label20.TabIndex = 11;
-            this.label20.Text = "You only need local settings\r\nif you wan to override the \r\nglobal settings for th" +
-                "e current\r\nrepository.";
+            this.label20.Text = "You only need local settings\r\nif you want to override the \r\nglobal settings for t" +
+                "he current\r\nrepository.";
             // 
             // MergeTool
             // 
@@ -924,6 +924,8 @@
             this.ClientSize = new System.Drawing.Size(663, 358);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormSettigns";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";

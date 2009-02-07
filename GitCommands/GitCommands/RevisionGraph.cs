@@ -36,9 +36,12 @@ namespace GitCommands
 
             heads = GitCommands.GetHeads(true);
 
+            if (!LogParam.Contains("--grep"))
+                LogParam += " --graph ";
+
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log --graph -n " + LimitRevisions + " " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
+            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd %nParents:%P %n%s\"");
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);

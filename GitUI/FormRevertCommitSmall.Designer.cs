@@ -79,9 +79,9 @@
             this.BranchInfo.AutoSize = true;
             this.BranchInfo.Location = new System.Drawing.Point(12, 9);
             this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(60, 13);
+            this.BranchInfo.Size = new System.Drawing.Size(97, 13);
             this.BranchInfo.TabIndex = 5;
-            this.BranchInfo.Text = "Reset X to:";
+            this.BranchInfo.Text = "Revert this commit:";
             // 
             // Revert
             // 

@@ -35,7 +35,7 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
-            if (!GitCommands.Settings.ValidWorkingDir())
+            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
             {
                 openToolStripMenuItem_Click(sender, e);
             }
@@ -548,6 +548,30 @@ namespace GitUI
         private void button1_Click(object sender, EventArgs e)
         {
             new FormClone().ShowDialog();
+        }
+
+        private void ToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void toolStripTextBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripLabel2_Click(object sender, EventArgs e)
+        {
+            if (toolStripTextBoxFilter.Text.CompareTo(RevisionGrid.Filter) != 0)
+            {
+                RevisionGrid.Filter = toolStripTextBoxFilter.Text;
+                RevisionGrid.RefreshRevisions();
+            }
+        }
+
+        private void toolStripTextBoxFilter_Leave(object sender, EventArgs e)
+        {
+            toolStripLabel2_Click(sender, e);
         }
 
 

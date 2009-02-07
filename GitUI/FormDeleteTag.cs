@@ -29,6 +29,8 @@ namespace GitUI
 
                 if (!string.IsNullOrEmpty(s))
                     MessageBox.Show(s, "Delete tag");
+
+                Close();
             }
             catch
             {

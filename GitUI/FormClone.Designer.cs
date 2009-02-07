@@ -43,6 +43,9 @@
             this.Ok = new System.Windows.Forms.Button();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
+            this.NewDirectory = new System.Windows.Forms.TextBox();
+            this.Info = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,6 +61,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.Info);
+            this.splitContainer1.Panel1.Controls.Add(this.NewDirectory);
+            this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.From);
             this.splitContainer1.Panel1.Controls.Add(this.To);
@@ -71,15 +77,15 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(460, 176);
-            this.splitContainer1.SplitterDistance = 147;
+            this.splitContainer1.Size = new System.Drawing.Size(504, 238);
+            this.splitContainer1.SplitterDistance = 207;
             this.splitContainer1.TabIndex = 0;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(3, 73);
+            this.groupBox1.Location = new System.Drawing.Point(15, 135);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(352, 68);
             this.groupBox1.TabIndex = 4;
@@ -111,24 +117,28 @@
             // From
             // 
             this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(66, 17);
+            this.From.Location = new System.Drawing.Point(124, 17);
             this.From.Name = "From";
             this.From.Size = new System.Drawing.Size(289, 21);
-            this.From.TabIndex = 8;
+            this.From.TabIndex = 1;
+            this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
+            this.From.TextUpdate += new System.EventHandler(this.From_TextUpdate);
             this.From.DropDown += new System.EventHandler(this.From_DropDown);
             // 
             // To
             // 
             this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(66, 45);
+            this.To.Location = new System.Drawing.Point(124, 45);
             this.To.Name = "To";
             this.To.Size = new System.Drawing.Size(289, 21);
-            this.To.TabIndex = 7;
+            this.To.TabIndex = 2;
+            this.To.SelectedIndexChanged += new System.EventHandler(this.To_SelectedIndexChanged);
+            this.To.TextUpdate += new System.EventHandler(this.To_TextUpdate);
             this.To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
             // ToBrowse
             // 
-            this.ToBrowse.Location = new System.Drawing.Point(373, 45);
+            this.ToBrowse.Location = new System.Drawing.Point(425, 44);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(75, 23);
             this.ToBrowse.TabIndex = 6;
@@ -138,7 +148,7 @@
             // 
             // FromBrowse
             // 
-            this.FromBrowse.Location = new System.Drawing.Point(373, 17);
+            this.FromBrowse.Location = new System.Drawing.Point(425, 16);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(75, 23);
             this.FromBrowse.TabIndex = 5;
@@ -149,20 +159,21 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 48);
+            this.label2.Location = new System.Drawing.Point(12, 49);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 13);
+            this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "To";
+            this.label2.Text = "Destination";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 17);
+            this.label1.Location = new System.Drawing.Point(12, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
+            this.label1.Size = new System.Drawing.Size(98, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "From";
+            this.label1.Text = "Repository to clone";
             // 
             // LoadSSHKey
             // 
@@ -178,10 +189,10 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(373, 2);
+            this.Ok.Location = new System.Drawing.Point(425, 2);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
-            this.Ok.TabIndex = 0;
+            this.Ok.TabIndex = 4;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
@@ -208,11 +219,40 @@
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 75);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(111, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Subdirectory to create";
+            // 
+            // NewDirectory
+            // 
+            this.NewDirectory.Location = new System.Drawing.Point(124, 72);
+            this.NewDirectory.Name = "NewDirectory";
+            this.NewDirectory.Size = new System.Drawing.Size(153, 20);
+            this.NewDirectory.TabIndex = 3;
+            this.NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
+            // 
+            // Info
+            // 
+            this.Info.AutoSize = true;
+            this.Info.BackColor = System.Drawing.SystemColors.Info;
+            this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Info.Location = new System.Drawing.Point(15, 102);
+            this.Info.Name = "Info";
+            this.Info.Size = new System.Drawing.Size(295, 28);
+            this.Info.TabIndex = 11;
+            this.Info.Text = "The repository will be cloned to a new directory located here:\r\n      [destinatio" +
+                "n]\\[directory]\r\n";
+            // 
             // FormClone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 176);
+            this.ClientSize = new System.Drawing.Size(504, 238);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormClone";
@@ -245,5 +285,8 @@
         private System.Windows.Forms.RadioButton Central;
         private System.Windows.Forms.RadioButton Personal;
         private System.Windows.Forms.Button LoadSSHKey;
+        private System.Windows.Forms.TextBox NewDirectory;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label Info;
     }
 }
