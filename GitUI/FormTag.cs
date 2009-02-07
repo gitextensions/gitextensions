@@ -33,7 +33,7 @@ namespace GitUI
 
                 MessageBox.Show("Command executed \n" + GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid), "Tag");
 
-                GitRevisions.RefreshRevisions();
+                Close();
             }
             catch
             {

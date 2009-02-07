@@ -114,6 +114,9 @@ namespace GitUI
                 new FormProcess(GitCommands.GitCommands.PatchCmd(PatchDir.Text + "\\*.patch"));
 
             EnableButtons();
+
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
+                Close();
         }
 
         private void Mergetool_Click(object sender, EventArgs e)

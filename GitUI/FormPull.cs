@@ -152,6 +152,9 @@ namespace GitUI
                 }
             }
 
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+                Close();
+
         }
 
         private void FormPull_Load(object sender, EventArgs e)

@@ -34,6 +34,7 @@ namespace GitUI
             catch
             {
             }
+            Close();
         }
     }
 }

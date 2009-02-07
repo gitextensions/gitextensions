@@ -55,6 +55,9 @@ namespace GitUI
                 form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
                 //form = new FormProcess(GitCommands.Settings.GitLibexecDir + "git-push.exe", "\"" + Remotes.Text.Trim() + "\" " + Branch.Text);
             }
+
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+                Close();
         }
 
         private void PushDestination_DropDown(object sender, EventArgs e)
