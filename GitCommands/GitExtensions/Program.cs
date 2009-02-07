@@ -57,9 +57,11 @@ namespace GitExtensions
                 if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
                      Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
                 {
+                    
                     FormSettigns settings = new FormSettigns();
                     if (!settings.CheckSettings())
-                        settings.ShowDialog();
+                        Application.Run(settings);
+                        //settings.ShowDialog();
                 }
             }
             catch
