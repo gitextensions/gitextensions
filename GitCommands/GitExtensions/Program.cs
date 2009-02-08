@@ -181,6 +181,11 @@ namespace GitExtensions
             {
                 Application.Run(new FormCherryPick());
             } else
+            if (args.Length > 1 && args[1] == "revert")
+            {
+                Application.Run(new FormRevert(args[2]));
+            }
+            else
             if (args.Length > 1 && args[1] == "tag")
             {
                 Application.Run(new FormTag());

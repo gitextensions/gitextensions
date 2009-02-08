@@ -47,12 +47,46 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\Browse.cs" />
+    <Compile Include="Commands\Cherry.cs" />
+    <Compile Include="Commands\Clone.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\Commit.cs" />
+    <Compile Include="Commands\CreateBranch.cs" />
+    <Compile Include="Commands\FileHistory.cs" />
+    <Compile Include="Commands\FormatPatch.cs" />
+    <Compile Include="Commands\Init.cs" />
+    <Compile Include="Commands\ItemCommandBase.cs" />
+    <Compile Include="Commands\Merge.cs" />
+    <Compile Include="Commands\Pull.cs" />
+    <Compile Include="Commands\Push.cs" />
+    <Compile Include="Commands\Rebase.cs" />
+    <Compile Include="Commands\Revert.cs" />
+    <Compile Include="Commands\Settings.cs" />
+    <Compile Include="Commands\Stash.cs" />
+    <Compile Include="Commands\SwitchBranch.cs" />
+    <Compile Include="Commands\ToolbarCommand.cs" />
+    <Compile Include="Commands\ViewDiff.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DebugLogHandler.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Singleton.cs" />
+    <Compile Include="VisualStudioLogHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandBar.resx" />
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -100,6 +134,22 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons.bmp" />
+    <None Include="Resources\commit1121111.bmp" />
+    <None Include="Resources\commit112111.bmp" />
+    <None Include="Resources\commit11211.bmp" />
+    <None Include="Resources\commit1121.bmp" />
+    <None Include="Resources\commit112.bmp" />
+    <None Include="Resources\commit111.bmp" />
+    <None Include="Resources\commit11.bmp" />
+    <None Include="Resources\commit1.bmp" />
+    <None Include="Resources\Commit.bmp" />
+    <None Include="Resources\RevisionHistory.bmp" />
+    <None Include="Resources\EditAll.bmp" />
+    <None Include="Resources\Revert.bmp" />
+    <None Include="Resources\Diff.bmp" />
+    <None Include="Resources\Configure.bmp" />
+    <None Include="Resources\Edit.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
