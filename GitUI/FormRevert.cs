@@ -20,19 +20,20 @@ namespace GitUI
 
         private void FormRevert_Load(object sender, EventArgs e)
         {
-            RevertLabel.Text = "Undo changes made to: " + FileName;
+            RevertLabel.Text = "Undo changes in: " + FileName + "?";
         }
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to reset the changes of this file?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                string output = GitCommands.GitCommands.ResetFile(FileName);
+            string output = GitCommands.GitCommands.ResetFile(FileName);
 
-                if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(output, "Reset changes");
+            if (!string.IsNullOrEmpty(output))
+                MessageBox.Show(output, "Reset changes");
+        }
 
-            }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

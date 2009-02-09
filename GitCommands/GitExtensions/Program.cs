@@ -86,13 +86,17 @@ namespace GitExtensions
                 Application.Run(new FormBrowse());
 
             }else
+            if (args.Length > 1 && args[1] == "mergeconflicts")
+            {
+                Application.Run(new FormResolveConflicts());
 
+            }
+            else
             if (args.Length > 1 && args[1] == "browse")
             {
                 Application.Run(new FormBrowse());
                 
             }else
-
             if (args.Length > 1 && (args[1] == "addfiles" || args[1] == "add"))
             {
                 Application.Run(new FormAddFiles());
