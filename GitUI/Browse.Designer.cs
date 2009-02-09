@@ -275,7 +275,7 @@
             // 
             this.toolStripTextBoxFilter.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
-            this.toolStripTextBoxFilter.Size = new System.Drawing.Size(200, 25);
+            this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
             this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
             this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
             // 

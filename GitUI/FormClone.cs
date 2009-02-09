@@ -50,7 +50,8 @@ namespace GitUI
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
                 From.Text = dialog.SelectedPath;
-
+            
+            To_TextUpdate(sender, e);
         }
 
         private void ToBrowse_Click(object sender, EventArgs e)
@@ -59,6 +60,7 @@ namespace GitUI
             if (dialog.ShowDialog() == DialogResult.OK)
                 To.Text = dialog.SelectedPath;
 
+            To_TextUpdate(sender, e); 
         }
 
         private void From_DropDown(object sender, EventArgs e)

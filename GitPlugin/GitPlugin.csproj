@@ -63,6 +63,7 @@
     <Compile Include="Commands\Rebase.cs" />
     <Compile Include="Commands\Revert.cs" />
     <Compile Include="Commands\Settings.cs" />
+    <Compile Include="Commands\SolveMergeConflicts.cs" />
     <Compile Include="Commands\Stash.cs" />
     <Compile Include="Commands\SwitchBranch.cs" />
     <Compile Include="Commands\ToolbarCommand.cs" />

@@ -120,7 +120,7 @@ namespace GitPlugin.Commands
                 try
                 {
                     // Create the new CommandBar
-                    bar = cmdBars.Add(name, position, false, false);
+                    bar = cmdBars.Add(name, position, false, true);
                     bar.Visible = true;
                 }
                 catch (ArgumentException)
