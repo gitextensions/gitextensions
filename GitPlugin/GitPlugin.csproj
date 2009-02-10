@@ -47,6 +47,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\About.cs" />
+    <Compile Include="Commands\ApplyPatch.cs" />
     <Compile Include="Commands\Browse.cs" />
     <Compile Include="Commands\Cherry.cs" />
     <Compile Include="Commands\Clone.cs" />

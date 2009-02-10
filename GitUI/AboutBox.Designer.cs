@@ -116,7 +116,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(271, 17);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "Version 1.40";
+            this.labelVersion.Text = "Version 1.41";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelVersion.Click += new System.EventHandler(this.labelVersion_Click);
             // 
@@ -174,6 +174,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
+            this.Load += new System.EventHandler(this.AboutBox_Load);
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    partial class AboutBox : Form
+    public partial class AboutBox : Form
     {
         public AboutBox()
         {
@@ -29,6 +29,11 @@ namespace GitUI
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+        }
+
+        private void AboutBox_Load(object sender, EventArgs e)
+        {
+
         }
 
     }

@@ -42,5 +42,10 @@ namespace GitUI
             MergeConflictHandler.HandleMergeConflicts();
             RevisionGrid.RefreshRevisions();
         }
+
+        private void FormBranch_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

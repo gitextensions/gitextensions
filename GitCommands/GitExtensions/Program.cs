@@ -193,6 +193,10 @@ namespace GitExtensions
             if (args.Length > 1 && args[1] == "tag")
             {
                 Application.Run(new FormTag());
+            } else
+            if (args.Length > 1 && args[1] == "about")
+            {
+                Application.Run(new AboutBox());
             }
             else
                 if (args.Length > 1 && args[1] == "stash")
