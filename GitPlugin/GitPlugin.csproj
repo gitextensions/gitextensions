@@ -57,12 +57,15 @@
     <Compile Include="Commands\CreateBranch.cs" />
     <Compile Include="Commands\FileHistory.cs" />
     <Compile Include="Commands\FormatPatch.cs" />
+    <Compile Include="Commands\GitBash.cs" />
+    <Compile Include="Commands\GitIgnore.cs" />
     <Compile Include="Commands\Init.cs" />
     <Compile Include="Commands\ItemCommandBase.cs" />
     <Compile Include="Commands\Merge.cs" />
     <Compile Include="Commands\Pull.cs" />
     <Compile Include="Commands\Push.cs" />
     <Compile Include="Commands\Rebase.cs" />
+    <Compile Include="Commands\Remotes.cs" />
     <Compile Include="Commands\Revert.cs" />
     <Compile Include="Commands\Settings.cs" />
     <Compile Include="Commands\SolveMergeConflicts.cs" />

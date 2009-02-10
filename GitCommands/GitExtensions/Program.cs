@@ -92,6 +92,21 @@ namespace GitExtensions
 
             }
             else
+            if (args.Length > 1 && args[1] == "gitbash")
+            {
+                GitCommands.GitCommands.RunBash();
+            }
+            else
+            if (args.Length > 1 && args[1] == "gitignore")
+            {
+                Application.Run(new FormGitIgnore());
+            }
+            else
+            if (args.Length > 1 && args[1] == "remotes")
+            {
+                Application.Run(new FormRemotes());
+            }
+            else 
             if (args.Length > 1 && args[1] == "browse")
             {
                 Application.Run(new FormBrowse());
