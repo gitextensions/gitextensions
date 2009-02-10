@@ -31,11 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBranch));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
+            this.ChechoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.Checkout = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
-            this.ChechoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -68,6 +68,7 @@
             // 
             this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Filter = "";
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
@@ -75,6 +76,18 @@
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
             this.RevisionGrid.TabIndex = 0;
+            // 
+            // ChechoutAfterCreate
+            // 
+            this.ChechoutAfterCreate.AutoSize = true;
+            this.ChechoutAfterCreate.Checked = true;
+            this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChechoutAfterCreate.Location = new System.Drawing.Point(322, 8);
+            this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
+            this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.ChechoutAfterCreate.TabIndex = 4;
+            this.ChechoutAfterCreate.Text = "Chechout after create";
+            this.ChechoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // Checkout
             // 
@@ -112,18 +125,6 @@
             this.BName.Size = new System.Drawing.Size(227, 20);
             this.BName.TabIndex = 0;
             // 
-            // ChechoutAfterCreate
-            // 
-            this.ChechoutAfterCreate.AutoSize = true;
-            this.ChechoutAfterCreate.Checked = true;
-            this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChechoutAfterCreate.Location = new System.Drawing.Point(322, 8);
-            this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
-            this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
-            this.ChechoutAfterCreate.TabIndex = 4;
-            this.ChechoutAfterCreate.Text = "Chechout after create";
-            this.ChechoutAfterCreate.UseVisualStyleBackColor = true;
-            // 
             // FormBranch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -133,6 +134,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormBranch";
             this.Text = "Create Branch";
+            this.Load += new System.EventHandler(this.FormBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
