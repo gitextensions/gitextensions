@@ -12,7 +12,7 @@
     <AssemblyName>GitPlugin</AssemblyName>
     <RootNamespace>GitPlugin</RootNamespace>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>GitPluginKey.pfx</AssemblyOriginatorKeyFile>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -79,19 +80,19 @@
     <Compile Include="DebugLogHandler.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="Resource1.Designer.cs">
+    <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resource1.resx</DependentUpon>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Singleton.cs" />
     <Compile Include="VisualStudioLogHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandBar.resx" />
-    <EmbeddedResource Include="Resource1.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,20 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons.bmp" />
+    <None Include="Resources\commit113.bmp" />
+    <None Include="Resources\commit12.bmp" />
+    <None Include="Resources\commit2.bmp" />
+    <None Include="Resources\RevisionHistory1.bmp" />
+    <None Include="Resources\EditAll1.bmp" />
+    <None Include="Resources\Revert1.bmp" />
+    <None Include="Resources\Diff1.bmp" />
+    <None Include="Resources\Configure1.bmp" />
+    <None Include="Resources\commit11211111.bmp" />
+    <None Include="Resources\commit1121112.bmp" />
+    <None Include="Resources\commit112112.bmp" />
+    <None Include="Resources\commit11212.bmp" />
+    <None Include="Resources\commit1122.bmp" />
+    <None Include="Resources\Edit1.bmp" />
     <None Include="Resources\commit1121111.bmp" />
     <None Include="Resources\commit112111.bmp" />
     <None Include="Resources\commit11211.bmp" />
@@ -167,8 +182,11 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>cd "$(ProjectDir)"
+mkdir "$(ProjectDir)$(OutDir)en-US"
+"C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\Resgen" "$(ProjectDir)Properties\Resources.resx"
+"$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"
+del "$(ProjectDir)Properties\Resources.resources"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
