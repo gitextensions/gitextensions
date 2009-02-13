@@ -151,12 +151,31 @@ namespace GitPlugin.Commands
             Command command = GetCommand(commandName);
             if (command == null)
             {
-                command = commands.AddNamedCommand2(m_addIn,
-                        commandName, caption, tooltip, false, iconIndex, ref contextGUIDS,
-                        (int)vsCommandStatus.vsCommandStatusSupported +
-                        (int)vsCommandStatus.vsCommandStatusEnabled,
-                        (int)vsCommandStyle.vsCommandStylePictAndText,
-                        vsCommandControlType.vsCommandControlTypeButton);
+                if (iconIndex > 0)
+                {
+                    try
+                    {
+                        command = commands.AddNamedCommand2(m_addIn,
+                                commandName, caption, tooltip, false, iconIndex, ref contextGUIDS,
+                                (int)vsCommandStatus.vsCommandStatusSupported +
+                                (int)vsCommandStatus.vsCommandStatusEnabled,
+                                (int)vsCommandStyle.vsCommandStylePictAndText,
+                                vsCommandControlType.vsCommandControlTypeButton);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (command == null)
+                {
+                    command = commands.AddNamedCommand2(m_addIn,
+                            commandName, caption, tooltip, true, -1, ref contextGUIDS,
+                            (int)vsCommandStatus.vsCommandStatusSupported +
+                            (int)vsCommandStatus.vsCommandStatusEnabled,
+                            (int)vsCommandStyle.vsCommandStylePictAndText,
+                            vsCommandControlType.vsCommandControlTypeButton);
+                }
             }
             if (command != null && popup != null)
             {
@@ -231,12 +250,31 @@ namespace GitPlugin.Commands
             Command command = GetCommand(commandName);
             if (command == null)
             {
-                command = commands.AddNamedCommand2(m_addIn, commandName,
-                            caption, tooltip, false, iconIndex, ref contextGUIDS,
+                if (iconIndex > 0)
+                {
+                    try
+                    {
+                        command = commands.AddNamedCommand2(m_addIn, commandName,
+                                    caption, tooltip, false, iconIndex, ref contextGUIDS,
+                                    (int)vsCommandStatus.vsCommandStatusSupported +
+                                    (int)vsCommandStatus.vsCommandStatusEnabled,
+                                    (int)commandStyle,
+                                    vsCommandControlType.vsCommandControlTypeButton);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (command == null && commandStyle != vsCommandStyle.vsCommandStylePict)
+                {
+                    command = commands.AddNamedCommand2(m_addIn, commandName,
+                            caption, tooltip, true, -1, ref contextGUIDS,
                             (int)vsCommandStatus.vsCommandStatusSupported +
                             (int)vsCommandStatus.vsCommandStatusEnabled,
                             (int)commandStyle,
                             vsCommandControlType.vsCommandControlTypeButton);
+                }
             }
             if (command != null && bar != null)
             {
