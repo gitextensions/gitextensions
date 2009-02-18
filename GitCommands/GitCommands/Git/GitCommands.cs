@@ -163,6 +163,7 @@ namespace GitCommands
                         (arguments.Contains("http://")) ||
                         (arguments.Contains("git://")) ||
                         (arguments.Contains("push")) ||
+                        (arguments.Contains("remote")) ||
                         (arguments.Contains("pull"))
                         )
                     ) ||

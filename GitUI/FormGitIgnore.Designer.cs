@@ -33,6 +33,7 @@
             this.GitIgnoreEdit = new ICSharpCode.TextEditor.TextEditorControl();
             this.Save = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.AddDefault = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.AddDefault);
             this.splitContainer1.Panel2.Controls.Add(this.Save);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Size = new System.Drawing.Size(634, 473);
@@ -85,6 +87,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 
+            // AddDefault
+            // 
+            this.AddDefault.Location = new System.Drawing.Point(6, 438);
+            this.AddDefault.Name = "AddDefault";
+            this.AddDefault.Size = new System.Drawing.Size(108, 23);
+            this.AddDefault.TabIndex = 2;
+            this.AddDefault.Text = "Add default ignores";
+            this.AddDefault.UseVisualStyleBackColor = true;
+            this.AddDefault.Click += new System.EventHandler(this.AddDefault_Click);
+            // 
             // FormGitIgnore
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -110,6 +122,7 @@
         private ICSharpCode.TextEditor.TextEditorControl GitIgnoreEdit;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Save;
+        private System.Windows.Forms.Button AddDefault;
 
     }
 }

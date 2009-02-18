@@ -133,6 +133,7 @@ namespace GitUI
                         if (ProcessArguments.Contains("pull") ||
                             ProcessArguments.Contains("push") ||
                             ProcessArguments.Contains("plink") ||
+                            ProcessArguments.Contains("remote") ||
                             ProcessString.Contains("clone") ||
                             ProcessArguments.Contains("clone"))
                         {
