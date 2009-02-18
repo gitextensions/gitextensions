@@ -56,11 +56,11 @@
             this.RemoteCombo = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Prune = new System.Windows.Forms.Button();
             this.UpdateBranch = new System.Windows.Forms.Button();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Prune = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -365,6 +365,16 @@
             // 
             this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
             // 
+            // Prune
+            // 
+            this.Prune.Location = new System.Drawing.Point(327, 4);
+            this.Prune.Name = "Prune";
+            this.Prune.Size = new System.Drawing.Size(137, 23);
+            this.Prune.TabIndex = 11;
+            this.Prune.Text = "Prune remote branches";
+            this.Prune.UseVisualStyleBackColor = true;
+            this.Prune.Click += new System.EventHandler(this.Prune_Click);
+            // 
             // UpdateBranch
             // 
             this.UpdateBranch.Location = new System.Drawing.Point(470, 4);
@@ -394,16 +404,6 @@
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // Prune
-            // 
-            this.Prune.Location = new System.Drawing.Point(327, 4);
-            this.Prune.Name = "Prune";
-            this.Prune.Size = new System.Drawing.Size(137, 23);
-            this.Prune.TabIndex = 11;
-            this.Prune.Text = "Prune remote branches";
-            this.Prune.UseVisualStyleBackColor = true;
-            this.Prune.Click += new System.EventHandler(this.Prune_Click);
             // 
             // FormRemotes
             // 
