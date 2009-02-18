@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormDeleteBranch : Form
+    public partial class FormDeleteBranch : GitExtensionsForm
     {
         public FormDeleteBranch()
         {

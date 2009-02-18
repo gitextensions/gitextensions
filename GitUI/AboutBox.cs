@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class AboutBox : Form
+    public partial class AboutBox : GitExtensionsForm
     {
         public AboutBox()
         {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormCommandlineHelp : Form
+    public partial class FormCommandlineHelp : GitExtensionsForm
     {
         public FormCommandlineHelp()
         {

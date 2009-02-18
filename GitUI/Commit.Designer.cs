@@ -33,7 +33,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.label2 = new System.Windows.Forms.Label();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,6 +53,7 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.AddManyFiles = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
@@ -64,7 +64,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.SolveMergeconflicts = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetAlltrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -94,6 +98,7 @@
             this.splitContainer8.Panel1.SuspendLayout();
             this.splitContainer8.Panel2.SuspendLayout();
             this.splitContainer8.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -143,7 +148,7 @@
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.label2);
+            this.splitContainer4.Panel1.Controls.Add(this.menuStrip1);
             // 
             // splitContainer4.Panel2
             // 
@@ -152,15 +157,6 @@
             this.splitContainer4.Size = new System.Drawing.Size(389, 255);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Working dir changes";
             // 
             // Loading
             // 
@@ -401,6 +397,19 @@
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
+            // SolveMergeconflicts
+            // 
+            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
+            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(4, 190);
+            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(129, 42);
+            this.SolveMergeconflicts.TabIndex = 8;
+            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeconflicts.Visible = false;
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            // 
             // Amend
             // 
             this.Amend.Location = new System.Drawing.Point(4, 29);
@@ -517,18 +526,46 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // SolveMergeconflicts
+            // menuStrip1
             // 
-            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
-            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(4, 190);
-            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(129, 42);
-            this.SolveMergeconflicts.TabIndex = 8;
-            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
-            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
-            this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.workingToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(389, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // workingToolStripMenuItem
+            // 
+            this.workingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteSelectedFilesToolStripMenuItem,
+            this.resetSelectedFilesToolStripMenuItem,
+            this.resetAlltrackedChangesToolStripMenuItem});
+            this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(128, 20);
+            this.workingToolStripMenuItem.Text = "Working dir changes";
+            // 
+            // deleteSelectedFilesToolStripMenuItem
+            // 
+            this.deleteSelectedFilesToolStripMenuItem.Name = "deleteSelectedFilesToolStripMenuItem";
+            this.deleteSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.deleteSelectedFilesToolStripMenuItem.Text = "Delete selected files";
+            this.deleteSelectedFilesToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedFilesToolStripMenuItem_Click);
+            // 
+            // resetSelectedFilesToolStripMenuItem
+            // 
+            this.resetSelectedFilesToolStripMenuItem.Name = "resetSelectedFilesToolStripMenuItem";
+            this.resetSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.resetSelectedFilesToolStripMenuItem.Text = "Reset selected files";
+            this.resetSelectedFilesToolStripMenuItem.Click += new System.EventHandler(this.resetSelectedFilesToolStripMenuItem_Click);
+            // 
+            // resetAlltrackedChangesToolStripMenuItem
+            // 
+            this.resetAlltrackedChangesToolStripMenuItem.Name = "resetAlltrackedChangesToolStripMenuItem";
+            this.resetAlltrackedChangesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.resetAlltrackedChangesToolStripMenuItem.Text = "Reset all (tracked) changes";
+            this.resetAlltrackedChangesToolStripMenuItem.Click += new System.EventHandler(this.resetAlltrackedChangesToolStripMenuItem_Click);
             // 
             // FormCommit
             // 
@@ -537,6 +574,7 @@
             this.ClientSize = new System.Drawing.Size(796, 576);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormCommit";
             this.Text = "Commit";
             this.Load += new System.EventHandler(this.FormCommit_Load);
@@ -572,6 +610,8 @@
             this.splitContainer8.Panel1.PerformLayout();
             this.splitContainer8.Panel2.ResumeLayout(false);
             this.splitContainer8.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -591,7 +631,6 @@
         private System.Windows.Forms.Button Scan;
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.Label label3;
         private ICSharpCode.TextEditor.TextEditorControl SelectedDiff;
@@ -615,5 +654,10 @@
         private System.Windows.Forms.ToolStripMenuItem ResetChanges;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.Button SolveMergeconflicts;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem workingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
     }
 }

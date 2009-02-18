@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormMergeBranch : Form
+    public partial class FormMergeBranch : GitExtensionsForm
     {
         public FormMergeBranch()
         {

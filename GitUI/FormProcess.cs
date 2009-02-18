@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace GitUI
 {
     delegate void DataCallback(string text);
-    public partial class FormProcess : Form
+    public partial class FormProcess : GitExtensionsForm
     {
         public FormProcess(string process, string arguments, string remote)
         {

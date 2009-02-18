@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormCheckout : Form
+    public partial class FormCheckout : GitExtensionsForm
     {
         public FormCheckout()
         {

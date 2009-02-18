@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormFormatPath : Form
+    public partial class FormFormatPath : GitExtensionsForm
     {
         public FormFormatPath()
         {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormTag : Form
+    public partial class FormTag : GitExtensionsForm
     {
         public FormTag()
         {

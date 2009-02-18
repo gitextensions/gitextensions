@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class GitLogForm : Form
+    public partial class GitLogForm : GitExtensionsForm
     {
         public GitLogForm()
         {

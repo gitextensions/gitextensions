@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormPuttyError : Form
+    public partial class FormPuttyError : GitExtensionsForm
     {
         public FormPuttyError()
         {

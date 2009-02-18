@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormResetCurrentBranch : Form
+    public partial class FormResetCurrentBranch : GitExtensionsForm
     {
         public FormResetCurrentBranch(GitRevision Revision)
         {

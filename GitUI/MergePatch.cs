@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class MergePatch : Form
+    public partial class MergePatch : GitExtensionsForm
     {
         public MergePatch()
         {

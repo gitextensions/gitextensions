@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormMailMap : Form
+    public partial class FormMailMap : GitExtensionsForm
     {
         public FormMailMap()
         {

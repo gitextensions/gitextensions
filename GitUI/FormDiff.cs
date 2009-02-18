@@ -12,7 +12,7 @@ using PatchApply;
 
 namespace GitUI
 {
-    public partial class FormDiff : Form
+    public partial class FormDiff : GitExtensionsForm
     {
         public FormDiff()
         {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormModifiedDeletedCreated : Form
+    public partial class FormModifiedDeletedCreated : GitExtensionsForm
     {
         public FormModifiedDeletedCreated()
         {

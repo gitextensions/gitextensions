@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormRevertCommitSmall : Form
+    public partial class FormRevertCommitSmall : GitExtensionsForm
     {
         public FormRevertCommitSmall(GitRevision Revision)
         {

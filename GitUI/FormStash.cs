@@ -11,7 +11,7 @@ using PatchApply;
 
 namespace GitUI
 {
-    public partial class FormStash : Form
+    public partial class FormStash : GitExtensionsForm
     {
         public FormStash()
         {

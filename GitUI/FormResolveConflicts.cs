@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormResolveConflicts : Form
+    public partial class FormResolveConflicts : GitExtensionsForm
     {
         public FormResolveConflicts()
         {

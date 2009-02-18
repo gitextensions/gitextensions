@@ -9,7 +9,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormLoadPuttySSHKey : Form
+    public partial class FormLoadPuttySSHKey : GitExtensionsForm
     {
         public FormLoadPuttySSHKey()
         {

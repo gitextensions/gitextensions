@@ -11,7 +11,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormPush : Form
+    public partial class FormPush : GitExtensionsForm
     {
         public FormPush()
         {
