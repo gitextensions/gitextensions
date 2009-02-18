@@ -60,6 +60,7 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Prune = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -309,6 +310,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.Prune);
             this.splitContainer2.Panel2.Controls.Add(this.UpdateBranch);
             this.splitContainer2.Size = new System.Drawing.Size(642, 189);
             this.splitContainer2.SplitterDistance = 155;
@@ -393,6 +395,16 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
+            // Prune
+            // 
+            this.Prune.Location = new System.Drawing.Point(327, 4);
+            this.Prune.Name = "Prune";
+            this.Prune.Size = new System.Drawing.Size(137, 23);
+            this.Prune.TabIndex = 11;
+            this.Prune.Text = "Prune remote branches";
+            this.Prune.UseVisualStyleBackColor = true;
+            this.Prune.Click += new System.EventHandler(this.Prune_Click);
+            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -455,5 +467,6 @@
         private System.Windows.Forms.Button TestConnection;
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.GroupBox PuTTYSSH;
+        private System.Windows.Forms.Button Prune;
     }
 }

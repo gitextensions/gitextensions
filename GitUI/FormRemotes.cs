@@ -130,8 +130,7 @@ namespace GitUI
 
         private void UpdateBranch_Click(object sender, EventArgs e)
         {
-            string output = GitCommands.GitCommands.UpdateRemotes();
-            MessageBox.Show(output, "Update remote info");
+            new FormProcess("remote update");
         }
 
         private void SshBrowse_Click(object sender, EventArgs e)
@@ -167,6 +166,11 @@ namespace GitUI
         private void TestConnection_Click(object sender, EventArgs e)
         {
             GitCommands.GitCommands.RunRealCmdDetatched("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" -T \"" + Url.Text + "\"\"");
+        }
+
+        private void Prune_Click(object sender, EventArgs e)
+        {
+            new FormProcess("remote prune " + remote);
         }
     }
 }

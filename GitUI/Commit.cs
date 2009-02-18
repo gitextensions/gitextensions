@@ -345,7 +345,7 @@ namespace GitUI
 
         private void deleteSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete all selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete all selected files?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 foreach (DataGridViewRow row in Unstaged.Rows)
                 {
@@ -374,6 +374,12 @@ namespace GitUI
         private void resetAlltrackedChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Reset_Click(null, null);
+        }
+
+        private void eToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormGitIgnore().ShowDialog();
+            Initialize();
         }
     }
 }
