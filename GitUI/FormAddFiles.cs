@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormAddFiles : Form
+    public partial class FormAddFiles : GitExtensionsForm
     {
         public FormAddFiles()
         {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormRevert : Form
+    public partial class FormRevert : GitExtensionsForm
     {
         public FormRevert(string filename)
         {

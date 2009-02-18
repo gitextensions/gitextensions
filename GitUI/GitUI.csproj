@@ -295,6 +295,9 @@
     <Compile Include="FormTagSmall.Designer.cs">
       <DependentUpon>FormTagSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitExtensionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>

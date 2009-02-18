@@ -12,7 +12,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormSettigns : Form
+    public partial class FormSettigns : GitExtensionsForm
     {
         public FormSettigns()
         {

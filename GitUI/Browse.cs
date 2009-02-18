@@ -12,7 +12,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormBrowse : Form
+    public partial class FormBrowse : GitExtensionsForm
     {
         public FormBrowse()
         {
@@ -35,10 +35,7 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
-            {
-                openToolStripMenuItem_Click(sender, e);
-            }
+
 
             InternalInitialize(false);
             RevisionGrid.Focus();
@@ -68,6 +65,7 @@ namespace GitUI
                 ShowRevisions();
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
+            this.Text = "Browse " + GitCommands.Settings.WorkingDir;
 
             if (GitCommands.Settings.ValidWorkingDir() && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
             {
@@ -126,9 +124,34 @@ namespace GitUI
         private void ShowRevisions()
         {
             RevisionGrid.RefreshRevisions();
-            GitTree.Nodes.Clear();
-            if (RevisionGrid.GetRevisions().Count > 0)
-                LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
+            FillFileTree();
+            FillDiff();
+        }
+
+        private void FillFileTree()
+        {
+            if (tabControl1.SelectedTab == Tree)
+            {
+                GitTree.Nodes.Clear();
+                if (RevisionGrid.GetRevisions().Count > 0)
+                    LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
+            }
+        }
+
+        private void FillDiff()
+        {
+            if (tabControl1.SelectedTab == Commit)
+            {
+                if (RevisionGrid.GetRevisions().Count == 0)
+                    return;
+
+                GitRevision revision = RevisionGrid.GetRevisions()[0];
+
+                DiffFiles.DataSource = null;
+                DiffFiles.DisplayMember = "FileNameB";
+
+                DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+            }
         }
 
         protected void LoadInTreeSingle(IGitItem item, TreeNodeCollection node)
@@ -174,13 +197,8 @@ namespace GitUI
         {
             try
             {
-                if (RevisionGrid.GetRevisions().Count == 0) 
-                    return;
-                IGitItem revision = RevisionGrid.GetRevisions()[0];
-
-                //List<GitItem> items = GitCommands.GitCommands.GetTree(revision.TreeGuid);
-                GitTree.Nodes.Clear();
-                LoadInTreeSingle(revision, GitTree.Nodes);
+                FillFileTree();
+                FillDiff();
             }
             catch
             { 
@@ -572,6 +590,44 @@ namespace GitUI
         private void toolStripTextBoxFilter_Leave(object sender, EventArgs e)
         {
             toolStripLabel2_Click(sender, e);
+        }
+
+        private void FormBrowse_Shown(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
+            {
+                openToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillFileTree();
+            FillDiff();
+        }
+
+        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem is string)
+            {
+                if (RevisionGrid.GetRevisions().Count == 0)
+                    return;
+
+                GitRevision revision = RevisionGrid.GetRevisions()[0];
+
+                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
+                if (selectedPatch != null)
+                {
+                    //EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
+                    DiffText.SetHighlighting("Patch");
+                    DiffText.Text = selectedPatch.Text;
+                }
+                else
+                {
+                    DiffText.Text = "";
+                }
+                DiffText.Refresh();
+            }
         }
 
 

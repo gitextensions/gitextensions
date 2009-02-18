@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace GitUI
 {
-    public partial class FormRemotes : Form
+    public partial class FormRemotes : GitExtensionsForm
     {
         public FormRemotes()
         {

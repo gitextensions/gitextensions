@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormFileHistory : Form
+    public partial class FormFileHistory : GitExtensionsForm
     {
         public FormFileHistory(string fileName)
         {

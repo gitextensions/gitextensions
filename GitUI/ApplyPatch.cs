@@ -12,7 +12,7 @@ using GitUI;
 
 namespace PatchApply
 {
-    public partial class ViewPatch : Form
+    public partial class ViewPatch : GitExtensionsForm
     {
         public ViewPatch()
         {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormArchive : Form
+    public partial class FormArchive : GitExtensionsForm
     {
         public FormArchive()
         {

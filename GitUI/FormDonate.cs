@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormDonate : Form
+    public partial class FormDonate : GitExtensionsForm
     {
         public FormDonate()
         {

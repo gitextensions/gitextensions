@@ -51,7 +51,7 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.Tree = new System.Windows.Forms.TabPage();
             this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,6 +106,10 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Commit = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -117,10 +121,14 @@
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.Tree.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
+            this.Commit.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -292,7 +300,7 @@
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
+            this.splitContainer3.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer3.Size = new System.Drawing.Size(796, 519);
             this.splitContainer3.SplitterDistance = 230;
             this.splitContainer3.TabIndex = 1;
@@ -315,7 +323,8 @@
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer4.Location = new System.Drawing.Point(3, 3);
             this.splitContainer4.Name = "splitContainer4";
             // 
             // splitContainer4.Panel1
@@ -324,9 +333,9 @@
             // 
             // splitContainer4.Panel2
             // 
-            this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer4.Size = new System.Drawing.Size(796, 285);
-            this.splitContainer4.SplitterDistance = 238;
+            this.splitContainer4.Panel2.Controls.Add(this.FileText);
+            this.splitContainer4.Size = new System.Drawing.Size(782, 253);
+            this.splitContainer4.SplitterDistance = 213;
             this.splitContainer4.TabIndex = 1;
             // 
             // GitTree
@@ -334,7 +343,7 @@
             this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(238, 285);
+            this.GitTree.Size = new System.Drawing.Size(213, 253);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
             this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
@@ -342,32 +351,34 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.Tree);
+            this.tabControl1.Controls.Add(this.Commit);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(554, 285);
+            this.tabControl1.Size = new System.Drawing.Size(796, 285);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
-            // tabPage1
+            // Tree
             // 
-            this.tabPage1.Controls.Add(this.FileText);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(546, 259);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "View file";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.Tree.Controls.Add(this.splitContainer4);
+            this.Tree.Location = new System.Drawing.Point(4, 22);
+            this.Tree.Name = "Tree";
+            this.Tree.Padding = new System.Windows.Forms.Padding(3);
+            this.Tree.Size = new System.Drawing.Size(788, 259);
+            this.Tree.TabIndex = 0;
+            this.Tree.Text = "File tree";
+            this.Tree.UseVisualStyleBackColor = true;
             // 
             // FileText
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileText.IsReadOnly = false;
-            this.FileText.Location = new System.Drawing.Point(3, 3);
+            this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(540, 253);
+            this.FileText.Size = new System.Drawing.Size(565, 253);
             this.FileText.TabIndex = 0;
             // 
             // menuStrip1
@@ -801,6 +812,53 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // Commit
+            // 
+            this.Commit.Controls.Add(this.splitContainer1);
+            this.Commit.Location = new System.Drawing.Point(4, 22);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(788, 259);
+            this.Commit.TabIndex = 1;
+            this.Commit.Text = "Commit";
+            this.Commit.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.DiffFiles);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.DiffText);
+            this.splitContainer1.Size = new System.Drawing.Size(788, 259);
+            this.splitContainer1.SplitterDistance = 217;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // DiffFiles
+            // 
+            this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.Location = new System.Drawing.Point(0, 0);
+            this.DiffFiles.Name = "DiffFiles";
+            this.DiffFiles.Size = new System.Drawing.Size(217, 251);
+            this.DiffFiles.TabIndex = 1;
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            // 
+            // DiffText
+            // 
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IsReadOnly = false;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.Size = new System.Drawing.Size(567, 259);
+            this.DiffText.TabIndex = 1;
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -813,6 +871,7 @@
             this.Name = "FormBrowse";
             this.Text = "Browse";
             this.Load += new System.EventHandler(this.Browse_Load);
+            this.Shown += new System.EventHandler(this.FormBrowse_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowse_FormClosing);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
@@ -827,11 +886,15 @@
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.Tree.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
+            this.Commit.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -843,7 +906,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage Tree;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -915,5 +978,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
+        private System.Windows.Forms.TabPage Commit;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ListBox DiffFiles;
+        private ICSharpCode.TextEditor.TextEditorControl DiffText;
     }
 }

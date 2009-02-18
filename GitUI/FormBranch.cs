@@ -8,7 +8,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormBranch : Form
+    public partial class FormBranch : GitExtensionsForm
     {
         public FormBranch()
         {

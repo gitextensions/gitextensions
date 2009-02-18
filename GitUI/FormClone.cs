@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormClone : Form
+    public partial class FormClone : GitExtensionsForm
     {
         public FormClone()
         {

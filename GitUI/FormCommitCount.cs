@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormCommitCount : Form
+    public partial class FormCommitCount : GitExtensionsForm
     {
         public FormCommitCount()
         {

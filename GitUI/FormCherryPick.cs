@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormCherryPick : Form
+    public partial class FormCherryPick : GitExtensionsForm
     {
         public FormCherryPick()
         {

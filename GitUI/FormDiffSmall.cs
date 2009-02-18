@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormDiffSmall : Form
+    public partial class FormDiffSmall : GitExtensionsForm
     {
         public FormDiffSmall()
         {

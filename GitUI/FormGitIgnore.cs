@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormGitIgnore : Form
+    public partial class FormGitIgnore : GitExtensionsForm
     {
         public FormGitIgnore()
         {

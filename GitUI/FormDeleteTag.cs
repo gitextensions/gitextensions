@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormDeleteTag : Form
+    public partial class FormDeleteTag : GitExtensionsForm
     {
         public FormDeleteTag()
         {

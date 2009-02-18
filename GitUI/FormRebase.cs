@@ -9,7 +9,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormRebase : Form
+    public partial class FormRebase : GitExtensionsForm
     {
         public FormRebase()
         {

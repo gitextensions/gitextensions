@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class Open : Form
+    public partial class Open : GitExtensionsForm
     {
         public Open()
         {

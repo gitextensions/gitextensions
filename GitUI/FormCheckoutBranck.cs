@@ -10,7 +10,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormCheckoutBranck : Form
+    public partial class FormCheckoutBranck : GitExtensionsForm
     {
         public FormCheckoutBranck()
         {

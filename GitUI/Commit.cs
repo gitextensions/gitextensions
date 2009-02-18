@@ -12,7 +12,7 @@ namespace GitUI
 {
     delegate void DoneCallback();
 
-    public partial class FormCommit : Form
+    public partial class FormCommit : GitExtensionsForm
     {
         public FormCommit()
         {
@@ -341,6 +341,39 @@ namespace GitUI
         {
             new FormResolveConflicts().ShowDialog();
             Initialize();
+        }
+
+        private void deleteSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete all selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                foreach (DataGridViewRow row in Unstaged.Rows)
+                {
+                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                    File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                }
+                Initialize();
+            }
+        }
+
+        private void resetSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to reset all selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+
+                foreach (DataGridViewRow row in Unstaged.Rows)
+                {
+                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+
+                    string output = GitCommands.GitCommands.ResetFile(item.Name);
+                }
+                Initialize();
+            }
+        }
+
+        private void resetAlltrackedChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Reset_Click(null, null);
         }
     }
 }

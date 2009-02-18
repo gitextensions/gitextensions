@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormPull : Form
+    public partial class FormPull : GitExtensionsForm
     {
         public FormPull()
         {
@@ -144,7 +144,7 @@ namespace GitUI
 
             MergeConflictHandler.HandleMergeConflicts();
 
-            if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 if (MessageBox.Show("Apply stashed items to working dir again?", "Auto stash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {

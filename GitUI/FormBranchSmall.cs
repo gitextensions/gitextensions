@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormBranchSmall : Form
+    public partial class FormBranchSmall : GitExtensionsForm
     {
         public FormBranchSmall()
         {
