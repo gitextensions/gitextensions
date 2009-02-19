@@ -63,6 +63,9 @@ namespace GitCommands
         {
             if (e.Data == null)
                 return;
+            if (e.Data.Length <= graphIndex)
+                return;
+
             //First line found!
             if (e.Data.IndexOf("Commit ") > 0 && e.Data.IndexOf("*") >= 0 || (e.Data.IndexOf("Commit ") == 0))
             {
