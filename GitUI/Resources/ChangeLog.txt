@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.49
+	Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)
+	
 Version 1.48
 	Added ChangeLog
 
