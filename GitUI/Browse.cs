@@ -630,6 +630,11 @@ namespace GitUI
             }
         }
 
+        private void changelogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormChangeLog1().ShowDialog();
+        }
+
 
     }
 }

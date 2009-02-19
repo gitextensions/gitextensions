@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Info = new System.Windows.Forms.Label();
+            this.NewDirectory = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CentralRepository = new System.Windows.Forms.RadioButton();
             this.PersonalRepository = new System.Windows.Forms.RadioButton();
@@ -43,9 +46,6 @@
             this.Ok = new System.Windows.Forms.Button();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.NewDirectory = new System.Windows.Forms.TextBox();
-            this.Info = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -81,6 +81,35 @@
             this.splitContainer1.SplitterDistance = 207;
             this.splitContainer1.TabIndex = 0;
             // 
+            // Info
+            // 
+            this.Info.AutoSize = true;
+            this.Info.BackColor = System.Drawing.SystemColors.Info;
+            this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Info.Location = new System.Drawing.Point(15, 102);
+            this.Info.Name = "Info";
+            this.Info.Size = new System.Drawing.Size(295, 28);
+            this.Info.TabIndex = 11;
+            this.Info.Text = "The repository will be cloned to a new directory located here:\r\n      [destinatio" +
+                "n]\\[directory]\r\n";
+            // 
+            // NewDirectory
+            // 
+            this.NewDirectory.Location = new System.Drawing.Point(124, 72);
+            this.NewDirectory.Name = "NewDirectory";
+            this.NewDirectory.Size = new System.Drawing.Size(153, 20);
+            this.NewDirectory.TabIndex = 3;
+            this.NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 75);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(111, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Subdirectory to create";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.CentralRepository);
@@ -97,9 +126,9 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(258, 17);
+            this.CentralRepository.Size = new System.Drawing.Size(217, 17);
             this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "Central repository, no working dir  (--bare --shared)";
+            this.CentralRepository.Text = "Central repository, no working dir  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository
@@ -218,35 +247,6 @@
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 75);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(111, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Subdirectory to create";
-            // 
-            // NewDirectory
-            // 
-            this.NewDirectory.Location = new System.Drawing.Point(124, 72);
-            this.NewDirectory.Name = "NewDirectory";
-            this.NewDirectory.Size = new System.Drawing.Size(153, 20);
-            this.NewDirectory.TabIndex = 3;
-            this.NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
-            // 
-            // Info
-            // 
-            this.Info.AutoSize = true;
-            this.Info.BackColor = System.Drawing.SystemColors.Info;
-            this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Info.Location = new System.Drawing.Point(15, 102);
-            this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(295, 28);
-            this.Info.TabIndex = 11;
-            this.Info.Text = "The repository will be cloned to a new directory located here:\r\n      [destinatio" +
-                "n]\\[directory]\r\n";
             // 
             // FormClone
             // 

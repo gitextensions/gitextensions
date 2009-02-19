@@ -1,0 +1,250 @@
+Changelog
+=========
+
+Version 1.48
+	Added ChangeLog
+
+Version 1.47
+	Commit count per user now counts all branches
+	Fixed bug that local settings could not be saved
+	Fixed bug that remote branches could not be saved
+
+Version 1.45
+	No more taskbar terror! 
+	Added "prune" button in remotes dialog 
+	Browse window title includes working dir 
+	Added diff view to browse window 
+	Commit dialog improved (working dir changes is now a menu!!!) 
+	Default .gitignore file added (for use in Visual Studio and/or resharper) 
+	Fixed a bug letting GitExtensions hang when using OpenSSH 
+	Fixed a bug that some mergeconflicts where ignored 
+	Fixed some minor bugs
+
+Version 1.44 
+	Fixed some problems in new Visual Studio plugin 
+
+Version 1.42 
+	Fixed VS2005 plugin 
+
+Version 1.41 
+	Fixed a bug in Visual Studio plugin
+
+Version 1.40 
+	Better Visual Studio intergration.
+
+Version 1.38
+	Most dialogs are closed after a task is finished with success
+	Clone dialog is easier to understand
+	Fixed a spelling mistake
+	Settings dialog will now have a normal size when started on gitextensions startup
+	Filter feature added
+
+Version 1.37 
+	Added diff highlighting (+/-) highlighting 
+	Auto-fix settings refreshes automaticly 
+	
+Version 1.36
+	Improved performance of commit dialog a lot.
+	Minor changes
+
+Version 1.35 
+	Fixed bug causing multiple config entries 
+	Improved solve mergeconflict features 
+	Small changes to improve usuability 
+	
+Version 1.30 
+	Added support for custom mergetools 
+	Fixed settings for git 1.6.1.xxx 
+	Improved patch and rebase features 
+	Removed a lot of annoying mergeconlict popups 
+	32 bit and 64bit support is now in same setup 
+	Fixed (and probably created) some bugs 
+	Some small 64bit Windows improvements (auto-settings, some paths) 	
+	
+Version 1.28
+	Added 64-bit support
+	Added installer that also installs git and kdiff3
+	Added commandline support (gitex.cmd), see gitex help for list of commands
+	Improved auto resolve settings
+	Added commit revert
+	Various small improvements
+	
+Version 1.27 
+	Removed usage of git-clone.exe because it cause problems. 	
+	
+Version 1.26 
+	Fixed shell extensions.... 
+	
+Version 1.25 
+	PuTTY is working fine not (at least for me) 
+	Setup is improved 
+	Rebase improved 
+	As long as you use PuTTY and not OpenSSH, all is fine. 
+
+Version 1.21 
+	Fixed some small bugs that sneeked in version 1.20 
+	
+Version 1.20 
+	Added PuTTY support. 
+	PuTTY can now be used instead of OpenSSH. 
+	When using PuTTY the commandline windows that are needed for entering 
+	OpenSSH passprase are not needed anymore. 
+	PuTTY private keys can be configured per remote, so key is automatilly loaded. 	
+	
+Version 1.14 
+	Improved rebase features a bit. 
+	Minor bug fixes. 
+	
+Version 1.13 
+	I'm still focussing on the push and pull features, because I use this a lot myself. 
+	Improved auto-settings-correct features 
+	Added rebase features 
+	Improved merge conflict handling a bit. 
+
+Version 1.12
+	Fixed lots of remote feature mistakes and added some missing features. 
+	Push/pull/fetch should work as suppost to.
+	Added multiple stash support.
+	Did some testing, fixed minor bugs.
+	Know bug: delay loading commit graph is broken, I will fix this in the next release!
+	
+Version 1.11 
+	Added remote repository functions push/pull/fetch improved delete improved some small changes and bug fixes 	
+	
+Version 1.09 
+	Added Visual Studio 2005 and Visual Studio 2008 plugin to the setup as options. 
+	Added .mailmap edit 
+	Minor changes No bugfixes 	
+	
+Version 1.08
+	Fixed drop down boxes in clone dialog 
+	Added archive function 
+	Fixed commit count 
+	Fixed using " (quote) in commit message 	
+	
+Version 1.07 
+	Path of git.cmd can be edited 
+	Format path fixed 
+	Auto-config: register files fixed 	
+	
+Version 1.06 
+	Fixed file history diff, broke since using git.cmd 
+	
+Version 1.05 
+	Unstage files problems fixed Problems cause by replace git.exe for git.cmd fixed (I hope) 
+	Added progress dialog for a few commands 	
+	
+Version 1.04 
+	Using git.cmd instead of git.exe. 
+
+Version 1.03
+	Bugs in commit solved
+	Added support for empty repositories
+	
+Version 1.02
+	Added some usability changes
+	Added delete tag function
+	Added "reset branch" function	
+	
+Version 1.01
+	Blame fucntion added to file history
+	Fixed working dir detection
+	Small performance improvements
+	
+Version 1.00
+	Bugs in delay loading fixed
+	Added amend to commit dialog
+	Added init dialog
+	Added init central/bare repository
+	Added support for bare repository
+	Minor performance increase
+	Several minor bugfixes
+	Fixed bug in mergetool.keepBackup setting, this should work now
+
+Version 0.98
+	Performance and stability increased
+	Bug that not all files where staged properly fixed
+	Added commit count per user dialog
+	Memory usage optimized
+
+Version 0.93
+	Performance of commit is increased (about 2x faster).
+	The installer is not needed anymore. 
+	The program will check if it is installed correct and offers to fix the problems. 
+	The installer is still recommended, because it adds icons and uninstaller.
+
+Version 0.92 
+	Fixed a bug in clone/push/pull. 
+	
+	For this version I also added a non-installer version. This is just a zip file that cointains the binairy files. 
+	Please note that this is just the standalone application without shell extensions! 
+	
+Version 0.91
+	Rewritten most of commit logic. This works better now. 
+	Colors added on tag/branch/stach labels
+	I also added a directory history on open/push/pull/clone, just to increase useabillity
+	
+Version 0.9
+	Removed Visual Studio plugin
+	First stable release. 
+	Please uninstall older versions carefully. 
+
+Version 0.71
+	There was a nasty bug in the shell extensions in the last release, this caused explorer to crash. This is fixed now. 
+	Lots of cosmetic changes too. 
+	Reinstalling since version 0.7 shouldn't be a pain anymore singe there is no .net registration.
+
+Version 0.7
+	Rewritten shell extensions in c++, the program is a lot more stable now. 
+	Fixed some small bugs, added lots of warnings and messages to prevent users from making mistakes.
+	Some small features added, nothing mayor since 0.6.
+	
+Version 0.6
+	Add files
+	Apply patch
+	Create branch
+	Checkout branch
+	Checkout revision
+	Cherry pick
+	Delete branch
+	Clone
+	Commit
+	Format patch
+	Init new repository
+	Pull
+	Run mergetool to solve merge conflicts
+	Push
+	Basic settings
+	Stash
+	View diff
+	View patch file
+
+Version 0.5
+	Pull/Push/Patch improved
+	Better feedback when an error occurs
+	Shell extension also works on directories
+	Dialogs are modal now
+	VS2008 doesn't crash on errors anymore (which was very anoying!)
+
+Version 0.4
+	Apply patch is now working
+	View patch is now ok
+	
+Version 0.31
+	Added icons in the setup
+	
+Version 0.30
+	Added install
+	Many bugfixes
+	
+Version 0.2
+	Added apply patch interactive
+	Added change basic git settings
+	Added syntax highlighting (using ICSharpCode)
+	Performance increased a bit
+	Many bugfixes
+
+Version 0.1
+	Added shell extension
+	Added visual studio 2008 plugin
+	Added standalone UI

@@ -579,7 +579,7 @@ namespace GitCommands
             to = FixPath(to);
 
             if (central)
-                return "clone -v --bare --shared \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
+                return "clone -v --bare \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
             else
                 return "clone -v \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
 
@@ -1093,7 +1093,7 @@ namespace GitCommands
                 value = FixPath(value);
                 value = value.Replace("$QUOTE$", "\"");
 
-                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --replace-all --file \"" + configFileName + "\" \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "config --file \"" + configFileName + "\" --replace-all  \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
             }
             else
             {
