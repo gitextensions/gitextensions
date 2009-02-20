@@ -9,6 +9,36 @@ namespace GitCommands
 {
     public class Settings
     {
+
+        private static bool showRevisionGraph = true;
+        public static bool ShowRevisionGraph
+        {
+            get
+            {
+                return showRevisionGraph;
+            }
+            set
+            {
+                showRevisionGraph = value;
+            }
+        }
+
+
+
+
+        private static bool closeProcessDialog = false;
+        public static bool CloseProcessDialog
+        {
+            get
+            {
+                return closeProcessDialog;
+            }
+            set
+            {
+                closeProcessDialog = value;
+            }
+        }
+
         public static string GetInstallDir()
         {
             if (Application.UserAppDataRegistry.GetValue("InstallDir") != null)

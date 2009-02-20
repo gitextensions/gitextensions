@@ -36,7 +36,7 @@ namespace GitCommands
 
             heads = GitCommands.GetHeads(true);
 
-            if (!LogParam.Contains("--grep"))
+            if (!LogParam.Contains("--grep") && Settings.ShowRevisionGraph)
                 LogParam += " --graph ";
 
             gitGetGraphCommand = new GitCommands();

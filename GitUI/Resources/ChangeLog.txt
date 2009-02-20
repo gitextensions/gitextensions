@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.50
+	Added double click on file in diff-tree in browse window
+	Process dialog is can now set to close automaticly when process succeeds
+
 Version 1.49
 	Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)
 	

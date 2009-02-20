@@ -52,7 +52,10 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.UnstageFiles = new System.Windows.Forms.Button();
             this.AddFiles = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
+            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
+            this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Staged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,6 +91,7 @@
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
+            this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -118,7 +122,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(796, 576);
+            this.splitContainer1.Size = new System.Drawing.Size(895, 648);
             this.splitContainer1.SplitterDistance = 389;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -136,8 +140,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer2.Size = new System.Drawing.Size(389, 576);
-            this.splitContainer2.SplitterDistance = 255;
+            this.splitContainer2.Size = new System.Drawing.Size(389, 648);
+            this.splitContainer2.SplitterDistance = 286;
             this.splitContainer2.TabIndex = 3;
             // 
             // splitContainer4
@@ -156,7 +160,7 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Loading);
             this.splitContainer4.Panel2.Controls.Add(this.Unstaged);
-            this.splitContainer4.Size = new System.Drawing.Size(389, 255);
+            this.splitContainer4.Size = new System.Drawing.Size(389, 286);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 1;
             // 
@@ -223,7 +227,7 @@
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(389, 226);
+            this.Loading.Size = new System.Drawing.Size(389, 257);
             this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 2;
             this.Loading.TabStop = false;
@@ -245,7 +249,7 @@
             this.Unstaged.ReadOnly = true;
             this.Unstaged.RowHeadersVisible = false;
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Unstaged.Size = new System.Drawing.Size(389, 226);
+            this.Unstaged.Size = new System.Drawing.Size(389, 257);
             this.Unstaged.TabIndex = 0;
             this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
@@ -305,18 +309,18 @@
             this.splitContainer5.Panel1.Controls.Add(this.progressBar);
             this.splitContainer5.Panel1.Controls.Add(this.UnstageFiles);
             this.splitContainer5.Panel1.Controls.Add(this.AddFiles);
-            this.splitContainer5.Panel1.Controls.Add(this.label3);
+            this.splitContainer5.Panel1.Controls.Add(this.menuStrip2);
             // 
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Staged);
-            this.splitContainer5.Size = new System.Drawing.Size(389, 317);
+            this.splitContainer5.Size = new System.Drawing.Size(389, 358);
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 1;
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(124, 3);
+            this.progressBar.Location = new System.Drawing.Point(125, 1);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(262, 23);
             this.progressBar.TabIndex = 1;
@@ -348,14 +352,38 @@
             this.AddFiles.UseVisualStyleBackColor = true;
             this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
             // 
-            // label3
+            // menuStrip2
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Files listed to commit";
+            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.filesListedToCommitToolStripMenuItem});
+            this.menuStrip2.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip2.Name = "menuStrip2";
+            this.menuStrip2.Size = new System.Drawing.Size(389, 24);
+            this.menuStrip2.TabIndex = 5;
+            this.menuStrip2.Text = "menuStrip2";
+            // 
+            // filesListedToCommitToolStripMenuItem
+            // 
+            this.filesListedToCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stageAllToolStripMenuItem,
+            this.unstageAllToolStripMenuItem});
+            this.filesListedToCommitToolStripMenuItem.Name = "filesListedToCommitToolStripMenuItem";
+            this.filesListedToCommitToolStripMenuItem.Size = new System.Drawing.Size(101, 20);
+            this.filesListedToCommitToolStripMenuItem.Text = "Files to commit";
+            // 
+            // stageAllToolStripMenuItem
+            // 
+            this.stageAllToolStripMenuItem.Name = "stageAllToolStripMenuItem";
+            this.stageAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stageAllToolStripMenuItem.Text = "Stage all";
+            this.stageAllToolStripMenuItem.Click += new System.EventHandler(this.stageAllToolStripMenuItem_Click);
+            // 
+            // unstageAllToolStripMenuItem
+            // 
+            this.unstageAllToolStripMenuItem.Name = "unstageAllToolStripMenuItem";
+            this.unstageAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.unstageAllToolStripMenuItem.Text = "Unstage all";
+            this.unstageAllToolStripMenuItem.Click += new System.EventHandler(this.unstageAllToolStripMenuItem_Click);
             // 
             // Staged
             // 
@@ -374,7 +402,7 @@
             this.Staged.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Staged.RowHeadersVisible = false;
             this.Staged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Staged.Size = new System.Drawing.Size(389, 288);
+            this.Staged.Size = new System.Drawing.Size(389, 329);
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
@@ -418,8 +446,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer3.Size = new System.Drawing.Size(403, 576);
-            this.splitContainer3.SplitterDistance = 299;
+            this.splitContainer3.Size = new System.Drawing.Size(502, 648);
+            this.splitContainer3.SplitterDistance = 371;
             this.splitContainer3.TabIndex = 0;
             // 
             // SelectedDiff
@@ -428,7 +456,7 @@
             this.SelectedDiff.IsReadOnly = false;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(403, 299);
+            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
             this.SelectedDiff.TabIndex = 0;
             // 
             // splitContainer6
@@ -450,7 +478,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(403, 273);
+            this.splitContainer6.Size = new System.Drawing.Size(502, 273);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
@@ -531,7 +559,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer7.Size = new System.Drawing.Size(265, 273);
+            this.splitContainer7.Size = new System.Drawing.Size(364, 273);
             this.splitContainer7.SplitterDistance = 135;
             this.splitContainer7.TabIndex = 0;
             // 
@@ -550,7 +578,7 @@
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.Message);
-            this.splitContainer8.Size = new System.Drawing.Size(265, 135);
+            this.splitContainer8.Size = new System.Drawing.Size(364, 135);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
@@ -569,7 +597,7 @@
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(265, 106);
+            this.Message.Size = new System.Drawing.Size(364, 106);
             this.Message.TabIndex = 0;
             this.Message.Text = "";
             // 
@@ -579,7 +607,7 @@
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(265, 134);
+            this.OutPut.Size = new System.Drawing.Size(364, 134);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
@@ -587,7 +615,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(796, 576);
+            this.ClientSize = new System.Drawing.Size(895, 648);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -614,6 +642,8 @@
             this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
+            this.menuStrip2.ResumeLayout(false);
+            this.menuStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -648,7 +678,6 @@
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
-        private System.Windows.Forms.Label label3;
         private ICSharpCode.TextEditor.TextEditorControl SelectedDiff;
         private System.Windows.Forms.BindingSource gitItemStatusBindingSource;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isDeletedDataGridViewCheckBoxColumn1;
@@ -677,5 +706,9 @@
         private System.Windows.Forms.ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem filesListedToCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
     }
 }

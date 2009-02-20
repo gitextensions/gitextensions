@@ -110,7 +110,11 @@ namespace GitUI
         {
             try
             {
-                
+                if (Settings.ShowRevisionGraph)
+                    Revisions.Columns[0].Width = 150;
+                else
+                    Revisions.Columns[0].Width = 0;
+
 
                 Error.Visible = false;
                 NoCommits.Visible = false;

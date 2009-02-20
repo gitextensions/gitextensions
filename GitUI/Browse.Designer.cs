@@ -38,14 +38,14 @@
             this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.AddFiles = new System.Windows.Forms.ToolStripButton();
-            this.CreateBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripButtonPull = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -105,13 +105,13 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitcountPerUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -163,8 +163,8 @@
             this.CurrentBranch,
             this.toolStripSeparator1,
             this.toolStripButton1,
-            this.AddFiles,
-            this.CreateBranch,
+            this.toolStripButtonPull,
+            this.toolStripButtonPush,
             this.toolStripSeparator2,
             this.GitBash,
             this.EditSettings,
@@ -226,26 +226,6 @@
             this.toolStripButton1.Text = "Commit";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // AddFiles
-            // 
-            this.AddFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AddFiles.Image = ((System.Drawing.Image)(resources.GetObject("AddFiles.Image")));
-            this.AddFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(23, 22);
-            this.AddFiles.Text = "Add files";
-            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
-            // 
-            // CreateBranch
-            // 
-            this.CreateBranch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CreateBranch.Image = ((System.Drawing.Image)(resources.GetObject("CreateBranch.Image")));
-            this.CreateBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CreateBranch.Name = "CreateBranch";
-            this.CreateBranch.Size = new System.Drawing.Size(23, 22);
-            this.CreateBranch.Text = "Create branch";
-            this.CreateBranch.Click += new System.EventHandler(this.CreateBranch_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -256,8 +236,7 @@
             this.GitBash.Image = ((System.Drawing.Image)(resources.GetObject("GitBash.Image")));
             this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.GitBash.Name = "GitBash";
-            this.GitBash.Size = new System.Drawing.Size(70, 22);
-            this.GitBash.Text = "Git bash";
+            this.GitBash.Size = new System.Drawing.Size(23, 22);
             this.GitBash.Click += new System.EventHandler(this.GitBash_Click);
             // 
             // EditSettings
@@ -288,6 +267,26 @@
             this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
             this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
             this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
+            // 
+            // toolStripButtonPull
+            // 
+            this.toolStripButtonPull.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPull.Image = global::GitUI.Properties.Resources._4;
+            this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPull.Name = "toolStripButtonPull";
+            this.toolStripButtonPull.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPull.Text = "Pull";
+            this.toolStripButtonPull.Click += new System.EventHandler(this.toolStripButtonPull_Click);
+            // 
+            // toolStripButtonPush
+            // 
+            this.toolStripButtonPush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources._31;
+            this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPush.Name = "toolStripButtonPush";
+            this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPush.Text = "Push";
+            this.toolStripButtonPush.Click += new System.EventHandler(this.toolStripButtonPush_Click);
             // 
             // splitContainer3
             // 
@@ -420,6 +419,7 @@
             this.DiffFiles.Size = new System.Drawing.Size(217, 251);
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
             // 
             // DiffText
             // 
@@ -637,7 +637,7 @@
             // 
             // pullToolStripMenuItem
             // 
-            this.pullToolStripMenuItem.Image = global::GitUI.Properties.Resources._8;
+            this.pullToolStripMenuItem.Image = global::GitUI.Properties.Resources._4;
             this.pullToolStripMenuItem.Name = "pullToolStripMenuItem";
             this.pullToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.pullToolStripMenuItem.Text = "Pull";
@@ -645,7 +645,7 @@
             // 
             // pushToolStripMenuItem
             // 
-            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources._7;
+            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources._3;
             this.pushToolStripMenuItem.Name = "pushToolStripMenuItem";
             this.pushToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.pushToolStripMenuItem.Text = "Push";
@@ -835,6 +835,18 @@
             this.gitcommandLogToolStripMenuItem.Text = "Gitcommand log";
             this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.gitcommandLogToolStripMenuItem_Click);
             // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(165, 6);
+            // 
+            // changelogToolStripMenuItem
+            // 
+            this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
+            this.changelogToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.changelogToolStripMenuItem.Text = "Changelog";
+            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.changelogToolStripMenuItem_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -862,18 +874,6 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // changelogToolStripMenuItem
-            // 
-            this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
-            this.changelogToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.changelogToolStripMenuItem.Text = "Changelog";
-            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.changelogToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(165, 6);
             // 
             // FormBrowse
             // 
@@ -962,9 +962,7 @@
         private System.Windows.Forms.ToolStripButton Workingdir;
         private System.Windows.Forms.ToolStripButton CurrentBranch;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton AddFiles;
         private System.Windows.Forms.ToolStripButton GitBash;
-        private System.Windows.Forms.ToolStripButton CreateBranch;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton EditSettings;
         private System.Windows.Forms.ToolStripMenuItem tagToolStripMenuItem;
@@ -1000,5 +998,7 @@
         private ICSharpCode.TextEditor.TextEditorControl DiffText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem changelogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPull;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPush;
     }
 }

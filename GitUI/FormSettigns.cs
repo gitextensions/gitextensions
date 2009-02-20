@@ -38,7 +38,6 @@ namespace GitUI
 
             KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("mergetool.keepBackup").Trim() == "true";
 
-
             GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
             GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
@@ -55,6 +54,9 @@ namespace GitUI
             PuttygenPath.Text = GitCommands.Settings.Puttygen;
             PageantPath.Text = GitCommands.Settings.Pageant;
             AutostartPageant.Checked = GitCommands.Settings.AutoStartPageant;
+
+            CloseProcessDialog.Checked = GitCommands.Settings.CloseProcessDialog;
+            ShowRevisionGraph.Checked = GitCommands.Settings.ShowRevisionGraph;
 
             if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
                 OpenSSH.Checked = true;
@@ -97,8 +99,8 @@ namespace GitUI
             GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
             GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
 
-
-            
+            GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
+            GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
 
             if (KeepMergeBackup.Checked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
@@ -774,6 +776,11 @@ namespace GitUI
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
             MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
             MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+        }
+
+        private void ShowRevisionGraph_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

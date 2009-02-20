@@ -635,6 +635,26 @@ namespace GitUI
             new FormChangeLog1().ShowDialog();
         }
 
+        private void DiffFiles_DoubleClick(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem is string)
+            {
+                {
+                    new FormFileHistory((string)DiffFiles.SelectedItem).ShowDialog();
+                }
+            }
+        }
+
+        private void toolStripButtonPull_Click(object sender, EventArgs e)
+        {
+            pullToolStripMenuItem_Click(sender, e);
+        }
+
+        private void toolStripButtonPush_Click(object sender, EventArgs e)
+        {
+            pushToolStripMenuItem_Click(sender, e);
+        }
+
 
     }
 }

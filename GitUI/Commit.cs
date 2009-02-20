@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.IO;
+using System.Collections;
 
 namespace GitUI
 {
@@ -164,6 +165,12 @@ namespace GitUI
 
         private void Stage_Click(object sender, EventArgs e)
         {
+            IList rows = Unstaged.SelectedRows;
+            Stage(rows);
+        }
+
+        private void Stage(IList rows)
+        {
             Loading.Visible = true;
             progressBar.Visible = true;
             progressBar.Maximum = Unstaged.SelectedRows.Count * 2;
@@ -171,7 +178,7 @@ namespace GitUI
 
             List<GitItemStatus> files = new List<GitItemStatus>();
 
-            foreach (DataGridViewRow row in Unstaged.SelectedRows)
+            foreach (DataGridViewRow row in rows)
             {
                 if (row.DataBoundItem is GitItemStatus)
                 {
@@ -379,6 +386,18 @@ namespace GitUI
         private void eToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormGitIgnore().ShowDialog();
+            Initialize();
+        }
+
+        private void stageAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList rows = Unstaged.Rows;
+            Stage(rows);
+        }
+
+        private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
             Initialize();
         }
     }
