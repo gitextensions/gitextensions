@@ -54,6 +54,7 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -102,6 +103,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
+            this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -401,6 +403,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
+            this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
             this.TabPageGitExtensions.Controls.Add(this.BrowseGitBinPath);
             this.TabPageGitExtensions.Controls.Add(this.GitBinPath);
             this.TabPageGitExtensions.Controls.Add(this.label14);
@@ -416,6 +420,17 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // CloseProcessDialog
+            // 
+            this.CloseProcessDialog.AutoSize = true;
+            this.CloseProcessDialog.Location = new System.Drawing.Point(7, 116);
+            this.CloseProcessDialog.Name = "CloseProcessDialog";
+            this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.CloseProcessDialog.Size = new System.Drawing.Size(314, 17);
+            this.CloseProcessDialog.TabIndex = 9;
+            this.CloseProcessDialog.Text = "Close process dialog automaticly when process is succeeded";
+            this.CloseProcessDialog.UseVisualStyleBackColor = true;
             // 
             // BrowseGitBinPath
             // 
@@ -917,6 +932,18 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
+            // ShowRevisionGraph
+            // 
+            this.ShowRevisionGraph.AutoSize = true;
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(135, 140);
+            this.ShowRevisionGraph.Name = "ShowRevisionGraph";
+            this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowRevisionGraph.Size = new System.Drawing.Size(186, 17);
+            this.ShowRevisionGraph.TabIndex = 10;
+            this.ShowRevisionGraph.Text = "Show revision graph in commit log";
+            this.ShowRevisionGraph.UseVisualStyleBackColor = true;
+            this.ShowRevisionGraph.CheckedChanged += new System.EventHandler(this.ShowRevisionGraph_CheckedChanged);
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1028,6 +1055,8 @@
         private System.Windows.Forms.ComboBox MergeToolCmd;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox CloseProcessDialog;
+        private System.Windows.Forms.CheckBox ShowRevisionGraph;
 
     }
 }

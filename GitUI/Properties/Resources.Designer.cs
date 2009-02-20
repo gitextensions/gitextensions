@@ -109,6 +109,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap _31 {
+            get {
+                object obj = ResourceManager.GetObject("31", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap _33 {
             get {
                 object obj = ResourceManager.GetObject("33", resourceCulture);
@@ -285,7 +292,17 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version 1.48
+        ///   Looks up a localized string similar to Changelog
+        ///=========
+        ///
+        ///Version 1.50
+        ///	Added double click on file in diff-tree in browse window
+        ///	Process dialog is can now set to close automaticly when process succeeds
+        ///
+        ///Version 1.49
+        ///	Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)
+        ///	
+        ///Version 1.48
         ///	Added ChangeLog
         ///
         ///Version 1.47
@@ -294,13 +311,7 @@ namespace GitUI.Properties {
         ///	Fixed bug that remote branches could not be saved
         ///
         ///Version 1.45
-        ///	No more taskbar terror! 
-        ///	Added &quot;prune&quot; button in remotes dialog 
-        ///	Browse window title includes working dir 
-        ///	Added diff view to browse window 
-        ///	Commit dialog improved (working dir changes is now a menu!!!) 
-        ///	Default .gitignore file added (for use in Visual Studio and/or resharper) 
-        ///	Fixed [rest of string was truncated]&quot;;.
+        ///	No more taskbar te [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

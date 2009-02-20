@@ -159,6 +159,10 @@ namespace GitUI
                 {
                     ErrorImage.Visible = false;
                     SuccessImage.Visible = true;
+
+                    if (GitCommands.Settings.CloseProcessDialog)
+                        Close();
+
                 }
             }
             catch
