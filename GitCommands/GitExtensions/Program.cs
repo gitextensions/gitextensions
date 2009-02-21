@@ -36,6 +36,7 @@ namespace GitExtensions
                 if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
+                if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) GitCommands.Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) GitCommands.Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) GitCommands.Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) GitCommands.Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
@@ -238,6 +239,7 @@ namespace GitExtensions
                 Application.UserAppDataRegistry.SetValue("showallbranches", GitCommands.Settings.ShowAllBranches);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", GitCommands.Settings.CloseProcessDialog);
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", GitCommands.Settings.ShowRevisionGraph);
+                Application.UserAppDataRegistry.SetValue("showgitcommandline", GitCommands.Settings.ShowGitCommandLine);
                 
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());
 

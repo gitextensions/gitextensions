@@ -400,5 +400,18 @@ namespace GitUI
             OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
             Initialize();
         }
+
+        private void Unstaged_DoubleClick(object sender, EventArgs e)
+        {
+            if (Unstaged == null || Unstaged.SelectedRows.Count == 0)
+                return;
+
+            if (Unstaged.SelectedRows[0].DataBoundItem is GitItemStatus)
+            {
+                {
+                    new FormFileHistory(((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem).Name).ShowDialog();
+                }
+            }
+        }
     }
 }

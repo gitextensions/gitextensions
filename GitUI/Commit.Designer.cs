@@ -251,6 +251,7 @@
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Unstaged.Size = new System.Drawing.Size(389, 257);
             this.Unstaged.TabIndex = 0;
+            this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
             this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
             this.Unstaged.Click += new System.EventHandler(this.Unstaged_Click);
@@ -374,14 +375,14 @@
             // stageAllToolStripMenuItem
             // 
             this.stageAllToolStripMenuItem.Name = "stageAllToolStripMenuItem";
-            this.stageAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stageAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.stageAllToolStripMenuItem.Text = "Stage all";
             this.stageAllToolStripMenuItem.Click += new System.EventHandler(this.stageAllToolStripMenuItem_Click);
             // 
             // unstageAllToolStripMenuItem
             // 
             this.unstageAllToolStripMenuItem.Name = "unstageAllToolStripMenuItem";
-            this.unstageAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.unstageAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.unstageAllToolStripMenuItem.Text = "Unstage all";
             this.unstageAllToolStripMenuItem.Click += new System.EventHandler(this.unstageAllToolStripMenuItem_Click);
             // 
