@@ -82,14 +82,18 @@ namespace GitUI
 
         protected void ShowChanges(GitItemStatus item, bool staged)
         {
-            
-
-            //EditorOptions.SetSyntax(SelectedDiff, item.Name);
-            SelectedDiff.SetHighlighting("Patch");
-            //ICSharpCode.TextEditor.Highlight h = new ICSharpCode.TextEditor.Highlight(new ICSharpCode.TextEditor.TextLocation(1, 10), new ICSharpCode.TextEditor.TextLocation(1, 15));
-            
-            SelectedDiff.Text = GitCommands.GitCommands.GetCurrentChanges(item.Name, staged);
-            SelectedDiff.Refresh();
+            if (item.Name.EndsWith(".png"))
+            {
+                SelectedDiff.ViewFile(item.Name);
+            } else
+            if (item.IsTracked)
+            {
+                SelectedDiff.ViewCurrentChanges(item.Name, "Patch", staged);
+            }
+            else
+            {
+                SelectedDiff.ViewFile(item.Name);
+            }
         }
 
         private void Tracked_SelectionChanged(object sender, EventArgs e)
@@ -237,30 +241,6 @@ namespace GitUI
             Initialize();
             progressBar.Visible = false;
 
-            /*
-            Loading.Visible = true;
-            string result = "";
-            progressBar.Visible = true;
-            progressBar.Maximum = Staged.SelectedRows.Count;
-            progressBar.Value = 0;
-            foreach (DataGridViewRow row in Staged.SelectedRows)
-            {
-                progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                if (row.DataBoundItem is GitItemStatus)
-                {
-                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-
-                    if (!item.IsNew)
-                        result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
-                    else
-                        result = GitCommands.GitCommands.UnstageFile(item.Name);
-                    if (result.Length > 0)
-                        OutPut.Text += result;  
-                }
-            }
-           
-            Initialize();
-            progressBar.Visible = false;*/
         }
 
         private void splitContainer8_SplitterMoved(object sender, SplitterEventArgs e)
@@ -325,13 +305,20 @@ namespace GitUI
 
         private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.Rows.Count > LastRow && LastRow >= 0 && MessageBox.Show("Are you sure you want delete this file?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            try
             {
-                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
-                File.Delete(GitCommands.Settings.WorkingDir + item.Name);
-                Initialize();
+                SelectedDiff.ViewText("", "");
+                if (Unstaged.Rows.Count > LastRow && LastRow >= 0 && MessageBox.Show("Are you sure you want delete this file?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                    File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                    Initialize();
+                }
             }
-
+            catch
+            {
+                MessageBox.Show("Delete file failed");
+            }
         }
 
         private void SolveMergeconflicts_Click(object sender, EventArgs e)

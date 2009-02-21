@@ -105,7 +105,7 @@ void CSimpleShlExt::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
 
 int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
 {
-    AddMenuItem(hMenu, "Add files (.)", id, AddFilesId=0);
+    AddMenuItem(hMenu, "Add files", id, AddFilesId=0);
     AddMenuItem(hMenu, "Apply patch", ++id, ApplyPatchId=1);
 	AddMenuItem(hMenu, "Browse", ++id, BrowseId=2);
     AddMenuItem(hMenu, "Create branch", ++id, CreateBranchId=3);

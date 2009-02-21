@@ -61,7 +61,6 @@
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.SelectedDiff = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
@@ -74,6 +73,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.SelectedDiff = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -451,15 +451,6 @@
             this.splitContainer3.SplitterDistance = 371;
             this.splitContainer3.TabIndex = 0;
             // 
-            // SelectedDiff
-            // 
-            this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.IsReadOnly = false;
-            this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
-            this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
-            this.SelectedDiff.TabIndex = 0;
-            // 
             // splitContainer6
             // 
             this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -612,6 +603,14 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
+            // SelectedDiff
+            // 
+            this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
+            this.SelectedDiff.Name = "SelectedDiff";
+            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
+            this.SelectedDiff.TabIndex = 0;
+            // 
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -680,7 +679,6 @@
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
-        private ICSharpCode.TextEditor.TextEditorControl SelectedDiff;
         private System.Windows.Forms.BindingSource gitItemStatusBindingSource;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isDeletedDataGridViewCheckBoxColumn1;
         private System.Windows.Forms.Button Reset;
@@ -712,5 +710,6 @@
         private System.Windows.Forms.ToolStripMenuItem filesListedToCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
+        private FileViewer SelectedDiff;
     }
 }

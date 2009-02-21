@@ -38,7 +38,6 @@
             this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
-            this.View = new ICSharpCode.TextEditor.TextEditorControl();
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
             this.Blame = new System.Windows.Forms.TabPage();
@@ -49,6 +48,7 @@
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventLog1 = new System.Diagnostics.EventLog();
+            this.View = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -158,15 +158,6 @@
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
             // 
-            // View
-            // 
-            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.IsReadOnly = false;
-            this.View.Location = new System.Drawing.Point(3, 3);
-            this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(736, 298);
-            this.View.TabIndex = 0;
-            // 
             // DiffTab
             // 
             this.DiffTab.Controls.Add(this.Diff);
@@ -267,6 +258,14 @@
             // 
             this.eventLog1.SynchronizingObject = this;
             // 
+            // View
+            // 
+            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Location = new System.Drawing.Point(3, 3);
+            this.View.Name = "View";
+            this.View.Size = new System.Drawing.Size(736, 298);
+            this.View.TabIndex = 0;
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -305,7 +304,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
-        private ICSharpCode.TextEditor.TextEditorControl View;
         private ICSharpCode.TextEditor.TextEditorControl Diff;
         private System.Windows.Forms.TabPage Blame;
         private System.Windows.Forms.BindingSource gitItemBindingSource1;
@@ -318,5 +316,6 @@
         private System.Diagnostics.EventLog eventLog1;
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn TextColumn;
+        private FileViewer View;
     }
 }
