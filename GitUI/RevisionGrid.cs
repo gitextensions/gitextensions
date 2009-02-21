@@ -23,6 +23,8 @@ namespace GitUI
             //RefreshRevisions();
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
+            
+            showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
 
             SetShowBranches();
             Filter = "";
@@ -749,6 +751,13 @@ namespace GitUI
         private void Clone_Click(object sender, EventArgs e)
         {
             new FormClone().ShowDialog();
+        }
+
+        private void showRevisionGraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.ShowRevisionGraph = !showRevisionGraphToolStripMenuItem.Checked;
+            showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
+            RefreshRevisions();
         }
     }
 }
