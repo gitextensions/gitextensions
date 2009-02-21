@@ -20,8 +20,7 @@ namespace GitUI
 
         private void FormStash_Load(object sender, EventArgs e)
         {
-            Initialize();
-            InitializeTracked();
+
 
         }
 
@@ -64,6 +63,7 @@ namespace GitUI
 
         private void Stashed_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (Stashed.SelectedItem is Patch)
             {
                 ShowPatch((Patch)Stashed.SelectedItem);
@@ -110,7 +110,7 @@ namespace GitUI
 
         private void Changes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //EditorOptions.SetSyntax(View, ((GitItemStatus)Changes.SelectedItem).Name);
+            Cursor.Current = Cursors.WaitCursor;
             View.SetHighlighting("Patch");
             View.Text = GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
             View.Refresh();
@@ -120,15 +120,7 @@ namespace GitUI
 
         private void Stash_Click(object sender, EventArgs e)
         {
-            /*
-            if (GitCommands.GitCommands.GetStashedItems().Count > 0)
-            {
-                MessageBox.Show("There are allready stashed items.\nStashing now will overwrite current stash, aborting.", "Error");
-                return;
-            }            
-            */
-
-            //MessageBox.Show("Stash changes\n" + GitCommands.GitCommands.Stash(), "Stash");
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess("stash save");
             NeedRefresh = true;
             Initialize();
@@ -138,7 +130,7 @@ namespace GitUI
 
         private void Clear_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("Stash cleared\n" + GitCommands.GitCommands.StashClear(), "Stash");
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess("stash drop " + Stashes.Text);
             NeedRefresh = true;
             Initialize();
@@ -158,6 +150,7 @@ namespace GitUI
 
         private void Stashes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             InitializeSoft();
             if (Stashes.SelectedItem != null)
             {
@@ -167,6 +160,14 @@ namespace GitUI
 
         private void Refresh_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            Initialize();
+            InitializeTracked();
+        }
+
+        private void FormStash_Shown(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
             Initialize();
             InitializeTracked();
         }

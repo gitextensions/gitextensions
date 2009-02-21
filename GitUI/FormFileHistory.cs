@@ -23,12 +23,6 @@ namespace GitUI
 
         private void FormFileHistory_Load(object sender, EventArgs e)
         {
-            EditorOptions.SetSyntax(View, FileName);
-            
-            FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
-
-            BlameGrid.RowTemplate.Height = 15;
-
             this.Text = "File History (" + FileName + ")";
         }
 
@@ -39,6 +33,7 @@ namespace GitUI
 
         private void FileChanges_SelectionChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (FileChanges.SelectedRows.Count == 0) return;
 
             if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
@@ -102,14 +97,7 @@ namespace GitUI
 
         private void Blame_Click(object sender, EventArgs e)
         {
-            //if (FileChanges.SelectedRows.Count == 0) return;
-
-            //if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
-            //{
-            //    GitItem revision = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
-            //    BlameText.Text = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
-            //    BlameText.Refresh();
-            //}          
+         
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,6 +152,16 @@ namespace GitUI
                     e.Graphics.DrawString(blame.Author, BlameGrid.Font, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                 }
             }
+        }
+
+        private void FormFileHistory_Shown(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            EditorOptions.SetSyntax(View, FileName);
+
+            FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
+
+            BlameGrid.RowTemplate.Height = 15;
         }
     }
 }

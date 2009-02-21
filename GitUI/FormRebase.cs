@@ -89,8 +89,7 @@ namespace GitUI
 
         private void Resolved_Click(object sender, EventArgs e)
         {
-            //Output.Text += "\n";
-            //Output.Text += GitCommands.GitCommands.ContinueRebase();
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.ContinueRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
@@ -98,8 +97,7 @@ namespace GitUI
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            //Output.Text += "\n";
-            //Output.Text += GitCommands.GitCommands.SkipRebase();
+            Cursor.Current = Cursors.WaitCursor; 
             new FormProcess(GitCommands.GitCommands.SkipRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
@@ -107,8 +105,7 @@ namespace GitUI
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            //Output.Text += "\n";
-            //Output.Text += GitCommands.GitCommands.AbortRebase();
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.AbortRebaseCmd());
             EnableButtons();
             patchGrid1.Initialize();
@@ -116,6 +113,7 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(Branches.Text))
             {
                 MessageBox.Show("Please select a branch");

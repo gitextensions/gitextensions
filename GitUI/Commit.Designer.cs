@@ -623,6 +623,7 @@
             this.Name = "FormCommit";
             this.Text = "Commit";
             this.Load += new System.EventHandler(this.FormCommit_Load);
+            this.Shown += new System.EventHandler(this.FormCommit_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);

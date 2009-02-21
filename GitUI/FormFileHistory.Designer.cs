@@ -42,13 +42,13 @@
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
             this.Blame = new System.Windows.Forms.TabPage();
-            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.BlameGrid = new System.Windows.Forms.DataGridView();
-            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.eventLog1 = new System.Diagnostics.EventLog();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TextColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.eventLog1 = new System.Diagnostics.EventLog();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,10 +58,10 @@
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
             this.Blame.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BlameGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -198,15 +198,6 @@
             this.Blame.UseVisualStyleBackColor = true;
             this.Blame.Click += new System.EventHandler(this.Blame_Click);
             // 
-            // subItemsBindingSource
-            // 
-            this.subItemsBindingSource.DataMember = "SubItems";
-            this.subItemsBindingSource.DataSource = this.gitItemBindingSource1;
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
-            // 
             // BlameGrid
             // 
             this.BlameGrid.AllowUserToAddRows = false;
@@ -241,14 +232,6 @@
             this.BlameGrid.DoubleClick += new System.EventHandler(this.BlameGrid_DoubleClick);
             this.BlameGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.BlameGrid_CellPainting);
             // 
-            // gitBlameBindingSource
-            // 
-            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
-            // 
-            // eventLog1
-            // 
-            this.eventLog1.SynchronizingObject = this;
-            // 
             // authorDataGridViewTextBoxColumn
             // 
             this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -267,6 +250,23 @@
             this.TextColumn.Name = "TextColumn";
             this.TextColumn.ReadOnly = true;
             // 
+            // gitBlameBindingSource
+            // 
+            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
+            // 
+            // subItemsBindingSource
+            // 
+            this.subItemsBindingSource.DataMember = "SubItems";
+            this.subItemsBindingSource.DataSource = this.gitItemBindingSource1;
+            // 
+            // gitItemBindingSource
+            // 
+            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            // 
+            // eventLog1
+            // 
+            this.eventLog1.SynchronizingObject = this;
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,6 +278,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
             this.Load += new System.EventHandler(this.FormFileHistory_Load);
+            this.Shown += new System.EventHandler(this.FormFileHistory_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -287,10 +288,10 @@
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
             this.Blame.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BlameGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.ResumeLayout(false);
 

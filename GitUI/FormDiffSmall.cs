@@ -44,6 +44,7 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (DiffFiles.SelectedItem is Patch)
             {
                 {

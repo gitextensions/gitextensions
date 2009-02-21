@@ -18,8 +18,7 @@ namespace GitUI
         {
             InitializeComponent();
 
-            LoadSettings();
-            CheckSettings();
+
         }
 
         private void LoadSettings()
@@ -83,6 +82,7 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Save();
 
             Close();
@@ -497,6 +497,7 @@ namespace GitUI
 
         private void Rescan_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Save();
             CheckSettings();
         }
@@ -784,6 +785,13 @@ namespace GitUI
         private void ShowRevisionGraph_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void FormSettigns_Shown(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            LoadSettings();
+            CheckSettings();
         }
 
     }
