@@ -4,6 +4,14 @@ Changelog
 Version 1.50
 	Added double click on file in diff-tree in browse window
 	Process dialog is can now set to close automaticly when process succeeds
+	Added waitcursors
+	Option added to show the Git commandline dialog during a process
+	Revision graph can be disabled in settings
+	Added doubleclick in commit dialog
+	Added stage/unstage all buttons to commit dialog ("Files to commit" is now a dropdown menu)
+	Most windows are now shown before initializing, to show users that GitExtensions is busy
+	Added push and pull to the toolbar in the browse dialog
+	Added picture viewer to commit dialog
 
 Version 1.49
 	Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)

@@ -41,7 +41,7 @@ namespace GitUI
         {
             try
             {
-
+                Cursor.Current = Cursors.WaitCursor;
                 DiffFiles.DataSource = null;
                 if (RevisionGrid.GetRevisions().Count == 0) return;
 
@@ -102,6 +102,7 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (DiffFiles.SelectedItem is Patch)
             {
                 {

@@ -73,6 +73,12 @@
       <DependentUpon>Commit.cs</DependentUpon>
     </Compile>
     <Compile Include="EditorOptions.cs" />
+    <Compile Include="FileViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FileViewer.Designer.cs">
+      <DependentUpon>FileViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormAddFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -359,6 +365,9 @@
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileViewer.resx">
+      <DependentUpon>FileViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddFiles.resx">
       <DependentUpon>FormAddFiles.cs</DependentUpon>

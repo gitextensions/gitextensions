@@ -46,8 +46,9 @@ namespace GitUI
                 }
                 if (tabControl1.SelectedTab == ViewTab)
                 {
-                    View.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
-                    View.Refresh();
+                    View.ViewGitItem(FileName, revision.Guid);
+                    //View.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
+                    //View.Refresh();
                 }
             }
 
@@ -157,7 +158,7 @@ namespace GitUI
         private void FormFileHistory_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            EditorOptions.SetSyntax(View, FileName);
+            //EditorOptions.SetSyntax(View, FileName);
 
             FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
 

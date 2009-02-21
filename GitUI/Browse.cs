@@ -27,9 +27,11 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
-                    EditorOptions.SetSyntax(FileText, ((GitItem)item).FileName);
-                    FileText.Text = GitCommands.GitCommands.GetFileText(item.Guid);
-                    FileText.Refresh();
+                    FileText.ViewGitItem(((GitItem)item).FileName, item.Guid);
+                }
+                else
+                {
+                    FileText.ViewText("", "");
                 }
         }
 
@@ -614,19 +616,15 @@ namespace GitUI
                     return;
 
                 GitRevision revision = RevisionGrid.GetRevisions()[0];
-
                 Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
                 if (selectedPatch != null)
                 {
-                    //EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
-                    DiffText.SetHighlighting("Patch");
-                    DiffText.Text = selectedPatch.Text;
+                    DiffText.ViewPatch(selectedPatch.Text);
                 }
                 else
                 {
-                    DiffText.Text = "";
+                    DiffText.ViewText("", "");
                 }
-                DiffText.Refresh();
             }
         }
 

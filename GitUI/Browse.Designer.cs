@@ -38,25 +38,25 @@
             this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPull = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripButtonPull = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Tree = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
-            this.FileText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.FileText = new GitUI.FileViewer();
             this.Commit = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
-            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.DiffText = new GitUI.FileViewer();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -226,6 +226,26 @@
             this.toolStripButton1.Text = "Commit";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // toolStripButtonPull
+            // 
+            this.toolStripButtonPull.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPull.Image = global::GitUI.Properties.Resources._4;
+            this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPull.Name = "toolStripButtonPull";
+            this.toolStripButtonPull.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPull.Text = "Pull";
+            this.toolStripButtonPull.Click += new System.EventHandler(this.toolStripButtonPull_Click);
+            // 
+            // toolStripButtonPush
+            // 
+            this.toolStripButtonPush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources._31;
+            this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPush.Name = "toolStripButtonPush";
+            this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPush.Text = "Push";
+            this.toolStripButtonPush.Click += new System.EventHandler(this.toolStripButtonPush_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -267,26 +287,6 @@
             this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
             this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
             this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
-            // 
-            // toolStripButtonPull
-            // 
-            this.toolStripButtonPull.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPull.Image = global::GitUI.Properties.Resources._4;
-            this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPull.Name = "toolStripButtonPull";
-            this.toolStripButtonPull.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPull.Text = "Pull";
-            this.toolStripButtonPull.Click += new System.EventHandler(this.toolStripButtonPull_Click);
-            // 
-            // toolStripButtonPush
-            // 
-            this.toolStripButtonPush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources._31;
-            this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPush.Name = "toolStripButtonPush";
-            this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPush.Text = "Push";
-            this.toolStripButtonPush.Click += new System.EventHandler(this.toolStripButtonPush_Click);
             // 
             // splitContainer3
             // 
@@ -376,7 +376,6 @@
             // FileText
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileText.IsReadOnly = false;
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Name = "FileText";
             this.FileText.Size = new System.Drawing.Size(565, 253);
@@ -424,11 +423,10 @@
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IsReadOnly = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
             this.DiffText.Size = new System.Drawing.Size(567, 259);
-            this.DiffText.TabIndex = 1;
+            this.DiffText.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -941,7 +939,6 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem patchToolStripMenuItem;
-        private ICSharpCode.TextEditor.TextEditorControl FileText;
         private System.Windows.Forms.ToolStripMenuItem applyPatchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gitBashToolStripMenuItem;
@@ -995,10 +992,11 @@
         private System.Windows.Forms.TabPage Commit;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox DiffFiles;
-        private ICSharpCode.TextEditor.TextEditorControl DiffText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem changelogToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonPull;
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
+        private FileViewer FileText;
+        private FileViewer DiffText;
     }
 }

@@ -1926,6 +1926,59 @@ namespace GitCommands
             return RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + id + "\"");
         }
 
+        public static void StreamCopy(Stream input, Stream output)
+        {
+            int read = 0;
+            byte[] buffer = new byte[2048];
+            do
+            {
+                read = input.Read(buffer, 0, buffer.Length);
+                output.Write(buffer, 0, read);
+            } while (read > 0);
+        }
+
+
+
+        public static Stream GetFileStream(string id)
+        {
+            try
+            {
+                MemoryStream newStream = new MemoryStream();
+
+                SetEnvironmentVariable();
+
+                Settings.GitLog += Settings.GitDir + "git.cmd" + " " + "cat-file blob \"" + id + "\"" + "\n";
+                //process used to execute external commands
+
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.ErrorDialog = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = false;
+                process.StartInfo.RedirectStandardError = false;
+
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = "\"" + Settings.GitDir + "git.cmd" + "\"";
+                process.StartInfo.Arguments = "cat-file blob \"" + id + "\"";
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+
+                process.Start();
+
+                StreamCopy(process.StandardOutput.BaseStream, newStream);
+                
+                process.WaitForExit();
+
+                return newStream;
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
         public static string MergeBranch(string branch)
         {
             return RunCmd(Settings.GitDir + "git.cmd", MergeBranchCmd(branch));
