@@ -35,7 +35,9 @@
             this.ErrorImage = new System.Windows.Forms.PictureBox();
             this.Output = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -44,6 +46,9 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // Ok
@@ -116,7 +121,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.ProgressBar);
+            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
             // 
             // splitContainer2.Panel2
             // 
@@ -125,16 +130,46 @@
             this.splitContainer2.SplitterDistance = 480;
             this.splitContainer2.TabIndex = 0;
             // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.ProgressBar);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.KeepDialogOpen);
+            this.splitContainer3.Size = new System.Drawing.Size(480, 25);
+            this.splitContainer3.SplitterDistance = 356;
+            this.splitContainer3.TabIndex = 0;
+            // 
             // ProgressBar
             // 
             this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ProgressBar.Location = new System.Drawing.Point(0, 0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(480, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(356, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
+            // 
+            // KeepDialogOpen
+            // 
+            this.KeepDialogOpen.AutoSize = true;
+            this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
+            this.KeepDialogOpen.Name = "KeepDialogOpen";
+            this.KeepDialogOpen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.KeepDialogOpen.Size = new System.Drawing.Size(117, 17);
+            this.KeepDialogOpen.TabIndex = 3;
+            this.KeepDialogOpen.Text = "Do not close dialog";
+            this.KeepDialogOpen.UseVisualStyleBackColor = true;
+            this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
+            this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
             // 
             // FormProcess
             // 
@@ -156,6 +191,10 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.Panel2.PerformLayout();
+            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -169,5 +208,7 @@
         private System.Windows.Forms.RichTextBox Output;
         private System.Windows.Forms.PictureBox ErrorImage;
         private System.Windows.Forms.PictureBox SuccessImage;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.CheckBox KeepDialogOpen;
     }
 }
