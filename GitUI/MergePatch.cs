@@ -102,6 +102,7 @@ namespace GitUI
 
         private void Apply_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
                 MessageBox.Show("Please select a patch to apply");
@@ -127,19 +128,21 @@ namespace GitUI
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.SkipCmd());
             EnableButtons();
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.ResolvedCmd());
             EnableButtons();
         }
 
         private void Abort_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.AbortCmd());
             EnableButtons();
         }

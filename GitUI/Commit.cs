@@ -27,9 +27,6 @@ namespace GitUI
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            Initialize();
-            this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
-            Message.Text = GitCommands.GitCommands.GetMergeMessage();
 
         }
 
@@ -45,6 +42,7 @@ namespace GitUI
 
         private void Initialize()
         {
+            Cursor.Current = Cursors.WaitCursor;
             SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
             //Load unstaged files
@@ -138,16 +136,6 @@ namespace GitUI
             {
                 new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "'"), amend));
 
-                //OutPut.Text = "";
-
-                //CommitDto dto = new CommitDto(Message.Text, amend);
-                //GitCommands.Commit commit = new GitCommands.Commit(dto);
-                //commit.Execute();
-
-                //if (OutPut.Text.Length == 0)
-                //    OutPut.Text = "Command executed \n";
-
-                //OutPut.Text += dto.Result;
 
                 NeedRefresh = true;
 
@@ -171,6 +159,7 @@ namespace GitUI
 
         private void Stage(IList rows)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Loading.Visible = true;
             progressBar.Visible = true;
             progressBar.Maximum = Unstaged.SelectedRows.Count * 2;
@@ -210,7 +199,7 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
-
+            Cursor.Current = Cursors.WaitCursor;
             if (Staged.SelectedRows.Count == Staged.RowCount)
             {
                 OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
@@ -297,6 +286,7 @@ namespace GitUI
 
         private void Amend_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
@@ -412,6 +402,13 @@ namespace GitUI
                     new FormFileHistory(((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem).Name).ShowDialog();
                 }
             }
+        }
+
+        private void FormCommit_Shown(object sender, EventArgs e)
+        {
+            Initialize();
+            this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
+            Message.Text = GitCommands.GitCommands.GetMergeMessage();
         }
     }
 }

@@ -35,8 +35,7 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
-
-
+            Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
         }
@@ -58,6 +57,7 @@ namespace GitUI
 
         private void InternalInitialize(bool hard)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = selectedHead;
 
