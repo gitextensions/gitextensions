@@ -57,6 +57,7 @@ namespace GitUI
 
             CloseProcessDialog.Checked = GitCommands.Settings.CloseProcessDialog;
             ShowRevisionGraph.Checked = GitCommands.Settings.ShowRevisionGraph;
+            ShowGitCommandLine.Checked = GitCommands.Settings.ShowGitCommandLine;
 
             if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
                 OpenSSH.Checked = true;
@@ -101,6 +102,8 @@ namespace GitUI
 
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
+            GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+            
 
             if (KeepMergeBackup.Checked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");

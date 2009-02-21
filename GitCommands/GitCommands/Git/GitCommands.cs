@@ -182,7 +182,7 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.RedirectStandardError = true;
 
-            Process.StartInfo.CreateNoWindow = !ssh;
+            Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             Process.StartInfo.FileName = "\"" + cmd + "\"";
             Process.StartInfo.Arguments = arguments;
             Process.StartInfo.WorkingDirectory = Settings.WorkingDir;

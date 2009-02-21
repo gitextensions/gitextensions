@@ -54,6 +54,7 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
             this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
@@ -103,7 +104,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
+            this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -403,6 +404,7 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
             this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
             this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
             this.TabPageGitExtensions.Controls.Add(this.BrowseGitBinPath);
@@ -420,6 +422,18 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // ShowRevisionGraph
+            // 
+            this.ShowRevisionGraph.AutoSize = true;
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(135, 162);
+            this.ShowRevisionGraph.Name = "ShowRevisionGraph";
+            this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowRevisionGraph.Size = new System.Drawing.Size(186, 17);
+            this.ShowRevisionGraph.TabIndex = 10;
+            this.ShowRevisionGraph.Text = "Show revision graph in commit log";
+            this.ShowRevisionGraph.UseVisualStyleBackColor = true;
+            this.ShowRevisionGraph.CheckedChanged += new System.EventHandler(this.ShowRevisionGraph_CheckedChanged);
             // 
             // CloseProcessDialog
             // 
@@ -932,17 +946,16 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
-            // ShowRevisionGraph
+            // ShowGitCommandLine
             // 
-            this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(135, 140);
-            this.ShowRevisionGraph.Name = "ShowRevisionGraph";
-            this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowRevisionGraph.Size = new System.Drawing.Size(186, 17);
-            this.ShowRevisionGraph.TabIndex = 10;
-            this.ShowRevisionGraph.Text = "Show revision graph in commit log";
-            this.ShowRevisionGraph.UseVisualStyleBackColor = true;
-            this.ShowRevisionGraph.CheckedChanged += new System.EventHandler(this.ShowRevisionGraph_CheckedChanged);
+            this.ShowGitCommandLine.AutoSize = true;
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(38, 139);
+            this.ShowGitCommandLine.Name = "ShowGitCommandLine";
+            this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowGitCommandLine.Size = new System.Drawing.Size(283, 17);
+            this.ShowGitCommandLine.TabIndex = 11;
+            this.ShowGitCommandLine.Text = "Show Git commandline dialog when executing process";
+            this.ShowGitCommandLine.UseVisualStyleBackColor = true;
             // 
             // FormSettigns
             // 
@@ -1057,6 +1070,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox CloseProcessDialog;
         private System.Windows.Forms.CheckBox ShowRevisionGraph;
+        private System.Windows.Forms.CheckBox ShowGitCommandLine;
 
     }
 }

@@ -9,6 +9,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static bool showGitCommandLine = false;
+        public static bool ShowGitCommandLine
+        {
+            get
+            {
+                return showGitCommandLine;
+            }
+            set
+            {
+                showGitCommandLine = value;
+            }
+        }
+
 
         private static bool showRevisionGraph = true;
         public static bool ShowRevisionGraph
@@ -22,9 +35,6 @@ namespace GitCommands
                 showRevisionGraph = value;
             }
         }
-
-
-
 
         private static bool closeProcessDialog = false;
         public static bool CloseProcessDialog
