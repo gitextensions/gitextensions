@@ -49,6 +49,7 @@
             this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
+            this.Clone = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.Init = new System.Windows.Forms.Button();
             this.GitIgnore = new System.Windows.Forms.Button();
@@ -58,7 +59,7 @@
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Clone = new System.Windows.Forms.Button();
+            this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -144,9 +145,10 @@
             this.revertCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.ShowRemoteBranches,
-            this.showAllBranchesToolStripMenuItem});
+            this.showAllBranchesToolStripMenuItem,
+            this.showRevisionGraphToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 148);
+            this.CreateTag.Size = new System.Drawing.Size(224, 192);
             // 
             // createTagToolStripMenuItem
             // 
@@ -237,6 +239,16 @@
             this.NoGit.Size = new System.Drawing.Size(585, 204);
             this.NoGit.TabIndex = 4;
             // 
+            // Clone
+            // 
+            this.Clone.Location = new System.Drawing.Point(329, 35);
+            this.Clone.Name = "Clone";
+            this.Clone.Size = new System.Drawing.Size(143, 23);
+            this.Clone.TabIndex = 2;
+            this.Clone.Text = "Clone existing repository";
+            this.Clone.UseVisualStyleBackColor = true;
+            this.Clone.Click += new System.EventHandler(this.Clone_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -323,15 +335,12 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // Clone
+            // showRevisionGraphToolStripMenuItem
             // 
-            this.Clone.Location = new System.Drawing.Point(329, 35);
-            this.Clone.Name = "Clone";
-            this.Clone.Size = new System.Drawing.Size(143, 23);
-            this.Clone.TabIndex = 2;
-            this.Clone.Text = "Clone existing repository";
-            this.Clone.UseVisualStyleBackColor = true;
-            this.Clone.Click += new System.EventHandler(this.Clone_Click);
+            this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
+            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
+            this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.showRevisionGraphToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -387,5 +396,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
         private System.Windows.Forms.Button Clone;
+        private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
     }
 }
