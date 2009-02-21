@@ -36,7 +36,7 @@ namespace GitCommands
             }
         }
 
-        private static bool closeProcessDialog = false;
+        private static bool closeProcessDialog = true;
         public static bool CloseProcessDialog
         {
             get

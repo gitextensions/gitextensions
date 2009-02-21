@@ -19,6 +19,7 @@ namespace GitUI
             ProcessString = process;
             ProcessArguments = arguments;
             Remote = remote;
+            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
 
             ShowDialog();
         }
@@ -29,6 +30,7 @@ namespace GitUI
 
             ProcessString = process;
             ProcessArguments = arguments;
+            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
 
             ShowDialog();
         }
@@ -39,6 +41,7 @@ namespace GitUI
 
             ProcessString = GitCommands.Settings.GitDir + "git.cmd";
             ProcessArguments = arguments;
+            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
 
             ShowDialog();
         }
@@ -261,6 +264,19 @@ namespace GitUI
             catch
             {
             }            
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+        }
+
+        private void KeepDialogOpen_Click(object sender, EventArgs e)
+        {
         }
     }
 }
