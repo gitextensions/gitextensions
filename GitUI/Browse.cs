@@ -154,7 +154,6 @@ namespace GitUI
                 DiffFiles.DisplayMember = "FileNameB";
 
                 DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
-                DiffFiles.Sorted = true;
             }
         }
 

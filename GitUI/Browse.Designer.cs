@@ -416,6 +416,7 @@
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
             this.DiffFiles.Size = new System.Drawing.Size(217, 251);
+            this.DiffFiles.Sorted = true;
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
