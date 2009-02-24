@@ -1164,7 +1164,8 @@ namespace GitCommands
             List<string> retVal = new List<string>();
             foreach (string s in files)
             {
-                retVal.Add(s);
+                if (!string.IsNullOrEmpty(s))
+                    retVal.Add(s);
             }
 
             return retVal;
@@ -1179,7 +1180,8 @@ namespace GitCommands
             List<string> retVal = new List<string>();
             foreach (string s in files)
             {
-                retVal.Add(s);
+                if (!string.IsNullOrEmpty(s))
+                    retVal.Add(s);
             }
 
             return retVal;
