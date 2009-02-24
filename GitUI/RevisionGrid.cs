@@ -8,11 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace GitUI
 {
     public partial class RevisionGrid : UserControl
     {
+        IndexWatcher indexWatcher = new IndexWatcher();
+
         public RevisionGrid()
         {
             base.InitLayout();
@@ -110,6 +113,12 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
+            if (indexWatcher.IndexChanged())
+                ForceRefreshRevisions();
+        }
+
+        private void ForceRefreshRevisions()
+        {
             try
             {
                 if (Settings.ShowRevisionGraph)
@@ -152,7 +161,7 @@ namespace GitUI
                 //Revisions.ScrollBars = ScrollBars.None;
                 Revisions.RowCount = 0;
                 Revisions.RowCount = Math.Max(Revisions.DisplayedRowCount(true), GitCommands.Settings.MaxCommits);
-                    
+
                 currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
                 ScrollBarSet = false;
                 InternalRefresh();
@@ -219,6 +228,7 @@ namespace GitUI
 
             Revisions.Enabled = false;
             Loading.Visible = true;
+            indexWatcher.Reset();
             revisionGraphCommand = new RevisionGraph();
             string grep = "";
             if (!string.IsNullOrEmpty(Filter))

@@ -161,12 +161,12 @@
             // KeepDialogOpen
             // 
             this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
+            this.KeepDialogOpen.Location = new System.Drawing.Point(8, 5);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
             this.KeepDialogOpen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.KeepDialogOpen.Size = new System.Drawing.Size(117, 17);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(109, 17);
             this.KeepDialogOpen.TabIndex = 3;
-            this.KeepDialogOpen.Text = "Do not close dialog";
+            this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
             this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
             this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);

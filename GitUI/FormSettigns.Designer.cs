@@ -105,6 +105,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
+            this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -404,6 +405,7 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.UseFastChecks);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
             this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
             this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
@@ -957,6 +959,17 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
+            // UseFastChecks
+            // 
+            this.UseFastChecks.AutoSize = true;
+            this.UseFastChecks.Location = new System.Drawing.Point(67, 185);
+            this.UseFastChecks.Name = "UseFastChecks";
+            this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.UseFastChecks.Size = new System.Drawing.Size(254, 17);
+            this.UseFastChecks.TabIndex = 12;
+            this.UseFastChecks.Text = "Use fast checks, performs better but is less save";
+            this.UseFastChecks.UseVisualStyleBackColor = true;
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1072,6 +1085,7 @@
         private System.Windows.Forms.CheckBox CloseProcessDialog;
         private System.Windows.Forms.CheckBox ShowRevisionGraph;
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
+        private System.Windows.Forms.CheckBox UseFastChecks;
 
     }
 }

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.51
+	Staging/unstaging is much faster
+	Whitespaces are ignored in blame view
+	Settings dialog starts up faster
+
 Version 1.50
 	Added double click on file in diff-tree in browse window
 	Process dialog is can now set to close automaticly when process succeeds

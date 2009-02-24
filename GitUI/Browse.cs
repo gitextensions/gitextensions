@@ -57,6 +57,8 @@ namespace GitUI
             }
         }
 
+        IndexWatcher indexWatcher = new IndexWatcher();
+
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -125,9 +127,13 @@ namespace GitUI
 
         private void ShowRevisions()
         {
-            RevisionGrid.RefreshRevisions();
-            FillFileTree();
-            FillDiff();
+            if (indexWatcher.IndexChanged())
+            {
+                indexWatcher.Reset();
+                RevisionGrid.RefreshRevisions();
+                FillFileTree();
+                FillDiff();
+            }
         }
 
         private void FillFileTree()
@@ -310,6 +316,7 @@ namespace GitUI
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            indexWatcher.Clear();
             Initialize();
         }
 
@@ -548,6 +555,7 @@ namespace GitUI
         private void manageRemoteRepositoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormRemotes().ShowDialog();
+            Initialize();
         }
 
         private void rebaseToolStripMenuItem_Click(object sender, EventArgs e)
