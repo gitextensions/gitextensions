@@ -58,6 +58,8 @@ namespace GitUI
             ShowRevisionGraph.Checked = GitCommands.Settings.ShowRevisionGraph;
             ShowGitCommandLine.Checked = GitCommands.Settings.ShowGitCommandLine;
 
+            UseFastChecks.Checked = GitCommands.Settings.UseFastChecks;
+
             if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
                 OpenSSH.Checked = true;
             else
@@ -103,6 +105,8 @@ namespace GitUI
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
             GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+
+            GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
             
 
             if (KeepMergeBackup.Checked)

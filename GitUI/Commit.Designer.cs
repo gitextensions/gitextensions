@@ -61,6 +61,7 @@
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.SelectedDiff = new GitUI.FileViewer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.RichTextBox();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.SelectedDiff = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -323,7 +323,7 @@
             // 
             this.progressBar.Location = new System.Drawing.Point(125, 1);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(262, 23);
+            this.progressBar.Size = new System.Drawing.Size(262, 25);
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
@@ -407,6 +407,7 @@
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
+            this.Staged.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Staged_CellContentClick);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -450,6 +451,14 @@
             this.splitContainer3.Size = new System.Drawing.Size(502, 648);
             this.splitContainer3.SplitterDistance = 371;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // SelectedDiff
+            // 
+            this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
+            this.SelectedDiff.Name = "SelectedDiff";
+            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
+            this.SelectedDiff.TabIndex = 0;
             // 
             // splitContainer6
             // 
@@ -602,14 +611,6 @@
             this.OutPut.Size = new System.Drawing.Size(364, 134);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
-            // 
-            // SelectedDiff
-            // 
-            this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
-            this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
-            this.SelectedDiff.TabIndex = 0;
             // 
             // FormCommit
             // 

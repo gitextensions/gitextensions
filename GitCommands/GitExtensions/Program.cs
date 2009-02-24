@@ -31,11 +31,14 @@ namespace GitExtensions
                     }
                 }
 
+                
+
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.GitCommands.SetSsh( Application.UserAppDataRegistry.GetValue("gitssh").ToString() );
                 if (Application.UserAppDataRegistry.GetValue("plink") != null) GitCommands.Settings.Plink = Application.UserAppDataRegistry.GetValue("plink").ToString();
                 if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
+                if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) GitCommands.Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) GitCommands.Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) GitCommands.Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) GitCommands.Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
@@ -239,8 +242,10 @@ namespace GitExtensions
                 Application.UserAppDataRegistry.SetValue("showallbranches", GitCommands.Settings.ShowAllBranches);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", GitCommands.Settings.CloseProcessDialog);
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", GitCommands.Settings.ShowRevisionGraph);
+             
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", GitCommands.Settings.ShowGitCommandLine);
-                
+                Application.UserAppDataRegistry.SetValue("usefastchecks", GitCommands.Settings.UseFastChecks);
+
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());
 
                 Application.UserAppDataRegistry.SetValue("plink", GitCommands.Settings.Plink);

@@ -2,7 +2,7 @@ How to compile GitExtensions
 ============================
 
 -Open the solution file (\GitCommands\GitCommands.sln)
--First remove singing from the projects
+-First remove signing from the projects
 -Compile SimpleShlExt in release for 64bit windows
 -Compile SimpleShlExt in release for 32bit windows
 -Compile entire solution in release, mixed platforms

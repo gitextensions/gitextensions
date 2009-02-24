@@ -316,6 +316,7 @@
     <Compile Include="GitLogForm.Designer.cs">
       <DependentUpon>GitLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="MergePatch.cs">
       <SubType>Form</SubType>

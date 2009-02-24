@@ -344,8 +344,10 @@ namespace GitCommands
 
         static public bool InTheMiddleOfConflictedMerge()
         {
-            //return RunCmd(Settings.GitDir + "git.cmd", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
-            return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));
+            if (Settings.UseFastChecks)
+                return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));            
+            else
+                return RunCmd(Settings.GitDir + "git.cmd", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
         }
 
         static public List<GitItem> GetConflictedFiles()
@@ -1296,6 +1298,15 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
+        static public bool FileIsStaged(string filename)
+        {
+            string status = RunCmd(Settings.GitDir + "git.cmd", "diff --cached --numstat -- \"" + filename + "\"");
+            if (string.IsNullOrEmpty(status))
+                return false;
+            return 
+                true;
+        }
+
         static public List<GitItemStatus> GetStagedFiles()
         {
             string status = RunCmd(Settings.GitDir + "git.cmd", "diff --cached --name-status");
@@ -1305,7 +1316,7 @@ namespace GitCommands
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 status = RunCmd(Settings.GitDir + "git.cmd", "status --untracked-files=no");
-
+                    
                 string[] statusStrings = status.Split('\n');
 
                 foreach (string statusString in statusStrings)

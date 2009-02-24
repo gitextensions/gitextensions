@@ -43,13 +43,20 @@ namespace GitUI
         private void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
-            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
             gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd);
             Loading.Visible = true;
             AddFiles.Enabled = false;
+
+            InitializedStaged();
+        }
+
+        private void InitializedStaged()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
             //Load staged files
             List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
@@ -163,30 +170,52 @@ namespace GitUI
 
         private void Stage(IList rows)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Loading.Visible = true;
-            progressBar.Visible = true;
-            progressBar.Maximum = Unstaged.SelectedRows.Count * 2;
-            progressBar.Value = 0;
-
-            List<GitItemStatus> files = new List<GitItemStatus>();
-
-            foreach (DataGridViewRow row in rows)
+            try
             {
-                if (row.DataBoundItem is GitItemStatus)
+                Cursor.Current = Cursors.WaitCursor;
+                //Loading.Visible = true;
+                progressBar.Visible = true;
+                progressBar.Maximum = Unstaged.SelectedRows.Count * 2;
+                progressBar.Value = 0;
+
+                List<GitItemStatus> files = new List<GitItemStatus>();
+
+                foreach (DataGridViewRow row in rows)
                 {
-                    progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-                    files.Add(item);
+                    if (row.DataBoundItem is GitItemStatus)
+                    {
+                        progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                        GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                        files.Add(item);
+                    }
                 }
+
+                OutPut.Text = GitCommands.GitCommands.StageFiles(files);
+
+                InitializedStaged();
+                List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.DataSource;
+                List<GitItemStatus> unStagedFiles = (List<GitItemStatus>)Unstaged.DataSource;
+                Unstaged.DataSource = null;
+
+                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name));
+                /*foreach (GitItemStatus item in files)
+                {
+                    if (stagedFiles.Exists(i => i.Name == item.Name))
+                    {
+                        if (unStagedFiles.Contains(item))
+                            unStagedFiles.RemoveAll(i => stagedFiles.Exists(i => i.Name == item.Name));
+                    }
+                }*/
+                Unstaged.DataSource = unStagedFiles;
+
+                progressBar.Value = progressBar.Maximum;
+
+                //Initialize();
+                progressBar.Visible = false;
             }
-
-            OutPut.Text = GitCommands.GitCommands.StageFiles(files);
-
-            progressBar.Value = progressBar.Maximum;
-
-            Initialize();
-            progressBar.Visible = false;
+            catch
+            {
+            }
         }
 
         private void Reset_Click(object sender, EventArgs e)
@@ -203,43 +232,74 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if (Staged.SelectedRows.Count == Staged.RowCount)
+            try
             {
-                OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
-            } else
-            {
-                Loading.Visible = true;
-                progressBar.Visible = true;
-                progressBar.Maximum = Staged.SelectedRows.Count * 2;
-                progressBar.Value = 0;
-
-                List<GitItemStatus> files = new List<GitItemStatus>();
-                string result = "";
-                foreach (DataGridViewRow row in Staged.SelectedRows)
+                Cursor.Current = Cursors.WaitCursor;
+                if (Staged.SelectedRows.Count == Staged.RowCount && Staged.RowCount > 10)
                 {
-                    if (row.DataBoundItem is GitItemStatus)
+                    Loading.Visible = true;
+                    OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
+                    Initialize();
+                }
+                else
+                {
+                    //Loading.Visible = true;
+                    progressBar.Visible = true;
+                    progressBar.Maximum = Staged.SelectedRows.Count * 2;
+                    progressBar.Value = 0;
+
+                    List<GitItemStatus> files = new List<GitItemStatus>();
+                    List<GitItemStatus> allFiles = new List<GitItemStatus>();
+                    string result = "";
+
+                    foreach (DataGridViewRow row in Staged.SelectedRows)
                     {
-                        progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                        GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-                        if (!item.IsNew)
+                        if (row.DataBoundItem is GitItemStatus)
                         {
                             progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
-                            result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
-                        }
-                        else
-                        {
-                            files.Add(item);
+                            GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                            if (!item.IsNew)
+                            {
+                                progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                                result = GitCommands.GitCommands.UnstageFileToRemove(item.Name);
+                            }
+                            else
+                            {
+                                files.Add(item);
+                            }
+                            allFiles.Add(item);
+
                         }
                     }
+
+                    OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
+
+                    InitializedStaged();
+                    List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.DataSource;
+                    List<GitItemStatus> unStagedFiles = (List<GitItemStatus>)Unstaged.DataSource;
+                    Unstaged.DataSource = null;
+                    foreach (GitItemStatus item in allFiles)
+                    {
+                        if (!stagedFiles.Exists(i => i.Name == item.Name))
+                        {
+                            if (!unStagedFiles.Exists(i => i.Name == item.Name))
+                            {
+                                item.IsTracked = false;
+                                unStagedFiles.Add(item);
+                            }
+                        }
+                    }
+                    Staged.DataSource = stagedFiles;
+                    Unstaged.DataSource = unStagedFiles;
+
+                    progressBar.Value = progressBar.Maximum;
                 }
-
-                OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
-
-                progressBar.Value = progressBar.Maximum;
+                //Initialize();
+                progressBar.Visible = false;
             }
-            Initialize();
-            progressBar.Visible = false;
+            catch
+            {
+            }
 
         }
 
@@ -396,6 +456,11 @@ namespace GitUI
             Initialize();
             this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
+        }
+
+        private void Staged_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

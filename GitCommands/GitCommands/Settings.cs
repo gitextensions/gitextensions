@@ -22,6 +22,18 @@ namespace GitCommands
             }
         }
 
+        private static bool useFastChecks = true;
+        public static bool UseFastChecks
+        {
+            get
+            {
+                return useFastChecks;
+            }
+            set
+            {
+                useFastChecks = value;
+            }
+        }
 
         private static bool showRevisionGraph = true;
         public static bool ShowRevisionGraph
@@ -36,7 +48,7 @@ namespace GitCommands
             }
         }
 
-        private static bool closeProcessDialog = true;
+        private static bool closeProcessDialog = false;
         public static bool CloseProcessDialog
         {
             get
