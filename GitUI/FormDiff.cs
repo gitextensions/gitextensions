@@ -41,7 +41,6 @@ namespace GitUI
         {
             try
             {
-                DiffFiles.Sorted = true;
                 Cursor.Current = Cursors.WaitCursor;
                 DiffFiles.DataSource = null;
                 if (RevisionGrid.GetRevisions().Count == 0) return;
