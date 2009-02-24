@@ -1869,7 +1869,7 @@ namespace GitCommands
         {
             from = FixPath(from);
             filename = FixPath(filename);
-            string[] itemsStrings = RunCmd(Settings.GitDir + "git.cmd", "blame -l \"" + from + "\" \"" + filename + "\"").Split('\n');
+            string[] itemsStrings = RunCmd(Settings.GitDir + "git.cmd", "blame -M -w -l \"" + from + "\" \"" + filename + "\"").Split('\n');
 
             List<GitBlame> items = new List<GitBlame>();
 
