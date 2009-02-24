@@ -137,6 +137,7 @@ namespace GitUI
                 GitTree.Nodes.Clear();
                 if (RevisionGrid.GetRevisions().Count > 0)
                     LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
+                GitTree.Sort();
             }
         }
 
@@ -153,6 +154,7 @@ namespace GitUI
                 DiffFiles.DisplayMember = "FileNameB";
 
                 DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                DiffFiles.Sorted = true;
             }
         }
 
