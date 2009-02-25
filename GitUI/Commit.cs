@@ -42,6 +42,11 @@ namespace GitUI
 
         private void Initialize()
         {
+            UnstageFiles.Enabled = false;
+            AddFiles.Enabled = false;
+            filesListedToCommitToolStripMenuItem.Enabled = false;
+            workingToolStripMenuItem.Enabled = false;
+
             Cursor.Current = Cursors.WaitCursor;
 
             //Load unstaged files
@@ -70,6 +75,11 @@ namespace GitUI
             Unstaged.DataSource = GitCommands.GitCommands.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
             Loading.Visible = false;
             AddFiles.Enabled = true;
+
+            UnstageFiles.Enabled = true;
+            AddFiles.Enabled = true;
+            filesListedToCommitToolStripMenuItem.Enabled = true;
+            workingToolStripMenuItem.Enabled = true;
         }
 
         void gitCommands_Exited(object sender, EventArgs e)
@@ -170,6 +180,8 @@ namespace GitUI
 
         private void Stage(IList rows)
         {
+            UnstageFiles.Enabled = false;
+            AddFiles.Enabled = false;
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -216,6 +228,8 @@ namespace GitUI
             catch
             {
             }
+            UnstageFiles.Enabled = true;
+            AddFiles.Enabled = true;
         }
 
         private void Reset_Click(object sender, EventArgs e)
@@ -232,6 +246,8 @@ namespace GitUI
 
         private void UnstageFiles_Click(object sender, EventArgs e)
         {
+            UnstageFiles.Enabled = false;
+            AddFiles.Enabled = false;
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -300,6 +316,8 @@ namespace GitUI
             catch
             {
             }
+            UnstageFiles.Enabled = true;
+            AddFiles.Enabled = true;
 
         }
 
