@@ -54,6 +54,7 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
             this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
@@ -105,7 +106,6 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -425,6 +425,17 @@
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // UseFastChecks
+            // 
+            this.UseFastChecks.AutoSize = true;
+            this.UseFastChecks.Location = new System.Drawing.Point(46, 185);
+            this.UseFastChecks.Name = "UseFastChecks";
+            this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.UseFastChecks.Size = new System.Drawing.Size(275, 17);
+            this.UseFastChecks.TabIndex = 12;
+            this.UseFastChecks.Text = "Use FileSystemWatcher to check if index is changed";
+            this.UseFastChecks.UseVisualStyleBackColor = true;
+            // 
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
@@ -529,7 +540,7 @@
             this.MaxCommits.Size = new System.Drawing.Size(123, 20);
             this.MaxCommits.TabIndex = 2;
             this.MaxCommits.Value = new decimal(new int[] {
-            2000,
+            1000,
             0,
             0,
             0});
@@ -958,17 +969,6 @@
             this.directorySearcher2.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
-            // 
-            // UseFastChecks
-            // 
-            this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(67, 185);
-            this.UseFastChecks.Name = "UseFastChecks";
-            this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.UseFastChecks.Size = new System.Drawing.Size(254, 17);
-            this.UseFastChecks.TabIndex = 12;
-            this.UseFastChecks.Text = "Use fast checks, performs better but is less save";
-            this.UseFastChecks.UseVisualStyleBackColor = true;
             // 
             // FormSettigns
             // 

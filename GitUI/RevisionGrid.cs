@@ -717,11 +717,6 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        private void Init_Click(object sender, EventArgs e)
-        {
-            new FormInit().ShowDialog();
-            RefreshRevisions();
-        }
 
         private void ShowRemoteBranches_Click(object sender, EventArgs e)
         {
@@ -758,10 +753,6 @@ namespace GitUI
             }
         }
 
-        private void Clone_Click(object sender, EventArgs e)
-        {
-            new FormClone().ShowDialog();
-        }
 
         private void showRevisionGraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -769,5 +760,6 @@ namespace GitUI
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             RefreshRevisions();
         }
+
     }
 }

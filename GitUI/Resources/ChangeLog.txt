@@ -6,6 +6,8 @@ Version 1.51
 	Whitespaces are ignored in blame view
 	Settings dialog starts up faster
 	Added sorting
+	FileSystemWatcher is used to check if index is changed
+	Menu's are disabled when not in a repository
 
 Version 1.50
 	Added double click on file in diff-tree in browse window

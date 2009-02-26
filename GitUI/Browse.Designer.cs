@@ -112,6 +112,11 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.NoGit = new System.Windows.Forms.Panel();
+            this.Open = new System.Windows.Forms.Button();
+            this.Clone = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Init = new System.Windows.Forms.Button();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -131,6 +136,7 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
+            this.NoGit.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -297,6 +303,7 @@
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.NoGit);
             this.splitContainer3.Panel1.Controls.Add(this.RevisionGrid);
             // 
             // splitContainer3.Panel2
@@ -874,6 +881,57 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // NoGit
+            // 
+            this.NoGit.Controls.Add(this.Open);
+            this.NoGit.Controls.Add(this.Clone);
+            this.NoGit.Controls.Add(this.label2);
+            this.NoGit.Controls.Add(this.Init);
+            this.NoGit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NoGit.Location = new System.Drawing.Point(0, 0);
+            this.NoGit.Name = "NoGit";
+            this.NoGit.Size = new System.Drawing.Size(796, 230);
+            this.NoGit.TabIndex = 1;
+            // 
+            // Open
+            // 
+            this.Open.Location = new System.Drawing.Point(325, 14);
+            this.Open.Name = "Open";
+            this.Open.Size = new System.Drawing.Size(143, 23);
+            this.Open.TabIndex = 7;
+            this.Open.Text = "Open existing repository";
+            this.Open.UseVisualStyleBackColor = true;
+            this.Open.Click += new System.EventHandler(this.Open_Click);
+            // 
+            // Clone
+            // 
+            this.Clone.Location = new System.Drawing.Point(325, 43);
+            this.Clone.Name = "Clone";
+            this.Clone.Size = new System.Drawing.Size(143, 23);
+            this.Clone.TabIndex = 6;
+            this.Clone.Text = "Clone existing repository";
+            this.Clone.UseVisualStyleBackColor = true;
+            this.Clone.Click += new System.EventHandler(this.Clone_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(24, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(218, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "The current working dir is not a git repository.";
+            // 
+            // Init
+            // 
+            this.Init.Location = new System.Drawing.Point(325, 72);
+            this.Init.Name = "Init";
+            this.Init.Size = new System.Drawing.Size(143, 23);
+            this.Init.TabIndex = 4;
+            this.Init.Text = "Initialize new repository";
+            this.Init.UseVisualStyleBackColor = true;
+            this.Init.Click += new System.EventHandler(this.Init_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -910,6 +968,8 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
+            this.NoGit.ResumeLayout(false);
+            this.NoGit.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -999,5 +1059,10 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
         private FileViewer FileText;
         private FileViewer DiffText;
+        private System.Windows.Forms.Panel NoGit;
+        private System.Windows.Forms.Button Open;
+        private System.Windows.Forms.Button Clone;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button Init;
     }
 }

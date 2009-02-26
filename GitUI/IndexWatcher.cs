@@ -61,8 +61,11 @@ namespace GitUI
 
         void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            IndexChanged = true;
-            OnChanged();
+            if (e.Name != "config.lock" && e.Name != "config")
+            {
+                IndexChanged = true;
+                OnChanged();
+            }
         }
 
         public void Reset()
