@@ -291,27 +291,31 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_refresh_dirty {
+            get {
+                object obj = ResourceManager.GetObject("arrow_refresh_dirty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///Version 1.51
+        ///	Staging/unstaging is much faster
+        ///	Whitespaces are ignored in blame view
+        ///	Settings dialog starts up faster
+        ///	Added sorting
+        ///
         ///Version 1.50
         ///	Added double click on file in diff-tree in browse window
         ///	Process dialog is can now set to close automaticly when process succeeds
-        ///
-        ///Version 1.49
-        ///	Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)
-        ///	
-        ///Version 1.48
-        ///	Added ChangeLog
-        ///
-        ///Version 1.47
-        ///	Commit count per user now counts all branches
-        ///	Fixed bug that local settings could not be saved
-        ///	Fixed bug that remote branches could not be saved
-        ///
-        ///Version 1.45
-        ///	No more taskbar te [rest of string was truncated]&quot;;.
+        ///	Added waitcursors
+        ///	Option added to show the Git commandline dialog during a process
+        ///	Revision graph can be disabled in settings
+        ///	Added doubleclick in commit dialog
+        ///	Added stage/unstage all butt [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

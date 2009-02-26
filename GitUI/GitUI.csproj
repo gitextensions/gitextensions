@@ -560,6 +560,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />
     <None Include="Icons\merge.png" />
     <None Include="Icons\fetch.png" />

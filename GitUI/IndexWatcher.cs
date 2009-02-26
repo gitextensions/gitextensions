@@ -7,42 +7,80 @@ namespace GitUI
 {
     public class IndexWatcher
     {
-        public DateTime IndexTime { get; set; }
-        public long IndexSize { get; set; }
-
-
-
-        private void SetIndexTime()
+        public IndexWatcher()
         {
-            FileInfo fileInfo = new FileInfo(GitCommands.Settings.WorkingDirGitDir() + "\\index");
-            if (fileInfo.Exists)
+            if (FileSystemWatcher == null)
             {
-                IndexTime = fileInfo.LastWriteTimeUtc;
-                IndexSize = fileInfo.Length;
+                FileSystemWatcher = new FileSystemWatcher();
+                SetFileSystemWatcher();
+            }
+
+            IndexChanged = true;
+            FileSystemWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
+        }
+
+        private void SetFileSystemWatcher()
+        {
+            if (!string.IsNullOrEmpty(GitCommands.Settings.WorkingDirGitDir()))
+            {
+                enabled = GitCommands.Settings.UseFastChecks;
+
+                FileSystemWatcher.Path = GitCommands.Settings.WorkingDirGitDir();
+                FileSystemWatcher.IncludeSubdirectories = true;
+                FileSystemWatcher.EnableRaisingEvents = enabled;                    
             }
         }
 
-        public bool IndexChanged()
-        {
-            FileInfo fileInfo = new FileInfo(GitCommands.Settings.WorkingDirGitDir() + "\\index");
-            if (fileInfo.Exists)
-            {
-                if (fileInfo.LastWriteTimeUtc == IndexTime &&
-                    fileInfo.Length == IndexSize)
-                    return false;
-            }
+        public event EventHandler Changed;
 
-            return true;
+        private void OnChanged()
+        {
+            // If there are registered clients raise event
+            if (Changed != null)
+                Changed(this, new EventArgs());
+        }
+
+        private bool indexChanged;
+        public bool IndexChanged 
+        { 
+            get
+            {
+                if (!enabled)
+                    return true;
+
+                return indexChanged;
+            }
+            set
+            {
+                indexChanged = value;
+            }
+        }
+
+        static private bool enabled;
+        static private FileSystemWatcher FileSystemWatcher { get; set; }
+
+        void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            IndexChanged = true;
+            OnChanged();
         }
 
         public void Reset()
         {
-            SetIndexTime();
+            if (FileSystemWatcher.Path != GitCommands.Settings.WorkingDirGitDir() ||
+                enabled != GitCommands.Settings.UseFastChecks)
+                SetFileSystemWatcher();
+
+            IndexChanged = false;
         }
 
         public void Clear()
         {
-            IndexSize = 0;
+            if (FileSystemWatcher.Path != GitCommands.Settings.WorkingDirGitDir() ||
+                enabled != GitCommands.Settings.UseFastChecks)
+                SetFileSystemWatcher();
+
+            IndexChanged = true;
         }
     }
 }
