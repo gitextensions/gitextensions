@@ -488,7 +488,13 @@ namespace GitUI
 
         private void FormSettigns_Load(object sender, EventArgs e)
         {
-
+            bool valid = GitCommands.Settings.ValidWorkingDir();
+            UserName.Enabled = valid;
+            UserEmail.Enabled = valid;
+            Editor.Enabled = valid;
+            MergeTool.Enabled = valid;
+            KeepMergeBackup.Enabled = valid;
+            NoGitRepo.Visible = !valid;
         }
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
