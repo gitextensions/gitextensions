@@ -46,7 +46,7 @@ namespace GitUI
 
         void indexWatcher_Changed(object sender, EventArgs e)
         {
-            if (ToolStrip.InvokeRequired)
+            /*if (ToolStrip.InvokeRequired)
             {
                 DoneCallback d = new DoneCallback(SetIndexDirty);
                 this.Invoke(d, new object[] { });
@@ -54,7 +54,7 @@ namespace GitUI
             else
             {
                 SetIndexDirty();
-            }
+            }*/
         }
 
         private void SetIndexDirty()
@@ -93,13 +93,27 @@ namespace GitUI
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = selectedHead;
 
+            bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
+            NoGit.Visible = !validWorkingDir;
+            commandsToolStripMenuItem.Enabled = validWorkingDir;
+            manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
+            CurrentBranch.Enabled = validWorkingDir;
+            toolStripButton1.Enabled = validWorkingDir;
+            toolStripButtonPull.Enabled = validWorkingDir;
+            toolStripButtonPush.Enabled = validWorkingDir;
+            gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
+            editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
+            editmailmapToolStripMenuItem.Enabled = validWorkingDir;
+            commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+
+
             if (hard)
                 ShowRevisions();
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
             this.Text = "Browse " + GitCommands.Settings.WorkingDir;
 
-            if (GitCommands.Settings.ValidWorkingDir() && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
+            if (validWorkingDir && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
             {
                 if (rebase == null)
                 {
@@ -122,7 +136,7 @@ namespace GitUI
                 }
             }
 
-            if (GitCommands.Settings.ValidWorkingDir() && GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
+            if (validWorkingDir && GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !Directory.Exists(GitCommands.Settings.WorkingDir + ".git\\rebase-apply\\"))
             {
                 if (warning == null)
                 {
@@ -347,6 +361,7 @@ namespace GitUI
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
             SetIndexClean();
         }
 
@@ -693,5 +708,27 @@ namespace GitUI
         }
 
 
+        private void Open_Click(object sender, EventArgs e)
+        {
+            Open open = new Open();
+            open.ShowDialog();
+            indexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
+
+        }
+
+        private void Clone_Click(object sender, EventArgs e)
+        {
+            new FormClone().ShowDialog();
+        }
+        
+        private void Init_Click(object sender, EventArgs e)
+        {
+            new FormInit().ShowDialog();
+            indexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
+        }
     }
 }
