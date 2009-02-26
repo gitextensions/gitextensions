@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.LocalSettings = new System.Windows.Forms.TabPage();
             this.label20 = new System.Windows.Forms.Label();
             this.MergeTool = new System.Windows.Forms.ComboBox();
             this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
@@ -106,7 +106,8 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.tabPage1.SuspendLayout();
+            this.NoGitRepo = new System.Windows.Forms.Label();
+            this.LocalSettings.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
@@ -120,26 +121,27 @@
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabPage1
+            // LocalSettings
             // 
-            this.tabPage1.Controls.Add(this.label20);
-            this.tabPage1.Controls.Add(this.MergeTool);
-            this.tabPage1.Controls.Add(this.KeepMergeBackup);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.Editor);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.UserEmail);
-            this.tabPage1.Controls.Add(this.UserName);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(655, 299);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Local settings";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.LocalSettings.Controls.Add(this.NoGitRepo);
+            this.LocalSettings.Controls.Add(this.label20);
+            this.LocalSettings.Controls.Add(this.MergeTool);
+            this.LocalSettings.Controls.Add(this.KeepMergeBackup);
+            this.LocalSettings.Controls.Add(this.label9);
+            this.LocalSettings.Controls.Add(this.label8);
+            this.LocalSettings.Controls.Add(this.Editor);
+            this.LocalSettings.Controls.Add(this.label5);
+            this.LocalSettings.Controls.Add(this.UserEmail);
+            this.LocalSettings.Controls.Add(this.UserName);
+            this.LocalSettings.Controls.Add(this.label2);
+            this.LocalSettings.Controls.Add(this.label1);
+            this.LocalSettings.Location = new System.Drawing.Point(4, 22);
+            this.LocalSettings.Name = "LocalSettings";
+            this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.LocalSettings.Size = new System.Drawing.Size(655, 299);
+            this.LocalSettings.TabIndex = 0;
+            this.LocalSettings.Text = "Local settings";
+            this.LocalSettings.UseVisualStyleBackColor = true;
             // 
             // label20
             // 
@@ -246,7 +248,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.TabPageGitExtensions);
             this.tabControl1.Controls.Add(this.GlobalSettingsPage);
-            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.LocalSettings);
             this.tabControl1.Controls.Add(this.Ssh);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -970,6 +972,17 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
+            // NoGitRepo
+            // 
+            this.NoGitRepo.AutoSize = true;
+            this.NoGitRepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
+            this.NoGitRepo.Location = new System.Drawing.Point(350, 70);
+            this.NoGitRepo.Name = "NoGitRepo";
+            this.NoGitRepo.Size = new System.Drawing.Size(106, 13);
+            this.NoGitRepo.TabIndex = 12;
+            this.NoGitRepo.Text = "Not in a git repository";
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -985,8 +998,8 @@
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.FormSettigns_Load);
             this.Shown += new System.EventHandler(this.FormSettigns_Shown);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.LocalSettings.ResumeLayout(false);
+            this.LocalSettings.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -1009,7 +1022,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage LocalSettings;
         private System.Windows.Forms.TextBox UserEmail;
         private System.Windows.Forms.TextBox UserName;
         private System.Windows.Forms.Label label2;
@@ -1086,6 +1099,7 @@
         private System.Windows.Forms.CheckBox ShowRevisionGraph;
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
         private System.Windows.Forms.CheckBox UseFastChecks;
+        private System.Windows.Forms.Label NoGitRepo;
 
     }
 }
