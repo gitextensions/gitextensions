@@ -113,11 +113,11 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
-            if (indexWatcher.IndexChanged())
+            if (indexWatcher.IndexChanged)
                 ForceRefreshRevisions();
         }
 
-        private void ForceRefreshRevisions()
+        public void ForceRefreshRevisions()
         {
             try
             {

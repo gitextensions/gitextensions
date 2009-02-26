@@ -45,8 +45,8 @@ namespace GitUI
 
         private void InitializeTracked()
         {
-            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GitStatus(false);
-
+            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GetAllChangedFiles();// GitStatus(false);
+            /*
             List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
             List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
             foreach (GitItemStatus itemStatus in itemStatusList)
@@ -55,10 +55,11 @@ namespace GitUI
                     untrackedItemStatus.Add(itemStatus);
                 else
                 trackedItemStatus.Add(itemStatus);
-            }
+            }*/
 
             Changes.DisplayMember = "Name";
-            Changes.DataSource = trackedItemStatus;
+            //Changes.DataSource = trackedItemStatus;
+            Changes.DataSource = itemStatusList;
         }
 
         private void Stashed_SelectedIndexChanged(object sender, EventArgs e)

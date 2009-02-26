@@ -9,6 +9,7 @@ using GitCommands;
 using System.Text.RegularExpressions;
 using PatchApply;
 using System.IO;
+using GitUI.Properties;
 
 namespace GitUI
 {
@@ -40,7 +41,32 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
+            indexWatcher.Changed += new EventHandler(indexWatcher_Changed);
         }
+
+        void indexWatcher_Changed(object sender, EventArgs e)
+        {
+            if (ToolStrip.InvokeRequired)
+            {
+                DoneCallback d = new DoneCallback(SetIndexDirty);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                SetIndexDirty();
+            }
+        }
+
+        private void SetIndexDirty()
+        {
+            RefreshButton.Image = Resources.arrow_refresh_dirty;
+        }
+
+        private void SetIndexClean()
+        {
+            RefreshButton.Image = Resources.arrow_refresh;
+        }
+
 
         private ToolStripItem warning;
         private ToolStripItem rebase;
@@ -61,6 +87,8 @@ namespace GitUI
 
         private void InternalInitialize(bool hard)
         {
+            SetIndexClean();
+
             Cursor.Current = Cursors.WaitCursor;
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             CurrentBranch.Text = selectedHead;
@@ -127,13 +155,13 @@ namespace GitUI
 
         private void ShowRevisions()
         {
-            if (indexWatcher.IndexChanged())
+            if (indexWatcher.IndexChanged)
             {
-                indexWatcher.Reset();
                 RevisionGrid.RefreshRevisions();
                 FillFileTree();
                 FillDiff();
             }
+            indexWatcher.Reset();
         }
 
         private void FillFileTree()
@@ -218,7 +246,9 @@ namespace GitUI
         {
             Open open = new Open();
             open.ShowDialog();
-            Initialize();
+            indexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
 
         }
 
@@ -316,8 +346,8 @@ namespace GitUI
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            indexWatcher.Clear();
-            Initialize();
+            RevisionGrid.ForceRefreshRevisions();
+            SetIndexClean();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
