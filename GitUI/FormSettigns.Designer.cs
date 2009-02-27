@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
             this.LocalSettings = new System.Windows.Forms.TabPage();
+            this.NoGitRepo = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.MergeTool = new System.Windows.Forms.ComboBox();
             this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
@@ -106,7 +107,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.NoGitRepo = new System.Windows.Forms.Label();
+            this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -142,6 +143,17 @@
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
+            // 
+            // NoGitRepo
+            // 
+            this.NoGitRepo.AutoSize = true;
+            this.NoGitRepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
+            this.NoGitRepo.Location = new System.Drawing.Point(350, 70);
+            this.NoGitRepo.Name = "NoGitRepo";
+            this.NoGitRepo.Size = new System.Drawing.Size(106, 13);
+            this.NoGitRepo.TabIndex = 12;
+            this.NoGitRepo.Text = "Not in a git repository";
             // 
             // label20
             // 
@@ -407,6 +419,7 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.ShowRelativeDate);
             this.TabPageGitExtensions.Controls.Add(this.UseFastChecks);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
             this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
@@ -972,16 +985,16 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
-            // NoGitRepo
+            // ShowRelativeDate
             // 
-            this.NoGitRepo.AutoSize = true;
-            this.NoGitRepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
-            this.NoGitRepo.Location = new System.Drawing.Point(350, 70);
-            this.NoGitRepo.Name = "NoGitRepo";
-            this.NoGitRepo.Size = new System.Drawing.Size(106, 13);
-            this.NoGitRepo.TabIndex = 12;
-            this.NoGitRepo.Text = "Not in a git repository";
+            this.ShowRelativeDate.AutoSize = true;
+            this.ShowRelativeDate.Location = new System.Drawing.Point(118, 208);
+            this.ShowRelativeDate.Name = "ShowRelativeDate";
+            this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowRelativeDate.Size = new System.Drawing.Size(203, 17);
+            this.ShowRelativeDate.TabIndex = 13;
+            this.ShowRelativeDate.Text = "Show relative date instead of full date";
+            this.ShowRelativeDate.UseVisualStyleBackColor = true;
             // 
             // FormSettigns
             // 
@@ -1100,6 +1113,7 @@
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
         private System.Windows.Forms.CheckBox UseFastChecks;
         private System.Windows.Forms.Label NoGitRepo;
+        private System.Windows.Forms.CheckBox ShowRelativeDate;
 
     }
 }

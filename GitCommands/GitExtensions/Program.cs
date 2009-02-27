@@ -38,6 +38,7 @@ namespace GitExtensions
                 if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
+                if (Application.UserAppDataRegistry.GetValue("relativedate") != null) GitCommands.Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) GitCommands.Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) GitCommands.Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) GitCommands.Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
@@ -245,6 +246,7 @@ namespace GitExtensions
              
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", GitCommands.Settings.ShowGitCommandLine);
                 Application.UserAppDataRegistry.SetValue("usefastchecks", GitCommands.Settings.UseFastChecks);
+                Application.UserAppDataRegistry.SetValue("relativedate", GitCommands.Settings.RelativeDate);                
 
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());
 

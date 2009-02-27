@@ -22,6 +22,19 @@ namespace GitCommands
             }
         }
 
+        private static bool relativeDate = true;
+        public static bool RelativeDate
+        {
+            get
+            {
+                return relativeDate;
+            }
+            set
+            {
+                relativeDate = value;
+            }
+        }
+
         private static bool useFastChecks = true;
         public static bool UseFastChecks
         {

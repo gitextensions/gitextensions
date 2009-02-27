@@ -59,6 +59,7 @@ namespace GitUI
             ShowGitCommandLine.Checked = GitCommands.Settings.ShowGitCommandLine;
 
             UseFastChecks.Checked = GitCommands.Settings.UseFastChecks;
+            ShowRelativeDate.Checked = GitCommands.Settings.RelativeDate;
 
             if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
                 OpenSSH.Checked = true;
@@ -107,7 +108,7 @@ namespace GitUI
             GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
 
             GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
-            
+            GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
 
             if (KeepMergeBackup.Checked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");

@@ -42,6 +42,7 @@ namespace GitUI
             InternalInitialize(false);
             RevisionGrid.Focus();
             indexWatcher.Changed += new EventHandler(indexWatcher_Changed);
+            indexWatcher.Reset();
         }
 
         void indexWatcher_Changed(object sender, EventArgs e)
@@ -174,6 +175,7 @@ namespace GitUI
                 RevisionGrid.RefreshRevisions();
                 FillFileTree();
                 FillDiff();
+                FillCommitInfo();
             }
             indexWatcher.Reset();
         }
@@ -202,6 +204,20 @@ namespace GitUI
                 DiffFiles.DisplayMember = "FileNameB";
 
                 DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+            }
+        }
+
+
+        private void FillCommitInfo()
+        {
+            if (tabControl1.SelectedTab == CommitInfo)
+            {
+                if (RevisionGrid.GetRevisions().Count == 0)
+                    return;
+
+                GitRevision revision = RevisionGrid.GetRevisions()[0];
+
+                RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision.Guid);
             }
         }
 
@@ -250,6 +266,7 @@ namespace GitUI
             {
                 FillFileTree();
                 FillDiff();
+                FillCommitInfo();
             }
             catch
             { 
@@ -263,6 +280,7 @@ namespace GitUI
             indexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
+            indexWatcher.Reset();
 
         }
 
@@ -363,6 +381,7 @@ namespace GitUI
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
             SetIndexClean();
+            indexWatcher.Reset();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -589,7 +608,7 @@ namespace GitUI
 
         private void verifyGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess("fsck-objects");
+            new FormVerify().ShowDialog();
         }
 
         private void removeDanglingObjecsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -660,6 +679,7 @@ namespace GitUI
         {
             FillFileTree();
             FillDiff();
+            FillCommitInfo();
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -715,6 +735,7 @@ namespace GitUI
             indexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
+            indexWatcher.Reset();
 
         }
 
@@ -729,6 +750,23 @@ namespace GitUI
             indexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
+            indexWatcher.Reset();
+        }
+
+        private void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.EnableRaisingEvents = false;
+                proc.StartInfo.FileName = e.LinkText;
+
+                proc.Start();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
