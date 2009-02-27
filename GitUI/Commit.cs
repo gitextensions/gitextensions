@@ -152,18 +152,21 @@ namespace GitUI
                 MessageBox.Show("Please enter commit message");
                 return;
             }
-            
             try
             {
-                new FormProcess(GitCommands.GitCommands.CommitCmd(Message.Text.Replace("\"", "'"), amend));
+                StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false);
+                textWriter.Write(Message.Text);
+                textWriter.Close();
 
-
+                new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
+                
                 NeedRefresh = true;
 
                 Close();
             }
-            catch
+            catch(Exception e)
             {
+                MessageBox.Show("Exception: " + e.Message);
             }
         }
 

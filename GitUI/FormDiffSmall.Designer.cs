@@ -32,9 +32,15 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
             this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -50,7 +56,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(717, 529);
+            this.splitContainer1.Size = new System.Drawing.Size(717, 410);
             this.splitContainer1.SplitterDistance = 239;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -60,7 +66,7 @@
             this.DiffFiles.FormattingEnabled = true;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(239, 524);
+            this.DiffFiles.Size = new System.Drawing.Size(239, 407);
             this.DiffFiles.Sorted = true;
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
@@ -72,16 +78,44 @@
             this.DiffText.IsReadOnly = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(474, 529);
+            this.DiffText.Size = new System.Drawing.Size(474, 410);
             this.DiffText.TabIndex = 0;
             this.DiffText.Text = "textEditorControl1";
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.RevisionInfo);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
+            this.splitContainer2.Size = new System.Drawing.Size(717, 529);
+            this.splitContainer2.SplitterDistance = 115;
+            this.splitContainer2.TabIndex = 1;
+            // 
+            // RevisionInfo
+            // 
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(717, 115);
+            this.RevisionInfo.TabIndex = 0;
+            this.RevisionInfo.Text = "";
             // 
             // FormDiffSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 529);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitContainer2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDiffSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -90,6 +124,9 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -99,5 +136,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox DiffFiles;
         private ICSharpCode.TextEditor.TextEditorControl DiffText;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.RichTextBox RevisionInfo;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

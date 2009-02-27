@@ -31,6 +31,7 @@ namespace GitUI
             DiffFiles.DisplayMember = "FileNameB";
 
             DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+            RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision.Guid);
         }
 
         public void SetRevision(string revision)

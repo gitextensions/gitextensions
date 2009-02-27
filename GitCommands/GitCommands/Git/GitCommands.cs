@@ -450,6 +450,16 @@ namespace GitCommands
                 return RunCmd(Settings.GitDir + "git.cmd", "cherry-pick --no-commit \"" + cherry + "\"");
         }
 
+        static public string ShowSha1(string sha1)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "show " + sha1);
+        }
+
+        static public string GetCommitInfo(string sha1)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "show -s --pretty=format:\"Author:\t%cN%nDate:\t%cr (%cd)%n%n%s%n%b\" " + sha1);
+        }
+
         static public string UserCommitCount()
         {
             return RunCmd(Settings.GitDir + "git.cmd", "shortlog -s -n");
@@ -980,19 +990,19 @@ namespace GitCommands
             return "am --3way --abort";
         }
 
-        static public string Commit(string message, bool amend)
+        static public string Commit(bool amend)
         {
-            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", CommitCmd(message, amend));
+            return GitCommands.RunCmd(Settings.GitDir + "git.cmd", CommitCmd(amend));
         }
 
-        static public string CommitCmd(string message, bool amend)
+        static public string CommitCmd(bool amend)
         {
             //message = message.Replace('\"', '\'');
 
             if (amend)
-                return "commit --amend -m \"" + message + "\"";
+                return "commit --amend -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
             else
-                return "commit -m \"" + message + "\"";
+                return "commit  -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
         }
 
         static public string Patch(string patchFile)

@@ -9,14 +9,16 @@ namespace GitUI
     {
         public IndexWatcher()
         {
-            if (FileSystemWatcher == null)
+            if (GitIndexWatcher == null)
             {
-                FileSystemWatcher = new FileSystemWatcher();
+                GitIndexWatcher = new FileSystemWatcher();
+                RefsWatcher = new FileSystemWatcher();
                 SetFileSystemWatcher();
             }
 
             IndexChanged = true;
-            FileSystemWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
+            GitIndexWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
+            RefsWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
         }
 
         private void SetFileSystemWatcher()
@@ -25,9 +27,16 @@ namespace GitUI
             {
                 enabled = GitCommands.Settings.UseFastChecks;
 
-                FileSystemWatcher.Path = GitCommands.Settings.WorkingDirGitDir();
-                FileSystemWatcher.IncludeSubdirectories = true;
-                FileSystemWatcher.EnableRaisingEvents = enabled;                    
+                Path = GitCommands.Settings.WorkingDirGitDir();
+
+                GitIndexWatcher.Path = GitCommands.Settings.WorkingDirGitDir();
+                GitIndexWatcher.Filter = "index";
+                GitIndexWatcher.IncludeSubdirectories = false;
+                GitIndexWatcher.EnableRaisingEvents = enabled;
+
+                RefsWatcher.Path = GitCommands.Settings.WorkingDirGitDir() + "\\refs";
+                RefsWatcher.IncludeSubdirectories = true;
+                RefsWatcher.EnableRaisingEvents = enabled;
             }
         }
 
@@ -57,20 +66,19 @@ namespace GitUI
         }
 
         static private bool enabled;
-        static private FileSystemWatcher FileSystemWatcher { get; set; }
+        static private string Path;
+        static private FileSystemWatcher GitIndexWatcher { get; set; }
+        static private FileSystemWatcher RefsWatcher { get; set; }
 
         void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            if (e.Name != "config.lock" && e.Name != "config")
-            {
-                IndexChanged = true;
-                OnChanged();
-            }
+            IndexChanged = true;
+            OnChanged();
         }
 
         public void Reset()
         {
-            if (FileSystemWatcher.Path != GitCommands.Settings.WorkingDirGitDir() ||
+            if (Path != GitCommands.Settings.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
                 SetFileSystemWatcher();
 
@@ -79,7 +87,7 @@ namespace GitUI
 
         public void Clear()
         {
-            if (FileSystemWatcher.Path != GitCommands.Settings.WorkingDirGitDir() ||
+            if (Path != GitCommands.Settings.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
                 SetFileSystemWatcher();
 

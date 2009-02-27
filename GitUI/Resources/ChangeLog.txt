@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 1.52
+	Multiline commit messages can be viewed
+	Fixed bug preventing multiline message to be committed correct
+	Added relative date option
+	Added recover lost objects function
+	Fixed small refresh bug in FileSystemWatcher
+	Performance FileSystemWatcher increased a bit
+
 Version 1.51
 	Staging/unstaging is much faster
 	Whitespaces are ignored in blame view

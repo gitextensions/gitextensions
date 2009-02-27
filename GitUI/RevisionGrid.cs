@@ -702,7 +702,6 @@ namespace GitUI
         private void AddFiles_Click(object sender, EventArgs e)
         {
             new FormAddFiles().ShowDialog();
-            RefreshRevisions();
         }
 
         private void Commit_Click(object sender, EventArgs e)
@@ -714,7 +713,6 @@ namespace GitUI
         private void GitIgnore_Click(object sender, EventArgs e)
         {
             new FormGitIgnore().ShowDialog();
-            RefreshRevisions();
         }
 
 
@@ -729,7 +727,7 @@ namespace GitUI
             Settings.ShowAllBranches = !showAllBranchesToolStripMenuItem.Checked;
 
             SetShowBranches();
-            RefreshRevisions();
+            ForceRefreshRevisions();
         }
 
         private void SetShowBranches()
@@ -749,7 +747,6 @@ namespace GitUI
                 FormRevertCommitSmall frm = new FormRevertCommitSmall((GitRevision)RevisionList[LastRow]);
                 frm.ShowDialog();
                 RefreshRevisions();
-
             }
         }
 
