@@ -101,6 +101,8 @@
             // 
             // RevisionInfo
             // 
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Name = "RevisionInfo";
