@@ -675,7 +675,7 @@ namespace GitCommands
         {
             path = FixPath(path);
 
-            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all, false) + "\"");
+            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all) + "\"");
         }
 
 
@@ -692,7 +692,7 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            GitCommands.Run(Settings.Pageant, sshKeyFile);
+            GitCommands.Run(Settings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
         public static string GetPuttyKeyFileForRemote(string remote)
@@ -707,24 +707,35 @@ namespace GitCommands
             return "";
         }
 
-        public static string PushCmd(string path, string branch, bool all, bool allTags)
+        public static string PushCmd(string path, string branch, bool all)
         {
             path = FixPath(path);
 
             branch = branch.Replace(" ", "");
 
-            string allTagsOption = "";
-            if (allTags)
-                allTagsOption = " --tags";
-
             if (all)
-                return "push" + allTagsOption + " --all \"" + path.Trim() + "\"";
+                return "push --all \"" + path.Trim() + "\"";
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return "push" + allTagsOption + " \"" + path.Trim() + "\" " + branch;
+                    return "push \"" + path.Trim() + "\" " + branch;
 
 
             return "push \"" + path.Trim() + "\"";
+        }
+
+        public static string PushTagCmd(string path, string tag, bool all)
+        {
+            path = FixPath(path);
+
+            tag = tag.Replace(" ", "");
+
+            if (all)
+                return "push \"" + path.Trim() + "\" --tags";
+            else
+                if (!string.IsNullOrEmpty(tag))
+                    return "push \"" + path.Trim() + "\" tag " + tag;
+
+            return "";
         }
 
         static public string Fetch(string remote, string branch)

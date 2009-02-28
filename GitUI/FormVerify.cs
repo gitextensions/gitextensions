@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormVerify : Form
+    public partial class FormVerify : GitExtensionsForm
     {
         public FormVerify()
         {
@@ -44,6 +44,11 @@ namespace GitUI
             {
                 new FormProcess("prune");
             }
+        }
+
+        private void FormVerify_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -48,6 +48,7 @@
             this.Controls.Add(this.Viewer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View";
             this.Load += new System.EventHandler(this.FormEdit_Load);
             this.ResumeLayout(false);

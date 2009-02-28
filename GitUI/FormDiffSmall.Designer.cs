@@ -80,7 +80,6 @@
             this.DiffText.Name = "DiffText";
             this.DiffText.Size = new System.Drawing.Size(474, 410);
             this.DiffText.TabIndex = 0;
-            this.DiffText.Text = "textEditorControl1";
             // 
             // splitContainer2
             // 

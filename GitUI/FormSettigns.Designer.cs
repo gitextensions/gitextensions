@@ -34,7 +34,6 @@
             this.label20 = new System.Windows.Forms.Label();
             this.MergeTool = new System.Windows.Forms.ComboBox();
             this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.Editor = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -55,6 +54,7 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
@@ -76,7 +76,6 @@
             this.PathToKDiff3 = new System.Windows.Forms.Label();
             this.MergetoolPath = new System.Windows.Forms.TextBox();
             this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.GlobalEditor = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -107,7 +106,8 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
+            this.GlobalAutoCrlf = new System.Windows.Forms.CheckBox();
+            this.LocalAutoCrlf = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -124,11 +124,11 @@
             // 
             // LocalSettings
             // 
+            this.LocalSettings.Controls.Add(this.LocalAutoCrlf);
             this.LocalSettings.Controls.Add(this.NoGitRepo);
             this.LocalSettings.Controls.Add(this.label20);
             this.LocalSettings.Controls.Add(this.MergeTool);
             this.LocalSettings.Controls.Add(this.KeepMergeBackup);
-            this.LocalSettings.Controls.Add(this.label9);
             this.LocalSettings.Controls.Add(this.label8);
             this.LocalSettings.Controls.Add(this.Editor);
             this.LocalSettings.Controls.Add(this.label5);
@@ -181,20 +181,15 @@
             // KeepMergeBackup
             // 
             this.KeepMergeBackup.AutoSize = true;
-            this.KeepMergeBackup.Location = new System.Drawing.Point(187, 126);
+            this.KeepMergeBackup.Checked = true;
+            this.KeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.KeepMergeBackup.Location = new System.Drawing.Point(136, 127);
             this.KeepMergeBackup.Name = "KeepMergeBackup";
-            this.KeepMergeBackup.Size = new System.Drawing.Size(15, 14);
+            this.KeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.KeepMergeBackup.Size = new System.Drawing.Size(175, 17);
             this.KeepMergeBackup.TabIndex = 9;
+            this.KeepMergeBackup.Text = "Keep backup (.orig) after merge";
             this.KeepMergeBackup.UseVisualStyleBackColor = true;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 126);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(156, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Keep backup (.orig) after merge";
             // 
             // label8
             // 
@@ -440,6 +435,17 @@
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // ShowRelativeDate
+            // 
+            this.ShowRelativeDate.AutoSize = true;
+            this.ShowRelativeDate.Location = new System.Drawing.Point(118, 208);
+            this.ShowRelativeDate.Name = "ShowRelativeDate";
+            this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowRelativeDate.Size = new System.Drawing.Size(203, 17);
+            this.ShowRelativeDate.TabIndex = 13;
+            this.ShowRelativeDate.Text = "Show relative date instead of full date";
+            this.ShowRelativeDate.UseVisualStyleBackColor = true;
+            // 
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
@@ -573,6 +579,7 @@
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCrlf);
             this.GlobalSettingsPage.Controls.Add(this.button1);
             this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
             this.GlobalSettingsPage.Controls.Add(this.label19);
@@ -581,7 +588,6 @@
             this.GlobalSettingsPage.Controls.Add(this.PathToKDiff3);
             this.GlobalSettingsPage.Controls.Add(this.MergetoolPath);
             this.GlobalSettingsPage.Controls.Add(this.GlobalKeepMergeBackup);
-            this.GlobalSettingsPage.Controls.Add(this.label10);
             this.GlobalSettingsPage.Controls.Add(this.label7);
             this.GlobalSettingsPage.Controls.Add(this.GlobalEditor);
             this.GlobalSettingsPage.Controls.Add(this.label6);
@@ -670,20 +676,15 @@
             // GlobalKeepMergeBackup
             // 
             this.GlobalKeepMergeBackup.AutoSize = true;
-            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(183, 179);
+            this.GlobalKeepMergeBackup.Checked = true;
+            this.GlobalKeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(136, 176);
             this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
-            this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
+            this.GlobalKeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(175, 17);
             this.GlobalKeepMergeBackup.TabIndex = 9;
+            this.GlobalKeepMergeBackup.Text = "Keep backup (.orig) after merge";
             this.GlobalKeepMergeBackup.UseVisualStyleBackColor = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 179);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(156, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Keep backup (.orig) after merge";
             // 
             // label7
             // 
@@ -985,16 +986,31 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
-            // ShowRelativeDate
+            // GlobalAutoCrlf
             // 
-            this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(118, 208);
-            this.ShowRelativeDate.Name = "ShowRelativeDate";
-            this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowRelativeDate.Size = new System.Drawing.Size(203, 17);
-            this.ShowRelativeDate.TabIndex = 13;
-            this.ShowRelativeDate.Text = "Show relative date instead of full date";
-            this.ShowRelativeDate.UseVisualStyleBackColor = true;
+            this.GlobalAutoCrlf.AutoSize = true;
+            this.GlobalAutoCrlf.Checked = true;
+            this.GlobalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.GlobalAutoCrlf.Location = new System.Drawing.Point(10, 199);
+            this.GlobalAutoCrlf.Name = "GlobalAutoCrlf";
+            this.GlobalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GlobalAutoCrlf.Size = new System.Drawing.Size(300, 17);
+            this.GlobalAutoCrlf.TabIndex = 17;
+            this.GlobalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
+            this.GlobalAutoCrlf.UseVisualStyleBackColor = true;
+            // 
+            // LocalAutoCrlf
+            // 
+            this.LocalAutoCrlf.AutoSize = true;
+            this.LocalAutoCrlf.Checked = true;
+            this.LocalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.LocalAutoCrlf.Location = new System.Drawing.Point(11, 150);
+            this.LocalAutoCrlf.Name = "LocalAutoCrlf";
+            this.LocalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.LocalAutoCrlf.Size = new System.Drawing.Size(300, 17);
+            this.LocalAutoCrlf.TabIndex = 18;
+            this.LocalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
+            this.LocalAutoCrlf.UseVisualStyleBackColor = true;
             // 
             // FormSettigns
             // 
@@ -1054,10 +1070,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox KeepMergeBackup;
         private System.Windows.Forms.CheckBox GlobalKeepMergeBackup;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button GitExtensionsInstall;
         private System.Windows.Forms.Button ShellExtensionsRegistered;
@@ -1114,6 +1128,8 @@
         private System.Windows.Forms.CheckBox UseFastChecks;
         private System.Windows.Forms.Label NoGitRepo;
         private System.Windows.Forms.CheckBox ShowRelativeDate;
+        private System.Windows.Forms.CheckBox GlobalAutoCrlf;
+        private System.Windows.Forms.CheckBox LocalAutoCrlf;
 
     }
 }

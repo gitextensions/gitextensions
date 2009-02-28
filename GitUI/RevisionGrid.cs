@@ -30,12 +30,31 @@ namespace GitUI
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
 
             SetShowBranches();
-            Filter = "";
+            filter = "";
         }
 
         public string LogParam = "HEAD --all --boundary";
 
-        public string Filter { get; set; }
+        private string filter;
+        public string Filter
+        {
+            get
+            {
+                return filter;
+            }
+            set
+            {
+                filter = value;
+            }
+        }
+
+        public string FormatQuickFilter(string filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+                return "";
+            else
+                return " --regexp-ignore-case --grep=\"" + filter + "\" --committer=\"" + filter + "\" --author=\"" + filter + "\" ";
+        }
 
         void Revisions_SizeChanged(object sender, EventArgs e)
         {
@@ -230,12 +249,8 @@ namespace GitUI
             Loading.Visible = true;
             indexWatcher.Reset();
             revisionGraphCommand = new RevisionGraph();
-            string grep = "";
-            if (!string.IsNullOrEmpty(Filter))
-                grep = " --grep=\"" + Filter + "\" ";
 
-
-            revisionGraphCommand.LogParam = LogParam + grep;
+            revisionGraphCommand.LogParam = LogParam + Filter;
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
@@ -756,6 +771,17 @@ namespace GitUI
             Settings.ShowRevisionGraph = !showRevisionGraphToolStripMenuItem.Checked;
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             RefreshRevisions();
+        }
+
+        private FormRevisionFilter RevisionFilter = null;
+        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionFilter == null)
+                RevisionFilter  = new FormRevisionFilter();
+
+            RevisionFilter.ShowDialog();
+            filter = RevisionFilter.GetFilter();
+            ForceRefreshRevisions();
         }
 
     }
