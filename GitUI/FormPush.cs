@@ -21,6 +21,7 @@ namespace GitUI
         private void BrowseSource_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.SelectedPath = PushDestination.Text;
             if (dialog.ShowDialog() == DialogResult.OK)
                 PushDestination.Text = dialog.SelectedPath;
             

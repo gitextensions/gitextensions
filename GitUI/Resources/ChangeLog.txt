@@ -4,10 +4,15 @@ Changelog
 Version 1.52
 	Multiline commit messages can be viewed
 	Fixed bug preventing multiline message to be committed correct
-	Added relative date option
+	Added option to show relative date in commit log
 	Added recover lost objects function
 	Fixed small refresh bug in FileSystemWatcher
 	Performance FileSystemWatcher increased a bit
+	Fixed enter key in filter
+	Basic filter now ignores case and searches in commit message and author
+	Added advanced filter in context menu commit log
+	Added autocrln option
+	Added option to push tags
 
 Version 1.51
 	Staging/unstaging is much faster

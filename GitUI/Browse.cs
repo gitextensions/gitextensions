@@ -780,5 +780,10 @@ namespace GitUI
                 toolStripLabel2_Click(null, null);
             }
         }
+
+        private void NoGit_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -9,6 +9,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static string pullMerge = "merge";
+        public static string PullMerge
+        {
+            get
+            {
+                return pullMerge;
+            }
+            set
+            {
+                pullMerge = value;
+            }
+        }
+
         private static bool showGitCommandLine = false;
         public static bool ShowGitCommandLine
         {

@@ -25,18 +25,25 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(GitCommands.Settings.WorkingDirGitDir()))
             {
-                enabled = GitCommands.Settings.UseFastChecks;
+                try
+                {
+                    enabled = GitCommands.Settings.UseFastChecks;
 
-                Path = GitCommands.Settings.WorkingDirGitDir();
+                    Path = GitCommands.Settings.WorkingDirGitDir();
 
-                GitIndexWatcher.Path = GitCommands.Settings.WorkingDirGitDir();
-                GitIndexWatcher.Filter = "index";
-                GitIndexWatcher.IncludeSubdirectories = false;
-                GitIndexWatcher.EnableRaisingEvents = enabled;
+                    GitIndexWatcher.Path = GitCommands.Settings.WorkingDirGitDir();
+                    GitIndexWatcher.Filter = "index";
+                    GitIndexWatcher.IncludeSubdirectories = false;
+                    GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                RefsWatcher.Path = GitCommands.Settings.WorkingDirGitDir() + "\\refs";
-                RefsWatcher.IncludeSubdirectories = true;
-                RefsWatcher.EnableRaisingEvents = enabled;
+                    RefsWatcher.Path = GitCommands.Settings.WorkingDirGitDir() + "\\refs";
+                    RefsWatcher.IncludeSubdirectories = true;
+                    RefsWatcher.EnableRaisingEvents = enabled;
+                }
+                catch
+                {
+                    enabled = false;
+                }
             }
         }
 

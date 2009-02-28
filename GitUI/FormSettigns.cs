@@ -492,13 +492,13 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
             {
-                GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
+                    GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                 {
                     GitCommands.Settings.GitDir = @"c:\Program Files (x86)\Git\cmd\";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                     {
-                        GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
+                        GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                         {
                             GitCommands.Settings.GitDir = "";

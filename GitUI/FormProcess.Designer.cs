@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProcess));
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Abort = new System.Windows.Forms.Button();
             this.SuccessImage = new System.Windows.Forms.PictureBox();
             this.ErrorImage = new System.Windows.Forms.PictureBox();
             this.Output = new System.Windows.Forms.RichTextBox();
@@ -81,6 +82,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(564, 261);
             this.splitContainer1.SplitterDistance = 232;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // Abort
+            // 
+            this.Abort.Location = new System.Drawing.Point(123, 2);
+            this.Abort.Name = "Abort";
+            this.Abort.Size = new System.Drawing.Size(75, 23);
+            this.Abort.TabIndex = 3;
+            this.Abort.Text = "Abort";
+            this.Abort.UseVisualStyleBackColor = true;
+            this.Abort.Click += new System.EventHandler(this.Abort_Click_1);
             // 
             // SuccessImage
             // 
@@ -142,9 +153,10 @@
             // 
             // splitContainer3.Panel2
             // 
+            this.splitContainer3.Panel2.Controls.Add(this.Abort);
             this.splitContainer3.Panel2.Controls.Add(this.KeepDialogOpen);
             this.splitContainer3.Size = new System.Drawing.Size(480, 25);
-            this.splitContainer3.SplitterDistance = 356;
+            this.splitContainer3.SplitterDistance = 279;
             this.splitContainer3.TabIndex = 0;
             // 
             // ProgressBar
@@ -153,7 +165,7 @@
             this.ProgressBar.Location = new System.Drawing.Point(0, 0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(356, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(279, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
@@ -210,5 +222,6 @@
         private System.Windows.Forms.PictureBox SuccessImage;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.CheckBox KeepDialogOpen;
+        private System.Windows.Forms.Button Abort;
     }
 }

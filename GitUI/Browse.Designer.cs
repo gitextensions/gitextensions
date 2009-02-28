@@ -54,6 +54,8 @@
             this.Init = new System.Windows.Forms.Button();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.CommitInfo = new System.Windows.Forms.TabPage();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.Tree = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
@@ -62,8 +64,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
             this.DiffText = new GitUI.FileViewer();
-            this.CommitInfo = new System.Windows.Forms.TabPage();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,6 +127,7 @@
             this.splitContainer3.SuspendLayout();
             this.NoGit.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.CommitInfo.SuspendLayout();
             this.Tree.SuspendLayout();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
@@ -135,7 +136,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.CommitInfo.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -327,6 +327,7 @@
             this.NoGit.Name = "NoGit";
             this.NoGit.Size = new System.Drawing.Size(796, 230);
             this.NoGit.TabIndex = 1;
+            this.NoGit.Paint += new System.Windows.Forms.PaintEventHandler(this.NoGit_Paint);
             // 
             // Open
             // 
@@ -384,9 +385,9 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.CommitInfo);
             this.tabControl1.Controls.Add(this.Tree);
             this.tabControl1.Controls.Add(this.Commit);
-            this.tabControl1.Controls.Add(this.CommitInfo);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -394,6 +395,31 @@
             this.tabControl1.Size = new System.Drawing.Size(796, 285);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
+            // CommitInfo
+            // 
+            this.CommitInfo.Controls.Add(this.RevisionInfo);
+            this.CommitInfo.Location = new System.Drawing.Point(4, 22);
+            this.CommitInfo.Margin = new System.Windows.Forms.Padding(15);
+            this.CommitInfo.Name = "CommitInfo";
+            this.CommitInfo.Size = new System.Drawing.Size(788, 259);
+            this.CommitInfo.TabIndex = 2;
+            this.CommitInfo.Text = "Commit";
+            this.CommitInfo.UseVisualStyleBackColor = true;
+            // 
+            // RevisionInfo
+            // 
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(10);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(788, 259);
+            this.RevisionInfo.TabIndex = 1;
+            this.RevisionInfo.Text = "";
+            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfo_LinkClicked);
             // 
             // Tree
             // 
@@ -490,27 +516,6 @@
             this.DiffText.Name = "DiffText";
             this.DiffText.Size = new System.Drawing.Size(567, 259);
             this.DiffText.TabIndex = 0;
-            // 
-            // CommitInfo
-            // 
-            this.CommitInfo.Controls.Add(this.RevisionInfo);
-            this.CommitInfo.Location = new System.Drawing.Point(4, 22);
-            this.CommitInfo.Name = "CommitInfo";
-            this.CommitInfo.Size = new System.Drawing.Size(788, 259);
-            this.CommitInfo.TabIndex = 2;
-            this.CommitInfo.Text = "Commit";
-            this.CommitInfo.UseVisualStyleBackColor = true;
-            // 
-            // RevisionInfo
-            // 
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(788, 259);
-            this.RevisionInfo.TabIndex = 1;
-            this.RevisionInfo.Text = "";
-            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfo_LinkClicked);
             // 
             // menuStrip1
             // 
@@ -975,6 +980,7 @@
             this.NoGit.ResumeLayout(false);
             this.NoGit.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.CommitInfo.ResumeLayout(false);
             this.Tree.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
@@ -983,7 +989,6 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.CommitInfo.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();

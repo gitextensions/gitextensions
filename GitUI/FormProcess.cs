@@ -125,6 +125,7 @@ namespace GitUI
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
+            Abort.Enabled = false;
             try
             {
                 //An error occured!
@@ -282,6 +283,15 @@ namespace GitUI
 
         private void KeepDialogOpen_Click(object sender, EventArgs e)
         {
+        }
+
+        private void Abort_Click_1(object sender, EventArgs e)
+        {
+            if (Process != null)
+            {
+                Process.Kill();
+                outputString.Append("\nAborted");
+            }
         }
     }
 }

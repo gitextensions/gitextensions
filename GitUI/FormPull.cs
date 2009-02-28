@@ -20,6 +20,7 @@ namespace GitUI
         private void BrowseSource_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.SelectedPath = PullSource.Text;
             if (dialog.ShowDialog() == DialogResult.OK)
                 PullSource.Text = dialog.SelectedPath;
         }
@@ -102,6 +103,13 @@ namespace GitUI
                 return;                
             }
 
+            if (Merge.Checked)
+                GitCommands.Settings.PullMerge = "merge";
+            if (Rebase.Checked)
+                GitCommands.Settings.PullMerge = "rebase";
+            if (Fetch.Checked)
+                GitCommands.Settings.PullMerge = "fetch";
+
             RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
             string source;
@@ -166,6 +174,11 @@ namespace GitUI
 
             this.Text = "Pull (" + GitCommands.Settings.WorkingDir + ")";
             EnableLoadSSHButton();
+
+
+            Merge.Checked = GitCommands.Settings.PullMerge == "merge";
+            Rebase.Checked = GitCommands.Settings.PullMerge == "rebase";
+            Fetch.Checked = GitCommands.Settings.PullMerge == "fetch";
         }
 
         private void PullSource_DrawItem(object sender, DrawItemEventArgs e)
