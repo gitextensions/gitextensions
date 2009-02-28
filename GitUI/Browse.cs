@@ -203,7 +203,10 @@ namespace GitUI
                 DiffFiles.DataSource = null;
                 DiffFiles.DisplayMember = "FileNameB";
 
-                DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                if (revision.ParentGuids.Count > 0)
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                else
+                    DiffFiles.DataSource = null;
             }
         }
 
@@ -338,6 +341,7 @@ namespace GitUI
         {
             FormClone form = new FormClone();
             form.ShowDialog();
+
             Initialize();
         }
 
@@ -655,10 +659,10 @@ namespace GitUI
 
         private void toolStripLabel2_Click(object sender, EventArgs e)
         {
-            if (toolStripTextBoxFilter.Text.CompareTo(RevisionGrid.Filter) != 0)
+            if (RevisionGrid.Filter != RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text))
             {
-                RevisionGrid.Filter = toolStripTextBoxFilter.Text;
-                RevisionGrid.RefreshRevisions();
+                RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
+                RevisionGrid.ForceRefreshRevisions();
             }
         }
 
@@ -766,6 +770,14 @@ namespace GitUI
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripTextBoxFilter_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                toolStripLabel2_Click(null, null);
             }
         }
     }

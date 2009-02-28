@@ -21,6 +21,19 @@ namespace GitUI
 
         }
 
+        private void SetCheckboxFromString(CheckBox checkBox, string str)
+        {
+            str = str.Trim().ToLower();
+
+            if (str == "true")
+                checkBox.CheckState = CheckState.Checked;
+            else
+            if (str == "false")
+                checkBox.CheckState = CheckState.Unchecked;
+            else
+                checkBox.CheckState = CheckState.Indeterminate;
+        }
+
         private void LoadSettings()
         {
             MaxCommits.Value = GitCommands.Settings.MaxCommits;
@@ -35,19 +48,22 @@ namespace GitUI
             Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
             MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
 
-            KeepMergeBackup.Checked = GitCommands.GitCommands.GetSetting("mergetool.keepBackup").Trim() == "true";
 
             GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
             GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
             GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
 
+            SetCheckboxFromString(KeepMergeBackup, GitCommands.GitCommands.GetSetting("mergetool.keepBackup"));
+            SetCheckboxFromString(LocalAutoCrlf, GitCommands.GitCommands.GetSetting("core.autocrlf"));
+
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
 
-            GlobalKeepMergeBackup.Checked = gitCommands.GetGlobalSetting("mergetool.keepBackup").Trim() == "true";
+            SetCheckboxFromString(GlobalKeepMergeBackup, gitCommands.GetGlobalSetting("mergetool.keepBackup"));
+            SetCheckboxFromString(GlobalAutoCrlf, gitCommands.GetGlobalSetting("core.autocrlf"));
 
             PlinkPath.Text = GitCommands.Settings.Plink;
             PuttygenPath.Text = GitCommands.Settings.Puttygen;
@@ -110,11 +126,18 @@ namespace GitUI
             GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
             GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
 
-            if (KeepMergeBackup.Checked)
+            if (KeepMergeBackup.CheckState == CheckState.Checked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
             else
+            if (KeepMergeBackup.CheckState == CheckState.Unchecked)
                 GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
 
+
+            if (LocalAutoCrlf.CheckState == CheckState.Checked)
+                GitCommands.GitCommands.SetSetting("core.autocrlf", "true");
+            else
+            if (LocalAutoCrlf.CheckState == CheckState.Unchecked)
+                GitCommands.GitCommands.SetSetting("core.autocrlf", "false");
 
             gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
             gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
@@ -126,10 +149,17 @@ namespace GitUI
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
 
-            if (GlobalKeepMergeBackup.Checked)
+            if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
             else
+            if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
                 gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
+
+            if (GlobalAutoCrlf.CheckState == CheckState.Checked)
+                gitCommands.SetGlobalSetting("core.autocrlf", "true");
+            else
+            if (GlobalAutoCrlf.CheckState == CheckState.Unchecked)
+                gitCommands.SetGlobalSetting("core.autocrlf", "false");
 
             GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
 
@@ -495,6 +525,7 @@ namespace GitUI
             Editor.Enabled = valid;
             MergeTool.Enabled = valid;
             KeepMergeBackup.Enabled = valid;
+            LocalAutoCrlf.Enabled = valid;
             NoGitRepo.Visible = !valid;
         }
 

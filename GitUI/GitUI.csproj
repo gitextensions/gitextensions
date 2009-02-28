@@ -289,6 +289,12 @@
     <Compile Include="FormRevertCommitSmall.Designer.cs">
       <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormRevisionFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRevisionFilter.Designer.cs">
+      <DependentUpon>FormRevisionFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSettigns.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -517,6 +523,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRevertCommitSmall.resx">
       <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRevisionFilter.resx">
+      <DependentUpon>FormRevisionFilter.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettigns.resx">

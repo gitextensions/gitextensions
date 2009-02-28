@@ -52,10 +52,11 @@ namespace GitUI
         public string ProcessArguments { get; set; }
         public Process Process { get; set; }
         private GitCommands.GitCommands gitCommand;
+        private bool errorOccured = false;
 
         public bool ErrorOccured()
         {
-            return ErrorImage.Visible == true;
+            return errorOccured;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -130,6 +131,7 @@ namespace GitUI
                 if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
                 {
                     ErrorImage.Visible = true;
+                    errorOccured = true;
                     SuccessImage.Visible = false;
                     if (Plink)
                     {
@@ -144,6 +146,7 @@ namespace GitUI
                             {
                                 SuccessImage.Visible = true;
                                 ErrorImage.Visible = false;
+                                errorOccured = false;
                             }
 
                             if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
@@ -162,6 +165,7 @@ namespace GitUI
                 {
                     ErrorImage.Visible = false;
                     SuccessImage.Visible = true;
+                    errorOccured = false;
 
                     if (GitCommands.Settings.CloseProcessDialog)
                         Close();
@@ -170,6 +174,7 @@ namespace GitUI
             }
             catch
             {
+                errorOccured = true;
                 ErrorImage.Visible = true;
                 SuccessImage.Visible = false;
             }

@@ -294,6 +294,7 @@
             this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
             this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
             this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
+            this.toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBoxFilter_KeyPress);
             this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
             // 
             // splitContainer3
@@ -1064,7 +1065,6 @@
         private System.Windows.Forms.ToolStripMenuItem startAuthenticationAgentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateOrImportKeyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.TabPage Commit;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -1082,5 +1082,6 @@
         private System.Windows.Forms.Button Init;
         private System.Windows.Forms.TabPage CommitInfo;
         private System.Windows.Forms.RichTextBox RevisionInfo;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
     }
 }

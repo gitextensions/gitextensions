@@ -50,6 +50,10 @@ namespace GitUI
 
         private void Directory_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                Load_Click(null, null);
+            }
         }
 
     }

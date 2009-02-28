@@ -158,11 +158,12 @@ namespace GitUI
                 textWriter.Write(Message.Text);
                 textWriter.Close();
 
-                new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
+                FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
                 
                 NeedRefresh = true;
 
-                Close();
+                if (!form.ErrorOccured())
+                    Close();
             }
             catch(Exception e)
             {

@@ -46,14 +46,14 @@
             this.Tag = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.TabControlTagBranch = new System.Windows.Forms.TabControl();
             this.BranchTab = new System.Windows.Forms.TabPage();
             this.TagTab = new System.Windows.Forms.TabPage();
-            this.PushTagsWithBranches = new System.Windows.Forms.CheckBox();
+            this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.TabControlTagBranch.SuspendLayout();
             this.BranchTab.SuspendLayout();
             this.TagTab.SuspendLayout();
             this.SuspendLayout();
@@ -189,7 +189,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.PushTagsWithBranches);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.Branch);
             this.groupBox1.Controls.Add(this.PushAllBranches);
@@ -224,6 +223,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.PushAllTags);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.Tag);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -244,16 +244,19 @@
             this.label1.Text = "Tag to push";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // tabControl1
+            // TabControlTagBranch
             // 
-            this.tabControl1.Controls.Add(this.BranchTab);
-            this.tabControl1.Controls.Add(this.TagTab);
-            this.tabControl1.Location = new System.Drawing.Point(12, 98);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(541, 143);
-            this.tabControl1.TabIndex = 24;
+            this.TabControlTagBranch.Controls.Add(this.BranchTab);
+            this.TabControlTagBranch.Controls.Add(this.TagTab);
+            this.TabControlTagBranch.HotTrack = true;
+            this.TabControlTagBranch.ItemSize = new System.Drawing.Size(57, 18);
+            this.TabControlTagBranch.Location = new System.Drawing.Point(12, 98);
+            this.TabControlTagBranch.Multiline = true;
+            this.TabControlTagBranch.Name = "TabControlTagBranch";
+            this.TabControlTagBranch.SelectedIndex = 0;
+            this.TabControlTagBranch.ShowToolTips = true;
+            this.TabControlTagBranch.Size = new System.Drawing.Size(541, 143);
+            this.TabControlTagBranch.TabIndex = 24;
             // 
             // BranchTab
             // 
@@ -264,36 +267,39 @@
             this.BranchTab.Padding = new System.Windows.Forms.Padding(3);
             this.BranchTab.Size = new System.Drawing.Size(533, 117);
             this.BranchTab.TabIndex = 0;
-            this.BranchTab.Text = "Branch";
+            this.BranchTab.Text = "Branches";
+            this.BranchTab.ToolTipText = "Push branches and commits to remote repository.";
             this.BranchTab.UseVisualStyleBackColor = true;
             // 
             // TagTab
             // 
+            this.TagTab.BackColor = System.Drawing.Color.Transparent;
             this.TagTab.Controls.Add(this.groupBox3);
             this.TagTab.Location = new System.Drawing.Point(4, 22);
             this.TagTab.Name = "TagTab";
             this.TagTab.Padding = new System.Windows.Forms.Padding(3);
             this.TagTab.Size = new System.Drawing.Size(533, 117);
             this.TagTab.TabIndex = 1;
-            this.TagTab.Text = "Tag";
+            this.TagTab.Text = "Tags";
+            this.TagTab.ToolTipText = "Push tags to remote repository";
             this.TagTab.UseVisualStyleBackColor = true;
             // 
-            // PushTagsWithBranches
+            // PushAllTags
             // 
-            this.PushTagsWithBranches.AutoSize = true;
-            this.PushTagsWithBranches.Location = new System.Drawing.Point(127, 74);
-            this.PushTagsWithBranches.Name = "PushTagsWithBranches";
-            this.PushTagsWithBranches.Size = new System.Drawing.Size(86, 17);
-            this.PushTagsWithBranches.TabIndex = 21;
-            this.PushTagsWithBranches.Text = "Push all tags";
-            this.PushTagsWithBranches.UseVisualStyleBackColor = true;
+            this.PushAllTags.AutoSize = true;
+            this.PushAllTags.Location = new System.Drawing.Point(127, 51);
+            this.PushAllTags.Name = "PushAllTags";
+            this.PushAllTags.Size = new System.Drawing.Size(86, 17);
+            this.PushAllTags.TabIndex = 22;
+            this.PushAllTags.Text = "Push all tags";
+            this.PushAllTags.UseVisualStyleBackColor = true;
             // 
             // FormPush
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(559, 282);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.TabControlTagBranch);
             this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Push);
@@ -309,7 +315,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.TabControlTagBranch.ResumeLayout(false);
             this.BranchTab.ResumeLayout(false);
             this.TagTab.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -335,9 +341,9 @@
         private System.Windows.Forms.ComboBox Tag;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl TabControlTagBranch;
         private System.Windows.Forms.TabPage BranchTab;
         private System.Windows.Forms.TabPage TagTab;
-        private System.Windows.Forms.CheckBox PushTagsWithBranches;
+        private System.Windows.Forms.CheckBox PushAllTags;
     }
 }

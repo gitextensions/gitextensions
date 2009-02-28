@@ -38,13 +38,23 @@ namespace GitUI
                 MessageBox.Show("Please select a remote repository");
                 return;
             }
+            if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(Tag.Text) && !PushAllTags.Checked)
+            {
+                MessageBox.Show("You need to select a tag to push or select \"Push all tags\".");
+                return;
+            }
 
             RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
             FormProcess form;
 
             if (PullFromUrl.Checked)
-                form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked, PushTagsWithBranches.Checked));
+            {
+                if (TabControlTagBranch.SelectedTab == BranchTab)
+                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked));
+                else
+                    form = new FormProcess(GitCommands.GitCommands.PushTagCmd(PushDestination.Text, Tag.Text, PushAllTags.Checked));
+            }
             else
             {
                 if (!File.Exists(GitCommands.Settings.Pageant))
@@ -52,11 +62,13 @@ namespace GitUI
                 else
                     GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
 
-                form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked, PushTagsWithBranches.Checked), Remotes.Text.Trim());
-                //form = new FormProcess(GitCommands.Settings.GitLibexecDir + "git-push.exe", "\"" + Remotes.Text.Trim() + "\" " + Branch.Text);
+                if (TabControlTagBranch.SelectedTab == BranchTab)
+                    form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
+                else
+                    form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushTagCmd(Remotes.Text, Tag.Text, PushAllTags.Checked), Remotes.Text.Trim());
             }
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !form.ErrorOccured())
                 Close();
         }
 
