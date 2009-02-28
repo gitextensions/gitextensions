@@ -675,7 +675,7 @@ namespace GitCommands
         {
             path = FixPath(path);
 
-            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all) + "\"");
+            return RunCmdAsync("cmd.exe", " /k \"\"" + Settings.GitDir + "git.cmd\" " + PushCmd(path, branch, all, false) + "\"");
         }
 
 
@@ -707,17 +707,21 @@ namespace GitCommands
             return "";
         }
 
-        public static string PushCmd(string path, string branch, bool all)
+        public static string PushCmd(string path, string branch, bool all, bool allTags)
         {
             path = FixPath(path);
 
             branch = branch.Replace(" ", "");
 
+            string allTagsOption = "";
+            if (allTags)
+                allTagsOption = " --tags";
+
             if (all)
-                return "push --all \"" + path.Trim() + "\"";
+                return "push" + allTagsOption + " --all \"" + path.Trim() + "\"";
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return "push \"" + path.Trim() + "\" " + branch;
+                    return "push" + allTagsOption + " \"" + path.Trim() + "\" " + branch;
 
 
             return "push \"" + path.Trim() + "\"";

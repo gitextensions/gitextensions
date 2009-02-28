@@ -30,11 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Warnings = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
+            this.Warnings = new System.Windows.Forms.ListBox();
             this.Remove = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,26 +62,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(699, 512);
             this.splitContainer1.SplitterDistance = 478;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(537, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(159, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Save objects to .git/lost-found";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // Warnings
-            // 
-            this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Warnings.FormattingEnabled = true;
-            this.Warnings.Location = new System.Drawing.Point(0, 0);
-            this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(699, 446);
-            this.Warnings.TabIndex = 0;
-            this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
             // 
             // splitContainer2
             // 
@@ -111,6 +91,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Double-click on a row containing a sha1 to view object";
             // 
+            // Warnings
+            // 
+            this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Warnings.FormattingEnabled = true;
+            this.Warnings.Location = new System.Drawing.Point(0, 0);
+            this.Warnings.Name = "Warnings";
+            this.Warnings.Size = new System.Drawing.Size(699, 446);
+            this.Warnings.TabIndex = 0;
+            this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
+            // 
             // Remove
             // 
             this.Remove.Location = new System.Drawing.Point(393, 3);
@@ -120,6 +110,16 @@
             this.Remove.Text = "Remove dangling objects";
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(537, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(159, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Save objects to .git/lost-found";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FormVerify
             // 

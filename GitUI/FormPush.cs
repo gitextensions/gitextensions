@@ -44,7 +44,7 @@ namespace GitUI
             FormProcess form;
 
             if (PullFromUrl.Checked)
-                form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked));
+                form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked, PushTagsWithBranches.Checked));
             else
             {
                 if (!File.Exists(GitCommands.Settings.Pageant))
@@ -52,7 +52,7 @@ namespace GitUI
                 else
                     GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
 
-                form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
+                form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked, PushTagsWithBranches.Checked), Remotes.Text.Trim());
                 //form = new FormProcess(GitCommands.Settings.GitLibexecDir + "git-push.exe", "\"" + Remotes.Text.Trim() + "\" " + Branch.Text);
             }
 
@@ -68,7 +68,7 @@ namespace GitUI
         private void Branch_DropDown(object sender, EventArgs e)
         {
             Branch.DisplayMember = "Name";
-            Branch.DataSource = GitCommands.GitCommands.GetHeads(false);
+            Branch.DataSource = GitCommands.GitCommands.GetHeads(false, true);
         }
 
         private void Pull_Click(object sender, EventArgs e)
@@ -145,6 +145,17 @@ namespace GitUI
         private void Remotes_Validated(object sender, EventArgs e)
         {
             EnableLoadSSHButton();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Tag_DropDown(object sender, EventArgs e)
+        {
+            Tag.DisplayMember = "Name";
+            Tag.DataSource = GitCommands.GitCommands.GetHeads(true, false);
         }
     }
 }
