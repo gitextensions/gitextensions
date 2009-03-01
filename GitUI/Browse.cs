@@ -102,6 +102,7 @@ namespace GitUI
             toolStripButton1.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
+            submodulesToolStripMenuItem.Enabled = validWorkingDir;
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
@@ -244,6 +245,8 @@ namespace GitUI
                 {
                     if (((GitItem)item).ItemType == "tree")
                         subNode.Nodes.Add(new TreeNode());
+                    if (((GitItem)item).ItemType == "commit")
+                        subNode.Text = item.Name + " (Submodule)";
                 }
                 else
                 {
@@ -784,6 +787,31 @@ namespace GitUI
         private void NoGit_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void manageSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSubmodules formSubmodules = new FormSubmodules();
+            formSubmodules.ShowDialog();
+            InternalInitialize(true);
+        }
+
+        private void updateAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            InternalInitialize(true);
+        }
+
+        private void initializeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            InternalInitialize(true);
+        }
+
+        private void syncronizeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            InternalInitialize(true);
         }
     }
 }

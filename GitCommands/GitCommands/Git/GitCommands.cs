@@ -492,6 +492,80 @@ namespace GitCommands
             return 0;
         }
 
+        static public string GetSubmoduleRemotePath(string name)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "config -f .gitmodules --get submodule." + name.Trim() + ".url");
+        }
+
+        static public string GetSubmoduleLocalPath(string name)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "config -f .gitmodules --get submodule." + name.Trim() + ".path");
+        }
+
+        static public string SubmoduleInitCmd(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return "submodule update --init";
+
+            return "submodule update --init \"" + name.Trim() + "\"";
+        }
+
+        static public string SubmoduleUpdateCmd(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return "submodule update";
+
+            return "submodule update \"" + name.Trim() + "\"";
+        }
+
+        static public string SubmoduleSyncCmd(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return "submodule sync";
+
+            return "submodule sync \"" + name.Trim() + "\"";
+        }
+
+        static public string AddSubmoduleCmd(string remotePath, string localPath, string branch)
+        {
+            remotePath = FixPath(remotePath);
+            localPath = FixPath(localPath);
+
+            if (!string.IsNullOrEmpty(branch))
+                branch = " \"" + branch.Trim() + "\"";
+
+            return "submodule add \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"" + branch;
+        }
+
+        static public List<GitSubmodule> GetSubmodules()
+        {
+            string[] submodules = RunCmd(Settings.GitDir + "git.cmd", "submodule status").Split('\n');
+
+            List<GitSubmodule> submoduleList = new List<GitSubmodule>();
+
+            foreach (string submodule in submodules)
+            {
+                if (submodule.Length < 43)
+                    continue;
+
+                GitSubmodule gitSubmodule = new GitSubmodule();
+                gitSubmodule.Initialized = submodule[0] != '-';
+                gitSubmodule.UpToDate = submodule[0] != '+';
+                gitSubmodule.CurrentCommitGuid = submodule.Substring(1, 40).Trim();
+                string name = submodule.Substring(42).Trim();
+                if (name.Contains("("))
+                {
+                    gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
+                    gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new char[] { '(', ')', ' ' });
+                }
+                else
+                    gitSubmodule.Name = name;
+                submoduleList.Add(gitSubmodule);
+            }
+
+            return submoduleList;
+        }
+
         static public string Stash()
         {
             return RunCmd(Settings.GitDir + "git.cmd", "stash save");
@@ -1888,9 +1962,10 @@ namespace GitCommands
                 {
 
                     item.Mode = itemsString.Substring(0, 6);
-                    item.ItemType = itemsString.Substring(7, 4);
-                    item.Guid = itemsString.Substring(12, 40);
-                    item.Name = itemsString.Substring(53).Trim();
+                    int guidStart = itemsString.IndexOf(' ', 7);
+                    item.ItemType = itemsString.Substring(7, guidStart - 7);
+                    item.Guid = itemsString.Substring(guidStart+1, 40);
+                    item.Name = itemsString.Substring(guidStart+42).Trim();
                     item.FileName = item.Name;
 
                     //if (item.ItemType == "tree")

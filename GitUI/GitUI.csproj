@@ -85,6 +85,12 @@
     <Compile Include="FormAddFiles.Designer.cs">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormAddSubmodule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddSubmodule.Designer.cs">
+      <DependentUpon>FormAddSubmodule.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormArchive.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -307,6 +313,12 @@
     <Compile Include="FormStash.Designer.cs">
       <DependentUpon>FormStash.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSubmodules.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSubmodules.Designer.cs">
+      <DependentUpon>FormSubmodules.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormTag.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -390,6 +402,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddFiles.resx">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAddSubmodule.resx">
+      <DependentUpon>FormAddSubmodule.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormArchive.resx">
@@ -537,6 +553,10 @@
       <DependentUpon>FormStash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormSubmodules.resx">
+      <DependentUpon>FormSubmodules.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormTag.resx">
       <DependentUpon>FormTag.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -590,6 +610,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
     <None Include="Resources\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />
     <None Include="Icons\merge.png" />

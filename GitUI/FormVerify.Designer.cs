@@ -129,6 +129,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormVerify";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Verify database";
             this.Load += new System.EventHandler(this.FormVerify_Load);
             this.Shown += new System.EventHandler(this.FormVerify_Shown);

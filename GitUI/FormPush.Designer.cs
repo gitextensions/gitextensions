@@ -45,11 +45,11 @@
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.Tag = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
             this.BranchTab = new System.Windows.Forms.TabPage();
             this.TagTab = new System.Windows.Forms.TabPage();
-            this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -234,6 +234,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tag";
             // 
+            // PushAllTags
+            // 
+            this.PushAllTags.AutoSize = true;
+            this.PushAllTags.Location = new System.Drawing.Point(127, 51);
+            this.PushAllTags.Name = "PushAllTags";
+            this.PushAllTags.Size = new System.Drawing.Size(86, 17);
+            this.PushAllTags.TabIndex = 22;
+            this.PushAllTags.Text = "Push all tags";
+            this.PushAllTags.UseVisualStyleBackColor = true;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -267,7 +277,7 @@
             this.BranchTab.Padding = new System.Windows.Forms.Padding(3);
             this.BranchTab.Size = new System.Drawing.Size(533, 117);
             this.BranchTab.TabIndex = 0;
-            this.BranchTab.Text = "Branches";
+            this.BranchTab.Text = "Push branches";
             this.BranchTab.ToolTipText = "Push branches and commits to remote repository.";
             this.BranchTab.UseVisualStyleBackColor = true;
             // 
@@ -280,19 +290,9 @@
             this.TagTab.Padding = new System.Windows.Forms.Padding(3);
             this.TagTab.Size = new System.Drawing.Size(533, 117);
             this.TagTab.TabIndex = 1;
-            this.TagTab.Text = "Tags";
+            this.TagTab.Text = "Push tags";
             this.TagTab.ToolTipText = "Push tags to remote repository";
             this.TagTab.UseVisualStyleBackColor = true;
-            // 
-            // PushAllTags
-            // 
-            this.PushAllTags.AutoSize = true;
-            this.PushAllTags.Location = new System.Drawing.Point(127, 51);
-            this.PushAllTags.Name = "PushAllTags";
-            this.PushAllTags.Size = new System.Drawing.Size(86, 17);
-            this.PushAllTags.TabIndex = 22;
-            this.PushAllTags.Text = "Push all tags";
-            this.PushAllTags.UseVisualStyleBackColor = true;
             // 
             // FormPush
             // 
