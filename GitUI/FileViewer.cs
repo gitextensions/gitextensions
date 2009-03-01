@@ -87,7 +87,8 @@ namespace GitUI
                 PictureBox.Visible = false;
                 TextEditor.Visible = true;
 
-                TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
+                if (File.Exists(GitCommands.Settings.WorkingDir + fileName))
+                    TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
             }
         }
 

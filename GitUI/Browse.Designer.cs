@@ -100,6 +100,8 @@
             this.PuTTYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startAuthenticationAgentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateOrImportKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.submodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,6 +120,10 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -524,6 +530,7 @@
             this.gitToolStripMenuItem,
             this.commandsToolStripMenuItem,
             this.remotesToolStripMenuItem,
+            this.submodulesToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -821,6 +828,25 @@
             this.generateOrImportKeyToolStripMenuItem.Text = "Generate or import key";
             this.generateOrImportKeyToolStripMenuItem.Click += new System.EventHandler(this.generateOrImportKeyToolStripMenuItem_Click);
             // 
+            // submodulesToolStripMenuItem
+            // 
+            this.submodulesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageSubmodulesToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.updateAllSubmodulesToolStripMenuItem,
+            this.initializeAllSubmodulesToolStripMenuItem,
+            this.syncronizeAllSubmodulesToolStripMenuItem});
+            this.submodulesToolStripMenuItem.Name = "submodulesToolStripMenuItem";
+            this.submodulesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.submodulesToolStripMenuItem.Text = "Submodules";
+            // 
+            // manageSubmodulesToolStripMenuItem
+            // 
+            this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
+            this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules";
+            this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.manageSubmodulesToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -953,6 +979,32 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(197, 6);
+            // 
+            // updateAllSubmodulesToolStripMenuItem
+            // 
+            this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
+            this.updateAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
+            this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // initializeAllSubmodulesToolStripMenuItem
+            // 
+            this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
+            this.initializeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
+            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // syncronizeAllSubmodulesToolStripMenuItem
+            // 
+            this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
+            this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
+            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.syncronizeAllSubmodulesToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -1088,5 +1140,11 @@
         private System.Windows.Forms.TabPage CommitInfo;
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripMenuItem submodulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manageSubmodulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem updateAllSubmodulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem initializeAllSubmodulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem syncronizeAllSubmodulesToolStripMenuItem;
     }
 }

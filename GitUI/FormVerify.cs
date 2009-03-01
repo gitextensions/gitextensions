@@ -17,6 +17,7 @@ namespace GitUI
 
         private void FormVerify_Shown(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess("fsck-objects");
             Warnings.DataSource = process.outputString.ToString().Split('\n');
         }
@@ -28,6 +29,7 @@ namespace GitUI
 
         private void Warnings_DoubleClick(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string warningString = Warnings.SelectedValue as string;
             foreach (string sha1 in warningString.Split(' '))
             {

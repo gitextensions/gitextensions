@@ -57,5 +57,10 @@ namespace GitUI
             }
         }
 
+        private void Directory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

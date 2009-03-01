@@ -51,6 +51,7 @@
             this.Directory.Name = "Directory";
             this.Directory.Size = new System.Drawing.Size(266, 21);
             this.Directory.TabIndex = 1;
+            this.Directory.SelectedIndexChanged += new System.EventHandler(this.Directory_SelectedIndexChanged);
             this.Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Directory_KeyPress);
             // 
             // Browse
