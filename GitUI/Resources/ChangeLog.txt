@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.53
+	Fixed open repository after clone
+
 Version 1.52
 	Multiline commit messages can be viewed
 	Fixed bug preventing multiline message to be committed correctly

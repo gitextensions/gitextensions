@@ -64,6 +64,9 @@ namespace GitUI
                 if (!enabled)
                     return true;
 
+                if (Path != GitCommands.Settings.WorkingDirGitDir())
+                    return true;
+
                 return indexChanged;
             }
             set
