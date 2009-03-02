@@ -132,7 +132,7 @@ namespace GitUI
                 stashed = true;
             }
 
-            FormProcess process;
+            FormProcess process = null;
             if (Fetch.Checked)
                 /*Output.Text = */
                 process = new FormProcess(GitCommands.GitCommands.FetchCmd(source, Branches.Text));
@@ -160,7 +160,7 @@ namespace GitUI
                 }
             }
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && (process != null && !process.ErrorOccured()))
                 Close();
 
         }
