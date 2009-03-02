@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.54
+	Pull dialog will not be closed if pull failed
+	
 Version 1.53
 	Fixed open repository after clone
 
