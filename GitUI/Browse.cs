@@ -115,7 +115,7 @@ namespace GitUI
                 ShowRevisions();
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
-            this.Text = "Browse " + GitCommands.Settings.WorkingDir;
+            this.Text = "Browse " + GitCommands.Settings.WorkingDir + " - Git Extensions";
 
             if (validWorkingDir && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
             {
@@ -870,6 +870,11 @@ namespace GitUI
 
             GitCommands.Settings.WorkingDir += GitCommands.GitCommands.GetSubmoduleLocalPath(button.Text);
             InternalInitialize(true);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
     }

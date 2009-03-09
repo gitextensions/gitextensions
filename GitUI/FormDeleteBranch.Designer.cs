@@ -110,6 +110,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDeleteBranch";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
             this.Load += new System.EventHandler(this.FormDeleteBranch_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
