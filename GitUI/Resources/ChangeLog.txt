@@ -5,6 +5,8 @@ Version 1.55
 	Fetching a branch that does not exists locally will create a new branch with the same name locally
 	Open repository after clone improved
 	Added 'quick' stash and stash pop
+	Some settings are solved silent
+	Packed with Git-1.6.2-preview20090308.exe
 
 Version 1.54
 	Pull dialog will not be closed if pull failed
