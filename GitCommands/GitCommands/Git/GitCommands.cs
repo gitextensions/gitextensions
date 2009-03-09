@@ -824,6 +824,14 @@ namespace GitCommands
             return "Done";
         }
 
+        public static bool PathIsUrl(string path)
+        {
+            if (path.Contains("\\") || path.Contains("/"))
+                return true;
+
+            return false;
+        }
+
         public static string FetchCmd(string remote, string branch)
         {
             remote = FixPath(remote);
@@ -838,7 +846,12 @@ namespace GitCommands
                 localbranch = "+refs/heads/" + branch + "";
 
             string remotebranch;
-            if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
+            string remoteUrl = GetSetting("remote." + remote + ".url");
+
+            if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
+                remotebranch = ":refs/heads/" + branch + "";
+            else
+            if (PathIsUrl(remote) || string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteUrl))
                 remotebranch = "";
             else
                 remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
@@ -878,7 +891,12 @@ namespace GitCommands
                 localbranch = "+refs/heads/" + branch + "";
 
             string remotebranch;
-            if (string.IsNullOrEmpty(GetSetting("remote." + remote + ".url")) || string.IsNullOrEmpty(branch))
+            string remoteUrl = GetSetting("remote." + remote + ".url");
+
+            if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
+                remotebranch = ":refs/heads/" + branch + "";
+            else
+            if (string.IsNullOrEmpty(branch)  || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                 remotebranch = "";
             else
                 remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";

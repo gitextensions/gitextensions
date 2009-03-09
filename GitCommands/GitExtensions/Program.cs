@@ -68,8 +68,11 @@ namespace GitExtensions
                     
                     FormSettigns settings = new FormSettigns();
                     if (!settings.CheckSettings())
+                    {
+                        FormSettigns.AutoSolveAllSettings();
                         Application.Run(settings);
                         //settings.ShowDialog();
+                    }
                 }
             }
             catch
