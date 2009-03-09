@@ -37,6 +37,11 @@
             this.Workingdir = new System.Windows.Forms.ToolStripButton();
             this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
+            this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stashPopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.viewStashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPull = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
@@ -102,6 +107,13 @@
             this.generateOrImportKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.submodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.openSubmoduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,10 +132,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.syncronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -176,6 +184,7 @@
             this.Workingdir,
             this.CurrentBranch,
             this.toolStripSeparator1,
+            this.toolStripSplitStash,
             this.toolStripButton1,
             this.toolStripButtonPull,
             this.toolStripButtonPush,
@@ -214,6 +223,7 @@
             this.Workingdir.Name = "Workingdir";
             this.Workingdir.Size = new System.Drawing.Size(87, 22);
             this.Workingdir.Text = "WorkingDir";
+            this.Workingdir.ToolTipText = "Change working directory";
             this.Workingdir.Click += new System.EventHandler(this.Workingdir_Click_1);
             // 
             // CurrentBranch
@@ -223,13 +233,58 @@
             this.CurrentBranch.Name = "CurrentBranch";
             this.CurrentBranch.Size = new System.Drawing.Size(64, 22);
             this.CurrentBranch.Text = "Branch";
-            this.CurrentBranch.ToolTipText = "Current branch";
+            this.CurrentBranch.ToolTipText = "Switch branch";
             this.CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click_1);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSplitStash
+            // 
+            this.toolStripSplitStash.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitStash.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stashChangesToolStripMenuItem,
+            this.stashPopToolStripMenuItem,
+            this.toolStripSeparator9,
+            this.viewStashToolStripMenuItem});
+            this.toolStripSplitStash.Image = global::GitUI.Properties.Resources.stash1;
+            this.toolStripSplitStash.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitStash.Name = "toolStripSplitStash";
+            this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitStash.Text = "toolStripSplitButton1";
+            this.toolStripSplitStash.ToolTipText = "Stash changes";
+            this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.toolStripSplitStash_ButtonClick);
+            // 
+            // stashChangesToolStripMenuItem
+            // 
+            this.stashChangesToolStripMenuItem.Name = "stashChangesToolStripMenuItem";
+            this.stashChangesToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.stashChangesToolStripMenuItem.Text = "Stash";
+            this.stashChangesToolStripMenuItem.ToolTipText = "Stash changes";
+            this.stashChangesToolStripMenuItem.Click += new System.EventHandler(this.stashChangesToolStripMenuItem_Click);
+            // 
+            // stashPopToolStripMenuItem
+            // 
+            this.stashPopToolStripMenuItem.Name = "stashPopToolStripMenuItem";
+            this.stashPopToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.stashPopToolStripMenuItem.Text = "Stash pop";
+            this.stashPopToolStripMenuItem.ToolTipText = "Apply and drop single stash";
+            this.stashPopToolStripMenuItem.Click += new System.EventHandler(this.stashPopToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(126, 6);
+            // 
+            // viewStashToolStripMenuItem
+            // 
+            this.viewStashToolStripMenuItem.Name = "viewStashToolStripMenuItem";
+            this.viewStashToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.viewStashToolStripMenuItem.Text = "View stash";
+            this.viewStashToolStripMenuItem.ToolTipText = "View stash";
+            this.viewStashToolStripMenuItem.Click += new System.EventHandler(this.viewStashToolStripMenuItem_Click);
             // 
             // toolStripButton1
             // 
@@ -271,6 +326,7 @@
             this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.GitBash.Name = "GitBash";
             this.GitBash.Size = new System.Drawing.Size(23, 22);
+            this.GitBash.ToolTipText = "Git bash";
             this.GitBash.Click += new System.EventHandler(this.GitBash_Click);
             // 
             // EditSettings
@@ -280,6 +336,7 @@
             this.EditSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.EditSettings.Name = "EditSettings";
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
+            this.EditSettings.ToolTipText = "Settings";
             this.EditSettings.Click += new System.EventHandler(this.Settings_Click);
             // 
             // toolStripSeparator5
@@ -835,7 +892,9 @@
             this.toolStripSeparator8,
             this.updateAllSubmodulesToolStripMenuItem,
             this.initializeAllSubmodulesToolStripMenuItem,
-            this.syncronizeAllSubmodulesToolStripMenuItem});
+            this.syncronizeAllSubmodulesToolStripMenuItem,
+            this.toolStripSeparator10,
+            this.openSubmoduleToolStripMenuItem});
             this.submodulesToolStripMenuItem.Name = "submodulesToolStripMenuItem";
             this.submodulesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.submodulesToolStripMenuItem.Text = "Submodules";
@@ -843,9 +902,54 @@
             // manageSubmodulesToolStripMenuItem
             // 
             this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
-            this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules";
             this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.manageSubmodulesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(218, 6);
+            // 
+            // updateAllSubmodulesToolStripMenuItem
+            // 
+            this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
+            this.updateAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
+            this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // initializeAllSubmodulesToolStripMenuItem
+            // 
+            this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
+            this.initializeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
+            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // syncronizeAllSubmodulesToolStripMenuItem
+            // 
+            this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
+            this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
+            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.syncronizeAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(218, 6);
+            // 
+            // openSubmoduleToolStripMenuItem
+            // 
+            this.openSubmoduleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator11});
+            this.openSubmoduleToolStripMenuItem.Name = "openSubmoduleToolStripMenuItem";
+            this.openSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.openSubmoduleToolStripMenuItem.Text = "Browse submodule";
+            this.openSubmoduleToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openSubmoduleToolStripMenuItem_DropDownOpening);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(149, 6);
             // 
             // settingsToolStripMenuItem1
             // 
@@ -979,32 +1083,6 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(197, 6);
-            // 
-            // updateAllSubmodulesToolStripMenuItem
-            // 
-            this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
-            this.updateAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
-            this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesToolStripMenuItem_Click);
-            // 
-            // initializeAllSubmodulesToolStripMenuItem
-            // 
-            this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
-            this.initializeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
-            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesToolStripMenuItem_Click);
-            // 
-            // syncronizeAllSubmodulesToolStripMenuItem
-            // 
-            this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
-            this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
-            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.syncronizeAllSubmodulesToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -1146,5 +1224,13 @@
         private System.Windows.Forms.ToolStripMenuItem updateAllSubmodulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem initializeAllSubmodulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem syncronizeAllSubmodulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitStash;
+        private System.Windows.Forms.ToolStripMenuItem stashChangesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stashPopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripMenuItem viewStashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripMenuItem openSubmoduleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
     }
 }

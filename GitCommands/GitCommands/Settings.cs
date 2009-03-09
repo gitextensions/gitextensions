@@ -212,7 +212,7 @@ namespace GitCommands
             }
             set
             {
-                workingdir = GitCommands.FindGitWorkingDir(value);
+                workingdir = GitCommands.FindGitWorkingDir(value.Trim());
             }
         }
 

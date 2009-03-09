@@ -83,6 +83,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Clear);
+            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(708, 520);
             this.splitContainer1.SplitterDistance = 485;
             this.splitContainer1.TabIndex = 0;

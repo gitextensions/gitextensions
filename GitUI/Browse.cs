@@ -96,6 +96,7 @@ namespace GitUI
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
             NoGit.Visible = !validWorkingDir;
+            tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             CurrentBranch.Enabled = validWorkingDir;
@@ -106,6 +107,7 @@ namespace GitUI
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
+            toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
 
 
@@ -813,5 +815,62 @@ namespace GitUI
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
             InternalInitialize(true);
         }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void toolStripSplitStash_ButtonClick(object sender, EventArgs e)
+        {
+            new FormStash().ShowDialog();
+        }
+
+        private void stashChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess("stash save");
+        }
+
+        private void stashPopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess("stash pop");
+        }
+
+        private void viewStashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormStash().ShowDialog();
+        }
+
+        private void openSubmoduleToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            openSubmoduleToolStripMenuItem.DropDownItems.Clear();
+
+            List<GitSubmodule> submodules = GitCommands.GitCommands.GetSubmodules();
+
+            foreach (GitSubmodule submodule in submodules)
+            {
+                ToolStripButton submenu = new ToolStripButton(submodule.Name);
+                submenu.Click += submenu_Click;
+                openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
+            }
+
+            if (openSubmoduleToolStripMenuItem.DropDownItems.Count == 0)
+                openSubmoduleToolStripMenuItem.DropDownItems.Add("No submodules");
+        }
+
+        private void submenu_Click(object sender, EventArgs e)
+        {
+            ToolStripButton button = sender as ToolStripButton;
+
+            if (button == null)
+                return;
+
+
+            GitCommands.Settings.WorkingDir += GitCommands.GitCommands.GetSubmoduleLocalPath(button.Text);
+            InternalInitialize(true);
+        }
+
     }
 }

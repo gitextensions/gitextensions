@@ -610,6 +610,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\stash.png" />
+    <None Include="Icons\stash.bmp" />
+    <None Include="Icons\90.png" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
     <None Include="Resources\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />

@@ -25,6 +25,7 @@ namespace GitUI
         private void button1_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess("fsck-objects --lost-found");
+            FormVerify_Shown(null, null);
         }
 
         private void Warnings_DoubleClick(object sender, EventArgs e)
@@ -45,6 +46,7 @@ namespace GitUI
             if (MessageBox.Show("Are you sure you want to delete dangling objects?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("prune");
+                FormVerify_Shown(null, null);
             }
         }
 
