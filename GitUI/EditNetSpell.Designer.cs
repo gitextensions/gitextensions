@@ -1,0 +1,83 @@
+﻿namespace GitUI
+{
+    partial class EditNetSpell
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.TextBox = new System.Windows.Forms.RichTextBox();
+            this.SpellCheckContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.SpellCheckContextMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // TextBox
+            // 
+            this.TextBox.AcceptsTab = true;
+            this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
+            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextBox.Location = new System.Drawing.Point(0, 0);
+            this.TextBox.Name = "TextBox";
+            this.TextBox.Size = new System.Drawing.Size(150, 150);
+            this.TextBox.TabIndex = 0;
+            this.TextBox.Text = "";
+            this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.TextBox.Click += new System.EventHandler(this.TextBox_Click);
+            // 
+            // SpellCheckContextMenu
+            // 
+            this.SpellCheckContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator1});
+            this.SpellCheckContextMenu.Name = "SpellCheckContextMenu";
+            this.SpellCheckContextMenu.Size = new System.Drawing.Size(61, 10);
+            this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenu_Opening);
+            this.SpellCheckContextMenu.Click += new System.EventHandler(this.SpellCheckContextMenu_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // EditNetSpell
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TextBox);
+            this.Name = "EditNetSpell";
+            this.Load += new System.EventHandler(this.EditNetSpell_Load);
+            this.SpellCheckContextMenu.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.RichTextBox TextBox;
+        private System.Windows.Forms.ContextMenuStrip SpellCheckContextMenu;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+    }
+}

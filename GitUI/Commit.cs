@@ -484,5 +484,10 @@ namespace GitUI
         {
 
         }
+
+        private void SpellCheck_Click(object sender, EventArgs e)
+        {
+            Message.CheckSpelling();
+        }
     }
 }
