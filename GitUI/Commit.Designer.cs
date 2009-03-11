@@ -72,8 +72,9 @@
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
-            this.Message = new System.Windows.Forms.RichTextBox();
+            this.Message = new GitUI.EditNetSpell();
             this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.SpellCheck = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -574,6 +575,7 @@
             // 
             // splitContainer8.Panel1
             // 
+            this.splitContainer8.Panel1.Controls.Add(this.SpellCheck);
             this.splitContainer8.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer8.Panel2
@@ -600,7 +602,6 @@
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(364, 106);
             this.Message.TabIndex = 0;
-            this.Message.Text = "";
             // 
             // OutPut
             // 
@@ -611,6 +612,16 @@
             this.OutPut.Size = new System.Drawing.Size(364, 134);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
+            // 
+            // SpellCheck
+            // 
+            this.SpellCheck.Location = new System.Drawing.Point(192, 2);
+            this.SpellCheck.Name = "SpellCheck";
+            this.SpellCheck.Size = new System.Drawing.Size(112, 23);
+            this.SpellCheck.TabIndex = 2;
+            this.SpellCheck.Text = "Check spelling";
+            this.SpellCheck.UseVisualStyleBackColor = true;
+            this.SpellCheck.Click += new System.EventHandler(this.SpellCheck_Click);
             // 
             // FormCommit
             // 
@@ -671,7 +682,6 @@
         private System.Windows.Forms.RichTextBox OutPut;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.RichTextBox Message;
         private System.Windows.Forms.DataGridView Unstaged;
         private System.Windows.Forms.DataGridView Staged;
         private System.Windows.Forms.Label label1;
@@ -712,5 +722,7 @@
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
         private FileViewer SelectedDiff;
+        private EditNetSpell Message;
+        private System.Windows.Forms.Button SpellCheck;
     }
 }

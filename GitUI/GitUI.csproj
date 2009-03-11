@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
+    <Reference Include="NetSpell.SpellChecker, Version=2.1.7.41329, Culture=neutral, PublicKeyToken=318b389f0db66e46">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\NetSpell.SpellChecker.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
@@ -71,6 +75,12 @@
     </Compile>
     <Compile Include="Commit.Designer.cs">
       <DependentUpon>Commit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditNetSpell.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EditNetSpell.Designer.cs">
+      <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
     <Compile Include="EditorOptions.cs" />
     <Compile Include="FileViewer.cs">
@@ -395,6 +405,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditNetSpell.resx">
+      <DependentUpon>EditNetSpell.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FileViewer.resx">
