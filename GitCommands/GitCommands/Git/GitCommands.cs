@@ -17,11 +17,12 @@ namespace GitCommands
             if (string.IsNullOrEmpty(startDir))
                 return "";
 
-            string dir = startDir;
-            if (!dir.EndsWith("\\") && !dir.EndsWith("/"))
-                dir += "\\";
+            if (!startDir.EndsWith("\\") && !startDir.EndsWith("/"))
+                startDir += "\\";
 
-            while (dir.LastIndexOfAny(new char[]{'\\', '/'}) > 0)
+            string dir = startDir;
+
+            while (dir.LastIndexOfAny(new char[] { '\\', '/' }) > 0)
             {
                 dir = dir.Substring(0, dir.LastIndexOfAny(new char[] { '\\', '/' }));
 
@@ -344,10 +345,10 @@ namespace GitCommands
 
         static public bool InTheMiddleOfConflictedMerge()
         {
-            if (Settings.UseFastChecks)
-                return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));            
-            else
-                return RunCmd(Settings.GitDir + "git.cmd", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
+            //if (Settings.UseFastChecks)
+                return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));
+            //else
+            //    return RunCmd(Settings.GitDir + "git.cmd", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
         }
 
         static public List<GitItem> GetConflictedFiles()

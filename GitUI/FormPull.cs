@@ -110,6 +110,8 @@ namespace GitUI
             if (Fetch.Checked)
                 GitCommands.Settings.PullMerge = "fetch";
 
+            GitCommands.Settings.AutoStash = AutoStash.Checked;
+
             RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
             string source;
@@ -147,16 +149,19 @@ namespace GitUI
             if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 new FormRebase().ShowDialog();
-                return;
             }
-
-            MergeConflictHandler.HandleMergeConflicts();
+            else
+            {
+                MergeConflictHandler.HandleMergeConflicts();
+            }
 
             if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 if (MessageBox.Show("Apply stashed items to working dir again?", "Auto stash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormProcess("stash pop");
+
+                    MergeConflictHandler.HandleMergeConflicts();
                 }
             }
 
@@ -179,6 +184,8 @@ namespace GitUI
             Merge.Checked = GitCommands.Settings.PullMerge == "merge";
             Rebase.Checked = GitCommands.Settings.PullMerge == "rebase";
             Fetch.Checked = GitCommands.Settings.PullMerge == "fetch";
+
+            AutoStash.Checked = GitCommands.Settings.AutoStash;
         }
 
         private void PullSource_DrawItem(object sender, DrawItemEventArgs e)
