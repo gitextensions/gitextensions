@@ -55,5 +55,10 @@ namespace GitUI
                 Directory.Text = browseDialog.SelectedPath;
             }
         }
+
+        private void FormInit_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

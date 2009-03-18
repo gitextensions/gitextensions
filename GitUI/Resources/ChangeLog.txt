@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 1.56
+	Settings are saved when dialog is closed not only on OK
+	Load PuTTY key dialog is closed after loading key
+	Mergeconflicts during apply stash after pull are shown
+	Revision log is now refreshed correctly after using stash from toolbar
+
 Version 1.55
 	Fetching a branch that does not exists locally will create a new branch with the same name locally
 	Open repository after clone improved
