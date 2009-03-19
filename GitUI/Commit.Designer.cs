@@ -74,7 +74,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new GitUI.EditNetSpell();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.SpellCheck = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -450,7 +449,7 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
             this.splitContainer3.Size = new System.Drawing.Size(502, 648);
-            this.splitContainer3.SplitterDistance = 371;
+            this.splitContainer3.SplitterDistance = 337;
             this.splitContainer3.TabIndex = 0;
             // 
             // SelectedDiff
@@ -458,7 +457,7 @@
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(502, 371);
+            this.SelectedDiff.Size = new System.Drawing.Size(502, 337);
             this.SelectedDiff.TabIndex = 0;
             // 
             // splitContainer6
@@ -480,7 +479,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(502, 273);
+            this.splitContainer6.Size = new System.Drawing.Size(502, 307);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
@@ -561,8 +560,8 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer7.Size = new System.Drawing.Size(364, 273);
-            this.splitContainer7.SplitterDistance = 135;
+            this.splitContainer7.Size = new System.Drawing.Size(364, 307);
+            this.splitContainer7.SplitterDistance = 151;
             this.splitContainer7.TabIndex = 0;
             // 
             // splitContainer8
@@ -575,13 +574,12 @@
             // 
             // splitContainer8.Panel1
             // 
-            this.splitContainer8.Panel1.Controls.Add(this.SpellCheck);
             this.splitContainer8.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.Message);
-            this.splitContainer8.Size = new System.Drawing.Size(364, 135);
+            this.splitContainer8.Size = new System.Drawing.Size(364, 151);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
@@ -599,8 +597,9 @@
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Message.Location = new System.Drawing.Point(0, 0);
+            this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(364, 106);
+            this.Message.Size = new System.Drawing.Size(364, 122);
             this.Message.TabIndex = 0;
             // 
             // OutPut
@@ -609,19 +608,9 @@
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(364, 134);
+            this.OutPut.Size = new System.Drawing.Size(364, 152);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
-            // 
-            // SpellCheck
-            // 
-            this.SpellCheck.Location = new System.Drawing.Point(192, 2);
-            this.SpellCheck.Name = "SpellCheck";
-            this.SpellCheck.Size = new System.Drawing.Size(112, 23);
-            this.SpellCheck.TabIndex = 2;
-            this.SpellCheck.Text = "Check spelling";
-            this.SpellCheck.UseVisualStyleBackColor = true;
-            this.SpellCheck.Click += new System.EventHandler(this.SpellCheck_Click);
             // 
             // FormCommit
             // 
@@ -723,6 +712,5 @@
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
         private FileViewer SelectedDiff;
         private EditNetSpell Message;
-        private System.Windows.Forms.Button SpellCheck;
     }
 }

@@ -38,6 +38,8 @@ namespace GitExtensions
                 if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
+                if (Application.UserAppDataRegistry.GetValue("dictionary") != null) GitCommands.Settings.Dictionary = Application.UserAppDataRegistry.GetValue("dictionary").ToString();
+
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) GitCommands.Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
                 if (Application.UserAppDataRegistry.GetValue("relativedate") != null) GitCommands.Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
@@ -261,6 +263,8 @@ namespace GitExtensions
                 Application.UserAppDataRegistry.SetValue("plink", GitCommands.Settings.Plink);
                 Application.UserAppDataRegistry.SetValue("puttygen", GitCommands.Settings.Puttygen);
                 Application.UserAppDataRegistry.SetValue("pageant", GitCommands.Settings.Pageant);
+                
+                Application.UserAppDataRegistry.SetValue("dictionary", GitCommands.Settings.Dictionary);
             }
             catch
             {

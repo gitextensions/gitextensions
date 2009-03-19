@@ -19,8 +19,24 @@ namespace GitUI
             InitializeComponent();
         }
 
+        public override string Text
+        {
+            get
+            {
+                return TextBox.Text;
+            }
+            set
+            {
+                TextBox.Text = value;
+            }
+        }
+
+        public Font MistakeFont { get; set; }
+
         private void EditNetSpell_Load(object sender, EventArgs e)
         {
+            this.MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
+            
             this.components = new System.ComponentModel.Container();
             this.wordDictionary = new NetSpell.SpellChecker.Dictionary.WordDictionary(components);
             this.spelling = new NetSpell.SpellChecker.Spelling(components);
@@ -39,7 +55,7 @@ namespace GitUI
             // 
             // wordDictionary
             // 
-            this.wordDictionary.DictionaryFile = @"D:\NetSpell\dic\en-US.dic";
+            this.wordDictionary.DictionaryFile = GitCommands.Settings.GetDictionaryDir() + GitCommands.Settings.Dictionary + ".dic";
 
             SpellCheckContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SpellCheckContextMenu_ItemClicked);
             TextBox.MouseDown += new MouseEventHandler(TextBox_MouseDown);
@@ -49,12 +65,16 @@ namespace GitUI
         void spelling_MisspelledWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
         {
             this.TextBox.Select(e.TextIndex, e.Word.Length);
-            this.TextBox.SelectionBackColor = Color.OrangeRed;
+            //this.TextBox.SelectionBackColor = Color.OrangeRed;
+            this.TextBox.SelectionFont = MistakeFont;
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            CheckSpelling();
+            if (GitCommands.Settings.Dictionary == "None")
+                return;
+
+            SpellCheckTimer.Enabled = true;
         }
 
         public void CheckSpelling()
@@ -63,11 +83,18 @@ namespace GitUI
             int length = this.TextBox.SelectionLength;
 
             this.TextBox.Select(0, this.TextBox.Text.Length);
-            this.TextBox.SelectionBackColor = Color.White;
-
-            this.spelling.Text = this.TextBox.Text;
-            this.spelling.ShowDialog = false;
-            this.spelling.SpellCheck();
+            //this.TextBox.SelectionBackColor = Color.White;
+            this.TextBox.SelectionFont = TextBox.Font; 
+            
+            try
+            {
+                this.spelling.Text = this.TextBox.Text;
+                this.spelling.ShowDialog = false;
+                this.spelling.SpellCheck();
+            }
+            catch
+            {
+            }
 
             if (start > this.TextBox.Text.Length)
                 start = this.TextBox.Text.Length;
@@ -75,7 +102,7 @@ namespace GitUI
             if ((start + length) > this.TextBox.Text.Length)
                 length = 0;
 
-            this.TextBox.Select(start, length);            
+            this.TextBox.Select(start, length);
         }
 
         private void spelling_DeletedWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
@@ -124,35 +151,40 @@ namespace GitUI
 
         private void SpellCheckContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            char[] seperators = new char[]{' ', '\\', '/', '-', '=', '!', '.', ',', '|', '"', '\'', '&', '*', '@', '#', '(', ')', '[', ']', '{', '}', '+', '^', ':', ';', '~'};
-
-            int pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
-
-            if (pos <= 0)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            this.spelling.Text = TextBox.Text.Substring(TextBox.Text.Substring(0, pos).LastIndexOfAny(seperators));
-            this.spelling.WordIndex = 0;
-            this.spelling.ShowDialog = false;
-            this.spelling.SpellCheck();
-
-            //generate suggestions
-            this.spelling.Suggest();
-
             SpellCheckContextMenu.Items.Clear();
 
-            SpellCheckContextMenu.Items.Add("Add to dictionary");
-            SpellCheckContextMenu.Items.Add("Ignore word");
-            SpellCheckContextMenu.Items.Add("Remove word");
-
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-
-            foreach (string suggestion in (string[])this.spelling.Suggestions.ToArray(typeof(string)))
+            try
             {
-                SpellCheckContextMenu.Items.Add(suggestion);
+                int pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+
+                if (pos <= 0)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                this.spelling.Text = TextBox.Text;
+
+                this.spelling.WordIndex = this.spelling.GetWordIndexFromTextIndex(pos);
+                this.spelling.ShowDialog = false;
+                this.spelling.MaxSuggestions = 10;
+
+                //generate suggestions
+                this.spelling.Suggest();
+
+                SpellCheckContextMenu.Items.Add("Add to dictionary");
+                SpellCheckContextMenu.Items.Add("Ignore word");
+                SpellCheckContextMenu.Items.Add("Remove word");
+
+                SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+
+                foreach (string suggestion in (string[])this.spelling.Suggestions.ToArray(typeof(string)))
+                {
+                    SpellCheckContextMenu.Items.Add(suggestion);
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -182,6 +214,13 @@ namespace GitUI
         private void TextBox_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void SpellCheckTimer_Tick(object sender, EventArgs e)
+        {
+            CheckSpelling();
+            SpellCheckTimer.Enabled = false;
+            SpellCheckTimer.Interval = 500;
         }
     }
 }

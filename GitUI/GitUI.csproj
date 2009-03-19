@@ -39,9 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
-    <Reference Include="NetSpell.SpellChecker, Version=2.1.7.41329, Culture=neutral, PublicKeyToken=318b389f0db66e46">
+    <Reference Include="SpellChecker, Version=2.1.7.34261, Culture=neutral, PublicKeyToken=318b389f0db66e46, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\NetSpell.SpellChecker.dll</HintPath>
+      <HintPath>..\Bin\SpellChecker.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
@@ -413,6 +413,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddFiles.resx">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
@@ -436,6 +437,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormChangeLog1.resx">
       <DependentUpon>FormChangeLog1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCheckout.resx">
       <DependentUpon>FormCheckout.cs</DependentUpon>
@@ -515,6 +517,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormModifiedDeletedCreated.resx">
       <DependentUpon>FormModifiedDeletedCreated.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormProcess.resx">
       <DependentUpon>FormProcess.cs</DependentUpon>
@@ -550,6 +553,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRevert.resx">
       <DependentUpon>FormRevert.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRevertCommitSmall.resx">
       <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>

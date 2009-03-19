@@ -32,6 +32,7 @@
             this.TextBox = new System.Windows.Forms.RichTextBox();
             this.SpellCheckContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.SpellCheckContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,7 +61,12 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(57, 6);
+            // 
+            // SpellCheckTimer
+            // 
+            this.SpellCheckTimer.Interval = 250;
+            this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimer_Tick);
             // 
             // EditNetSpell
             // 
@@ -79,5 +85,6 @@
         private System.Windows.Forms.RichTextBox TextBox;
         private System.Windows.Forms.ContextMenuStrip SpellCheckContextMenu;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Timer SpellCheckTimer;
     }
 }
