@@ -30,6 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
             this.LocalSettings = new System.Windows.Forms.TabPage();
+            this.InvalidGitPathLocal = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.LocalAutoCrlf = new System.Windows.Forms.CheckBox();
             this.NoGitRepo = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.MergeTool = new System.Windows.Forms.ComboBox();
@@ -68,6 +72,10 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.GlobalAutoCrlf = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.MergeToolCmd = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -106,24 +114,30 @@
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
-            this.GlobalAutoCrlf = new System.Windows.Forms.CheckBox();
-            this.LocalAutoCrlf = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.LocalSettings.SuspendLayout();
+            this.InvalidGitPathLocal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.GlobalSettingsPage.SuspendLayout();
+            this.InvalidGitPathGlobal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.Ssh.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // LocalSettings
             // 
+            this.LocalSettings.Controls.Add(this.InvalidGitPathLocal);
             this.LocalSettings.Controls.Add(this.LocalAutoCrlf);
             this.LocalSettings.Controls.Add(this.NoGitRepo);
             this.LocalSettings.Controls.Add(this.label20);
@@ -144,12 +158,56 @@
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
             // 
+            // InvalidGitPathLocal
+            // 
+            this.InvalidGitPathLocal.BackColor = System.Drawing.SystemColors.Info;
+            this.InvalidGitPathLocal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.InvalidGitPathLocal.Controls.Add(this.label21);
+            this.InvalidGitPathLocal.Controls.Add(this.pictureBox3);
+            this.InvalidGitPathLocal.Location = new System.Drawing.Point(295, 8);
+            this.InvalidGitPathLocal.Name = "InvalidGitPathLocal";
+            this.InvalidGitPathLocal.Size = new System.Drawing.Size(246, 62);
+            this.InvalidGitPathLocal.TabIndex = 20;
+            this.InvalidGitPathLocal.Visible = false;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(63, 9);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(175, 39);
+            this.label21.TabIndex = 19;
+            this.label21.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nlocal settin" +
+                "gs.\r\n";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::GitUI.Properties.Resources.error;
+            this.pictureBox3.Location = new System.Drawing.Point(3, 4);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox3.TabIndex = 18;
+            this.pictureBox3.TabStop = false;
+            // 
+            // LocalAutoCrlf
+            // 
+            this.LocalAutoCrlf.AutoSize = true;
+            this.LocalAutoCrlf.Checked = true;
+            this.LocalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.LocalAutoCrlf.Location = new System.Drawing.Point(11, 150);
+            this.LocalAutoCrlf.Name = "LocalAutoCrlf";
+            this.LocalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.LocalAutoCrlf.Size = new System.Drawing.Size(300, 17);
+            this.LocalAutoCrlf.TabIndex = 18;
+            this.LocalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
+            this.LocalAutoCrlf.UseVisualStyleBackColor = true;
+            // 
             // NoGitRepo
             // 
             this.NoGitRepo.AutoSize = true;
             this.NoGitRepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
-            this.NoGitRepo.Location = new System.Drawing.Point(350, 70);
+            this.NoGitRepo.Location = new System.Drawing.Point(350, 76);
             this.NoGitRepo.Name = "NoGitRepo";
             this.NoGitRepo.Size = new System.Drawing.Size(106, 13);
             this.NoGitRepo.TabIndex = 12;
@@ -579,6 +637,7 @@
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.InvalidGitPathGlobal);
             this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCrlf);
             this.GlobalSettingsPage.Controls.Add(this.button1);
             this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
@@ -602,6 +661,50 @@
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
+            // 
+            // InvalidGitPathGlobal
+            // 
+            this.InvalidGitPathGlobal.BackColor = System.Drawing.SystemColors.Info;
+            this.InvalidGitPathGlobal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.InvalidGitPathGlobal.Controls.Add(this.label9);
+            this.InvalidGitPathGlobal.Controls.Add(this.pictureBox1);
+            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(295, 8);
+            this.InvalidGitPathGlobal.Name = "InvalidGitPathGlobal";
+            this.InvalidGitPathGlobal.Size = new System.Drawing.Size(246, 62);
+            this.InvalidGitPathGlobal.TabIndex = 19;
+            this.InvalidGitPathGlobal.Visible = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(63, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(175, 39);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nglobal setti" +
+                "ngs.\r\n";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.error;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox1.TabIndex = 18;
+            this.pictureBox1.TabStop = false;
+            // 
+            // GlobalAutoCrlf
+            // 
+            this.GlobalAutoCrlf.AutoSize = true;
+            this.GlobalAutoCrlf.Checked = true;
+            this.GlobalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.GlobalAutoCrlf.Location = new System.Drawing.Point(10, 199);
+            this.GlobalAutoCrlf.Name = "GlobalAutoCrlf";
+            this.GlobalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GlobalAutoCrlf.Size = new System.Drawing.Size(300, 17);
+            this.GlobalAutoCrlf.TabIndex = 17;
+            this.GlobalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
+            this.GlobalAutoCrlf.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -986,31 +1089,24 @@
             this.directorySearcher2.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher2.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
-            // GlobalAutoCrlf
+            // label10
             // 
-            this.GlobalAutoCrlf.AutoSize = true;
-            this.GlobalAutoCrlf.Checked = true;
-            this.GlobalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.GlobalAutoCrlf.Location = new System.Drawing.Point(10, 199);
-            this.GlobalAutoCrlf.Name = "GlobalAutoCrlf";
-            this.GlobalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.GlobalAutoCrlf.Size = new System.Drawing.Size(300, 17);
-            this.GlobalAutoCrlf.TabIndex = 17;
-            this.GlobalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
-            this.GlobalAutoCrlf.UseVisualStyleBackColor = true;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(63, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(175, 39);
+            this.label10.TabIndex = 19;
+            this.label10.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nany global s" +
+                "etting.\r\n";
             // 
-            // LocalAutoCrlf
+            // pictureBox2
             // 
-            this.LocalAutoCrlf.AutoSize = true;
-            this.LocalAutoCrlf.Checked = true;
-            this.LocalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.LocalAutoCrlf.Location = new System.Drawing.Point(11, 150);
-            this.LocalAutoCrlf.Name = "LocalAutoCrlf";
-            this.LocalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.LocalAutoCrlf.Size = new System.Drawing.Size(300, 17);
-            this.LocalAutoCrlf.TabIndex = 18;
-            this.LocalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
-            this.LocalAutoCrlf.UseVisualStyleBackColor = true;
+            this.pictureBox2.Image = global::GitUI.Properties.Resources.error;
+            this.pictureBox2.Location = new System.Drawing.Point(3, 4);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox2.TabIndex = 18;
+            this.pictureBox2.TabStop = false;
             // 
             // FormSettigns
             // 
@@ -1027,8 +1123,12 @@
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.FormSettigns_Load);
             this.Shown += new System.EventHandler(this.FormSettigns_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettigns_FormClosing);
             this.LocalSettings.ResumeLayout(false);
             this.LocalSettings.PerformLayout();
+            this.InvalidGitPathLocal.ResumeLayout(false);
+            this.InvalidGitPathLocal.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -1037,6 +1137,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
+            this.InvalidGitPathGlobal.ResumeLayout(false);
+            this.InvalidGitPathGlobal.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.Ssh.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -1045,6 +1148,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1130,6 +1234,14 @@
         private System.Windows.Forms.CheckBox ShowRelativeDate;
         private System.Windows.Forms.CheckBox GlobalAutoCrlf;
         private System.Windows.Forms.CheckBox LocalAutoCrlf;
+        private System.Windows.Forms.Panel InvalidGitPathGlobal;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel InvalidGitPathLocal;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.PictureBox pictureBox2;
 
     }
 }

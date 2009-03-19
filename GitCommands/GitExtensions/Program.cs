@@ -32,12 +32,13 @@ namespace GitExtensions
                 }
 
 
-
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) GitCommands.Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.GitCommands.SetSsh( Application.UserAppDataRegistry.GetValue("gitssh").ToString() );
                 if (Application.UserAppDataRegistry.GetValue("plink") != null) GitCommands.Settings.Plink = Application.UserAppDataRegistry.GetValue("plink").ToString();
                 if (Application.UserAppDataRegistry.GetValue("puttygen") != null) GitCommands.Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) GitCommands.Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
+
+                if (Application.UserAppDataRegistry.GetValue("autostash") != null) GitCommands.Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
                 if (Application.UserAppDataRegistry.GetValue("relativedate") != null) GitCommands.Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) GitCommands.Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
@@ -254,6 +255,8 @@ namespace GitExtensions
 
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GitCommands.GetSsh());
                 Application.UserAppDataRegistry.SetValue("pullmerge", GitCommands.Settings.PullMerge);
+
+                Application.UserAppDataRegistry.SetValue("autostash", GitCommands.Settings.AutoStash);
 
                 Application.UserAppDataRegistry.SetValue("plink", GitCommands.Settings.Plink);
                 Application.UserAppDataRegistry.SetValue("puttygen", GitCommands.Settings.Puttygen);

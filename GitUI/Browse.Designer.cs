@@ -123,6 +123,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editmailmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.settingsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitcountPerUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +135,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -495,7 +495,7 @@
             this.Tree.Location = new System.Drawing.Point(4, 22);
             this.Tree.Name = "Tree";
             this.Tree.Padding = new System.Windows.Forms.Padding(3);
-            this.Tree.Size = new System.Drawing.Size(788, 259);
+            this.Tree.Size = new System.Drawing.Size(788, 260);
             this.Tree.TabIndex = 0;
             this.Tree.Text = "File tree";
             this.Tree.UseVisualStyleBackColor = true;
@@ -514,7 +514,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.FileText);
-            this.splitContainer4.Size = new System.Drawing.Size(782, 253);
+            this.splitContainer4.Size = new System.Drawing.Size(782, 254);
             this.splitContainer4.SplitterDistance = 213;
             this.splitContainer4.TabIndex = 1;
             // 
@@ -523,7 +523,7 @@
             this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(213, 253);
+            this.GitTree.Size = new System.Drawing.Size(213, 254);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
             this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
@@ -534,7 +534,7 @@
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(565, 253);
+            this.FileText.Size = new System.Drawing.Size(565, 254);
             this.FileText.TabIndex = 0;
             // 
             // Commit
@@ -542,7 +542,7 @@
             this.Commit.Controls.Add(this.splitContainer1);
             this.Commit.Location = new System.Drawing.Point(4, 22);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(788, 259);
+            this.Commit.Size = new System.Drawing.Size(788, 260);
             this.Commit.TabIndex = 1;
             this.Commit.Text = "Diff";
             this.Commit.UseVisualStyleBackColor = true;
@@ -561,7 +561,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(788, 259);
+            this.splitContainer1.Size = new System.Drawing.Size(788, 260);
             this.splitContainer1.SplitterDistance = 217;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -582,7 +582,7 @@
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(567, 259);
+            this.DiffText.Size = new System.Drawing.Size(567, 260);
             this.DiffText.TabIndex = 0;
             // 
             // menuStrip1
@@ -654,21 +654,21 @@
             // 
             this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources._26;
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
-            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
             this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
             // 
             // gitGUIToolStripMenuItem
             // 
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
-            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
             this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
             // 
             // kGitToolStripMenuItem
             // 
             this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
-            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.kGitToolStripMenuItem.Text = "GitK";
             this.kGitToolStripMenuItem.Click += new System.EventHandler(this.kGitToolStripMenuItem_Click);
             // 
@@ -969,7 +969,7 @@
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(57, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(149, 6);
             // 
             // settingsToolStripMenuItem1
             // 
@@ -1026,6 +1026,11 @@
             this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.editmailmapToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(158, 6);
             // 
             // settingsToolStripMenuItem2
             // 
@@ -1104,11 +1109,6 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // toolStripSeparator13
-            // 
-            this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(158, 6);
             // 
             // FormBrowse
             // 

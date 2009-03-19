@@ -33,8 +33,8 @@
             this.Directory = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Personal = new System.Windows.Forms.RadioButton();
             this.Central = new System.Windows.Forms.RadioButton();
+            this.Personal = new System.Windows.Forms.RadioButton();
             this.Init = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -78,6 +78,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
             // 
+            // Central
+            // 
+            this.Central.AutoSize = true;
+            this.Central.Location = new System.Drawing.Point(6, 42);
+            this.Central.Name = "Central";
+            this.Central.Size = new System.Drawing.Size(274, 17);
+            this.Central.TabIndex = 1;
+            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.Central.UseVisualStyleBackColor = true;
+            // 
             // Personal
             // 
             this.Personal.AutoSize = true;
@@ -89,16 +99,6 @@
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
-            // 
-            // Central
-            // 
-            this.Central.AutoSize = true;
-            this.Central.Location = new System.Drawing.Point(6, 42);
-            this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(274, 17);
-            this.Central.TabIndex = 1;
-            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
-            this.Central.UseVisualStyleBackColor = true;
             // 
             // Init
             // 
@@ -124,6 +124,7 @@
             this.Name = "FormInit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Initialize new repository";
+            this.Load += new System.EventHandler(this.FormInit_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

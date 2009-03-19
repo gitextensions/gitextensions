@@ -360,7 +360,10 @@ namespace GitUI
 
         private void initNewRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormInit().ShowDialog();
+            if (!GitCommands.Settings.ValidWorkingDir())
+                new FormInit(GitCommands.Settings.WorkingDir).ShowDialog();
+            else
+                new FormInit().ShowDialog();
             Initialize();
         }
 
@@ -755,7 +758,7 @@ namespace GitUI
         
         private void Init_Click(object sender, EventArgs e)
         {
-            new FormInit().ShowDialog();
+            new FormInit(GitCommands.Settings.WorkingDir).ShowDialog();
             indexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
@@ -795,25 +798,25 @@ namespace GitUI
         {
             FormSubmodules formSubmodules = new FormSubmodules();
             formSubmodules.ShowDialog();
-            InternalInitialize(true);
+            Initialize();
         }
 
         private void updateAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
-            InternalInitialize(true);
+            Initialize();
         }
 
         private void initializeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
-            InternalInitialize(true);
+            Initialize();
         }
 
         private void syncronizeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
-            InternalInitialize(true);
+            Initialize();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -824,21 +827,25 @@ namespace GitUI
         private void toolStripSplitStash_ButtonClick(object sender, EventArgs e)
         {
             new FormStash().ShowDialog();
+            Initialize();
         }
 
         private void stashChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormProcess("stash save");
+            Initialize();
         }
 
         private void stashPopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormProcess("stash pop");
+            Initialize();
         }
 
         private void viewStashToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormStash().ShowDialog();
+            Initialize();
         }
 
         private void openSubmoduleToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

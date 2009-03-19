@@ -22,6 +22,20 @@ namespace GitCommands
             }
         }
 
+        private static bool autoStash = false;
+        public static bool AutoStash
+        {
+            get
+            {
+                return autoStash;
+            }
+            set
+            {
+                autoStash = value;
+            }
+        }
+
+
         private static bool showGitCommandLine = false;
         public static bool ShowGitCommandLine
         {
@@ -127,6 +141,8 @@ namespace GitCommands
                 gitDir = value;
                 if (gitDir.Length > 0 && gitDir[gitDir.Length - 1] != '\\')
                     gitDir += "\\";
+                gitDir = gitDir.Replace("\\\\", "\\");
+                gitDir = gitDir.Replace("//", "/");
 
             }
         }
