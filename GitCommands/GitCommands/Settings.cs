@@ -35,6 +35,18 @@ namespace GitCommands
             }
         }
 
+        private static string dictionary = "en-US";
+        public static string Dictionary
+        {
+            get
+            {
+                return dictionary;
+            }
+            set
+            {
+                dictionary = value;
+            }
+        }
 
         private static bool showGitCommandLine = false;
         public static bool ShowGitCommandLine
@@ -100,6 +112,15 @@ namespace GitCommands
                 closeProcessDialog = value;
             }
         }
+
+        public static string GetDictionaryDir()
+        {
+            if (Application.UserAppDataRegistry.GetValue("InstallDir") != null)
+                return GetInstallDir() + "\\Dictionaries\\";
+
+            return "";
+        }
+
 
         public static string GetInstallDir()
         {

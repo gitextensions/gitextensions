@@ -116,6 +116,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.Dictionary = new System.Windows.Forms.ComboBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -472,6 +474,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.Dictionary);
+            this.TabPageGitExtensions.Controls.Add(this.label22);
             this.TabPageGitExtensions.Controls.Add(this.ShowRelativeDate);
             this.TabPageGitExtensions.Controls.Add(this.UseFastChecks);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
@@ -496,7 +500,7 @@
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(118, 208);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(119, 241);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(203, 17);
@@ -507,7 +511,7 @@
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(46, 185);
+            this.UseFastChecks.Location = new System.Drawing.Point(47, 218);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(275, 17);
@@ -518,7 +522,7 @@
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(38, 139);
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(39, 172);
             this.ShowGitCommandLine.Name = "ShowGitCommandLine";
             this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitCommandLine.Size = new System.Drawing.Size(283, 17);
@@ -529,7 +533,7 @@
             // ShowRevisionGraph
             // 
             this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(135, 162);
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(136, 195);
             this.ShowRevisionGraph.Name = "ShowRevisionGraph";
             this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRevisionGraph.Size = new System.Drawing.Size(186, 17);
@@ -541,7 +545,7 @@
             // CloseProcessDialog
             // 
             this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(7, 116);
+            this.CloseProcessDialog.Location = new System.Drawing.Point(8, 149);
             this.CloseProcessDialog.Name = "CloseProcessDialog";
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(314, 17);
@@ -1108,6 +1112,24 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(8, 119);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(152, 13);
+            this.label22.TabIndex = 14;
+            this.label22.Text = "Dictionary for spelling checker.";
+            // 
+            // Dictionary
+            // 
+            this.Dictionary.FormattingEnabled = true;
+            this.Dictionary.Location = new System.Drawing.Point(305, 111);
+            this.Dictionary.Name = "Dictionary";
+            this.Dictionary.Size = new System.Drawing.Size(242, 21);
+            this.Dictionary.TabIndex = 15;
+            this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1242,6 +1264,8 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox Dictionary;
 
     }
 }

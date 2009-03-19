@@ -56,6 +56,7 @@ namespace GitUI
             Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
             MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
 
+            Dictionary.Text = GitCommands.Settings.Dictionary;
 
             GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
             GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
@@ -117,6 +118,22 @@ namespace GitUI
             GitCommands.Settings.GitDir = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
+            GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
+            GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
+            GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+
+            GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
+            GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
+
+            GitCommands.Settings.Dictionary = Dictionary.Text;
+
+            GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
+
+            GitCommands.Settings.Plink = PlinkPath.Text;
+            GitCommands.Settings.Puttygen = PuttygenPath.Text;
+            GitCommands.Settings.Pageant = PageantPath.Text;
+            GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
+
             EnableSettings();
 
             if (!CanFindGitCmd())
@@ -133,12 +150,6 @@ namespace GitUI
                 GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
                 GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
 
-                GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
-                GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
-                GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
-
-                GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
-                GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
 
                 if (KeepMergeBackup.CheckState == CheckState.Checked)
                     GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
@@ -175,13 +186,6 @@ namespace GitUI
                     if (GlobalAutoCrlf.CheckState == CheckState.Unchecked)
                         gitCommands.SetGlobalSetting("core.autocrlf", "false");
             }
-
-            GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
-
-            GitCommands.Settings.Plink = PlinkPath.Text;
-            GitCommands.Settings.Puttygen = PuttygenPath.Text;
-            GitCommands.Settings.Pageant = PageantPath.Text;
-            GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
 
             if (OpenSSH.Checked)
                 GitCommands.GitCommands.UnSetSsh();
@@ -948,6 +952,17 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (!Save())
                 e.Cancel = true;
+        }
+
+        private void Dictionary_DropDown(object sender, EventArgs e)
+        {
+            Dictionary.Items.Clear();
+            Dictionary.Items.Add("None");
+            foreach (string fileName in Directory.GetFiles(GitCommands.Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+            {
+                FileInfo file = new FileInfo(fileName);
+                Dictionary.Items.Add(file.Name.Replace(".dic", ""));
+            }
         }
 
     }
