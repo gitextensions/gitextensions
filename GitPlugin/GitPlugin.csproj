@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E996BE2D-B07D-472D-9D74-3EA2D48EF269}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -185,8 +185,7 @@
     <PostBuildEvent>cd "$(ProjectDir)"
 mkdir "$(ProjectDir)$(OutDir)en-US"
 "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\Resgen" "$(ProjectDir)Properties\Resources.resx"
-"$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"
-del "$(ProjectDir)Properties\Resources.resources"</PostBuildEvent>
+"$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
