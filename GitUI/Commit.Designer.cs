@@ -436,7 +436,6 @@
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -449,7 +448,7 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
             this.splitContainer3.Size = new System.Drawing.Size(502, 648);
-            this.splitContainer3.SplitterDistance = 337;
+            this.splitContainer3.SplitterDistance = 316;
             this.splitContainer3.TabIndex = 0;
             // 
             // SelectedDiff
@@ -457,7 +456,7 @@
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(502, 337);
+            this.SelectedDiff.Size = new System.Drawing.Size(502, 316);
             this.SelectedDiff.TabIndex = 0;
             // 
             // splitContainer6
@@ -479,7 +478,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(502, 307);
+            this.splitContainer6.Size = new System.Drawing.Size(502, 328);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
@@ -549,6 +548,7 @@
             // splitContainer7
             // 
             this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer7.Location = new System.Drawing.Point(0, 0);
             this.splitContainer7.Name = "splitContainer7";
             this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -560,8 +560,8 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer7.Size = new System.Drawing.Size(364, 307);
-            this.splitContainer7.SplitterDistance = 151;
+            this.splitContainer7.Size = new System.Drawing.Size(364, 328);
+            this.splitContainer7.SplitterDistance = 194;
             this.splitContainer7.TabIndex = 0;
             // 
             // splitContainer8
@@ -579,7 +579,7 @@
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.Message);
-            this.splitContainer8.Size = new System.Drawing.Size(364, 151);
+            this.splitContainer8.Size = new System.Drawing.Size(364, 194);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
@@ -599,7 +599,7 @@
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(364, 122);
+            this.Message.Size = new System.Drawing.Size(364, 165);
             this.Message.TabIndex = 0;
             // 
             // OutPut
@@ -608,7 +608,7 @@
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(364, 152);
+            this.OutPut.Size = new System.Drawing.Size(364, 130);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 

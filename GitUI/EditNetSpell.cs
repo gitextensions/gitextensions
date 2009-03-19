@@ -65,13 +65,13 @@ namespace GitUI
         void spelling_MisspelledWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
         {
             this.TextBox.Select(e.TextIndex, e.Word.Length);
-            //this.TextBox.SelectionBackColor = Color.OrangeRed;
+            
             this.TextBox.SelectionFont = MistakeFont;
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            if (GitCommands.Settings.Dictionary == "None")
+            if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = true;
@@ -83,8 +83,7 @@ namespace GitUI
             int length = this.TextBox.SelectionLength;
 
             this.TextBox.Select(0, this.TextBox.Text.Length);
-            //this.TextBox.SelectionBackColor = Color.White;
-            this.TextBox.SelectionFont = TextBox.Font; 
+            this.TextBox.SelectionFont = this.TextBox.Font;
             
             try
             {
