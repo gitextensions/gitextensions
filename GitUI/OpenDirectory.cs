@@ -62,5 +62,10 @@ namespace GitUI
 
         }
 
+        private void Open_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

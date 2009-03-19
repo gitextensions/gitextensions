@@ -109,65 +109,72 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Save();
-
             Close();
         }
 
-        private void Save()
+        private bool Save()
         {
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
             GitCommands.Settings.GitDir = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
-            GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
-            GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
-            GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
-            GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
+            EnableSettings();
 
-            GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
-            GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
-            GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
-
-            GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
-            GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
-
-            if (KeepMergeBackup.CheckState == CheckState.Checked)
-                GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
+            if (!CanFindGitCmd())
+            {
+                if (MessageBox.Show("The path to git.cmd is not configured correct.\nYou need to set the correct path to be able to use GitExtensions.\n\nDo you want to set the correct path now?", "Incorrect path", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    return false;
+            }
             else
-            if (KeepMergeBackup.CheckState == CheckState.Unchecked)
-                GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
+            {
+                GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+                GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
+                GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
+                GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
+                GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
+
+                GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
+                GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
+                GitCommands.Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+
+                GitCommands.Settings.UseFastChecks = UseFastChecks.Checked;
+                GitCommands.Settings.RelativeDate = ShowRelativeDate.Checked;
+
+                if (KeepMergeBackup.CheckState == CheckState.Checked)
+                    GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
+                else
+                    if (KeepMergeBackup.CheckState == CheckState.Unchecked)
+                        GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
 
 
-            if (LocalAutoCrlf.CheckState == CheckState.Checked)
-                GitCommands.GitCommands.SetSetting("core.autocrlf", "true");
-            else
-            if (LocalAutoCrlf.CheckState == CheckState.Unchecked)
-                GitCommands.GitCommands.SetSetting("core.autocrlf", "false");
+                if (LocalAutoCrlf.CheckState == CheckState.Checked)
+                    GitCommands.GitCommands.SetSetting("core.autocrlf", "true");
+                else
+                    if (LocalAutoCrlf.CheckState == CheckState.Unchecked)
+                        GitCommands.GitCommands.SetSetting("core.autocrlf", "false");
 
-            gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
-            gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
-            gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
-            gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
+                gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
+                gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
+                gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
+                gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
 
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
 
-            if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
-                gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
-            else
-            if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
-                gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
+                if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
+                    gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
+                else
+                    if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
+                        gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
-            if (GlobalAutoCrlf.CheckState == CheckState.Checked)
-                gitCommands.SetGlobalSetting("core.autocrlf", "true");
-            else
-            if (GlobalAutoCrlf.CheckState == CheckState.Unchecked)
-                gitCommands.SetGlobalSetting("core.autocrlf", "false");
+                if (GlobalAutoCrlf.CheckState == CheckState.Checked)
+                    gitCommands.SetGlobalSetting("core.autocrlf", "true");
+                else
+                    if (GlobalAutoCrlf.CheckState == CheckState.Unchecked)
+                        gitCommands.SetGlobalSetting("core.autocrlf", "false");
+            }
 
             GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
 
@@ -185,6 +192,7 @@ namespace GitUI
             if (Other.Checked)
                 GitCommands.GitCommands.SetSsh(OtherSsh.Text);
 
+            return true;
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -327,7 +335,7 @@ namespace GitUI
                             else
                             {
                                 DiffTool.BackColor = Color.LightGreen;
-                                DiffTool.Text = "There is a custom configured: " + mergetool;
+                                DiffTool.Text = "There is a custom mergetool configured: " + mergetool;
                             }
                         }
                         else
@@ -338,7 +346,7 @@ namespace GitUI
                     }
                 }
 
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
+                if (!CanFindGitCmd())
                 {
                     GitFound.BackColor = Color.LightSalmon;
                     GitFound.Text = "git.cmd not found. To solve this problem you can set the correct path in settings.";
@@ -407,6 +415,11 @@ namespace GitUI
             }
 
             return bValid;
+        }
+
+        private static bool CanFindGitCmd()
+        {
+            return !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", ""));
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -575,7 +588,25 @@ namespace GitUI
 
         private void FormSettigns_Load(object sender, EventArgs e)
         {
-            bool valid = GitCommands.Settings.ValidWorkingDir();
+            EnableSettings();
+        }
+
+        private void EnableSettings()
+        {
+            bool canFindGitCmd = CanFindGitCmd();
+            GlobalUserName.Enabled = canFindGitCmd;
+            GlobalUserEmail.Enabled = canFindGitCmd;
+            GlobalEditor.Enabled = canFindGitCmd;
+            GlobalMergeTool.Enabled = canFindGitCmd;
+            MergetoolPath.Enabled = canFindGitCmd;
+            MergeToolCmd.Enabled = canFindGitCmd;
+            GlobalKeepMergeBackup.Enabled = canFindGitCmd;
+            GlobalAutoCrlf.Enabled = canFindGitCmd;
+
+            InvalidGitPathGlobal.Visible = !canFindGitCmd;
+            InvalidGitPathLocal.Visible = !canFindGitCmd;
+
+            bool valid = GitCommands.Settings.ValidWorkingDir() && canFindGitCmd;
             UserName.Enabled = valid;
             UserEmail.Enabled = valid;
             Editor.Enabled = valid;
@@ -583,6 +614,7 @@ namespace GitUI
             KeepMergeBackup.Enabled = valid;
             LocalAutoCrlf.Enabled = valid;
             NoGitRepo.Visible = !valid;
+
         }
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
@@ -602,7 +634,10 @@ namespace GitUI
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
         {
+            SolveGitCmdDir();
+
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            browseDialog.SelectedPath = GitCommands.Settings.GitDir;
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
@@ -780,7 +815,10 @@ namespace GitUI
 
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
+            SolveGitBinDir();
+
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            browseDialog.SelectedPath = GitCommands.Settings.GitBinDir;
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
@@ -793,15 +831,17 @@ namespace GitUI
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
                 MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
+            }
             else
                 if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
-                MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
-            else
-               if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
-                MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe", MergetoolPath.Text);
-            else
-                MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
+                    MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
+                else
+                    if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+                        MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe", MergetoolPath.Text);
+                    else
+                        MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
 
         }
 
@@ -901,6 +941,13 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             LoadSettings();
             CheckSettings();
+        }
+
+        private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            if (!Save())
+                e.Cancel = true;
         }
 
     }
