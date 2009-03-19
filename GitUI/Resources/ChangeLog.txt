@@ -6,6 +6,7 @@ Version 1.56
 	Load PuTTY key dialog is closed after loading key
 	Mergeconflicts during apply stash after pull are shown
 	Revision log is now refreshed correctly after using stash from toolbar
+	Added spelling checker
 
 Version 1.55
 	Fetching a branch that does not exists locally will create a new branch with the same name locally
