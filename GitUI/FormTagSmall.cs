@@ -40,5 +40,16 @@ namespace GitUI
             {
             }
         }
+
+        private void TName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TName_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                Ok_Click(null, null);
+        }
     }
 }

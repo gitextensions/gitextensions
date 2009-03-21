@@ -57,6 +57,7 @@
             // 
             // TextBox
             // 
+            this.TextBox.AcceptsTab = true;
             this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextBox.Location = new System.Drawing.Point(0, 0);

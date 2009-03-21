@@ -60,6 +60,7 @@
             this.BName.Name = "BName";
             this.BName.Size = new System.Drawing.Size(223, 20);
             this.BName.TabIndex = 3;
+            this.BName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BName_KeyUp);
             // 
             // ChechoutAfterCreate
             // 

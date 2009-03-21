@@ -790,5 +790,44 @@ namespace GitUI
                 filterToolStripMenuItem_Click(null, null);
         }
 
+        private void CreateTag_Opening(object sender, CancelEventArgs e)
+        {
+            if (RevisionList.Count < LastRow)
+                return;
+
+            GitRevision revision = RevisionList[LastRow] as GitRevision;
+
+            ToolStripDropDown dropDown = new ToolStripDropDown();
+
+            foreach (GitHead head in revision.Heads)
+            {
+                if (head.IsTag)
+                {
+                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += new EventHandler(toolStripItem_Click);
+                    dropDown.Items.Add(toolStripItem);
+                }
+            }
+
+            deleteTagToolStripMenuItem.DropDown = dropDown;
+            deleteTagToolStripMenuItem.Visible = dropDown.Items.Count > 0;
+        }
+
+        void toolStripItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            new FormProcess(GitCommands.GitCommands.DeleteTagCmd(toolStripItem.Text));
+            ForceRefreshRevisions();
+        }
+
+        private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

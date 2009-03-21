@@ -59,6 +59,8 @@
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 20);
             this.TName.TabIndex = 6;
+            this.TName.TextChanged += new System.EventHandler(this.TName_TextChanged);
+            this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TName_KeyUp);
             // 
             // FormTagSmall
             // 
@@ -70,6 +72,7 @@
             this.Controls.Add(this.TName);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormTagSmall";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
             this.ResumeLayout(false);
             this.PerformLayout();
