@@ -89,6 +89,12 @@
     <Compile Include="FileViewer.Designer.cs">
       <DependentUpon>FileViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormAddFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -364,6 +370,7 @@
     <Compile Include="MergePatch.Designer.cs">
       <DependentUpon>MergePatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="OpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -389,6 +396,8 @@
     <Compile Include="RevisionGrid.Designer.cs">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpellCheckEditControl.cs" />
+    <Compile Include="TextBoxAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutBox.resx">
@@ -413,6 +422,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddFiles.resx">

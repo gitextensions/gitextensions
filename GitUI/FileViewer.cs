@@ -14,6 +14,14 @@ namespace GitUI
         public FileViewer()
         {
             InitializeComponent();
+            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += new KeyEventHandler(TextArea_KeyUp);
+
+        }
+
+        void TextArea_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+                Find();
         }
 
         private void ClearImage()
@@ -25,6 +33,13 @@ namespace GitUI
                 PictureBox.Image.Dispose();
                 PictureBox.Image = null;
             }
+        }
+
+        FindAndReplaceForm findAndReplaceForm = new FindAndReplaceForm();
+
+        public void Find()
+        {
+            findAndReplaceForm.ShowFor(TextEditor, false);
         }
 
         public void ViewFile(string fileName)
@@ -211,6 +226,21 @@ namespace GitUI
                 TextEditor.Text = "Unsupported file";
             }
             TextEditor.Refresh();
+        }
+
+        private void TextEditor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+        }
+
+        private void TextEditor_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Find();
         }
     }
 }

@@ -28,9 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
+            this.ContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
+            this.ContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox
@@ -48,12 +52,29 @@
             // 
             // TextEditor
             // 
+            this.TextEditor.ContextMenuStrip = this.ContextMenu;
             this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextEditor.IsReadOnly = false;
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
             this.TextEditor.Name = "TextEditor";
             this.TextEditor.Size = new System.Drawing.Size(649, 449);
             this.TextEditor.TabIndex = 3;
+            this.TextEditor.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextEditor_KeyUp);
+            this.TextEditor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextEditor_KeyPress);
+            // 
+            // ContextMenu
+            // 
+            this.ContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.findToolStripMenuItem});
+            this.ContextMenu.Name = "ContextMenu";
+            this.ContextMenu.Size = new System.Drawing.Size(98, 26);
+            // 
+            // findToolStripMenuItem
+            // 
+            this.findToolStripMenuItem.Name = "findToolStripMenuItem";
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.findToolStripMenuItem.Text = "Find";
+            this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
             // FileViewer
             // 
@@ -64,6 +85,7 @@
             this.Name = "FileViewer";
             this.Size = new System.Drawing.Size(649, 449);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
+            this.ContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -72,5 +94,7 @@
 
         private System.Windows.Forms.PictureBox PictureBox;
         private ICSharpCode.TextEditor.TextEditorControl TextEditor;
+        private System.Windows.Forms.ContextMenuStrip ContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
     }
 }

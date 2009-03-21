@@ -13,10 +13,13 @@ namespace GitUI
         private NetSpell.SpellChecker.Spelling spelling;
         private NetSpell.SpellChecker.Dictionary.WordDictionary wordDictionary;
         //private System.ComponentModel.IContainer components;
+        private CustomPaintTextBox customUnderlines;
 
         public EditNetSpell()
         {
             InitializeComponent();
+
+            customUnderlines = new CustomPaintTextBox(TextBox);
         }
 
         public override string Text
@@ -36,12 +39,15 @@ namespace GitUI
         private void EditNetSpell_Load(object sender, EventArgs e)
         {
             this.MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
-            
+
+            //this.TextBox.Document.TextEditorProperties.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.None;
+
             this.components = new System.ComponentModel.Container();
             this.wordDictionary = new NetSpell.SpellChecker.Dictionary.WordDictionary(components);
             this.spelling = new NetSpell.SpellChecker.Spelling(components);
             this.spelling.ShowDialog = false;
             this.spelling.IgnoreAllCapsWords = true;
+            this.spelling.IgnoreWordsWithDigits = true;
 
             // 
             // spelling
@@ -64,9 +70,7 @@ namespace GitUI
 
         void spelling_MisspelledWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
         {
-            this.TextBox.Select(e.TextIndex, e.Word.Length);
-            
-            this.TextBox.SelectionFont = MistakeFont;
+            customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
@@ -79,12 +83,8 @@ namespace GitUI
 
         public void CheckSpelling()
         {
-            int start = this.TextBox.SelectionStart;
-            int length = this.TextBox.SelectionLength;
+            customUnderlines.Lines.Clear();
 
-            this.TextBox.Select(0, this.TextBox.Text.Length);
-            this.TextBox.SelectionFont = this.TextBox.Font;
-            
             try
             {
                 this.spelling.Text = this.TextBox.Text;
@@ -95,13 +95,7 @@ namespace GitUI
             {
             }
 
-            if (start > this.TextBox.Text.Length)
-                start = this.TextBox.Text.Length;
-
-            if ((start + length) > this.TextBox.Text.Length)
-                length = 0;
-
-            this.TextBox.Select(start, length);
+            TextBox.Refresh();
         }
 
         private void spelling_DeletedWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
@@ -154,6 +148,10 @@ namespace GitUI
 
             try
             {
+
+
+
+                //int pos = this.TextBox.Document.PositionToOffset(this.TextBox.ActiveTextAreaControl.Caret.Position);//= TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
                 int pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
 
                 if (pos <= 0)
@@ -218,8 +216,32 @@ namespace GitUI
         private void SpellCheckTimer_Tick(object sender, EventArgs e)
         {
             CheckSpelling();
+
             SpellCheckTimer.Enabled = false;
-            SpellCheckTimer.Interval = 500;
+            SpellCheckTimer.Interval = 250;
+        }
+
+        private void TextBox_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TextBox_TextChanged_1(object sender, EventArgs e)
+        {
+            if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
+                return;
+
+            SpellCheckTimer.Enabled = true;
+        }
+
+        private void TextBox_TextChanged_2(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void TextBox_TextChanged_3(object sender, EventArgs e)
+        {
+            TextBox_TextChanged(sender, e);
         }
     }
 }

@@ -29,25 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.TextBox = new System.Windows.Forms.RichTextBox();
             this.SpellCheckContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
+            this.TextBox = new System.Windows.Forms.RichTextBox();
             this.SpellCheckContextMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // TextBox
-            // 
-            this.TextBox.AcceptsTab = true;
-            this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
-            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextBox.Location = new System.Drawing.Point(0, 0);
-            this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(150, 150);
-            this.TextBox.TabIndex = 0;
-            this.TextBox.Text = "";
-            this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.TextBox.Click += new System.EventHandler(this.TextBox_Click);
             // 
             // SpellCheckContextMenu
             // 
@@ -68,12 +55,24 @@
             this.SpellCheckTimer.Interval = 250;
             this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimer_Tick);
             // 
+            // TextBox
+            // 
+            this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
+            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextBox.Location = new System.Drawing.Point(0, 0);
+            this.TextBox.Name = "TextBox";
+            this.TextBox.Size = new System.Drawing.Size(331, 291);
+            this.TextBox.TabIndex = 1;
+            this.TextBox.Text = "";
+            this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged_3);
+            // 
             // EditNetSpell
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TextBox);
             this.Name = "EditNetSpell";
+            this.Size = new System.Drawing.Size(331, 291);
             this.Load += new System.EventHandler(this.EditNetSpell_Load);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -82,9 +81,9 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox TextBox;
         private System.Windows.Forms.ContextMenuStrip SpellCheckContextMenu;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Timer SpellCheckTimer;
+        private System.Windows.Forms.RichTextBox TextBox;
     }
 }
