@@ -40,6 +40,7 @@
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CreateTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +62,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
-            this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
@@ -176,13 +176,22 @@
             // 
             // createTagToolStripMenuItem
             // 
+            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.createTagToolStripMenuItem.Text = "Create new tag";
             this.createTagToolStripMenuItem.Click += new System.EventHandler(this.createTagToolStripMenuItem_Click);
             // 
+            // deleteTagToolStripMenuItem
+            // 
+            this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
+            this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.deleteTagToolStripMenuItem.Text = "Delete tag";
+            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
+            // 
             // createNewBranchToolStripMenuItem
             // 
+            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.createNewBranchToolStripMenuItem.Text = "Create new branch";
@@ -351,13 +360,6 @@
             this.Loading.TabIndex = 1;
             this.Loading.TabStop = false;
             this.Loading.Visible = false;
-            // 
-            // deleteTagToolStripMenuItem
-            // 
-            this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
-            this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.deleteTagToolStripMenuItem.Text = "Delete tag";
-            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
             // gitRevisionBindingSource
             // 

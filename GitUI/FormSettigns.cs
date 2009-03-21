@@ -965,5 +965,10 @@ namespace GitUI
             }
         }
 
+        private void Dictionary_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

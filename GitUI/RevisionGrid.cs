@@ -770,7 +770,7 @@ namespace GitUI
         {
             Settings.ShowRevisionGraph = !showRevisionGraphToolStripMenuItem.Checked;
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
-            RefreshRevisions();
+            this.ForceRefreshRevisions();
         }
 
         private FormRevisionFilter RevisionFilter = null;
