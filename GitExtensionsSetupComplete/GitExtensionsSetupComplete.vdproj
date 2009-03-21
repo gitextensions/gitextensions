@@ -256,6 +256,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -263,12 +269,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_CC844C218A040E0095B17234095AA10C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -658,7 +658,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3365.36108, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3367.29431, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -688,7 +688,7 @@
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8707CE19741C4891BA2988673C51D1F8"
             {
             "SourcePath" = "8:..\\SimpleExt\\ReleaseMinDependency64\\GitExtensionsShellEx.dll"
-            "TargetName" = "8:GitExtensionsShellEx.dll"
+            "TargetName" = "8:GitExtensionsShellEx64.dll"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:INSTALLSHELLEXTENSION And OS=64"
@@ -759,10 +759,10 @@
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AC172A85E904390ABAC6CD994495461"
             {
             "SourcePath" = "8:..\\SimpleExt\\ReleaseMinDependency\\GitExtensionsShellEx.dll"
-            "TargetName" = "8:GitExtensionsShellEx.dll"
+            "TargetName" = "8:GitExtensionsShellEx32.dll"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:INSTALLSHELLEXTENSION And OS=32"
+            "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -931,7 +931,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3365.36108, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3367.29431, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1177,7 +1177,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=4.0.0.3889, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F4DCB422B63B6ADEAF1D97713D01ED7A"
@@ -1402,7 +1402,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{60041DF5-82FB-4635-ADEB-AC2D9A034558}"
+        "PackageCode" = "8:{952F6869-5249-4219-95A3-7271CD9B5B16}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"

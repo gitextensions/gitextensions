@@ -19,11 +19,14 @@ namespace GitUI
         public FormInit()
         {
             InitializeComponent();
+
+            if (!GitCommands.Settings.ValidWorkingDir())
+                Directory.Text = GitCommands.Settings.WorkingDir;
         }
 
         private void Directory_DropDown(object sender, EventArgs e)
         {
-            Directory.DataSource = RepositoryHistory.MostRecentRepositories;
+            Directory.DataSource = GitCommands.RepositoryHistory.MostRecentRepositories;
         }
 
         private void Init_Click(object sender, EventArgs e)
@@ -41,7 +44,7 @@ namespace GitUI
             
             MessageBox.Show(GitCommands.GitCommands.Init(Central.Checked, Central.Checked), "Initialize new repository");
 
-            RepositoryHistory.AddMostRecentRepository(Directory.Text);
+            GitCommands.RepositoryHistory.AddMostRecentRepository(Directory.Text);
             
             Close();
         }

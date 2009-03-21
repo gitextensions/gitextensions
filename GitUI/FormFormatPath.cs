@@ -32,6 +32,9 @@ namespace GitUI
 
         private void FormatPatch_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(OutputPath.Text))
+                MessageBox.Show("You need to enter an output path.");
+
             string rev1 = "";
             string rev2 = "";
             string result = "";
@@ -54,11 +57,13 @@ namespace GitUI
 
                 if (RevisionGrid.GetRevisions().Count > 2)
                 {
+                    int n = 0;
                     foreach (GitRevision revision in RevisionGrid.GetRevisions())
                     {
+                        n++;
                         rev1 = revision.ParentGuids[0];
                         rev2 = revision.Guid;
-                        result += new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text);
+                        result += new GitCommands.GitCommands().FormatPatch(rev1, rev2, OutputPath.Text, n);
                     }
                 }
             } else

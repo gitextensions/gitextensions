@@ -389,7 +389,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RepositoryHistory.cs" />
     <Compile Include="RevisionGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -198,18 +198,25 @@ namespace GitUI
         {
             if (tabControl1.SelectedTab == Commit)
             {
+                DiffFiles.DataSource = null;
+                DiffFiles.DisplayMember = "FileNameB"; 
+                
                 if (RevisionGrid.GetRevisions().Count == 0)
                     return;
 
-                GitRevision revision = RevisionGrid.GetRevisions()[0];
-
-                DiffFiles.DataSource = null;
-                DiffFiles.DisplayMember = "FileNameB";
-
-                if (revision.ParentGuids.Count > 0)
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                if (RevisionGrid.GetRevisions().Count == 2)
+                {
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid);
+                }
                 else
-                    DiffFiles.DataSource = null;
+                {
+                    GitRevision revision = RevisionGrid.GetRevisions()[0];
+
+                    if (revision.ParentGuids.Count > 0)
+                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                    else
+                        DiffFiles.DataSource = null;
+                }
             }
         }
 
@@ -701,8 +708,18 @@ namespace GitUI
                 if (RevisionGrid.GetRevisions().Count == 0)
                     return;
 
-                GitRevision revision = RevisionGrid.GetRevisions()[0];
-                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
+                Patch selectedPatch = null;
+
+                if (RevisionGrid.GetRevisions().Count == 2)
+                {
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem);
+                }
+                else
+                {
+                    GitRevision revision = RevisionGrid.GetRevisions()[0];
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
+                }
+
                 if (selectedPatch != null)
                 {
                     DiffText.ViewPatch(selectedPatch.Text);
@@ -882,6 +899,11 @@ namespace GitUI
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void openSubmoduleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

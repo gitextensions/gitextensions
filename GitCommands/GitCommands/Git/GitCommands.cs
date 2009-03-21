@@ -684,6 +684,15 @@ namespace GitCommands
         }
 
 
+        public string FormatPatch(string from, string to, string output, int start)
+        {
+            output = FixPath(output);
+
+            string result = RunCmd(Settings.GitDir + "git.cmd", "format-patch -M -C -B --start-number " + start + " \"" + from + "\"..\"" + to + "\" -o \"" + output + "\"");
+
+            return result;
+        }
+
         public string FormatPatch(string from, string to, string output)
         {
             output = FixPath(output);
@@ -692,6 +701,7 @@ namespace GitCommands
 
             return result;
         }
+
 
         static public string Tag(string tagName, string revision)
         {

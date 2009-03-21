@@ -32,8 +32,9 @@ namespace GitUI
         {
             new FormProcess(GitCommands.GitCommands.RevertCmd(Revision.Guid, AutoCommit.Checked));
 
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
-                new FormResolveConflicts().ShowDialog();
+            MergeConflictHandler.HandleMergeConflicts();
+
+            Close();
         }
     }
 }

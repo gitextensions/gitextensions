@@ -36,6 +36,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.ViewObject = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,6 +59,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.ViewObject);
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.button1);
@@ -115,11 +117,11 @@
             // 
             // Remove
             // 
-            this.Remove.Location = new System.Drawing.Point(393, 3);
+            this.Remove.Location = new System.Drawing.Point(380, 3);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(138, 23);
+            this.Remove.Size = new System.Drawing.Size(151, 23);
             this.Remove.TabIndex = 1;
-            this.Remove.Text = "Remove dangling objects";
+            this.Remove.Text = "Remove all dangling objects";
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
             // 
@@ -132,6 +134,16 @@
             this.button1.Text = "Save objects to .git/lost-found";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // ViewObject
+            // 
+            this.ViewObject.Location = new System.Drawing.Point(118, 3);
+            this.ViewObject.Name = "ViewObject";
+            this.ViewObject.Size = new System.Drawing.Size(108, 23);
+            this.ViewObject.TabIndex = 3;
+            this.ViewObject.Text = "View object";
+            this.ViewObject.UseVisualStyleBackColor = true;
+            this.ViewObject.Click += new System.EventHandler(this.ViewObject_Click);
             // 
             // FormVerify
             // 
@@ -165,5 +177,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button ViewObject;
     }
 }

@@ -120,7 +120,18 @@ namespace GitUI
             else
                 if (DiffFiles.SelectedItem is string)
                 {
-                    Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[0]).ParentGuids[0], (string)DiffFiles.SelectedItem);
+                    Patch selectedPatch = null;
+
+                    if (RevisionGrid.GetRevisions().Count == 2)
+                    {
+                        selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem);
+                    }
+                    else
+                    {
+                        GitRevision revision = RevisionGrid.GetRevisions()[0];
+                        selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
+                    }
+
                     if (selectedPatch != null)
                     {
                         //EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);

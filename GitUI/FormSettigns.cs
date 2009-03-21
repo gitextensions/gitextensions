@@ -196,6 +196,8 @@ namespace GitUI
             if (Other.Checked)
                 GitCommands.GitCommands.SetSsh(OtherSsh.Text);
 
+            GitCommands.Settings.SaveSettings();
+
             return true;
         }
 
