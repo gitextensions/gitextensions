@@ -58,6 +58,8 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.Dictionary = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
@@ -116,8 +118,6 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.Dictionary = new System.Windows.Forms.ComboBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -496,6 +496,25 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // Dictionary
+            // 
+            this.Dictionary.FormattingEnabled = true;
+            this.Dictionary.Location = new System.Drawing.Point(305, 111);
+            this.Dictionary.Name = "Dictionary";
+            this.Dictionary.Size = new System.Drawing.Size(242, 21);
+            this.Dictionary.TabIndex = 15;
+            this.Dictionary.SelectedIndexChanged += new System.EventHandler(this.Dictionary_SelectedIndexChanged);
+            this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(8, 119);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(152, 13);
+            this.label22.TabIndex = 14;
+            this.label22.Text = "Dictionary for spelling checker.";
             // 
             // ShowRelativeDate
             // 
@@ -1111,24 +1130,6 @@
             this.pictureBox2.Size = new System.Drawing.Size(54, 50);
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(8, 119);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(152, 13);
-            this.label22.TabIndex = 14;
-            this.label22.Text = "Dictionary for spelling checker.";
-            // 
-            // Dictionary
-            // 
-            this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(305, 111);
-            this.Dictionary.Name = "Dictionary";
-            this.Dictionary.Size = new System.Drawing.Size(242, 21);
-            this.Dictionary.TabIndex = 15;
-            this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
             // 
             // FormSettigns
             // 

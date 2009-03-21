@@ -756,7 +756,7 @@
             // 
             // branchToolStripMenuItem
             // 
-            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
+            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.branchToolStripMenuItem.Text = "Create branch";

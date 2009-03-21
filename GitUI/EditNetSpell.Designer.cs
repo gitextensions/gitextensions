@@ -41,7 +41,7 @@
             this.SpellCheckContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator1});
             this.SpellCheckContextMenu.Name = "SpellCheckContextMenu";
-            this.SpellCheckContextMenu.Size = new System.Drawing.Size(61, 10);
+            this.SpellCheckContextMenu.Size = new System.Drawing.Size(153, 32);
             this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenu_Opening);
             this.SpellCheckContextMenu.Click += new System.EventHandler(this.SpellCheckContextMenu_Click);
             // 

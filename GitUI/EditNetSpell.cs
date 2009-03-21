@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GitUI
 {
@@ -43,7 +44,6 @@ namespace GitUI
             //this.TextBox.Document.TextEditorProperties.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.None;
 
             this.components = new System.ComponentModel.Container();
-            this.wordDictionary = new NetSpell.SpellChecker.Dictionary.WordDictionary(components);
             this.spelling = new NetSpell.SpellChecker.Spelling(components);
             this.spelling.ShowDialog = false;
             this.spelling.IgnoreAllCapsWords = true;
@@ -51,8 +51,7 @@ namespace GitUI
 
             // 
             // spelling
-            // 
-            this.spelling.Dictionary = this.wordDictionary;
+            //             
             this.spelling.ReplacedWord += new NetSpell.SpellChecker.Spelling.ReplacedWordEventHandler(this.spelling_ReplacedWord);
             this.spelling.EndOfText += new NetSpell.SpellChecker.Spelling.EndOfTextEventHandler(this.spelling_EndOfText);
             this.spelling.DeletedWord += new NetSpell.SpellChecker.Spelling.DeletedWordEventHandler(this.spelling_DeletedWord);
@@ -61,11 +60,20 @@ namespace GitUI
             // 
             // wordDictionary
             // 
-            this.wordDictionary.DictionaryFile = GitCommands.Settings.GetDictionaryDir() + GitCommands.Settings.Dictionary + ".dic";
+            LoadDictionary();
 
             SpellCheckContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SpellCheckContextMenu_ItemClicked);
             TextBox.MouseDown += new MouseEventHandler(TextBox_MouseDown);
 
+        }
+
+        private void LoadDictionary()
+        {
+            this.wordDictionary = new NetSpell.SpellChecker.Dictionary.WordDictionary(components);
+
+            this.wordDictionary.DictionaryFile = GitCommands.Settings.GetDictionaryDir() + GitCommands.Settings.Dictionary + ".dic";
+
+            this.spelling.Dictionary = this.wordDictionary;
         }
 
         void spelling_MisspelledWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
@@ -183,6 +191,51 @@ namespace GitUI
             catch
             {
             }
+
+            try
+            {
+                SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+                ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Dictionary");
+                SpellCheckContextMenu.Items.Add(toolStripMenuItem);
+
+                ContextMenuStrip toolStripDropDown = new ContextMenuStrip();
+
+                ToolStripMenuItem noDicToolStripMenuItem = new ToolStripMenuItem("None");
+                noDicToolStripMenuItem.Click += new EventHandler(dicToolStripMenuItem_Click);
+                if (GitCommands.Settings.Dictionary == "None")
+                    noDicToolStripMenuItem.Checked = true;
+
+
+                toolStripDropDown.Items.Add(noDicToolStripMenuItem);
+
+                foreach (string fileName in Directory.GetFiles(GitCommands.Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo file = new FileInfo(fileName);
+
+                    string dic = file.Name.Replace(".dic", "");
+
+                    ToolStripMenuItem dicToolStripMenuItem = new ToolStripMenuItem(dic);
+                    dicToolStripMenuItem.Click += new EventHandler(dicToolStripMenuItem_Click);
+
+                    if (GitCommands.Settings.Dictionary == dic)
+                        dicToolStripMenuItem.Checked = true;
+
+                    toolStripDropDown.Items.Add(dicToolStripMenuItem);
+                }               
+
+                toolStripMenuItem.DropDown = toolStripDropDown;
+            }
+            catch
+            {
+            }
+        }
+
+        void dicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.Settings.Dictionary = ((ToolStripItem)sender).Text;
+            LoadDictionary();
+            CheckSpelling();
+
         }
 
         void TextBox_MouseDown(object sender, MouseEventArgs e)
