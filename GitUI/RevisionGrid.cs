@@ -784,5 +784,11 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        private void Revisions_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+                filterToolStripMenuItem_Click(null, null);
+        }
+
     }
 }
