@@ -61,6 +61,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
+            this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
@@ -158,6 +159,7 @@
             // 
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createTagToolStripMenuItem,
+            this.deleteTagToolStripMenuItem,
             this.createNewBranchToolStripMenuItem,
             this.toolStripSeparator2,
             this.resetCurrentBranchToHereToolStripMenuItem,
@@ -169,7 +171,8 @@
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 198);
+            this.CreateTag.Size = new System.Drawing.Size(224, 242);
+            this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
             // 
@@ -349,6 +352,13 @@
             this.Loading.TabStop = false;
             this.Loading.Visible = false;
             // 
+            // deleteTagToolStripMenuItem
+            // 
+            this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
+            this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.deleteTagToolStripMenuItem.Text = "Delete tag";
+            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
+            // 
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
@@ -408,5 +418,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
     }
 }

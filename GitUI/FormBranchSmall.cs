@@ -39,5 +39,11 @@ namespace GitUI
             {
             }
         }
+
+        private void BName_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                Ok_Click(null, null);
+        }
     }
 }

@@ -476,7 +476,12 @@ namespace GitCommands
 
         static public string DeleteTag(string tagName)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "tag -d \"" + tagName + "\"");
+            return RunCmd(Settings.GitDir + "git.cmd", DeleteTagCmd(tagName));
+        }
+
+        public static string DeleteTagCmd(string tagName)
+        {
+            return "tag -d \"" + tagName + "\"";
         }
 
         static public string GetCurrentCheckout()
@@ -1918,7 +1923,7 @@ namespace GitCommands
         static public List<GitItem> GetFileChanges(string file)
         {
             file = FixPath(file);
-            string tree = RunCmd(Settings.GitDir + "git.cmd", "whatchanged --all \"" + file + "\"");
+            string tree = RunCmd(Settings.GitDir + "git.cmd", "whatchanged --all -- \"" + file + "\"");
 
             string[] itemsStrings = tree.Split('\n');
 
@@ -2001,7 +2006,7 @@ namespace GitCommands
         {
             from = FixPath(from);
             filename = FixPath(filename);
-            string[] itemsStrings = RunCmd(Settings.GitDir + "git.cmd", "blame -M -w -l \"" + from + "\" \"" + filename + "\"").Split('\n');
+            string[] itemsStrings = RunCmd(Settings.GitDir + "git.cmd", "blame -M -w -l \"" + from + "\" -- \"" + filename + "\"").Split('\n');
 
             List<GitBlame> items = new List<GitBlame>();
 

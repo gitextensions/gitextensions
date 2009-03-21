@@ -1,6 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+# SharpDevelop 4.0.0.3889
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExt", "..\SimpleExt\SimpleExt.vcproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
@@ -378,6 +379,67 @@ Global
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|Win32.ActiveCfg = Release|Any CPU
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|x64.ActiveCfg = Release|Any CPU
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Debug|Win32.Build.0 = Debug|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Debug|x64.Build.0 = Debug|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release MinDependency|Win32.Build.0 = Release MinDependency|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release MinDependency|x64.Build.0 = Release MinDependency|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release MinSize|Win32.Build.0 = Release MinSize|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release MinSize|x64.Build.0 = Release MinSize|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release|Win32.Build.0 = Release|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Release|x64.Build.0 = Release|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Debug|x64.Build.0 = Unicode Debug|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinDependency|Win32.Build.0 = Unicode Release MinDependency|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinDependency|x64.Build.0 = Unicode Release MinDependency|x64
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|x64.Build.0 = Unicode Release MinSize|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Debug|Win32.Build.0 = Debug|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Debug|x64.Build.0 = Debug|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release MinDependency|Win32.Build.0 = Release MinDependency|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release MinDependency|x64.Build.0 = Release MinDependency|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release MinSize|Win32.Build.0 = Release MinSize|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release MinSize|x64.Build.0 = Release MinSize|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release|Win32.Build.0 = Release|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Release|x64.Build.0 = Release|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Debug|x64.Build.0 = Unicode Debug|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Release MinDependency|Win32.Build.0 = Unicode Release MinDependency|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Release MinDependency|x64.Build.0 = Unicode Release MinDependency|x64
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+		{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}.Unicode Release MinSize|x64.Build.0 = Unicode Release MinSize|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Debug|Win32.Build.0 = Debug|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Debug|x64.Build.0 = Debug|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release MinDependency|Win32.Build.0 = Release MinDependency|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release MinDependency|x64.Build.0 = Release MinDependency|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release MinSize|Win32.Build.0 = Release MinSize|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release MinSize|x64.Build.0 = Release MinSize|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release|Win32.Build.0 = Release|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Release|x64.Build.0 = Release|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Debug|x64.Build.0 = Unicode Debug|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Release MinDependency|Win32.Build.0 = Unicode Release MinDependency|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Release MinDependency|x64.Build.0 = Unicode Release MinDependency|x64
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+		{E996BE2D-B07D-472D-9D74-3EA2D48EF269}.Unicode Release MinSize|x64.Build.0 = Unicode Release MinSize|x64
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinDependency|Any CPU.Build.0 = Release MinDependency|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release MinSize|Any CPU.Build.0 = Release MinSize|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Debug|Any CPU.Build.0 = Unicode Debug|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinDependency|Any CPU.Build.0 = Unicode Release MinDependency|Any CPU
+		{BBE7B8AD-D175-4679-A614-38BFF28B0269}.Unicode Release MinSize|Any CPU.Build.0 = Unicode Release MinSize|Any CPU
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Debug|Win32.Build.0 = Debug|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release MinDependency|Win32.Build.0 = Release MinDependency|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release MinDependency|x64.Build.0 = Release MinDependency|x64
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release MinSize|Win32.Build.0 = Release MinSize|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release MinSize|x64.Build.0 = Release MinSize|x64
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Release|Win32.Build.0 = Release|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Debug|x64.Build.0 = Unicode Debug|x64
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Release MinDependency|Win32.Build.0 = Unicode Release MinDependency|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Release MinDependency|x64.Build.0 = Unicode Release MinDependency|x64
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
+		{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}.Unicode Release MinSize|x64.Build.0 = Unicode Release MinSize|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
