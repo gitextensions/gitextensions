@@ -20,6 +20,8 @@ namespace GitUI
                 From.Text = Settings.WorkingDir;
             else
                 To.Text = Settings.WorkingDir;
+
+            From_TextUpdate(null, null);
         }
 
         private void Ok_Click(object sender, EventArgs e)
