@@ -386,6 +386,7 @@
             // 
             // NoGit
             // 
+            this.NoGit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.NoGit.Controls.Add(this.Open);
             this.NoGit.Controls.Add(this.Clone);
             this.NoGit.Controls.Add(this.label2);
@@ -966,6 +967,7 @@
             this.openSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.openSubmoduleToolStripMenuItem.Text = "Browse submodule";
             this.openSubmoduleToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openSubmoduleToolStripMenuItem_DropDownOpening);
+            this.openSubmoduleToolStripMenuItem.Click += new System.EventHandler(this.openSubmoduleToolStripMenuItem_Click);
             // 
             // toolStripSeparator11
             // 

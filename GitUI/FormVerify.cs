@@ -79,5 +79,10 @@ namespace GitUI
                 form.ShowDialog();
             }
         }
+
+        private void ViewObject_Click(object sender, EventArgs e)
+        {
+            Warnings_DoubleClick(null, null);
+        }
     }
 }

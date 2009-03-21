@@ -3,11 +3,20 @@ Changelog
 
 Version 1.57
 	Spelling checker performance improved
+	Red wiggly lines added to mark incorrect spelled words	
 	Added search dialog to most file viewers
 	Added delete tag function to context menu revision grid
 	Added add tag function to recover lost objects dialog
 	Added enter support to the small create tag and create branch dialogs
 	Fixed file history view on deleted or moved files	
+	Packed with Git-1.6.1 to avoid a bug in Git-1.6.2
+	When installing 64bit version, both 32bit and 64bit shell extensions will be registered
+	Application settings are saved when closing settings dialog instead of when application exits
+	Revert commit handles merge conflicts better
+	Diff in browse dialog now shows the diff between revisions if 2 revisions are selected
+	Bug solved: files in diff viewer are not shown correctly when 2 revisions are selected
+	Format path dialog improved
+	Clone and Initialize dialogs start with directory filled in
 
 Version 1.56
 	Settings are saved when dialog is closed not only on OK

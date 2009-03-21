@@ -305,6 +305,96 @@ namespace GitCommands
             {
                 autoStartPageant = value;
             }
-        }    
+        }
+
+
+        public static void SaveSettings()
+        {
+            try
+            {
+                for (int n = 0; n < RepositoryHistory.MostRecentRepositories.Count; n++)
+                {
+                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
+                }
+                Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
+                Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
+                Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
+                Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowAllBranches);
+                Application.UserAppDataRegistry.SetValue("closeprocessdialog", Settings.CloseProcessDialog);
+                Application.UserAppDataRegistry.SetValue("showrevisiongraph", Settings.ShowRevisionGraph);
+
+                Application.UserAppDataRegistry.SetValue("showgitcommandline", Settings.ShowGitCommandLine);
+                Application.UserAppDataRegistry.SetValue("usefastchecks", Settings.UseFastChecks);
+                Application.UserAppDataRegistry.SetValue("relativedate", Settings.RelativeDate);
+
+                Application.UserAppDataRegistry.SetValue("gitssh", GitCommands.GetSsh());
+                Application.UserAppDataRegistry.SetValue("pullmerge", Settings.PullMerge);
+
+                Application.UserAppDataRegistry.SetValue("autostash", Settings.AutoStash);
+
+                Application.UserAppDataRegistry.SetValue("plink", Settings.Plink);
+                Application.UserAppDataRegistry.SetValue("puttygen", Settings.Puttygen);
+                Application.UserAppDataRegistry.SetValue("pageant", Settings.Pageant);
+
+                Application.UserAppDataRegistry.SetValue("dictionary", Settings.Dictionary);
+            }
+            catch
+            {
+            }
+        }
+
+        public static void LoadSettings()
+        {
+            try
+            {
+                if (Application.UserAppDataRegistry.GetValue("maxcommits") != null)
+                {
+                    int result;
+                    if (int.TryParse(Application.UserAppDataRegistry.GetValue("maxcommits").ToString(), out result) == true)
+                    {
+                        Settings.MaxCommits = result;
+                    }
+                }
+
+
+                if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
+                if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
+                if (Application.UserAppDataRegistry.GetValue("plink") != null) Settings.Plink = Application.UserAppDataRegistry.GetValue("plink").ToString();
+                if (Application.UserAppDataRegistry.GetValue("puttygen") != null) Settings.Puttygen = Application.UserAppDataRegistry.GetValue("puttygen").ToString();
+                if (Application.UserAppDataRegistry.GetValue("pageant") != null) Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
+
+                if (Application.UserAppDataRegistry.GetValue("dictionary") != null) Settings.Dictionary = Application.UserAppDataRegistry.GetValue("dictionary").ToString();
+
+                if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
+
+                if (Application.UserAppDataRegistry.GetValue("relativedate") != null) Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
+                if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
+                if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir11") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir11").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir10") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir10").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir9") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir9").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir8") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir8").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir7") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir7").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir6") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir6").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir5") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir5").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir4") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir4").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir3") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir3").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir2") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir2").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir1") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir1").ToString());
+                if (Application.UserAppDataRegistry.GetValue("dir0") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir0").ToString());
+
+
+            }
+            catch
+            {
+            }
+        }
     }
 }
