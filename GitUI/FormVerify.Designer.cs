@@ -33,10 +33,10 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.Warnings = new System.Windows.Forms.ListBox();
+            this.ViewObject = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.ViewObject = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -105,6 +105,16 @@
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
             // 
+            // ViewObject
+            // 
+            this.ViewObject.Location = new System.Drawing.Point(118, 3);
+            this.ViewObject.Name = "ViewObject";
+            this.ViewObject.Size = new System.Drawing.Size(108, 23);
+            this.ViewObject.TabIndex = 3;
+            this.ViewObject.Text = "View object";
+            this.ViewObject.UseVisualStyleBackColor = true;
+            this.ViewObject.Click += new System.EventHandler(this.ViewObject_Click);
+            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(3, 3);
@@ -134,16 +144,6 @@
             this.button1.Text = "Save objects to .git/lost-found";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // ViewObject
-            // 
-            this.ViewObject.Location = new System.Drawing.Point(118, 3);
-            this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(108, 23);
-            this.ViewObject.TabIndex = 3;
-            this.ViewObject.Text = "View object";
-            this.ViewObject.UseVisualStyleBackColor = true;
-            this.ViewObject.Click += new System.EventHandler(this.ViewObject_Click);
             // 
             // FormVerify
             // 
