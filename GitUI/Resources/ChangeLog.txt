@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.58
+	Added support for Araxis merge and DiffMerge
+
 Version 1.57
 	Spelling checker performance improved
 	Red wiggly lines added to mark incorrect spelled words	

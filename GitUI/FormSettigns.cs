@@ -888,6 +888,17 @@ namespace GitUI
 
         }
 
+        private string FindFileInFolders(string fileName, params string[] locations)
+        {
+            foreach (string location in locations)
+            {
+                if (!string.IsNullOrEmpty(location) || File.Exists(location + fileName))
+                    return location + fileName;
+            }
+
+            return "";
+        }
+
         private void AutoConfigMergeToolcmd()
         {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
@@ -898,15 +909,42 @@ namespace GitUI
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
                     MergetoolPath.Text = @"c:\Program Files\Perforce\p4merge.exe";
+
+                    MergetoolPath.Text = FindFileInFolders("p4merge.exe",
+                                       @"c:\Program Files (x86)\Perforce\",
+                                       @"c:\Program Files\Perforce\");
+
                     if (!File.Exists(MergetoolPath.Text))
                     {
                         MergetoolPath.Text = "";
-                        MessageBox.Show("Please enter the path to p4merge.exe and press suggest again.", "Suggest mergetool cmd");
+                        MessageBox.Show("Please enter the path to p4merge.exe and press suggest.", "Suggest mergetool cmd");
                         return;
                     }
                 }
 
                 MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
+                return;
+            }
+
+            if (GlobalMergeTool.Text.Equals("Araxis", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = FindFileInFolders("Compare.exe", 
+                                                           @"C:\Program Files (x86)\Araxis\Araxis Merge\",
+                                                           @"C:\Program Files\Araxis\Araxis Merge\");
+
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to Compare.exe and press suggest.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 return;
             }
 
@@ -916,11 +954,16 @@ namespace GitUI
                     MergetoolPath.Text = "";
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
-                    MergetoolPath.Text = @"c:\Program Files\TortoiseSVN\bin\TortoiseMerge.exe";
+                    MergetoolPath.Text = FindFileInFolders("TortoiseMerge.exe",
+                                       @"c:\Program Files (x86)\TortoiseSVN\bin\",
+                                       @"c:\Program Files\TortoiseSVN\bin\",
+                                       @"c:\Program Files (x86)\TortoiseGit\bin\",
+                                       @"c:\Program Files\TortoiseGit\bin\");
+
                     if (!File.Exists(MergetoolPath.Text))
                     {
                         MergetoolPath.Text = "";
-                        MessageBox.Show("Please enter the path to TortoiseMerge.exe and press suggest again.", "Suggest mergetool cmd");
+                        MessageBox.Show("Please enter the path to TortoiseMerge.exe and press suggest.", "Suggest mergetool cmd");
                         return;
                     }
                 }
@@ -928,13 +971,34 @@ namespace GitUI
                 MergeToolCmd.Text = "\"TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                 return;
             }
+
+            if (GlobalMergeTool.Text.Equals("DiffMerge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("p4merge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = FindFileInFolders("DiffMerge.exe",
+                                       @"C:\Program Files (x86)\SourceGear\DiffMerge\",
+                                       @"C:\Program Files\SourceGear\DiffMerge\");
+
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to DiffMerge.exe and press suggest.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                ///m /r=%merged /t1=%yname /t2=%bname /t3=%tname /c=%mname %mine %base %theirs
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                return;
+            }                        
         }
 
         private void GlobalMergeTool_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-            MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
-            MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+
         }
 
         private void ShowRevisionGraph_CheckedChanged(object sender, EventArgs e)
@@ -970,6 +1034,15 @@ namespace GitUI
         private void Dictionary_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
+            MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+
+            button1_Click_1(null, null);
         }
 
     }

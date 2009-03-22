@@ -242,5 +242,10 @@ namespace GitUI
         {
             Find();
         }
+
+        private void TextEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }
