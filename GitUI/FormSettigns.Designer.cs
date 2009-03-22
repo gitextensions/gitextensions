@@ -745,7 +745,11 @@
             this.MergeToolCmd.Items.AddRange(new object[] {
             "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
             "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
-                " /theirs:\"$REMOTE\" /merged:\"$MERGED\""});
+                " /theirs:\"$REMOTE\" /merged:\"$MERGED\"",
+            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
+                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
+            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
+                "BASE\" \"$REMOTE\""});
             this.MergeToolCmd.Location = new System.Drawing.Point(113, 147);
             this.MergeToolCmd.Name = "MergeToolCmd";
             this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
@@ -774,6 +778,8 @@
             // 
             this.GlobalMergeTool.FormattingEnabled = true;
             this.GlobalMergeTool.Items.AddRange(new object[] {
+            "Araxis",
+            "DiffMerge",
             "kdiff3",
             "p4merge",
             "TortoiseMerge"});
@@ -782,6 +788,7 @@
             this.GlobalMergeTool.Size = new System.Drawing.Size(164, 21);
             this.GlobalMergeTool.TabIndex = 12;
             this.GlobalMergeTool.SelectedIndexChanged += new System.EventHandler(this.GlobalMergeTool_SelectedIndexChanged);
+            this.GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
             // PathToKDiff3
             // 
