@@ -63,6 +63,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_32E4D087AE5B49AC977ADB1E695F04E9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_331E12700CA4CF7C5D0715BC5128EF63"
         "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
         "MsmSig" = "8:_UNDEFINED"
@@ -201,12 +207,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C2E4BC98D8404F34AD32DD2E2B222E04"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
         "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
         "MsmSig" = "8:_UNDEFINED"
@@ -268,12 +268,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -281,6 +275,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_CC844C218A040E0095B17234095AA10C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -401,17 +401,17 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_1D635D7E392A4A32B138D7123361CF3C"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_92673C55FA664BE2AD544BCD4EAADB93"
             {
-            "Name" = "8:Git-1.6.1-preview20081227.exe"
+            "Name" = "8:Git-1.6.2.1-preview20090322.exe"
             "Condition" = "8:INSTALL_MSYSGIT"
-            "Object" = "8:_C2E4BC98D8404F34AD32DD2E2B222E04"
+            "Object" = "8:_32E4D087AE5B49AC977ADB1E695F04E9"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:/Install"
             "EntryPoint" = "8:"
             "Sequence" = "3:2"
-            "Identifier" = "8:_CB978736_4888_4403_AB43_F6E89FA0465B"
+            "Identifier" = "8:_BDD32876_FDF0_4082_904D_2BF6840358A2"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -610,6 +610,26 @@
             "Tag" = "8:"
             "Folder" = "8:_D7C3DA4D0E3449789BCE3E86E407E5E1"
             "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_32E4D087AE5B49AC977ADB1E695F04E9"
+            {
+            "SourcePath" = "8:..\\Bin\\Git-1.6.2.1-preview20090322.exe"
+            "TargetName" = "8:Git-1.6.2.1-preview20090322.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
+            "Condition" = "8:INSTALL_MSYSGIT"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1076,26 +1096,6 @@
             "Tag" = "8:"
             "Folder" = "8:_B87A411EFCD54B309F33A0BDA5CA6F5C"
             "Condition" = "8:INSTALLVS2005"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C2E4BC98D8404F34AD32DD2E2B222E04"
-            {
-            "SourcePath" = "8:..\\Bin\\Git-1.6.1-preview20081227.exe"
-            "TargetName" = "8:Git-1.6.1-preview20081227.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
-            "Condition" = "8:INSTALL_MSYSGIT"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1962,7 +1962,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:msysgit (1.6.1 or newer required)"
+                            "Value" = "8:msysgit (1.6.2.1)"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
