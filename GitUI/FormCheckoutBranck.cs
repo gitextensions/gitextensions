@@ -16,21 +16,59 @@ namespace GitUI
         {
             InitializeComponent();
 
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+
+            if (LocalBranch.Checked)
+            {
+                Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+            }
+            else
+            {
+                List<GitHead> heads = GitCommands.GitCommands.GetHeads(true, true);
+
+                List<GitHead> remoteHeads = new List<GitHead>();
+
+                foreach (GitHead head in heads)
+                {
+                    if (head.IsRemote)
+                        remoteHeads.Add(head);
+                }
+
+                Branches.DataSource = remoteHeads;
+            }
         }
 
         private void Ok_Click(object sender, EventArgs e)
         {
             try
             {
-                new FormProcess("checkout \"" + Branches.Text + "\"");
-                //CheckoutDto dto = new CheckoutDto(Branches.Text);
+                FormProcess form;
 
-                //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
-                //commit.Execute();
-                //MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
-                Close();
+                //Get a localbranch name
+                int index = Branches.Text.LastIndexOfAny(new char[] { '\\', '/' });
+                string localBranchName = Branches.Text;
+                if (index > 0 && index + 1 < Branches.Text.Length)
+                    localBranchName = localBranchName.Substring(index + 1);
+
+                if (Remotebranch.Checked &&
+                    MessageBox.Show("You choose to checkout a remote branch.\n\nDo you want create a local branch with the name '" + localBranchName + "'\nthat track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo) == DialogResult.Yes
+                    )
+                {
+                    //git checkout --track -b localbranch origin/remotebranch 
+                    form = new FormProcess("checkout --track -b \"" + localBranchName + "\" \"" + Branches.Text + "\"");
+                }
+                else
+                {
+                    form = new FormProcess("checkout \"" + Branches.Text + "\"");
+                }
+
+                if (!form.ErrorOccured())
+                    Close();
             }
             catch
             {
@@ -45,6 +83,21 @@ namespace GitUI
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void BranchTypeChanged()
+        {
+            Initialize();
+        }
+
+        private void Remotebranch_CheckedChanged(object sender, EventArgs e)
+        {
+            BranchTypeChanged();
+        }
+
+        private void LocalBranch_CheckedChanged(object sender, EventArgs e)
+        {
+            BranchTypeChanged();
         }
     }
 }

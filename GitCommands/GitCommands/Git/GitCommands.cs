@@ -1870,6 +1870,65 @@ namespace GitCommands
             return GetHeads(tags, true);
         }
 
+        static public List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
+        {
+            string tree = "";
+            if (tags && branches)
+                tree = RunCmd(Settings.GitDir + "git.cmd", "ls-remote --heads --tags \"" + remote + "\"");
+            else
+                if (tags)
+                    tree = RunCmd(Settings.GitDir + "git.cmd", "ls-remote --tags \"" + remote + "\"");
+                else
+                    if (branches)
+                        tree = RunCmd(Settings.GitDir + "git.cmd", "ls-remote --heads \"" + remote + "\"");
+
+            string[] itemsStrings = tree.Split('\n');
+
+            List<GitHead> heads = new List<GitHead>();
+
+            foreach (string itemsString in itemsStrings)
+            {
+                if (itemsString.Length > 42)
+                {
+                    GitHead head = new GitHead();
+                    head.Guid = itemsString.Substring(0, 40);
+                    head.Name = itemsString.Substring(41).Trim();
+                    if (head.Name.Length > 0 && head.Name.LastIndexOf("/") > 1)
+                    {
+                        if (head.Name.Contains("refs/tags/"))
+                        {
+                            //we need the one containing ^{}, because it contains the reference
+                            if (head.Name.Contains("^{}"))
+                            {
+                                head.Name = head.Name.Substring(0, head.Name.Length - 3);
+                            }
+                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                            head.IsHead = false;
+                            head.IsTag = true;
+                        }
+                        else
+                        {
+                            head.IsHead = head.Name.Contains("refs/heads/");
+                            head.IsRemote = head.Name.Contains("refs/remotes/");
+                            head.IsTag = false;
+                            head.IsOther = !head.IsHead && !head.IsRemote && !head.IsTag;
+                            if (head.IsHead)
+                                head.Name = head.Name.Substring(head.Name.LastIndexOf("heads/") + 6);
+                            else
+                                if (head.IsRemote)
+                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
+                                else
+                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                        }
+                    }
+
+                    heads.Add(head);
+                }
+            }
+
+            return heads;
+        }
+
 
         static public List<GitHead> GetHeads(bool tags, bool branches)
         {

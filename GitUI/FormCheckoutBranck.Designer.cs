@@ -32,12 +32,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
+            this.LocalBranch = new System.Windows.Forms.RadioButton();
+            this.Remotebranch = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Location = new System.Drawing.Point(12, 45);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 0;
@@ -46,7 +48,7 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(92, 10);
+            this.Branches.Location = new System.Drawing.Point(91, 42);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(236, 21);
             this.Branches.TabIndex = 1;
@@ -54,7 +56,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(374, 8);
+            this.Ok.Location = new System.Drawing.Point(373, 40);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 2;
@@ -62,11 +64,37 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
+            // LocalBranch
+            // 
+            this.LocalBranch.AutoSize = true;
+            this.LocalBranch.Checked = true;
+            this.LocalBranch.Location = new System.Drawing.Point(13, 13);
+            this.LocalBranch.Name = "LocalBranch";
+            this.LocalBranch.Size = new System.Drawing.Size(87, 17);
+            this.LocalBranch.TabIndex = 3;
+            this.LocalBranch.TabStop = true;
+            this.LocalBranch.Text = "Local branch";
+            this.LocalBranch.UseVisualStyleBackColor = true;
+            this.LocalBranch.CheckedChanged += new System.EventHandler(this.LocalBranch_CheckedChanged);
+            // 
+            // Remotebranch
+            // 
+            this.Remotebranch.AutoSize = true;
+            this.Remotebranch.Location = new System.Drawing.Point(128, 13);
+            this.Remotebranch.Name = "Remotebranch";
+            this.Remotebranch.Size = new System.Drawing.Size(98, 17);
+            this.Remotebranch.TabIndex = 4;
+            this.Remotebranch.Text = "Remote branch";
+            this.Remotebranch.UseVisualStyleBackColor = true;
+            this.Remotebranch.CheckedChanged += new System.EventHandler(this.Remotebranch_CheckedChanged);
+            // 
             // FormCheckoutBranck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 50);
+            this.ClientSize = new System.Drawing.Size(463, 78);
+            this.Controls.Add(this.Remotebranch);
+            this.Controls.Add(this.LocalBranch);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.label1);
@@ -85,5 +113,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.Button Ok;
+        private System.Windows.Forms.RadioButton LocalBranch;
+        private System.Windows.Forms.RadioButton Remotebranch;
     }
 }
