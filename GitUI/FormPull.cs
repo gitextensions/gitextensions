@@ -120,10 +120,13 @@ namespace GitUI
                 source = PullSource.Text;
             else
             {
-                if (!File.Exists(GitCommands.Settings.Pageant))
-                    MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
-                else
-                    GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                if (GitCommands.GitCommands.Plink())
+                {
+                    if (!File.Exists(GitCommands.Settings.Pageant))
+                        MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                    else
+                        GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                }
                 source = Remotes.Text;
             }
 

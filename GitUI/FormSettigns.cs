@@ -857,7 +857,6 @@ namespace GitUI
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
-                MessageBox.Show("KDiff3 is supported by Git, you can leave mergetool cmd empty.", "Suggest mergetool cmd");
                 MergeToolCmd.Text = "";
 
                 string kdiff3path = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");

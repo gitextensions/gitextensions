@@ -58,10 +58,13 @@ namespace GitUI
             }
             else
             {
-                if (!File.Exists(GitCommands.Settings.Pageant))
-                    MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
-                else
-                    GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                if (GitCommands.GitCommands.Plink())
+                {
+                    if (!File.Exists(GitCommands.Settings.Pageant))
+                        MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                    else
+                        GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+                }
 
                 if (TabControlTagBranch.SelectedTab == BranchTab)
                     form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
