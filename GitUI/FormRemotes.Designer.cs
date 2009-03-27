@@ -419,6 +419,7 @@
             this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
             this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
             this.guidDataGridViewTextBoxColumn.ReadOnly = true;
+            this.guidDataGridViewTextBoxColumn.Visible = false;
             // 
             // nameDataGridViewTextBoxColumn1
             // 
@@ -426,6 +427,7 @@
             this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
             this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.nameDataGridViewTextBoxColumn1.Visible = false;
             // 
             // headTypeDataGridViewTextBoxColumn
             // 
@@ -433,6 +435,7 @@
             this.headTypeDataGridViewTextBoxColumn.HeaderText = "HeadType";
             this.headTypeDataGridViewTextBoxColumn.Name = "headTypeDataGridViewTextBoxColumn";
             this.headTypeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.headTypeDataGridViewTextBoxColumn.Visible = false;
             // 
             // selectedDataGridViewCheckBoxColumn
             // 
@@ -440,6 +443,7 @@
             this.selectedDataGridViewCheckBoxColumn.HeaderText = "Selected";
             this.selectedDataGridViewCheckBoxColumn.Name = "selectedDataGridViewCheckBoxColumn";
             this.selectedDataGridViewCheckBoxColumn.ReadOnly = true;
+            this.selectedDataGridViewCheckBoxColumn.Visible = false;
             // 
             // isHeadDataGridViewCheckBoxColumn
             // 
@@ -447,6 +451,7 @@
             this.isHeadDataGridViewCheckBoxColumn.HeaderText = "IsHead";
             this.isHeadDataGridViewCheckBoxColumn.Name = "isHeadDataGridViewCheckBoxColumn";
             this.isHeadDataGridViewCheckBoxColumn.ReadOnly = true;
+            this.isHeadDataGridViewCheckBoxColumn.Visible = false;
             // 
             // isTagDataGridViewCheckBoxColumn
             // 
@@ -454,6 +459,7 @@
             this.isTagDataGridViewCheckBoxColumn.HeaderText = "IsTag";
             this.isTagDataGridViewCheckBoxColumn.Name = "isTagDataGridViewCheckBoxColumn";
             this.isTagDataGridViewCheckBoxColumn.ReadOnly = true;
+            this.isTagDataGridViewCheckBoxColumn.Visible = false;
             // 
             // isRemoteDataGridViewCheckBoxColumn
             // 
@@ -461,6 +467,7 @@
             this.isRemoteDataGridViewCheckBoxColumn.HeaderText = "IsRemote";
             this.isRemoteDataGridViewCheckBoxColumn.Name = "isRemoteDataGridViewCheckBoxColumn";
             this.isRemoteDataGridViewCheckBoxColumn.ReadOnly = true;
+            this.isRemoteDataGridViewCheckBoxColumn.Visible = false;
             // 
             // isOtherDataGridViewCheckBoxColumn
             // 
@@ -468,6 +475,7 @@
             this.isOtherDataGridViewCheckBoxColumn.HeaderText = "IsOther";
             this.isOtherDataGridViewCheckBoxColumn.Name = "isOtherDataGridViewCheckBoxColumn";
             this.isOtherDataGridViewCheckBoxColumn.ReadOnly = true;
+            this.isOtherDataGridViewCheckBoxColumn.Visible = false;
             // 
             // remoteDataGridViewTextBoxColumn
             // 
@@ -475,6 +483,7 @@
             this.remoteDataGridViewTextBoxColumn.HeaderText = "Remote";
             this.remoteDataGridViewTextBoxColumn.Name = "remoteDataGridViewTextBoxColumn";
             this.remoteDataGridViewTextBoxColumn.ReadOnly = true;
+            this.remoteDataGridViewTextBoxColumn.Visible = false;
             // 
             // mergeWithDataGridViewTextBoxColumn
             // 
@@ -482,6 +491,7 @@
             this.mergeWithDataGridViewTextBoxColumn.HeaderText = "MergeWith";
             this.mergeWithDataGridViewTextBoxColumn.Name = "mergeWithDataGridViewTextBoxColumn";
             this.mergeWithDataGridViewTextBoxColumn.ReadOnly = true;
+            this.mergeWithDataGridViewTextBoxColumn.Visible = false;
             // 
             // gitHeadBindingSource
             // 
