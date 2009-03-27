@@ -56,6 +56,16 @@
             this.BranchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RemoteCombo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MergeWith = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.headTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.selectedDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.isHeadDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.isTagDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.isRemoteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.isOtherDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.remoteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.LocalBranchNameEdit = new System.Windows.Forms.TextBox();
             this.RemoteRepositoryCombo = new System.Windows.Forms.ComboBox();
@@ -68,16 +78,6 @@
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.headTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.selectedDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.isHeadDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.isTagDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.isRemoteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.isOtherDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.remoteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -413,6 +413,76 @@
             this.MergeWith.Name = "MergeWith";
             this.MergeWith.ReadOnly = true;
             // 
+            // guidDataGridViewTextBoxColumn
+            // 
+            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
+            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
+            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
+            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // headTypeDataGridViewTextBoxColumn
+            // 
+            this.headTypeDataGridViewTextBoxColumn.DataPropertyName = "HeadType";
+            this.headTypeDataGridViewTextBoxColumn.HeaderText = "HeadType";
+            this.headTypeDataGridViewTextBoxColumn.Name = "headTypeDataGridViewTextBoxColumn";
+            this.headTypeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // selectedDataGridViewCheckBoxColumn
+            // 
+            this.selectedDataGridViewCheckBoxColumn.DataPropertyName = "Selected";
+            this.selectedDataGridViewCheckBoxColumn.HeaderText = "Selected";
+            this.selectedDataGridViewCheckBoxColumn.Name = "selectedDataGridViewCheckBoxColumn";
+            this.selectedDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // isHeadDataGridViewCheckBoxColumn
+            // 
+            this.isHeadDataGridViewCheckBoxColumn.DataPropertyName = "IsHead";
+            this.isHeadDataGridViewCheckBoxColumn.HeaderText = "IsHead";
+            this.isHeadDataGridViewCheckBoxColumn.Name = "isHeadDataGridViewCheckBoxColumn";
+            this.isHeadDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // isTagDataGridViewCheckBoxColumn
+            // 
+            this.isTagDataGridViewCheckBoxColumn.DataPropertyName = "IsTag";
+            this.isTagDataGridViewCheckBoxColumn.HeaderText = "IsTag";
+            this.isTagDataGridViewCheckBoxColumn.Name = "isTagDataGridViewCheckBoxColumn";
+            this.isTagDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // isRemoteDataGridViewCheckBoxColumn
+            // 
+            this.isRemoteDataGridViewCheckBoxColumn.DataPropertyName = "IsRemote";
+            this.isRemoteDataGridViewCheckBoxColumn.HeaderText = "IsRemote";
+            this.isRemoteDataGridViewCheckBoxColumn.Name = "isRemoteDataGridViewCheckBoxColumn";
+            this.isRemoteDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // isOtherDataGridViewCheckBoxColumn
+            // 
+            this.isOtherDataGridViewCheckBoxColumn.DataPropertyName = "IsOther";
+            this.isOtherDataGridViewCheckBoxColumn.HeaderText = "IsOther";
+            this.isOtherDataGridViewCheckBoxColumn.Name = "isOtherDataGridViewCheckBoxColumn";
+            this.isOtherDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // remoteDataGridViewTextBoxColumn
+            // 
+            this.remoteDataGridViewTextBoxColumn.DataPropertyName = "Remote";
+            this.remoteDataGridViewTextBoxColumn.HeaderText = "Remote";
+            this.remoteDataGridViewTextBoxColumn.Name = "remoteDataGridViewTextBoxColumn";
+            this.remoteDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // mergeWithDataGridViewTextBoxColumn
+            // 
+            this.mergeWithDataGridViewTextBoxColumn.DataPropertyName = "MergeWith";
+            this.mergeWithDataGridViewTextBoxColumn.HeaderText = "MergeWith";
+            this.mergeWithDataGridViewTextBoxColumn.Name = "mergeWithDataGridViewTextBoxColumn";
+            this.mergeWithDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // gitHeadBindingSource
             // 
             this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
@@ -511,76 +581,6 @@
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // guidDataGridViewTextBoxColumn
-            // 
-            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
-            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // headTypeDataGridViewTextBoxColumn
-            // 
-            this.headTypeDataGridViewTextBoxColumn.DataPropertyName = "HeadType";
-            this.headTypeDataGridViewTextBoxColumn.HeaderText = "HeadType";
-            this.headTypeDataGridViewTextBoxColumn.Name = "headTypeDataGridViewTextBoxColumn";
-            this.headTypeDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // selectedDataGridViewCheckBoxColumn
-            // 
-            this.selectedDataGridViewCheckBoxColumn.DataPropertyName = "Selected";
-            this.selectedDataGridViewCheckBoxColumn.HeaderText = "Selected";
-            this.selectedDataGridViewCheckBoxColumn.Name = "selectedDataGridViewCheckBoxColumn";
-            this.selectedDataGridViewCheckBoxColumn.ReadOnly = true;
-            // 
-            // isHeadDataGridViewCheckBoxColumn
-            // 
-            this.isHeadDataGridViewCheckBoxColumn.DataPropertyName = "IsHead";
-            this.isHeadDataGridViewCheckBoxColumn.HeaderText = "IsHead";
-            this.isHeadDataGridViewCheckBoxColumn.Name = "isHeadDataGridViewCheckBoxColumn";
-            this.isHeadDataGridViewCheckBoxColumn.ReadOnly = true;
-            // 
-            // isTagDataGridViewCheckBoxColumn
-            // 
-            this.isTagDataGridViewCheckBoxColumn.DataPropertyName = "IsTag";
-            this.isTagDataGridViewCheckBoxColumn.HeaderText = "IsTag";
-            this.isTagDataGridViewCheckBoxColumn.Name = "isTagDataGridViewCheckBoxColumn";
-            this.isTagDataGridViewCheckBoxColumn.ReadOnly = true;
-            // 
-            // isRemoteDataGridViewCheckBoxColumn
-            // 
-            this.isRemoteDataGridViewCheckBoxColumn.DataPropertyName = "IsRemote";
-            this.isRemoteDataGridViewCheckBoxColumn.HeaderText = "IsRemote";
-            this.isRemoteDataGridViewCheckBoxColumn.Name = "isRemoteDataGridViewCheckBoxColumn";
-            this.isRemoteDataGridViewCheckBoxColumn.ReadOnly = true;
-            // 
-            // isOtherDataGridViewCheckBoxColumn
-            // 
-            this.isOtherDataGridViewCheckBoxColumn.DataPropertyName = "IsOther";
-            this.isOtherDataGridViewCheckBoxColumn.HeaderText = "IsOther";
-            this.isOtherDataGridViewCheckBoxColumn.Name = "isOtherDataGridViewCheckBoxColumn";
-            this.isOtherDataGridViewCheckBoxColumn.ReadOnly = true;
-            // 
-            // remoteDataGridViewTextBoxColumn
-            // 
-            this.remoteDataGridViewTextBoxColumn.DataPropertyName = "Remote";
-            this.remoteDataGridViewTextBoxColumn.HeaderText = "Remote";
-            this.remoteDataGridViewTextBoxColumn.Name = "remoteDataGridViewTextBoxColumn";
-            this.remoteDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // mergeWithDataGridViewTextBoxColumn
-            // 
-            this.mergeWithDataGridViewTextBoxColumn.DataPropertyName = "MergeWith";
-            this.mergeWithDataGridViewTextBoxColumn.HeaderText = "MergeWith";
-            this.mergeWithDataGridViewTextBoxColumn.Name = "mergeWithDataGridViewTextBoxColumn";
-            this.mergeWithDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // FormRemotes
             // 
