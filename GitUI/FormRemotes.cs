@@ -38,15 +38,15 @@ namespace GitUI
 
             List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false, true);
             RemoteBranches.DataSource = heads;
-            foreach (object item in GitCommands.GitCommands.GetRemotes())
+/*            foreach (object item in GitCommands.GitCommands.GetRemotes())
             {
                 RemoteCombo.Items.Add(item);
             }
             mergeWithDataGridViewTextBoxColumn.Items.Add("");
-            foreach (GitCommands.GitHead head in heads)
+            /*foreach (GitCommands.GitHead head in heads)
             {
                 mergeWithDataGridViewTextBoxColumn.Items.Add(head.Name);
-            }
+            }*/
             RemoteBranches.DataError += new DataGridViewDataErrorEventHandler(RemoteBranches_DataError);
 
             if (GitCommands.GitCommands.Plink())
@@ -172,5 +172,101 @@ namespace GitUI
         {
             new FormProcess("remote prune " + remote);
         }
+
+        private void RemoteBranches_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
+        private void RemoteBranches_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void RemoteBranches_SelectionChanged(object sender, EventArgs e)
+        {
+            if (RemoteBranches.SelectedRows.Count != 1)
+                return;
+
+            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+
+            if (head == null)
+                return;
+
+            LocalBranchNameEdit.Text = head.Name;
+            LocalBranchNameEdit.ReadOnly = true;
+            RemoteRepositoryCombo.Items.Clear();
+            RemoteRepositoryCombo.Items.Add("");
+            foreach (string remote in GitCommands.GitCommands.GetRemotes())
+                RemoteRepositoryCombo.Items.Add(remote);
+
+            RemoteRepositoryCombo.Text = head.Remote;
+
+            DefaultMergeWithCombo.Text = head.MergeWith;
+
+        }
+
+        private void RemoteRepositoryCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DefaultMergeWithCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DefaultMergeWithCombo_DropDown(object sender, EventArgs e)
+        {
+            if (RemoteBranches.SelectedRows.Count != 1)
+                return;
+
+            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+
+            if (head == null)
+                return;
+
+            DefaultMergeWithCombo.Items.Clear();
+            DefaultMergeWithCombo.Items.Add("");
+            if (!string.IsNullOrEmpty(head.Remote))
+            {
+                string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + remote + ".url");
+
+                if (!string.IsNullOrEmpty(remoteUrl))
+                {
+                    foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
+                    {
+                        if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(remote.ToLower()))
+                        DefaultMergeWithCombo.Items.Add(remoteHead.Name);
+                    }
+                }
+            }
+
+        }
+
+        private void RemoteRepositoryCombo_Validated(object sender, EventArgs e)
+        {
+            if (RemoteBranches.SelectedRows.Count != 1)
+                return;
+
+            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            if (head == null)
+                return;
+
+            head.Remote = RemoteRepositoryCombo.Text;
+        }
+
+        private void DefaultMergeWithCombo_Validated(object sender, EventArgs e)
+        {
+            if (RemoteBranches.SelectedRows.Count != 1)
+                return;
+
+            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            if (head == null)
+                return;
+
+            head.MergeWith = DefaultMergeWithCombo.Text;
+        }
     }
 }
+
