@@ -175,6 +175,8 @@ namespace GitCommands
 
             Kill();
 
+            Settings.GitLog += cmd + " " + arguments + "\n";
+
             //process used to execute external commands
             Process = new System.Diagnostics.Process();
             Process.StartInfo.UseShellExecute = false;

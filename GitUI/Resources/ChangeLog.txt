@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.59
+	Remote branches can be checked out and tracked from the checkout branch dialog
+	Manage remote branch dialog improved
+
 Version 1.58
 	Added support for Araxis merge and DiffMerge
 
