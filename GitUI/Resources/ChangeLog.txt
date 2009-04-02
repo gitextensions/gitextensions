@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.61
+	Fixed bug that mergeconflicts of files listed in .gitignore are hidden
+
 Version 1.60
 	Fixed bug in Manage remotes dialog
 

@@ -348,14 +348,14 @@ namespace GitCommands
         static public bool InTheMiddleOfConflictedMerge()
         {
             //if (Settings.UseFastChecks)
-                return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard"));
+                return !string.IsNullOrEmpty(RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged"));
             //else
             //    return RunCmd(Settings.GitDir + "git.cmd", "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
         }
 
         static public List<GitItem> GetConflictedFiles()
         {
-            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard").Split('\n');
+            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged").Split('\n');
 
             List<GitItem> unmergedFiles = new List<GitItem>();
 
@@ -380,7 +380,7 @@ namespace GitCommands
         static public string GetConflictedFiles(string filename)
         {
             filename = FixPath(filename);
-            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged --exclude-standard \"" + filename + "\"").Split('\n');
+            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged \"" + filename + "\"").Split('\n');
 
             foreach (string file in unmerged)
             {
