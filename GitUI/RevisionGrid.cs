@@ -833,7 +833,8 @@ namespace GitUI
 
             GitRevision revision = RevisionList[LastRow] as GitRevision;
 
-            ToolStripDropDown dropDown = new ToolStripDropDown();
+            ToolStripDropDown tagDropDown = new ToolStripDropDown();
+            ToolStripDropDown branchDropDown = new ToolStripDropDown();
 
             foreach (GitHead head in revision.Heads)
             {
@@ -841,12 +842,21 @@ namespace GitUI
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += new EventHandler(toolStripItem_Click);
-                    dropDown.Items.Add(toolStripItem);
+                    tagDropDown.Items.Add(toolStripItem);
+                } else
+                if (head.IsHead && !head.IsRemote)
+                {
+                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
+                    branchDropDown.Items.Add(toolStripItem);
                 }
             }
 
-            deleteTagToolStripMenuItem.DropDown = dropDown;
-            deleteTagToolStripMenuItem.Visible = dropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.DropDown = tagDropDown;
+            deleteTagToolStripMenuItem.Visible = tagDropDown.Items.Count > 0;
+
+            deleteBranchToolStripMenuItem.DropDown = branchDropDown;
+            deleteBranchToolStripMenuItem.Visible = branchDropDown.Items.Count > 0;            
         }
 
         void toolStripItem_Click(object sender, EventArgs e)
@@ -857,6 +867,17 @@ namespace GitUI
                 return;
 
             new FormProcess(GitCommands.GitCommands.DeleteTagCmd(toolStripItem.Text));
+            ForceRefreshRevisions();
+        }
+
+        void toolStripItem_ClickBranch(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            new FormProcess(GitCommands.GitCommands.DeleteBranchCmd(toolStripItem.Text, false));
             ForceRefreshRevisions();
         }
 
