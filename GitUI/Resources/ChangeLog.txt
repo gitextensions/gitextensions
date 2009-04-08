@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.62
+	Fixed exception when right click on gridheaders in revision log
+	Last selection and scroll position in revision log are remembered
+
 Version 1.61
 	Fixed bug that mergeconflicts of files listed in .gitignore are hidden
 
