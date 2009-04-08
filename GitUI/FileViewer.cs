@@ -44,66 +44,74 @@ namespace GitUI
 
         public void ViewFile(string fileName)
         {
-            if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase)
-                )
+            try
             {
-                Image image;
-
-                if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
+                if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase)
+                    )
                 {
-                    Icon icon = new Icon(GitCommands.Settings.WorkingDir + fileName);
-                    image = icon.ToBitmap();
-                    icon.Dispose();
+                    Image image;
+
+                    if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Icon icon = new Icon(GitCommands.Settings.WorkingDir + fileName);
+                        image = icon.ToBitmap();
+                        icon.Dispose();
+                    }
+                    else
+                    {
+                        Image fileImage = Image.FromFile(GitCommands.Settings.WorkingDir + fileName);
+                        image = (Image)fileImage.Clone();
+                        fileImage.Dispose();
+                    }
+
+                    PictureBox.Visible = true;
+                    TextEditor.Visible = false;
+
+                    if (image.Size.Height > PictureBox.Size.Height ||
+                        image.Size.Width > PictureBox.Size.Width)
+                    {
+                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
+                    else
+                    {
+                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                    }
+                    PictureBox.Image = image;
+
+
                 }
                 else
-                {
-                    Image fileImage = Image.FromFile(GitCommands.Settings.WorkingDir + fileName);
-                    image = (Image)fileImage.Clone();
-                    fileImage.Dispose();
-                }
+                    if (fileName.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase) ||
+                        fileName.EndsWith(".gif", StringComparison.CurrentCultureIgnoreCase) ||
+                        fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
+                        fileName.EndsWith(".mpeg", StringComparison.CurrentCultureIgnoreCase) ||
+                        fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
+                        fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        ClearImage();
+                        PictureBox.Visible = false;
+                        TextEditor.Visible = true;
+                        TextEditor.Text = "Binary file: " + fileName;
+                        TextEditor.Refresh();
+                    }
+                    else
+                    {
+                        ClearImage();
+                        PictureBox.Visible = false;
+                        TextEditor.Visible = true;
 
-                PictureBox.Visible = true;
-                TextEditor.Visible = false;
-                
-                if (image.Size.Height > PictureBox.Size.Height ||
-                    image.Size.Width > PictureBox.Size.Width)
-                {
-                    PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                } else
-                {
-                    PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                }
-                PictureBox.Image = image;
-                
-
+                        if (File.Exists(GitCommands.Settings.WorkingDir + fileName))
+                            TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
+                    }
             }
-            else
-            if (fileName.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".gif", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".mpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
-                fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase))
+            catch
             {
-                ClearImage();
-                PictureBox.Visible = false;
-                TextEditor.Visible = true;
-                TextEditor.Text = "Binary file: " + fileName;
-                TextEditor.Refresh();
-            } else
-            {
-                ClearImage();
-                PictureBox.Visible = false;
-                TextEditor.Visible = true;
-
-                if (File.Exists(GitCommands.Settings.WorkingDir + fileName))
-                    TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
             }
         }
 

@@ -136,10 +136,21 @@ namespace GitUI
                 ForceRefreshRevisions();
         }
 
+        public int LastScrollPos = 0;
+        public List<int> LastSelectedRows = new List<int>();
+
         public void ForceRefreshRevisions()
         {
             try
             {
+                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
+                LastSelectedRows.Clear();
+
+                foreach (DataGridViewRow row in Revisions.SelectedRows)
+                {
+                    LastSelectedRows.Add(row.Index);
+                }
+
                 if (Settings.ShowRevisionGraph)
                     Revisions.Columns[0].Width = 150;
                 else
@@ -243,7 +254,7 @@ namespace GitUI
                 return;
             }
 
-            LastRevision = Math.Min(Revisions.RowCount, Math.Max(firstVisibleRow + numberOfVisibleRows, Math.Max(GitCommands.Settings.MaxCommits, LastRevision * 2)));
+            LastRevision = Math.Min(Revisions.RowCount, Math.Max(LastScrollPos + numberOfVisibleRows, Math.Max(firstVisibleRow + numberOfVisibleRows, Math.Max(GitCommands.Settings.MaxCommits, LastRevision * 2))));
 
             Revisions.Enabled = false;
             Loading.Visible = true;
@@ -286,11 +297,11 @@ namespace GitUI
                 Revisions.Visible = false;
                 return;
             }
+            Revisions.SuspendLayout();
 
             if (!ScrollBarSet)
             {
                 ScrollBarSet = true;
-                Revisions.SuspendLayout();
                 Revisions.ScrollBars = ScrollBars.None;
                 Revisions.RowCount = RevisionList.Count;
                 Revisions.ScrollBars = ScrollBars.Vertical;
@@ -305,10 +316,33 @@ namespace GitUI
                     gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
-                Revisions.ResumeLayout();
+                
             }
 
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
+
+            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            {
+                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
+                LastScrollPos = -1;
+            }
+
+            if (LastSelectedRows.Count > 0)
+            {
+                Revisions.ClearSelection();
+
+                if (Revisions.Rows.Count > LastSelectedRows[0])
+                    Revisions.CurrentCell = Revisions.Rows[LastSelectedRows[0]].Cells[0];
+
+                foreach (int row in LastSelectedRows)
+                {
+                    if (Revisions.Rows.Count > row)
+                    {
+                        Revisions.Rows[row].Selected = true;
+                    }
+                }
+                LastSelectedRows.Clear();
+            }
 
             DrawVisibleGraphPart();
 
@@ -316,6 +350,8 @@ namespace GitUI
             Revisions.Enabled = true;
             Revisions.Focus();
             Revisions.SelectionChanged += new EventHandler(Revisions_SelectionChanged);
+
+            Revisions.ResumeLayout();
         }
 
         private bool skipFirst = false;
@@ -792,7 +828,7 @@ namespace GitUI
 
         private void CreateTag_Opening(object sender, CancelEventArgs e)
         {
-            if (RevisionList.Count < LastRow)
+            if (RevisionList.Count < LastRow || LastRow < 0)
                 return;
 
             GitRevision revision = RevisionList[LastRow] as GitRevision;
