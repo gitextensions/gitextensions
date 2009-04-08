@@ -470,10 +470,15 @@ namespace GitCommands
 
         static public string DeleteBranch(string branchName, bool force)
         {
+            return RunCmd(Settings.GitDir + "git.cmd", DeleteBranchCmd(branchName, force));
+        }
+
+        public static string DeleteBranchCmd(string branchName, bool force)
+        {
             if (force)
-                return RunCmd(Settings.GitDir + "git.cmd", "branch -D \"" + branchName + "\"");
+                return "branch -D \"" + branchName + "\"";
             else
-                return RunCmd(Settings.GitDir + "git.cmd", "branch -d \"" + branchName + "\"");
+                return "branch -d \"" + branchName + "\"";
         }
 
         static public string DeleteTag(string tagName)

@@ -63,6 +63,7 @@
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -161,6 +162,7 @@
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
             this.createNewBranchToolStripMenuItem,
+            this.deleteBranchToolStripMenuItem,
             this.toolStripSeparator2,
             this.resetCurrentBranchToHereToolStripMenuItem,
             this.revertCommitToolStripMenuItem,
@@ -171,7 +173,7 @@
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 242);
+            this.CreateTag.Size = new System.Drawing.Size(224, 264);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
@@ -365,6 +367,12 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // deleteBranchToolStripMenuItem
+            // 
+            this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
+            this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.deleteBranchToolStripMenuItem.Text = "Delete branch";
+            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -421,5 +429,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
     }
 }
