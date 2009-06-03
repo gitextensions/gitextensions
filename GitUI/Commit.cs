@@ -138,6 +138,12 @@ namespace GitUI
 
         private void Commit_Click(object sender, EventArgs e)
         {
+            if (Staged.RowCount == 0)
+            {
+                MessageBox.Show("You need to stage at least one file to commit");
+                return;
+            }
+
             DoCommit(false);
         }
 
@@ -164,7 +170,10 @@ namespace GitUI
                 NeedRefresh = true;
 
                 if (!form.ErrorOccured())
+                {
+                    File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
                     Close();
+                }
             }
             catch(Exception e)
             {
@@ -482,6 +491,10 @@ namespace GitUI
             Initialize();
             this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
+
+            if (string.IsNullOrEmpty(Message.Text))
+                Message.Text = File.ReadAllText(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
+
         }
 
         private void Staged_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -492,6 +505,18 @@ namespace GitUI
         private void SpellCheck_Click(object sender, EventArgs e)
         {
             Message.CheckSpelling();
+        }
+
+        private void Message_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FormCommit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false);
+            textWriter.Write(Message.Text);
+            textWriter.Close();
         }
     }
 }

@@ -11,8 +11,6 @@ TODO:
 
 -It would be nice if Git Extensions had an option to use the --ignore-space-at-eol option to git diff.  I’ve had issues with Git auto-converting my line endings and thus have had commits in which every file changed 100%.
 
-- I often forget to stage any files when committing.  When I hit Ok the commit fails and I lose my commit message.  When you commit with no files, it would be nice to show a dialog telling you to stage at least one file, and then let you try again.  Also when a commit fails for any reason, it would be nice if the commit dialog came back with the staged files and comment preserved.
-
 
 -I would love the ability to interactively stage / unstage individual hunks of a file diff.
 
@@ -33,6 +31,9 @@ FIXED:
 -It would be nice to show the commit hash in the Commit tab (under Browse).  Right now I can’t find the commit hash anywhere in the UI. 
 
 -Close solve mergeconflicts dialog automaticly after all conflicts are solved
+
+-I often forget to stage any files when committing.  When I hit Ok the commit fails and I lose my commit message.  When you commit with no files, it would be nice to show a dialog telling you to stage at least one file, and then let you try again.  Also when a commit fails for any reason, it would be nice if the commit dialog came back with the staged files and comment preserved.
++Mostly solved
 
 PUTTY
 =====
