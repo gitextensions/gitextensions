@@ -161,9 +161,12 @@ namespace GitUI
             }
             try
             {
-                StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false);
-                textWriter.Write(Message.Text);
-                textWriter.Close();
+                using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
+                {
+                    textWriter.Write(Message.Text);
+                    textWriter.Flush();
+                    textWriter.Close();
+                }
 
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
                 
@@ -171,7 +174,8 @@ namespace GitUI
 
                 if (!form.ErrorOccured())
                 {
-                    File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
+                    File.Delete(GitCommands.Settings.WorkingDirGitDir() + "COMMITMESSAGE");
+
                     Close();
                 }
             }
@@ -492,7 +496,7 @@ namespace GitUI
             this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
 
-            if (string.IsNullOrEmpty(Message.Text))
+            if (string.IsNullOrEmpty(Message.Text) && File.Exists(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
                 Message.Text = File.ReadAllText(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
 
         }
@@ -514,9 +518,11 @@ namespace GitUI
 
         private void FormCommit_FormClosing(object sender, FormClosingEventArgs e)
         {
-            StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false);
-            textWriter.Write(Message.Text);
-            textWriter.Close();
+            using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
+            {
+                textWriter.Write(Message.Text);
+                textWriter.Close();
+            }
         }
     }
 }
