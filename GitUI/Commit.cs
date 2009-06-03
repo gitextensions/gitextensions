@@ -174,9 +174,8 @@ namespace GitUI
 
                 if (!form.ErrorOccured())
                 {
-                    File.Delete(GitCommands.Settings.WorkingDirGitDir() + "COMMITMESSAGE");
-
                     Close();
+                    File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
                 }
             }
             catch(Exception e)

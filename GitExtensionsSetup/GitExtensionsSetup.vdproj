@@ -33,12 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_15FC89E799A440C8A3BA8D33282CFB37"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_17CDC4FD75804862BAEF6FFDA917AC87"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -249,6 +243,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_EC3844F20E674DE9958748B85E69F76A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F28379104587D8D689384604F44214E0"
         "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
         "MsmSig" = "8:_UNDEFINED"
@@ -401,17 +401,17 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_408E83BBBCE944A0B3BE4C5FDE8FEC25"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0676996D814742A0964E73F9AA6A32EE"
             {
-            "Name" = "8:Git-1.6.2.2-preview20090408.exe"
+            "Name" = "8:Git-1.6.3-preview20090507-2.exe"
             "Condition" = "8:INSTALL_MSYSGIT"
-            "Object" = "8:_15FC89E799A440C8A3BA8D33282CFB37"
+            "Object" = "8:_EC3844F20E674DE9958748B85E69F76A"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:/Install"
             "EntryPoint" = "8:"
             "Sequence" = "3:2"
-            "Identifier" = "8:_CF25837C_BA1C_4824_9999_7C21259B0B74"
+            "Identifier" = "8:_30496228_75F4_4F11_9486_914950082E50"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -456,7 +456,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2da19ef2af72bcc4, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_000A2A17B368E31C8184B9D156A2CB69"
@@ -510,26 +510,6 @@
             "Tag" = "8:"
             "Folder" = "8:_D7C3DA4D0E3449789BCE3E86E407E5E1"
             "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_15FC89E799A440C8A3BA8D33282CFB37"
-            {
-            "SourcePath" = "8:..\\Bin\\Git-1.6.2.2-preview20090408.exe"
-            "TargetName" = "8:Git-1.6.2.2-preview20090408.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
-            "Condition" = "8:INSTALL_MSYSGIT"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -880,7 +860,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3373.34468, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3441.32842, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -1133,7 +1113,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3373.34468, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3441.32842, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1164,7 +1144,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce7debbf8321c49b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C0E93D7D5BF545CA9D60024445106C8D"
@@ -1251,6 +1231,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EC3844F20E674DE9958748B85E69F76A"
+            {
+            "SourcePath" = "8:..\\Bin\\Git-1.6.3-preview20090507-2.exe"
+            "TargetName" = "8:Git-1.6.3-preview20090507-2.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
+            "Condition" = "8:INSTALL_MSYSGIT"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F28379104587D8D689384604F44214E0"
@@ -1493,7 +1493,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{E00AD1FF-7DD1-4F3D-A8B0-8322B9D76DA0}"
+        "PackageCode" = "8:{3A0D9B57-DC1C-4B4D-A6E5-2358CFBBE546}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1962,7 +1962,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:msysgit (1.6.2.2)"
+                            "Value" = "8:msysgit (1.6.3)"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
