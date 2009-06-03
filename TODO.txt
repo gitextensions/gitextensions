@@ -35,6 +35,8 @@ FIXED:
 -I often forget to stage any files when committing.  When I hit Ok the commit fails and I lose my commit message.  When you commit with no files, it would be nice to show a dialog telling you to stage at least one file, and then let you try again.  Also when a commit fails for any reason, it would be nice if the commit dialog came back with the staged files and comment preserved.
 +Mostly solved
 
+-Added git 1.6.3 to installer
+
 PUTTY
 =====
 

@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Version 1.63
+	Added file filter to revision graph filter
+	Shortened title of browse window
+	Added checkout revision context menu in the Browse list
+	Added a Recent Repositories submenu in the File menu
+	Added commit hash to commit info dialogs
+	Close solve mergeconflicts dialog automaticly after all conflicts are solved
+	Commit message is now remembered when commit dialog is closed without making the commit
+	Packed with Git-1.6.3
+
 Version 1.62
 	Fixed exception when right click on gridheaders in revision log
 	Last selection and scroll position in revision log are remembered
