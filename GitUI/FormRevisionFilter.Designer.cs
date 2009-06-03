@@ -51,6 +51,9 @@
             this.AuthorCheck = new System.Windows.Forms.CheckBox();
             this.CheckUntil = new System.Windows.Forms.CheckBox();
             this.SinceCheck = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.FileFilterCheck = new System.Windows.Forms.CheckBox();
+            this.FileFilter = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -208,10 +211,13 @@
             this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.SinceCheck, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label8, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.FileFilterCheck, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.FileFilter, 2, 7);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowCount = 8;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -219,7 +225,8 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(454, 175);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(454, 204);
             this.tableLayoutPanel1.TabIndex = 4;
             this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
@@ -294,6 +301,33 @@
             this.SinceCheck.UseVisualStyleBackColor = true;
             this.SinceCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 175);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(45, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "File filter";
+            // 
+            // FileFilterCheck
+            // 
+            this.FileFilterCheck.AutoSize = true;
+            this.FileFilterCheck.Location = new System.Drawing.Point(187, 178);
+            this.FileFilterCheck.Name = "FileFilterCheck";
+            this.FileFilterCheck.Size = new System.Drawing.Size(15, 17);
+            this.FileFilterCheck.TabIndex = 29;
+            this.FileFilterCheck.Text = "checkBox1";
+            this.FileFilterCheck.UseVisualStyleBackColor = true;
+            this.FileFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
+            // 
+            // FileFilter
+            // 
+            this.FileFilter.Location = new System.Drawing.Point(208, 178);
+            this.FileFilter.Name = "FileFilter";
+            this.FileFilter.Size = new System.Drawing.Size(241, 20);
+            this.FileFilter.TabIndex = 30;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -309,15 +343,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(454, 208);
-            this.splitContainer1.SplitterDistance = 175;
+            this.splitContainer1.Size = new System.Drawing.Size(454, 237);
+            this.splitContainer1.SplitterDistance = 204;
             this.splitContainer1.TabIndex = 21;
             // 
             // FormRevisionFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(454, 208);
+            this.ClientSize = new System.Drawing.Size(454, 237);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -361,6 +395,9 @@
         private System.Windows.Forms.CheckBox CheckUntil;
         private System.Windows.Forms.CheckBox SinceCheck;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox FileFilterCheck;
+        private System.Windows.Forms.TextBox FileFilter;
 
 
     }

@@ -115,7 +115,7 @@ namespace GitUI
                 ShowRevisions();
 
             Workingdir.Text = GitCommands.Settings.WorkingDir;
-            this.Text = "Browse " + GitCommands.Settings.WorkingDir + " - Git Extensions";
+            this.Text = GitCommands.Settings.WorkingDir + " - Git Extensions";
 
             if (validWorkingDir && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
             {
@@ -902,6 +902,37 @@ namespace GitUI
         }
 
         private void openSubmoduleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            recentToolStripMenuItem.DropDownItems.Clear();
+
+            foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
+            {
+                if (!string.IsNullOrEmpty(historyItem))
+                {
+                    ToolStripButton historyItemMenu = new ToolStripButton(historyItem);
+                    historyItemMenu.Click += new EventHandler(historyItemMenu_Click);
+                    recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
+                }
+            }
+        }
+
+        void historyItemMenu_Click(object sender, EventArgs e)
+        {
+            ToolStripButton button = sender as ToolStripButton;
+
+            if (button == null)
+                return;
+
+            GitCommands.Settings.WorkingDir = button.Text;
+            InternalInitialize(true);
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }

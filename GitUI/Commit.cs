@@ -27,7 +27,8 @@ namespace GitUI
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-
+            Commit.Enabled = false;
+            Amend.Enabled = false;
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
@@ -234,6 +235,9 @@ namespace GitUI
             }
             UnstageFiles.Enabled = true;
             AddFiles.Enabled = true;
+
+            Commit.Enabled = true;
+            Amend.Enabled = true;
         }
 
         private void Reset_Click(object sender, EventArgs e)

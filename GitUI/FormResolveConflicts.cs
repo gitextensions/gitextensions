@@ -44,6 +44,8 @@ namespace GitUI
                     FormCommit frm = new FormCommit();
                     frm.ShowDialog();
                 }
+
+                Close();
             }
         }
 
