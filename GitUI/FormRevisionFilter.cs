@@ -48,6 +48,7 @@ namespace GitUI
             Committer.Enabled = CommitterCheck.Checked;
             Message.Enabled = MessageCheck.Checked;
             Limit.Enabled = LimitCheck.Checked;
+            FileFilter.Enabled = FileFilterCheck.Checked;
         }
 
         public string GetFilter()
@@ -67,6 +68,8 @@ namespace GitUI
                 filter += " --max-count=\"" + Limit.Value.ToString("N") + "\"";
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
+            if (FileFilterCheck.Checked)
+                filter += " \"" + FileFilter.Text + "\"";
 
             return filter;
         }

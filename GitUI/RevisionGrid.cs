@@ -886,5 +886,17 @@ namespace GitUI
 
         }
 
+        private void checkoutRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    new FormProcess("checkout \"" + RevisionList[LastRow].Guid + "\"");
+                    ForceRefreshRevisions();
+                }
+            }
+        }
+
     }
 }

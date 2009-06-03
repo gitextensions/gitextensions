@@ -1,3 +1,39 @@
+TODO:
+
+-This is kind of a big one, but a radio button to switch from ‘change’ view to ‘tree’ view in the main window would be awesome!  I’m thinking of a tree control showing the repository as it’s currently checked out, with columns indicating the file status, most recent change (author, date and comment) for each file.  Context menus would allow viewing the history of the file, showing the blame results for the file , etc. 
+
+-Another big one, have you seen Perforce’s “time lapse view”?  It’s a view of the file with “blame” markers on the left, a draggable timeline at the top and change details at the bottom.  Dragging the timeline left and forth allows you to “watch” the file change over time.
+
+
+-The Stash changes dialog doesn’t resize properly.  The OK button tracks the size properly, but not the Abort, Keep dialog open, or Green Check controls.
+
+-Is there a way to type in a message for a stash?  When I just created a stash using Stash all changes, the Message box was disabled.
+
+-It would be nice if Git Extensions had an option to use the --ignore-space-at-eol option to git diff.  I’ve had issues with Git auto-converting my line endings and thus have had commits in which every file changed 100%.
+
+- I often forget to stage any files when committing.  When I hit Ok the commit fails and I lose my commit message.  When you commit with no files, it would be nice to show a dialog telling you to stage at least one file, and then let you try again.  Also when a commit fails for any reason, it would be nice if the commit dialog came back with the staged files and comment preserved.
+
+
+-I would love the ability to interactively stage / unstage individual hunks of a file diff.
+
+
+FIXED:
+
+-It would be awesome if the filter box could search filenames as well as commit messages.  For example, it would be nice to filter changelists that patch ‘unittests/heap.cpp’.  I think the git-gui search box even searches the patches…
++Hit ctrl-F or select advanced filter in context menu of revision graph
+
+-The Browse window is the one I keep up most often.  The window title is ‘Browse <reponame> - Git Extensions’ .  When you have a lot of them open in the task bar the repository name gets truncated.  I think it would be best to just have the title be ‘<reponame> - Git Extensions’.
++Fixed
+
+-Checkout revision context menu in the Browse list would be very cool.
++I added a messagebox with an 'are you sure' question.
+
+-A Recent Repositories submenu in the File menu would be really useful.  I have a lot of repositories and it’s nice to be able to jump around quickly.
+
+-It would be nice to show the commit hash in the Commit tab (under Browse).  Right now I can’t find the commit hash anywhere in the UI. 
+
+-Close solve mergeconflicts dialog automaticly after all conflicts are solved
+
 PUTTY
 =====
 

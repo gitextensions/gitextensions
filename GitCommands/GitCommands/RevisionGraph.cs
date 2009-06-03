@@ -37,7 +37,7 @@ namespace GitCommands
             heads = GitCommands.GetHeads(true);
 
             if (!LogParam.Contains("=") && Settings.ShowRevisionGraph)
-                LogParam += " --graph ";
+                LogParam = " --graph " + LogParam;
 
             string dateFormat;
             if (Settings.RelativeDate)
@@ -47,7 +47,7 @@ namespace GitCommands
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " " + LogParam + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   " + dateFormat + " %nParents:%P %n%s\"");
+            gitGetGraphCommand.CmdStartProcess(Settings.GitDir + "git.cmd", "log -n " + LimitRevisions + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   " + dateFormat + " %nParents:%P %n%s\" " + LogParam);
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);

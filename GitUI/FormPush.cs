@@ -96,6 +96,9 @@ namespace GitUI
         {
             string branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
+
+            Branch.Text = branch;
+
             EnableLoadSSHButton();
 
             this.Text = "Push (" + GitCommands.Settings.WorkingDir + ")";
