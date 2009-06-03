@@ -601,6 +601,7 @@
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(364, 165);
             this.Message.TabIndex = 0;
+            this.Message.Load += new System.EventHandler(this.Message_Load);
             // 
             // OutPut
             // 
@@ -624,6 +625,7 @@
             this.Text = "Commit";
             this.Load += new System.EventHandler(this.FormCommit_Load);
             this.Shown += new System.EventHandler(this.FormCommit_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommit_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
