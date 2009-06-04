@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.64
+	Commits are now ordered by date
+	Fixed bug in commit dialog
+
 Version 1.63
 	Added file filter to revision graph filter
 	Shortened title of browse window
