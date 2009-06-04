@@ -27,8 +27,6 @@ namespace GitUI
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            Commit.Enabled = false;
-            Amend.Enabled = false;
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
