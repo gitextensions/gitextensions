@@ -29,6 +29,7 @@
 UMM/UMM448/IActivaplanner.h
 [Tt]est[Rr]esults/
 *.orig
+Thumbs.db
 
 !/Bin/ICSharpCode.TextEditor.dll
 !/Bin/plink.exe
@@ -36,3 +37,4 @@ UMM/UMM448/IActivaplanner.h
 !/Bin/puttygen.exe
 !/Bin/kdiff3*.exe
 !/Bin/Git-1*.exe
+!/Bin/NetSpell.SpellChecker.dll
