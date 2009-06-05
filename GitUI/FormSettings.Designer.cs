@@ -77,7 +77,6 @@
 			this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
 			this.label9 = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.GlobalAutoCrlf = new System.Windows.Forms.CheckBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.MergeToolCmd = new System.Windows.Forms.ComboBox();
 			this.label19 = new System.Windows.Forms.Label();
@@ -118,6 +117,8 @@
 			this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
 			this.label10 = new System.Windows.Forms.Label();
 			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
+			this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
 			this.LocalSettings.SuspendLayout();
 			this.InvalidGitPathLocal.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -660,8 +661,9 @@
 			// 
 			// GlobalSettingsPage
 			// 
+			this.GlobalSettingsPage.Controls.Add(this.lblGlobalAutoCRLF);
+			this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCRLF);
 			this.GlobalSettingsPage.Controls.Add(this.InvalidGitPathGlobal);
-			this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCrlf);
 			this.GlobalSettingsPage.Controls.Add(this.button1);
 			this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
 			this.GlobalSettingsPage.Controls.Add(this.label19);
@@ -715,19 +717,6 @@
 			this.pictureBox1.Size = new System.Drawing.Size(54, 50);
 			this.pictureBox1.TabIndex = 18;
 			this.pictureBox1.TabStop = false;
-			// 
-			// GlobalAutoCrlf
-			// 
-			this.GlobalAutoCrlf.AutoSize = true;
-			this.GlobalAutoCrlf.Checked = true;
-			this.GlobalAutoCrlf.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-			this.GlobalAutoCrlf.Location = new System.Drawing.Point(10, 199);
-			this.GlobalAutoCrlf.Name = "GlobalAutoCrlf";
-			this.GlobalAutoCrlf.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.GlobalAutoCrlf.Size = new System.Drawing.Size(300, 17);
-			this.GlobalAutoCrlf.TabIndex = 17;
-			this.GlobalAutoCrlf.Text = "Convert CRLF at the end of lines in text files to LF, autocrlf";
-			this.GlobalAutoCrlf.UseVisualStyleBackColor = true;
 			// 
 			// button1
 			// 
@@ -1138,6 +1127,27 @@
 			this.pictureBox2.TabIndex = 18;
 			this.pictureBox2.TabStop = false;
 			// 
+			// GlobalAutoCRLF
+			// 
+			this.GlobalAutoCRLF.FormattingEnabled = true;
+			this.GlobalAutoCRLF.Items.AddRange(new object[] {
+            "true",
+            "false",
+            "input"});
+			this.GlobalAutoCRLF.Location = new System.Drawing.Point(295, 202);
+			this.GlobalAutoCRLF.Name = "GlobalAutoCRLF";
+			this.GlobalAutoCRLF.Size = new System.Drawing.Size(121, 21);
+			this.GlobalAutoCRLF.TabIndex = 20;
+			// 
+			// lblGlobalAutoCRLF
+			// 
+			this.lblGlobalAutoCRLF.AutoSize = true;
+			this.lblGlobalAutoCRLF.Location = new System.Drawing.Point(233, 205);
+			this.lblGlobalAutoCRLF.Name = "lblGlobalAutoCRLF";
+			this.lblGlobalAutoCRLF.Size = new System.Drawing.Size(56, 13);
+			this.lblGlobalAutoCRLF.TabIndex = 21;
+			this.lblGlobalAutoCRLF.Text = "AutoCRLF";
+			// 
 			// FormSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1261,8 +1271,7 @@
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
         private System.Windows.Forms.CheckBox UseFastChecks;
         private System.Windows.Forms.Label NoGitRepo;
-        private System.Windows.Forms.CheckBox ShowRelativeDate;
-        private System.Windows.Forms.CheckBox GlobalAutoCrlf;
+		private System.Windows.Forms.CheckBox ShowRelativeDate;
         private System.Windows.Forms.CheckBox LocalAutoCrlf;
         private System.Windows.Forms.Panel InvalidGitPathGlobal;
         private System.Windows.Forms.Label label9;
@@ -1274,6 +1283,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox Dictionary;
+		private System.Windows.Forms.Label lblGlobalAutoCRLF;
+		private System.Windows.Forms.ComboBox GlobalAutoCRLF;
 
     }
 }
