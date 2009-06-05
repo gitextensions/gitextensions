@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormSettigns
+    partial class FormSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettigns));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.LocalSettings = new System.Windows.Forms.TabPage();
             this.InvalidGitPathLocal = new System.Windows.Forms.Panel();
             this.label21 = new System.Windows.Forms.Label();

@@ -12,9 +12,9 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormSettigns : GitExtensionsForm
+    public partial class FormSettings : GitExtensionsForm
     {
-        public FormSettigns()
+        public FormSettings()
         {
             InitializeComponent();
 
@@ -437,7 +437,7 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = Assembly.GetAssembly(typeof(FormSettigns)).Location;
+            string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
             fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' }));
 
             if (File.Exists(fileName + "\\GitExtensions.exe"))
