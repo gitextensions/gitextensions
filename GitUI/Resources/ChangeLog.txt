@@ -3,6 +3,9 @@ Changelog
 
 Version 1.65
 	Option added to order revision by date or by branch	
+	Patches can be mailed from the format-patch dialog
+	Global AutoCRLF now has three options: true, false, input
+	Bug solved: When an item is staged when opening the commit dialog, unstaging it always marked it as untracked
 	
 Version 1.64
 	Commits are now ordered by date
