@@ -28,10 +28,10 @@ namespace GitExtensions
                      Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
                 {
 
-                    FormSettigns settings = new FormSettigns();
+                    FormSettings settings = new FormSettings();
                     if (!settings.CheckSettings())
                     {
-                        FormSettigns.AutoSolveAllSettings();
+                        FormSettings.AutoSolveAllSettings();
                         Application.Run(settings);
                         //settings.ShowDialog();
                     }
@@ -153,7 +153,7 @@ namespace GitExtensions
             }else
             if (args.Length > 1 && args[1] == "settings")
             {
-                Application.Run(new FormSettigns());
+                Application.Run(new FormSettings());
             } else
             if (args.Length > 1 && args[1] == "viewdiff")
             {

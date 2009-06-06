@@ -606,7 +606,7 @@ namespace GitUI
 
         private void settingsToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            FormSettigns form = new FormSettigns();
+            FormSettings form = new FormSettings();
             form.ShowDialog();
         }
 
