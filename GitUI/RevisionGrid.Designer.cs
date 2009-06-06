@@ -45,6 +45,7 @@
             this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkoutRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +65,7 @@
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.checkoutRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -172,10 +173,11 @@
             this.ShowRemoteBranches,
             this.showAllBranchesToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
+            this.orderRevisionsByDateToolStripMenuItem,
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 286);
+            this.CreateTag.Size = new System.Drawing.Size(224, 308);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
@@ -218,6 +220,13 @@
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchToHereToolStripMenuItem_Click);
+            // 
+            // checkoutRevisionToolStripMenuItem
+            // 
+            this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
+            this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
+            this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.checkoutRevisionToolStripMenuItem_Click);
             // 
             // revertCommitToolStripMenuItem
             // 
@@ -375,12 +384,12 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // checkoutRevisionToolStripMenuItem
+            // orderRevisionsByDateToolStripMenuItem
             // 
-            this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
-            this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
-            this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.checkoutRevisionToolStripMenuItem_Click);
+            this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
+            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
+            this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.orderRevisionsByDateToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -440,5 +449,6 @@
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
     }
 }

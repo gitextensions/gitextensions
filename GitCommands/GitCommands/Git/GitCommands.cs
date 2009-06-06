@@ -465,7 +465,7 @@ namespace GitCommands
 
         static public string UserCommitCount()
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "shortlog -s -n");
+            return RunCmd(Settings.GitDir + "git.cmd", "shortlog -s -n --email ");
         }
 
         static public string DeleteBranch(string branchName, bool force)
