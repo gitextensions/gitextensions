@@ -118,6 +118,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.SmtpServer = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -474,6 +476,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.label23);
+            this.TabPageGitExtensions.Controls.Add(this.SmtpServer);
             this.TabPageGitExtensions.Controls.Add(this.Dictionary);
             this.TabPageGitExtensions.Controls.Add(this.label22);
             this.TabPageGitExtensions.Controls.Add(this.ShowRelativeDate);
@@ -519,7 +523,7 @@
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(119, 241);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(119, 277);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(203, 17);
@@ -530,7 +534,7 @@
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(47, 218);
+            this.UseFastChecks.Location = new System.Drawing.Point(47, 254);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(275, 17);
@@ -541,7 +545,7 @@
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(39, 172);
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(39, 208);
             this.ShowGitCommandLine.Name = "ShowGitCommandLine";
             this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitCommandLine.Size = new System.Drawing.Size(283, 17);
@@ -552,7 +556,7 @@
             // ShowRevisionGraph
             // 
             this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(136, 195);
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(136, 231);
             this.ShowRevisionGraph.Name = "ShowRevisionGraph";
             this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRevisionGraph.Size = new System.Drawing.Size(186, 17);
@@ -564,7 +568,7 @@
             // CloseProcessDialog
             // 
             this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(8, 149);
+            this.CloseProcessDialog.Location = new System.Drawing.Point(8, 185);
             this.CloseProcessDialog.Name = "CloseProcessDialog";
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(314, 17);
@@ -1138,6 +1142,22 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // SmtpServer
+            // 
+            this.SmtpServer.Location = new System.Drawing.Point(305, 142);
+            this.SmtpServer.Name = "SmtpServer";
+            this.SmtpServer.Size = new System.Drawing.Size(242, 20);
+            this.SmtpServer.TabIndex = 17;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(8, 145);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(175, 13);
+            this.label23.TabIndex = 18;
+            this.label23.Text = "Smtp server voor versturen patches";
+            // 
             // FormSettigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1274,6 +1294,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox Dictionary;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox SmtpServer;
 
     }
 }

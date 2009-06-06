@@ -44,6 +44,8 @@ namespace GitUI
 
         private void LoadSettings()
         {
+            SmtpServer.Text = GitCommands.Settings.Smtp;
+
             MaxCommits.Value = GitCommands.Settings.MaxCommits;
 
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
@@ -115,6 +117,8 @@ namespace GitUI
 
         private bool Save()
         {
+            GitCommands.Settings.Smtp = SmtpServer.Text;
+
             GitCommands.Settings.GitDir = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 

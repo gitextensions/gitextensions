@@ -22,6 +22,19 @@ namespace GitCommands
             }
         }
 
+        private static string smtp = "";
+        public static string Smtp
+        {
+            get
+            {
+                return smtp;
+            }
+            set
+            {
+                smtp = value;
+            }
+        }
+
         private static bool autoStash = false;
         public static bool AutoStash
         {
@@ -32,6 +45,19 @@ namespace GitCommands
             set
             {
                 autoStash = value;
+            }
+        }
+
+        private static bool orderRevisionByDate = true;
+        public static bool OrderRevisionByDate
+        {
+            get
+            {
+                return orderRevisionByDate;
+            }
+            set
+            {
+                orderRevisionByDate = value;
             }
         }
 
@@ -322,6 +348,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowAllBranches);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", Settings.CloseProcessDialog);
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", Settings.ShowRevisionGraph);
+                Application.UserAppDataRegistry.SetValue("orderrevisiongraphbydate", Settings.OrderRevisionByDate);
 
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", Settings.ShowGitCommandLine);
                 Application.UserAppDataRegistry.SetValue("usefastchecks", Settings.UseFastChecks);
@@ -335,6 +362,8 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("plink", Settings.Plink);
                 Application.UserAppDataRegistry.SetValue("puttygen", Settings.Puttygen);
                 Application.UserAppDataRegistry.SetValue("pageant", Settings.Pageant);
+
+                Application.UserAppDataRegistry.SetValue("smtp", Settings.Smtp);
 
                 Application.UserAppDataRegistry.SetValue("dictionary", Settings.Dictionary);
             }
@@ -364,6 +393,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("pageant") != null) Settings.Pageant = Application.UserAppDataRegistry.GetValue("pageant").ToString();
 
                 if (Application.UserAppDataRegistry.GetValue("dictionary") != null) Settings.Dictionary = Application.UserAppDataRegistry.GetValue("dictionary").ToString();
+                if (Application.UserAppDataRegistry.GetValue("smtp") != null) Settings.Smtp = Application.UserAppDataRegistry.GetValue("smtp").ToString();
 
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
@@ -373,6 +403,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate") != null) Settings.OrderRevisionByDate = Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());

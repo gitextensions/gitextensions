@@ -898,5 +898,12 @@ namespace GitUI
             }
         }
 
+        private void orderRevisionsByDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.OrderRevisionByDate = !orderRevisionsByDateToolStripMenuItem.Checked;
+            orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
+            this.ForceRefreshRevisions();
+        }
+
     }
 }

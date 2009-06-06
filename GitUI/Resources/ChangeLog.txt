@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.65
+	Option added to order revision by date or by branch	
+	
 Version 1.64
 	Commits are now ordered by date
 	Fixed bug in commit dialog
