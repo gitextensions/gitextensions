@@ -318,7 +318,11 @@ namespace GitUI
                         {
                             if (!unStagedFiles.Exists(i => i.Name == item.Name))
                             {
-                                item.IsTracked = false;
+                                if (item.IsNew && !item.IsChanged && !item.IsDeleted)
+                                    item.IsTracked = false;
+                                else
+                                    item.IsTracked = true;
+
                                 unStagedFiles.Add(item);
                             }
                         }
