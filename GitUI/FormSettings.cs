@@ -12,9 +12,9 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class FormSettigns : GitExtensionsForm
+    public partial class FormSettings : GitExtensionsForm
     {
-        public FormSettigns()
+        public FormSettings()
         {
             InitializeComponent();
 
@@ -41,6 +41,30 @@ namespace GitUI
             else
                 checkBox.CheckState = CheckState.Indeterminate;
         }
+
+		private static void SetComboBoxFromString(ComboBox comboBox, string option)
+		{
+			option = option.Trim().ToLower();
+
+			switch (option)
+			{
+				case "true":
+					comboBox.SelectedItem = option;
+					break;
+	
+				case "false":
+					comboBox.SelectedItem = option;
+					break;
+
+				case "input":
+					comboBox.SelectedItem = option;
+					break;
+
+				default:
+                    comboBox.SelectedItem = "";
+                    break;
+			}
+		}
 
         private void LoadSettings()
         {
@@ -74,7 +98,7 @@ namespace GitUI
                 MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
 
             SetCheckboxFromString(GlobalKeepMergeBackup, gitCommands.GetGlobalSetting("mergetool.keepBackup"));
-            SetCheckboxFromString(GlobalAutoCrlf, gitCommands.GetGlobalSetting("core.autocrlf"));
+			SetComboBoxFromString(GlobalAutoCRLF, gitCommands.GetGlobalSetting("core.autocrlf"));
 
             PlinkPath.Text = GitCommands.Settings.Plink;
             PuttygenPath.Text = GitCommands.Settings.Puttygen;
@@ -184,11 +208,10 @@ namespace GitUI
                     if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
                         gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
-                if (GlobalAutoCrlf.CheckState == CheckState.Checked)
-                    gitCommands.SetGlobalSetting("core.autocrlf", "true");
-                else
-                    if (GlobalAutoCrlf.CheckState == CheckState.Unchecked)
-                        gitCommands.SetGlobalSetting("core.autocrlf", "false");
+				if (GlobalAutoCRLF.SelectedItem.ToString() != gitCommands.GetGlobalSetting("core.autocrlf"))
+            	{
+					gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem.ToString());
+            	}
             }
 
             if (OpenSSH.Checked)
@@ -441,7 +464,7 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = Assembly.GetAssembly(typeof(FormSettigns)).Location;
+            string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
             fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' }));
 
             if (File.Exists(fileName + "\\GitExtensions.exe"))
@@ -611,7 +634,6 @@ namespace GitUI
             MergetoolPath.Enabled = canFindGitCmd;
             MergeToolCmd.Enabled = canFindGitCmd;
             GlobalKeepMergeBackup.Enabled = canFindGitCmd;
-            GlobalAutoCrlf.Enabled = canFindGitCmd;
 
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
             InvalidGitPathLocal.Visible = !canFindGitCmd;
