@@ -45,6 +45,10 @@ namespace GitUI
                     frm.ShowDialog();
                 }
 
+            }
+
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            {
                 Close();
             }
         }

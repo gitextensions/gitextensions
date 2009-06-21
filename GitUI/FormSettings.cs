@@ -141,6 +141,8 @@ namespace GitUI
 
         private bool Save()
         {
+
+
             GitCommands.Settings.Smtp = SmtpServer.Text;
 
             GitCommands.Settings.GitDir = GitPath.Text;
@@ -208,10 +210,7 @@ namespace GitUI
                     if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
                         gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
-				if (GlobalAutoCRLF.SelectedItem.ToString() != gitCommands.GetGlobalSetting("core.autocrlf"))
-            	{
-					gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem.ToString());
-            	}
+    			gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
             }
 
             if (OpenSSH.Checked)

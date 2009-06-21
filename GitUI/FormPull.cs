@@ -148,14 +148,21 @@ namespace GitUI
                 /*Output.Text = */
                 process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, true));
 
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && (process != null && !process.ErrorOccured()))
+                Close();
+
             //Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
             {
                 new FormRebase().ShowDialog();
+                if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+                    Close();
             }
             else
             {
                 MergeConflictHandler.HandleMergeConflicts();
+                if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
+                    Close();
             }
 
             if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
@@ -168,8 +175,6 @@ namespace GitUI
                 }
             }
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && (process != null && !process.ErrorOccured()))
-                Close();
 
         }
 

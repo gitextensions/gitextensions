@@ -28,6 +28,7 @@ namespace GitUI
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
             
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
+            orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
 
             SetShowBranches();
             filter = "";
@@ -877,7 +878,11 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommands.GitCommands.DeleteBranchCmd(toolStripItem.Text, false));
+            //new FormProcess(GitCommands.GitCommands.DeleteBranchCmd(toolStripItem.Text, false));
+
+            FormDeleteBranch form = new FormDeleteBranch();
+            form.SetBranch(toolStripItem.Text);
+
             ForceRefreshRevisions();
         }
 
@@ -903,6 +908,11 @@ namespace GitUI
             Settings.OrderRevisionByDate = !orderRevisionsByDateToolStripMenuItem.Checked;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             this.ForceRefreshRevisions();
+        }
+
+        private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

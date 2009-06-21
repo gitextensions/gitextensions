@@ -22,6 +22,11 @@ namespace GitUI
             Branches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
         }
 
+        public void SetBranch(string branchName)
+        {
+            Branches.Text = branchName;
+        }
+
         private void Ok_Click(object sender, EventArgs e)
         {
             try

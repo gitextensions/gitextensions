@@ -184,7 +184,9 @@ namespace GitUI
 
         private void Scan_Click(object sender, EventArgs e)
         {
+            Scan.Enabled = false;
             Initialize();
+            Scan.Enabled = true;
         }
 
         private void Stage_Click(object sender, EventArgs e)
@@ -367,7 +369,7 @@ namespace GitUI
         private void Amend_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (MessageBox.Show("You are about to rewite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("You are about to rewrite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
                 Close();
@@ -523,6 +525,32 @@ namespace GitUI
             {
                 textWriter.Write(Message.Text);
                 textWriter.Close();
+            }
+        }
+
+        private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete all untracked?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                new FormProcess("clean -f");
+                Initialize();
+            }
+        }
+
+        private void stageChunkOfFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedRows.Count != 1)
+            {
+                MessageBox.Show("You can only use this option when selecting a single file", "Stage chunk");
+                return;
+            }
+
+            foreach (DataGridViewRow row in Unstaged.SelectedRows)
+            {
+                GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+
+                GitCommands.GitCommands.RunRealCmd(Settings.GitDir + "git.cmd", "add -p \"" + item.Name + "\"");
+                Initialize();
             }
         }
     }
