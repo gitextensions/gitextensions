@@ -44,9 +44,11 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
             this.patchGrid1 = new GitUI.PatchGrid();
+            this.SolveMergeconflicts = new System.Windows.Forms.Button();
+            this.ContinuePanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.SolveMergeconflicts = new System.Windows.Forms.Button();
+            this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -149,7 +151,7 @@
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(2, 98);
+            this.Mergetool.Location = new System.Drawing.Point(3, 98);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(108, 23);
             this.Mergetool.TabIndex = 10;
@@ -177,6 +179,9 @@
             this.splitContainer1.Panel2.Controls.Add(this.Abort);
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
+            this.splitContainer1.Panel2.Controls.Add(this.ContinuePanel);
+            this.splitContainer1.Panel2.Controls.Add(this.MergeToolPanel);
+            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(675, 368);
             this.splitContainer1.SplitterDistance = 557;
             this.splitContainer1.TabIndex = 17;
@@ -196,10 +201,12 @@
             this.splitContainer2.Panel1.Controls.Add(this.Currentbranch);
             this.splitContainer2.Panel1.Controls.Add(this.label2);
             this.splitContainer2.Panel1.Controls.Add(this.Branches);
+            this.splitContainer2.Panel1MinSize = 0;
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Panel2MinSize = 0;
             this.splitContainer2.Size = new System.Drawing.Size(557, 368);
             this.splitContainer2.SplitterDistance = 74;
             this.splitContainer2.TabIndex = 0;
@@ -242,6 +249,27 @@
             this.patchGrid1.Size = new System.Drawing.Size(557, 270);
             this.patchGrid1.TabIndex = 16;
             // 
+            // SolveMergeconflicts
+            // 
+            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
+            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(2, 307);
+            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(107, 49);
+            this.SolveMergeconflicts.TabIndex = 19;
+            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeconflicts.Visible = false;
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            // 
+            // ContinuePanel
+            // 
+            this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ContinuePanel.Location = new System.Drawing.Point(0, 197);
+            this.ContinuePanel.Name = "ContinuePanel";
+            this.ContinuePanel.Size = new System.Drawing.Size(114, 27);
+            this.ContinuePanel.TabIndex = 7;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -273,18 +301,13 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // SolveMergeconflicts
+            // MergeToolPanel
             // 
-            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
-            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(2, 307);
-            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(107, 49);
-            this.SolveMergeconflicts.TabIndex = 19;
-            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
-            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
-            this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MergeToolPanel.Location = new System.Drawing.Point(-1, 96);
+            this.MergeToolPanel.Name = "MergeToolPanel";
+            this.MergeToolPanel.Size = new System.Drawing.Size(114, 27);
+            this.MergeToolPanel.TabIndex = 8;
             // 
             // FormRebase
             // 
@@ -337,5 +360,7 @@
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button SolveMergeconflicts;
+        private System.Windows.Forms.Panel ContinuePanel;
+        private System.Windows.Forms.Panel MergeToolPanel;
     }
 }

@@ -503,6 +503,7 @@
             this.LocalBranchNameEdit.Name = "LocalBranchNameEdit";
             this.LocalBranchNameEdit.Size = new System.Drawing.Size(133, 20);
             this.LocalBranchNameEdit.TabIndex = 5;
+            this.LocalBranchNameEdit.TextChanged += new System.EventHandler(this.LocalBranchNameEdit_TextChanged);
             // 
             // RemoteRepositoryCombo
             // 

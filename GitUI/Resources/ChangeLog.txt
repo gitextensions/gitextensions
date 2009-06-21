@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Version 1.67
+	Fixed exception when AutoCRLF is left empty
+	Clicking 'Rescan changes' twice no longer results in 
+	Mergeconflict dialog closes when there are no mergeconflicts left
+	Pull dialog closes after successful pull
+	Delete branch from revision grid now uses the correct dialog
+	Fixed spelling mistake in warning dialog for 'Amend to last commit'
+	
+Version 1.66
+	Fixed exception when AutoCRLF is left empty
+	
 Version 1.65
 	Option added to order revision by date or by branch	
 	Patches can be mailed from the format-patch dialog

@@ -267,6 +267,11 @@ namespace GitUI
 
             head.MergeWith = DefaultMergeWithCombo.Text;
         }
+
+        private void LocalBranchNameEdit_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

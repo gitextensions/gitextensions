@@ -46,6 +46,24 @@ namespace GitUI
         {
             try
             {
+                /*
+                ViewInWebBrowser.Visible = false;
+                ViewInWebBrowser.Url = null;
+
+                if (
+                    fileName.EndsWith(".doc", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".docx", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".vsd", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".html", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".xls", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".ppt", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".pps", StringComparison.CurrentCultureIgnoreCase)
+                    )
+                {
+                    ViewInWebBrowser.Visible = true;
+                    ViewInWebBrowser.Url = new Uri(GitCommands.Settings.WorkingDir + fileName);
+                    return;
+                } else*/
                 if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
