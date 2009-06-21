@@ -460,7 +460,7 @@ namespace GitCommands
 
         static public string GetCommitInfo(string sha1)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "show -s --pretty=format:\"Author:\t\t%cN%nDate:\t\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%b\" " + sha1);
+            return RunCmd(Settings.GitDir + "git.cmd", "show -s --pretty=format:\"Author:\t\t%aN%nDate:\t\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%b\" " + sha1);
         }
 
         static public string UserCommitCount()
