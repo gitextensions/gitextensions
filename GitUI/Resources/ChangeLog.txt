@@ -8,6 +8,7 @@ Version 1.67
 	Pull dialog closes after successful pull
 	Delete branch from revision grid now uses the correct dialog
 	Fixed spelling mistake in warning dialog for 'Amend to last commit'
+	Packed with Git-1.6.3.2
 	
 Version 1.66
 	Fixed exception when AutoCRLF is left empty

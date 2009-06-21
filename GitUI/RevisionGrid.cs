@@ -882,6 +882,7 @@ namespace GitUI
 
             FormDeleteBranch form = new FormDeleteBranch();
             form.SetBranch(toolStripItem.Text);
+            form.ShowDialog();
 
             ForceRefreshRevisions();
         }
