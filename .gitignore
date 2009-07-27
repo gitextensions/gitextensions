@@ -29,6 +29,8 @@
 UMM/UMM448/IActivaplanner.h
 [Tt]est[Rr]esults/
 *.orig
+_UpgradeReport_Files/
+Thums.db
 
 !/Bin/ICSharpCode.TextEditor.dll
 !/Bin/plink.exe
