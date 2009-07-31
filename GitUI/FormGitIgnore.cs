@@ -55,7 +55,7 @@ namespace GitUI
 
         private void AddDefault_Click(object sender, EventArgs e)
         {
-            GitIgnoreEdit.Text += "\n#ignore thumbnails created by windows\nThumbs.db\n#Ignore files build by Visual Studio\n*.obj\n*.exe\n*.pdb\n*.user\n*.aps\n*.pch\n*.vspscc\n*_i.c\n*_p.c\n*.ncb\n*.suo\n*.tlb\n*.tlh\n*.bak\n*.cache\n*.ilk\n*.log\n[Bb]in\n[Db]ebug*/\n*.lib\n*.sbr\nobj/\n[Rr]elease*/\n_ReSharper*/\n[Tt]est[Rr]esult*\n";
+            GitIgnoreEdit.Text += "\n#ignore thumbnails created by windows\nThumbs.db\n#Ignore files build by Visual Studio\n*.obj\n*.exe\n*.pdb\n*.user\n*.aps\n*.pch\n*.vspscc\n*_i.c\n*_p.c\n*.ncb\n*.suo\n*.tlb\n*.tlh\n*.bak\n*.cache\n*.ilk\n*.log\n[Bb]in\n[Dd]ebug*/\n*.lib\n*.sbr\nobj/\n[Rr]elease*/\n_ReSharper*/\n[Tt]est[Rr]esult*\n";
         }
     }
 }
