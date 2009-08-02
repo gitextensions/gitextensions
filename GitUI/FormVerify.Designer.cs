@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ShowOnlyCommits = new System.Windows.Forms.CheckBox();
             this.NoReflogs = new System.Windows.Forms.CheckBox();
             this.FullCheck = new System.Windows.Forms.CheckBox();
             this.Unreachable = new System.Windows.Forms.CheckBox();
@@ -86,6 +88,8 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.label2);
+            this.splitContainer2.Panel1.Controls.Add(this.ShowOnlyCommits);
             this.splitContainer2.Panel1.Controls.Add(this.NoReflogs);
             this.splitContainer2.Panel1.Controls.Add(this.FullCheck);
             this.splitContainer2.Panel1.Controls.Add(this.Unreachable);
@@ -95,15 +99,37 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Warnings);
             this.splitContainer2.Size = new System.Drawing.Size(699, 466);
-            this.splitContainer2.SplitterDistance = 97;
+            this.splitContainer2.SplitterDistance = 137;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(280, 91);
+            this.label2.TabIndex = 5;
+            this.label2.Text = resources.GetString("label2.Text");
+            // 
+            // ShowOnlyCommits
+            // 
+            this.ShowOnlyCommits.AutoSize = true;
+            this.ShowOnlyCommits.Checked = true;
+            this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowOnlyCommits.Location = new System.Drawing.Point(309, 7);
+            this.ShowOnlyCommits.Name = "ShowOnlyCommits";
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
+            this.ShowOnlyCommits.TabIndex = 4;
+            this.ShowOnlyCommits.Text = "Show only commits";
+            this.ShowOnlyCommits.UseVisualStyleBackColor = true;
+            this.ShowOnlyCommits.CheckedChanged += new System.EventHandler(this.ShowOnlyCommits_CheckedChanged);
             // 
             // NoReflogs
             // 
             this.NoReflogs.AutoSize = true;
             this.NoReflogs.Checked = true;
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NoReflogs.Location = new System.Drawing.Point(310, 4);
+            this.NoReflogs.Location = new System.Drawing.Point(309, 33);
             this.NoReflogs.Name = "NoReflogs";
             this.NoReflogs.Size = new System.Drawing.Size(335, 30);
             this.NoReflogs.TabIndex = 3;
@@ -115,7 +141,7 @@
             // FullCheck
             // 
             this.FullCheck.AutoSize = true;
-            this.FullCheck.Location = new System.Drawing.Point(310, 70);
+            this.FullCheck.Location = new System.Drawing.Point(309, 99);
             this.FullCheck.Name = "FullCheck";
             this.FullCheck.Size = new System.Drawing.Size(382, 30);
             this.FullCheck.TabIndex = 2;
@@ -127,7 +153,7 @@
             // Unreachable
             // 
             this.Unreachable.AutoSize = true;
-            this.Unreachable.Location = new System.Drawing.Point(310, 37);
+            this.Unreachable.Location = new System.Drawing.Point(309, 66);
             this.Unreachable.Name = "Unreachable";
             this.Unreachable.Size = new System.Drawing.Size(383, 30);
             this.Unreachable.TabIndex = 1;
@@ -139,11 +165,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-3, 78);
+            this.label1.Location = new System.Drawing.Point(3, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(266, 13);
+            this.label1.Size = new System.Drawing.Size(269, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Double-click on a row containing a sha1 to view object";
+            this.label1.Text = "Double-click on a row containing a sha1 to view object.";
             // 
             // Warnings
             // 
@@ -151,7 +177,7 @@
             this.Warnings.FormattingEnabled = true;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(699, 355);
+            this.Warnings.Size = new System.Drawing.Size(699, 316);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
             // 
@@ -264,5 +290,7 @@
         private System.Windows.Forms.CheckBox FullCheck;
         private System.Windows.Forms.CheckBox NoReflogs;
         private System.Windows.Forms.Button TagAllCommits;
+        private System.Windows.Forms.CheckBox ShowOnlyCommits;
+        private System.Windows.Forms.Label label2;
     }
 }
