@@ -86,6 +86,9 @@ namespace GitUI
             if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
+            customUnderlines.Lines.Clear();
+            SpellCheckTimer.Enabled = false;
+            SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
         }
 
