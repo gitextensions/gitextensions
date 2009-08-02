@@ -826,16 +826,95 @@ namespace GitUI
             Initialize();
         }
 
+        private void updateAllSubmodulesRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            UpdateSubmodulesRecursive();
+            Initialize();
+        }
+
+        private static void UpdateSubmodulesRecursive()
+        {
+            string oldworkingdir = Settings.WorkingDir;
+
+            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            {
+                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
+
+                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                {
+                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+
+                    UpdateSubmodulesRecursive();
+                }
+            }
+
+            Settings.WorkingDir = oldworkingdir;
+        }
+
+
         private void initializeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
             Initialize();
+        }
+        private void initializeAllSubmodulesRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            InitSubmodulesRecursive();
+            Initialize();
+        }
+
+        private static void InitSubmodulesRecursive()
+        {
+            string oldworkingdir = Settings.WorkingDir;
+
+            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            {
+                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
+                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                {
+                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+
+                    InitSubmodulesRecursive();
+                }
+            }
+
+            Settings.WorkingDir = oldworkingdir;
         }
 
         private void syncronizeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
             Initialize();
+        }
+
+        private void synchronizeAlSubmodulesRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            SyncSubmodulesRecursive();
+            Initialize();
+        }
+
+        private static void SyncSubmodulesRecursive()
+        {
+            string oldworkingdir = Settings.WorkingDir;
+
+            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            {
+                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
+                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                {
+                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+
+                    SyncSubmodulesRecursive();
+                }
+            }
+
+            Settings.WorkingDir = oldworkingdir;
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -938,6 +1017,10 @@ namespace GitUI
         {
 
         }
+
+
+
+
 
     }
 }

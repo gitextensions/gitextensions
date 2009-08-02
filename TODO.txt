@@ -1,9 +1,5 @@
 TODO:
 
--Improve 'lost and found' dialog.
-
--Add warning when making a commit when not on a branch.
-
 -I would love the ability to interactively stage / unstage individual hunks of a file diff.
 +partly fixed, by allowing to start the command prompt with this command. Adding the 'real' function stays on the todo list, but i'm not sure how to do this yet.
 
@@ -21,6 +17,12 @@ TODO:
 
 FIXED:
 
+-Improve 'lost and found' dialog.
++Fixed
+
+-Add warning when making a commit when not on a branch.
++fixed
+
 -It would be awesome if the filter box could search filenames as well as commit messages.  For example, it would be nice to filter changelists that patch ‘unittests/heap.cpp’.  I think the git-gui search box even searches the patches…
 +Hit ctrl-F or select advanced filter in context menu of revision graph
 
@@ -31,15 +33,19 @@ FIXED:
 +I added a messagebox with an 'are you sure' question.
 
 -A Recent Repositories submenu in the File menu would be really useful.  I have a lot of repositories and it’s nice to be able to jump around quickly.
++fixed
 
 -It would be nice to show the commit hash in the Commit tab (under Browse).  Right now I can’t find the commit hash anywhere in the UI. 
++fixed
 
 -Close solve mergeconflicts dialog automaticly after all conflicts are solved
++fixed
 
 -I often forget to stage any files when committing.  When I hit Ok the commit fails and I lose my commit message.  When you commit with no files, it would be nice to show a dialog telling you to stage at least one file, and then let you try again.  Also when a commit fails for any reason, it would be nice if the commit dialog came back with the staged files and comment preserved.
 +Mostly solved
 
 -Added git 1.6.3 to installer
++fixed
 
 PUTTY
 =====
