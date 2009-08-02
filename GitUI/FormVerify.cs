@@ -18,10 +18,49 @@ namespace GitUI
 
         private void FormVerify_Shown(object sender, EventArgs e)
         {
+            LoadLostObjects();
+        }
+
+        private void LoadLostObjects()
+        {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess process = new FormProcess("fsck-objects");
             
-            Warnings.DataSource = process.outputString.ToString().Split('\n');
+            string options = "";
+
+            if (Unreachable.Checked)
+                options += " --unreachable";
+            
+            if (FullCheck.Checked)
+                options += " --full";
+
+            if (NoReflogs.Checked)
+                options += " --no-reflogs";
+                
+            FormProcess process = new FormProcess("fsck-objects" + options);
+
+            List<string> warningList = new List<string>();
+
+            foreach (string warning in process.outputString.ToString().Split('\n'))
+            {
+                warningList.Add(ExtendWarning(warning));
+            }
+
+            Warnings.DataSource = warningList;
+        }
+
+        private string ExtendWarning(string warning)
+        {
+            string sha1 = FindSha1(warning);
+
+            if (String.IsNullOrEmpty(sha1))
+                return warning;
+
+            string commitInfo = GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "log -n1 --pretty=format:\"%aN, %s, %cd\" " + FindSha1(warning));
+
+            if (String.IsNullOrEmpty(commitInfo))
+                return warning;
+
+            return warning + " -> " + commitInfo;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,22 +72,20 @@ namespace GitUI
         private void Warnings_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            
-            string sha1 = FindSha1();
+            string sha1 = FindSha1(Warnings.SelectedValue as string);
             if (!string.IsNullOrEmpty(sha1))
             {
                 new FormEdit(GitCommands.GitCommands.ShowSha1(sha1)).ShowDialog();
             }
         }
 
-        private string FindSha1()
+        private string FindSha1(string warningString)
         {
-            string warningString = Warnings.SelectedValue as string;
             foreach (string sha1 in warningString.Split(' '))
             {
-                if (sha1.Length == 40)
+                if (sha1.Trim().Length == 40)
                 {
-                    return sha1;
+                    return sha1.Trim();
                 }
             }
 
@@ -71,7 +108,7 @@ namespace GitUI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string sha1 = FindSha1();
+            string sha1 = FindSha1(Warnings.SelectedValue as string);
             if (!string.IsNullOrEmpty(sha1))
             {
                 FormTagSmall form = new FormTagSmall();
@@ -84,6 +121,66 @@ namespace GitUI
         private void ViewObject_Click(object sender, EventArgs e)
         {
             Warnings_DoubleClick(null, null);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadLostObjects();
+        }
+
+        private void TagAllObjects_Click(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            CreateLostFoundTags(false);
+            LoadLostObjects();
+        }
+
+        private void CreateLostFoundTags(bool onlyCommits)
+        {
+            int currentTag = 0;
+            foreach (string warningString in Warnings.DataSource as List<string>)
+            {
+                if (!onlyCommits || warningString.Contains("commit"))
+                {
+                    string sha1 = FindSha1(warningString);
+                    currentTag++;
+                    GitCommands.GitCommands.Tag("LOST_FOUND_" + currentTag, sha1);
+                }
+            }
+
+            MessageBox.Show(currentTag + " Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.", "Tags created");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            LoadLostObjects();
+        }
+
+        private static void DeleteLostFoundTags()
+        {
+            foreach (GitHead head in GitCommands.GitCommands.GetHeads(true, false))
+            {
+                if (head.Name.StartsWith("LOST_FOUND_"))
+                    GitCommands.GitCommands.DeleteTag(head.Name);
+            }
+        }
+
+        private void FullCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadLostObjects();
+        }
+
+        private void NoReflogs_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadLostObjects();
+        }
+
+        private void TagAllCommits_Click(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            CreateLostFoundTags(true);
+            LoadLostObjects();
         }
     }
 }

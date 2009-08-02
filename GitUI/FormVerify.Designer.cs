@@ -31,8 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.NoReflogs = new System.Windows.Forms.CheckBox();
+            this.FullCheck = new System.Windows.Forms.CheckBox();
+            this.Unreachable = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Warnings = new System.Windows.Forms.ListBox();
+            this.TagAllCommits = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.TagAllObjects = new System.Windows.Forms.Button();
             this.ViewObject = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
@@ -59,12 +65,15 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.TagAllCommits);
+            this.splitContainer1.Panel2.Controls.Add(this.button3);
+            this.splitContainer1.Panel2.Controls.Add(this.TagAllObjects);
             this.splitContainer1.Panel2.Controls.Add(this.ViewObject);
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.button1);
-            this.splitContainer1.Size = new System.Drawing.Size(699, 512);
-            this.splitContainer1.SplitterDistance = 478;
+            this.splitContainer1.Size = new System.Drawing.Size(699, 524);
+            this.splitContainer1.SplitterDistance = 466;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -77,19 +86,60 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.NoReflogs);
+            this.splitContainer2.Panel1.Controls.Add(this.FullCheck);
+            this.splitContainer2.Panel1.Controls.Add(this.Unreachable);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Warnings);
-            this.splitContainer2.Size = new System.Drawing.Size(699, 478);
-            this.splitContainer2.SplitterDistance = 25;
+            this.splitContainer2.Size = new System.Drawing.Size(699, 466);
+            this.splitContainer2.SplitterDistance = 97;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // NoReflogs
+            // 
+            this.NoReflogs.AutoSize = true;
+            this.NoReflogs.Checked = true;
+            this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.NoReflogs.Location = new System.Drawing.Point(310, 4);
+            this.NoReflogs.Name = "NoReflogs";
+            this.NoReflogs.Size = new System.Drawing.Size(335, 30);
+            this.NoReflogs.TabIndex = 3;
+            this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
+                "reachable.";
+            this.NoReflogs.UseVisualStyleBackColor = true;
+            this.NoReflogs.CheckedChanged += new System.EventHandler(this.NoReflogs_CheckedChanged);
+            // 
+            // FullCheck
+            // 
+            this.FullCheck.AutoSize = true;
+            this.FullCheck.Location = new System.Drawing.Point(310, 70);
+            this.FullCheck.Name = "FullCheck";
+            this.FullCheck.Size = new System.Drawing.Size(382, 30);
+            this.FullCheck.TabIndex = 2;
+            this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
+                " ones found in alternate object pools.\r\n";
+            this.FullCheck.UseVisualStyleBackColor = true;
+            this.FullCheck.CheckedChanged += new System.EventHandler(this.FullCheck_CheckedChanged);
+            // 
+            // Unreachable
+            // 
+            this.Unreachable.AutoSize = true;
+            this.Unreachable.Location = new System.Drawing.Point(310, 37);
+            this.Unreachable.Name = "Unreachable";
+            this.Unreachable.Size = new System.Drawing.Size(383, 30);
+            this.Unreachable.TabIndex = 1;
+            this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
+                "\nnodes.\r\n";
+            this.Unreachable.UseVisualStyleBackColor = true;
+            this.Unreachable.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 4);
+            this.label1.Location = new System.Drawing.Point(-3, 78);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(266, 13);
             this.label1.TabIndex = 0;
@@ -101,17 +151,47 @@
             this.Warnings.FormattingEnabled = true;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(699, 446);
+            this.Warnings.Size = new System.Drawing.Size(699, 355);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
             // 
+            // TagAllCommits
+            // 
+            this.TagAllCommits.Location = new System.Drawing.Point(234, 3);
+            this.TagAllCommits.Name = "TagAllCommits";
+            this.TagAllCommits.Size = new System.Drawing.Size(123, 23);
+            this.TagAllCommits.TabIndex = 6;
+            this.TagAllCommits.Text = "Tag all lost commits";
+            this.TagAllCommits.UseVisualStyleBackColor = true;
+            this.TagAllCommits.Click += new System.EventHandler(this.TagAllCommits_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(6, 28);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(221, 23);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "Delete all LOST_AND_FOUND tags";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // TagAllObjects
+            // 
+            this.TagAllObjects.Location = new System.Drawing.Point(118, 3);
+            this.TagAllObjects.Name = "TagAllObjects";
+            this.TagAllObjects.Size = new System.Drawing.Size(109, 23);
+            this.TagAllObjects.TabIndex = 4;
+            this.TagAllObjects.Text = "Tag all lost objects";
+            this.TagAllObjects.UseVisualStyleBackColor = true;
+            this.TagAllObjects.Click += new System.EventHandler(this.TagAllObjects_Click);
+            // 
             // ViewObject
             // 
-            this.ViewObject.Location = new System.Drawing.Point(118, 3);
+            this.ViewObject.Location = new System.Drawing.Point(233, 28);
             this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(108, 23);
+            this.ViewObject.Size = new System.Drawing.Size(124, 23);
             this.ViewObject.TabIndex = 3;
-            this.ViewObject.Text = "View object";
+            this.ViewObject.Text = "View selected object";
             this.ViewObject.UseVisualStyleBackColor = true;
             this.ViewObject.Click += new System.EventHandler(this.ViewObject_Click);
             // 
@@ -127,9 +207,9 @@
             // 
             // Remove
             // 
-            this.Remove.Location = new System.Drawing.Point(380, 3);
+            this.Remove.Location = new System.Drawing.Point(538, 3);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(151, 23);
+            this.Remove.Size = new System.Drawing.Size(158, 23);
             this.Remove.TabIndex = 1;
             this.Remove.Text = "Remove all dangling objects";
             this.Remove.UseVisualStyleBackColor = true;
@@ -137,7 +217,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(537, 3);
+            this.button1.Location = new System.Drawing.Point(538, 28);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(159, 23);
             this.button1.TabIndex = 0;
@@ -149,7 +229,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 512);
+            this.ClientSize = new System.Drawing.Size(699, 524);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormVerify";
@@ -178,5 +258,11 @@
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button ViewObject;
+        private System.Windows.Forms.CheckBox Unreachable;
+        private System.Windows.Forms.Button TagAllObjects;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox FullCheck;
+        private System.Windows.Forms.CheckBox NoReflogs;
+        private System.Windows.Forms.Button TagAllCommits;
     }
 }

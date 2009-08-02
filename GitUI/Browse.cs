@@ -618,6 +618,7 @@ namespace GitUI
         private void editmailmapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormMailMap().ShowDialog();
+            Initialize();
         }
 
         private void compressGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -628,6 +629,7 @@ namespace GitUI
         private void verifyGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormVerify().ShowDialog();
+            Initialize();
         }
 
         private void removeDanglingObjecsToolStripMenuItem_Click(object sender, EventArgs e)
