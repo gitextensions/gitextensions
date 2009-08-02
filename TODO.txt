@@ -1,7 +1,23 @@
 TODO:
 
+-Add a feature to save window positions. At least the browse window position should be saved. Any other windows are centered anyway.
+
+-Renamed items show as deleted/new in the commit dialog. It should be possible to detect renames there.
+
+-Add seach function and line numbers to blame view
+
 -Improve Visual Studio intergration
 	-Command bar is repositionized every time visual studio is started
+
+-Files types tagged as binary in .gitattributes are still displayed when selected in the file tree
+ Simple to reproduce.
+ 1) Add a .gitattributes file to the root of your working directory.
+ 2) Add the following line to the .gitattributes file: *.[Ww][Aa][Vv] binary
+ 3) Add a .wav file to your working directory
+ 4) Commit your changes
+ 5) Select the .wav file in the file tree. "Garbage" is then displayed in the file contents window. 
+    Diffs and Commits show the file  as binary and do not display the garbage.
+
 
 -I would love the ability to interactively stage / unstage individual hunks of a file diff.
 +partly fixed, by allowing to start the command prompt with this command. Adding the 'real' function stays on the todo list, but i'm not sure how to do this yet.
