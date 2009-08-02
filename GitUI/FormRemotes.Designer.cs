@@ -67,6 +67,7 @@
             this.remoteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mergeWithDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gitHeadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.SaveDefaultPushPull = new System.Windows.Forms.Button();
             this.LocalBranchNameEdit = new System.Windows.Forms.TextBox();
             this.RemoteRepositoryCombo = new System.Windows.Forms.ComboBox();
             this.DefaultMergeWithCombo = new System.Windows.Forms.ComboBox();
@@ -348,6 +349,7 @@
             // 
             // splitContainer3.Panel2
             // 
+            this.splitContainer3.Panel2.Controls.Add(this.SaveDefaultPushPull);
             this.splitContainer3.Panel2.Controls.Add(this.LocalBranchNameEdit);
             this.splitContainer3.Panel2.Controls.Add(this.RemoteRepositoryCombo);
             this.splitContainer3.Panel2.Controls.Add(this.DefaultMergeWithCombo);
@@ -496,6 +498,16 @@
             // gitHeadBindingSource
             // 
             this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
+            // 
+            // SaveDefaultPushPull
+            // 
+            this.SaveDefaultPushPull.Location = new System.Drawing.Point(182, 129);
+            this.SaveDefaultPushPull.Name = "SaveDefaultPushPull";
+            this.SaveDefaultPushPull.Size = new System.Drawing.Size(75, 23);
+            this.SaveDefaultPushPull.TabIndex = 6;
+            this.SaveDefaultPushPull.Text = "Save";
+            this.SaveDefaultPushPull.UseVisualStyleBackColor = true;
+            this.SaveDefaultPushPull.Click += new System.EventHandler(this.SaveDefaultPushPull_Click);
             // 
             // LocalBranchNameEdit
             // 
@@ -677,5 +689,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn isOtherDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn remoteDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn mergeWithDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button SaveDefaultPushPull;
     }
 }

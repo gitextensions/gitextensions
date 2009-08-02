@@ -86,7 +86,47 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(remote))
             {
+                if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
+                {
+                    return;
+                }
+
                 output = GitCommands.GitCommands.AddRemote(RemoteName.Text, Url.Text);
+
+                if (MessageBox.Show("You have added a new remote repository." + Environment.NewLine + "Do you want to automaticly configure the default push and pull behaviour for this remote?", "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    string remoteUrl = Url.Text;
+
+                    if (!string.IsNullOrEmpty(remoteUrl))
+                    {
+                        new FormProcess("remote update");
+
+                        foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
+                        {
+                            foreach (GitCommands.GitHead localHead in GitCommands.GitCommands.GetHeads(true, true))
+                            {
+                                if (remoteHead.IsRemote &&
+                                    !localHead.IsRemote &&
+                                    string.IsNullOrEmpty(localHead.Remote) &&
+                                    string.IsNullOrEmpty(localHead.Remote) &&
+                                    !remoteHead.IsTag &&
+                                    !localHead.IsTag &&
+                                    remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) &&
+                                    remoteHead.Name.ToLower().Contains(remote.ToLower()))
+                                {
+                                    localHead.Remote = RemoteName.Text;
+                                    localHead.MergeWith = remoteHead.Name;
+                                }
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        MessageBox.Show("You need to configure a valid url for this remote", "Url needed");
+                    }
+
+                }
             }
             else
             {
@@ -237,7 +277,13 @@ namespace GitUI
                     foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
                     {
                         if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(remote.ToLower()))
-                        DefaultMergeWithCombo.Items.Add(remoteHead.Name);
+                        {
+                            if (string.IsNullOrEmpty(remoteHead.MergeWith))
+                            {
+
+                                DefaultMergeWithCombo.Items.Add(remoteHead.Name);
+                            }
+                        }
                     }
                 }
             }
@@ -271,6 +317,11 @@ namespace GitUI
         private void LocalBranchNameEdit_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void SaveDefaultPushPull_Click(object sender, EventArgs e)
+        {
+            Initialize();
         }
     }
 }
