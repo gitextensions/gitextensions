@@ -1,5 +1,12 @@
 TODO:
 
+-Improve 'lost and found' dialog.
+
+-Add warning when making a commit when not on a branch.
+
+-I would love the ability to interactively stage / unstage individual hunks of a file diff.
++partly fixed, by allowing to start the command prompt with this command. Adding the 'real' function stays on the todo list, but i'm not sure how to do this yet.
+
 -This is kind of a big one, but a radio button to switch from ‘change’ view to ‘tree’ view in the main window would be awesome!  I’m thinking of a tree control showing the repository as it’s currently checked out, with columns indicating the file status, most recent change (author, date and comment) for each file.  Context menus would allow viewing the history of the file, showing the blame results for the file , etc. 
 
 -Another big one, have you seen Perforce’s “time lapse view”?  It’s a view of the file with “blame” markers on the left, a draggable timeline at the top and change details at the bottom.  Dragging the timeline left and forth allows you to “watch” the file change over time.
@@ -10,9 +17,6 @@ TODO:
 -Is there a way to type in a message for a stash?  When I just created a stash using Stash all changes, the Message box was disabled.
 
 -It would be nice if Git Extensions had an option to use the --ignore-space-at-eol option to git diff.  I’ve had issues with Git auto-converting my line endings and thus have had commits in which every file changed 100%.
-
-
--I would love the ability to interactively stage / unstage individual hunks of a file diff.
 
 
 FIXED:

@@ -99,7 +99,7 @@ namespace GitUI
             }
             if (!Fetch.Checked && Branches.Text == "*")
             {
-                MessageBox.Show("You can only fetch all remote branches (*) whithout merge or rebase.\nIf you want to fetch all remote branches, choose fetch.\nIf you want to fetch and merge a branch, choose a specific branch.");
+                MessageBox.Show("You can only fetch all remote branches (*) whithout merge or rebase." + Environment.NewLine + "If you want to fetch all remote branches, choose fetch." + Environment.NewLine + "If you want to fetch and merge a branch, choose a specific branch.");
                 return;                
             }
 

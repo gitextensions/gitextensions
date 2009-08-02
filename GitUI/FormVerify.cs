@@ -20,6 +20,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess("fsck-objects");
+            
             Warnings.DataSource = process.outputString.ToString().Split('\n');
         }
 

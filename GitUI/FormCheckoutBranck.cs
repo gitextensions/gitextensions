@@ -56,7 +56,7 @@ namespace GitUI
                     localBranchName = localBranchName.Substring(index + 1);
 
                 if (Remotebranch.Checked &&
-                    MessageBox.Show("You choose to checkout a remote branch.\n\nDo you want create a local branch with the name '" + localBranchName + "'\nthat track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo) == DialogResult.Yes
+                    MessageBox.Show("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '" + localBranchName + "'" + Environment.NewLine + "that track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo) == DialogResult.Yes
                     )
                 {
                     //git checkout --track -b localbranch origin/remotebranch 

@@ -55,7 +55,7 @@ namespace GitUI
 
         private void AddDefault_Click(object sender, EventArgs e)
         {
-            GitIgnoreEdit.Text += "\n#ignore thumbnails created by windows\nThumbs.db\n#Ignore files build by Visual Studio\n*.obj\n*.exe\n*.pdb\n*.user\n*.aps\n*.pch\n*.vspscc\n*_i.c\n*_p.c\n*.ncb\n*.suo\n*.tlb\n*.tlh\n*.bak\n*.cache\n*.ilk\n*.log\n[Bb]in\n[Dd]ebug*/\n*.lib\n*.sbr\nobj/\n[Rr]elease*/\n_ReSharper*/\n[Tt]est[Rr]esult*\n";
+            GitIgnoreEdit.Text += Environment.NewLine + "#ignore thumbnails created by windows" + Environment.NewLine + "Thumbs.db" + Environment.NewLine + "#Ignore files build by Visual Studio" + Environment.NewLine + "*.obj" + Environment.NewLine + "*.exe" + Environment.NewLine + "*.pdb" + Environment.NewLine + "*.user" + Environment.NewLine + "*.aps" + Environment.NewLine + "*.pch" + Environment.NewLine + "*.vspscc" + Environment.NewLine + "*_i.c" + Environment.NewLine + "*_p.c" + Environment.NewLine + "*.ncb" + Environment.NewLine + "*.suo" + Environment.NewLine + "*.tlb" + Environment.NewLine + "*.tlh" + Environment.NewLine + "*.bak" + Environment.NewLine + "*.cache" + Environment.NewLine + "*.ilk" + Environment.NewLine + "*.log" + Environment.NewLine + "[Bb]in" + Environment.NewLine + "[Dd]ebug*/" + Environment.NewLine + "*.lib" + Environment.NewLine + "*.sbr" + Environment.NewLine + "obj/" + Environment.NewLine + "[Rr]elease*/" + Environment.NewLine + "_ReSharper*/" + Environment.NewLine + "[Tt]est[Rr]esult*" + Environment.NewLine + "";
         }
     }
 }

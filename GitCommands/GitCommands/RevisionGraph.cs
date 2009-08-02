@@ -145,7 +145,7 @@ namespace GitCommands
                 if (e.Data.Length > graphIndex)
                 {
                     if (string.IsNullOrEmpty(revision.Message))
-                        revision.Message = e.Data.Substring(graphIndex).Trim() + "\n";
+                        revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
 
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                 }

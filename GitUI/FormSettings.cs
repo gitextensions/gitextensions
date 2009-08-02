@@ -168,7 +168,7 @@ namespace GitUI
 
             if (!CanFindGitCmd())
             {
-                if (MessageBox.Show("The path to git.cmd is not configured correct.\nYou need to set the correct path to be able to use GitExtensions.\n\nDo you want to set the correct path now?", "Incorrect path", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("The path to git.cmd is not configured correct." + Environment.NewLine + "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine + Environment.NewLine + "Do you want to set the correct path now?", "Incorrect path", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return false;
             }
             else
@@ -278,7 +278,7 @@ namespace GitUI
             }
             catch(UnauthorizedAccessException ex)
             {
-                MessageBox.Show("GitExtensions has insufficient permisions to modify the registry.\nPlease add this key to the registry manually.\nPath:   " + root.ToString() + "\\" + subkey +"\nValue:  " + key + " = " + value);
+                MessageBox.Show("GitExtensions has insufficient permisions to modify the registry." + Environment.NewLine + "Please add this key to the registry manually." + Environment.NewLine + "Path:   " + root.ToString() + "\\" + subkey + Environment.NewLine + "Value:  " + key + " = " + value);
             }
         }
 
@@ -503,7 +503,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("merge.tool")))
             {
-                if (MessageBox.Show("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?\nSelect no if you want to configure a different mergetool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" + Environment.NewLine + "Select no if you want to configure a different mergetool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveKDiff();
                     GlobalMergeTool.Text = "kdiff3";
@@ -529,7 +529,7 @@ namespace GitUI
 
             if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrEmpty(gitCommands.GetGlobalSetting("mergetool.kdiff3.path")))
             {
-                MessageBox.Show("Path to kdiff3 could not be found automatically.\nPlease make sure KDiff3 is installed or set path manually.");
+                MessageBox.Show("Path to kdiff3 could not be found automatically." + Environment.NewLine + "Please make sure KDiff3 is installed or set path manually.");
                 tabControl1.SelectTab("GlobalSettingsPage");
                 return;
             }
@@ -584,7 +584,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(GitCommands.Settings.GitDir))
             {
-                MessageBox.Show("The path to git.cmd could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
+                MessageBox.Show("The path to git.cmd could not be found automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
 
                 tabControl1.SelectTab("TabPageGitExtensions");
                 return;
@@ -693,7 +693,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(GitCommands.Settings.GitBinDir))
             {
-                MessageBox.Show("The path to git.exe could not be found automatically.\nPlease make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
+                MessageBox.Show("The path to git.exe could not be found automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
                 tabControl1.SelectTab("TabPageGitExtensions");
                 return;
             }

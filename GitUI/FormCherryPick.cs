@@ -24,10 +24,10 @@ namespace GitUI
                 MessageBox.Show("Select 1 revision to pick.", "Cherry pick");
                 return;
             }
-                
 
 
-            MessageBox.Show("Command executed \n" + GitCommands.GitCommands.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
+
+            MessageBox.Show("Command executed " + Environment.NewLine + GitCommands.GitCommands.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
 
             MergeConflictHandler.HandleMergeConflicts();
 

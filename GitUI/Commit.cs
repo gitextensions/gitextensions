@@ -157,6 +157,15 @@ namespace GitUI
                 MessageBox.Show("Please enter commit message");
                 return;
             }
+
+            if (GitCommands.GitCommands.GetSelectedBranch().CompareTo("(no branch)") == 0)
+            {
+                if (MessageBox.Show("You are not working on a branch." + Environment.NewLine + "This commit will be unreferenced when switching to another brach and can be lost." + Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?", "Not on a branch.", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             try
             {
                 using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
@@ -254,7 +263,7 @@ namespace GitUI
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to reset all changes in the working dir?\nAll changes made to all files in the workin dir will be overwritten by the files from the current HEAD!", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to reset all changes in the working dir?" + Environment.NewLine + "All changes made to all files in the workin dir will be overwritten by the files from the current HEAD!", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 if (MessageBox.Show("Are you really sure you want to DELETE all changes?", "WARNING! WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -308,7 +317,7 @@ namespace GitUI
                         }
                     }
 
-                    OutPut.Text = result + "\n" + GitCommands.GitCommands.UnstageFiles(files);
+                    OutPut.Text = result + Environment.NewLine + GitCommands.GitCommands.UnstageFiles(files);
 
                     InitializedStaged();
                     List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.DataSource;
@@ -369,7 +378,7 @@ namespace GitUI
         private void Amend_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (MessageBox.Show("You are about to rewrite history.\nOnly use amend if the commit is not published yet!\n\nDo you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("You are about to rewrite history." + Environment.NewLine + "Only use amend if the commit is not published yet!" + Environment.NewLine + Environment.NewLine + "Do you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
                 Close();
