@@ -39,7 +39,7 @@ namespace GitUI
 
             if (!GitCommands.GitCommands.InTheMiddleOfPatch() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
-                if (MessageBox.Show("All mergeconflicts are resolved, you can commit.\nDo you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     FormCommit frm = new FormCommit();
                     frm.ShowDialog();

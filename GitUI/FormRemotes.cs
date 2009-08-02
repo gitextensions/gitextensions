@@ -27,7 +27,7 @@ namespace GitUI
         void RemoteBranches_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
-            MessageBox.Show(string.Format("Invalid ´{1}´ found for branch ´{0}´.\nValue has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText));
+            MessageBox.Show(string.Format("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine + "Value has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }

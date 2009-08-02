@@ -48,13 +48,13 @@ namespace GitUI
                 {
                     if (this.ShowInTaskbar == false)
                     {
-                        if (MessageBox.Show("The repository has been cloned successfully.\nDo you want to open the new repository \"" + dirTo + "\" now?", "Open", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show("The repository has been cloned successfully." + Environment.NewLine + "Do you want to open the new repository \"" + dirTo + "\" now?", "Open", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             GitCommands.Settings.WorkingDir = dirTo;
 
                             if (File.Exists(dirTo + "\\" + ".gitmodules"))
                             {
-                                if (MessageBox.Show("The cloned has submodules configured.\nDo you want to initialize the submodules?", "Submodules", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                if (MessageBox.Show("The cloned has submodules configured." + Environment.NewLine + "Do you want to initialize the submodules?", "Submodules", MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
                                     FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
                                 }
@@ -143,7 +143,7 @@ namespace GitUI
         {
             string destinationPath ="";
 
-            Info.Text = "The repository will be cloned to a new directory located here:\n";
+            Info.Text = "The repository will be cloned to a new directory located here:" + Environment.NewLine;
             if (string.IsNullOrEmpty(To.Text))
                 destinationPath += "[destination]";
             else

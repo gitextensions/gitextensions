@@ -108,7 +108,7 @@ namespace GitUI
 
         void AddOutput(string text)
         {
-            Output.Text += text + "\n";
+            Output.Text += text + Environment.NewLine;
         }
 
         public StringBuilder outputString;
@@ -209,7 +209,7 @@ namespace GitUI
                     AddOutput(e.Data);
                 }*/
                 outputString.Append(e.Data);
-                outputString.Append("\n");
+                outputString.Append(Environment.NewLine);
             }
 
 
@@ -217,7 +217,7 @@ namespace GitUI
             {
                 if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
                 {
-                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY.\nThis causes this process to hang, and that why it is automaticly stopped.\n\nWhen te connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered.\nYou could also manually add the host's fingerprint or run Test Connection from the remotes dialog.\n\nDo you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automaticly stopped." + Environment.NewLine + Environment.NewLine + "When te connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
 
@@ -263,7 +263,7 @@ namespace GitUI
                 if (Process != null)
                 {
                     Process.Kill();
-                    outputString.Append("\nAborted");
+                    outputString.Append(Environment.NewLine + "Aborted");
                     Done();
                 }
             }
@@ -290,7 +290,7 @@ namespace GitUI
             if (Process != null)
             {
                 Process.Kill();
-                outputString.Append("\nAborted");
+                outputString.Append(Environment.NewLine + "Aborted");
             }
         }
     }

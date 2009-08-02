@@ -47,7 +47,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + "\n";
+                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -87,8 +87,8 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                
-                Settings.GitLog += cmd + " " + arguments + "\n";
+
+                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -119,7 +119,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + "\n";
+                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -175,7 +175,7 @@ namespace GitCommands
 
             Kill();
 
-            Settings.GitLog += cmd + " " + arguments + "\n";
+            Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
 
             //process used to execute external commands
             Process = new System.Diagnostics.Process();
@@ -246,7 +246,7 @@ namespace GitCommands
         {
             //ErrorOutput.Append(e.Data + "\n");
             if (CollectOutput)
-                Output.Append(e.Data + "\n");
+                Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
         }
@@ -254,7 +254,7 @@ namespace GitCommands
         void process_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
             if (CollectOutput)
-                Output.Append( e.Data + "\n" );
+                Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
         }
@@ -269,7 +269,7 @@ namespace GitCommands
                 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
-                Settings.GitLog += cmd + " " + arguments + "\n";
+                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -300,7 +300,7 @@ namespace GitCommands
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    output += "\n" + error;
+                    output += Environment.NewLine + error;
                 }
             }
             catch
@@ -317,8 +317,8 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                
-                Settings.GitLog += cmd + " " + arguments + "\n";
+
+                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
                 //process used to execute external commands
 
 
@@ -1666,7 +1666,7 @@ namespace GitCommands
                 while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
                 {
                     if (line.Length > graphIndex)
-                        revision.Message += line.Substring(graphIndex).Trim() + "\n";
+                        revision.Message += line.Substring(graphIndex).Trim() + Environment.NewLine;
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;
@@ -1726,7 +1726,7 @@ namespace GitCommands
                     itemsStrings[n].Length > 0 &&
                     itemsStrings[n][0] == ' ')
                 {
-                    revision.Message += itemsStrings[n++].Trim() + "\n";
+                    revision.Message += itemsStrings[n++].Trim() + Environment.NewLine;
                 }
 
                 revisions.Add(revision);
@@ -2034,7 +2034,7 @@ namespace GitCommands
                 else
                 if (!itemsString.StartsWith(":") && !string.IsNullOrEmpty(itemsString))
                 {
-                    item.Name += itemsString.Trim() + "\n";
+                    item.Name += itemsString.Trim() + Environment.NewLine;
                 }
                 else
                 {
@@ -2122,7 +2122,7 @@ namespace GitCommands
                             item.Author = itemsString.Substring(41, codeIndex - 41).Trim();
 
                         if (!string.IsNullOrEmpty(item.Text))
-                            item.Text += "\n";
+                            item.Text += Environment.NewLine;
                         item.Text += itemsString.Substring(codeIndex);
                     }
                     
@@ -2161,7 +2161,7 @@ namespace GitCommands
 
                 SetEnvironmentVariable();
 
-                Settings.GitLog += Settings.GitDir + "git.cmd" + " " + "cat-file blob \"" + id + "\"" + "\n";
+                Settings.GitLog += Settings.GitDir + "git.cmd" + " " + "cat-file blob \"" + id + "\"" + Environment.NewLine;
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
