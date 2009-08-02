@@ -42,7 +42,8 @@ namespace GitUI
 
             foreach (string warning in process.outputString.ToString().Split('\n'))
             {
-                warningList.Add(ExtendWarning(warning));
+                if (!ShowOnlyCommits.Checked || warning.Contains("commit"))
+                    warningList.Add(ExtendWarning(warning));
             }
 
             Warnings.DataSource = warningList;
@@ -180,6 +181,11 @@ namespace GitUI
         {
             DeleteLostFoundTags();
             CreateLostFoundTags(true);
+            LoadLostObjects();
+        }
+
+        private void ShowOnlyCommits_CheckedChanged(object sender, EventArgs e)
+        {
             LoadLostObjects();
         }
     }
