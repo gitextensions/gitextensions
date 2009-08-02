@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 1.68
+	Improved 'Recover lost objects' dialog. Now all lost objects can be found and finding a specific commit should be much easier now.
+	Use Environment.NewLine instead of "\n".
+	Fixed a bug in default .gitignore file, it would show the [Db]ebug directory. It should be [Dd]ebug directory ofcourse.
+	Added Resharper directories to .gitignore file.
+
 Version 1.67
 	Fixed exception when AutoCRLF is left empty
 	Clicking 'Rescan changes' twice no longer results in 
