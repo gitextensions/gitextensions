@@ -113,8 +113,11 @@
             this.manageSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.syncronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.openSubmoduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -137,9 +140,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.updateAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -935,10 +936,11 @@
             this.manageSubmodulesToolStripMenuItem,
             this.toolStripSeparator8,
             this.updateAllSubmodulesToolStripMenuItem,
-            this.updateAllSubmodulesRecursiveToolStripMenuItem,
             this.initializeAllSubmodulesToolStripMenuItem,
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem,
             this.syncronizeAllSubmodulesToolStripMenuItem,
+            this.toolStripSeparator14,
+            this.updateAllSubmodulesRecursiveToolStripMenuItem,
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem,
             this.synchronizeAlSubmodulesRecursiveToolStripMenuItem,
             this.toolStripSeparator10,
             this.openSubmoduleToolStripMenuItem});
@@ -965,6 +967,13 @@
             this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
             this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesToolStripMenuItem_Click);
             // 
+            // updateAllSubmodulesRecursiveToolStripMenuItem
+            // 
+            this.updateAllSubmodulesRecursiveToolStripMenuItem.Name = "updateAllSubmodulesRecursiveToolStripMenuItem";
+            this.updateAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.updateAllSubmodulesRecursiveToolStripMenuItem.Text = "Update all submodules recursive";
+            this.updateAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesRecursiveToolStripMenuItem_Click);
+            // 
             // initializeAllSubmodulesToolStripMenuItem
             // 
             this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
@@ -972,12 +981,26 @@
             this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
             this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesToolStripMenuItem_Click);
             // 
+            // initializeAllSubmodulesRecursiveToolStripMenuItem
+            // 
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Name = "initializeAllSubmodulesRecursiveToolStripMenuItem";
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Text = "Initialize all submodules recursive";
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesRecursiveToolStripMenuItem_Click);
+            // 
             // syncronizeAllSubmodulesToolStripMenuItem
             // 
             this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
             this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
             this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.syncronizeAllSubmodulesToolStripMenuItem_Click);
+            // 
+            // synchronizeAlSubmodulesRecursiveToolStripMenuItem
+            // 
+            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAlSubmodulesRecursiveToolStripMenuItem";
+            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize al submodules recursive";
+            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.synchronizeAlSubmodulesRecursiveToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -1138,26 +1161,10 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // updateAllSubmodulesRecursiveToolStripMenuItem
+            // toolStripSeparator14
             // 
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Name = "updateAllSubmodulesRecursiveToolStripMenuItem";
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Text = "Update all submodules recursive";
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesRecursiveToolStripMenuItem_Click);
-            // 
-            // initializeAllSubmodulesRecursiveToolStripMenuItem
-            // 
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Name = "initializeAllSubmodulesRecursiveToolStripMenuItem";
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Text = "Initialize all submodules recursive";
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesRecursiveToolStripMenuItem_Click);
-            // 
-            // synchronizeAlSubmodulesRecursiveToolStripMenuItem
-            // 
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAlSubmodulesRecursiveToolStripMenuItem";
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize al submodules recursive";
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.synchronizeAlSubmodulesRecursiveToolStripMenuItem_Click);
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(265, 6);
             // 
             // FormBrowse
             // 
@@ -1315,5 +1322,6 @@
         private System.Windows.Forms.ToolStripMenuItem updateAllSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem initializeAllSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem synchronizeAlSubmodulesRecursiveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
     }
 }

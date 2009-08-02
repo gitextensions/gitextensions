@@ -19,10 +19,12 @@ namespace GitUI
 
             try
             {
-                StreamReader re = File.OpenText(Settings.WorkingDir + ".gitignore");
-                GitIgnoreFile = re.ReadToEnd();
-                re.Close();
-
+                if (File.Exists(Settings.WorkingDir + ".gitignore"))
+                {
+                    StreamReader re = File.OpenText(Settings.WorkingDir + ".gitignore");
+                    GitIgnoreFile = re.ReadToEnd();
+                    re.Close();
+                }
                 GitIgnoreEdit.Text = GitIgnoreFile;
             }
             catch

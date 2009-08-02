@@ -41,8 +41,14 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
+            RevisionGrid.ChangedCurrentBranch += RevisionGrid_ChangedCurrentBranch;
             indexWatcher.Changed += new EventHandler(indexWatcher_Changed);
             indexWatcher.Reset();
+        }
+
+        void RevisionGrid_ChangedCurrentBranch(object sender, EventArgs e)
+        {
+            Initialize();
         }
 
         void indexWatcher_Changed(object sender, EventArgs e)
