@@ -1,5 +1,8 @@
 TODO:
 
+-Improve Visual Studio intergration
+	-Command bar is repositionized every time visual studio is started
+
 -I would love the ability to interactively stage / unstage individual hunks of a file diff.
 +partly fixed, by allowing to start the command prompt with this command. Adding the 'real' function stays on the todo list, but i'm not sure how to do this yet.
 
