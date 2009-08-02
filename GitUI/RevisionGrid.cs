@@ -14,6 +14,15 @@ namespace GitUI
 {
     public partial class RevisionGrid : UserControl
     {
+        public event EventHandler ChangedCurrentBranch;
+
+        public virtual void OnChangedCurrentBranch()
+        {
+            if (ChangedCurrentBranch != null)
+                ChangedCurrentBranch(this, null);
+        }
+
+
         IndexWatcher indexWatcher = new IndexWatcher();
 
         public RevisionGrid()
@@ -707,7 +716,6 @@ namespace GitUI
                 FormResetCurrentBranch frm = new FormResetCurrentBranch((GitRevision)RevisionList[LastRow]);
                 frm.ShowDialog();
                 RefreshRevisions();
-
             }
         }
 
@@ -719,7 +727,7 @@ namespace GitUI
                 frm.Revision = (GitRevision)RevisionList[LastRow];
                 frm.ShowDialog();
                 RefreshRevisions();
-
+                OnChangedCurrentBranch();
             }
 
         }
@@ -836,6 +844,7 @@ namespace GitUI
 
             ToolStripDropDown tagDropDown = new ToolStripDropDown();
             ToolStripDropDown branchDropDown = new ToolStripDropDown();
+            ToolStripDropDown checkoutBranchDropDown = new ToolStripDropDown();
 
             foreach (GitHead head in revision.Heads)
             {
@@ -850,6 +859,10 @@ namespace GitUI
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
                     branchDropDown.Items.Add(toolStripItem);
+
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click +=new EventHandler(toolStripItem_ClickCheckoutBranch);
+                    checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
             }
 
@@ -857,7 +870,10 @@ namespace GitUI
             deleteTagToolStripMenuItem.Visible = tagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = branchDropDown;
-            deleteBranchToolStripMenuItem.Visible = branchDropDown.Items.Count > 0;            
+            deleteBranchToolStripMenuItem.Visible = branchDropDown.Items.Count > 0;
+
+            checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
+            checkoutBranchToolStripMenuItem.Visible = checkoutBranchDropDown.Items.Count > 0;
         }
 
         void toolStripItem_Click(object sender, EventArgs e)
@@ -887,6 +903,18 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        void toolStripItem_ClickCheckoutBranch(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            new FormProcess("checkout \"" + toolStripItem.Text + "\"");
+
+            ForceRefreshRevisions();
+            OnChangedCurrentBranch();
+        }
         private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -900,6 +928,7 @@ namespace GitUI
                 {
                     new FormProcess("checkout \"" + RevisionList[LastRow].Guid + "\"");
                     ForceRefreshRevisions();
+                    OnChangedCurrentBranch();
                 }
             }
         }
@@ -912,6 +941,11 @@ namespace GitUI
         }
 
         private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }

@@ -19,10 +19,12 @@ namespace GitUI
 
             try
             {
-                StreamReader re = File.OpenText(Settings.WorkingDir + ".mailmap");
-                MailMapFile = re.ReadToEnd();
-                re.Close();
-
+                if (File.Exists(Settings.WorkingDir + ".mailmap"))
+                {
+                    StreamReader re = File.OpenText(Settings.WorkingDir + ".mailmap");
+                    MailMapFile = re.ReadToEnd();
+                    re.Close();
+                }
                 MailMapText.Text = MailMapFile;
             }
             catch

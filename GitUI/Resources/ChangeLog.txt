@@ -6,6 +6,8 @@ Version 1.68
 	Use Environment.NewLine instead of "\n".
 	Fixed a bug in default .gitignore file, it would show the [Db]ebug directory. It should be [Dd]ebug directory ofcourse.
 	Added Resharper directories to .gitignore file.
+	Added recursive submode commands. When cloning a submodule containing nested submodules, all nested submodules can be initialized. There are also recursive initialize, update and synchronize commands added to the submodule menu.
+	Added checkout branch to the revision graph context menu.
 
 Version 1.67
 	Fixed exception when AutoCRLF is left empty
