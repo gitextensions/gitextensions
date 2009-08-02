@@ -87,10 +87,13 @@ namespace GitUI
 
                 // Draw the wavy underline.   
                 //Multiline wiggle.....
-                if (start.Y != end.Y)
+                if (start.Y < end.Y - 3 || start.Y > end.Y + 3)
                 {
-                    DrawWave(start, new Point(textBox.Width - 3, start.Y));
-                    DrawWave(new Point(3, end.Y), end);
+                    if (start.X != end.X && start.Y < end.Y)
+                    {
+                        DrawWave(start, new Point(textBox.Width - 3, start.Y));
+                        DrawWave(new Point(3, end.Y), end);
+                    }
                 }
                 else
                     DrawWave(start, end);
