@@ -846,13 +846,18 @@ namespace GitUI
 
             foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
             {
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
-                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+                    Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
 
-                    UpdateSubmodulesRecursive();
+                    if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                    {
+                        FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+
+                        UpdateSubmodulesRecursive();
+                    }
+
+                    Settings.WorkingDir = oldworkingdir;
                 }
             }
 
@@ -879,12 +884,18 @@ namespace GitUI
 
             foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
             {
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
-                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+                    Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
 
-                    InitSubmodulesRecursive();
+                    if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                    {
+                        FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+
+                        InitSubmodulesRecursive();
+                    }
+
+                    Settings.WorkingDir = oldworkingdir;
                 }
             }
 
@@ -911,12 +922,18 @@ namespace GitUI
 
             foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
             {
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-                if (File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
-                    FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+                    Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
 
-                    SyncSubmodulesRecursive();
+                    if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
+                    {
+                        FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+
+                        SyncSubmodulesRecursive();
+                    }
+
+                    Settings.WorkingDir = oldworkingdir;
                 }
             }
 

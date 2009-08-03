@@ -66,7 +66,18 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FormProcess process = new FormProcess("fsck-objects --lost-found");
+            string options = "";
+
+            if (Unreachable.Checked)
+                options += " --unreachable";
+
+            if (FullCheck.Checked)
+                options += " --full";
+
+            if (NoReflogs.Checked)
+                options += " --no-reflogs";
+
+            FormProcess process = new FormProcess("fsck-objects --lost-found" + options);
             FormVerify_Shown(null, null);
         }
 
@@ -95,7 +106,7 @@ namespace GitUI
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete dangling objects?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete all dangling objects?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("prune");
                 FormVerify_Shown(null, null);

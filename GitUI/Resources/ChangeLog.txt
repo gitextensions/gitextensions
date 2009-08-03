@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.69
+	Fixed updating submodules recursive when having multiple submodules
+
 Version 1.68
 	Improved 'Recover lost objects' dialog. Now all lost objects can be found and finding a specific commit should be much easier now.
 	Use Environment.NewLine instead of "\n".
