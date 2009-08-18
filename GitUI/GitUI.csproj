@@ -389,6 +389,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="RevisionGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -644,6 +649,10 @@
     <None Include="Icons\stash.bmp" />
     <None Include="Icons\90.png" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />
     <None Include="Icons\merge.png" />

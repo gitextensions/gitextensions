@@ -1,6 +1,7 @@
 TODO:
 
 -Add a feature to save window positions. At least the browse window position should be saved. Any other windows are centered anyway.
+ (geimplementeerd door patch van Wilbert van Dolleweerd)
 
 -Renamed items show as deleted/new in the commit dialog. It should be possible to detect renames there.
 
