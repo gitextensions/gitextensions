@@ -90,7 +90,7 @@ namespace GitUI
             GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
 
             SetCheckboxFromString(KeepMergeBackup, GitCommands.GitCommands.GetSetting("mergetool.keepBackup"));
-            SetCheckboxFromString(LocalAutoCrlf, GitCommands.GitCommands.GetSetting("core.autocrlf"));
+        	SetComboBoxFromString(LocalAutoCRLF, GitCommands.GitCommands.GetSetting("core.autocrlf"));
 
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                 MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
@@ -141,8 +141,6 @@ namespace GitUI
 
         private bool Save()
         {
-
-
             GitCommands.Settings.Smtp = SmtpServer.Text;
 
             GitCommands.Settings.GitDir = GitPath.Text;
@@ -187,12 +185,7 @@ namespace GitUI
                     if (KeepMergeBackup.CheckState == CheckState.Unchecked)
                         GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
 
-
-                if (LocalAutoCrlf.CheckState == CheckState.Checked)
-                    GitCommands.GitCommands.SetSetting("core.autocrlf", "true");
-                else
-                    if (LocalAutoCrlf.CheckState == CheckState.Unchecked)
-                        GitCommands.GitCommands.SetSetting("core.autocrlf", "false");
+				GitCommands.GitCommands.SetSetting("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
 
                 gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
                 gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
@@ -643,7 +636,7 @@ namespace GitUI
             Editor.Enabled = valid;
             MergeTool.Enabled = valid;
             KeepMergeBackup.Enabled = valid;
-            LocalAutoCrlf.Enabled = valid;
+        	LocalAutoCRLF.Enabled = valid;
             NoGitRepo.Visible = !valid;
 
         }
