@@ -359,6 +359,7 @@ namespace GitCommands
 
             List<GitItem> unmergedFiles = new List<GitItem>();
 
+            
             string fileName = "";
             foreach (string file in unmerged)
             {
@@ -369,6 +370,8 @@ namespace GitCommands
                         fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
                         GitItem gitFile = new GitItem();
                         gitFile.FileName = fileName;
+
+
                         unmergedFiles.Add(gitFile);
                     }
                 }
@@ -390,17 +393,17 @@ namespace GitCommands
                 if (fileline[2].Trim() == "1")
                 {
                     string newFileName = filename + ".BASE";
-                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
                 }
                 if (fileline[2].Trim() == "2")
                 {
                     string newFileName = filename + ".LOCAL";
-                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
                 }
                 if (fileline[2].Trim() == "3")
                 {
                     string newFileName = filename + ".REMOTE";
-                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob " + fileline[1] + " > " + newFileName + "");
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
                 }
             }
 
@@ -512,7 +515,7 @@ namespace GitCommands
 
         static public string GetSubmoduleLocalPath(string name)
         {
-            return RunCmd(Settings.GitDir + "git.cmd", "config -f .gitmodules --get submodule." + name.Trim() + ".path");
+            return RunCmd(Settings.GitDir + "git.cmd", "config -f .gitmodules --get submodule." + name.Trim() + ".path").Trim();
         }
 
         static public string SubmoduleInitCmd(string name)
@@ -556,10 +559,17 @@ namespace GitCommands
 
             List<GitSubmodule> submoduleList = new List<GitSubmodule>();
 
+            string lastLine = null;
+
             foreach (string submodule in submodules)
             {
                 if (submodule.Length < 43)
                     continue;
+
+                if (submodule.Equals(lastLine))
+                    continue;
+
+                lastLine = submodule;
 
                 GitSubmodule gitSubmodule = new GitSubmodule();
                 gitSubmodule.Initialized = submodule[0] != '-';

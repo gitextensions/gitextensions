@@ -71,6 +71,23 @@ namespace GitUI
 
             string filename = GitCommands.GitCommands.GetConflictedFiles(((GitItem)row.DataBoundItem).FileName);
 
+            if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
+            {
+                List<GitSubmodule> submodules = GitCommands.GitCommands.GetSubmodules();
+                foreach (GitSubmodule submodule in submodules)
+                {
+                    if (submodule.LocalPath.Equals(filename))
+                    {
+                        if (MessageBox.Show("The selected mergeconflict is a submodule. Mark conflict as resolved?", "Merge", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + filename + "\"");
+                            Initialize();
+                        }
+                        return;
+                    }
+                }
+            }
+
             bool file1 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".BASE");
             bool file2 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".LOCAL");
             bool file3 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".REMOTE");
