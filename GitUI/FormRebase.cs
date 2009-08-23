@@ -72,12 +72,16 @@ namespace GitUI
 
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
+                AcceptButton = Mergetool;
+                Mergetool.Focus();
                 Mergetool.Text = ">Solve conflicts<";
                 MergeToolPanel.BackColor = Color.Black;
             }
             else
                 if (GitCommands.GitCommands.InTheMiddleOfRebase())
                 {
+                    AcceptButton = Resolved;
+                    Resolved.Focus();
                     Resolved.Text = ">Continue rebase<";
                     ContinuePanel.BackColor = Color.Black;
                 }

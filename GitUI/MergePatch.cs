@@ -68,11 +68,13 @@ namespace GitUI
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = ">Solve conflicts<";
+                AcceptButton = Mergetool;
             }
             else
                 if (GitCommands.GitCommands.InTheMiddleOfPatch())
                 {
                     Resolved.Text = ">Conflicts resolved<";
+                    AcceptButton = Resolved;
                 }
 
         }

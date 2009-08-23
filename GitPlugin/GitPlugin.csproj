@@ -187,8 +187,8 @@
     </PreBuildEvent>
     <PostBuildEvent>cd "$(ProjectDir)"
 mkdir "$(ProjectDir)$(OutDir)en-US"
-"C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\Resgen" "$(ProjectDir)Properties\Resources.resx"
-"$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
+"$(ProjectDir)Resgen\Resgen" "$(ProjectDir)Properties\Resources.resx"
+"$(ProjectDir)Resgen\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

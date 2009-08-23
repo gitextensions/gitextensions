@@ -38,11 +38,11 @@
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ChangesList = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.button1 = new System.Windows.Forms.Button();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -153,6 +153,16 @@
             this.splitContainer4.SplitterDistance = 40;
             this.splitContainer4.TabIndex = 2;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(430, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Load";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // BrowsePatch
             // 
             this.BrowsePatch.Location = new System.Drawing.Point(339, 9);
@@ -180,18 +190,9 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Patch";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(430, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Load";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // ViewPatch
             // 
+            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 501);
