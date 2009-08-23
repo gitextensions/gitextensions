@@ -69,6 +69,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_633EE6257B44E4EF506A9D5FFC12F489"
+        "OwnerKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_692872B1DD114DC28B27329FB00D1FD8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -77,6 +83,12 @@
         {
         "MsmKey" = "8:_7BDBB3C66B9142D3B95FCD555CA0F516"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7DAFBC5D776A604416EC151FCE738C19"
+        "OwnerKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -105,8 +117,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_909167026F96EDB318896B5DA97BBC90"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "MsmKey" = "8:_987CB2C9092C4D85A1F5493903AA74F5"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -137,6 +149,18 @@
         {
         "MsmKey" = "8:_AE00C5477A4D4B488AEC947350097941"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AEAF37DF789A91E7B79A04036D679DD0"
+        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AEAF37DF789A91E7B79A04036D679DD0"
+        "OwnerKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -189,12 +213,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CC844C218A040E0095B17234095AA10C"
-        "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D0311187947244E3B926E38B1A986205"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -213,32 +231,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EC06998F0BBC0FF27A928580F05B96F8"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EC06998F0BBC0FF27A928580F05B96F8"
-        "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_ECBED974EB4C4B2D92F11758A4F75C99"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
+        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
-        "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
+        "MsmKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -256,25 +262,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F4DCB422B63B6ADEAF1D97713D01ED7A"
+        "OwnerKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_909167026F96EDB318896B5DA97BBC90"
+        "OwnerKey" = "8:_633EE6257B44E4EF506A9D5FFC12F489"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CC844C218A040E0095B17234095AA10C"
+        "OwnerKey" = "8:_7DAFBC5D776A604416EC151FCE738C19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EC06998F0BBC0FF27A928580F05B96F8"
+        "OwnerKey" = "8:_AEAF37DF789A91E7B79A04036D679DD0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -594,6 +600,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_633EE6257B44E4EF506A9D5FFC12F489"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SpellChecker, Version=2.1.7.34261, Culture=neutral, PublicKeyToken=318b389f0db66e46, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_633EE6257B44E4EF506A9D5FFC12F489"
+                    {
+                    "Name" = "8:SpellChecker.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SpellChecker.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_692872B1DD114DC28B27329FB00D1FD8"
             {
             "SourcePath" = "8:..\\Bin\\pageant.exe"
@@ -634,6 +671,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7DAFBC5D776A604416EC151FCE738C19"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=4.0.0.3889, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_7DAFBC5D776A604416EC151FCE738C19"
+                    {
+                    "Name" = "8:ICSharpCode.TextEditor.DLL"
+                    "Attributes" = "3:576"
+                    }
+                }
+            "SourcePath" = "8:ICSharpCode.TextEditor.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:TRUE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7E57C78A59AF41F2BF779DF83827EABF"
             {
             "SourcePath" = "8:..\\Bin\\plink.exe"
@@ -658,7 +726,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3367.29431, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3522.22926, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -725,21 +793,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_909167026F96EDB318896B5DA97BBC90"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_987CB2C9092C4D85A1F5493903AA74F5"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2da19ef2af72bcc4, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_909167026F96EDB318896B5DA97BBC90"
-                    {
-                    "Name" = "8:GitUI.DLL"
-                    "Attributes" = "3:516"
-                    }
-                }
-            "SourcePath" = "8:GitUI.DLL"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\Bin\\GitExtensionsUserManual.pdf"
+            "TargetName" = "8:GitExtensionsUserManual.pdf"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
@@ -747,13 +804,13 @@
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
-            "System" = "11:TRUE"
+            "System" = "11:FALSE"
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AC172A85E904390ABAC6CD994495461"
@@ -856,6 +913,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AEAF37DF789A91E7B79A04036D679DD0"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_AEAF37DF789A91E7B79A04036D679DD0"
+                    {
+                    "Name" = "8:GitCommands.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:GitCommands.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B13F9D40D75E49C6808E8D198E8B2B9F"
             {
             "SourcePath" = "8:..\\Bin\\Dictionaries\\fr-FR.dic"
@@ -931,7 +1019,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3367.29431, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3522.22926, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -986,37 +1074,6 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CC844C218A040E0095B17234095AA10C"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SpellChecker, Version=2.1.7.34261, Culture=neutral, PublicKeyToken=318b389f0db66e46, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_CC844C218A040E0095B17234095AA10C"
-                    {
-                    "Name" = "8:SpellChecker.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SpellChecker.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1091,37 +1148,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EC06998F0BBC0FF27A928580F05B96F8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitCommands, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce7debbf8321c49b, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_EC06998F0BBC0FF27A928580F05B96F8"
-                    {
-                    "Name" = "8:GitCommands.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:GitCommands.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ECBED974EB4C4B2D92F11758A4F75C99"
             {
             "SourcePath" = "8:..\\Bin\\Dictionaries\\nl-NL.dic"
@@ -1140,6 +1166,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED0AFD483F5E1D0EE05463DF6AF75094"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GitUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_ED0AFD483F5E1D0EE05463DF6AF75094"
+                    {
+                    "Name" = "8:GitUI.DLL"
+                    "Attributes" = "3:516"
+                    }
+                }
+            "SourcePath" = "8:GitUI.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:TRUE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F341A1E8640E462A825A2ACC56D6128A"
@@ -1171,37 +1228,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F4DCB422B63B6ADEAF1D97713D01ED7A"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=4.0.0.3889, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F4DCB422B63B6ADEAF1D97713D01ED7A"
-                    {
-                    "Name" = "8:ICSharpCode.TextEditor.DLL"
-                    "Attributes" = "3:576"
-                    }
-                }
-            "SourcePath" = "8:ICSharpCode.TextEditor.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:TRUE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F66E3F334B75D4BCC3A44ECE11F14ED7"
@@ -1402,7 +1428,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{952F6869-5249-4219-95A3-7271CD9B5B16}"
+        "PackageCode" = "8:{50DA2D0D-52D0-4A10-932C-92C033F8E512}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1603,6 +1629,20 @@
             "Folder" = "8:_10F9618BDF3040938E9E9BCC29522757"
             "WorkingFolder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Icon" = "8:_003AA43D935B4F8DA4130EC0304368B3"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FC413E24F47B4C62805C8F9F84F6588B"
+            {
+            "Name" = "8:User Manual.pdf"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_987CB2C9092C4D85A1F5493903AA74F5"
+            "Folder" = "8:_10F9618BDF3040938E9E9BCC29522757"
+            "WorkingFolder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
