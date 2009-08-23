@@ -5,6 +5,7 @@ Version 1.70
 	Added support for mergeconflict on submodules
 	Local AutoCRLF now has three options: true, false, input
 	Main windows opens on last position
+	Added shortcuts and default buttons
 
 Version 1.69
 	Fixed updating submodules recursive when having multiple submodules
