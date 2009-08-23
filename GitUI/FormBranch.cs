@@ -45,7 +45,8 @@ namespace GitUI
 
         private void FormBranch_Load(object sender, EventArgs e)
         {
-
+            BName.Focus();
+            AcceptButton = Ok;
         }
     }
 }

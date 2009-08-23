@@ -114,6 +114,9 @@ namespace GitUI
 
         void Revisions_SelectionChanged(object sender, EventArgs e)
         {
+            if (Revisions.SelectedRows.Count > 0)
+                LastRow = Revisions.SelectedRows[0].Index;
+
             SelecctionTimer.Enabled = false;
             SelecctionTimer.Stop();
             SelecctionTimer.Enabled = true;
