@@ -57,6 +57,8 @@
             this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Staged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -75,8 +77,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new GitUI.EditNetSpell();
             this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -399,6 +399,18 @@
             this.unstageAllToolStripMenuItem.Text = "Unstage all";
             this.unstageAllToolStripMenuItem.Click += new System.EventHandler(this.unstageAllToolStripMenuItem_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
+            // 
+            // stageChunkOfFileToolStripMenuItem
+            // 
+            this.stageChunkOfFileToolStripMenuItem.Name = "stageChunkOfFileToolStripMenuItem";
+            this.stageChunkOfFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.stageChunkOfFileToolStripMenuItem.Text = "Stage chunk of file";
+            this.stageChunkOfFileToolStripMenuItem.Click += new System.EventHandler(this.stageChunkOfFileToolStripMenuItem_Click);
+            // 
             // Staged
             // 
             this.Staged.AllowUserToAddRows = false;
@@ -626,20 +638,9 @@
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // stageChunkOfFileToolStripMenuItem
-            // 
-            this.stageChunkOfFileToolStripMenuItem.Name = "stageChunkOfFileToolStripMenuItem";
-            this.stageChunkOfFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.stageChunkOfFileToolStripMenuItem.Text = "Stage chunk of file";
-            this.stageChunkOfFileToolStripMenuItem.Click += new System.EventHandler(this.stageChunkOfFileToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
-            // 
             // FormCommit
             // 
+            this.AcceptButton = this.Commit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(895, 648);

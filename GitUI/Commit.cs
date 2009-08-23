@@ -259,6 +259,8 @@ namespace GitUI
 
             Commit.Enabled = true;
             Amend.Enabled = true;
+            AcceptButton = Commit;
+            Commit.Focus();
         }
 
         private void Reset_Click(object sender, EventArgs e)

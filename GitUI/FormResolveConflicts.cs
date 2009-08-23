@@ -34,6 +34,8 @@ namespace GitUI
 
         private void Initialize()
         {
+            button1.Focus();
+
             ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
             InitMergetool();
 

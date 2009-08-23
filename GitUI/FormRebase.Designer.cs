@@ -46,9 +46,9 @@
             this.patchGrid1 = new GitUI.PatchGrid();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.ContinuePanel = new System.Windows.Forms.Panel();
+            this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -270,6 +270,14 @@
             this.ContinuePanel.Size = new System.Drawing.Size(114, 27);
             this.ContinuePanel.TabIndex = 7;
             // 
+            // MergeToolPanel
+            // 
+            this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MergeToolPanel.Location = new System.Drawing.Point(-1, 96);
+            this.MergeToolPanel.Name = "MergeToolPanel";
+            this.MergeToolPanel.Size = new System.Drawing.Size(114, 27);
+            this.MergeToolPanel.TabIndex = 8;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -301,16 +309,9 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // MergeToolPanel
-            // 
-            this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.MergeToolPanel.Location = new System.Drawing.Point(-1, 96);
-            this.MergeToolPanel.Name = "MergeToolPanel";
-            this.MergeToolPanel.Size = new System.Drawing.Size(114, 27);
-            this.MergeToolPanel.TabIndex = 8;
-            // 
             // FormRebase
             // 
+            this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
