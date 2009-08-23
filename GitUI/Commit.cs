@@ -567,5 +567,10 @@ namespace GitUI
                 Initialize();
             }
         }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

@@ -66,6 +66,7 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new GitUI.FileViewer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.Cancel = new System.Windows.Forms.Button();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.AddManyFiles = new System.Windows.Forms.Button();
@@ -507,6 +508,17 @@
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(232, 104);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(129, 23);
+            this.Cancel.TabIndex = 9;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
             // SolveMergeconflicts
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
@@ -585,6 +597,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.OutPut);
+            this.splitContainer7.Panel2.Controls.Add(this.Cancel);
             this.splitContainer7.Size = new System.Drawing.Size(364, 328);
             this.splitContainer7.SplitterDistance = 194;
             this.splitContainer7.TabIndex = 0;
@@ -643,11 +656,13 @@
             this.AcceptButton = this.Commit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(895, 648);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormCommit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
             this.Load += new System.EventHandler(this.FormCommit_Load);
             this.Shown += new System.EventHandler(this.FormCommit_Shown);
@@ -743,5 +758,6 @@
         private System.Windows.Forms.ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
+        private System.Windows.Forms.Button Cancel;
     }
 }
