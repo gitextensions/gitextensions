@@ -268,19 +268,21 @@ namespace GitUI
 
             DefaultMergeWithCombo.Items.Clear();
             DefaultMergeWithCombo.Items.Add("");
-            if (!string.IsNullOrEmpty(head.Remote))
+
+            string currentSelectedRemote = RemoteRepositoryCombo.Text.Trim();
+
+            if (!string.IsNullOrEmpty(head.Remote) && !string.IsNullOrEmpty(currentSelectedRemote))
             {
-                string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + remote + ".url");
+                string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + currentSelectedRemote + ".url");
 
                 if (!string.IsNullOrEmpty(remoteUrl))
                 {
                     foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
                     {
-                        if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(remote.ToLower()))
+                        if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()))
                         {
                             if (string.IsNullOrEmpty(remoteHead.MergeWith))
                             {
-
                                 DefaultMergeWithCombo.Items.Add(remoteHead.Name);
                             }
                         }
