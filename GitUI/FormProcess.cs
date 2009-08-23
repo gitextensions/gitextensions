@@ -125,6 +125,8 @@ namespace GitUI
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
+            Ok.Focus();
+            AcceptButton = Ok;
             Abort.Enabled = false;
             try
             {

@@ -55,6 +55,9 @@ namespace GitUI
             AddFiles.Enabled = false;
 
             InitializedStaged();
+
+            Commit.Focus();
+            AcceptButton = Commit;
         }
 
         private void InitializedStaged()
@@ -138,8 +141,8 @@ namespace GitUI
         {
             if (Staged.RowCount == 0)
             {
-                MessageBox.Show("You need to stage at least one file to commit");
-                return;
+                if (MessageBox.Show("There are no files staged for this commit. Are you sure you want to commit?", "No files staged", MessageBoxButtons.YesNo) == DialogResult.No)
+                    return;
             }
 
             DoCommit(false);
