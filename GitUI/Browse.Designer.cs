@@ -141,6 +141,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -601,6 +602,7 @@
             this.commandsToolStripMenuItem,
             this.remotesToolStripMenuItem,
             this.submodulesToolStripMenuItem,
+            this.pluginsToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -1173,6 +1175,13 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // pluginsToolStripMenuItem
+            // 
+            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.pluginsToolStripMenuItem.Text = "Plugins";
+            this.pluginsToolStripMenuItem.Visible = false;
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1330,5 +1339,6 @@
         private System.Windows.Forms.ToolStripMenuItem initializeAllSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem synchronizeAlSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
     }
 }

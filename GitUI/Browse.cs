@@ -351,9 +351,8 @@ namespace GitUI
 
         private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCheckout form = new FormCheckout();
-            form.ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartCheckoutRevisionDialog())
+                Initialize();
         }
 
         private void FileText_TextChanged(object sender, EventArgs e)
@@ -373,8 +372,8 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
-                    FormFileHistory form = new FormFileHistory(((GitItem)item).FileName);
-                    form.ShowDialog();
+                    if (GitUICommands.Instance.StartFileHistoryDialog(((GitItem)item).FileName))
+                        Initialize();
 
                 }
 
@@ -382,67 +381,50 @@ namespace GitUI
 
         private void viewDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormDiff diff = new FormDiff();
-            diff.ShowDialog();
+            if (GitUICommands.Instance.StartCompareRevisionsDialog())
+                Initialize();
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAddFiles addFiles = new FormAddFiles();
-            addFiles.ShowDialog();
+            if (GitUICommands.Instance.StartAddFilesDialog())
+                Initialize();
         }
 
         private void branchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBranch form = new FormBranch();
-            form.ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartCreateBranchDialog())
+                Initialize();
         }
 
         private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormClone form = new FormClone();
-            form.ShowDialog();
-
-            Initialize();
+            if (GitUICommands.Instance.StartCloneDialog())
+                Initialize();
         }
 
         private void commitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCommit form = new FormCommit();
-            form.ShowDialog();
-            if (form.NeedRefresh)
+            if (GitUICommands.Instance.StartCommitDialog())
                 Initialize();
         }
 
         private void initNewRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!GitCommands.Settings.ValidWorkingDir())
-                new FormInit(GitCommands.Settings.WorkingDir).ShowDialog();
-            else
-                new FormInit().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartInitializeDialog())
+                Initialize();
         }
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //GitCommands.Push cmd = new GitCommands.Push(new GitCommands.PushDto());
-            //cmd.Execute();
-            //MessageBox.Show(cmd.Dto.Result);
-            //Initialize();
-            new FormPush().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartPushDialog());
+                Initialize();
         }
 
         private void pullToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //GitCommands.Pull cmd = new GitCommands.Pull(new GitCommands.PullDto());
-            //cmd.Execute();
-            //MessageBox.Show(cmd.Dto.Result);
-            //Initialize();
-
-            new FormPull().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartPullDialog());
+                Initialize();
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,17 +443,15 @@ namespace GitUI
 
         private void patchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ViewPatch applyPatch = new ViewPatch();
-            applyPatch.ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartViewPatchDialog())
+                Initialize();
         }
 
 
         private void applyPatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MergePatch form = new MergePatch();
-            form.ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartApplyPatchDialog())
+                Initialize();
         }
 
         private void gitBashToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -487,7 +467,8 @@ namespace GitUI
 
         private void formatPatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormFormatPath().ShowDialog();
+            if (GitUICommands.Instance.StartFormatPatchDialog())
+                Initialize();
         }
 
         private void gitcommandLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -502,34 +483,31 @@ namespace GitUI
 
         private void RevisionGrid_DoubleClick(object sender, EventArgs e)
         {
-            FormDiff form = new FormDiff();
-            form.ShowDialog();
+            GitUICommands.Instance.StartCompareRevisionsDialog();
         }
 
         private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormCheckoutBranck().ShowDialog();
-            Initialize();
-
+            if (GitUICommands.Instance.StartCheckoutBranchDialog())
+                Initialize();
         }
 
         private void stashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormStash().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartStashDialog())
+                Initialize();
         }
 
         private void runMergetoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormResolveConflicts().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartResolveConflictsDialog())
+                Initialize();
         }
 
         void warning_Click(object sender, EventArgs e)
         {
-            new FormResolveConflicts().ShowDialog();
-            //if (MergeConflictHandler.HandleMergeConflicts())
-            Initialize();
+            if (GitUICommands.Instance.StartResolveConflictsDialog())
+                Initialize();
         }
 
 
@@ -550,8 +528,8 @@ namespace GitUI
 
         private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDeleteBranch().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartDeleteBranchDialog())
+                Initialize();
         }
 
         private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
@@ -561,14 +539,14 @@ namespace GitUI
 
         private void cherryPickToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormCherryPick().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartCherryPickDialog())
+                Initialize();
         }
 
         private void mergeBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormMergeBranch().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartMergeBranchDialog()) 
+                Initialize();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -613,8 +591,8 @@ namespace GitUI
 
         private void tagToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormTag().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartCreateTagDialog())
+                Initialize();
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -639,8 +617,8 @@ namespace GitUI
 
         private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDeleteTag().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartDeleteTagDialog())
+                Initialize();
         }
 
         private void FormBrowse_FormClosing(object sender, FormClosingEventArgs e)
@@ -679,24 +657,26 @@ namespace GitUI
 
         private void editgitignoreToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            new FormGitIgnore().ShowDialog();
+            if (GitUICommands.Instance.StartEditGitIgnoreDialog())
+                Initialize();
         }
 
         private void settingsToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            FormSettings form = new FormSettings();
-            form.ShowDialog();
+            if (GitUICommands.Instance.StartSettingsDialog())
+                Initialize();
         }
 
         private void archiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormArchive().ShowDialog();
+            if (GitUICommands.Instance.StartArchiveDialog())
+                Initialize();
         }
 
         private void editmailmapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormMailMap().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartMailMapDialog())
+                Initialize();
         }
 
         private void compressGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -706,8 +686,8 @@ namespace GitUI
 
         private void verifyGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormVerify().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartVerifyDatabaseDialog())
+                Initialize();
         }
 
         private void removeDanglingObjecsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -717,14 +697,14 @@ namespace GitUI
 
         private void manageRemoteRepositoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormRemotes().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartRemotesDialog())
+                Initialize();
         }
 
         private void rebaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormRebase().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartRebaseDialog())
+                Initialize();
         }
 
         private void startAuthenticationAgentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -739,7 +719,8 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new FormClone().ShowDialog();
+            if (GitUICommands.Instance.StartCloneDialog())
+                Initialize();
         }
 
         private void ToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -821,7 +802,8 @@ namespace GitUI
             if (DiffFiles.SelectedItem is string)
             {
                 {
-                    new FormFileHistory((string)DiffFiles.SelectedItem).ShowDialog();
+                    if (GitUICommands.Instance.StartFileHistoryDialog((string)DiffFiles.SelectedItem))
+                        Initialize();
                 }
             }
         }
@@ -850,12 +832,14 @@ namespace GitUI
 
         private void Clone_Click(object sender, EventArgs e)
         {
-            new FormClone().ShowDialog();
+            if (GitUICommands.Instance.StartCloneDialog())
+                Initialize();
         }
         
         private void Init_Click(object sender, EventArgs e)
         {
-            new FormInit(GitCommands.Settings.WorkingDir).ShowDialog();
+            GitUICommands.Instance.StartInitializeDialog(GitCommands.Settings.WorkingDir);
+
             indexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
@@ -893,49 +877,25 @@ namespace GitUI
 
         private void manageSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormSubmodules formSubmodules = new FormSubmodules();
-            formSubmodules.ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartSubmodulesDialog())
+                Initialize();
         }
 
         private void updateAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
-            Initialize();
+            if (GitUICommands.Instance.StartUpdateSubmodulesDialog())
+                Initialize();
         }
 
         private void updateAllSubmodulesRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
-            UpdateSubmodulesRecursive();
-            Initialize();
+
+            if (GitUICommands.Instance.StartUpdateSubmodulesRecursiveDialog())
+                Initialize();
+
+
         }
-
-        private static void UpdateSubmodulesRecursive()
-        {
-            string oldworkingdir = Settings.WorkingDir;
-
-            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
-            {
-                if (!string.IsNullOrEmpty(submodule.LocalPath))
-                {
-                    Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                    if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
-                    {
-                        FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
-
-                        UpdateSubmodulesRecursive();
-                    }
-
-                    Settings.WorkingDir = oldworkingdir;
-                }
-            }
-
-            Settings.WorkingDir = oldworkingdir;
-        }
-
 
         private void initializeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1020,8 +980,8 @@ namespace GitUI
 
         private void toolStripSplitStash_ButtonClick(object sender, EventArgs e)
         {
-            new FormStash().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartStashDialog())
+                Initialize();
         }
 
         private void stashChangesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1038,8 +998,8 @@ namespace GitUI
 
         private void viewStashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormStash().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartStashDialog())
+                Initialize();
         }
 
         private void openSubmoduleToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
