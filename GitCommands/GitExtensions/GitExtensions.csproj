@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -56,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoadPlugins.cs" />
+    <Compile Include="GitPluginSettingsContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -82,6 +84,10 @@
     <ProjectReference Include="..\..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
+      <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
+      <Name>AutoCompileSubmodules</Name>
     </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>

@@ -22,6 +22,9 @@ namespace GitExtensions
 
             GitCommands.Settings.LoadSettings();
 
+            //Register pugins
+            PluginLoader.Load();
+
             try
             {
                 if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||

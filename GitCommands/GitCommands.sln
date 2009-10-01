@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "..\GitUI\GitUI.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommands", "GitCommands\GitCommands.csproj", "{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -436,8 +440,53 @@ Global
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|Win32.Build.0 = Unicode Release MinSize|Win32
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|x64.ActiveCfg = Release|Any CPU
 		{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}.Unicode Release MinSize|x64.Build.0 = Unicode Release MinSize|x64
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|Any CPU.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|Win32.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinDependency|x64.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|Any CPU.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|Win32.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release MinSize|x64.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Win32.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|Any CPU.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|Win32.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinDependency|x64.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|Any CPU.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|Win32.ActiveCfg = Release|Any CPU
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Unicode Release MinSize|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 	EndGlobalSection
 EndGlobal
