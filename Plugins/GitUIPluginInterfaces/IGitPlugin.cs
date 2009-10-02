@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GitUI
+namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
         string Description { get; }
 
-        void Register(GitUICommands gitUICommands, IGitPluginSettingsContainer settings);
-        void Execute(GitUIEventArgs gitUICommands);
+        IGitPluginSettingsContainer Settings { get; set;  }
+
+        void Register(IGitUICommands gitUICommands);
+        void Execute(IGitUIEventArgs gitUICommands);
     }
 
     public interface IGitPluginSettingsContainer
     {
         void AddSetting(string name, string defaultValue);
+        void SetSetting(string name, string value);
         string GetSetting(string name);
+        IList<string> GetAvailableSettings();
     }
 }

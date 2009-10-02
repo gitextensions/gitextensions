@@ -38,7 +38,7 @@ namespace GitUI
 
         private void Checkout_Click(object sender, EventArgs e)
         {
-            new FormCheckoutBranck().ShowDialog();
+            GitUICommands.Instance.StartCheckoutBranchDialog();
             MergeConflictHandler.HandleMergeConflicts();
             RevisionGrid.RefreshRevisions();
         }

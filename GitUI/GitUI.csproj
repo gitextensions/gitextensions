@@ -371,7 +371,7 @@
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="GitUIEvents.cs" />
-    <Compile Include="IGitPlugin.cs" />
+    <Compile Include="GitUIPluginCollection.cs" />
     <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="MergePatch.cs">
@@ -648,6 +648,10 @@
     <ProjectReference Include="..\GitCommands\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.Text;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitUIEventArgs
+    public class GitUIEventArgs : IGitUIEventArgs
     {
-        public GitUIEventArgs()
+        public GitUIEventArgs(IGitUICommands gitUICommands)
         {
             Cancel = false;
         }
 
         public bool Cancel { get; set; }
-        public GitUICommands GitUICommands 
+
+        private IGitUICommands gitUICommands;
+        public IGitUICommands GitUICommands 
         {
             get
             {
-                return GitUICommands.Instance;
+                return gitUICommands;
             }
         }
 
@@ -26,6 +29,14 @@ namespace GitUI
             get
             {
                 return Settings.WorkingDir;
+            }
+        }
+
+        public string GitVersion
+        {
+            get
+            {
+                return "171";
             }
         }
 

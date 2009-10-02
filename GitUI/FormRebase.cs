@@ -91,14 +91,13 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            new FormResolveConflicts().ShowDialog();
+            GitUICommands.Instance.StartResolveConflictsDialog();
             EnableButtons();
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
         {
-            FormAddFiles form = new FormAddFiles();
-            form.ShowDialog();
+            GitUICommands.Instance.StartAddFilesDialog();
         }
 
         private void Resolved_Click(object sender, EventArgs e)

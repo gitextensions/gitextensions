@@ -124,7 +124,7 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            new FormResolveConflicts().ShowDialog();
+            GitUICommands.Instance.StartResolveConflictsDialog();
             EnableButtons();
         }
 
@@ -151,8 +151,7 @@ namespace GitUI
 
         private void AddFiles_Click(object sender, EventArgs e)
         {
-            FormAddFiles form = new FormAddFiles();
-            form.ShowDialog();
+            GitUICommands.Instance.StartAddFilesDialog();
         }
 
         private void MergePatch_Load(object sender, EventArgs e)

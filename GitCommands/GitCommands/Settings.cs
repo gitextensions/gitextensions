@@ -367,8 +367,9 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("dictionary", Settings.Dictionary);
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Could not load settigns.\n\n" + ex.Message);
             }
         }
 

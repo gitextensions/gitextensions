@@ -4,10 +4,11 @@ using System.Text;
 using PatchApply;
 using GitCommands;
 using System.IO;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitUICommands
+    public class GitUICommands : IGitUICommands
     {
         private static GitUICommands instance = null;
 
@@ -21,6 +22,9 @@ namespace GitUI
                 return instance;
             }
         }
+
+        public event GitUIEventHandler PreBrowse;
+        public event GitUIEventHandler PostBrowse;
 
         public event GitUIEventHandler PreDeleteBranch;
         public event GitUIEventHandler PostDeleteBranch;
@@ -124,6 +128,19 @@ namespace GitUI
         public bool StartGitCommandProcessDialog(string arguments)
         {
             FormProcess process = new FormProcess(arguments);
+            return true;
+        }
+
+        public bool StartBrowseDialog()
+        {
+            if (!InvokeEvent(PreBrowse))
+                return false;
+
+            FormBrowse form = new FormBrowse();
+            form.ShowDialog();
+
+            InvokeEvent(PostBrowse);
+
             return true;
         }
         
@@ -538,13 +555,20 @@ namespace GitUI
             if (!InvokeEvent(PreUpdateSubmodulesRecursive))
                 return true;
 
-            StartUpdateSubmodulesDialog();
+            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
             UpdateSubmodulesRecursive();
 
             InvokeEvent(PostUpdateSubmodulesRecursive);
 
             return true;
         }
+
+        public bool StartPluginSettingsDialog()
+        {
+            new FormPluginSettings().ShowDialog();
+            return true;
+        }
+        
 
         private static void UpdateSubmodulesRecursive()
         {
@@ -572,7 +596,7 @@ namespace GitUI
 
         internal static bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
         {
-            GitUIEventArgs e = new GitUIEventArgs();
+            GitUIEventArgs e = new GitUIEventArgs(GitUICommands.Instance);
             if (gitUIEventHandler != null)
                 gitUIEventHandler.Invoke(e);
 

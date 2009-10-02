@@ -655,7 +655,7 @@ namespace GitUI
                 form.ShowDialog();
             }
             else
-                new FormDiff().ShowDialog();
+                GitUICommands.Instance.StartCompareRevisionsDialog();
         }
 
         private void Revisions_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -764,18 +764,18 @@ namespace GitUI
 
         private void AddFiles_Click(object sender, EventArgs e)
         {
-            new FormAddFiles().ShowDialog();
+            GitUICommands.Instance.StartAddFilesDialog();
         }
 
         private void Commit_Click(object sender, EventArgs e)
         {
-            new FormCommit().ShowDialog();
+            GitUICommands.Instance.StartCommitDialog();
             RefreshRevisions();
         }
 
         private void GitIgnore_Click(object sender, EventArgs e)
         {
-            new FormGitIgnore().ShowDialog();
+            GitUICommands.Instance.StartEditGitIgnoreDialog();
         }
 
 
@@ -897,11 +897,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            //new FormProcess(GitCommands.GitCommands.DeleteBranchCmd(toolStripItem.Text, false));
-
-            FormDeleteBranch form = new FormDeleteBranch();
-            form.SetBranch(toolStripItem.Text);
-            form.ShowDialog();
+            GitUICommands.Instance.StartDeleteBranchDialog();
 
             ForceRefreshRevisions();
         }
