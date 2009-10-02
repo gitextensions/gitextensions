@@ -154,7 +154,7 @@ namespace GitUI
             //Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                new FormRebase().ShowDialog();
+                GitUICommands.Instance.StartRebaseDialog();
                 if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
                     Close();
             }
@@ -208,7 +208,7 @@ namespace GitUI
 
         private void Stash_Click(object sender, EventArgs e)
         {
-            new FormStash().ShowDialog();
+            GitUICommands.Instance.StartStashDialog();
         }
 
         private void Remotes_DropDown(object sender, EventArgs e)
@@ -240,7 +240,7 @@ namespace GitUI
 
         private void AddRemote_Click(object sender, EventArgs e)
         {
-            new FormRemotes().ShowDialog();
+            GitUICommands.Instance.StartRemotesDialog();
         }
 
         private void AutoStash_CheckedChanged(object sender, EventArgs e)

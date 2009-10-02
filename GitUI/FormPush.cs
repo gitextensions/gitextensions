@@ -89,7 +89,7 @@ namespace GitUI
 
         private void Pull_Click(object sender, EventArgs e)
         {
-            new FormPull().ShowDialog();
+            GitUICommands.Instance.StartPullDialog();
         }
 
         private void FormPush_Load(object sender, EventArgs e)
@@ -106,7 +106,7 @@ namespace GitUI
 
         private void AddRemote_Click(object sender, EventArgs e)
         {
-            new FormRemotes().ShowDialog();
+            GitUICommands.Instance.StartRemotesDialog();
         }
 
         private void Remotes_DropDown(object sender, EventArgs e)

@@ -85,9 +85,17 @@
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
+      <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
+      <Name>AutoCheckForUpdates</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
       <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>

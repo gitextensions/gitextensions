@@ -26,14 +26,14 @@ namespace GitUI
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                new FormResolveConflicts().ShowDialog();
+                GitUICommands.Instance.StartResolveConflictsDialog();
             }
 
             if (GitCommands.GitCommands.InTheMiddleOfPatch())
             {
                 if (MessageBox.Show("You are in the middle of a patch apply, continue patch apply?", "Patch apply", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new MergePatch().ShowDialog();
+                    GitUICommands.Instance.StartApplyPatchDialog();
                 }
             }
             else
@@ -41,7 +41,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormRebase().ShowDialog();
+                    GitUICommands.Instance.StartRebaseDialog();
                 }
             }
       

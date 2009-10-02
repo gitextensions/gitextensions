@@ -155,7 +155,7 @@ namespace GitUI
             if (DiffFiles.SelectedItem is string)
             {
                 {
-                    new FormFileHistory((string)DiffFiles.SelectedItem).ShowDialog();
+                    GitUICommands.Instance.StartFileHistoryDialog((string)DiffFiles.SelectedItem);
                 }
             }
         }

@@ -35,8 +35,8 @@ namespace GitExtensions
                     if (!settings.CheckSettings())
                     {
                         FormSettings.AutoSolveAllSettings();
-                        Application.Run(settings);
-                        //settings.ShowDialog();
+                        //Application.Run();
+                        GitUICommands.Instance.StartSettingsDialog();
                     }
                 }
             }
@@ -58,13 +58,14 @@ namespace GitExtensions
             
             if (args.Length <= 1)
             {
-                Application.Run(new FormBrowse());
+                ////Application.Run();
+                GitUICommands.Instance.StartBrowseDialog();
 
             }else
             if (args.Length > 1 && args[1] == "mergeconflicts")
             {
-                Application.Run(new FormResolveConflicts());
-
+                //Application.Run();
+                GitUICommands.Instance.StartResolveConflictsDialog();
             }
             else
             if (args.Length > 1 && args[1] == "gitbash")
@@ -74,106 +75,126 @@ namespace GitExtensions
             else
             if (args.Length > 1 && args[1] == "gitignore")
             {
-                Application.Run(new FormGitIgnore());
+                //Application.Run();
+                GitUICommands.Instance.StartEditGitIgnoreDialog();
             }
             else
             if (args.Length > 1 && args[1] == "remotes")
             {
-                Application.Run(new FormRemotes());
+                //Application.Run();
+                GitUICommands.Instance.StartRemotesDialog();
             }
             else 
             if (args.Length > 1 && args[1] == "browse")
             {
-                Application.Run(new FormBrowse());
+                //Application.Run();
+                GitUICommands.Instance.StartBrowseDialog();
                 
             }else
             if (args.Length > 1 && (args[1] == "addfiles" || args[1] == "add"))
             {
-                Application.Run(new FormAddFiles());
+                //Application.Run();
+                GitUICommands.Instance.StartAddFilesDialog();
                 
             }else
 
             if (args.Length > 1 && (args[1] == "applypatch" || args[1] == "apply"))
             {
-                Application.Run(new MergePatch());
+                //Application.Run();
+                GitUICommands.Instance.StartApplyPatchDialog();
                 
             }else
 
             if (args.Length > 1 && args[1] == "branch")
             {
-                Application.Run(new FormBranch());
+                //Application.Run();
+                GitUICommands.Instance.StartCreateBranchDialog();
                 
             }else
 
             if (args.Length > 1 && (args[1] == "checkoutbranch" || args[1] == "checkout"))
             {
-                Application.Run(new FormCheckoutBranck());
+                //Application.Run();
+                GitUICommands.Instance.StartCheckoutBranchDialog();
                 
             }else
             if (args.Length > 1 && args[1] == "checkoutrevision")
             {
-                Application.Run(new FormCheckout());
+                //Application.Run();
+                GitUICommands.Instance.StartCheckoutRevisionDialog();
                 
             }else
             if (args.Length > 1 && args[1] == "init")
             {
-                FormInit frm = new FormInit(args[2]);
-                Application.Run(frm);
+                //Application.Run();
+                GitUICommands.Instance.StartInitializeDialog(args[2]);
 
             }
             else 
             if (args.Length > 1 && args[1] == "clone")
             {
-                Application.Run(new FormClone());
+                //Application.Run();
+                GitUICommands.Instance.StartCloneDialog();
                 
             }else
             if (args.Length > 1 && args[1] == "commit")
             {
-                Application.Run(new FormCommit());
+                //Application.Run();
+                GitUICommands.Instance.StartCommitDialog();
                 
             }else
             if (args.Length > 1 && args[1] == "filehistory")
             {
                 if (args.Length > 2)
-                    Application.Run(new FormFileHistory(args[2]));
+                {
+                    //Application.Run();
+                    GitUICommands.Instance.StartFileHistoryDialog(args[2]);
+                }
                 else
                     MessageBox.Show("No file selected");
                 
             } else
             if (args.Length > 1 && args[1] == "formatpatch")
             {
-                Application.Run(new FormFormatPath());
+                //Application.Run();
+                GitUICommands.Instance.StartFormatPatchDialog();
                 
             }else
             if (args.Length > 1 && args[1] == "pull")
             {
-                Application.Run(new FormPull());
-                
+                //Application.Run();
+                GitUICommands.Instance.StartPullDialog();
             }else
             if (args.Length > 1 && args[1] == "push")
             {
-                Application.Run(new FormPush());
+                //Application.Run();
+                GitUICommands.Instance.StartPushDialog();
             }else
             if (args.Length > 1 && args[1] == "settings")
             {
-                Application.Run(new FormSettings());
+                //Application.Run();
+                GitUICommands.Instance.StartSettingsDialog();
             } else
             if (args.Length > 1 && args[1] == "viewdiff")
             {
-                Application.Run(new FormDiff());
+                //Application.Run();
+                GitUICommands.Instance.StartCompareRevisionsDialog();
             } else
             if (args.Length > 1 && args[1] == "rebase")
             {
-                Application.Run(new FormRebase());
+                //Application.Run();
+                GitUICommands.Instance.StartRebaseDialog();
             }
             else
             if (args.Length > 1 && args[1] == "merge")
             {
-                Application.Run(new FormMergeBranch());
+                //Application.Run();
+                GitUICommands.Instance.StartMergeBranchDialog();
             } else
             if (args.Length > 1 && args[1] == "cherry")
             {
-                Application.Run(new FormCherryPick());
+                //Application.Run();
+                GitUICommands.Instance.StartCherryPickDialog();
             } else
             if (args.Length > 1 && args[1] == "revert")
             {
@@ -182,7 +203,8 @@ namespace GitExtensions
             else
             if (args.Length > 1 && args[1] == "tag")
             {
-                Application.Run(new FormTag());
+                //Application.Run();
+                GitUICommands.Instance.StartCreateTagDialog();
             } else
             if (args.Length > 1 && args[1] == "about")
             {
@@ -191,7 +213,8 @@ namespace GitExtensions
             else
                 if (args.Length > 1 && args[1] == "stash")
                 {
-                    Application.Run(new FormStash());
+                    //Application.Run();
+                    GitUICommands.Instance.StartStashDialog();
                 }
                 else
                     if (args.Length > 1)

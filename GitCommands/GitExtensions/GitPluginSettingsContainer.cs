@@ -4,6 +4,7 @@ using System.Text;
 using GitUI;
 using System.Collections;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitExtensions
 {
@@ -19,7 +20,7 @@ namespace GitExtensions
 
         public void AddSetting(string name, string defaultValue)
         {
-            string value = Application.UserAppDataRegistry.GetValue(name) as string;
+            string value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
 
             if (value == null)
             {
@@ -53,6 +54,17 @@ namespace GitExtensions
                 return settings[name];
 
             return (string)value;
+        }
+
+        public IList<string> GetAvailableSettings()
+        {
+            IList<string> keys = new List<string>(settings.Keys.Count);
+            foreach (string key in settings.Keys)
+            {
+                keys.Add(key);
+            }
+
+            return keys;
         }
     }
 }

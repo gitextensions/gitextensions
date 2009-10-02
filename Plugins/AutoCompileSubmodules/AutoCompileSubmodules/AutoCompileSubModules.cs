@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GitUI;
 using System.Windows.Forms;
 using System.IO;
+using GitUIPluginInterfaces;
 
 namespace AutoCompileSubmodules
 {
     public class AutoCompileSubModules : IGitPlugin
     {
-        //Description of the submodule
+        //Description of the plugin
         public string Description 
         {
             get
@@ -19,7 +19,18 @@ namespace AutoCompileSubmodules
         }
 
         //Store settings to use later
-        private IGitPluginSettingsContainer Settings;
+        private IGitPluginSettingsContainer settings;
+        public IGitPluginSettingsContainer Settings 
+        {
+            get
+            {
+                return settings;
+            }
+            set
+            {
+                settings = value;
+            }
+        }
 
         private string FindMsBuild()
         {
@@ -29,55 +40,73 @@ namespace AutoCompileSubmodules
             return "";
         }
 
-        public void Register(GitUICommands gitUICommands, IGitPluginSettingsContainer settings)
+        public void Register(IGitUICommands gitUICommands)
         {
             //Register settings
-            settings.AddSetting("MsBuild path", FindMsBuild());
-            settings.AddSetting("MsBuild arguments", "/p:Configuration=Debug");
-            Settings = settings;
+            Settings.AddSetting("Enabled (true / false)", "false");
+            Settings.AddSetting("Path to msbuild.exe", FindMsBuild());
+            Settings.AddSetting("msbuild.exe arguments", "/p:Configuration=Debug");
 
             //Connect to events
             gitUICommands.PostUpdateSubmodules += new GitUIEventHandler(gitUICommands_PostUpdateSubmodules);
+            gitUICommands.PostUpdateSubmodulesRecursive += new GitUIEventHandler(gitUICommands_PostUpdateSubmodulesRecursive);
+        }
+
+        void gitUICommands_PostUpdateSubmodulesRecursive(IGitUIEventArgs e)
+        {
+            Execute(e);
         }
 
 
         /// <summary>
         /// Automaticly compile all solution files found in any submodule
         /// </summary>
-        void gitUICommands_PostUpdateSubmodules(GitUIEventArgs e)
+        void gitUICommands_PostUpdateSubmodules(IGitUIEventArgs e)
         {
             Execute(e);
         }
 
-        public void Execute(GitUIEventArgs e)
+        public void Execute(IGitUIEventArgs e)
         {
-            DirectoryInfo workingDir = new DirectoryInfo(e.GitWorkingDir);
-            DirectoryInfo[] repositories = workingDir.GetDirectories(".git", SearchOption.AllDirectories);
-
-            string arguments = Settings.GetSetting("MsBuild arguments");
-            string msbuildpath = Settings.GetSetting("MsBuild path");
-
-            //Loop through all .git directories
-            foreach (DirectoryInfo repositoryDirectory in repositories)
+            //Only build when plugin is enabled
+            if (Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(e.GitWorkingDir))
             {
-                //When the parent dir is not equal to the current working dir, it is a submodule
-                if (repositoryDirectory.Parent != workingDir)
+                string arguments = Settings.GetSetting("msbuild.exe arguments");
+                string msbuildpath = Settings.GetSetting("Path to msbuild.exe");
+
+                DirectoryInfo workingDir = new DirectoryInfo(e.GitWorkingDir);
+                FileInfo[] solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
+
+                for (int n = solutionFiles.Length -1; n > 0; n--)
                 {
+                    FileInfo solutionFile = solutionFiles[n];
 
-                    FileInfo[] solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
+                    DialogResult result = MessageBox.Show("Do you want to build " + solutionFile.Name + "?\n\n" + SolutionFilesToString(solutionFiles), "Build", MessageBoxButtons.YesNoCancel);
 
-                    foreach (FileInfo solutionFile in solutionFiles)
+                    if (result == DialogResult.Cancel)
+                        return;
+
+                    if (result == DialogResult.Yes)
                     {
-                        if (MessageBox.Show("Do you want to build " + solutionFile.Name + "?", "Build", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
-                                MessageBox.Show("Please enter correct MSBuild path and try again.");
-                            else
-                                e.GitUICommands.StartCommandLineProcessDialog(msbuildpath, solutionFile.FullName + " " + arguments);
-                        }
+                        if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
+                            MessageBox.Show("Please enter correct MSBuild path in the plugin settings dialog and try again.");
+                        else
+                            e.GitUICommands.StartCommandLineProcessDialog(msbuildpath, solutionFile.FullName + " " + arguments);
                     }
                 }
             }
+        }
+
+        private string SolutionFilesToString(FileInfo[] solutionFiles)
+        {
+            StringBuilder solutionString = new StringBuilder();
+            for (int n = solutionFiles.Length - 1; n > 0; n--)
+            {
+                FileInfo solutionFile = solutionFiles[n]; 
+                solutionString.Append(solutionFile.Name);
+                solutionString.Append("\n");
+            }
+            return solutionString.ToString();
         }
     }
 }

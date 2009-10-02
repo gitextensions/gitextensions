@@ -68,62 +68,69 @@ namespace GitUI
 
         private void LoadSettings()
         {
-            SmtpServer.Text = GitCommands.Settings.Smtp;
+            try
+            {
+                SmtpServer.Text = GitCommands.Settings.Smtp;
 
-            MaxCommits.Value = GitCommands.Settings.MaxCommits;
+                MaxCommits.Value = GitCommands.Settings.MaxCommits;
 
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+                GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-            GitPath.Text = GitCommands.Settings.GitDir;
-            GitBinPath.Text = GitCommands.Settings.GitBinDir;
+                GitPath.Text = GitCommands.Settings.GitDir;
+                GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
-            UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
-            UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
-            Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
-            MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
+                UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
+                UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
+                Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
+                MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
 
-            Dictionary.Text = GitCommands.Settings.Dictionary;
+                Dictionary.Text = GitCommands.Settings.Dictionary;
 
-            GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
-            GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
-            GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
-            GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
+                GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
+                GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
+                GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
+                GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
 
-            SetCheckboxFromString(KeepMergeBackup, GitCommands.GitCommands.GetSetting("mergetool.keepBackup"));
-        	SetComboBoxFromString(LocalAutoCRLF, GitCommands.GitCommands.GetSetting("core.autocrlf"));
+                SetCheckboxFromString(KeepMergeBackup, GitCommands.GitCommands.GetSetting("mergetool.keepBackup"));
+                SetComboBoxFromString(LocalAutoCRLF, GitCommands.GitCommands.GetSetting("core.autocrlf"));
 
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
 
-            SetCheckboxFromString(GlobalKeepMergeBackup, gitCommands.GetGlobalSetting("mergetool.keepBackup"));
-			SetComboBoxFromString(GlobalAutoCRLF, gitCommands.GetGlobalSetting("core.autocrlf"));
+                SetCheckboxFromString(GlobalKeepMergeBackup, gitCommands.GetGlobalSetting("mergetool.keepBackup"));
+                SetComboBoxFromString(GlobalAutoCRLF, gitCommands.GetGlobalSetting("core.autocrlf"));
 
-            PlinkPath.Text = GitCommands.Settings.Plink;
-            PuttygenPath.Text = GitCommands.Settings.Puttygen;
-            PageantPath.Text = GitCommands.Settings.Pageant;
-            AutostartPageant.Checked = GitCommands.Settings.AutoStartPageant;
+                PlinkPath.Text = GitCommands.Settings.Plink;
+                PuttygenPath.Text = GitCommands.Settings.Puttygen;
+                PageantPath.Text = GitCommands.Settings.Pageant;
+                AutostartPageant.Checked = GitCommands.Settings.AutoStartPageant;
 
-            CloseProcessDialog.Checked = GitCommands.Settings.CloseProcessDialog;
-            ShowRevisionGraph.Checked = GitCommands.Settings.ShowRevisionGraph;
-            ShowGitCommandLine.Checked = GitCommands.Settings.ShowGitCommandLine;
+                CloseProcessDialog.Checked = GitCommands.Settings.CloseProcessDialog;
+                ShowRevisionGraph.Checked = GitCommands.Settings.ShowRevisionGraph;
+                ShowGitCommandLine.Checked = GitCommands.Settings.ShowGitCommandLine;
 
-            UseFastChecks.Checked = GitCommands.Settings.UseFastChecks;
-            ShowRelativeDate.Checked = GitCommands.Settings.RelativeDate;
+                UseFastChecks.Checked = GitCommands.Settings.UseFastChecks;
+                ShowRelativeDate.Checked = GitCommands.Settings.RelativeDate;
 
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
-                OpenSSH.Checked = true;
-            else
-                if (GitCommands.GitCommands.Plink())
-                    Putty.Checked = true;
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
+                    OpenSSH.Checked = true;
                 else
-                {
-                    OtherSsh.Text = GitCommands.GitCommands.GetSsh();
-                    Other.Checked = true;
-                }
+                    if (GitCommands.GitCommands.Plink())
+                        Putty.Checked = true;
+                    else
+                    {
+                        OtherSsh.Text = GitCommands.GitCommands.GetSsh();
+                        Other.Checked = true;
+                    }
 
-            EnableSshOptions();
+                EnableSshOptions();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not load settigns.\n\n" + ex.Message);
+            }
         }
 
         private void UserName_TextChanged(object sender, EventArgs e)

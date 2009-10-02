@@ -11,6 +11,7 @@ using PatchApply;
 using System.IO;
 using GitUI.Properties;
 using Settings=GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -39,6 +40,7 @@ namespace GitUI
 
         private void Browse_Load(object sender, EventArgs e)
         {
+            bool t = Application.MessageLoop;
 			// Restore eventual saved Windows state
         	RestoreWindowsPositionAndState();
 
@@ -48,6 +50,29 @@ namespace GitUI
             RevisionGrid.ChangedCurrentBranch += RevisionGrid_ChangedCurrentBranch;
             indexWatcher.Changed += new EventHandler(indexWatcher_Changed);
             indexWatcher.Reset();
+
+            foreach (IGitPlugin plugin in GitUIPluginCollection.Plugins)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem();
+                item.Text = plugin.Description;
+                item.Tag = plugin;
+                item.Click += new EventHandler(item_Click);
+                pluginsToolStripMenuItem.DropDownItems.Add(item);
+            }
+        }
+
+        void item_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            if (menuItem != null)
+            {
+                IGitPlugin plugin = menuItem.Tag as IGitPlugin;
+                if (plugin != null)
+                {
+                    GitUIEventArgs eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+                    plugin.Execute(eventArgs);
+                }
+            }
         }
 
 		private void RestoreWindowsPositionAndState()
@@ -160,6 +185,23 @@ namespace GitUI
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
 
+            if (NoGit.Visible)
+            {
+                int xStart = 10;
+                int yStart = 25;
+                RecentRepositoriesGroupBox.Controls.Clear();
+
+                foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
+                {
+                    LinkLabel label = new LinkLabel();
+                    label.Text = historyItem;
+                    label.Location = new Point(xStart, yStart);
+                    label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
+                    label.Click += new EventHandler(label_Click);
+                    RecentRepositoriesGroupBox.Controls.Add(label);
+                    yStart += 20;
+                }
+            }
 
             if (hard)
                 ShowRevisions();
@@ -211,12 +253,28 @@ namespace GitUI
 
         }
 
+        void label_Click(object sender, EventArgs e)
+        {
+            LinkLabel label = sender as LinkLabel;
+            if (label != null && !string.IsNullOrEmpty(label.Text))
+            {
+                Settings.WorkingDir = label.Text;
+                RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+
+                indexWatcher.Clear();
+                RevisionGrid.ForceRefreshRevisions();
+                InternalInitialize(false);
+                indexWatcher.Reset();
+            }
+
+        }
+
         void rebase_Click(object sender, EventArgs e)
         {
             if (GitCommands.GitCommands.InTheMiddleOfRebase())
-                new FormRebase().ShowDialog();
+                GitUICommands.Instance.StartRebaseDialog();
             else
-                new MergePatch().ShowDialog();
+                GitUICommands.Instance.StartApplyPatchDialog();
             Initialize();
         }
 
@@ -751,7 +809,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
             {
-                openToolStripMenuItem_Click(sender, e);
+                //openToolStripMenuItem_Click(sender, e);
             }
         }
 
@@ -1072,6 +1130,26 @@ namespace GitUI
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitUICommands.Instance.StartPluginSettingsDialog();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.WorkingDir = "";
+
+            indexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
+            indexWatcher.Reset();
+        }
+
+        private void Donate_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
 
     }

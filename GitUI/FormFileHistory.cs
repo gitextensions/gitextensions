@@ -117,7 +117,7 @@ namespace GitUI
                 form.ShowDialog();
             }
             else
-                new FormDiff().ShowDialog();
+                GitUICommands.Instance.StartCompareRevisionsDialog();
 
         }
 

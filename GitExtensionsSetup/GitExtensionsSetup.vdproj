@@ -33,18 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_17D1916ED0D149B0B8D0F1CD11BE8095"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_197F0F3EF0634730879BC1EFF5B81700"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1A7AD49BC07C4A0E90A6C48D35588836"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -94,6 +82,12 @@
         "Entry"
         {
         "MsmKey" = "8:_48CBE837DDC6474B88C37C3E1E4C5833"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -153,6 +147,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_99E19ACC44714919A002B8FFE4868267"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9AC172A85E904390ABAC6CD994495461"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -177,6 +177,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9DE8C595CF9C4327BFD341D221704F09"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A42D69E82C7E472D855CCDF88F110F84"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -190,7 +196,7 @@
         "Entry"
         {
         "MsmKey" = "8:_AEAF37DF789A91E7B79A04036D679DD0"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "OwnerKey" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -243,6 +249,36 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "OwnerKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "OwnerKey" = "8:_9DE8C595CF9C4327BFD341D221704F09"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "OwnerKey" = "8:_99E19ACC44714919A002B8FFE4868267"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "OwnerKey" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D14F1FCADBE54AE787FB7FBD0FB6C498"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DBBB470F70D62A6540B1E2E98AC9DA2F"
         "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
         "MsmSig" = "8:_UNDEFINED"
@@ -250,13 +286,7 @@
         "Entry"
         {
         "MsmKey" = "8:_ED0AFD483F5E1D0EE05463DF6AF75094"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -267,8 +297,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F93871A8BA9C4EF5A4355B3343BDC645"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+        "OwnerKey" = "8:_9DE8C595CF9C4327BFD341D221704F09"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -292,7 +334,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AEAF37DF789A91E7B79A04036D679DD0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_99E19ACC44714919A002B8FFE4868267"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -407,31 +461,31 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A848F61D95E6410999A9E6134DB0E706"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_4F2142ABC8884EFB94FF208F031BFF48"
             {
-            "Name" = "8:KDiff3Setup_0.9.94.exe"
+            "Name" = "8:KDiff3Setup_0.9.95.exe"
             "Condition" = "8:INSTALL_KDIFF3"
-            "Object" = "8:_197F0F3EF0634730879BC1EFF5B81700"
+            "Object" = "8:_D14F1FCADBE54AE787FB7FBD0FB6C498"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:/Install"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_B4D3DD58_470B_4005_939E_34F7EE10BCAD"
+            "Identifier" = "8:_C050E76F_C69B_4C98_A024_03B777EB76D5"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C752F4E059164F1A823FFFB1CEDEC432"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D095041932F94055BF57DAEBE99AD93A"
             {
-            "Name" = "8:Git-1.6.3.2-preview20090608.exe"
+            "Name" = "8:Git-1.6.4-preview20090730.exe"
             "Condition" = "8:INSTALL_MSYSGIT"
-            "Object" = "8:_17D1916ED0D149B0B8D0F1CD11BE8095"
+            "Object" = "8:_F93871A8BA9C4EF5A4355B3343BDC645"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:/Install"
             "EntryPoint" = "8:"
             "Sequence" = "3:2"
-            "Identifier" = "8:_D40B8B02_2094_465D_AADC_FF322D8D5BC6"
+            "Identifier" = "8:_291972D0_9BC9_4619_A232_A38240CDF2A2"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -505,46 +559,6 @@
             "Tag" = "8:"
             "Folder" = "8:_D7C3DA4D0E3449789BCE3E86E407E5E1"
             "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_17D1916ED0D149B0B8D0F1CD11BE8095"
-            {
-            "SourcePath" = "8:..\\Bin\\Git-1.6.3.2-preview20090608.exe"
-            "TargetName" = "8:Git-1.6.3.2-preview20090608.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
-            "Condition" = "8:INSTALL_MSYSGIT"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_197F0F3EF0634730879BC1EFF5B81700"
-            {
-            "SourcePath" = "8:..\\Bin\\KDiff3Setup_0.9.94.exe"
-            "TargetName" = "8:KDiff3Setup_0.9.94.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
-            "Condition" = "8:INSTALL_KDIFF3"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -751,6 +765,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_573B75487B944FA69F7FBA19A5A1A8D0"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GitExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_573B75487B944FA69F7FBA19A5A1A8D0"
+                    {
+                    "Name" = "8:GitExtensions.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\GitCommands\\GitExtensions\\bin\\Release\\GitExtensions.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_59D43B8B780A44258A501DEF9982D146"
             {
             "SourcePath" = "8:..\\Bin\\GitExtensionsUserManual.pdf"
@@ -852,7 +897,7 @@
                     "_7DAFBC5D776A604416EC151FCE738C19"
                     {
                     "Name" = "8:ICSharpCode.TextEditor.DLL"
-                    "Attributes" = "3:576"
+                    "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:ICSharpCode.TextEditor.DLL"
@@ -860,7 +905,7 @@
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
-            "Transitive" = "11:TRUE"
+            "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -917,7 +962,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3522.22926, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3564.19982, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -951,6 +996,37 @@
             "Tag" = "8:"
             "Folder" = "8:_B87A411EFCD54B309F33A0BDA5CA6F5C"
             "Condition" = "8:INSTALLVS2005"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_99E19ACC44714919A002B8FFE4868267"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:AutoCheckForUpdates, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_99E19ACC44714919A002B8FFE4868267"
+                    {
+                    "Name" = "8:AutoCheckForUpdates.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Plugins\\AutoCheckForUpdates\\bin\\Release\\AutoCheckForUpdates.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DA14DB54FEAC4B3FB4E6BA03BF075480"
+            "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1030,6 +1106,37 @@
             "TargetName" = "8:es-ES.dic"
             "Tag" = "8:"
             "Folder" = "8:_D7C3DA4D0E3449789BCE3E86E407E5E1"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9DE8C595CF9C4327BFD341D221704F09"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:AutoCompileSubmodules, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9DE8C595CF9C4327BFD341D221704F09"
+                    {
+                    "Name" = "8:AutoCompileSubmodules.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Plugins\\AutoCompileSubmodules\\AutoCompileSubmodules\\bin\\Release\\AutoCompileSubmodules.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DA14DB54FEAC4B3FB4E6BA03BF075480"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1170,7 +1277,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3522.22926, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3564.19982, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1228,6 +1335,57 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D08E50D2F0793CA20E974F99314FFEA1"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GitUIPluginInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_D08E50D2F0793CA20E974F99314FFEA1"
+                    {
+                    "Name" = "8:GitUIPluginInterfaces.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:GitUIPluginInterfaces.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D14F1FCADBE54AE787FB7FBD0FB6C498"
+            {
+            "SourcePath" = "8:..\\Bin\\KDiff3Setup_0.9.95.exe"
+            "TargetName" = "8:KDiff3Setup_0.9.95.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
+            "Condition" = "8:INSTALL_KDIFF3"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DBBB470F70D62A6540B1E2E98AC9DA2F"
             {
             "SourcePath" = "8:dte80.olb"
@@ -1258,41 +1416,10 @@
                     "_ED0AFD483F5E1D0EE05463DF6AF75094"
                     {
                     "Name" = "8:GitUI.DLL"
-                    "Attributes" = "3:516"
-                    }
-                }
-            "SourcePath" = "8:GitUI.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:TRUE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F341A1E8640E462A825A2ACC56D6128A"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F341A1E8640E462A825A2ACC56D6128A"
-                    {
-                    "Name" = "8:GitExtensions.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\GitCommands\\GitExtensions\\bin\\Release\\GitExtensions.exe"
+            "SourcePath" = "8:GitUI.DLL"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
@@ -1307,7 +1434,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F66E3F334B75D4BCC3A44ECE11F14ED7"
@@ -1328,6 +1455,26 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F93871A8BA9C4EF5A4355B3343BDC645"
+            {
+            "SourcePath" = "8:..\\Bin\\Git-1.6.4-preview20090730.exe"
+            "TargetName" = "8:Git-1.6.4-preview20090730.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_3BE7409CC92F43B388137C1281DE9AC9"
+            "Condition" = "8:INSTALL_MSYSGIT"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -1500,6 +1647,17 @@
                         {
                         }
                     }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_DA14DB54FEAC4B3FB4E6BA03BF075480"
+                    {
+                    "Name" = "8:Plugins"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_2435AEAE0257471AA48DEE9C10BA3BD0"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -1519,7 +1677,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{3E5DCBB4-4BC6-4040-A0AD-ACFF85860152}"
+        "PackageCode" = "8:{0D3CBDE2-7478-4C72-91A9-F3BDA8FAC1F1}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1702,7 +1860,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+            "Target" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
             "Folder" = "8:_8279FCBF20684581A1576352FEACEA09"
             "WorkingFolder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Icon" = "8:_003AA43D935B4F8DA4130EC0304368B3"
@@ -1716,7 +1874,7 @@
             "ShowCmd" = "3:3"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_F341A1E8640E462A825A2ACC56D6128A"
+            "Target" = "8:_573B75487B944FA69F7FBA19A5A1A8D0"
             "Folder" = "8:_10F9618BDF3040938E9E9BCC29522757"
             "WorkingFolder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Icon" = "8:_003AA43D935B4F8DA4130EC0304368B3"
@@ -2002,7 +2160,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:msysgit (1.6.3.2)"
+                            "Value" = "8:msysgit (1.6.4)"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -2054,7 +2212,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:KDiff3"
+                            "Value" = "8:KDiff3 (0.9.95)"
                             "DefaultValue" = "8:#1235"
                             "UsePlugInResources" = "11:TRUE"
                             }

@@ -376,8 +376,8 @@ namespace GitUI
 
         private void AddManyFiles_Click(object sender, EventArgs e)
         {
-            new FormAddFiles().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartAddFilesDialog())
+               Initialize();
         }
 
         private void Amend_Click(object sender, EventArgs e)
@@ -439,8 +439,8 @@ namespace GitUI
 
         private void SolveMergeconflicts_Click(object sender, EventArgs e)
         {
-            new FormResolveConflicts().ShowDialog();
-            Initialize();
+            if (GitUICommands.Instance.StartResolveConflictsDialog())
+                Initialize();
         }
 
         private void deleteSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -478,7 +478,7 @@ namespace GitUI
 
         private void eToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormGitIgnore().ShowDialog();
+            GitUICommands.Instance.StartEditGitIgnoreDialog();
             Initialize();
         }
 
@@ -502,7 +502,7 @@ namespace GitUI
             if (Unstaged.SelectedRows[0].DataBoundItem is GitItemStatus)
             {
                 {
-                    new FormFileHistory(((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem).Name).ShowDialog();
+                    GitUICommands.Instance.StartFileHistoryDialog(((GitItemStatus)Unstaged.SelectedRows[0].DataBoundItem).Name);
                 }
             }
         }

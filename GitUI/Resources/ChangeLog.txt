@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Version 1.71
+	Added support for plugin
+	Added "Check for updates" plugin
+	Added "Auto compile submodules" plugin
+	Improved start page
+	Added Close to file menu
+	Packed with Git-1.6.4
+	Packed with KDiff3 0.9.95
+
 Version 1.70
 	Added support for mergeconflict on submodules
 	Local AutoCRLF now has three options: true, false, input

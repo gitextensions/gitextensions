@@ -84,7 +84,7 @@ namespace GitUI
         private void UpdateSubmodule_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(SubModuleName.Text));
+            GitUICommands.Instance.StartUpdateSubmodulesDialog();
             Initialize();
         }
 
