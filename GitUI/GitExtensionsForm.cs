@@ -13,6 +13,8 @@ namespace GitUI
                 this.ShowInTaskbar = false;
             else
                 this.ShowInTaskbar = true;
+
+            this.AutoScaleMode = AutoScaleMode.None;
         }
     }
 }
