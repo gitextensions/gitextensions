@@ -5,6 +5,7 @@ using PatchApply;
 using GitCommands;
 using System.IO;
 using GitUIPluginInterfaces;
+using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -596,12 +597,19 @@ namespace GitUI
 
         internal static bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
         {
-            GitUIEventArgs e = new GitUIEventArgs(GitUICommands.Instance);
-            if (gitUIEventHandler != null)
-                gitUIEventHandler.Invoke(e);
+            try
+            {
+                GitUIEventArgs e = new GitUIEventArgs(GitUICommands.Instance);
+                if (gitUIEventHandler != null)
+                    gitUIEventHandler.Invoke(e);
 
-            return !e.Cancel;
-
+                return !e.Cancel;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception");
+            }
+            return true;
         }
 
     }

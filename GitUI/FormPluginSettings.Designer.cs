@@ -66,6 +66,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPluginSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugin settings";
             this.Load += new System.EventHandler(this.FormPluginSettings_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPluginSettings_FormClosing);

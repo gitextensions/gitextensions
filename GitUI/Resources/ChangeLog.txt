@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.72
+	Fixed bug in "Auto compile submodules" plugin
+	Added progress dialgo to "Check for updates" plugin
+
 Version 1.71
 	Added support for plugin
 	Added "Check for updates" plugin

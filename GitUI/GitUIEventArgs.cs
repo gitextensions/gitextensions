@@ -11,6 +11,7 @@ namespace GitUI
         public GitUIEventArgs(IGitUICommands gitUICommands)
         {
             Cancel = false;
+            this.gitUICommands = gitUICommands;
         }
 
         public bool Cancel { get; set; }
@@ -36,7 +37,7 @@ namespace GitUI
         {
             get
             {
-                return "171";
+                return "172";
             }
         }
 

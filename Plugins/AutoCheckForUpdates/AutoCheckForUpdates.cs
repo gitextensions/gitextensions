@@ -58,44 +58,19 @@ namespace AutoCheckForUpdates
                 if (DateTime.ParseExact(Settings.GetSetting("Last check (yyyy/M/dd)"), "yyyy/M/dd", CultureInfo.InvariantCulture).AddDays(7) < DateTime.Now)
                 {
                     Settings.SetSetting("Last check (yyyy/M/dd)", DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
-                    CheckForUpdate(e);
+
+                    Updates updateForm = new Updates(e.GitVersion);
+                    updateForm.AutoClose = true;
+                    updateForm.ShowDialog();
                 }
             }
         }
 
         public void Execute(IGitUIEventArgs e)
         {
-            if (!CheckForUpdate(e))
-                MessageBox.Show("No updates found.");
-        }
-
-        private static bool CheckForUpdate(IGitUIEventArgs e)
-        {
-            WebRequest myWebRequest = WebRequest.Create(@"http://code.google.com/p/gitextensions/");
-            WebResponse myWebResponse = myWebRequest.GetResponse();
-            Stream ReceiveStream = myWebResponse.GetResponseStream();
-            Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
-
-            StreamReader readStream = new StreamReader(ReceiveStream, encode);
-            string response = readStream.ReadToEnd();
-            readStream.Close();
-            myWebResponse.Close();
-
-            //find for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-            Regex regEx = new Regex(@"http://gitextensions.googlecode.com/files/GitExtensions[0-9][0-9][0-9]SetupComplete.msi");
-
-            MatchCollection matches = regEx.Matches(response);
-
-            foreach (Match match in matches)
-            {
-                if (!match.Value.Equals("http://gitextensions.googlecode.com/files/GitExtensions" + e.GitVersion + "SetupComplete.msi"))
-                {
-                    new Updates(match.Value).ShowDialog();
-                    return true;
-                }
-            }
-
-            return false;
+            Updates updateForm = new Updates(e.GitVersion);
+            updateForm.AutoClose = false;
+            updateForm.ShowDialog();
         }
     }
 }
