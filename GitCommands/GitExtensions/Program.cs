@@ -50,11 +50,14 @@ namespace GitExtensions
                     GitCommands.Settings.WorkingDir = args[2];
 
                 if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
-                    GitCommands.Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
+                {
+                    if (args[2].Contains("\\"))
+                        GitCommands.Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
+                }
+            }
 
-                if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
-                    GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
-            } 
+            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
+                GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
             
             if (args.Length <= 1)
             {
@@ -151,7 +154,7 @@ namespace GitExtensions
                     GitUICommands.Instance.StartFileHistoryDialog(args[2]);
                 }
                 else
-                    MessageBox.Show("No file selected");
+                    MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
                 
             } else
             if (args.Length > 1 && args[1] == "formatpatch")
