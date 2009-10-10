@@ -387,6 +387,7 @@
     <Compile Include="OpenDirectory.Designer.cs">
       <DependentUpon>OpenDirectory.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenWith.cs" />
     <Compile Include="PatchGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>

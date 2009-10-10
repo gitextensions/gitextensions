@@ -76,6 +76,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
             this.DiffText = new GitUI.FileViewer();
+            this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -181,6 +183,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.TreeContextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
@@ -650,6 +653,7 @@
             // GitTree
             // 
             this.GitTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GitTree.HideSelection = false;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
             this.GitTree.Size = new System.Drawing.Size(213, 254);
@@ -657,6 +661,7 @@
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
             this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
             this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.GitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GitTree_MouseDown);
             // 
             // FileText
             // 
@@ -713,6 +718,19 @@
             this.DiffText.Name = "DiffText";
             this.DiffText.Size = new System.Drawing.Size(567, 260);
             this.DiffText.TabIndex = 0;
+            // 
+            // TreeContextMenu
+            // 
+            this.TreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem});
+            this.TreeContextMenu.Name = "TreeContextMenu";
+            this.TreeContextMenu.Size = new System.Drawing.Size(99, 26);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.saveToolStripMenuItem.Text = "Save";
             // 
             // menuStrip1
             // 
@@ -1370,6 +1388,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.TreeContextMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
@@ -1503,5 +1522,7 @@
         private System.Windows.Forms.SplitContainer splitContainer7;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button Donate;
+        private System.Windows.Forms.ContextMenuStrip TreeContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }
