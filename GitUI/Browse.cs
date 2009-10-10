@@ -198,6 +198,17 @@ namespace GitUI
                     label.Location = new Point(xStart, yStart);
                     label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
                     label.Click += new EventHandler(label_Click);
+                   
+
+                    ToolTip toolTip = new ToolTip();
+                    toolTip.InitialDelay = 0;
+                    toolTip.AutomaticDelay = 0;
+                    toolTip.AutoPopDelay = 0;
+                    toolTip.UseFading = false;
+                    toolTip.UseAnimation = false;
+                    toolTip.ReshowDelay = 0;
+                    toolTip.SetToolTip(label, label.Text);
+
                     RecentRepositoriesGroupBox.Controls.Add(label);
                     yStart += 20;
                 }
@@ -1150,6 +1161,22 @@ namespace GitUI
         private void Donate_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+        }
+
+        public override void cancelButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(Settings.WorkingDir))
+            {
+                Close();
+            } else
+            {
+                Settings.WorkingDir = "";
+
+                indexWatcher.Clear();
+                RevisionGrid.ForceRefreshRevisions();
+                InternalInitialize(false);
+                indexWatcher.Reset();
+            }
         }
 
     }

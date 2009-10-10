@@ -83,7 +83,10 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.BName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormBranchSmall";
             this.Text = "Create branch";
             this.ResumeLayout(false);

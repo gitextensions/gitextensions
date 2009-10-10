@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPush));
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Push = new System.Windows.Forms.Button();
@@ -50,6 +51,7 @@
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
             this.BranchTab = new System.Windows.Forms.TabPage();
             this.TagTab = new System.Windows.Forms.TabPage();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -150,6 +152,7 @@
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 19;
             this.PullFromUrl.Text = "Url";
+            this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
             this.PullFromUrl.UseVisualStyleBackColor = true;
             this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
             // 
@@ -159,10 +162,11 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(110, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 18;
             this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote repository";
+            this.PullFromRemote.Text = "Remote";
+            this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
             // 
@@ -304,7 +308,10 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Push);
             this.Controls.Add(this.Pull);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
@@ -345,5 +352,6 @@
         private System.Windows.Forms.TabPage BranchTab;
         private System.Windows.Forms.TabPage TagTab;
         private System.Windows.Forms.CheckBox PushAllTags;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

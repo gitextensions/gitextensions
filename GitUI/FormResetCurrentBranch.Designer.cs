@@ -166,7 +166,10 @@
             this.Controls.Add(this.Author);
             this.Controls.Add(this.Commit);
             this.Controls.Add(this.BranchInfo);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormResetCurrentBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Reset current branch";

@@ -70,7 +70,10 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.TName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormTagSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";

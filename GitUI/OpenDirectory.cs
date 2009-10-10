@@ -20,6 +20,9 @@ namespace GitUI
 
             Load.Select();
 
+            Directory.Focus();
+            Directory.Select();
+
         }
 
         private void Browse_Click(object sender, EventArgs e)

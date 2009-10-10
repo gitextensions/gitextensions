@@ -31,22 +31,22 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFormatPath));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.MailBody = new System.Windows.Forms.RichTextBox();
+            this.MailSubject = new System.Windows.Forms.TextBox();
+            this.MailAddress = new System.Windows.Forms.ComboBox();
+            this.SendToMail = new System.Windows.Forms.RadioButton();
+            this.SaveToDir = new System.Windows.Forms.RadioButton();
             this.Browse = new System.Windows.Forms.Button();
             this.OutputPath = new System.Windows.Forms.TextBox();
-            this.CurrentBranch = new System.Windows.Forms.Label();
-            this.SelectedBranch = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.FormatPatch = new System.Windows.Forms.Button();
+            this.SelectedBranch = new System.Windows.Forms.Label();
+            this.CurrentBranch = new System.Windows.Forms.Label();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.SaveToDir = new System.Windows.Forms.RadioButton();
-            this.SendToMail = new System.Windows.Forms.RadioButton();
-            this.MailAddress = new System.Windows.Forms.ComboBox();
-            this.MailSubject = new System.Windows.Forms.TextBox();
-            this.MailBody = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -84,6 +84,70 @@
             this.splitContainer1.SplitterDistance = 152;
             this.splitContainer1.TabIndex = 0;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(28, 96);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Body";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(28, 69);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Subject";
+            // 
+            // MailBody
+            // 
+            this.MailBody.Location = new System.Drawing.Point(155, 93);
+            this.MailBody.Name = "MailBody";
+            this.MailBody.Size = new System.Drawing.Size(502, 56);
+            this.MailBody.TabIndex = 13;
+            this.MailBody.Text = "";
+            // 
+            // MailSubject
+            // 
+            this.MailSubject.Location = new System.Drawing.Point(155, 66);
+            this.MailSubject.Name = "MailSubject";
+            this.MailSubject.Size = new System.Drawing.Size(502, 20);
+            this.MailSubject.TabIndex = 12;
+            // 
+            // MailAddress
+            // 
+            this.MailAddress.FormattingEnabled = true;
+            this.MailAddress.Location = new System.Drawing.Point(155, 38);
+            this.MailAddress.Name = "MailAddress";
+            this.MailAddress.Size = new System.Drawing.Size(502, 21);
+            this.MailAddress.TabIndex = 11;
+            // 
+            // SendToMail
+            // 
+            this.SendToMail.AutoSize = true;
+            this.SendToMail.Location = new System.Drawing.Point(12, 40);
+            this.SendToMail.Name = "SendToMail";
+            this.SendToMail.Size = new System.Drawing.Size(97, 17);
+            this.SendToMail.TabIndex = 10;
+            this.SendToMail.Text = "Mail patches to";
+            this.SendToMail.UseVisualStyleBackColor = true;
+            // 
+            // SaveToDir
+            // 
+            this.SaveToDir.AutoSize = true;
+            this.SaveToDir.Checked = true;
+            this.SaveToDir.Location = new System.Drawing.Point(12, 14);
+            this.SaveToDir.Name = "SaveToDir";
+            this.SaveToDir.Size = new System.Drawing.Size(145, 17);
+            this.SaveToDir.TabIndex = 9;
+            this.SaveToDir.TabStop = true;
+            this.SaveToDir.Text = "Save patches in directory";
+            this.SaveToDir.UseVisualStyleBackColor = true;
+            this.SaveToDir.CheckedChanged += new System.EventHandler(this.SaveToDir_CheckedChanged);
+            // 
             // Browse
             // 
             this.Browse.Location = new System.Drawing.Point(663, 8);
@@ -100,23 +164,6 @@
             this.OutputPath.Name = "OutputPath";
             this.OutputPath.Size = new System.Drawing.Size(502, 20);
             this.OutputPath.TabIndex = 7;
-            // 
-            // CurrentBranch
-            // 
-            this.CurrentBranch.AutoSize = true;
-            this.CurrentBranch.Location = new System.Drawing.Point(60, 13);
-            this.CurrentBranch.Name = "CurrentBranch";
-            this.CurrentBranch.Size = new System.Drawing.Size(0, 13);
-            this.CurrentBranch.TabIndex = 5;
-            // 
-            // SelectedBranch
-            // 
-            this.SelectedBranch.AutoSize = true;
-            this.SelectedBranch.Location = new System.Drawing.Point(12, 12);
-            this.SelectedBranch.Name = "SelectedBranch";
-            this.SelectedBranch.Size = new System.Drawing.Size(41, 13);
-            this.SelectedBranch.TabIndex = 4;
-            this.SelectedBranch.Text = "Branch";
             // 
             // splitContainer2
             // 
@@ -162,6 +209,23 @@
             this.FormatPatch.UseVisualStyleBackColor = true;
             this.FormatPatch.Click += new System.EventHandler(this.FormatPatch_Click);
             // 
+            // SelectedBranch
+            // 
+            this.SelectedBranch.AutoSize = true;
+            this.SelectedBranch.Location = new System.Drawing.Point(12, 12);
+            this.SelectedBranch.Name = "SelectedBranch";
+            this.SelectedBranch.Size = new System.Drawing.Size(41, 13);
+            this.SelectedBranch.TabIndex = 4;
+            this.SelectedBranch.Text = "Branch";
+            // 
+            // CurrentBranch
+            // 
+            this.CurrentBranch.AutoSize = true;
+            this.CurrentBranch.Location = new System.Drawing.Point(60, 13);
+            this.CurrentBranch.Name = "CurrentBranch";
+            this.CurrentBranch.Size = new System.Drawing.Size(0, 13);
+            this.CurrentBranch.TabIndex = 5;
+            // 
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
@@ -170,77 +234,16 @@
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
-            // SaveToDir
-            // 
-            this.SaveToDir.AutoSize = true;
-            this.SaveToDir.Checked = true;
-            this.SaveToDir.Location = new System.Drawing.Point(12, 14);
-            this.SaveToDir.Name = "SaveToDir";
-            this.SaveToDir.Size = new System.Drawing.Size(145, 17);
-            this.SaveToDir.TabIndex = 9;
-            this.SaveToDir.TabStop = true;
-            this.SaveToDir.Text = "Save patches in directory";
-            this.SaveToDir.UseVisualStyleBackColor = true;
-            this.SaveToDir.CheckedChanged += new System.EventHandler(this.SaveToDir_CheckedChanged);
-            // 
-            // SendToMail
-            // 
-            this.SendToMail.AutoSize = true;
-            this.SendToMail.Location = new System.Drawing.Point(12, 40);
-            this.SendToMail.Name = "SendToMail";
-            this.SendToMail.Size = new System.Drawing.Size(97, 17);
-            this.SendToMail.TabIndex = 10;
-            this.SendToMail.Text = "Mail patches to";
-            this.SendToMail.UseVisualStyleBackColor = true;
-            // 
-            // MailAddress
-            // 
-            this.MailAddress.FormattingEnabled = true;
-            this.MailAddress.Location = new System.Drawing.Point(155, 38);
-            this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(502, 21);
-            this.MailAddress.TabIndex = 11;
-            // 
-            // MailSubject
-            // 
-            this.MailSubject.Location = new System.Drawing.Point(155, 66);
-            this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(502, 20);
-            this.MailSubject.TabIndex = 12;
-            // 
-            // MailBody
-            // 
-            this.MailBody.Location = new System.Drawing.Point(155, 93);
-            this.MailBody.Name = "MailBody";
-            this.MailBody.Size = new System.Drawing.Size(502, 56);
-            this.MailBody.TabIndex = 13;
-            this.MailBody.Text = "";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Subject";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 96);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Body";
-            // 
             // FormFormatPath
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 454);
             this.Controls.Add(this.splitContainer1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormFormatPath";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Format patch";

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPull));
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -50,6 +51,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.PullImage = new System.Windows.Forms.PictureBox();
             this.LoadSSHKey = new System.Windows.Forms.Button();
+            this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,6 +89,7 @@
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Remote branch";
+            this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // Pull
@@ -171,7 +174,7 @@
             // 
             // Stash
             // 
-            this.Stash.Location = new System.Drawing.Point(113, 256);
+            this.Stash.Location = new System.Drawing.Point(111, 256);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
             this.Stash.TabIndex = 14;
@@ -223,6 +226,7 @@
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 19;
             this.PullFromUrl.Text = "Url";
+            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
             this.PullFromUrl.UseVisualStyleBackColor = true;
             this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
             // 
@@ -232,10 +236,11 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(110, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 18;
             this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote repository";
+            this.PullFromRemote.Text = "Remote";
+            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
             // 
@@ -253,7 +258,7 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(223, 260);
+            this.AutoStash.Location = new System.Drawing.Point(219, 260);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(76, 17);
             this.AutoStash.TabIndex = 20;
@@ -283,7 +288,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
-            this.splitContainer1.Size = new System.Drawing.Size(640, 290);
+            this.splitContainer1.Size = new System.Drawing.Size(639, 290);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 25;
             // 
@@ -303,7 +308,7 @@
             // 
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(318, 256);
+            this.LoadSSHKey.Location = new System.Drawing.Point(320, 256);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
             this.LoadSSHKey.TabIndex = 24;
@@ -315,9 +320,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 290);
+            this.ClientSize = new System.Drawing.Size(639, 290);
             this.Controls.Add(this.splitContainer1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pull";
@@ -360,5 +368,6 @@
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox PullImage;
+        private System.Windows.Forms.ToolTip Tooltip;
     }
 }

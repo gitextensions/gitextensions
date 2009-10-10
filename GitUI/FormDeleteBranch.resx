@@ -128,7 +128,7 @@ this using `force delete´.
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsOAAALDgFAvuFBAAABrUlE
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsNAAALDQHtB8AsAAABrUlE
         QVQ4T5WSTyjDYRjHH00UF5McTFbLabWkHWSu2oXcuEiZpB0cXByEWllOOLlpuTg4uJBWO1ihJG0Lpaml
         mcaa1dban7B4PN+fH2H7rfbWp7493+/zvO/7e39EVVb4mCygWkbTCxxST+zSxAC65iEhL63lkosMoGse
         cHNE8ffiPgPoqgPknl2C9RvZcSB+beaPl20FaNR+Z9CjDL30kfHuok3u2v2HXHKeS/klBej/PnrQSzvr
@@ -142,7 +142,7 @@ this using `force delete´.
   <data name="pictureBox1.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsOAAALDgFAvuFBAAABrUlE
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsNAAALDQHtB8AsAAABrUlE
         QVQ4T5WSTyjDYRjHH00UF5McTFbLabWkHWSu2oXcuEiZpB0cXByEWllOOLlpuTg4uJBWO1ihJG0Lpaml
         mcaa1dban7B4PN+fH2H7rfbWp7493+/zvO/7e39EVVb4mCygWkbTCxxST+zSxAC65iEhL63lkosMoGse
         cHNE8ffiPgPoqgPknl2C9RvZcSB+beaPl20FaNR+Z9CjDL30kfHuok3u2v2HXHKeS/klBej/PnrQSzvr

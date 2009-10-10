@@ -15,6 +15,17 @@ namespace GitUI
                 this.ShowInTaskbar = true;
 
             this.AutoScaleMode = AutoScaleMode.None;
+
+            Button cancelButton = new Button();
+            cancelButton.Click += new EventHandler(cancelButton_Click);
+
+            this.CancelButton = cancelButton;
         }
+
+        public virtual void cancelButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
     }
 }

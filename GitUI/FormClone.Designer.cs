@@ -95,9 +95,9 @@
             // 
             // NewDirectory
             // 
-            this.NewDirectory.Location = new System.Drawing.Point(124, 72);
+            this.NewDirectory.Location = new System.Drawing.Point(158, 72);
             this.NewDirectory.Name = "NewDirectory";
-            this.NewDirectory.Size = new System.Drawing.Size(153, 20);
+            this.NewDirectory.Size = new System.Drawing.Size(152, 20);
             this.NewDirectory.TabIndex = 3;
             this.NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
             // 
@@ -146,9 +146,9 @@
             // From
             // 
             this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(124, 17);
+            this.From.Location = new System.Drawing.Point(158, 17);
             this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(289, 21);
+            this.From.Size = new System.Drawing.Size(255, 21);
             this.From.TabIndex = 1;
             this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
             this.From.TextUpdate += new System.EventHandler(this.From_TextUpdate);
@@ -157,9 +157,9 @@
             // To
             // 
             this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(124, 45);
+            this.To.Location = new System.Drawing.Point(158, 45);
             this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(289, 21);
+            this.To.Size = new System.Drawing.Size(255, 21);
             this.To.TabIndex = 2;
             this.To.SelectedIndexChanged += new System.EventHandler(this.To_SelectedIndexChanged);
             this.To.TextUpdate += new System.EventHandler(this.To_TextUpdate);
@@ -254,7 +254,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(504, 238);
             this.Controls.Add(this.splitContainer1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
