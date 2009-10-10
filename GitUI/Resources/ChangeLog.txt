@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Version 1.73
+	All dialogs can be closed with the ESC key
+	Modal dialogs are not resizable anymore
+	Added context menu on revision file tree (Save As, Open, Open With)
+	When selection a revision, the file tree remembers the last selected file
+	Fixed crash when starting from command line with invalid path
+	Added tooltips to startpage
+	"Auto compile submodules" plugin can be started from menu even when disabled
+	
 Version 1.72
 	Fixed bug in "Auto compile submodules" plugin
 	Added progress dialgo to "Check for updates" plugin
