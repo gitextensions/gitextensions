@@ -362,11 +362,77 @@ namespace GitUI
                 node[0].Expand();
         }
 
+        private ContextMenu treeContextMenu;
+        private ContextMenu GetTreeContextMenu()
+        {
+            if (treeContextMenu == null)
+            {
+                treeContextMenu = new ContextMenu();
+                treeContextMenu.MenuItems.Add(new MenuItem("Save as", new EventHandler(saveAsOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem("Open", new EventHandler(OpenOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem("Open with", new EventHandler(OpenWithOnClick)));
+
+            }
+            return treeContextMenu;
+        }
+
+        public void saveAsOnClick(object sender, EventArgs e)
+        {
+            object item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+            if (((GitItem)item).ItemType == "blob")
+            {
+                SaveFileDialog fileDialog = new SaveFileDialog();
+                fileDialog.FileName = ((GitItem)item).FileName;
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileDialog.FileName + "\"");
+                }
+            }
+        }
+
+        public void OpenWithOnClick(object sender, EventArgs e)
+        {
+            object item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+                if (((GitItem)item).ItemType == "blob")
+                {
+                    string fileName = ((GitItem)item).FileName;
+                    if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
+                        fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+
+                    fileName = Path.GetTempPath() + fileName;
+                    GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileName + "\"");
+                    OpenWith.OpenAs(fileName);
+                }            
+        }
+
+        public void OpenOnClick(object sender, EventArgs e)
+        {
+            object item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+                if (((GitItem)item).ItemType == "blob")
+                {
+                    string fileName = ((GitItem)item).FileName;
+                    if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
+                        fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+
+                    fileName = Path.GetTempPath() + fileName;
+                    GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileName + "\"");
+                    System.Diagnostics.Process.Start(fileName);
+                }
+        }
+
         protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
         {
             foreach (IGitItem item in items)
             {
                 TreeNode subNode = node.Add(item.Name);
+                subNode.ContextMenu = GetTreeContextMenu();
                 subNode.Tag = item;
 
                 if (item is GitItem)
@@ -1176,6 +1242,14 @@ namespace GitUI
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(false);
                 indexWatcher.Reset();
+            }
+        }
+
+        private void GitTree_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                GitTree.SelectedNode = GitTree.GetNodeAt(e.X, e.Y);
             }
         }
 
