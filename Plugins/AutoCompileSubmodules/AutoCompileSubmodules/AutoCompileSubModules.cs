@@ -54,7 +54,8 @@ namespace AutoCompileSubmodules
 
         void gitUICommands_PostUpdateSubmodulesRecursive(IGitUIEventArgs e)
         {
-            Execute(e);
+            if (Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                Execute(e);
         }
 
 
@@ -63,13 +64,14 @@ namespace AutoCompileSubmodules
         /// </summary>
         void gitUICommands_PostUpdateSubmodules(IGitUIEventArgs e)
         {
-            Execute(e);
+            if (Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                Execute(e);
         }
 
         public void Execute(IGitUIEventArgs e)
         {
             //Only build when plugin is enabled
-            if (Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(e.GitWorkingDir))
+            if (!string.IsNullOrEmpty(e.GitWorkingDir))
             {
                 string arguments = Settings.GetSetting("msbuild.exe arguments");
                 string msbuildpath = Settings.GetSetting("Path to msbuild.exe");
