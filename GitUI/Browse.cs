@@ -313,6 +313,8 @@ namespace GitUI
                 while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
                     lastSelectedNodes.Push(((TreeNode)lastSelectedNodes.Peek()).Parent);
 
+                int scrollPos = FileText.ScrollPos;
+
                 //Refresh tree
                 GitTree.Nodes.Clear();
                 if (RevisionGrid.GetRevisions().Count > 0)
@@ -333,6 +335,7 @@ namespace GitUI
                             node.Expand();
                             GitTree.SelectedNode = node;
                             currenNodes = node.Nodes;
+                            FileText.ScrollPos = scrollPos;
                         }
                     }
                 }
