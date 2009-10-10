@@ -301,15 +301,41 @@ namespace GitUI
             }
             indexWatcher.Reset();
         }
-
+        
         private void FillFileTree()
         {
             if (tabControl1.SelectedTab == Tree)
             {
+                //Save state
+                Stack<TreeNode> lastSelectedNodes;
+                lastSelectedNodes = new Stack<TreeNode>();
+                lastSelectedNodes.Push(GitTree.SelectedNode);
+                while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
+                    lastSelectedNodes.Push(((TreeNode)lastSelectedNodes.Peek()).Parent);
+
+                //Refresh tree
                 GitTree.Nodes.Clear();
                 if (RevisionGrid.GetRevisions().Count > 0)
                     LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
                 GitTree.Sort();
+
+
+                //Load state
+                TreeNodeCollection currenNodes = GitTree.Nodes;
+                while (lastSelectedNodes.Peek() != null)
+                {
+                    //TreeNode[] nodes = currenNodes.Find(((TreeNode)lastSelectedNodes.Pop()).Text, false);
+                    string next = ((TreeNode)lastSelectedNodes.Pop()).Text;
+                    foreach (TreeNode node in currenNodes)
+                    {
+                        if (node.Text == next || next.Length == 40)
+                        {
+                            node.Expand();
+                            GitTree.SelectedNode = node;
+                            currenNodes = node.Nodes;
+                        }
+                    }
+                }
             }
         }
 
@@ -432,32 +458,34 @@ namespace GitUI
             foreach (IGitItem item in items)
             {
                 TreeNode subNode = node.Add(item.Name);
-                subNode.ContextMenu = GetTreeContextMenu();
                 subNode.Tag = item;
-
+                
                 if (item is GitItem)
                 {
                     if (((GitItem)item).ItemType == "tree")
                         subNode.Nodes.Add(new TreeNode());
                     if (((GitItem)item).ItemType == "commit")
                         subNode.Text = item.Name + " (Submodule)";
+                    if (((GitItem)item).ItemType == "blob")
+                        subNode.ContextMenu = GetTreeContextMenu();
                 }
                 else
                 {
                     subNode.Nodes.Add(new TreeNode());
                 }
-                //LoadInTree(item.SubItems, subNode.Nodes);
             }
         }
 
         private void GitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            IGitItem item = (IGitItem)e.Node.Tag;
+            if (!e.Node.IsExpanded)
+            {
+                IGitItem item = (IGitItem)e.Node.Tag;
 
-            e.Node.Nodes.Clear();
-            //item.SubItems = GitCommands.GitCommands.GetTree(item.Guid);
-            LoadInTree(item.SubItems, e.Node.Nodes);
-
+                e.Node.Nodes.Clear();
+                //item.SubItems = GitCommands.GitCommands.GetTree(item.Guid);
+                LoadInTree(item.SubItems, e.Node.Nodes);
+            }
         }
 
         private void RevisionGrid_SelectionChanged(object sender, EventArgs e)
