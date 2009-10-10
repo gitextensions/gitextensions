@@ -48,7 +48,7 @@
             // Tags
             // 
             this.Tags.FormattingEnabled = true;
-            this.Tags.Location = new System.Drawing.Point(86, 12);
+            this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
             this.Tags.Size = new System.Drawing.Size(236, 21);
             this.Tags.TabIndex = 7;
@@ -71,7 +71,10 @@
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormDeleteTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete tag";

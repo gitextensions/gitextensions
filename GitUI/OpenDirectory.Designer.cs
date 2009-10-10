@@ -46,8 +46,10 @@
             // 
             // Directory
             // 
+            this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Directory.FormattingEnabled = true;
-            this.Directory.Location = new System.Drawing.Point(79, 10);
+            this.Directory.Location = new System.Drawing.Point(85, 10);
             this.Directory.Name = "Directory";
             this.Directory.Size = new System.Drawing.Size(266, 21);
             this.Directory.TabIndex = 1;
@@ -84,7 +86,10 @@
             this.Controls.Add(this.Browse);
             this.Controls.Add(this.Directory);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Open";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Open repository";

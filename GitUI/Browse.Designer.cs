@@ -61,6 +61,7 @@
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.RecentRepositoriesGroupBox = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Donate = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
@@ -151,7 +152,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Donate = new System.Windows.Forms.Button();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -523,6 +523,18 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Donate";
+            // 
+            // Donate
+            // 
+            this.Donate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Donate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Donate.Location = new System.Drawing.Point(48, 20);
+            this.Donate.Name = "Donate";
+            this.Donate.Size = new System.Drawing.Size(143, 30);
+            this.Donate.TabIndex = 0;
+            this.Donate.Text = "Donate";
+            this.Donate.UseVisualStyleBackColor = true;
+            this.Donate.Click += new System.EventHandler(this.Donate_Click);
             // 
             // label2
             // 
@@ -1311,18 +1323,6 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // Donate
-            // 
-            this.Donate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Donate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Donate.Location = new System.Drawing.Point(48, 20);
-            this.Donate.Name = "Donate";
-            this.Donate.Size = new System.Drawing.Size(143, 30);
-            this.Donate.TabIndex = 0;
-            this.Donate.Text = "Donate";
-            this.Donate.UseVisualStyleBackColor = true;
-            this.Donate.Click += new System.EventHandler(this.Donate_Click);
             // 
             // FormBrowse
             // 

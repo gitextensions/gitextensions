@@ -40,16 +40,16 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 27;
-            this.label1.Text = "Path to private key file";
+            this.label1.Text = "Private key file";
             // 
             // PrivateKeypath
             // 
             this.PrivateKeypath.FormattingEnabled = true;
-            this.PrivateKeypath.Location = new System.Drawing.Point(130, 16);
+            this.PrivateKeypath.Location = new System.Drawing.Point(140, 16);
             this.PrivateKeypath.Name = "PrivateKeypath";
-            this.PrivateKeypath.Size = new System.Drawing.Size(307, 21);
+            this.PrivateKeypath.Size = new System.Drawing.Size(297, 21);
             this.PrivateKeypath.TabIndex = 28;
             this.PrivateKeypath.DropDown += new System.EventHandler(this.PrivateKeypath_DropDown);
             // 
@@ -84,7 +84,10 @@
             this.Controls.Add(this.PrivateKeypath);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LoadSSHKey);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormLoadPuttySSHKey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Load PuTTY SSH key into authentication agent";

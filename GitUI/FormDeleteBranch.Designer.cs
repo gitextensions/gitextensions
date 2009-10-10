@@ -52,7 +52,7 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(86, 77);
+            this.Branches.Location = new System.Drawing.Point(122, 77);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(236, 21);
             this.Branches.TabIndex = 4;
@@ -90,7 +90,7 @@
             // ForceDelete
             // 
             this.ForceDelete.AutoSize = true;
-            this.ForceDelete.Location = new System.Drawing.Point(86, 104);
+            this.ForceDelete.Location = new System.Drawing.Point(122, 104);
             this.ForceDelete.Name = "ForceDelete";
             this.ForceDelete.Size = new System.Drawing.Size(85, 17);
             this.ForceDelete.TabIndex = 8;
@@ -108,7 +108,10 @@
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormDeleteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";

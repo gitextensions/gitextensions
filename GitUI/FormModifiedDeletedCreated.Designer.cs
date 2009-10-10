@@ -83,7 +83,10 @@
             this.Controls.Add(this.Deleted);
             this.Controls.Add(this.Created);
             this.Controls.Add(this.Label);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormModifiedDeletedCreated";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Solve mergeconflict";
