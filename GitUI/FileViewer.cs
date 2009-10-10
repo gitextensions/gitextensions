@@ -24,6 +24,21 @@ namespace GitUI
                 Find();
         }
 
+        public int ScrollPos 
+        {
+            get
+            {
+                return TextEditor.ActiveTextAreaControl.VScrollBar.Value;
+            }
+            set
+            {
+                if (TextEditor.ActiveTextAreaControl.VScrollBar.Maximum > value)
+                    TextEditor.ActiveTextAreaControl.VScrollBar.Value = value;
+                else
+                    TextEditor.ActiveTextAreaControl.VScrollBar.Value = TextEditor.ActiveTextAreaControl.VScrollBar.Maximum;
+            }
+        }
+
         private void ClearImage()
         {
             PictureBox.ImageLocation = "";
