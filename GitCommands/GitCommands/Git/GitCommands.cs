@@ -2212,5 +2212,14 @@ namespace GitCommands
         {
             return "merge \"" + branch + "\"";
         }
+
+        public static string GetFileExtension(string fileName)
+        {
+            if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)
+                return fileName.Substring(fileName.LastIndexOf('.') + 1);
+
+            return null;
+        }
+
     }
 }

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.74
+	Diff syntax highlighting improved
+	Various small bug fixes
+	Added statistics plugin
+	
 Version 1.73
 	All dialogs can be closed with the ESC key
 	Modal dialogs are not resizable anymore

@@ -33,7 +33,7 @@
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
-            this.DiffText = new ICSharpCode.TextEditor.TextEditorControl();
+            this.DiffText = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -107,11 +107,11 @@
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IsReadOnly = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
+            this.DiffText.ScrollPos = 0;
             this.DiffText.Size = new System.Drawing.Size(610, 320);
-            this.DiffText.TabIndex = 0;
+            this.DiffText.TabIndex = 1;
             // 
             // FormDiff
             // 
@@ -137,9 +137,9 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl DiffText;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.ListBox DiffFiles;
         private RevisionGrid RevisionGrid;
+        private FileViewer DiffText;
     }
 }

@@ -621,6 +621,8 @@ namespace GitUI
         private void FormSettigns_Load(object sender, EventArgs e)
         {
             EnableSettings();
+
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void EnableSettings()
@@ -1033,8 +1035,10 @@ namespace GitUI
         private void FormSettigns_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            this.WindowState = FormWindowState.Normal;
             LoadSettings();
             CheckSettings();
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)

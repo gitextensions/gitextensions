@@ -39,6 +39,8 @@ namespace PatchApply
 
             if (patch == null) return;
 
+            ChangesList.ViewPatch(patch.Text);
+            /*
             ChangesList.Text = "";
 
             try
@@ -53,7 +55,7 @@ namespace PatchApply
                 ChangesList.Refresh();
             }
             ChangesList.Text = patch.Text;
-            //PatchedFileEdit.Text = changedFile.New;
+            //PatchedFileEdit.Text = changedFile.New;*/
 
         }
 

@@ -38,8 +38,8 @@
             this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
+            this.View = new GitUI.FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
-            this.Diff = new ICSharpCode.TextEditor.TextEditorControl();
             this.Blame = new System.Windows.Forms.TabPage();
             this.BlameGrid = new System.Windows.Forms.DataGridView();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,7 +48,7 @@
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.View = new GitUI.FileViewer();
+            this.Diff = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -158,6 +158,15 @@
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
             // 
+            // View
+            // 
+            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Location = new System.Drawing.Point(3, 3);
+            this.View.Name = "View";
+            this.View.ScrollPos = 0;
+            this.View.Size = new System.Drawing.Size(736, 298);
+            this.View.TabIndex = 0;
+            // 
             // DiffTab
             // 
             this.DiffTab.Controls.Add(this.Diff);
@@ -168,15 +177,6 @@
             this.DiffTab.TabIndex = 1;
             this.DiffTab.Text = "Diff";
             this.DiffTab.UseVisualStyleBackColor = true;
-            // 
-            // Diff
-            // 
-            this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.IsReadOnly = false;
-            this.Diff.Location = new System.Drawing.Point(3, 3);
-            this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(736, 298);
-            this.Diff.TabIndex = 0;
             // 
             // Blame
             // 
@@ -258,13 +258,14 @@
             // 
             this.eventLog1.SynchronizingObject = this;
             // 
-            // View
+            // Diff
             // 
-            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Location = new System.Drawing.Point(3, 3);
-            this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(736, 298);
-            this.View.TabIndex = 0;
+            this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Diff.Location = new System.Drawing.Point(3, 3);
+            this.Diff.Name = "Diff";
+            this.Diff.ScrollPos = 0;
+            this.Diff.Size = new System.Drawing.Size(736, 298);
+            this.Diff.TabIndex = 0;
             // 
             // FormFileHistory
             // 
@@ -304,7 +305,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
-        private ICSharpCode.TextEditor.TextEditorControl Diff;
         private System.Windows.Forms.TabPage Blame;
         private System.Windows.Forms.BindingSource gitItemBindingSource1;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
@@ -317,5 +317,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn TextColumn;
         private FileViewer View;
+        private FileViewer Diff;
     }
 }

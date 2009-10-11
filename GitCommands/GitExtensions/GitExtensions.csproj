@@ -97,6 +97,10 @@
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
+      <Project>{92B57383-233E-46AE-8A86-6E98BF349A72}</Project>
+      <Name>GitStatistics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>

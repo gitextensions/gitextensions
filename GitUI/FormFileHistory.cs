@@ -46,9 +46,9 @@ namespace GitUI
                 }
                 if (tabControl1.SelectedTab == ViewTab)
                 {
+                    int scrollpos =View.ScrollPos;
                     View.ViewGitItem(FileName, revision.Guid);
-                    //View.Text = GitCommands.GitCommands.GetFileText(revision.Guid);
-                    //View.Refresh();
+                    View.ScrollPos = scrollpos;
                 }
             }
 
@@ -65,10 +65,8 @@ namespace GitUI
                             Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision2.CommitGuid, revision1.FileName));
                             diff.Execute();
                             ///EditorOptions.SetSyntax(Diff, FileName);
-                            Diff.SetHighlighting("Patch");
-                            Diff.Text = diff.Dto.Result;
-                            Diff.Refresh();
-                        }
+                            Diff.ViewPatch(diff.Dto.Result);
+                       }
                     }
             }
             else
@@ -82,17 +80,13 @@ namespace GitUI
                     {
                         Diff diff = new Diff(new DiffDto(revision1.CommitGuid + "^", revision1.CommitGuid, FileName));
                         diff.Execute();
-                        //EditorOptions.SetSyntax(Diff, FileName);
-                        Diff.SetHighlighting("Patch");
-                        Diff.Text = diff.Dto.Result;
-                        Diff.Refresh();
+                        Diff.ViewPatch(diff.Dto.Result);
                     }
                 }
             }
             else
             {
-                Diff.Text = "You need to select 2 files to view diff.";
-                Diff.Refresh();
+                Diff.ViewPatch("You need to select 2 files to view diff.");
             }
         }
 
