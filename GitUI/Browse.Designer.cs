@@ -154,6 +154,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -668,6 +669,7 @@
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Name = "FileText";
+            this.FileText.ScrollPos = 0;
             this.FileText.Size = new System.Drawing.Size(565, 254);
             this.FileText.TabIndex = 0;
             // 
@@ -716,6 +718,7 @@
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Name = "DiffText";
+            this.DiffText.ScrollPos = 0;
             this.DiffText.Size = new System.Drawing.Size(567, 260);
             this.DiffText.TabIndex = 0;
             // 
@@ -1278,6 +1281,7 @@
             this.commitcountPerUserToolStripMenuItem,
             this.gitcommandLogToolStripMenuItem,
             this.toolStripSeparator7,
+            this.userManualToolStripMenuItem,
             this.changelogToolStripMenuItem,
             this.toolStripSeparator3,
             this.donateToolStripMenuItem,
@@ -1341,6 +1345,13 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // userManualToolStripMenuItem
+            // 
+            this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
+            this.userManualToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.userManualToolStripMenuItem.Text = "User Manual";
+            this.userManualToolStripMenuItem.Click += new System.EventHandler(this.userManualToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -1524,5 +1535,6 @@
         private System.Windows.Forms.Button Donate;
         private System.Windows.Forms.ContextMenuStrip TreeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem userManualToolStripMenuItem;
     }
 }

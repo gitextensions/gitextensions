@@ -74,7 +74,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.button1);
-            this.splitContainer1.Size = new System.Drawing.Size(699, 524);
+            this.splitContainer1.Size = new System.Drawing.Size(820, 524);
             this.splitContainer1.SplitterDistance = 466;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -98,7 +98,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Warnings);
-            this.splitContainer2.Size = new System.Drawing.Size(699, 466);
+            this.splitContainer2.Size = new System.Drawing.Size(820, 466);
             this.splitContainer2.SplitterDistance = 137;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -116,7 +116,7 @@
             this.ShowOnlyCommits.AutoSize = true;
             this.ShowOnlyCommits.Checked = true;
             this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowOnlyCommits.Location = new System.Drawing.Point(309, 7);
+            this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 3);
             this.ShowOnlyCommits.Name = "ShowOnlyCommits";
             this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
             this.ShowOnlyCommits.TabIndex = 4;
@@ -129,7 +129,7 @@
             this.NoReflogs.AutoSize = true;
             this.NoReflogs.Checked = true;
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NoReflogs.Location = new System.Drawing.Point(309, 33);
+            this.NoReflogs.Location = new System.Drawing.Point(430, 29);
             this.NoReflogs.Name = "NoReflogs";
             this.NoReflogs.Size = new System.Drawing.Size(335, 30);
             this.NoReflogs.TabIndex = 3;
@@ -141,7 +141,7 @@
             // FullCheck
             // 
             this.FullCheck.AutoSize = true;
-            this.FullCheck.Location = new System.Drawing.Point(309, 99);
+            this.FullCheck.Location = new System.Drawing.Point(430, 95);
             this.FullCheck.Name = "FullCheck";
             this.FullCheck.Size = new System.Drawing.Size(382, 30);
             this.FullCheck.TabIndex = 2;
@@ -153,7 +153,7 @@
             // Unreachable
             // 
             this.Unreachable.AutoSize = true;
-            this.Unreachable.Location = new System.Drawing.Point(309, 66);
+            this.Unreachable.Location = new System.Drawing.Point(430, 62);
             this.Unreachable.Name = "Unreachable";
             this.Unreachable.Size = new System.Drawing.Size(383, 30);
             this.Unreachable.TabIndex = 1;
@@ -177,7 +177,7 @@
             this.Warnings.FormattingEnabled = true;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(699, 316);
+            this.Warnings.Size = new System.Drawing.Size(820, 316);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.Warnings_DoubleClick);
             // 
@@ -233,7 +233,7 @@
             // 
             // Remove
             // 
-            this.Remove.Location = new System.Drawing.Point(538, 3);
+            this.Remove.Location = new System.Drawing.Point(659, 3);
             this.Remove.Name = "Remove";
             this.Remove.Size = new System.Drawing.Size(158, 23);
             this.Remove.TabIndex = 1;
@@ -243,7 +243,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(538, 28);
+            this.button1.Location = new System.Drawing.Point(659, 28);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(159, 23);
             this.button1.TabIndex = 0;
@@ -255,9 +255,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 524);
+            this.ClientSize = new System.Drawing.Size(820, 524);
             this.Controls.Add(this.splitContainer1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormVerify";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Verify database";

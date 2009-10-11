@@ -44,10 +44,10 @@
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
-            this.View = new ICSharpCode.TextEditor.TextEditorControl();
             this.Stash = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
+            this.View = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -247,15 +247,6 @@
             this.Stashed.TabIndex = 0;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.Stashed_SelectedIndexChanged);
             // 
-            // View
-            // 
-            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.IsReadOnly = false;
-            this.View.Location = new System.Drawing.Point(0, 0);
-            this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(453, 485);
-            this.View.TabIndex = 0;
-            // 
             // Stash
             // 
             this.Stash.Location = new System.Drawing.Point(3, 3);
@@ -285,6 +276,15 @@
             this.Clear.Text = "Drop selected stash";
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.Clear_Click);
+            // 
+            // View
+            // 
+            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Location = new System.Drawing.Point(0, 0);
+            this.View.Name = "View";
+            this.View.ScrollPos = 0;
+            this.View.Size = new System.Drawing.Size(453, 485);
+            this.View.TabIndex = 0;
             // 
             // FormStash
             // 
@@ -334,11 +334,11 @@
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox Stashed;
-        private ICSharpCode.TextEditor.TextEditorControl View;
         private System.Windows.Forms.ComboBox Stashes;
         private System.Windows.Forms.BindingSource gitStashBindingSource;
         private System.Windows.Forms.RichTextBox StashMessage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Refresh;
+        private FileViewer View;
     }
 }

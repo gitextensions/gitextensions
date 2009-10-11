@@ -324,7 +324,7 @@ namespace GitUI
 
                 //Load state
                 TreeNodeCollection currenNodes = GitTree.Nodes;
-                while (lastSelectedNodes.Peek() != null)
+                while (lastSelectedNodes.Count > 0 && lastSelectedNodes.Peek() != null)
                 {
                     //TreeNode[] nodes = currenNodes.Find(((TreeNode)lastSelectedNodes.Pop()).Text, false);
                     string next = ((TreeNode)lastSelectedNodes.Pop()).Text;
@@ -399,10 +399,22 @@ namespace GitUI
                 treeContextMenu = new ContextMenu();
                 treeContextMenu.MenuItems.Add(new MenuItem("Save as", new EventHandler(saveAsOnClick)));
                 treeContextMenu.MenuItems.Add(new MenuItem("Open", new EventHandler(OpenOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem("Open with", new EventHandler(OpenWithOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem("Open With", new EventHandler(OpenWithOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem("File History", new EventHandler(FileHistoryOnClick)));
 
             }
             return treeContextMenu;
+        }
+
+        public void FileHistoryOnClick(object sender, EventArgs e)
+        {
+            object item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+                if (((GitItem)item).ItemType == "blob")
+                {
+                    GitUICommands.Instance.StartFileHistoryDialog(((GitItem)item).FileName);
+                }
         }
 
         public void saveAsOnClick(object sender, EventArgs e)
@@ -413,7 +425,11 @@ namespace GitUI
             if (((GitItem)item).ItemType == "blob")
             {
                 SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.FileName = ((GitItem)item).FileName;
+                fileDialog.FileName = Settings.WorkingDir + ((GitItem)item).FileName;
+                fileDialog.AddExtension = true;
+                fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
+                fileDialog.Filter = "Current format (*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
+                //GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
 
                 if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -1282,6 +1298,11 @@ namespace GitUI
             {
                 GitTree.SelectedNode = GitTree.GetNodeAt(e.X, e.Y);
             }
+        }
+
+        private void userManualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
         }
 
     }

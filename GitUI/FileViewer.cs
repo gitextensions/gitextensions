@@ -156,8 +156,10 @@ namespace GitUI
             TextEditor.Visible = true;
 
             TextEditor.SetHighlighting("Patch");
-
             TextEditor.Text = GitCommands.GitCommands.GetCurrentChanges(fileName, staged);
+            
+            AddPatchHighlighting();
+
             TextEditor.Refresh();
         }
 
@@ -168,9 +170,74 @@ namespace GitUI
             TextEditor.Visible = true;
 
             TextEditor.SetHighlighting("Patch");
-
             TextEditor.Text = text;
+
+            AddPatchHighlighting();
+
             TextEditor.Refresh();
+        }
+
+        private void AddPatchHighlighting()
+        {
+            //DIFF HIGHLIGHTING!
+            for (int line = 0; line < TextEditor.Document.TotalNumberOfLines; line++)
+            {
+                ICSharpCode.TextEditor.Document.LineSegment lineSegment = TextEditor.Document.GetLineSegment(line);
+
+                if (lineSegment.TotalLength != 0)
+                {
+                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '+')
+                    {
+                        Color color = Color.FromArgb(200, 255, 200);
+                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
+
+                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '+'; line++)
+                        {
+                            endLine = TextEditor.Document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = TextEditor.Document.GetLineSegment(line);
+
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                    } 
+                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '-')
+                    {
+                        Color color = Color.FromArgb(255, 200, 200);
+                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
+
+                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '-'; line++)
+                        {
+                            endLine = TextEditor.Document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = TextEditor.Document.GetLineSegment(line);
+
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                    }
+                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '@')
+                    {
+                        Color color = Color.FromArgb(230, 230, 230);
+                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
+
+                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '@'; line++)
+                        {
+                            endLine = TextEditor.Document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = TextEditor.Document.GetLineSegment(line);
+
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                    }
+
+                }
+            }
+            //END
         }
 
         public void ViewText(string fileName, string text)
@@ -199,6 +266,9 @@ namespace GitUI
                     fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".mpeg", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".pdf", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".doc", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".vsd", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase));
         }
 
@@ -244,12 +314,7 @@ namespace GitUI
                     PictureBox.Image = images;
                 }
                 else
-                    if (fileName.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".gif", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".mpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase))
+                    if (IsBinaryFile(fileName))
                     {
                         ClearImage();
                         TextEditor.Text = "Binary file: " + fileName;

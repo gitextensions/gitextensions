@@ -71,6 +71,8 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
 
+        string GitCommand(string arguments);
+        string CommandLineCommand(string cmd, string arguments);
 
         bool StartAddFilesDialog();
         bool StartApplyPatchDialog();

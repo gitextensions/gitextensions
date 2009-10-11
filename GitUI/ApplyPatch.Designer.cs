@@ -36,13 +36,13 @@
             this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ChangesList = new ICSharpCode.TextEditor.TextEditorControl();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ChangesList = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -122,15 +122,6 @@
             // 
             this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
             // 
-            // ChangesList
-            // 
-            this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangesList.IsReadOnly = false;
-            this.ChangesList.Location = new System.Drawing.Point(0, 0);
-            this.ChangesList.Name = "ChangesList";
-            this.ChangesList.Size = new System.Drawing.Size(689, 292);
-            this.ChangesList.TabIndex = 0;
-            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -190,6 +181,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Patch";
             // 
+            // ChangesList
+            // 
+            this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChangesList.Location = new System.Drawing.Point(0, 0);
+            this.ChangesList.Name = "ChangesList";
+            this.ChangesList.ScrollPos = 0;
+            this.ChangesList.Size = new System.Drawing.Size(689, 292);
+            this.ChangesList.TabIndex = 1;
+            // 
             // ViewPatch
             // 
             this.AcceptButton = this.button1;
@@ -227,11 +227,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.BindingSource patchBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn fileNameADataGridViewTextBoxColumn;
-        private ICSharpCode.TextEditor.TextEditorControl ChangesList;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameA;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.Button button1;
+        private GitUI.FileViewer ChangesList;
     }
 }
 

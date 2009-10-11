@@ -120,6 +120,17 @@ namespace GitUI
         public event GitUIEventHandler PreUpdateSubmodulesRecursive;
         public event GitUIEventHandler PostUpdateSubmodulesRecursive;
 
+        public string GitCommand(string arguments)
+        {
+            return GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", arguments);
+        }
+
+        public string CommandLineCommand(string cmd, string arguments)
+        {
+            return GitCommands.GitCommands.RunCmd(cmd, arguments);
+        }
+
+
         public bool StartCommandLineProcessDialog(string command, string arguments)
         {
             FormProcess process = new FormProcess(command, arguments);

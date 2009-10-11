@@ -18,7 +18,7 @@ namespace GitUI
         {
             InitializeComponent();
             //EditorOptions.SetSyntax(DiffText, "output.cs");
-            DiffText.SetHighlighting("Patch");
+            //DiffText.SetHighlighting("Patch");
         }
 
         public FormDiff(GitRevision revision)
@@ -107,8 +107,9 @@ namespace GitUI
             {
                 {
                     Patch patch = (Patch)DiffFiles.SelectedItem;
-                    DiffText.Text = patch.Text;
-                    DiffText.Refresh();
+                    //DiffText.Text = patch.Text;
+                    //DiffText.Refresh();
+                    DiffText.ViewPatch(patch.Text);
                     //EditorOptions.SetSyntax(DiffText, patch.FileNameB);
                 }
 
@@ -134,14 +135,12 @@ namespace GitUI
 
                     if (selectedPatch != null)
                     {
-                        //EditorOptions.SetSyntax(DiffText, selectedPatch.FileNameB);
-                        DiffText.Text = selectedPatch.Text;
+                        DiffText.ViewPatch(selectedPatch.Text);
                     }
                     else
                     {
-                        DiffText.Text = "";
+                        DiffText.ViewPatch("");
                     }
-                    DiffText.Refresh();
                 }
         }
 

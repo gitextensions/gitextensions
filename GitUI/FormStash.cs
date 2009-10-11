@@ -73,6 +73,7 @@ namespace GitUI
 
         private void ShowPatch(Patch patch)
         {
+            /*
             string syntax = "XML";
             if ((patch.FileNameB.LastIndexOf('.') > 0))
             {
@@ -106,15 +107,14 @@ namespace GitUI
             View.SetHighlighting(syntax);
 
             View.Text = patch.Text;
-            View.Refresh();
+            View.Refresh();*/
+            View.ViewPatch(patch.Text);
         }
 
         private void Changes_SelectedIndexChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            View.SetHighlighting("Patch");
-            View.Text = GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
-            View.Refresh();
+            View.ViewPatch(GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false));
         }
 
         public bool NeedRefresh = false;

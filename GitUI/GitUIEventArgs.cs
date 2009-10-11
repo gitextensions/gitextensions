@@ -33,11 +33,19 @@ namespace GitUI
             }
         }
 
+        public string GitDir
+        {
+            get
+            {
+                return Settings.GitDir;
+            }
+        }
+
         public string GitVersion
         {
             get
             {
-                return "173";
+                return "174";
             }
         }
 
