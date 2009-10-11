@@ -69,12 +69,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2CB2B7ADCC119E7A2926537FA0369C61"
-        "OwnerKey" = "8:_7EA5DD0CCCDC4432913B8D31B7B2FACC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_331E12700CA4CF7C5D0715BC5128EF63"
         "OwnerKey" = "8:_86F0ECA201E04185A17208ABF277D125"
         "MsmSig" = "8:_UNDEFINED"
@@ -262,6 +256,12 @@
         "Entry"
         {
         "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
+        "OwnerKey" = "8:_7EA5DD0CCCDC4432913B8D31B7B2FACC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D08E50D2F0793CA20E974F99314FFEA1"
         "OwnerKey" = "8:_906F480BA09C4D2FA6B22D6B0BD135EF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -323,12 +323,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_16F86AB4EBEF5C631A3F35A87D417B15"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2CB2B7ADCC119E7A2926537FA0369C61"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -595,7 +589,7 @@
             "SourcePath" = "8:PieChart.DLL"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_D0E0FC2FC4874774B14F6302FF7AE6BE"
+            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -730,37 +724,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2CB2B7ADCC119E7A2926537FA0369C61"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitUIPluginInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_2CB2B7ADCC119E7A2926537FA0369C61"
-                    {
-                    "Name" = "8:GitUIPluginInterfaces.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:GitUIPluginInterfaces.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_ED96CCF26E9445C893CE844C42A3639A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_331E12700CA4CF7C5D0715BC5128EF63"
@@ -971,7 +934,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3570.22365, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3571.28123, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -1295,7 +1258,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3570.22365, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3571.28123, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1715,7 +1678,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GitExtensions"
         "ProductCode" = "8:{43D95D75-6551-47C0-A239-C5F0AFEE1224}"
-        "PackageCode" = "8:{55965CBB-EAAA-4F59-9242-3F9F5874943D}"
+        "PackageCode" = "8:{7158FD29-7318-44CB-9215-5D9B076EDB33}"
         "UpgradeCode" = "8:{21C47884-2F47-492D-84AA-4AACAB569651}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
