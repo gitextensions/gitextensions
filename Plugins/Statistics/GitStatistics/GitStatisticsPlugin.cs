@@ -30,7 +30,7 @@ namespace GitStatistics
 
         public void Register(IGitUICommands gitUICommands)
         {
-            Settings.AddSetting("Code files", "*.c;*.cpp;*.h;*.hpp;*.inl;*.rc;*.resx;*.idl;*.asm;*.inc;*.cs;*.resx;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php");
+            Settings.AddSetting("Code files", "*.c;*.cpp;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php");
 
         }
 
@@ -38,11 +38,15 @@ namespace GitStatistics
         {
             try
             {
-                FormGitStatistics formGitStatistics = new FormGitStatistics(gitUICommands);
+                if (!string.IsNullOrEmpty(gitUICommands.GitWorkingDir))
+                {
+                    FormGitStatistics formGitStatistics = new FormGitStatistics(gitUICommands);
 
-                formGitStatistics.CodeFilePattern = Settings.GetSetting("Code files");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUICommands.GitWorkingDir);
-                formGitStatistics.ShowDialog();
+                    formGitStatistics.CodeFilePattern = Settings.GetSetting("Code files");
+                    formGitStatistics.WorkingDir = new DirectoryInfo(gitUICommands.GitWorkingDir);
+                        
+                    formGitStatistics.ShowDialog();
+                }
             }
             catch
             {
