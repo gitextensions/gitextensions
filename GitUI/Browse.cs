@@ -1097,7 +1097,7 @@ namespace GitUI
         {
             string oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
             {
                 if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
@@ -1135,7 +1135,7 @@ namespace GitUI
         {
             string oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
             {
                 if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
@@ -1190,9 +1190,9 @@ namespace GitUI
 
             openSubmoduleToolStripMenuItem.DropDownItems.Clear();
 
-            List<GitSubmodule> submodules = GitCommands.GitCommands.GetSubmodules();
+            IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
 
-            foreach (GitSubmodule submodule in submodules)
+            foreach (IGitSubmodule submodule in submodules)
             {
                 ToolStripButton submenu = new ToolStripButton(submodule.Name);
                 submenu.Click += submenu_Click;

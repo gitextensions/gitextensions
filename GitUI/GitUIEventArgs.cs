@@ -25,6 +25,14 @@ namespace GitUI
             }
         }
 
+        public IGitCommands GitCommands
+        {
+            get
+            {
+                return new GitCommands.GitCommands();
+            }
+        }
+
         public string GitWorkingDir
         {
             get
@@ -45,7 +53,7 @@ namespace GitUI
         {
             get
             {
-                return "174";
+                return "175";
             }
         }
 

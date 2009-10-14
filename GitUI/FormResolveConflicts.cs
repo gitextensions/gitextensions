@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -74,8 +75,8 @@ namespace GitUI
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
-                List<GitSubmodule> submodules = GitCommands.GitCommands.GetSubmodules();
-                foreach (GitSubmodule submodule in submodules)
+                IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
+                foreach (IGitSubmodule submodule in submodules)
                 {
                     if (submodule.LocalPath.Equals(filename))
                     {

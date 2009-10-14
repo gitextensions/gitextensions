@@ -22,6 +22,7 @@ namespace GitStatistics
         private IGitUIEventArgs GitUIEventArgs;
         public DirectoryInfo WorkingDir;
         public string CodeFilePattern;
+        public string DirectoriesToIgnore;
 
         protected Color[] decentColors = new Color[]{ Color.Red, 
 																	  Color.Yellow, 
@@ -108,7 +109,7 @@ namespace GitStatistics
         private void InitializeLinesOfCode()
         {
             LineCounter lineCounter = new LineCounter(WorkingDir);
-            lineCounter.Count(CodeFilePattern);
+            lineCounter.Count(CodeFilePattern, DirectoriesToIgnore);
 
             TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 
@@ -165,6 +166,26 @@ namespace GitStatistics
 
             FormGitStatistics_SizeChanged(null, null);
             SizeChanged += new EventHandler(FormGitStatistics_SizeChanged);
+        }
+
+        private void Tabs_TabIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Tabs_Selected(object sender, TabControlEventArgs e)
+        {
+        }
+
+        private void Tabs_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+
+
+        }
+
+        private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FormGitStatistics_SizeChanged(null, null);
         }
     }
 }

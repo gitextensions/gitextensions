@@ -76,7 +76,7 @@ namespace GitUI
         {
             string oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in GitCommands.GitCommands.GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
             {
                 if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {

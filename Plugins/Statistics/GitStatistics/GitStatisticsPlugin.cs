@@ -31,25 +31,33 @@ namespace GitStatistics
         public void Register(IGitUICommands gitUICommands)
         {
             Settings.AddSetting("Code files", "*.c;*.cpp;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php");
+            Settings.AddSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+            Settings.AddSetting("Ignore submodules (true/false)", "true");
 
         }
 
         public void Execute(IGitUIEventArgs gitUICommands)
         {
-            try
+            if (!string.IsNullOrEmpty(gitUICommands.GitWorkingDir))
             {
-                if (!string.IsNullOrEmpty(gitUICommands.GitWorkingDir))
-                {
-                    FormGitStatistics formGitStatistics = new FormGitStatistics(gitUICommands);
+                FormGitStatistics formGitStatistics = new FormGitStatistics(gitUICommands);
 
-                    formGitStatistics.CodeFilePattern = Settings.GetSetting("Code files");
-                    formGitStatistics.WorkingDir = new DirectoryInfo(gitUICommands.GitWorkingDir);
-                        
-                    formGitStatistics.ShowDialog();
+                formGitStatistics.CodeFilePattern = Settings.GetSetting("Code files");
+                formGitStatistics.DirectoriesToIgnore = Settings.GetSetting("Directories to ignore (EndsWith)");
+
+                if (Settings.GetSetting("Ignore submodules (true/false)").Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foreach (IGitSubmodule submodule in gitUICommands.GitCommands.GetSubmodules())
+                    {
+                        formGitStatistics.DirectoriesToIgnore += ";";
+                        formGitStatistics.DirectoriesToIgnore += gitUICommands.GitWorkingDir + submodule.LocalPath;
+                    }
                 }
-            }
-            catch
-            {
+
+                formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
+                formGitStatistics.WorkingDir = new DirectoryInfo(gitUICommands.GitWorkingDir);
+                    
+                formGitStatistics.ShowDialog();
             }
         }
 

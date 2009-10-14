@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitSubmodule
+    public class GitSubmodule : IGitSubmodule
     {
         public string Name { get; set; }
         public string RemotePath
