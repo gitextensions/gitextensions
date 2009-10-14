@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IGitCommands.cs" />
     <Compile Include="IGitPlugin.cs" />
+    <Compile Include="IGitSubmodule.cs" />
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="IGitUIEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

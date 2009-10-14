@@ -7,10 +7,11 @@ using System.IO;
 using PatchApply;
 using System.Diagnostics;
 using System.Drawing;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitCommands
+    public class GitCommands : IGitCommands
     {
         public static string FindGitWorkingDir(string startDir)
         {
@@ -567,11 +568,11 @@ namespace GitCommands
             return "submodule add \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"" + branch;
         }
 
-        static public List<GitSubmodule> GetSubmodules()
+        public IList<IGitSubmodule> GetSubmodules()
         {
             string[] submodules = RunCmd(Settings.GitDir + "git.cmd", "submodule status").Split('\n');
 
-            List<GitSubmodule> submoduleList = new List<GitSubmodule>();
+            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
 
             string lastLine = null;
 

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.75
+	Fixed ut8 national chars conversion
+	Added setting to ignore directories from statistics	
+	
 Version 1.74
 	Diff syntax highlighting improved
 	Various small bug fixes

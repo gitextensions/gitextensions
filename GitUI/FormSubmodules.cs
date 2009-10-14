@@ -36,7 +36,7 @@ namespace GitUI
         private void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
-            Submodules.DataSource = GitCommands.GitCommands.GetSubmodules();
+            Submodules.DataSource = (new GitCommands.GitCommands()).GetSubmodules();
         }
 
         private void Submodules_CellContentClick(object sender, DataGridViewCellEventArgs e)
