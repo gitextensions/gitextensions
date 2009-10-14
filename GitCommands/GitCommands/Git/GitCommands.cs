@@ -55,7 +55,8 @@ namespace GitCommands
                 process.StartInfo.ErrorDialog = false;
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
-
+				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
@@ -96,6 +97,9 @@ namespace GitCommands
                 process.StartInfo.ErrorDialog = false;
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
+				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+
 
                 process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -128,6 +132,9 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
+				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+
 
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -184,6 +191,8 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardOutput = true;
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.RedirectStandardError = true;
+			Process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+			Process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
             Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             Process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -278,6 +287,8 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
+				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -327,6 +338,9 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
                 process.StartInfo.RedirectStandardError = false;
+				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+
 
                 process.StartInfo.LoadUserProfile = true;
                 process.StartInfo.CreateNoWindow = false;
