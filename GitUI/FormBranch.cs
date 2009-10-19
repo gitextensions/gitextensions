@@ -26,7 +26,7 @@ namespace GitUI
                     return;
                 }
 
-                new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, ChechoutAfterCreate.Checked));
+                new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, CheckoutAfterCreate.Checked));
 
                 Close();
 

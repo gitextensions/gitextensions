@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBranch));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
-            this.ChechoutAfterCreate = new System.Windows.Forms.CheckBox();
+            this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.Checkout = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
@@ -55,7 +55,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.ChechoutAfterCreate);
+            this.splitContainer1.Panel2.Controls.Add(this.CheckoutAfterCreate);
             this.splitContainer1.Panel2.Controls.Add(this.Checkout);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
@@ -77,17 +77,17 @@
             this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
             this.RevisionGrid.TabIndex = 0;
             // 
-            // ChechoutAfterCreate
+            // CheckoutAfterCreate
             // 
-            this.ChechoutAfterCreate.AutoSize = true;
-            this.ChechoutAfterCreate.Checked = true;
-            this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChechoutAfterCreate.Location = new System.Drawing.Point(322, 8);
-            this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
-            this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
-            this.ChechoutAfterCreate.TabIndex = 4;
-            this.ChechoutAfterCreate.Text = "Chechout after create";
-            this.ChechoutAfterCreate.UseVisualStyleBackColor = true;
+            this.CheckoutAfterCreate.AutoSize = true;
+            this.CheckoutAfterCreate.Checked = true;
+            this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(322, 8);
+            this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.CheckoutAfterCreate.TabIndex = 4;
+            this.CheckoutAfterCreate.Text = "Checkout after create";
+            this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // Checkout
             // 
@@ -152,6 +152,6 @@
         private System.Windows.Forms.TextBox BName;
         private RevisionGrid RevisionGrid;
         private System.Windows.Forms.Button Checkout;
-        private System.Windows.Forms.CheckBox ChechoutAfterCreate;
+        private System.Windows.Forms.CheckBox CheckoutAfterCreate;
     }
 }
