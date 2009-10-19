@@ -85,7 +85,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Singleton.cs" />
     <Compile Include="VisualStudioLogHandler.cs" />
   </ItemGroup>
   <ItemGroup>
