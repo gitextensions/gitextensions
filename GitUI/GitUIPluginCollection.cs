@@ -7,7 +7,7 @@ namespace GitUI
 {
     public static class GitUIPluginCollection
     {
-        private static IList<IGitPlugin> plugins = new List<IGitPlugin>();
+        private static readonly IList<IGitPlugin> plugins = new List<IGitPlugin>();
         public static IList<IGitPlugin> Plugins
         {
             get
