@@ -370,7 +370,6 @@
     </Compile>
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
-    <Compile Include="GitUIEvents.cs" />
     <Compile Include="GitUIPluginCollection.cs" />
     <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
