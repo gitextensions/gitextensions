@@ -19,7 +19,7 @@ namespace GitUI
 
         private void GitLogForm_Load(object sender, EventArgs e)
         {
-            Log.Text = Settings.GitLog;
+            Log.Text = Settings.GitLog.ToString();
         }
     }
 }

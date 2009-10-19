@@ -279,7 +279,14 @@ namespace GitCommands
             }
         }
 
-        public static string GitLog { get; set; }
+        private static readonly CommandLogger _gitLog = new CommandLogger();
+        public static CommandLogger GitLog
+        {
+            get
+            {
+                return _gitLog;
+            }
+        }
 
         private static string plink = "";
         public static string Plink

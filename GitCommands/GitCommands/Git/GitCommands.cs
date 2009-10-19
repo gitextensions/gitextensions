@@ -48,7 +48,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+                Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -90,7 +90,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+                Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -124,7 +124,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+                Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -183,7 +183,7 @@ namespace GitCommands
 
             Kill();
 
-            Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+            Settings.GitLog.Log(cmd + " " + arguments);
 
             //process used to execute external commands
             Process = new System.Diagnostics.Process();
@@ -279,7 +279,7 @@ namespace GitCommands
                 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
-                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+                Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -330,7 +330,7 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                Settings.GitLog += cmd + " " + arguments + Environment.NewLine;
+                Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
 
@@ -2186,7 +2186,7 @@ namespace GitCommands
 
                 SetEnvironmentVariable();
 
-                Settings.GitLog += Settings.GitDir + "git.cmd" + " " + "cat-file blob \"" + id + "\"" + Environment.NewLine;
+                Settings.GitLog.Log(Settings.GitDir + "git.cmd" + " " + "cat-file blob \"" + id + "\"");
                 //process used to execute external commands
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
