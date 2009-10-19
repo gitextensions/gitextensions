@@ -48,6 +48,7 @@
     <Compile Include="ChangedFileManager.cs" />
     <Compile Include="Checkout.cs" />
     <Compile Include="Clone.cs" />
+    <Compile Include="CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="Git\GitBlame.cs" />
