@@ -187,7 +187,7 @@ namespace GitUI
             if (!InvokeEvent(PreCheckoutBranch))
                 return false;
 
-            FormCheckoutBranck form = new FormCheckoutBranck();
+            FormCheckoutBranch form = new FormCheckoutBranch();
             form.ShowDialog();
 
             InvokeEvent(PostCheckoutBranch);

@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormCheckoutBranck
+    partial class FormCheckoutBranch
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCheckoutBranck));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCheckoutBranch));
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
