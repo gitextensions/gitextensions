@@ -9,6 +9,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static Encoding encoding = Encoding.Default;
+        public static Encoding Encoding
+        {
+            get
+            {
+                return encoding;
+            }
+            set
+            {
+                encoding = value;
+            }
+        }
+
         private static string pullMerge = "merge";
         public static string PullMerge
         {
@@ -349,6 +362,19 @@ namespace GitCommands
                 {
                     Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
                 }
+
+                if (Settings.Encoding == System.Text.Encoding.Default)
+                    Application.UserAppDataRegistry.SetValue("encoding", "Default");
+                else
+                    if (Settings.Encoding == System.Text.Encoding.UTF7)
+                        Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
+                    else
+                        if (Settings.Encoding == System.Text.Encoding.UTF8)
+                            Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+                        else
+                            if (Settings.Encoding == System.Text.Encoding.UTF32)
+                                Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
@@ -393,6 +419,22 @@ namespace GitCommands
                     }
                 }
 
+                string encoding = null;
+                if (Application.UserAppDataRegistry.GetValue("encoding") != null) encoding = Application.UserAppDataRegistry.GetValue("encoding").ToString();
+
+                if (string.IsNullOrEmpty(encoding) || encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                    Settings.Encoding = System.Text.Encoding.Default;
+                else
+                    if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                        Settings.Encoding = System.Text.Encoding.UTF7;
+                    else
+                        if (encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                            Settings.Encoding = System.Text.Encoding.UTF8;
+                        else
+                            if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                Settings.Encoding = System.Text.Encoding.UTF32;
+                            else
+                                Settings.Encoding = System.Text.Encoding.Default;
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
