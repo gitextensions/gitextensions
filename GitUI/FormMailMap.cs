@@ -21,7 +21,7 @@ namespace GitUI
             {
                 if (File.Exists(Settings.WorkingDir + ".mailmap"))
                 {
-                    StreamReader re = File.OpenText(Settings.WorkingDir + ".mailmap");
+                    StreamReader re = new StreamReader(Settings.WorkingDir + ".mailmap", Settings.Encoding);
                     MailMapFile = re.ReadToEnd();
                     re.Close();
                 }
@@ -37,7 +37,7 @@ namespace GitUI
         private void Save_Click(object sender, EventArgs e)
         {
             MailMapFile = MailMapText.Text;
-            TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false);
+            TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false, Settings.Encoding);
             tw.Write(MailMapFile);
             tw.Close();
             Close();

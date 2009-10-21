@@ -70,6 +70,18 @@ namespace GitUI
         {
             try
             {
+                if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
+                    Encoding.Text = "Default";
+                else
+                    if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF7)
+                        Encoding.Text = "UTF7";
+                    else
+                        if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF8)
+                            Encoding.Text = "UTF8";
+                        else
+                            if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF32)
+                                Encoding.Text = "UTF32";
+
                 SmtpServer.Text = GitCommands.Settings.Smtp;
 
                 MaxCommits.Value = GitCommands.Settings.MaxCommits;
@@ -168,6 +180,20 @@ namespace GitUI
             GitCommands.Settings.Puttygen = PuttygenPath.Text;
             GitCommands.Settings.Pageant = PageantPath.Text;
             GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
+
+            if (string.IsNullOrEmpty(Encoding.Text) || Encoding.Text.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                GitCommands.Settings.Encoding = System.Text.Encoding.Default;
+            else
+            if (Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                GitCommands.Settings.Encoding = System.Text.Encoding.UTF7;
+            else
+            if (Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                GitCommands.Settings.Encoding = System.Text.Encoding.UTF8;
+            else
+            if (Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                GitCommands.Settings.Encoding = System.Text.Encoding.UTF32;
+            else
+                GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
             EnableSettings();
 

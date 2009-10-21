@@ -61,6 +61,8 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.EncodingLabel = new System.Windows.Forms.Label();
+            this.Encoding = new System.Windows.Forms.ComboBox();
             this.Dictionary = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
@@ -160,7 +162,7 @@
             this.LocalSettings.Location = new System.Drawing.Point(4, 22);
             this.LocalSettings.Name = "LocalSettings";
             this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(655, 299);
+            this.LocalSettings.Size = new System.Drawing.Size(655, 328);
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
@@ -350,7 +352,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(663, 325);
+            this.tabControl1.Size = new System.Drawing.Size(663, 354);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -367,7 +369,7 @@
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(655, 299);
+            this.tabPage3.Size = new System.Drawing.Size(655, 328);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -503,6 +505,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.EncodingLabel);
+            this.TabPageGitExtensions.Controls.Add(this.Encoding);
             this.TabPageGitExtensions.Controls.Add(this.label23);
             this.TabPageGitExtensions.Controls.Add(this.SmtpServer);
             this.TabPageGitExtensions.Controls.Add(this.Dictionary);
@@ -522,11 +526,34 @@
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
             this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(655, 299);
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(655, 328);
             this.TabPageGitExtensions.TabIndex = 3;
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // EncodingLabel
+            // 
+            this.EncodingLabel.AutoSize = true;
+            this.EncodingLabel.Location = new System.Drawing.Point(247, 289);
+            this.EncodingLabel.Name = "EncodingLabel";
+            this.EncodingLabel.Size = new System.Drawing.Size(52, 13);
+            this.EncodingLabel.TabIndex = 20;
+            this.EncodingLabel.Text = "Encoding";
+            // 
+            // Encoding
+            // 
+            this.Encoding.FormattingEnabled = true;
+            this.Encoding.Items.AddRange(new object[] {
+            "Default",
+            "ASCII",
+            "UTF7",
+            "UTF8",
+            "UTF32"});
+            this.Encoding.Location = new System.Drawing.Point(305, 286);
+            this.Encoding.Name = "Encoding";
+            this.Encoding.Size = new System.Drawing.Size(242, 21);
+            this.Encoding.TabIndex = 19;
             // 
             // Dictionary
             // 
@@ -712,7 +739,7 @@
             this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
             this.GlobalSettingsPage.Name = "GlobalSettingsPage";
             this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(655, 299);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(655, 328);
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
@@ -925,7 +952,7 @@
             this.Ssh.Location = new System.Drawing.Point(4, 22);
             this.Ssh.Name = "Ssh";
             this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(655, 299);
+            this.Ssh.Size = new System.Drawing.Size(655, 328);
             this.Ssh.TabIndex = 4;
             this.Ssh.Text = "Ssh";
             this.Ssh.UseVisualStyleBackColor = true;
@@ -1133,8 +1160,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(663, 358);
-            this.splitContainer1.SplitterDistance = 325;
+            this.splitContainer1.Size = new System.Drawing.Size(663, 387);
+            this.splitContainer1.SplitterDistance = 354;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -1182,7 +1209,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 358);
+            this.ClientSize = new System.Drawing.Size(663, 387);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1318,6 +1345,8 @@
 		private System.Windows.Forms.ComboBox GlobalAutoCRLF;
 		private System.Windows.Forms.Label lblLocalAutoCRLF;
 		private System.Windows.Forms.ComboBox LocalAutoCRLF;
+        private System.Windows.Forms.Label EncodingLabel;
+        private System.Windows.Forms.ComboBox Encoding;
 
     }
 }

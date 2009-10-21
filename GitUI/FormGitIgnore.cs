@@ -21,7 +21,7 @@ namespace GitUI
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
                 {
-                    StreamReader re = File.OpenText(Settings.WorkingDir + ".gitignore");
+                    StreamReader re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding);
                     GitIgnoreFile = re.ReadToEnd();
                     re.Close();
                 }
@@ -39,7 +39,7 @@ namespace GitUI
         private void Save_Click(object sender, EventArgs e)
         {
             GitIgnoreFile = GitIgnoreEdit.Text;
-            TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false);
+            TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding);
             tw.Write(GitIgnoreFile);
             tw.Close();
             Close();
