@@ -18,6 +18,8 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
+            FileChanges.Filter = " \"" + fileName + "\"";
+            FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
 
             BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
             BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;
@@ -48,55 +50,51 @@ namespace GitUI
         private void FileChanges_SelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (FileChanges.SelectedRows.Count == 0) return;
 
-            if (FileChanges.SelectedRows[0].DataBoundItem is IGitItem)
+            List<GitRevision> selectedRows = FileChanges.GetRevisions();
+
+            if (selectedRows.Count == 0) return;
+
+            IGitItem revision = selectedRows[0];
+
+            if (tabControl1.SelectedTab == Blame)
             {
-                GitItem revision = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
+                //BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
+                FillBlameTab(revision.Guid);
+            }
+            if (tabControl1.SelectedTab == ViewTab)
+            {
+                int scrollpos =View.ScrollPos;
 
-                if (tabControl1.SelectedTab == Blame)
-                {
-                    //BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
-                    FillBlameTab(revision.CommitGuid);
-                }
-                if (tabControl1.SelectedTab == ViewTab)
-                {
-                    int scrollpos =View.ScrollPos;
-                    View.ViewGitItem(FileName, revision.Guid);
-                    View.ScrollPos = scrollpos;
-                }
+                View.ViewGitItemRevision(FileName, revision.Guid);
+                View.ScrollPos = scrollpos;
             }
 
-            if (FileChanges.SelectedRows.Count == 2)
+            if (selectedRows.Count == 2)
             {
-                if (FileChanges.SelectedRows[0].DataBoundItem is GitItem)
-                    if (FileChanges.SelectedRows[1].DataBoundItem is GitItem)
-                    {
-                        GitItem revision1 = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
-                        GitItem revision2 = (GitItem)FileChanges.SelectedRows[1].DataBoundItem;
-
-                        if (tabControl1.SelectedTab == DiffTab)
-                        {
-                            Diff diff = new Diff(new DiffDto(revision1.CommitGuid, revision2.CommitGuid, revision1.FileName));
-                            diff.Execute();
-                            ///EditorOptions.SetSyntax(Diff, FileName);
-                            Diff.ViewPatch(diff.Dto.Result);
-                       }
-                    }
-            }
-            else
-            if (FileChanges.SelectedRows.Count == 1)
-            {
-                if (FileChanges.SelectedRows[0].DataBoundItem is GitItem)
                 {
-                    GitItem revision1 = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
+                    IGitItem revision1 = selectedRows[0];
+                    IGitItem revision2 = selectedRows[1];
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff diff = new Diff(new DiffDto(revision1.CommitGuid + "^", revision1.CommitGuid, FileName));
+                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid, FileName));
                         diff.Execute();
+                        ///EditorOptions.SetSyntax(Diff, FileName);
                         Diff.ViewPatch(diff.Dto.Result);
-                    }
+                   }
+                }
+            }
+            else
+                if (selectedRows.Count == 1)
+            {
+                IGitItem revision1 = selectedRows[0];
+
+                if (tabControl1.SelectedTab == DiffTab)
+                {
+                    Diff diff = new Diff(new DiffDto(revision1.Guid + "^", revision1.Guid, FileName));
+                    diff.Execute();
+                    Diff.ViewPatch(diff.Dto.Result);
                 }
             }
             else
@@ -169,12 +167,12 @@ namespace GitUI
 
         private void FileChanges_DoubleClick(object sender, EventArgs e)
         {
-            if (FileChanges.SelectedRows.Count > 0)
+            if (FileChanges.GetRevisions().Count > 0)
             {
-                GitItem revision = (GitItem)FileChanges.SelectedRows[0].DataBoundItem;
+                IGitItem revision = FileChanges.GetRevisions()[0];
 
                 FormDiffSmall form = new FormDiffSmall();
-                form.SetRevision(revision.CommitGuid);
+                form.SetRevision(revision.Guid);
                 form.ShowDialog();
             }
             else
@@ -187,7 +185,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             //EditorOptions.SetSyntax(View, FileName);
 
-            FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
+            //FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
         }
     }
 }

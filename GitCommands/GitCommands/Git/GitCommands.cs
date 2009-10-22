@@ -2160,6 +2160,12 @@ namespace GitCommands
 
         }
 
+        public static string GetFileRevisionText(string file, string revision)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "show " + revision + ":\"" + file.Replace('\\', '/') + "\"");
+        }
+
+
         public static string GetFileText(string id)
         {
             return RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + id + "\"");

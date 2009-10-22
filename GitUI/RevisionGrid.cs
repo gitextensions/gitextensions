@@ -146,7 +146,9 @@ namespace GitUI
         public void RefreshRevisions()
         {
             if (indexWatcher.IndexChanged)
+            {
                 ForceRefreshRevisions();
+            }
         }
 
         public int LastScrollPos = 0;
@@ -156,6 +158,8 @@ namespace GitUI
         {
             try
             {
+                initialLoad = true;
+
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
                 LastSelectedRows.Clear();
 
@@ -295,6 +299,7 @@ namespace GitUI
         public string currentCheckout { get; set; }
         public List<GitRevision> RevisionList;
         private int LastRevision = 0;
+        private bool initialLoad = true;
 
         private void LoadRevisions()
         {
@@ -365,6 +370,15 @@ namespace GitUI
             Revisions.SelectionChanged += new EventHandler(Revisions_SelectionChanged);
 
             Revisions.ResumeLayout();
+
+            if (initialLoad)
+            {
+                initialLoad = false;
+                SelecctionTimer.Enabled = false;
+                SelecctionTimer.Stop();
+                SelecctionTimer.Enabled = true;
+                SelecctionTimer.Start();
+            }
         }
 
         private bool skipFirst = false;
@@ -840,7 +854,7 @@ namespace GitUI
 
         private void CreateTag_Opening(object sender, CancelEventArgs e)
         {
-            if (RevisionList.Count < LastRow || LastRow < 0)
+            if (RevisionList.Count < LastRow || LastRow < 0 || RevisionList.Count == 0)
                 return;
 
             GitRevision revision = RevisionList[LastRow] as GitRevision;
