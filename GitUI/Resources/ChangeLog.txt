@@ -4,6 +4,8 @@ Changelog
 Version 1.75
 	Fixed ut8 national chars conversion
 	Added setting to ignore directories from statistics	
+	Added syntax and find to blame view
+	Toolbar in Visual Studio learned to remember the last position
 	
 Version 1.74
 	Diff syntax highlighting improved
