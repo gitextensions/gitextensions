@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -42,8 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddFiles.cs" />
-    <Compile Include="Branch.cs" />
     <Compile Include="ChangedFile.cs" />
     <Compile Include="ChangedFileManager.cs" />
     <Compile Include="Checkout.cs" />
@@ -61,10 +59,6 @@
     <Compile Include="Git\GitSubmodule.cs" />
     <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Init.cs" />
-    <Compile Include="Lane.cs" />
-    <Compile Include="LaneGraph.cs" />
-    <Compile Include="LaneGraphManager.cs" />
-    <Compile Include="LanePoint.cs" />
     <Compile Include="Patch\Patch.cs" />
     <Compile Include="Patch\PatchFile.cs" />
     <Compile Include="Patch\PatchManager.cs" />
