@@ -20,6 +20,7 @@ namespace GitUI
             InitializeComponent();
             FileChanges.Filter = " \"" + fileName + "\"";
             FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
+            FileChanges.DisableContextMenu();
 
             BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
             BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;

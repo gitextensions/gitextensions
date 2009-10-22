@@ -45,6 +45,13 @@ namespace GitUI
 
         public string LogParam = "HEAD --all --boundary";
 
+        private bool ContextMenuEnabled = true;
+        public void DisableContextMenu()
+        {
+            Revisions.ContextMenuStrip = null;
+            ContextMenuEnabled = false;
+        }
+
         private string filter;
         public string Filter
         {
@@ -848,7 +855,7 @@ namespace GitUI
 
         private void Revisions_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F && ContextMenuEnabled)
                 filterToolStripMenuItem_Click(null, null);
         }
 

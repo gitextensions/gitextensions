@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 1.75
+Version 1.76
 	Fixed ut8 national chars conversion
 	Added setting to ignore directories from statistics	
 	Added syntax and find to blame view

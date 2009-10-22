@@ -127,8 +127,8 @@
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Revisions_MouseClick);
             this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Revisions_CellMouseDown);
+            this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Revisions_KeyUp);
             this.Revisions.CellContextMenuStripChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContextMenuStripChanged);
-            this.Revisions.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Revisions_KeyUp);
             this.Revisions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContentClick);
             // 
             // Graph
@@ -179,7 +179,7 @@
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 330);
+            this.CreateTag.Size = new System.Drawing.Size(224, 308);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
