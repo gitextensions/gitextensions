@@ -434,7 +434,7 @@ namespace GitCommands
                             if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
                                 Settings.Encoding = System.Text.Encoding.UTF32;
                             else
-                                Settings.Encoding = System.Text.Encoding.Default;
+                                Settings.Encoding = System.Text.Encoding.UTF8;
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
