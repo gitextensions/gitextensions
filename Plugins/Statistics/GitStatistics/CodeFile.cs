@@ -63,7 +63,7 @@ namespace GitStatistics
             InitializeCountLines();
             if (file.Exists)
             {
-                StreamReader sr = new StreamReader(file.FullName);
+                StreamReader sr = new StreamReader(file.FullName, true);
                 try
                 {
                     while (!sr.EndOfStream)
