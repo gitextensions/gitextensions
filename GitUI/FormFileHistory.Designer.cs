@@ -31,11 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.FileChanges = new System.Windows.Forms.DataGridView();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileChanges = new GitUI.RevisionGrid();
             this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
@@ -46,14 +42,13 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
+            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventLog1 = new System.Diagnostics.EventLog();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
@@ -62,6 +57,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
@@ -85,56 +81,18 @@
             this.splitContainer1.SplitterDistance = 112;
             this.splitContainer1.TabIndex = 0;
             // 
-            // gitBlameBindingSource
-            // 
-            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
-            // 
             // FileChanges
             // 
-            this.FileChanges.AllowUserToAddRows = false;
-            this.FileChanges.AllowUserToDeleteRows = false;
-            this.FileChanges.AutoGenerateColumns = false;
-            this.FileChanges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.FileChanges.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn,
-            this.Author,
-            this.Date});
-            this.FileChanges.DataSource = this.gitItemBindingSource1;
+            this.FileChanges.currentCheckout = null;
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileChanges.Filter = "";
+            this.FileChanges.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
-            this.FileChanges.ReadOnly = true;
-            this.FileChanges.RowHeadersVisible = false;
-            this.FileChanges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FileChanges.Size = new System.Drawing.Size(750, 112);
-            this.FileChanges.TabIndex = 1;
-            this.FileChanges.DoubleClick += new System.EventHandler(this.FileChanges_DoubleClick);
-            this.FileChanges.SelectionChanged += new System.EventHandler(this.FileChanges_SelectionChanged);
-            this.FileChanges.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FileChanges_CellContentClick);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Author
-            // 
-            this.Author.DataPropertyName = "Author";
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.Width = 150;
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.Width = 180;
+            this.FileChanges.TabIndex = 2;
             // 
             // gitItemBindingSource1
             // 
@@ -238,6 +196,10 @@
             this.BlameFile.Size = new System.Drawing.Size(491, 304);
             this.BlameFile.TabIndex = 4;
             // 
+            // gitBlameBindingSource
+            // 
+            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
+            // 
             // subItemsBindingSource
             // 
             this.subItemsBindingSource.DataMember = "SubItems";
@@ -266,8 +228,6 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FileChanges)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
@@ -276,6 +236,7 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
@@ -286,16 +247,12 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.DataGridView FileChanges;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
         private System.Windows.Forms.TabPage Blame;
         private System.Windows.Forms.BindingSource gitItemBindingSource1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.BindingSource gitBlameBindingSource;
         private System.Diagnostics.EventLog eventLog1;
@@ -304,5 +261,6 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private ICSharpCode.TextEditor.TextEditorControl BlameFile;
         private ICSharpCode.TextEditor.TextEditorControl BlameCommitter;
+        private RevisionGrid FileChanges;
     }
 }

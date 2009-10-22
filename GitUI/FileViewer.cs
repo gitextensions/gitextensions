@@ -272,6 +272,68 @@ namespace GitUI
                     fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public void ViewGitItemRevision(string fileName, string guid)
+        {
+            ClearImage();
+            PictureBox.Visible = false;
+            TextEditor.Visible = true;
+
+            try
+            {
+
+                if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Stream stream = GitCommands.GitCommands.GetFileStream(guid);
+                    Image images;
+
+                    if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
+                        images = new Icon(stream).ToBitmap();
+                    else
+                        images = Image.FromStream(stream);
+
+                    stream.Close();
+
+                    PictureBox.Visible = true;
+                    TextEditor.Visible = false;
+
+                    if (images.Size.Height > PictureBox.Size.Height ||
+                        images.Size.Width > PictureBox.Size.Width)
+                    {
+                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
+                    else
+                    {
+                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                    }
+                    PictureBox.Image = images;
+                }
+                else
+                    if (IsBinaryFile(fileName))
+                    {
+                        ClearImage();
+                        TextEditor.Text = "Binary file: " + fileName;
+                    }
+                    else
+                    {
+                        ClearImage();
+                        EditorOptions.SetSyntax(TextEditor, fileName);
+
+                        TextEditor.Text = GitCommands.GitCommands.GetFileRevisionText(fileName, guid);
+                    }
+            }
+            catch
+            {
+                TextEditor.Text = "Unsupported file";
+            }
+            TextEditor.Refresh();
+        }
+
         public void ViewGitItem(string fileName, string guid)
         {
             ClearImage();
