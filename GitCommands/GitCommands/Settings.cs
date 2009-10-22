@@ -422,19 +422,22 @@ namespace GitCommands
                 string encoding = null;
                 if (Application.UserAppDataRegistry.GetValue("encoding") != null) encoding = Application.UserAppDataRegistry.GetValue("encoding").ToString();
 
-                if (string.IsNullOrEmpty(encoding) || encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                    Settings.Encoding = System.Text.Encoding.Default;
-                else
-                    if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                        Settings.Encoding = System.Text.Encoding.UTF7;
+                if (string.IsNullOrEmpty(encoding))
+                    Settings.Encoding = System.Text.Encoding.UTF8;
+                else 
+                    if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                        Settings.Encoding = System.Text.Encoding.Default;
                     else
-                        if (encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                            Settings.Encoding = System.Text.Encoding.UTF8;
+                        if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                            Settings.Encoding = System.Text.Encoding.UTF7;
                         else
-                            if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                                Settings.Encoding = System.Text.Encoding.UTF32;
-                            else
+                            if (encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
                                 Settings.Encoding = System.Text.Encoding.UTF8;
+                            else
+                                if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                    Settings.Encoding = System.Text.Encoding.UTF32;
+                                else
+                                    Settings.Encoding = System.Text.Encoding.UTF8;
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
