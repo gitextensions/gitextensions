@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ICSharpCode.TextEditor.Document;
 
 namespace GitUI
 {
@@ -17,6 +18,19 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
+
+            BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
+            BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;
+            BlameCommitter.ShowLineNumbers = false;
+            BlameCommitter.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
+            BlameCommitter.Enabled = false;
+
+            BlameFile.ActiveTextAreaControl.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            BlameFile.KeyDown += new KeyEventHandler(BlameFile_KeyUp);
+            BlameFile.ActiveTextAreaControl.TextArea.Click += new EventHandler(BlameFile_Click);
+            BlameFile.ActiveTextAreaControl.TextArea.KeyDown += new KeyEventHandler(BlameFile_KeyUp);
+            BlameFile.ActiveTextAreaControl.KeyDown += new KeyEventHandler(BlameFile_KeyUp);
+            BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += new EventHandler(ActiveTextAreaControl_DoubleClick);
         }
 
         public string FileName { get; set; }
@@ -42,7 +56,8 @@ namespace GitUI
 
                 if (tabControl1.SelectedTab == Blame)
                 {
-                    BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
+                    //BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
+                    FillBlameTab(revision.CommitGuid);
                 }
                 if (tabControl1.SelectedTab == ViewTab)
                 {
@@ -90,10 +105,62 @@ namespace GitUI
             }
         }
 
-        private void Blame_Click(object sender, EventArgs e)
+        private List<GitBlame> blameList;
+        private void FillBlameTab(string guid)
         {
-         
+            StringBuilder blameCommitter = new StringBuilder();
+            StringBuilder blameFile = new StringBuilder();
+
+            blameList = GitCommands.GitCommands.Blame(FileName, guid);
+
+            foreach (GitBlame blame in blameList)
+            {
+                blameCommitter.AppendLine(blame.Author);
+                blameFile.AppendLine(blame.Text);
+            }
+
+            EditorOptions.SetSyntax(BlameFile, FileName);
+
+            BlameCommitter.Text = blameCommitter.ToString();
+            BlameFile.Text = blameFile.ToString();
         }
+
+        FindAndReplaceForm findAndReplaceForm = new FindAndReplaceForm();
+
+        void BlameFile_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+                findAndReplaceForm.ShowFor(BlameFile, false);
+            SyncBlameViews();
+        }
+
+
+        void VScrollBar_ValueChanged(object sender, EventArgs e)
+        {
+            SyncBlameViews();
+        }
+
+        void BlameFile_Click(object sender, EventArgs e)
+        {
+            SyncBlameViews();
+        }
+        
+        private void SyncBlameViews()
+        {
+            BlameCommitter.ActiveTextAreaControl.VScrollBar.Value = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
+            //BlameCommitter.ActiveTextAreaControl.Caret.Line = BlameFile.ActiveTextAreaControl.Caret.Line;
+        }
+
+        void ActiveTextAreaControl_DoubleClick(object sender, EventArgs e)
+        {
+            if (blameList == null || blameList.Count < BlameFile.ActiveTextAreaControl.TextArea.Caret.Line)
+                return;
+
+            FormDiffSmall frm = new FormDiffSmall();
+            frm.SetRevision(blameList[BlameFile.ActiveTextAreaControl.TextArea.Caret.Line].CommitGuid);
+            frm.ShowDialog();
+        }
+
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -115,48 +182,12 @@ namespace GitUI
 
         }
 
-        private void textEditorControl1_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void BlameGrid_DoubleClick(object sender, EventArgs e)
-        {
-            if (BlameGrid.SelectedRows.Count == 0)
-                return;
-
-            FormDiffSmall frm = new FormDiffSmall();
-            frm.SetRevision(((GitBlame)BlameGrid.SelectedRows[0].DataBoundItem).CommitGuid);
-            frm.ShowDialog();
-        }
-
-        private void BlameGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            
-        }
-
-        private void BlameGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
-            {
-                if (e.ColumnIndex == 0)
-                {
-                    e.Handled = true;
-                    GitBlame blame = ((GitBlame)BlameGrid.Rows[e.RowIndex].DataBoundItem);
-                    e.Graphics.FillRectangle(new SolidBrush(blame.color), e.CellBounds);
-                    e.Graphics.DrawString(blame.Author, BlameGrid.Font, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                }
-            }
-        }
-
         private void FormFileHistory_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             //EditorOptions.SetSyntax(View, FileName);
 
             FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
-
-            BlameGrid.RowTemplate.Height = 15;
         }
     }
 }

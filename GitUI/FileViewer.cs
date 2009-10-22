@@ -14,7 +14,7 @@ namespace GitUI
         public FileViewer()
         {
             InitializeComponent();
-            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += new KeyEventHandler(TextArea_KeyUp);
+            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += new KeyEventHandler(TextArea_KeyUp);
 
         }
 
