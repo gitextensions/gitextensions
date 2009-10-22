@@ -12,7 +12,7 @@ namespace GitUI
 {
     public partial class FormFileHistory : GitExtensionsForm
     {
-        public FormFileHistory(string fileName)
+        public FormFileHistory(string fileName):base()
         {
             this.FileName = fileName;
 

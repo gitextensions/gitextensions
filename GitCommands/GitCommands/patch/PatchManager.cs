@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using GitCommands;
 
 namespace PatchApply
 {
@@ -18,7 +19,7 @@ namespace PatchApply
         {
             try
             {
-                StreamReader re = File.OpenText(DirToPatch + fileName);
+                StreamReader re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
   //              string retval = re.ReadToEnd();
 //                GetMD5Hash(retval);
                 string retval = "";
@@ -240,7 +241,7 @@ namespace PatchApply
         {
             try
             {
-                StreamReader re = File.OpenText(PatchFileName);
+                StreamReader re = new StreamReader(PatchFileName, Settings.Encoding);
                 LoadPatchStream(re, applyPatch);
             }
             catch
