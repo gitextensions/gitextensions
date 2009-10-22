@@ -9,7 +9,7 @@ namespace GitCommands
 {
     public class Settings
     {
-        private static Encoding encoding = Encoding.Default;
+        private static Encoding encoding = Encoding.UTF8;
         public static Encoding Encoding
         {
             get
