@@ -29,6 +29,7 @@ namespace GitUI
         {
             base.InitLayout();
             InitializeComponent();
+            Revisions.Columns[0].Width = 40;
 
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
@@ -166,6 +167,7 @@ namespace GitUI
             try
             {
                 initialLoad = true;
+                graphWidth = 0;
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
                 LastSelectedRows.Clear();
@@ -175,9 +177,9 @@ namespace GitUI
                     LastSelectedRows.Add(row.Index);
                 }
 
-                if (Settings.ShowRevisionGraph)
-                    Revisions.Columns[0].Width = 150;
-                else
+                if (!Settings.ShowRevisionGraph)
+                    //Revisions.Columns[0].Width = 1;
+                //else
                     Revisions.Columns[0].Width = 0;
 
 
@@ -389,8 +391,10 @@ namespace GitUI
         }
 
         private bool skipFirst = false;
+        private int graphWidth = 0;
         private void DrawVisibleGraphPart()
         {
+            graphWidth = 0;
             int height = Revisions.RowTemplate.Height;
             int width = 6;
             int y = -height;
@@ -596,14 +600,19 @@ namespace GitUI
                             {
                                 graph.DrawLine(linePen, hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
                             }
-
+//                            if (nextChar != ' ')
                         }
+                        graphWidth = Math.Max(graphWidth, Math.Max(40, (currentLine.Length * width) + width));
+                        graphWidth = Math.Min((100 * width) + width, graphWidth);
+
                     }
                     lastlastLine = lastLine;
                     lastLine = currentLine;
                     currentLine = nextLine;
                 }
             }
+
+            Revisions.Columns[0].Width = graphWidth;
         }
 
         void Revisions_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)

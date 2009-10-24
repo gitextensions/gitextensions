@@ -38,7 +38,8 @@ namespace GitUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            GitIgnoreFile = GitIgnoreEdit.Text;
+            //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
+            GitIgnoreFile = Environment.NewLine + GitIgnoreEdit.Text.Trim();
             TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding);
             tw.Write(GitIgnoreFile);
             tw.Close();
