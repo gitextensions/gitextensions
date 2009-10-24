@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 1.77
+	Fixed bug in version 1.76 that file history was broken when started from Visual Studio
+	Commit message now supports multiline (first line is the summary)
+	Revision grid resizes graph column automatically. 
+	Settings user.name and user.email are only saved when changed. This to work around a bug that utf8 chars are only allowed when editing the .config file manually. 
+	Recent repository list handles doubles better.
+	
 Version 1.76
 	Fixed ut8 national chars conversion
 	Added setting to ignore directories from statistics	
