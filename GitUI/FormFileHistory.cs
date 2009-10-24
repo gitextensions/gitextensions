@@ -15,6 +15,10 @@ namespace GitUI
     {
         public FormFileHistory(string fileName):base()
         {
+            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Settings.WorkingDir.Length);
+
+
             this.FileName = fileName;
 
             InitializeComponent();
@@ -23,10 +27,13 @@ namespace GitUI
             FileChanges.DisableContextMenu();
 
             BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
+
+            BlameCommitter.ActiveTextAreaControl.VScrollBar.Width = 0;
             BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;
             BlameCommitter.ShowLineNumbers = false;
             BlameCommitter.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
             BlameCommitter.Enabled = false;
+            BlameCommitter.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;//.Width = BlameCommitter.ActiveTextAreaControl.Width;
 
             BlameFile.ActiveTextAreaControl.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
             BlameFile.KeyDown += new KeyEventHandler(BlameFile_KeyUp);

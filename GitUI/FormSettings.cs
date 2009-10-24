@@ -206,8 +206,10 @@ namespace GitUI
             {
                 GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-                GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
-                GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
+                if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(GitCommands.GitCommands.GetSetting("user.name")))
+                    GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
+                if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(GitCommands.GitCommands.GetSetting("user.email")))
+                    GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
                 GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
                 GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
 
@@ -220,8 +222,10 @@ namespace GitUI
 
 				GitCommands.GitCommands.SetSetting("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
 
-                gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
-                gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
+                if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(gitCommands.GetGlobalSetting("user.name")))
+                    gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
+                if (string.IsNullOrEmpty(GlobalUserEmail.Text) || !GlobalUserEmail.Text.Equals(gitCommands.GetGlobalSetting("user.email")))
+                    gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
                 gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
                 gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
 

@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
-            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new GitUI.FileViewer();
@@ -42,6 +41,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
+            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -49,7 +49,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
@@ -57,6 +56,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -93,10 +93,6 @@
             this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FileChanges.Size = new System.Drawing.Size(750, 112);
             this.FileChanges.TabIndex = 2;
-            // 
-            // gitItemBindingSource1
-            // 
-            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
             // 
             // tabControl1
             // 
@@ -163,6 +159,7 @@
             // 
             // splitContainer2
             // 
+            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
@@ -184,7 +181,7 @@
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(247, 304);
+            this.BlameCommitter.Size = new System.Drawing.Size(245, 302);
             this.BlameCommitter.TabIndex = 5;
             // 
             // BlameFile
@@ -193,8 +190,12 @@
             this.BlameFile.IsReadOnly = false;
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(491, 304);
+            this.BlameFile.Size = new System.Drawing.Size(489, 302);
             this.BlameFile.TabIndex = 4;
+            // 
+            // gitItemBindingSource1
+            // 
+            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
             // 
             // gitBlameBindingSource
             // 
@@ -228,7 +229,6 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
@@ -236,6 +236,7 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();

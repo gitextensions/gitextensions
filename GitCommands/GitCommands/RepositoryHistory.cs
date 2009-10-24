@@ -14,9 +14,20 @@ namespace GitCommands
         {
             repo = repo.Trim();
 
-            if (MostRecentRepositories.IndexOf(repo) > -1)
+            if (string.IsNullOrEmpty(repo))
+                return;
+
+            repo.Replace('/', '\\');
+            if (!repo.EndsWith("\\"))
+                repo += "\\";
+
+            foreach (string recentRepository in MostRecentRepositories)
             {
-                MostRecentRepositories.Remove(repo);
+                if (recentRepository.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    MostRecentRepositories.Remove(recentRepository);
+                    break;
+                }
             }
 
             MostRecentRepositories.Insert(0, repo);
