@@ -792,11 +792,6 @@ namespace GitUI
             }
         }
 
-        private void AddFiles_Click(object sender, EventArgs e)
-        {
-            GitUICommands.Instance.StartAddFilesDialog();
-        }
-
         private void Commit_Click(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartCommitDialog();
@@ -975,6 +970,11 @@ namespace GitUI
         }
 
         private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
