@@ -143,8 +143,7 @@
 
 If this is a normal repository, these steps are recommended:
 - Make sure you have a proper .gitignore file in your repository
-- Then add files (using the "add files" function is much faster then using commit)
-- Commit the added files using commit
+- Commit files using commit
 
 If this is a central repository (bare repository without a working dir):
 - Push changes from another repository</value>

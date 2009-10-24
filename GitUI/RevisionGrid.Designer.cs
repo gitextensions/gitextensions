@@ -62,7 +62,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
-            this.AddFiles = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
@@ -310,7 +309,6 @@
             this.NoCommits.Controls.Add(this.NoGit);
             this.NoCommits.Controls.Add(this.GitIgnore);
             this.NoCommits.Controls.Add(this.Commit);
-            this.NoCommits.Controls.Add(this.AddFiles);
             this.NoCommits.Controls.Add(this.label1);
             this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoCommits.Location = new System.Drawing.Point(0, 0);
@@ -348,7 +346,7 @@
             // 
             // Commit
             // 
-            this.Commit.Location = new System.Drawing.Point(400, 68);
+            this.Commit.Location = new System.Drawing.Point(401, 39);
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(87, 23);
             this.Commit.TabIndex = 2;
@@ -356,24 +354,15 @@
             this.Commit.UseVisualStyleBackColor = true;
             this.Commit.Click += new System.EventHandler(this.Commit_Click);
             // 
-            // AddFiles
-            // 
-            this.AddFiles.Location = new System.Drawing.Point(400, 39);
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(87, 23);
-            this.AddFiles.TabIndex = 1;
-            this.AddFiles.Text = "Add files";
-            this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(381, 117);
+            this.label1.Size = new System.Drawing.Size(315, 104);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Error
             // 
@@ -445,7 +434,6 @@
         private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
         private System.Windows.Forms.Panel NoCommits;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
         private System.Windows.Forms.ToolStripMenuItem ShowRemoteBranches;
