@@ -272,8 +272,13 @@ namespace GitCommands
 
         public static string WorkingDirGitDir()
         {
-            if (Directory.Exists(WorkingDir + "\\" + ".git"))
-                return WorkingDir + "\\" + ".git";
+            string workingDir = WorkingDir;
+
+            if (Directory.Exists(workingDir + ".git"))
+                return workingDir + ".git";
+
+            if (Directory.Exists(workingDir + "\\" + ".git"))
+                return workingDir + "\\" + ".git";
 
             return WorkingDir;
         }

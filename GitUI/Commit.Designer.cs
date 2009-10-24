@@ -66,7 +66,6 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SelectedDiff = new GitUI.FileViewer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.Cancel = new System.Windows.Forms.Button();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.AddManyFiles = new System.Windows.Forms.Button();
@@ -78,6 +77,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Message = new GitUI.EditNetSpell();
             this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.Cancel = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -482,6 +482,7 @@
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Name = "SelectedDiff";
+            this.SelectedDiff.ScrollPos = 0;
             this.SelectedDiff.Size = new System.Drawing.Size(502, 316);
             this.SelectedDiff.TabIndex = 0;
             // 
@@ -507,17 +508,6 @@
             this.splitContainer6.Size = new System.Drawing.Size(502, 328);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
-            // 
-            // Cancel
-            // 
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(232, 104);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(129, 23);
-            this.Cancel.TabIndex = 9;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // SolveMergeconflicts
             // 
@@ -650,6 +640,17 @@
             this.OutPut.Size = new System.Drawing.Size(364, 130);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
+            // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(232, 104);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(129, 23);
+            this.Cancel.TabIndex = 9;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // FormCommit
             // 

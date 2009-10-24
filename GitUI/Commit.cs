@@ -171,11 +171,17 @@ namespace GitUI
 
             try
             {
-                using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
+                using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false, Settings.Encoding))
                 {
-                    textWriter.Write(Message.Text);
-                    textWriter.Flush();
-                    textWriter.Close();
+                    int lineNumber = 0;
+                    foreach (string line in Message.Text.Split('\n'))
+                    {
+                        if (lineNumber == 1 && !string.IsNullOrEmpty(line))
+                            textWriter.WriteLine();
+
+                        textWriter.WriteLine(line);
+                        lineNumber++;
+                    }
                 }
 
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
@@ -184,8 +190,8 @@ namespace GitUI
 
                 if (!form.ErrorOccured())
                 {
-                    Close();
                     File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
+                    Close();
                 }
             }
             catch(Exception e)
@@ -514,7 +520,7 @@ namespace GitUI
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
 
             if (string.IsNullOrEmpty(Message.Text) && File.Exists(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
-                Message.Text = File.ReadAllText(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
+                Message.Text = File.ReadAllText(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
 
         }
 
