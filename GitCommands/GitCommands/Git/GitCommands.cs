@@ -56,8 +56,7 @@ namespace GitCommands
                 process.StartInfo.ErrorDialog = false;
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
-				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+
                 process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
@@ -98,8 +97,6 @@ namespace GitCommands
                 process.StartInfo.ErrorDialog = false;
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
-				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
 
                 process.StartInfo.CreateNoWindow = false;
@@ -111,8 +108,9 @@ namespace GitCommands
 
                 process.Start();
             }
-            catch
+            catch(Exception ex)
             {
+
             }
 
 
@@ -339,8 +337,6 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = false;
                 process.StartInfo.RedirectStandardInput = false;
                 process.StartInfo.RedirectStandardError = false;
-				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
 
                 process.StartInfo.LoadUserProfile = true;
