@@ -70,17 +70,17 @@ namespace GitUI
         {
             try
             {
-                if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                    Encoding.Text = "Default";
-                else
-                    if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF7)
+                if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
                         Encoding.Text = "UTF7";
                     else
-                        if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF8)
+                        if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
                             Encoding.Text = "UTF8";
                         else
-                            if (GitCommands.Settings.Encoding == System.Text.Encoding.UTF32)
+                            if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
                                 Encoding.Text = "UTF32";
+                            else 
+                                if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
+                                    Encoding.Text = "Default";
 
                 SmtpServer.Text = GitCommands.Settings.Smtp;
 
@@ -185,13 +185,13 @@ namespace GitUI
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
             else
             if (Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = System.Text.Encoding.UTF7;
+                GitCommands.Settings.Encoding = new UTF7Encoding();
             else
             if (Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = System.Text.Encoding.UTF8;
+                GitCommands.Settings.Encoding = new UTF8Encoding(false);
             else
             if (Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = System.Text.Encoding.UTF32;
+                GitCommands.Settings.Encoding = new UTF32Encoding(true, false);
             else
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
