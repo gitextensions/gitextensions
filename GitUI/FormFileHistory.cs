@@ -22,7 +22,7 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
-            FileChanges.Filter = " \"" + fileName + "\"";
+            FileChanges.Filter = " -- \"" + fileName + "\"";
             FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
