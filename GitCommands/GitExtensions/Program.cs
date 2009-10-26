@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitUI;
 using System.IO;
+using GitCommands;
 
 namespace GitExtensions
 {
@@ -54,6 +55,9 @@ namespace GitExtensions
                     if (args[2].Contains("\\"))
                         GitCommands.Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
                 }
+
+                if (GitCommands.Settings.ValidWorkingDir())
+                    RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
             }
 
             if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))

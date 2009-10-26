@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.78
+	Fixed bug causing the commitmessage to contain encoding marker bytes
+	Fixed bug preventing the bash to show
+	Recent repository list is updated when opening submodule or loading from Visual Studio
+
 Version 1.77
 	Fixed bug in version 1.76 that file history was broken when started from Visual Studio
 	Commit message now supports multiline (first line is the summary)

@@ -172,7 +172,6 @@ namespace GitUI
 
                     if (GitCommands.Settings.CloseProcessDialog)
                         Close();
-
                 }
             }
             catch
