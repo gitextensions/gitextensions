@@ -69,7 +69,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)
-                filter += " \"" + FileFilter.Text.Replace('\\', '/') + "\"";
+                filter += " -- \"" + FileFilter.Text.Replace('\\', '/') + "\"";
 
             return filter;
         }
