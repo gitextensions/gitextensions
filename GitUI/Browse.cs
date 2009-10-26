@@ -1212,6 +1212,10 @@ namespace GitUI
 
 
             GitCommands.Settings.WorkingDir += GitCommands.GitCommands.GetSubmoduleLocalPath(button.Text);
+
+            if (GitCommands.Settings.ValidWorkingDir())
+                RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
+
             InternalInitialize(true);
         }
 
