@@ -368,17 +368,17 @@ namespace GitCommands
                     Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
                 }
 
-                if (Settings.Encoding == System.Text.Encoding.Default)
-                    Application.UserAppDataRegistry.SetValue("encoding", "Default");
+                if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
+                    Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
                 else
-                    if (Settings.Encoding == System.Text.Encoding.UTF7)
-                        Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
+                    if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
+                        Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
                     else
-                        if (Settings.Encoding == System.Text.Encoding.UTF8)
-                            Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+                        if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
+                            Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
                         else
-                            if (Settings.Encoding == System.Text.Encoding.UTF32)
-                                Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+                            if (Settings.Encoding == System.Text.Encoding.Default)
+                                Application.UserAppDataRegistry.SetValue("encoding", "Default");
 
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
@@ -428,21 +428,21 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("encoding") != null) encoding = Application.UserAppDataRegistry.GetValue("encoding").ToString();
 
                 if (string.IsNullOrEmpty(encoding))
-                    Settings.Encoding = System.Text.Encoding.UTF8;
-                else 
+                    Settings.Encoding = new UTF8Encoding(false);
+                else
                     if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
                         Settings.Encoding = System.Text.Encoding.Default;
                     else
                         if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                            Settings.Encoding = System.Text.Encoding.UTF7;
+                            Settings.Encoding = new UTF7Encoding();
                         else
                             if (encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                                Settings.Encoding = System.Text.Encoding.UTF8;
+                                Settings.Encoding = new UTF8Encoding(false);
                             else
                                 if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                                    Settings.Encoding = System.Text.Encoding.UTF32;
+                                    Settings.Encoding = new UTF32Encoding(true, false);
                                 else
-                                    Settings.Encoding = System.Text.Encoding.UTF8;
+                                    Settings.Encoding = new UTF8Encoding(false);
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());

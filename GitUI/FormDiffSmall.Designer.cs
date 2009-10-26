@@ -31,10 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDiffSmall));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffText = new GitUI.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.DiffText = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -72,6 +72,15 @@
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
             // 
+            // DiffText
+            // 
+            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Name = "DiffText";
+            this.DiffText.ScrollPos = 0;
+            this.DiffText.Size = new System.Drawing.Size(474, 410);
+            this.DiffText.TabIndex = 0;
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -101,15 +110,6 @@
             this.RevisionInfo.Size = new System.Drawing.Size(717, 115);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
-            // 
-            // DiffText
-            // 
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.ScrollPos = 0;
-            this.DiffText.Size = new System.Drawing.Size(474, 410);
-            this.DiffText.TabIndex = 0;
             // 
             // FormDiffSmall
             // 
