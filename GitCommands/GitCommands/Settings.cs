@@ -436,13 +436,10 @@ namespace GitCommands
                         if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
                             Settings.Encoding = new UTF7Encoding();
                         else
-                            if (encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                                Settings.Encoding = new UTF8Encoding(false);
+                            if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                Settings.Encoding = new UTF32Encoding(true, false);
                             else
-                                if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                                    Settings.Encoding = new UTF32Encoding(true, false);
-                                else
-                                    Settings.Encoding = new UTF8Encoding(false);
+                                Settings.Encoding = new UTF8Encoding(false);
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
