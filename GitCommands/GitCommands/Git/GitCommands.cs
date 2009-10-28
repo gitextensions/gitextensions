@@ -856,15 +856,24 @@ namespace GitCommands
 
         public static string PushTagCmd(string path, string tag, bool all)
         {
+            return PushTagCmd(path, tag, all, false);
+        }
+
+        public static string PushTagCmd(string path, string tag, bool all, bool force)
+        {
             path = FixPath(path);
 
             tag = tag.Replace(" ", "");
 
+            string sforce = "";
+            if (force)
+                sforce = "-f ";
+
             if (all)
-                return "push \"" + path.Trim() + "\" --tags";
+                return "push " + sforce + "\"" + path.Trim() + "\" --tags";
             else
                 if (!string.IsNullOrEmpty(tag))
-                    return "push \"" + path.Trim() + "\" tag " + tag;
+                    return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
         }

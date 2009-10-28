@@ -36,7 +36,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Branch = new System.Windows.Forms.ComboBox();
             this.PushAllBranches = new System.Windows.Forms.CheckBox();
-            this.ForcePush = new System.Windows.Forms.CheckBox();
+            this.ForcePushBranches = new System.Windows.Forms.CheckBox();
+            this.ForcePushTags = new System.Windows.Forms.CheckBox();
             this.Pull = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
@@ -120,15 +121,27 @@
             this.PushAllBranches.Text = "Push all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
             // 
-            // ForcePush
+            // ForcePushBranches
             // 
-            this.ForcePush.AutoSize = true;
-            this.ForcePush.Location = new System.Drawing.Point(127, 70);
-            this.ForcePush.Name = "ForcePush";
-            this.ForcePush.Size = new System.Drawing.Size(110, 17);
-            this.ForcePush.TabIndex = 19;
-            this.ForcePush.Text = "Force Push";
-            this.ForcePush.UseVisualStyleBackColor = true;
+            this.ForcePushBranches.AutoSize = true;
+            this.ForcePushBranches.Location = new System.Drawing.Point(127, 70);
+            this.ForcePushBranches.Name = "ForcePush";
+            this.ForcePushBranches.Size = new System.Drawing.Size(110, 17);
+            this.ForcePushBranches.TabIndex = 19;
+            this.ForcePushBranches.Text = "Force Push";
+            this.ForcePushBranches.UseVisualStyleBackColor = true;
+            this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranches_CheckedChanged);
+            // 
+            // ForcePushTags
+            // 
+            this.ForcePushTags.AutoSize = true;
+            this.ForcePushTags.Location = new System.Drawing.Point(127, 70);
+            this.ForcePushTags.Name = "ForcePush";
+            this.ForcePushTags.Size = new System.Drawing.Size(110, 17);
+            this.ForcePushTags.TabIndex = 19;
+            this.ForcePushTags.Text = "Force Push";
+            this.ForcePushTags.UseVisualStyleBackColor = true;
+            this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTags_CheckedChanged);
             // 
             // Pull
             // 
@@ -207,7 +220,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.Branch);
             this.groupBox1.Controls.Add(this.PushAllBranches);
-            this.groupBox1.Controls.Add(this.ForcePush);
+            this.groupBox1.Controls.Add(this.ForcePushBranches);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
@@ -241,6 +254,7 @@
             // 
             this.groupBox3.Controls.Add(this.PushAllTags);
             this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.ForcePushTags);
             this.groupBox3.Controls.Add(this.Tag);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
@@ -349,7 +363,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox Branch;
         private System.Windows.Forms.CheckBox PushAllBranches;
-        private System.Windows.Forms.CheckBox ForcePush;
+        private System.Windows.Forms.CheckBox ForcePushBranches;
+        private System.Windows.Forms.CheckBox ForcePushTags;
         private System.Windows.Forms.Button Pull;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton PullFromUrl;
