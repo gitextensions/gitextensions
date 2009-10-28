@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Branch = new System.Windows.Forms.ComboBox();
             this.PushAllBranches = new System.Windows.Forms.CheckBox();
+            this.ForcePush = new System.Windows.Forms.CheckBox();
             this.Pull = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
@@ -119,6 +120,16 @@
             this.PushAllBranches.Text = "Push all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
             // 
+            // ForcePush
+            // 
+            this.ForcePush.AutoSize = true;
+            this.ForcePush.Location = new System.Drawing.Point(127, 70);
+            this.ForcePush.Name = "ForcePush";
+            this.ForcePush.Size = new System.Drawing.Size(110, 17);
+            this.ForcePush.TabIndex = 19;
+            this.ForcePush.Text = "Force Push";
+            this.ForcePush.UseVisualStyleBackColor = true;
+            // 
             // Pull
             // 
             this.Pull.Location = new System.Drawing.Point(12, 247);
@@ -196,6 +207,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.Branch);
             this.groupBox1.Controls.Add(this.PushAllBranches);
+            this.groupBox1.Controls.Add(this.ForcePush);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
@@ -337,6 +349,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox Branch;
         private System.Windows.Forms.CheckBox PushAllBranches;
+        private System.Windows.Forms.CheckBox ForcePush;
         private System.Windows.Forms.Button Pull;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton PullFromUrl;

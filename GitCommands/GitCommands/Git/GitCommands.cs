@@ -831,18 +831,27 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
+            return PushCmd(path, branch, all, false);
+        }
+
+        public static string PushCmd(string path, string branch, bool all, bool force)
+        {
             path = FixPath(path);
 
             branch = branch.Replace(" ", "");
 
+            string sforce = "";
+            if (force)
+                sforce = "-f ";
+
             if (all)
-                return "push --all \"" + path.Trim() + "\"";
+                return "push " + sforce + "--all \"" + path.Trim() + "\"";
             else
                 if (!string.IsNullOrEmpty(branch))
-                    return "push \"" + path.Trim() + "\" " + branch;
+                    return "push " + sforce + "\"" + path.Trim() + "\" " + branch;
 
 
-            return "push \"" + path.Trim() + "\"";
+            return "push " + sforce + "\"" + path.Trim() + "\"";
         }
 
         public static string PushTagCmd(string path, string tag, bool all)

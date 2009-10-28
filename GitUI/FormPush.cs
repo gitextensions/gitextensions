@@ -52,7 +52,7 @@ namespace GitUI
             if (PullFromUrl.Checked)
             {
                 if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked));
+                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked, ForcePush.Checked));
                 else
                     form = new FormProcess(GitCommands.GitCommands.PushTagCmd(PushDestination.Text, Tag.Text, PushAllTags.Checked));
             }
@@ -67,7 +67,7 @@ namespace GitUI
                 }
 
                 if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked), Remotes.Text.Trim());
+                    form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked, ForcePush.Checked), Remotes.Text.Trim());
                 else
                     form = new FormProcess(GitCommands.Settings.GitDir + "git.cmd", GitCommands.GitCommands.PushTagCmd(Remotes.Text, Tag.Text, PushAllTags.Checked), Remotes.Text.Trim());
             }
