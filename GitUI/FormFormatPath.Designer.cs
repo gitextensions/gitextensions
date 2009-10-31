@@ -104,25 +104,25 @@
             // 
             // MailBody
             // 
-            this.MailBody.Location = new System.Drawing.Point(155, 93);
+            this.MailBody.Location = new System.Drawing.Point(189, 93);
             this.MailBody.Name = "MailBody";
-            this.MailBody.Size = new System.Drawing.Size(502, 56);
+            this.MailBody.Size = new System.Drawing.Size(468, 56);
             this.MailBody.TabIndex = 13;
             this.MailBody.Text = "";
             // 
             // MailSubject
             // 
-            this.MailSubject.Location = new System.Drawing.Point(155, 66);
+            this.MailSubject.Location = new System.Drawing.Point(189, 66);
             this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(502, 20);
+            this.MailSubject.Size = new System.Drawing.Size(468, 20);
             this.MailSubject.TabIndex = 12;
             // 
             // MailAddress
             // 
             this.MailAddress.FormattingEnabled = true;
-            this.MailAddress.Location = new System.Drawing.Point(155, 38);
+            this.MailAddress.Location = new System.Drawing.Point(189, 38);
             this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(502, 21);
+            this.MailAddress.Size = new System.Drawing.Size(468, 21);
             this.MailAddress.TabIndex = 11;
             // 
             // SendToMail
@@ -160,9 +160,9 @@
             // 
             // OutputPath
             // 
-            this.OutputPath.Location = new System.Drawing.Point(155, 11);
+            this.OutputPath.Location = new System.Drawing.Point(189, 11);
             this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(502, 20);
+            this.OutputPath.Size = new System.Drawing.Size(468, 20);
             this.OutputPath.TabIndex = 7;
             // 
             // splitContainer2
