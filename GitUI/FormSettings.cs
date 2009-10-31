@@ -1122,12 +1122,19 @@ namespace GitUI
 
         private void Dictionary_DropDown(object sender, EventArgs e)
         {
-            Dictionary.Items.Clear();
-            Dictionary.Items.Add("None");
-            foreach (string fileName in Directory.GetFiles(GitCommands.Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+            try
             {
-                FileInfo file = new FileInfo(fileName);
-                Dictionary.Items.Add(file.Name.Replace(".dic", ""));
+                Dictionary.Items.Clear();
+                Dictionary.Items.Add("None");
+                foreach (string fileName in Directory.GetFiles(GitCommands.Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo file = new FileInfo(fileName);
+                    Dictionary.Items.Add(file.Name.Replace(".dic", ""));
+                }
+            }
+            catch
+            {
+                MessageBox.Show("No dictionary files found in: " + GitCommands.Settings.GetDictionaryDir());
             }
         }
 
