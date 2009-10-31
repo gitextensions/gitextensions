@@ -98,7 +98,7 @@
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
             this.Pull.TabIndex = 7;
-            this.Pull.Text = "Pull";
+            this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.Pull_Click);
             // 
@@ -121,7 +121,7 @@
             this.Merge.Size = new System.Drawing.Size(210, 17);
             this.Merge.TabIndex = 0;
             this.Merge.TabStop = true;
-            this.Merge.Text = "Merge remote branch to current branch";
+            this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.Merge_CheckedChanged);
             // 
@@ -132,8 +132,8 @@
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(458, 30);
             this.Rebase.TabIndex = 1;
-            this.Rebase.Text = "Rebase remote branch to current branch, creates linear history. It is recommeded " +
-                "to choose \r\na remote branch when using rebase. (use with caution)";
+            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommeded" +
+                " to choose \r\na remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.Rebase_CheckedChanged);
             // 
@@ -157,7 +157,7 @@
             this.Fetch.Size = new System.Drawing.Size(212, 17);
             this.Fetch.TabIndex = 2;
             this.Fetch.TabStop = true;
-            this.Fetch.Text = "Do not merge, only fetch remote branch";
+            this.Fetch.Text = "Do not merge, only &fetch remote branch";
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.Fetch_CheckedChanged);
             // 

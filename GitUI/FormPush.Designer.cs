@@ -79,7 +79,7 @@
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(101, 23);
             this.Push.TabIndex = 15;
-            this.Push.Text = "Push";
+            this.Push.Text = "&Push";
             this.Push.UseVisualStyleBackColor = true;
             this.Push.Click += new System.EventHandler(this.Push_Click);
             // 
@@ -118,17 +118,17 @@
             this.PushAllBranches.Name = "PushAllBranches";
             this.PushAllBranches.Size = new System.Drawing.Size(110, 17);
             this.PushAllBranches.TabIndex = 19;
-            this.PushAllBranches.Text = "Push all branches";
+            this.PushAllBranches.Text = "Push &all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
             // 
             // ForcePushBranches
             // 
             this.ForcePushBranches.AutoSize = true;
             this.ForcePushBranches.Location = new System.Drawing.Point(127, 70);
-            this.ForcePushBranches.Name = "ForcePush";
-            this.ForcePushBranches.Size = new System.Drawing.Size(110, 17);
+            this.ForcePushBranches.Name = "ForcePushBranches";
+            this.ForcePushBranches.Size = new System.Drawing.Size(80, 17);
             this.ForcePushBranches.TabIndex = 19;
-            this.ForcePushBranches.Text = "Force Push";
+            this.ForcePushBranches.Text = "&Force Push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
             this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranches_CheckedChanged);
             // 
@@ -136,10 +136,10 @@
             // 
             this.ForcePushTags.AutoSize = true;
             this.ForcePushTags.Location = new System.Drawing.Point(127, 70);
-            this.ForcePushTags.Name = "ForcePush";
-            this.ForcePushTags.Size = new System.Drawing.Size(110, 17);
+            this.ForcePushTags.Name = "ForcePushTags";
+            this.ForcePushTags.Size = new System.Drawing.Size(80, 17);
             this.ForcePushTags.TabIndex = 19;
-            this.ForcePushTags.Text = "Force Push";
+            this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
             this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTags_CheckedChanged);
             // 
@@ -271,7 +271,7 @@
             this.PushAllTags.Name = "PushAllTags";
             this.PushAllTags.Size = new System.Drawing.Size(86, 17);
             this.PushAllTags.TabIndex = 22;
-            this.PushAllTags.Text = "Push all tags";
+            this.PushAllTags.Text = "Push &all tags";
             this.PushAllTags.UseVisualStyleBackColor = true;
             // 
             // label1
