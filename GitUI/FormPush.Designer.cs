@@ -124,7 +124,7 @@
             // ForcePushBranches
             // 
             this.ForcePushBranches.AutoSize = true;
-            this.ForcePushBranches.Location = new System.Drawing.Point(127, 70);
+            this.ForcePushBranches.Location = new System.Drawing.Point(127, 74);
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(80, 17);
             this.ForcePushBranches.TabIndex = 19;
@@ -135,7 +135,7 @@
             // ForcePushTags
             // 
             this.ForcePushTags.AutoSize = true;
-            this.ForcePushTags.Location = new System.Drawing.Point(127, 70);
+            this.ForcePushTags.Location = new System.Drawing.Point(127, 74);
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(80, 17);
             this.ForcePushTags.TabIndex = 19;
