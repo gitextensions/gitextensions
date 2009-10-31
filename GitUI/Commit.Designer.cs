@@ -528,7 +528,7 @@
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(127, 23);
             this.Amend.TabIndex = 7;
-            this.Amend.Text = "Amend to last commit";
+            this.Amend.Text = "&Amend to last commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.Click += new System.EventHandler(this.Amend_Click);
             // 
@@ -548,7 +548,7 @@
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(129, 23);
             this.Commit.TabIndex = 2;
-            this.Commit.Text = "Commit";
+            this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
             this.Commit.Click += new System.EventHandler(this.Commit_Click);
             // 
@@ -568,7 +568,7 @@
             this.Scan.Name = "Scan";
             this.Scan.Size = new System.Drawing.Size(129, 23);
             this.Scan.TabIndex = 3;
-            this.Scan.Text = "Rescan changes";
+            this.Scan.Text = "&Rescan changes";
             this.Scan.UseVisualStyleBackColor = true;
             this.Scan.Click += new System.EventHandler(this.Scan_Click);
             // 
