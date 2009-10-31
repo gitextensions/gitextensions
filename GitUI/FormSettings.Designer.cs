@@ -79,10 +79,26 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.AppearancePage = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.ColorRemoteBranchLabel = new System.Windows.Forms.Label();
+            this.ColorOtherLabel = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.ColorTagLabel = new System.Windows.Forms.Label();
+            this.ColorBranchLabel = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.RevisionGraphColorLabel = new System.Windows.Forms.Label();
             this.RevisionGraphColorSelected = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
-            this.RevisionGraphColorLabel = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.ColorSectionLabel = new System.Windows.Forms.Label();
+            this.ColorRemovedLine = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.ColorAddedLineLabel = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
             this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
             this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
@@ -129,14 +145,6 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.ColorRemovedLine = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.ColorAddedLineLabel = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.ColorSectionLabel = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -145,6 +153,8 @@
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.AppearancePage.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.GlobalSettingsPage.SuspendLayout();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -155,8 +165,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -744,6 +752,137 @@
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label33);
+            this.groupBox4.Controls.Add(this.ColorRemoteBranchLabel);
+            this.groupBox4.Controls.Add(this.ColorOtherLabel);
+            this.groupBox4.Controls.Add(this.label36);
+            this.groupBox4.Controls.Add(this.label25);
+            this.groupBox4.Controls.Add(this.ColorTagLabel);
+            this.groupBox4.Controls.Add(this.ColorBranchLabel);
+            this.groupBox4.Controls.Add(this.label32);
+            this.groupBox4.Controls.Add(this.label24);
+            this.groupBox4.Controls.Add(this.RevisionGraphColorLabel);
+            this.groupBox4.Controls.Add(this.RevisionGraphColorSelected);
+            this.groupBox4.Controls.Add(this.label26);
+            this.groupBox4.Location = new System.Drawing.Point(8, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(251, 205);
+            this.groupBox4.TabIndex = 11;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Revision graph";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(6, 133);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(102, 13);
+            this.label33.TabIndex = 8;
+            this.label33.Text = "Color remote branch";
+            // 
+            // ColorRemoteBranchLabel
+            // 
+            this.ColorRemoteBranchLabel.AutoSize = true;
+            this.ColorRemoteBranchLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorRemoteBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorRemoteBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorRemoteBranchLabel.Location = new System.Drawing.Point(192, 133);
+            this.ColorRemoteBranchLabel.Name = "ColorRemoteBranchLabel";
+            this.ColorRemoteBranchLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorRemoteBranchLabel.TabIndex = 9;
+            this.ColorRemoteBranchLabel.Text = "Red";
+            this.ColorRemoteBranchLabel.Click += new System.EventHandler(this.ColorRemoteBranchLabel_Click);
+            // 
+            // ColorOtherLabel
+            // 
+            this.ColorOtherLabel.AutoSize = true;
+            this.ColorOtherLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorOtherLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorOtherLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorOtherLabel.Location = new System.Drawing.Point(192, 161);
+            this.ColorOtherLabel.Name = "ColorOtherLabel";
+            this.ColorOtherLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorOtherLabel.TabIndex = 11;
+            this.ColorOtherLabel.Text = "Red";
+            this.ColorOtherLabel.Click += new System.EventHandler(this.ColorOtherLabel_Click);
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(6, 161);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(83, 13);
+            this.label36.TabIndex = 10;
+            this.label36.Text = "Color other label";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 76);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(49, 13);
+            this.label25.TabIndex = 4;
+            this.label25.Text = "Color tag";
+            // 
+            // ColorTagLabel
+            // 
+            this.ColorTagLabel.AutoSize = true;
+            this.ColorTagLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorTagLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorTagLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorTagLabel.Location = new System.Drawing.Point(192, 76);
+            this.ColorTagLabel.Name = "ColorTagLabel";
+            this.ColorTagLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorTagLabel.TabIndex = 5;
+            this.ColorTagLabel.Text = "Red";
+            this.ColorTagLabel.Click += new System.EventHandler(this.ColorTagLabel_Click);
+            // 
+            // ColorBranchLabel
+            // 
+            this.ColorBranchLabel.AutoSize = true;
+            this.ColorBranchLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorBranchLabel.Location = new System.Drawing.Point(192, 104);
+            this.ColorBranchLabel.Name = "ColorBranchLabel";
+            this.ColorBranchLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorBranchLabel.TabIndex = 7;
+            this.ColorBranchLabel.Text = "Red";
+            this.ColorBranchLabel.Click += new System.EventHandler(this.ColorBranchLabel_Click);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(6, 104);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(67, 13);
+            this.label32.TabIndex = 6;
+            this.label32.Text = "Color branch";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 19);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(100, 13);
+            this.label24.TabIndex = 0;
+            this.label24.Text = "Color revision graph";
+            // 
+            // RevisionGraphColorLabel
+            // 
+            this.RevisionGraphColorLabel.AutoSize = true;
+            this.RevisionGraphColorLabel.BackColor = System.Drawing.Color.Red;
+            this.RevisionGraphColorLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.RevisionGraphColorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.RevisionGraphColorLabel.Location = new System.Drawing.Point(192, 19);
+            this.RevisionGraphColorLabel.Name = "RevisionGraphColorLabel";
+            this.RevisionGraphColorLabel.Size = new System.Drawing.Size(29, 15);
+            this.RevisionGraphColorLabel.TabIndex = 1;
+            this.RevisionGraphColorLabel.Text = "Red";
+            this.RevisionGraphColorLabel.Click += new System.EventHandler(this.label25_Click);
+            // 
             // RevisionGraphColorSelected
             // 
             this.RevisionGraphColorSelected.AutoSize = true;
@@ -766,27 +905,86 @@
             this.label26.TabIndex = 2;
             this.label26.Text = "Color revision graph selected";
             // 
-            // RevisionGraphColorLabel
+            // groupBox3
             // 
-            this.RevisionGraphColorLabel.AutoSize = true;
-            this.RevisionGraphColorLabel.BackColor = System.Drawing.Color.Red;
-            this.RevisionGraphColorLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.RevisionGraphColorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.RevisionGraphColorLabel.Location = new System.Drawing.Point(192, 19);
-            this.RevisionGraphColorLabel.Name = "RevisionGraphColorLabel";
-            this.RevisionGraphColorLabel.Size = new System.Drawing.Size(29, 15);
-            this.RevisionGraphColorLabel.TabIndex = 1;
-            this.RevisionGraphColorLabel.Text = "Red";
-            this.RevisionGraphColorLabel.Click += new System.EventHandler(this.label25_Click);
+            this.groupBox3.Controls.Add(this.label27);
+            this.groupBox3.Controls.Add(this.ColorSectionLabel);
+            this.groupBox3.Controls.Add(this.ColorRemovedLine);
+            this.groupBox3.Controls.Add(this.label31);
+            this.groupBox3.Controls.Add(this.label29);
+            this.groupBox3.Controls.Add(this.ColorAddedLineLabel);
+            this.groupBox3.Location = new System.Drawing.Point(8, 214);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(251, 111);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Difference view";
             // 
-            // label24
+            // label27
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 19);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(100, 13);
-            this.label24.TabIndex = 0;
-            this.label24.Text = "Color revision graph";
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(6, 19);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(94, 13);
+            this.label27.TabIndex = 4;
+            this.label27.Text = "Color removed line";
+            // 
+            // ColorSectionLabel
+            // 
+            this.ColorSectionLabel.AutoSize = true;
+            this.ColorSectionLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorSectionLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorSectionLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorSectionLabel.Location = new System.Drawing.Point(192, 78);
+            this.ColorSectionLabel.Name = "ColorSectionLabel";
+            this.ColorSectionLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorSectionLabel.TabIndex = 9;
+            this.ColorSectionLabel.Text = "Red";
+            this.ColorSectionLabel.Click += new System.EventHandler(this.ColorSectionLabel_Click);
+            // 
+            // ColorRemovedLine
+            // 
+            this.ColorRemovedLine.AutoSize = true;
+            this.ColorRemovedLine.BackColor = System.Drawing.Color.Red;
+            this.ColorRemovedLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorRemovedLine.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorRemovedLine.Location = new System.Drawing.Point(192, 19);
+            this.ColorRemovedLine.Name = "ColorRemovedLine";
+            this.ColorRemovedLine.Size = new System.Drawing.Size(29, 15);
+            this.ColorRemovedLine.TabIndex = 5;
+            this.ColorRemovedLine.Text = "Red";
+            this.ColorRemovedLine.Click += new System.EventHandler(this.ColorRemovedLine_Click);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(6, 78);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(68, 13);
+            this.label31.TabIndex = 8;
+            this.label31.Text = "Color section";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(6, 49);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(83, 13);
+            this.label29.TabIndex = 6;
+            this.label29.Text = "Color added line";
+            // 
+            // ColorAddedLineLabel
+            // 
+            this.ColorAddedLineLabel.AutoSize = true;
+            this.ColorAddedLineLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorAddedLineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorAddedLineLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorAddedLineLabel.Location = new System.Drawing.Point(192, 49);
+            this.ColorAddedLineLabel.Name = "ColorAddedLineLabel";
+            this.ColorAddedLineLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorAddedLineLabel.TabIndex = 7;
+            this.ColorAddedLineLabel.Text = "Red";
+            this.ColorAddedLineLabel.Click += new System.EventHandler(this.label28_Click);
             // 
             // GlobalSettingsPage
             // 
@@ -1277,100 +1475,6 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
-            // ColorRemovedLine
-            // 
-            this.ColorRemovedLine.AutoSize = true;
-            this.ColorRemovedLine.BackColor = System.Drawing.Color.Red;
-            this.ColorRemovedLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ColorRemovedLine.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorRemovedLine.Location = new System.Drawing.Point(192, 19);
-            this.ColorRemovedLine.Name = "ColorRemovedLine";
-            this.ColorRemovedLine.Size = new System.Drawing.Size(29, 15);
-            this.ColorRemovedLine.TabIndex = 5;
-            this.ColorRemovedLine.Text = "Red";
-            this.ColorRemovedLine.Click += new System.EventHandler(this.ColorRemovedLine_Click);
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 19);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(94, 13);
-            this.label27.TabIndex = 4;
-            this.label27.Text = "Color removed line";
-            // 
-            // ColorAddedLineLabel
-            // 
-            this.ColorAddedLineLabel.AutoSize = true;
-            this.ColorAddedLineLabel.BackColor = System.Drawing.Color.Red;
-            this.ColorAddedLineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ColorAddedLineLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorAddedLineLabel.Location = new System.Drawing.Point(192, 49);
-            this.ColorAddedLineLabel.Name = "ColorAddedLineLabel";
-            this.ColorAddedLineLabel.Size = new System.Drawing.Size(29, 15);
-            this.ColorAddedLineLabel.TabIndex = 7;
-            this.ColorAddedLineLabel.Text = "Red";
-            this.ColorAddedLineLabel.Click += new System.EventHandler(this.label28_Click);
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(6, 49);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(83, 13);
-            this.label29.TabIndex = 6;
-            this.label29.Text = "Color added line";
-            // 
-            // ColorSectionLabel
-            // 
-            this.ColorSectionLabel.AutoSize = true;
-            this.ColorSectionLabel.BackColor = System.Drawing.Color.Red;
-            this.ColorSectionLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ColorSectionLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorSectionLabel.Location = new System.Drawing.Point(192, 78);
-            this.ColorSectionLabel.Name = "ColorSectionLabel";
-            this.ColorSectionLabel.Size = new System.Drawing.Size(29, 15);
-            this.ColorSectionLabel.TabIndex = 9;
-            this.ColorSectionLabel.Text = "Red";
-            this.ColorSectionLabel.Click += new System.EventHandler(this.ColorSectionLabel_Click);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 78);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(68, 13);
-            this.label31.TabIndex = 8;
-            this.label31.Text = "Color section";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label27);
-            this.groupBox3.Controls.Add(this.ColorSectionLabel);
-            this.groupBox3.Controls.Add(this.ColorRemovedLine);
-            this.groupBox3.Controls.Add(this.label31);
-            this.groupBox3.Controls.Add(this.label29);
-            this.groupBox3.Controls.Add(this.ColorAddedLineLabel);
-            this.groupBox3.Location = new System.Drawing.Point(8, 109);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(251, 111);
-            this.groupBox3.TabIndex = 10;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Difference view";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label24);
-            this.groupBox4.Controls.Add(this.RevisionGraphColorLabel);
-            this.groupBox4.Controls.Add(this.RevisionGraphColorSelected);
-            this.groupBox4.Controls.Add(this.label26);
-            this.groupBox4.Location = new System.Drawing.Point(8, 3);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(251, 100);
-            this.groupBox4.TabIndex = 11;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Revision graph";
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1399,6 +1503,10 @@
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.AppearancePage.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
             this.InvalidGitPathGlobal.ResumeLayout(false);
@@ -1413,10 +1521,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1531,6 +1635,14 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label ColorAddedLineLabel;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label ColorRemoteBranchLabel;
+        private System.Windows.Forms.Label ColorOtherLabel;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label ColorTagLabel;
+        private System.Windows.Forms.Label ColorBranchLabel;
+        private System.Windows.Forms.Label label32;
 
     }
 }

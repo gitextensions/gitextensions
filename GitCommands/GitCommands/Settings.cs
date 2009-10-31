@@ -38,6 +38,58 @@ namespace GitCommands
 
     #region Colors
 
+        private static Color otherTagColor = Color.Gray;
+        public static Color OtherTagColor
+        {
+            get
+            {
+                return otherTagColor;
+            }
+            set
+            {
+                otherTagColor = value;
+            }
+        }
+
+        private static Color tagColor = Color.DarkBlue;
+        public static Color TagColor
+        {
+            get
+            {
+                return tagColor;
+            }
+            set
+            {
+                tagColor = value;
+            }
+        }
+
+        private static Color branchColor = Color.DarkRed;
+        public static Color BranchColor
+        {
+            get
+            {
+                return branchColor;
+            }
+            set
+            {
+                branchColor = value;
+            }
+        }
+
+        private static Color remoteBranchColor = Color.Green;
+        public static Color RemoteBranchColor
+        {
+            get
+            {
+                return remoteBranchColor;
+            }
+            set
+            {
+                remoteBranchColor = value;
+            }
+        }
+
         private static Color diffSection = Color.FromArgb(230, 230, 230);
         public static Color DiffSectionColor
         {
@@ -480,6 +532,10 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("diffsectioncolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffSectionColor));
                 Application.UserAppDataRegistry.SetValue("revisiongraphcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColor));
                 Application.UserAppDataRegistry.SetValue("revisiongraphcolorselected", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColorSelected));
+                Application.UserAppDataRegistry.SetValue("tagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.TagColor));
+                Application.UserAppDataRegistry.SetValue("branchcolor", System.Drawing.ColorTranslator.ToHtml(Settings.BranchColor));
+                Application.UserAppDataRegistry.SetValue("remotebranchcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RemoteBranchColor));
+                Application.UserAppDataRegistry.SetValue("othertagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.OtherTagColor));
 
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
@@ -549,6 +605,10 @@ namespace GitCommands
                     if (Application.UserAppDataRegistry.GetValue("diffsectioncolor") != null) Settings.DiffSectionColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffsectioncolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("revisiongraphcolor") != null) Settings.RevisionGraphColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected") != null) Settings.RevisionGraphColorSelected = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("tagcolor") != null) Settings.TagColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("tagcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("branchcolor") != null) Settings.BranchColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("branchcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("remotebranchcolor") != null) Settings.RemoteBranchColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("remotebranchcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("othertagcolor") != null) Settings.OtherTagColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("othertagcolor").ToString());
                 }
                 catch
                 {
