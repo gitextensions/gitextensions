@@ -36,13 +36,12 @@
             this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ChangesList = new GitUI.FileViewer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.button1 = new System.Windows.Forms.Button();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ChangesList = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -122,6 +121,15 @@
             // 
             this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
             // 
+            // ChangesList
+            // 
+            this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChangesList.Location = new System.Drawing.Point(0, 0);
+            this.ChangesList.Name = "ChangesList";
+            this.ChangesList.ScrollPos = 0;
+            this.ChangesList.Size = new System.Drawing.Size(689, 292);
+            this.ChangesList.TabIndex = 1;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -132,7 +140,6 @@
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.button1);
             this.splitContainer4.Panel1.Controls.Add(this.BrowsePatch);
             this.splitContainer4.Panel1.Controls.Add(this.PatchFileNameEdit);
             this.splitContainer4.Panel1.Controls.Add(this.label1);
@@ -143,16 +150,6 @@
             this.splitContainer4.Size = new System.Drawing.Size(689, 501);
             this.splitContainer4.SplitterDistance = 40;
             this.splitContainer4.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(430, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Load";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // BrowsePatch
             // 
@@ -181,18 +178,8 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Patch";
             // 
-            // ChangesList
-            // 
-            this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangesList.Location = new System.Drawing.Point(0, 0);
-            this.ChangesList.Name = "ChangesList";
-            this.ChangesList.ScrollPos = 0;
-            this.ChangesList.Size = new System.Drawing.Size(689, 292);
-            this.ChangesList.TabIndex = 1;
-            // 
             // ViewPatch
             // 
-            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 501);
@@ -230,7 +217,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameA;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
-        private System.Windows.Forms.Button button1;
         private GitUI.FileViewer ChangesList;
     }
 }
