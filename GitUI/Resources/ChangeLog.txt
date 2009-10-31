@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 1.79
+	Added push force support for branch pushing
+	Added push force support for tag pushing
+	Added appearance tab to settings dialog.
+	Added alt-c, alt-a and alt-r as keys for commit, amend and rescan.
+	Added checkbox "close dialog after commit" on commit dialog
+	Removed Load button from view patch dialog. Patch is now loaded when file is selected.
+
 Version 1.78
 	Fixed bug causing the commitmessage to contain encoding marker bytes
 	Fixed bug preventing the bash to show
