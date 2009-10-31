@@ -402,6 +402,7 @@
             // SshConfig
             // 
             this.SshConfig.BackColor = System.Drawing.Color.Gray;
+            this.SshConfig.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -416,6 +417,7 @@
             // GitBinFound
             // 
             this.GitBinFound.BackColor = System.Drawing.Color.Gray;
+            this.GitBinFound.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitBinFound.FlatAppearance.BorderSize = 0;
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -461,6 +463,7 @@
             // GitFound
             // 
             this.GitFound.BackColor = System.Drawing.Color.Gray;
+            this.GitFound.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitFound.FlatAppearance.BorderSize = 0;
             this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -475,6 +478,7 @@
             // DiffTool
             // 
             this.DiffTool.BackColor = System.Drawing.Color.Gray;
+            this.DiffTool.Cursor = System.Windows.Forms.Cursors.Hand;
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -489,6 +493,7 @@
             // UserNameSet
             // 
             this.UserNameSet.BackColor = System.Drawing.Color.Gray;
+            this.UserNameSet.Cursor = System.Windows.Forms.Cursors.Hand;
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -503,6 +508,7 @@
             // ShellExtensionsRegistered
             // 
             this.ShellExtensionsRegistered.BackColor = System.Drawing.Color.Gray;
+            this.ShellExtensionsRegistered.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -517,6 +523,7 @@
             // GitExtensionsInstall
             // 
             this.GitExtensionsInstall.BackColor = System.Drawing.Color.Gray;
+            this.GitExtensionsInstall.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
