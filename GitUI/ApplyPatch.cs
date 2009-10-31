@@ -72,6 +72,7 @@ namespace PatchApply
         private void BrowsePatch_Click(object sender, EventArgs e)
         {
             PatchFileNameEdit.Text = SelectPatchFile(@".");
+            LoadButton_Click(sender, e);
         }
 
         private void LoadButton_Click(object sender, EventArgs e)
@@ -96,11 +97,6 @@ namespace PatchApply
         private void ViewPatch_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            LoadButton_Click(sender, e);
         }
     }
 }
