@@ -75,9 +75,12 @@
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
+            this.splitContainer9 = new System.Windows.Forms.SplitContainer();
             this.Message = new GitUI.EditNetSpell();
-            this.OutPut = new System.Windows.Forms.RichTextBox();
             this.Cancel = new System.Windows.Forms.Button();
+            this.OutPut = new System.Windows.Forms.RichTextBox();
+            this.splitContainer10 = new System.Windows.Forms.SplitContainer();
+            this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -109,6 +112,11 @@
             this.splitContainer8.Panel1.SuspendLayout();
             this.splitContainer8.Panel2.SuspendLayout();
             this.splitContainer8.SuspendLayout();
+            this.splitContainer9.Panel1.SuspendLayout();
+            this.splitContainer9.Panel2.SuspendLayout();
+            this.splitContainer9.SuspendLayout();
+            this.splitContainer10.Panel2.SuspendLayout();
+            this.splitContainer10.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -586,10 +594,9 @@
             // 
             // splitContainer7.Panel2
             // 
-            this.splitContainer7.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer7.Panel2.Controls.Add(this.Cancel);
+            this.splitContainer7.Panel2.Controls.Add(this.splitContainer10);
             this.splitContainer7.Size = new System.Drawing.Size(364, 328);
-            this.splitContainer7.SplitterDistance = 194;
+            this.splitContainer7.SplitterDistance = 299;
             this.splitContainer7.TabIndex = 0;
             // 
             // splitContainer8
@@ -606,8 +613,8 @@
             // 
             // splitContainer8.Panel2
             // 
-            this.splitContainer8.Panel2.Controls.Add(this.Message);
-            this.splitContainer8.Size = new System.Drawing.Size(364, 194);
+            this.splitContainer8.Panel2.Controls.Add(this.splitContainer9);
+            this.splitContainer8.Size = new System.Drawing.Size(364, 299);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
@@ -621,15 +628,45 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Commit message";
             // 
+            // splitContainer9
+            // 
+            this.splitContainer9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer9.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer9.Name = "splitContainer9";
+            this.splitContainer9.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer9.Panel1
+            // 
+            this.splitContainer9.Panel1.Controls.Add(this.Message);
+            this.splitContainer9.Panel1.Controls.Add(this.Cancel);
+            // 
+            // splitContainer9.Panel2
+            // 
+            this.splitContainer9.Panel2.Controls.Add(this.OutPut);
+            this.splitContainer9.Size = new System.Drawing.Size(364, 270);
+            this.splitContainer9.SplitterDistance = 198;
+            this.splitContainer9.TabIndex = 0;
+            // 
             // Message
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(364, 165);
+            this.Message.Size = new System.Drawing.Size(364, 198);
             this.Message.TabIndex = 0;
             this.Message.Load += new System.EventHandler(this.Message_Load);
+            // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(223, 95);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(129, 23);
+            this.Cancel.TabIndex = 9;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // OutPut
             // 
@@ -637,20 +674,35 @@
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(364, 130);
+            this.OutPut.Size = new System.Drawing.Size(364, 68);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
-            // Cancel
+            // splitContainer10
             // 
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(232, 104);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(129, 23);
-            this.Cancel.TabIndex = 9;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            this.splitContainer10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer10.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer10.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer10.Name = "splitContainer10";
+            // 
+            // splitContainer10.Panel2
+            // 
+            this.splitContainer10.Panel2.Controls.Add(this.CloseDialogAfterCommit);
+            this.splitContainer10.Size = new System.Drawing.Size(364, 25);
+            this.splitContainer10.SplitterDistance = 188;
+            this.splitContainer10.TabIndex = 0;
+            // 
+            // CloseDialogAfterCommit
+            // 
+            this.CloseDialogAfterCommit.AutoSize = true;
+            this.CloseDialogAfterCommit.Checked = true;
+            this.CloseDialogAfterCommit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CloseDialogAfterCommit.Location = new System.Drawing.Point(3, 5);
+            this.CloseDialogAfterCommit.Name = "CloseDialogAfterCommit";
+            this.CloseDialogAfterCommit.Size = new System.Drawing.Size(143, 17);
+            this.CloseDialogAfterCommit.TabIndex = 0;
+            this.CloseDialogAfterCommit.Text = "Close dialog after commit";
+            this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
             // 
             // FormCommit
             // 
@@ -704,6 +756,12 @@
             this.splitContainer8.Panel1.PerformLayout();
             this.splitContainer8.Panel2.ResumeLayout(false);
             this.splitContainer8.ResumeLayout(false);
+            this.splitContainer9.Panel1.ResumeLayout(false);
+            this.splitContainer9.Panel2.ResumeLayout(false);
+            this.splitContainer9.ResumeLayout(false);
+            this.splitContainer10.Panel2.ResumeLayout(false);
+            this.splitContainer10.Panel2.PerformLayout();
+            this.splitContainer10.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -760,5 +818,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private System.Windows.Forms.Button Cancel;
+        private System.Windows.Forms.SplitContainer splitContainer9;
+        private System.Windows.Forms.CheckBox CloseDialogAfterCommit;
+        private System.Windows.Forms.SplitContainer splitContainer10;
     }
 }

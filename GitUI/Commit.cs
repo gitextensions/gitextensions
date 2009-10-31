@@ -191,7 +191,11 @@ namespace GitUI
                 if (!form.ErrorOccured())
                 {
                     File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
-                    Close();
+                    if (CloseDialogAfterCommit.Checked)
+                        Close();
+                    else
+                        InitializedStaged();
+                        
                 }
             }
             catch(Exception e)
@@ -392,7 +396,6 @@ namespace GitUI
             if (MessageBox.Show("You are about to rewrite history." + Environment.NewLine + "Only use amend if the commit is not published yet!" + Environment.NewLine + Environment.NewLine + "Do you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
-                Close();
             }
         }
 
