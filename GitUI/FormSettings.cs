@@ -89,6 +89,20 @@ namespace GitUI
                 RevisionGraphColorSelected.BackColor = Settings.RevisionGraphColorSelected;
                 RevisionGraphColorSelected.Text = Settings.RevisionGraphColorSelected.Name;
                 RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
+                ColorTagLabel.BackColor = Settings.TagColor;
+                ColorTagLabel.Text = Settings.TagColor.Name;
+                ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorTagLabel.BackColor);
+                ColorBranchLabel.BackColor = Settings.BranchColor;
+                ColorBranchLabel.Text = Settings.BranchColor.Name;
+                ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorBranchLabel.BackColor);
+                ColorRemoteBranchLabel.BackColor = Settings.RemoteBranchColor;
+                ColorRemoteBranchLabel.Text = Settings.RemoteBranchColor.Name;
+                ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemoteBranchLabel.BackColor);
+                ColorOtherLabel.BackColor = Settings.OtherTagColor;
+                ColorOtherLabel.Text = Settings.OtherTagColor.Name;
+                ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorOtherLabel.BackColor);
+
+
                 ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
                 ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
                 ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
@@ -214,6 +228,11 @@ namespace GitUI
 
             Settings.RevisionGraphColor = RevisionGraphColorLabel.BackColor;
             Settings.RevisionGraphColorSelected = RevisionGraphColorSelected.BackColor;
+            Settings.TagColor = ColorTagLabel.BackColor;
+            Settings.BranchColor = ColorBranchLabel.BackColor;
+            Settings.RemoteBranchColor = ColorRemoteBranchLabel.BackColor;
+            Settings.OtherTagColor = ColorOtherLabel.BackColor;
+
             Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
             Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
             Settings.DiffSectionColor = ColorSectionLabel.BackColor;
@@ -1174,6 +1193,46 @@ namespace GitUI
             ColorSectionLabel.BackColor = colorDialog.Color;
             ColorSectionLabel.Text = colorDialog.Color.Name;
             ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
+        }
+
+        private void ColorTagLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorTagLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorTagLabel.BackColor = colorDialog.Color;
+            ColorTagLabel.Text = colorDialog.Color.Name;
+            ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorTagLabel.BackColor);
+        }
+
+        private void ColorBranchLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorBranchLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorBranchLabel.BackColor = colorDialog.Color;
+            ColorBranchLabel.Text = colorDialog.Color.Name;
+            ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorBranchLabel.BackColor);
+        }
+
+        private void ColorRemoteBranchLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorRemoteBranchLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorRemoteBranchLabel.BackColor = colorDialog.Color;
+            ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
+            ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemoteBranchLabel.BackColor);
+        }
+
+        private void ColorOtherLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorOtherLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorOtherLabel.BackColor = colorDialog.Color;
+            ColorOtherLabel.Text = colorDialog.Color.Name;
+            ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorOtherLabel.BackColor);
         }
 
     }

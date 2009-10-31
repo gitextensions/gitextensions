@@ -642,13 +642,12 @@ namespace GitUI
                     else
                         if (e.ColumnIndex == 1)
                         {
-
                             float offset = 0;
                             foreach (GitHead h in revision.Heads)
                             {
                                 if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
                                 {
-                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Color.DarkBlue : h.IsHead ? Color.DarkRed : h.IsRemote ? Color.Green : Color.Gray);
+                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
 
                                     e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
