@@ -46,7 +46,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(317, 5);
+            this.Ok.Location = new System.Drawing.Point(356, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 4;
@@ -56,7 +56,7 @@
             // 
             // BName
             // 
-            this.BName.Location = new System.Drawing.Point(88, 6);
+            this.BName.Location = new System.Drawing.Point(127, 6);
             this.BName.Name = "BName";
             this.BName.Size = new System.Drawing.Size(223, 20);
             this.BName.TabIndex = 3;
@@ -67,7 +67,7 @@
             this.ChechoutAfterCreate.AutoSize = true;
             this.ChechoutAfterCreate.Checked = true;
             this.ChechoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChechoutAfterCreate.Location = new System.Drawing.Point(88, 32);
+            this.ChechoutAfterCreate.Location = new System.Drawing.Point(127, 32);
             this.ChechoutAfterCreate.Name = "ChechoutAfterCreate";
             this.ChechoutAfterCreate.Size = new System.Drawing.Size(129, 17);
             this.ChechoutAfterCreate.TabIndex = 6;
@@ -78,7 +78,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(435, 58);
+            this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.ChechoutAfterCreate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);

@@ -45,7 +45,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(317, 5);
+            this.Ok.Location = new System.Drawing.Point(341, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 7;
@@ -55,7 +55,7 @@
             // 
             // TName
             // 
-            this.TName.Location = new System.Drawing.Point(84, 7);
+            this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 20);
             this.TName.TabIndex = 6;
@@ -66,7 +66,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 35);
+            this.ClientSize = new System.Drawing.Size(459, 35);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.TName);

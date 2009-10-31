@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using GitCommands;
 
 namespace GitUI
 {
@@ -188,7 +189,7 @@ namespace GitUI
                 {
                     if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '+')
                     {
-                        Color color = Color.FromArgb(200, 255, 200);
+                        Color color = Settings.DiffAddedColor;
                         ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
 
                         for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '+'; line++)
@@ -200,11 +201,11 @@ namespace GitUI
                         line--;
                         endLine = TextEditor.Document.GetLineSegment(line);
 
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     } 
                     if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '-')
                     {
-                        Color color = Color.FromArgb(255, 200, 200);
+                        Color color = Settings.DiffRemovedColor;
                         ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
 
                         for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '-'; line++)
@@ -216,11 +217,11 @@ namespace GitUI
                         line--;
                         endLine = TextEditor.Document.GetLineSegment(line);
 
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
                     if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '@')
                     {
-                        Color color = Color.FromArgb(230, 230, 230);
+                        Color color = Settings.DiffSectionColor;
                         ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
 
                         for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '@'; line++)
@@ -232,7 +233,7 @@ namespace GitUI
                         line--;
                         endLine = TextEditor.Document.GetLineSegment(line);
 
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, Color.Black));
+                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
 
                 }

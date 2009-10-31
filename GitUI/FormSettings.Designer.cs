@@ -78,6 +78,11 @@
             this.label13 = new System.Windows.Forms.Label();
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
+            this.AppearancePage = new System.Windows.Forms.TabPage();
+            this.RevisionGraphColorSelected = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.RevisionGraphColorLabel = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
             this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
             this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
@@ -124,6 +129,14 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.ColorRemovedLine = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.ColorAddedLineLabel = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.ColorSectionLabel = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -131,6 +144,7 @@
             this.tabPage3.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
+            this.AppearancePage.SuspendLayout();
             this.GlobalSettingsPage.SuspendLayout();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -141,6 +155,8 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -345,6 +361,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.TabPageGitExtensions);
+            this.tabControl1.Controls.Add(this.AppearancePage);
             this.tabControl1.Controls.Add(this.GlobalSettingsPage);
             this.tabControl1.Controls.Add(this.LocalSettings);
             this.tabControl1.Controls.Add(this.Ssh);
@@ -715,6 +732,61 @@
             this.label12.Text = "Limit number of commits that will be loaded in list at startup.\r\nOther commits wi" +
                 "ll be loaded when needed. Lower number \r\nresult is shorter startup time, but slo" +
                 "wer scrolling.";
+            // 
+            // AppearancePage
+            // 
+            this.AppearancePage.Controls.Add(this.groupBox4);
+            this.AppearancePage.Controls.Add(this.groupBox3);
+            this.AppearancePage.Location = new System.Drawing.Point(4, 22);
+            this.AppearancePage.Name = "AppearancePage";
+            this.AppearancePage.Size = new System.Drawing.Size(655, 328);
+            this.AppearancePage.TabIndex = 5;
+            this.AppearancePage.Text = "Appearance";
+            this.AppearancePage.UseVisualStyleBackColor = true;
+            // 
+            // RevisionGraphColorSelected
+            // 
+            this.RevisionGraphColorSelected.AutoSize = true;
+            this.RevisionGraphColorSelected.BackColor = System.Drawing.Color.Red;
+            this.RevisionGraphColorSelected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.RevisionGraphColorSelected.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.RevisionGraphColorSelected.Location = new System.Drawing.Point(192, 47);
+            this.RevisionGraphColorSelected.Name = "RevisionGraphColorSelected";
+            this.RevisionGraphColorSelected.Size = new System.Drawing.Size(29, 15);
+            this.RevisionGraphColorSelected.TabIndex = 3;
+            this.RevisionGraphColorSelected.Text = "Red";
+            this.RevisionGraphColorSelected.Click += new System.EventHandler(this.label25_Click_1);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(6, 47);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(143, 13);
+            this.label26.TabIndex = 2;
+            this.label26.Text = "Color revision graph selected";
+            // 
+            // RevisionGraphColorLabel
+            // 
+            this.RevisionGraphColorLabel.AutoSize = true;
+            this.RevisionGraphColorLabel.BackColor = System.Drawing.Color.Red;
+            this.RevisionGraphColorLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.RevisionGraphColorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.RevisionGraphColorLabel.Location = new System.Drawing.Point(192, 19);
+            this.RevisionGraphColorLabel.Name = "RevisionGraphColorLabel";
+            this.RevisionGraphColorLabel.Size = new System.Drawing.Size(29, 15);
+            this.RevisionGraphColorLabel.TabIndex = 1;
+            this.RevisionGraphColorLabel.Text = "Red";
+            this.RevisionGraphColorLabel.Click += new System.EventHandler(this.label25_Click);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 19);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(100, 13);
+            this.label24.TabIndex = 0;
+            this.label24.Text = "Color revision graph";
             // 
             // GlobalSettingsPage
             // 
@@ -1205,6 +1277,100 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // ColorRemovedLine
+            // 
+            this.ColorRemovedLine.AutoSize = true;
+            this.ColorRemovedLine.BackColor = System.Drawing.Color.Red;
+            this.ColorRemovedLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorRemovedLine.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorRemovedLine.Location = new System.Drawing.Point(192, 19);
+            this.ColorRemovedLine.Name = "ColorRemovedLine";
+            this.ColorRemovedLine.Size = new System.Drawing.Size(29, 15);
+            this.ColorRemovedLine.TabIndex = 5;
+            this.ColorRemovedLine.Text = "Red";
+            this.ColorRemovedLine.Click += new System.EventHandler(this.ColorRemovedLine_Click);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(6, 19);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(94, 13);
+            this.label27.TabIndex = 4;
+            this.label27.Text = "Color removed line";
+            // 
+            // ColorAddedLineLabel
+            // 
+            this.ColorAddedLineLabel.AutoSize = true;
+            this.ColorAddedLineLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorAddedLineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorAddedLineLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorAddedLineLabel.Location = new System.Drawing.Point(192, 49);
+            this.ColorAddedLineLabel.Name = "ColorAddedLineLabel";
+            this.ColorAddedLineLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorAddedLineLabel.TabIndex = 7;
+            this.ColorAddedLineLabel.Text = "Red";
+            this.ColorAddedLineLabel.Click += new System.EventHandler(this.label28_Click);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(6, 49);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(83, 13);
+            this.label29.TabIndex = 6;
+            this.label29.Text = "Color added line";
+            // 
+            // ColorSectionLabel
+            // 
+            this.ColorSectionLabel.AutoSize = true;
+            this.ColorSectionLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorSectionLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorSectionLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorSectionLabel.Location = new System.Drawing.Point(192, 78);
+            this.ColorSectionLabel.Name = "ColorSectionLabel";
+            this.ColorSectionLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorSectionLabel.TabIndex = 9;
+            this.ColorSectionLabel.Text = "Red";
+            this.ColorSectionLabel.Click += new System.EventHandler(this.ColorSectionLabel_Click);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(6, 78);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(68, 13);
+            this.label31.TabIndex = 8;
+            this.label31.Text = "Color section";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label27);
+            this.groupBox3.Controls.Add(this.ColorSectionLabel);
+            this.groupBox3.Controls.Add(this.ColorRemovedLine);
+            this.groupBox3.Controls.Add(this.label31);
+            this.groupBox3.Controls.Add(this.label29);
+            this.groupBox3.Controls.Add(this.ColorAddedLineLabel);
+            this.groupBox3.Location = new System.Drawing.Point(8, 109);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(251, 111);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Difference view";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label24);
+            this.groupBox4.Controls.Add(this.RevisionGraphColorLabel);
+            this.groupBox4.Controls.Add(this.RevisionGraphColorSelected);
+            this.groupBox4.Controls.Add(this.label26);
+            this.groupBox4.Location = new System.Drawing.Point(8, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(251, 100);
+            this.groupBox4.TabIndex = 11;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Revision graph";
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1232,6 +1398,7 @@
             this.TabPageGitExtensions.ResumeLayout(false);
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
+            this.AppearancePage.ResumeLayout(false);
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
             this.InvalidGitPathGlobal.ResumeLayout(false);
@@ -1246,6 +1413,10 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1347,6 +1518,19 @@
 		private System.Windows.Forms.ComboBox LocalAutoCRLF;
         private System.Windows.Forms.Label EncodingLabel;
         private System.Windows.Forms.ComboBox Encoding;
+        private System.Windows.Forms.TabPage AppearancePage;
+        private System.Windows.Forms.Label RevisionGraphColorLabel;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label RevisionGraphColorSelected;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label ColorSectionLabel;
+        private System.Windows.Forms.Label ColorRemovedLine;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label ColorAddedLineLabel;
 
     }
 }

@@ -4,11 +4,106 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace GitCommands
 {
     public class Settings
     {
+        private static int revisionGraphWidth = 6;
+        public static int RevisionGraphWidth
+        {
+            get
+            {
+                return revisionGraphWidth;
+            }
+            set
+            {
+                revisionGraphWidth = value;
+            }
+        }
+
+        private static float revisionGraphThickness = 1F;
+        public static float RevisionGraphThickness
+        {
+            get
+            {
+                return revisionGraphThickness;
+            }
+            set
+            {
+                revisionGraphThickness = value;
+            }
+        }
+
+    #region Colors
+
+        private static Color diffSection = Color.FromArgb(230, 230, 230);
+        public static Color DiffSectionColor
+        {
+            get
+            {
+                return diffSection;
+            }
+            set
+            {
+                diffSection = value;
+            }
+        }
+
+        private static Color diffRemoved = Color.FromArgb(255, 200, 200);
+        public static Color DiffRemovedColor
+        {
+            get
+            {
+                return diffRemoved;
+            }
+            set
+            {
+                diffRemoved = value;
+            }
+        }
+
+        private static Color diffAdded = Color.FromArgb(200, 255, 200);
+        public static Color DiffAddedColor
+        {
+            get
+            {
+                return diffAdded;
+            }
+            set
+            {
+                diffAdded = value;
+            }
+        }
+
+        private static Color revisionGraphColorSelected = Color.Blue;
+        public static Color RevisionGraphColorSelected
+        {
+            get
+            {
+                return revisionGraphColorSelected;
+            }
+            set
+            {
+                revisionGraphColorSelected = value;
+            }
+        }
+
+        private static Color revisionGraphColor = Color.Red;
+        public static Color RevisionGraphColor
+        {
+            get
+            {
+                return revisionGraphColor;
+            }
+            set
+            {
+                revisionGraphColor = value;
+            }
+        }
+
+    #endregion
         private static Encoding encoding = Encoding.UTF8;
         public static Encoding Encoding
         {
@@ -380,6 +475,12 @@ namespace GitCommands
                             if (Settings.Encoding == System.Text.Encoding.Default)
                                 Application.UserAppDataRegistry.SetValue("encoding", "Default");
 
+                Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
+                Application.UserAppDataRegistry.SetValue("diffremovedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedColor));
+                Application.UserAppDataRegistry.SetValue("diffsectioncolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffSectionColor));
+                Application.UserAppDataRegistry.SetValue("revisiongraphcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColor));
+                Application.UserAppDataRegistry.SetValue("revisiongraphcolorselected", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColorSelected));
+
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
@@ -440,6 +541,18 @@ namespace GitCommands
                                 Settings.Encoding = new UTF32Encoding(true, false);
                             else
                                 Settings.Encoding = new UTF8Encoding(false);
+
+                try
+                {
+                    if (Application.UserAppDataRegistry.GetValue("diffaddedcolor") != null) Settings.DiffAddedColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffaddedcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("diffremovedcolor") != null) Settings.DiffRemovedColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffremovedcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("diffsectioncolor") != null) Settings.DiffSectionColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffsectioncolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("revisiongraphcolor") != null) Settings.RevisionGraphColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected") != null) Settings.RevisionGraphColorSelected = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected").ToString());
+                }
+                catch
+                {
+                }
 
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());

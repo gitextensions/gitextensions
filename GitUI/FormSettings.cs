@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
+using GitCommands;
 
 namespace GitUI
 {
@@ -81,6 +82,22 @@ namespace GitUI
                             else 
                                 if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
                                     Encoding.Text = "Default";
+
+                RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
+                RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
+                RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
+                RevisionGraphColorSelected.BackColor = Settings.RevisionGraphColorSelected;
+                RevisionGraphColorSelected.Text = Settings.RevisionGraphColorSelected.Name;
+                RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
+                ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
+                ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
+                ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
+                ColorRemovedLine.BackColor = Settings.DiffRemovedColor;
+                ColorRemovedLine.Text = Settings.DiffRemovedColor.Name;
+                ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLine.BackColor);
+                ColorSectionLabel.BackColor = Settings.DiffSectionColor;
+                ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
+                ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
 
                 SmtpServer.Text = GitCommands.Settings.Smtp;
 
@@ -195,6 +212,12 @@ namespace GitUI
             else
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
+            Settings.RevisionGraphColor = RevisionGraphColorLabel.BackColor;
+            Settings.RevisionGraphColorSelected = RevisionGraphColorSelected.BackColor;
+            Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
+            Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
+            Settings.DiffSectionColor = ColorSectionLabel.BackColor;
+            
             EnableSettings();
 
             if (!CanFindGitCmd())
@@ -1101,6 +1124,56 @@ namespace GitUI
             MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
 
             button1_Click_1(null, null);
+        }
+
+        private void label25_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = RevisionGraphColorLabel.BackColor;
+            colorDialog.ShowDialog();
+            RevisionGraphColorLabel.BackColor = colorDialog.Color;
+            RevisionGraphColorLabel.Text = colorDialog.Color.Name;
+            RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
+        }
+
+        private void label25_Click_1(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = RevisionGraphColorSelected.BackColor;
+            colorDialog.ShowDialog();
+            RevisionGraphColorSelected.BackColor = colorDialog.Color;
+            RevisionGraphColorSelected.Text = colorDialog.Color.Name;
+            RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
+        }
+
+        private void label28_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorAddedLineLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorAddedLineLabel.BackColor = colorDialog.Color;
+            ColorAddedLineLabel.Text = colorDialog.Color.Name;
+            ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
+        }
+
+        private void ColorRemovedLine_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorRemovedLine.BackColor;
+            colorDialog.ShowDialog();
+            ColorRemovedLine.BackColor = colorDialog.Color;
+            ColorRemovedLine.Text = colorDialog.Color.Name;
+            ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLine.BackColor);
+        }
+
+        private void ColorSectionLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorSectionLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorSectionLabel.BackColor = colorDialog.Color;
+            ColorSectionLabel.Text = colorDialog.Color.Name;
+            ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
         }
 
     }
