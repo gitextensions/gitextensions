@@ -396,7 +396,7 @@ namespace GitUI
         {
             graphWidth = 0;
             int height = Revisions.RowTemplate.Height;
-            int width = 6;
+            int width = Settings.RevisionGraphWidth;
             int y = -height;
             int numberOfVisibleRows = Revisions.DisplayedRowCount(true);
             int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
@@ -422,9 +422,9 @@ namespace GitUI
             string lastLine = "";
             string currentLine = "";
 
-            Pen linePen = new Pen(Color.Red, 1);
-            SolidBrush blueBrush = new SolidBrush(Color.Blue);
-            SolidBrush redBrush = new SolidBrush(Color.Red);
+            Pen linePen = new Pen(Settings.RevisionGraphColor, Settings.RevisionGraphThickness);
+            SolidBrush blueBrush = new SolidBrush(Settings.RevisionGraphColorSelected);
+            SolidBrush redBrush = new SolidBrush(Settings.RevisionGraphColor);
             char[] calc = new char[100];
 
             int nLine = 0;
