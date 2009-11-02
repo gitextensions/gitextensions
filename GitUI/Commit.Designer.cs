@@ -566,7 +566,7 @@
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(128, 23);
             this.Reset.TabIndex = 5;
-            this.Reset.Text = "Reset changed HARD";
+            this.Reset.Text = "Reset changed";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 

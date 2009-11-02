@@ -448,6 +448,8 @@ namespace GitUI
                     string fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+                    if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
+                        fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
                     fileName = Path.GetTempPath() + fileName;
                     GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileName + "\"");
@@ -465,6 +467,8 @@ namespace GitUI
                     string fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+                    if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
+                        fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
                     fileName = Path.GetTempPath() + fileName;
                     GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileName + "\"");

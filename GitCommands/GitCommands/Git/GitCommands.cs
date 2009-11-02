@@ -391,6 +391,64 @@ namespace GitCommands
             return unmergedFiles;
         }
 
+        static public bool HandleConflice_SelectBase(string fileName)
+        {
+            if (HandeConflicts_SaveSide(fileName, fileName, "1"))
+            {
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + fileName + "\"");
+                return true;
+            }
+            return false;
+        }
+
+        static public bool HandleConflice_SelectLocal(string fileName)
+        {
+            if (HandeConflicts_SaveSide(fileName, fileName, "2"))
+            {
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + fileName + "\"");
+                return true;
+            }
+            return false;
+        }
+
+        static public bool HandleConflice_SelectRemote(string fileName)
+        {
+            if (HandeConflicts_SaveSide(fileName, fileName, "3"))
+            {
+                GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + fileName + "\"");
+                return true;
+            }
+            return false;
+        }
+        
+        public static bool HandeConflicts_SaveSide(string fileName, string saveAs, string side)
+        {
+            if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
+                side = "3";
+            if (side.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+                side = "2";
+            if (side.Equals("BASE", StringComparison.CurrentCultureIgnoreCase))
+                side = "1";
+
+            fileName = FixPath(fileName);
+            string[] unmerged = RunCmd(Settings.GitDir + "git.cmd", "ls-files --unmerged \"" + fileName + "\"").Split('\n');
+
+            foreach (string file in unmerged)
+            {
+                string[] fileline = file.Split(new char[] { ' ', '\t' });
+                if (fileline.Length < 3)
+                    continue;
+                if (fileline[2].Trim() == side)
+                {
+                    RunCmd(Settings.GitDir + "git.cmd", "cat-file blob \"" + fileline[1] + "\" > \"" + saveAs + "\"");
+                    
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         static public string GetConflictedFiles(string filename)
         {
             filename = FixPath(filename);

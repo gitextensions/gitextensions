@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abort.cs" />
     <Compile Include="AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +85,7 @@
       <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
     <Compile Include="EditorOptions.cs" />
+    <Compile Include="FileHelper.cs" />
     <Compile Include="FileViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

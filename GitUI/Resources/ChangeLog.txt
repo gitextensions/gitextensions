@@ -8,6 +8,8 @@ Version 1.79
 	Added alt-c, alt-a and alt-r as keys for commit, amend and rescan.
 	Added checkbox "close dialog after commit" on commit dialog
 	Removed Load button from view patch dialog. Patch is now loaded when file is selected.
+	Added context menu to merge conflict dialog
+	Added "Abort" button to merge conflict dialog
 
 Version 1.78
 	Fixed bug causing the commitmessage to contain encoding marker bytes
