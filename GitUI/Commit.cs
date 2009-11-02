@@ -278,14 +278,12 @@ namespace GitUI
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to reset all changes in the working dir?" + Environment.NewLine + "All changes made to all files in the workin dir will be overwritten by the files from the current HEAD!", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (Abort.AbortCurrentAction())
             {
-                if (MessageBox.Show("Are you really sure you want to DELETE all changes?", "WARNING! WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    OutPut.Text = GitCommands.GitCommands.ResetHard("");
-                    Initialize();
-                }
+                Initialize();
+                NeedRefresh = true;
             }
+
         }
 
         private void UnstageFiles_Click(object sender, EventArgs e)

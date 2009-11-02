@@ -19,6 +19,12 @@ namespace GitUI
             ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
         }
 
+        void ConflictedFiles_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex==SolveConflictButton.Index)
+                ConflictedFilesContextMenu.Show(Cursor.Position);
+        }
+
         private void Mergetool_Click(object sender, EventArgs e)
         {
             Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
@@ -39,6 +45,22 @@ namespace GitUI
 
             ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
             InitMergetool();
+
+            ConflictedFiles.CellClick += new DataGridViewCellEventHandler(ConflictedFiles_CellClick);
+            ConflictedFilesContextMenu.Text = "Solve";
+            OpenMergetool.Text = "Open in " + mergetool;
+            button1.Text = "Open in " + mergetool;
+
+            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+            {
+                ContextChooseLocal.Text = "Choose local (theirs)";
+                ContextChooseRemote.Text = "Choose remote (ours)";
+            }
+            else
+            {
+                ContextChooseLocal.Text = "Choose local (ours)";
+                ContextChooseRemote.Text = "Choose remote (theirs)";
+            }
 
             if (!GitCommands.GitCommands.InTheMiddleOfPatch() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
@@ -64,14 +86,22 @@ namespace GitUI
         private string mergetoolCmd;
         private string mergetoolPath;
 
+        private string GetFileName()
+        {
+            if (ConflictedFiles.SelectedRows.Count != 1)
+                return null;
+
+            DataGridViewRow row = ConflictedFiles.SelectedRows[0];
+            return ((GitItem)row.DataBoundItem).FileName;
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
-            DataGridViewRow row = ConflictedFiles.SelectedRows[0];
+            string filename = GitCommands.GitCommands.GetConflictedFiles(GetFileName());
 
-            string filename = GitCommands.GitCommands.GetConflictedFiles(((GitItem)row.DataBoundItem).FileName);
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
@@ -98,6 +128,12 @@ namespace GitUI
 
             if (file1 && file2 && file3)
             {
+                if (FileHelper.IsBinaryFile(filename))
+                {
+                    if (MessageBox.Show("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in " + mergetool + "?") == DialogResult.No)
+                        return;
+                }
+
                 arguments = arguments.Replace("$BASE", filename + ".BASE");
                 arguments = arguments.Replace("$LOCAL", filename + ".LOCAL");
                 arguments = arguments.Replace("$REMOTE", filename + ".REMOTE");
@@ -193,6 +229,135 @@ namespace GitUI
         private void button1_Click(object sender, EventArgs e)
         {
             ConflictedFiles_DoubleClick(sender, e);
+        }
+
+        private void Reset_Click(object sender, EventArgs e)
+        {
+            if (Abort.AbortCurrentAction())
+                Close();
+        }
+
+        private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void ContextChooseBase_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.HandleConflice_SelectBase(GetFileName());
+            Initialize();
+        }
+
+        private void ContextChooseLocal_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.HandleConflice_SelectLocal(GetFileName());
+            Initialize();
+        }
+
+        private void ContextChooseRemote_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.HandleConflice_SelectRemote(GetFileName());
+            Initialize();
+        }
+
+        private void OpenMergetool_Click(object sender, EventArgs e)
+        {
+            ConflictedFiles_DoubleClick(sender, e);
+        }
+
+        private void ContextOpenBaseWith_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            fileName = GetShortFileName(fileName);
+
+            fileName = Path.GetTempPath() + fileName;
+
+            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "BASE");
+
+            OpenWith.OpenAs(fileName);
+        }
+
+        private void ContextOpenLocalWith_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            fileName = GetShortFileName(fileName);
+
+            fileName = Path.GetTempPath() + fileName;
+
+            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "LOCAL");
+
+            OpenWith.OpenAs(fileName);
+        }
+
+        private static string GetShortFileName(string fileName)
+        {
+            if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+            if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
+            return fileName;
+        }
+
+        private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            fileName = GetShortFileName(fileName);
+
+            fileName = Path.GetTempPath() + fileName;
+
+            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "REMOTE");
+
+            OpenWith.OpenAs(fileName);
+        }
+
+        private void ConflictedFiles_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
+                DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
+                int LastRow = hti.RowIndex;
+                ConflictedFiles.ClearSelection();
+                if (LastRow >= 0 && ConflictedFiles.Rows.Count > LastRow)
+                    ConflictedFiles.Rows[LastRow].Selected = true;
+            }
+        }
+
+        private void SaveAs(string side)
+        {
+            string fileName = GetFileName();
+            fileName = GetShortFileName(fileName);
+
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.FileName = Settings.WorkingDir + fileName;
+            fileDialog.AddExtension = true;
+            fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
+            fileDialog.Filter = "Current format (*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileDialog.FileName, side);
+            }
+        }
+
+        private void ContextSaveBaseAs_Click(object sender, EventArgs e)
+        {
+            SaveAs("BASE");
+        }
+
+        private void ContextSaveLocalAs_Click(object sender, EventArgs e)
+        {
+            SaveAs("LOCAL");
+        }
+
+        private void ContextSaveRemoteAs_Click(object sender, EventArgs e)
+        {
+            SaveAs("REMOTE");
+        }
+
+        private void ContextMarkAsSolved_Click(object sender, EventArgs e)
+        {
+            GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + GetFileName() + "\"");
         }
     }
 }
