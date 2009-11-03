@@ -14,6 +14,7 @@ Version 1.79
 	Delete commit message after succesful commit.
 	Added waitcursor to FormResolveConflicts.
 	Set width to submodules submenu and recent repositories submenu.
+	Added F3 and Shift+F3 to code dialog.
 
 Version 1.78
 	Fixed bug causing the commitmessage to contain encoding marker bytes

@@ -24,7 +24,7 @@ namespace GitUI
 
         public static bool AutoSolveAllSettings()
         {
-            return  SolveGitCmdDir() &&
+            return SolveGitCmdDir() &&
                     SolveGitBinDir() &&
                     SolveKDiff() &&
                     SolveGitExtensionsDir();
@@ -37,51 +37,57 @@ namespace GitUI
             if (str == "true")
                 checkBox.CheckState = CheckState.Checked;
             else
-            if (str == "false")
-                checkBox.CheckState = CheckState.Unchecked;
-            else
-                checkBox.CheckState = CheckState.Indeterminate;
+                if (str == "false")
+                    checkBox.CheckState = CheckState.Unchecked;
+                else
+                    checkBox.CheckState = CheckState.Indeterminate;
         }
 
-		private static void SetComboBoxFromString(ComboBox comboBox, string option)
-		{
-			option = option.Trim().ToLower();
+        private static void SetComboBoxFromString(ComboBox comboBox, string option)
+        {
+            option = option.Trim().ToLower();
 
-			switch (option)
-			{
-				case "true":
-					comboBox.SelectedItem = option;
-					break;
-	
-				case "false":
-					comboBox.SelectedItem = option;
-					break;
+            switch (option)
+            {
+                case "true":
+                    comboBox.SelectedItem = option;
+                    break;
 
-				case "input":
-					comboBox.SelectedItem = option;
-					break;
+                case "false":
+                    comboBox.SelectedItem = option;
+                    break;
 
-				default:
+                case "input":
+                    comboBox.SelectedItem = option;
+                    break;
+
+                default:
                     comboBox.SelectedItem = "";
                     break;
-			}
-		}
+            }
+        }
 
         private void LoadSettings()
         {
             try
             {
-                if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                        Encoding.Text = "UTF7";
+                if (GitCommands.Settings.Encoding.GetType() == typeof(ASCIIEncoding))
+                    Encoding.Text = "ASCII";
+                else
+                    if (GitCommands.Settings.Encoding.GetType() == typeof(UnicodeEncoding))
+                        Encoding.Text = "Unicode";
                     else
-                        if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                            Encoding.Text = "UTF8";
+                        if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
+                            Encoding.Text = "UTF7";
                         else
-                            if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                                Encoding.Text = "UTF32";
-                            else 
-                                if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                                    Encoding.Text = "Default";
+                            if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
+                                Encoding.Text = "UTF8";
+                            else
+                                if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
+                                    Encoding.Text = "UTF32";
+                                else
+                                    if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
+                                        Encoding.Text = "Default";
 
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
                 RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
@@ -215,16 +221,22 @@ namespace GitUI
             if (string.IsNullOrEmpty(Encoding.Text) || Encoding.Text.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
             else
-            if (Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = new UTF7Encoding();
-            else
-            if (Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = new UTF8Encoding(false);
-            else
-            if (Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                GitCommands.Settings.Encoding = new UTF32Encoding(true, false);
-            else
-                GitCommands.Settings.Encoding = System.Text.Encoding.Default;
+                if (Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                    GitCommands.Settings.Encoding = new ASCIIEncoding();
+                else
+                    if (Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                        GitCommands.Settings.Encoding = new UnicodeEncoding();
+                    else
+                        if (Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                            GitCommands.Settings.Encoding = new UTF7Encoding();
+                        else
+                            if (Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                                GitCommands.Settings.Encoding = new UTF8Encoding(false);
+                            else
+                                if (Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                    GitCommands.Settings.Encoding = new UTF32Encoding(true, false);
+                                else
+                                    GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
             Settings.RevisionGraphColor = RevisionGraphColorLabel.BackColor;
             Settings.RevisionGraphColorSelected = RevisionGraphColorSelected.BackColor;
@@ -236,7 +248,7 @@ namespace GitUI
             Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
             Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
             Settings.DiffSectionColor = ColorSectionLabel.BackColor;
-            
+
             EnableSettings();
 
             if (!CanFindGitCmd())
@@ -262,7 +274,7 @@ namespace GitUI
                     if (KeepMergeBackup.CheckState == CheckState.Unchecked)
                         GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
 
-				GitCommands.GitCommands.SetSetting("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
+                GitCommands.GitCommands.SetSetting("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
 
                 if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(gitCommands.GetGlobalSetting("user.name")))
                     gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
@@ -282,15 +294,15 @@ namespace GitUI
                     if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
                         gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
 
-    			gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
+                gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
             }
 
             if (OpenSSH.Checked)
                 GitCommands.GitCommands.UnSetSsh();
-            
+
             if (Putty.Checked)
                 GitCommands.GitCommands.SetSsh(PlinkPath.Text);
-            
+
             if (Other.Checked)
                 GitCommands.GitCommands.SetSsh(OtherSsh.Text);
 
@@ -341,14 +353,14 @@ namespace GitUI
             {
                 string reg;
                 value = value.Replace("\\", "\\\\");
-                reg = "Windows Registry Editor Version 5.00"+ Environment.NewLine+Environment.NewLine+"[" + root.ToString() + "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
+                reg = "Windows Registry Editor Version 5.00" + Environment.NewLine + Environment.NewLine + "[" + root.ToString() + "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
 
                 TextWriter tw = new StreamWriter(System.IO.Path.GetTempPath() + "GitExtensions.reg", false);
                 tw.Write(reg);
                 tw.Close();
                 GitCommands.GitCommands.RunCmd("regedit", "\"" + System.IO.Path.GetTempPath() + "GitExtensions.reg" + "\"");
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 MessageBox.Show("GitExtensions has insufficient permisions to modify the registry." + Environment.NewLine + "Please add this key to the registry manually." + Environment.NewLine + "Path:   " + root.ToString() + "\\" + subkey + Environment.NewLine + "Value:  " + key + " = " + value);
             }
@@ -553,13 +565,13 @@ namespace GitUI
             if (File.Exists(GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll"))
                 GitCommands.GitCommands.RunCmd("regsvr32", "\"" + GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll\"");
             else
-                {
-                    string fileName = Assembly.GetAssembly(GetType()).Location;
-                    fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' })) + "\\GitExtensionsShellEx.dll";
+            {
+                string fileName = Assembly.GetAssembly(GetType()).Location;
+                fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' })) + "\\GitExtensionsShellEx.dll";
 
-                    if (File.Exists(fileName))
-                        GitCommands.GitCommands.RunCmd("regsvr32", "\"" + fileName + "\"");
-                }
+                if (File.Exists(fileName))
+                    GitCommands.GitCommands.RunCmd("regsvr32", "\"" + fileName + "\"");
+            }
 
             CheckSettings();
         }
@@ -590,13 +602,14 @@ namespace GitUI
             if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 SolveKDiffPath(gitCommands);
-            } else
-            if (gitCommands.GetGlobalSetting("merge.tool").Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
-                gitCommands.GetGlobalSetting("merge.tool").Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                AutoConfigMergeToolcmd();
-                gitCommands.SetGlobalSetting("mergetool." + gitCommands.GetGlobalSetting("merge.tool") + ".cmd", MergeToolCmd.Text);
             }
+            else
+                if (gitCommands.GetGlobalSetting("merge.tool").Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
+                    gitCommands.GetGlobalSetting("merge.tool").Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    AutoConfigMergeToolcmd();
+                    gitCommands.SetGlobalSetting("mergetool." + gitCommands.GetGlobalSetting("merge.tool") + ".cmd", MergeToolCmd.Text);
+                }
 
 
             if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrEmpty(gitCommands.GetGlobalSetting("mergetool.kdiff3.path")))
@@ -605,7 +618,7 @@ namespace GitUI
                 tabControl1.SelectTab("GlobalSettingsPage");
                 return;
             }
-            
+
             Rescan_Click(null, null);
         }
 
@@ -717,7 +730,7 @@ namespace GitUI
             Editor.Enabled = valid;
             MergeTool.Enabled = valid;
             KeepMergeBackup.Enabled = valid;
-        	LocalAutoCRLF.Enabled = valid;
+            LocalAutoCRLF.Enabled = valid;
             NoGitRepo.Visible = !valid;
 
         }
@@ -855,7 +868,7 @@ namespace GitUI
                 File.Exists(PuttygenPath.Text) &&
                 File.Exists(PlinkPath.Text))
                 return true;
-            else 
+            else
                 return false;
         }
 
@@ -1030,7 +1043,7 @@ namespace GitUI
                     MergetoolPath.Text = "";
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
-                    MergetoolPath.Text = FindFileInFolders("Compare.exe", 
+                    MergetoolPath.Text = FindFileInFolders("Compare.exe",
                                                            @"C:\Program Files (x86)\Araxis\Araxis Merge\",
                                                            @"C:\Program Files\Araxis\Araxis Merge\");
 
@@ -1091,7 +1104,7 @@ namespace GitUI
                 ///m /r=%merged /t1=%yname /t2=%bname /t3=%tname /c=%mname %mine %base %theirs
                 MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
                 return;
-            }                        
+            }
         }
 
         private void GlobalMergeTool_SelectedIndexChanged(object sender, EventArgs e)
