@@ -23,6 +23,13 @@ namespace GitUI
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
                 Find();
+
+            if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
+                findAndReplaceForm.FindNext(true, true, "Text not found");
+            else
+            if (e.KeyCode == Keys.F3)
+                findAndReplaceForm.FindNext(true, false, "Text not found");
+
         }
 
         public int ScrollPos 
