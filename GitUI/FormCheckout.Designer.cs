@@ -65,6 +65,7 @@
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(699, 425);
@@ -72,9 +73,9 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(299, 4);
+            this.Ok.Location = new System.Drawing.Point(299, 3);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(86, 20);
+            this.Ok.Size = new System.Drawing.Size(86, 24);
             this.Ok.TabIndex = 2;
             this.Ok.Text = "Checkout";
             this.Ok.UseVisualStyleBackColor = true;
@@ -82,7 +83,7 @@
             // 
             // FormCheckout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 456);
             this.Controls.Add(this.splitContainer1);

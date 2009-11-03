@@ -64,9 +64,10 @@
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.ItemHeight = 16;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(239, 407);
+            this.DiffFiles.Size = new System.Drawing.Size(239, 404);
             this.DiffFiles.Sorted = true;
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
@@ -76,6 +77,7 @@
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DiffText.Name = "DiffText";
             this.DiffText.ScrollPos = 0;
             this.DiffText.Size = new System.Drawing.Size(474, 410);
@@ -113,7 +115,7 @@
             // 
             // FormDiffSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 529);
             this.Controls.Add(this.splitContainer2);
