@@ -111,7 +111,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(642, 186);
+            this.splitContainer1.Size = new System.Drawing.Size(642, 189);
             this.splitContainer1.SplitterDistance = 177;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -119,10 +119,9 @@
             // 
             this.Remotes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Remotes.FormattingEnabled = true;
-            this.Remotes.ItemHeight = 16;
             this.Remotes.Location = new System.Drawing.Point(0, 0);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(177, 180);
+            this.Remotes.Size = new System.Drawing.Size(177, 186);
             this.Remotes.TabIndex = 0;
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
             // 
@@ -174,7 +173,7 @@
             // 
             this.PuttySshKey.Location = new System.Drawing.Point(107, 13);
             this.PuttySshKey.Name = "PuttySshKey";
-            this.PuttySshKey.Size = new System.Drawing.Size(246, 22);
+            this.PuttySshKey.Size = new System.Drawing.Size(246, 20);
             this.PuttySshKey.TabIndex = 7;
             this.PuttySshKey.TextChanged += new System.EventHandler(this.PuttySshKey_TextChanged);
             // 
@@ -195,7 +194,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 16);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 17);
+            this.label3.Size = new System.Drawing.Size(76, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Private key file";
             // 
@@ -243,7 +242,7 @@
             // 
             this.RemoteName.Location = new System.Drawing.Point(113, 19);
             this.RemoteName.Name = "RemoteName";
-            this.RemoteName.Size = new System.Drawing.Size(246, 22);
+            this.RemoteName.Size = new System.Drawing.Size(246, 20);
             this.RemoteName.TabIndex = 1;
             this.RemoteName.TextChanged += new System.EventHandler(this.RemoteName_TextChanged);
             // 
@@ -252,7 +251,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 17);
+            this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name";
             // 
@@ -261,7 +260,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 51);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(26, 17);
+            this.label2.Size = new System.Drawing.Size(20, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Url";
             // 
@@ -270,7 +269,7 @@
             this.Url.FormattingEnabled = true;
             this.Url.Location = new System.Drawing.Point(113, 48);
             this.Url.Name = "Url";
-            this.Url.Size = new System.Drawing.Size(246, 24);
+            this.Url.Size = new System.Drawing.Size(246, 21);
             this.Url.TabIndex = 3;
             this.Url.SelectedIndexChanged += new System.EventHandler(this.Url_SelectedIndexChanged);
             this.Url.DropDown += new System.EventHandler(this.Url_DropDown);
@@ -299,10 +298,10 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.splitContainer1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(648, 192);
+            this.tabPage1.Size = new System.Drawing.Size(648, 195);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Remote repositories";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -310,10 +309,10 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(648, 192);
+            this.tabPage2.Size = new System.Drawing.Size(648, 195);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Default pull behaviour (fetch & merge)";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -334,8 +333,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Prune);
             this.splitContainer2.Panel2.Controls.Add(this.UpdateBranch);
-            this.splitContainer2.Size = new System.Drawing.Size(642, 186);
-            this.splitContainer2.SplitterDistance = 152;
+            this.splitContainer2.Size = new System.Drawing.Size(642, 189);
+            this.splitContainer2.SplitterDistance = 155;
             this.splitContainer2.TabIndex = 11;
             // 
             // splitContainer3
@@ -357,7 +356,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.label6);
             this.splitContainer3.Panel2.Controls.Add(this.label5);
             this.splitContainer3.Panel2.Controls.Add(this.label4);
-            this.splitContainer3.Size = new System.Drawing.Size(642, 152);
+            this.splitContainer3.Size = new System.Drawing.Size(642, 155);
             this.splitContainer3.SplitterDistance = 376;
             this.splitContainer3.TabIndex = 1;
             // 
@@ -390,7 +389,7 @@
             this.RemoteBranches.ReadOnly = true;
             this.RemoteBranches.RowHeadersVisible = false;
             this.RemoteBranches.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RemoteBranches.Size = new System.Drawing.Size(376, 152);
+            this.RemoteBranches.Size = new System.Drawing.Size(376, 155);
             this.RemoteBranches.TabIndex = 0;
             this.RemoteBranches.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.RemoteBranches_RowValidated);
             this.RemoteBranches.SelectionChanged += new System.EventHandler(this.RemoteBranches_SelectionChanged);
@@ -514,7 +513,7 @@
             // 
             this.LocalBranchNameEdit.Location = new System.Drawing.Point(124, 6);
             this.LocalBranchNameEdit.Name = "LocalBranchNameEdit";
-            this.LocalBranchNameEdit.Size = new System.Drawing.Size(133, 22);
+            this.LocalBranchNameEdit.Size = new System.Drawing.Size(133, 20);
             this.LocalBranchNameEdit.TabIndex = 5;
             this.LocalBranchNameEdit.TextChanged += new System.EventHandler(this.LocalBranchNameEdit_TextChanged);
             // 
@@ -523,7 +522,7 @@
             this.RemoteRepositoryCombo.FormattingEnabled = true;
             this.RemoteRepositoryCombo.Location = new System.Drawing.Point(124, 32);
             this.RemoteRepositoryCombo.Name = "RemoteRepositoryCombo";
-            this.RemoteRepositoryCombo.Size = new System.Drawing.Size(133, 24);
+            this.RemoteRepositoryCombo.Size = new System.Drawing.Size(133, 21);
             this.RemoteRepositoryCombo.TabIndex = 4;
             this.RemoteRepositoryCombo.SelectedIndexChanged += new System.EventHandler(this.RemoteRepositoryCombo_SelectedIndexChanged);
             this.RemoteRepositoryCombo.Validated += new System.EventHandler(this.RemoteRepositoryCombo_Validated);
@@ -533,7 +532,7 @@
             this.DefaultMergeWithCombo.FormattingEnabled = true;
             this.DefaultMergeWithCombo.Location = new System.Drawing.Point(124, 59);
             this.DefaultMergeWithCombo.Name = "DefaultMergeWithCombo";
-            this.DefaultMergeWithCombo.Size = new System.Drawing.Size(133, 24);
+            this.DefaultMergeWithCombo.Size = new System.Drawing.Size(133, 21);
             this.DefaultMergeWithCombo.TabIndex = 3;
             this.DefaultMergeWithCombo.SelectedIndexChanged += new System.EventHandler(this.DefaultMergeWithCombo_SelectedIndexChanged);
             this.DefaultMergeWithCombo.Validated += new System.EventHandler(this.DefaultMergeWithCombo_Validated);
@@ -544,7 +543,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(7, 62);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(125, 17);
+            this.label6.Size = new System.Drawing.Size(95, 13);
             this.label6.TabIndex = 2;
             this.label6.Text = "Default merge with";
             // 
@@ -553,7 +552,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(7, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(124, 17);
+            this.label5.Size = new System.Drawing.Size(92, 13);
             this.label5.TabIndex = 1;
             this.label5.Text = "Remote repository";
             // 
@@ -562,7 +561,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(7, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(129, 17);
+            this.label4.Size = new System.Drawing.Size(98, 13);
             this.label4.TabIndex = 0;
             this.label4.Text = "Local branch name";
             // 
@@ -608,7 +607,7 @@
             // 
             // FormRemotes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(656, 221);
             this.Controls.Add(this.tabControl1);

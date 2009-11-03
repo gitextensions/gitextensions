@@ -10,6 +10,10 @@ Version 1.79
 	Removed Load button from view patch dialog. Patch is now loaded when file is selected.
 	Added context menu to merge conflict dialog
 	Added "Abort" button to merge conflict dialog
+	Most dialogs changed to support larger DPI settings.
+	Delete commit message after succesful commit.
+	Added waitcursor to FormResolveConflicts.
+	Set width to submodules submenu and recent repositories submenu.
 
 Version 1.78
 	Fixed bug causing the commitmessage to contain encoding marker bytes
