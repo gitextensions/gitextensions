@@ -44,10 +44,10 @@
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
+            this.View = new GitUI.FileViewer();
             this.Stash = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
-            this.View = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -158,7 +158,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 13);
+            this.label1.Size = new System.Drawing.Size(205, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tracked changes in working dir";
             // 
@@ -166,9 +166,10 @@
             // 
             this.Changes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Changes.FormattingEnabled = true;
+            this.Changes.ItemHeight = 16;
             this.Changes.Location = new System.Drawing.Point(0, 0);
             this.Changes.Name = "Changes";
-            this.Changes.Size = new System.Drawing.Size(251, 173);
+            this.Changes.Size = new System.Drawing.Size(251, 164);
             this.Changes.TabIndex = 0;
             this.Changes.SelectedIndexChanged += new System.EventHandler(this.Changes_SelectedIndexChanged);
             // 
@@ -209,7 +210,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(1, 29);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.Size = new System.Drawing.Size(69, 17);
             this.label3.TabIndex = 2;
             this.label3.Text = "Message:";
             // 
@@ -220,7 +221,7 @@
             this.Stashes.FormattingEnabled = true;
             this.Stashes.Location = new System.Drawing.Point(52, 3);
             this.Stashes.Name = "Stashes";
-            this.Stashes.Size = new System.Drawing.Size(196, 21);
+            this.Stashes.Size = new System.Drawing.Size(196, 24);
             this.Stashes.TabIndex = 1;
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.Stashes_SelectedIndexChanged);
             // 
@@ -233,7 +234,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(1, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 13);
+            this.label2.Size = new System.Drawing.Size(48, 17);
             this.label2.TabIndex = 0;
             this.label2.Text = "Stash:";
             // 
@@ -241,11 +242,22 @@
             // 
             this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Stashed.FormattingEnabled = true;
+            this.Stashed.ItemHeight = 16;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(251, 186);
+            this.Stashed.Size = new System.Drawing.Size(251, 180);
             this.Stashed.TabIndex = 0;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.Stashed_SelectedIndexChanged);
+            // 
+            // View
+            // 
+            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Location = new System.Drawing.Point(0, 0);
+            this.View.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.View.Name = "View";
+            this.View.ScrollPos = 0;
+            this.View.Size = new System.Drawing.Size(453, 485);
+            this.View.TabIndex = 0;
             // 
             // Stash
             // 
@@ -277,18 +289,9 @@
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.Clear_Click);
             // 
-            // View
-            // 
-            this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Location = new System.Drawing.Point(0, 0);
-            this.View.Name = "View";
-            this.View.ScrollPos = 0;
-            this.View.Size = new System.Drawing.Size(453, 485);
-            this.View.TabIndex = 0;
-            // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);

@@ -21,9 +21,11 @@ namespace GitUI
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
                 {
-                    StreamReader re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding);
-                    GitIgnoreFile = re.ReadToEnd();
-                    re.Close();
+                    using (StreamReader re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding))
+                    {
+                        GitIgnoreFile = re.ReadToEnd();
+                        re.Close();
+                    }
                 }
                 GitIgnoreEdit.Text = GitIgnoreFile;
             }
@@ -40,9 +42,11 @@ namespace GitUI
         {
             //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
             GitIgnoreFile = Environment.NewLine + GitIgnoreEdit.Text.Trim();
-            TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding);
-            tw.Write(GitIgnoreFile);
-            tw.Close();
+            using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+            {
+                tw.Write(GitIgnoreFile);
+                tw.Close();
+            }
             Close();
 
         }

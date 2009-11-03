@@ -68,6 +68,7 @@
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
@@ -96,9 +97,10 @@
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.ItemHeight = 16;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(136, 316);
+            this.DiffFiles.Size = new System.Drawing.Size(136, 308);
             this.DiffFiles.Sorted = true;
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
@@ -108,6 +110,7 @@
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
+            this.DiffText.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DiffText.Name = "DiffText";
             this.DiffText.ScrollPos = 0;
             this.DiffText.Size = new System.Drawing.Size(610, 320);
@@ -115,7 +118,7 @@
             // 
             // FormDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);

@@ -190,6 +190,8 @@ namespace GitUI
 
                 if (!form.ErrorOccured())
                 {
+                    Message.Text = string.Empty;
+
                     File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
                     if (CloseDialogAfterCommit.Checked)
                         Close();
@@ -542,11 +544,12 @@ namespace GitUI
 
         private void FormCommit_FormClosing(object sender, FormClosingEventArgs e)
         {
-            using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
-            {
-                textWriter.Write(Message.Text);
-                textWriter.Close();
-            }
+            if (!string.IsNullOrEmpty(Message.Text))
+                using (StreamWriter textWriter = new StreamWriter(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", false))
+                {
+                    textWriter.Write(Message.Text);
+                    textWriter.Close();
+                }
         }
 
         private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)
