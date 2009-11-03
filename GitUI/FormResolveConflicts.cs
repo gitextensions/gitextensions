@@ -27,6 +27,7 @@ namespace GitUI
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
             Initialize();
@@ -41,6 +42,7 @@ namespace GitUI
 
         private void Initialize()
         {
+            Cursor.Current = Cursors.WaitCursor;
             button1.Focus();
 
             ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
@@ -53,11 +55,13 @@ namespace GitUI
 
             if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
+                Reset.Text = "Abort rebase";
                 ContextChooseLocal.Text = "Choose local (theirs)";
                 ContextChooseRemote.Text = "Choose remote (ours)";
             }
             else
             {
+                Reset.Text = "Abort merge";
                 ContextChooseLocal.Text = "Choose local (ours)";
                 ContextChooseRemote.Text = "Choose remote (theirs)";
             }
@@ -97,6 +101,7 @@ namespace GitUI
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
@@ -199,6 +204,7 @@ namespace GitUI
 
         private void InitMergetool()
         {
+            Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             mergetool = GitCommands.GitCommands.GetSetting("merge.tool");
@@ -228,11 +234,13 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             ConflictedFiles_DoubleClick(sender, e);
         }
 
         private void Reset_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (Abort.AbortCurrentAction())
                 Close();
         }
@@ -244,29 +252,34 @@ namespace GitUI
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflice_SelectBase(GetFileName());
             Initialize();
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflice_SelectLocal(GetFileName());
             Initialize();
         }
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflice_SelectRemote(GetFileName());
             Initialize();
         }
 
         private void OpenMergetool_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             ConflictedFiles_DoubleClick(sender, e);
         }
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
@@ -279,6 +292,7 @@ namespace GitUI
 
         private void ContextOpenLocalWith_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
@@ -300,6 +314,7 @@ namespace GitUI
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
@@ -325,6 +340,7 @@ namespace GitUI
 
         private void SaveAs(string side)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
@@ -357,7 +373,9 @@ namespace GitUI
 
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + GetFileName() + "\"");
+            Initialize();
         }
     }
 }
