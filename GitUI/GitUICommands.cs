@@ -391,7 +391,7 @@ namespace GitUI
 
             InvokeEvent(PostResolveConflicts);
 
-            return false;
+            return true;
         }
 
         public bool StartCherryPickDialog()
