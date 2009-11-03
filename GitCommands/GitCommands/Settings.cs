@@ -36,7 +36,7 @@ namespace GitCommands
             }
         }
 
-    #region Colors
+        #region Colors
 
         private static Color otherTagColor = Color.Gray;
         public static Color OtherTagColor
@@ -155,7 +155,7 @@ namespace GitCommands
             }
         }
 
-    #endregion
+        #endregion
         private static Encoding encoding = Encoding.UTF8;
         public static Encoding Encoding
         {
@@ -337,12 +337,12 @@ namespace GitCommands
 
 
         private static string gitDir = "";
-        public static string GitDir 
+        public static string GitDir
         {
             get
             {
                 return gitDir;
-}
+            }
             set
             {
                 gitDir = value;
@@ -515,17 +515,23 @@ namespace GitCommands
                     Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
                 }
 
-                if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                    Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
+                if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
+                    Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
                 else
-                    if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                        Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+                    if (Settings.Encoding.GetType() == typeof(UnicodeEncoding))
+                        Application.UserAppDataRegistry.SetValue("encoding", "Unicode");
                     else
-                        if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                            Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+                        if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
+                            Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
                         else
-                            if (Settings.Encoding == System.Text.Encoding.Default)
-                                Application.UserAppDataRegistry.SetValue("encoding", "Default");
+                            if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
+                                Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+                            else
+                                if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
+                                    Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+                                else
+                                    if (Settings.Encoding == System.Text.Encoding.Default)
+                                        Application.UserAppDataRegistry.SetValue("encoding", "Default");
 
                 Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
                 Application.UserAppDataRegistry.SetValue("diffremovedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedColor));
@@ -590,13 +596,19 @@ namespace GitCommands
                     if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
                         Settings.Encoding = System.Text.Encoding.Default;
                     else
-                        if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                            Settings.Encoding = new UTF7Encoding();
+                        if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                            Settings.Encoding = new UnicodeEncoding();
                         else
-                            if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                                Settings.Encoding = new UTF32Encoding(true, false);
+                            if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                                Settings.Encoding = new ASCIIEncoding();
                             else
-                                Settings.Encoding = new UTF8Encoding(false);
+                                if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                                    Settings.Encoding = new UTF7Encoding();
+                                else
+                                    if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                        Settings.Encoding = new UTF32Encoding(true, false);
+                                    else
+                                        Settings.Encoding = new UTF8Encoding(false);
 
                 try
                 {

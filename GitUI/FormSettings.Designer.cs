@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.LocalSettings = new System.Windows.Forms.TabPage();
+            this.label30 = new System.Windows.Forms.Label();
             this.lblLocalAutoCRLF = new System.Windows.Forms.Label();
             this.LocalAutoCRLF = new System.Windows.Forms.ComboBox();
             this.InvalidGitPathLocal = new System.Windows.Forms.Panel();
@@ -61,6 +62,11 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
             this.EncodingLabel = new System.Windows.Forms.Label();
             this.Encoding = new System.Windows.Forms.ComboBox();
             this.Dictionary = new System.Windows.Forms.ComboBox();
@@ -100,6 +106,7 @@
             this.label29 = new System.Windows.Forms.Label();
             this.ColorAddedLineLabel = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.label28 = new System.Windows.Forms.Label();
             this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
             this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
             this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
@@ -145,13 +152,6 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -198,6 +198,15 @@
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(8, 127);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(156, 13);
+            this.label30.TabIndex = 23;
+            this.label30.Text = "Keep backup (.orig) after merge";
             // 
             // lblLocalAutoCRLF
             // 
@@ -576,6 +585,51 @@
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(8, 263);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(184, 13);
+            this.label39.TabIndex = 25;
+            this.label39.Text = "Show relative date instead of full date";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(8, 240);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(256, 13);
+            this.label38.TabIndex = 24;
+            this.label38.Text = "Use FileSystemWatcher to check if index is changed";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(8, 218);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(167, 13);
+            this.label37.TabIndex = 23;
+            this.label37.Text = "Show revision graph in commit log";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(8, 197);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(264, 13);
+            this.label35.TabIndex = 22;
+            this.label35.Text = "Show Git commandline dialog when executing process";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(8, 175);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(295, 13);
+            this.label34.TabIndex = 21;
+            this.label34.Text = "Close process dialog automaticly when process is succeeded";
+            // 
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
@@ -591,6 +645,7 @@
             this.Encoding.Items.AddRange(new object[] {
             "Default",
             "ASCII",
+            "Unicode",
             "UTF7",
             "UTF8",
             "UTF32"});
@@ -1028,6 +1083,15 @@
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(10, 179);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(156, 13);
+            this.label28.TabIndex = 22;
+            this.label28.Text = "Keep backup (.orig) after merge";
             // 
             // lblGlobalAutoCRLF
             // 
@@ -1488,69 +1552,6 @@
             this.pictureBox2.Size = new System.Drawing.Size(54, 50);
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(10, 179);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(156, 13);
-            this.label28.TabIndex = 22;
-            this.label28.Text = "Keep backup (.orig) after merge";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(8, 127);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(156, 13);
-            this.label30.TabIndex = 23;
-            this.label30.Text = "Keep backup (.orig) after merge";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(8, 175);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(295, 13);
-            this.label34.TabIndex = 21;
-            this.label34.Text = "Close process dialog automaticly when process is succeeded";
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(8, 197);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(264, 13);
-            this.label35.TabIndex = 22;
-            this.label35.Text = "Show Git commandline dialog when executing process";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(8, 218);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(167, 13);
-            this.label37.TabIndex = 23;
-            this.label37.Text = "Show revision graph in commit log";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(8, 240);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(256, 13);
-            this.label38.TabIndex = 24;
-            this.label38.Text = "Use FileSystemWatcher to check if index is changed";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(8, 263);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(184, 13);
-            this.label39.TabIndex = 25;
-            this.label39.Text = "Show relative date instead of full date";
             // 
             // FormSettings
             // 
