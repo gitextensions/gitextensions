@@ -1200,6 +1200,7 @@ namespace GitUI
             {
                 ToolStripButton submenu = new ToolStripButton(submodule.Name);
                 submenu.Click += submenu_Click;
+                submenu.Width = 200;
                 openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
             }
 
@@ -1243,6 +1244,7 @@ namespace GitUI
                 {
                     ToolStripButton historyItemMenu = new ToolStripButton(historyItem);
                     historyItemMenu.Click += new EventHandler(historyItemMenu_Click);
+                    historyItemMenu.Width = 225;
                     recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
                 }
             }
