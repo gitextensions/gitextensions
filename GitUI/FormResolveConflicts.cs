@@ -17,6 +17,9 @@ namespace GitUI
         {
             InitializeComponent();
             ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+            
+            //Solve button is disabled for now
+            SolveConflictButton.Visible = false;
         }
 
         void ConflictedFiles_CellClick(object sender, DataGridViewCellEventArgs e)
