@@ -15,6 +15,7 @@ Version 1.79
 	Added waitcursor to FormResolveConflicts.
 	Set width to submodules submenu and recent repositories submenu.
 	Added F3 and Shift+F3 to code dialog.
+	Bug fixed that the branch drop down box in the pull dialog was empty.
 
 Version 1.78
 	Fixed bug causing the commitmessage to contain encoding marker bytes

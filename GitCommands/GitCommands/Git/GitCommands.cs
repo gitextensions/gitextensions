@@ -1981,6 +1981,8 @@ namespace GitCommands
 
         static public List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
         {
+            remote = FixPath(remote);
+
             string tree = "";
             if (tags && branches)
                 tree = RunCmd(Settings.GitDir + "git.cmd", "ls-remote --heads --tags \"" + remote + "\"");
