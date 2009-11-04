@@ -380,5 +380,13 @@ namespace GitUI
             GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + GetFileName() + "\"");
             Initialize();
         }
+
+        private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(GetFileName()))
+                ConflictedFilesContextMenu.Enabled = false;
+            else
+                ConflictedFilesContextMenu.Enabled = true;
+        }
     }
 }

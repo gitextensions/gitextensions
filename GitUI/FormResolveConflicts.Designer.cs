@@ -91,7 +91,7 @@
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(596, 245);
+            this.ConflictedFiles.Size = new System.Drawing.Size(587, 367);
             this.ConflictedFiles.TabIndex = 0;
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
             this.ConflictedFiles.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ConflictedFiles_CellMouseDown);
@@ -116,6 +116,7 @@
             this.ContextSaveRemoteAs});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
             this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(196, 264);
+            this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
             // 
@@ -227,8 +228,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(732, 274);
-            this.splitContainer1.SplitterDistance = 596;
+            this.splitContainer1.Size = new System.Drawing.Size(723, 396);
+            this.splitContainer1.SplitterDistance = 587;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -246,7 +247,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.ConflictedFiles);
-            this.splitContainer2.Size = new System.Drawing.Size(596, 274);
+            this.splitContainer2.Size = new System.Drawing.Size(587, 396);
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -276,8 +277,8 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.Rescan);
             this.splitContainer3.Panel2.Controls.Add(this.Reset);
-            this.splitContainer3.Size = new System.Drawing.Size(132, 274);
-            this.splitContainer3.SplitterDistance = 207;
+            this.splitContainer3.Size = new System.Drawing.Size(132, 396);
+            this.splitContainer3.SplitterDistance = 329;
             this.splitContainer3.TabIndex = 7;
             // 
             // button1
@@ -343,7 +344,7 @@
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 274);
+            this.ClientSize = new System.Drawing.Size(723, 396);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormResolveConflicts";
