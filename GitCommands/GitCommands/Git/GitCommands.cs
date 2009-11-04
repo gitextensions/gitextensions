@@ -1295,7 +1295,7 @@ namespace GitCommands
 
         public void SetGlobalSetting(string setting, string value)
         {
-            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not"))
+            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
             {
 
                 value = value.Replace("\"", "$QUOTE$");
@@ -1331,7 +1331,7 @@ namespace GitCommands
             if (!File.Exists(configFileName))
                 return;
 
-            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not"))
+            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
             {
                 value = value.Replace("\"", "$QUOTE$");
                 value = FixPath(value);
