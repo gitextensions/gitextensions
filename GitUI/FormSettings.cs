@@ -682,18 +682,18 @@ namespace GitUI
 
         public static bool SolveGitCmdDir()
         {
+            GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
             {
-                GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
+                GitCommands.Settings.GitDir = @"c:\Program Files (x86)\Git\cmd\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                 {
-                    GitCommands.Settings.GitDir = @"c:\Program Files (x86)\Git\cmd\";
+                    GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                     {
-                        GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
+                        GitCommands.Settings.GitDir = "";
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
                         {
-                            GitCommands.Settings.GitDir = "";
                             return false;
                         }
                     }
@@ -792,22 +792,22 @@ namespace GitUI
 
         public static bool SolveGitBinDir()
         {
+            GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
             {
-                GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
+                GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                 {
-                    GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
+                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
+                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                     {
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
+                        GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                         {
-                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
-                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+                            GitCommands.Settings.GitBinDir = "";
+                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.exe", "")))
                             {
-                                GitCommands.Settings.GitBinDir = "";
                                 return false;
                             }
                         }
