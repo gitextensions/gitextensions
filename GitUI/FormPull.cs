@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using GitCommands;
 
 namespace GitUI
 {
@@ -44,11 +45,14 @@ namespace GitUI
 
         private void PullSource_TextChanged(object sender, EventArgs e)
         {
-            Branches.DataSource = null;
         }
+
+        private List<GitCommands.GitHead> Heads = null;
 
         private void Branches_DropDown(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             if ((PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text)) &&
                 (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text)))
             {
@@ -56,33 +60,57 @@ namespace GitUI
                 return;
             }
 
-            string realWorkingDir = GitCommands.Settings.WorkingDir;
+            //string realWorkingDir = GitCommands.Settings.WorkingDir;
 
             try
             {
-                if (PullFromUrl.Checked)
+                LoadPuttyKey();
+
+                if (Heads == null)
                 {
-                    GitCommands.Settings.WorkingDir = PullSource.Text;
-                }
-                else
-                {
-                    GitCommands.Settings.WorkingDir = GitCommands.GitCommands.GetSetting("remote." + Remotes.Text + ".url");
+                    if (PullFromUrl.Checked)
+                    {
+                        Heads = GitCommands.GitCommands.GetRemoteHeads(PullSource.Text, false, true);
+                    }
+                    else
+                    {
+                        //The line below is the most reliable way to get a list containing
+                        //all remote branches but it is also the slowest.
+                        //Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
+
+                        //The code below is a quick way to get a lost containg all remote branches.
+                        //It only returns the heads that are allready known to the repository. This
+                        //doesn't return heads that are new on the server. This can be updated using
+                        //update branch info in the manage remotes dialog.
+                        Heads = new List<GitHead>();
+                        foreach (GitHead head in GitCommands.GitCommands.GetHeads(true, true))
+                        {
+                            if (head.IsRemote && head.Name.StartsWith(Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                GitCommands.GitHead remoteHead = new GitCommands.GitHead();
+                                remoteHead.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                                Heads.Insert(0, remoteHead);
+                            }
+
+                        }
+                    }
                 }
                 Branches.DisplayMember = "Name";
-                List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false);
 
                 GitCommands.GitHead allHead = new GitCommands.GitHead();
                 allHead.Name = "*";
-                heads.Insert(0, allHead);
+                Heads.Insert(0, allHead);
                 GitCommands.GitHead noHead = new GitCommands.GitHead();
                 noHead.Name = "";
-                heads.Insert(0, noHead);
-                Branches.DataSource = heads;
+                Heads.Insert(0, noHead);
+                Branches.DataSource = Heads;
             }
             finally
             {
-                GitCommands.Settings.WorkingDir = realWorkingDir;
+                //GitCommands.Settings.WorkingDir = realWorkingDir;
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void Pull_Click(object sender, EventArgs e)
@@ -120,13 +148,7 @@ namespace GitUI
                 source = PullSource.Text;
             else
             {
-                if (GitCommands.GitCommands.Plink())
-                {
-                    if (!File.Exists(GitCommands.Settings.Pageant))
-                        MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
-                    else
-                        GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
-                }
+                LoadPuttyKey();
                 source = Remotes.Text;
             }
 
@@ -178,6 +200,17 @@ namespace GitUI
 
         }
 
+        private void LoadPuttyKey()
+        {
+            if (GitCommands.GitCommands.Plink())
+            {
+                if (!File.Exists(GitCommands.Settings.Pageant))
+                    MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                else
+                    GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
+            }
+        }
+
         private void FormPull_Load(object sender, EventArgs e)
         {
             Pull.Select();
@@ -220,6 +253,7 @@ namespace GitUI
         {
             if (PullFromRemote.Checked)
             {
+                ResetRemoteHeads();
                 PullSource.Enabled = false;
                 BrowseSource.Enabled = false;
                 Remotes.Enabled = true;
@@ -231,6 +265,7 @@ namespace GitUI
         {
             if (PullFromUrl.Checked)
             {
+                ResetRemoteHeads();
                 PullSource.Enabled = true;
                 BrowseSource.Enabled = true;
                 Remotes.Enabled = false;
@@ -293,5 +328,25 @@ namespace GitUI
             PullImage.BackgroundImage = GitUI.Properties.Resources.fetch;
         }
 
+        private void PullSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PullSource_Validating(object sender, CancelEventArgs e)
+        {
+            ResetRemoteHeads();
+        }
+
+        private void Remotes_Validating(object sender, CancelEventArgs e)
+        {
+            ResetRemoteHeads();
+        }
+
+        private void ResetRemoteHeads()
+        {
+            Branches.DataSource = null;
+            Heads = null;
+        }
     }
 }
