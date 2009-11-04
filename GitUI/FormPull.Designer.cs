@@ -132,7 +132,7 @@
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(542, 38);
             this.Rebase.TabIndex = 1;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommeded" +
+            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommended" +
                 "\r\nto choose a remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.Rebase_CheckedChanged);
