@@ -70,7 +70,8 @@ namespace GitUI
                 {
                     if (PullFromUrl.Checked)
                     {
-                        Heads = GitCommands.GitCommands.GetRemoteHeads(PullSource.Text, false, true);
+                        //Heads = GitCommands.GitCommands.GetRemoteHeads(PullSource.Text, false, true);
+                        Heads = GitCommands.GitCommands.GetHeads(false, true);
                     }
                     else
                     {
