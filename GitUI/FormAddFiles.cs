@@ -19,7 +19,10 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new FormProcess("add \"" + Filter.Text + "\"");
+            if (force.Checked)
+                new FormProcess("add -f \"" + Filter.Text + "\"");
+            else
+                new FormProcess("add \"" + Filter.Text + "\"");
             Close();
         }
 
