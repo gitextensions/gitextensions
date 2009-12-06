@@ -23,7 +23,7 @@ namespace GitCommands
         }
 
         private GitCommands gitGetGraphCommand;
-        
+
         public List<GitRevision> Revisions;
         private char[] graphChars = new char[] { '*', '|', '*', '\\', '/' };
         public int LimitRevisions { get; set; }
@@ -41,7 +41,7 @@ namespace GitCommands
 
             if (Settings.OrderRevisionByDate)
                 LogParam = " --date-order " + LogParam;
-                
+
 
             string dateFormat;
             if (Settings.RelativeDate)
@@ -85,7 +85,8 @@ namespace GitCommands
                 graphIndex = e.Data.IndexOf("Commit ");
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                revision.Name = revision.Guid = e.Data.Substring(graphIndex + 7).Trim();
+                /*revision.Name = */
+                revision.Guid = e.Data.Substring(graphIndex + 7).Trim();
 
                 List<GitHead> foundHeads = new List<GitHead>();
 
@@ -99,59 +100,71 @@ namespace GitCommands
 
             }
             else
-            if (e.Data.IndexOf("Tree:   ", graphIndex) >= 0)
-            {
-                revision.TreeGuid = e.Data.Substring(e.Data.IndexOf("Tree:   ", graphIndex) + 8).Trim();
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-            }
-            else
-            if (e.Data.IndexOf("Merge: ", graphIndex) >= 0)
-            {
-                //ignore
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex).Trim());
-            }
-            else
-            if (e.Data.IndexOf("Author: ", graphIndex) >= 0)
-            {
-                revision.Author = e.Data.Substring(e.Data.IndexOf("Author: ", graphIndex) + 8).Trim();
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-            }
-            else
-            if (e.Data.IndexOf("Date:   ", graphIndex) >= 0)
-            {
-                revision.Date = e.Data.Substring(e.Data.IndexOf("Date:   ", graphIndex) + 8).Trim();
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-            }
-            else
-            if (e.Data.IndexOf("Parents:", graphIndex) >= 0)
-            {
-                List<string> parentGuids = new List<string>();
-                foreach (string s in e.Data.Substring(e.Data.IndexOf("Parents:", graphIndex) + 8).Split(' '))
+                if (e.Data.IndexOf("Tree:   ", graphIndex) >= 0)
                 {
-                    parentGuids.Add(s.Trim());
+                    revision.TreeGuid = e.Data.Substring(e.Data.IndexOf("Tree:   ", graphIndex) + 8).Trim();
+                    if (e.Data.Length > graphIndex)
+                        revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                 }
+                else
+                    if (e.Data.IndexOf("Merge: ", graphIndex) >= 0)
+                    {
+                        //ignore
+                        if (e.Data.Length > graphIndex)
+                            revision.GraphLines.Add(e.Data.Substring(0, graphIndex).Trim());
+                    }
+                    else
+                        if (e.Data.IndexOf("Author: ", graphIndex) >= 0)
+                        {
+                            revision.Author = e.Data.Substring(e.Data.IndexOf("Author: ", graphIndex) + 8).Trim();
+                            if (e.Data.Length > graphIndex)
+                                revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+                        }
+                        else
+                            if (e.Data.IndexOf("Date:   ", graphIndex) >= 0)
+                            {
+                                revision.Date = e.Data.Substring(e.Data.IndexOf("Date:   ", graphIndex) + 8).Trim();
+                                if (e.Data.Length > graphIndex)
+                                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+                            }
+                            else
+                                if (e.Data.IndexOf("Parents:", graphIndex) >= 0)
+                                {
+                                    List<string> parentGuids = new List<string>();
+                                    foreach (string s in e.Data.Substring(e.Data.IndexOf("Parents:", graphIndex) + 8).Split(' '))
+                                    {
+                                        parentGuids.Add(s.Trim());
+                                    }
 
-                revision.ParentGuids = parentGuids;
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-            }
-            else
-            if (revision != null)
-            {
-                if (e.Data.Length > graphIndex)
-                {
-                    if (string.IsNullOrEmpty(revision.Message))
-                        revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
+                                    revision.ParentGuids = parentGuids;
+                                    if (e.Data.Length > graphIndex)
+                                        revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+                                }
+                                else
+                                    if (revision != null)
+                                    {
+                                        if (!string.IsNullOrEmpty(revision.Message) && e.Data.LastIndexOfAny(new char[] { '|', '*' }) < 0 && !e.Data.StartsWith("..."))
+                                        {
+                                            revision.Name = e.Data;
+                                        }
+                                        else
+                                            if (e.Data.Length > graphIndex && !e.Data.StartsWith("..."))
+                                            {
+                                                if (string.IsNullOrEmpty(revision.Message))
+                                                    revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
 
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                }
-            }
-        
-        
+                                                revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+
+                                            }
+                                            else
+                                                if (e.Data.Length == graphIndex && !e.Data.StartsWith("..."))
+                                                {
+                                                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+                                                }
+
+                                    }
+
+
         }
 
     }

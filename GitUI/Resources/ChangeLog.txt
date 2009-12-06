@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.80
+	File history follows file renames
+	Added paragraph about ssh to User Manual
+	Added force option to add files dialog
+
 Version 1.79
 	Added push force support for branch pushing
 	Added push force support for tag pushing

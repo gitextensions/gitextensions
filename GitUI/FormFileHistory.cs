@@ -22,7 +22,7 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
-            FileChanges.Filter = " -- \"" + fileName + "\"";
+            FileChanges.Filter = "  --name-only --follow -- \"" + fileName + "\"";
             FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
@@ -65,16 +65,23 @@ namespace GitUI
 
             IGitItem revision = selectedRows[0];
 
+            string fileName = revision.Name;
+
+            if (string.IsNullOrEmpty(fileName))
+                fileName = FileName;
+
+            this.Text = "File History (" + fileName + ")";
+
             if (tabControl1.SelectedTab == Blame)
             {
                 //BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
-                FillBlameTab(revision.Guid);
+                FillBlameTab(revision.Guid, fileName);
             }
             if (tabControl1.SelectedTab == ViewTab)
             {
                 int scrollpos =View.ScrollPos;
 
-                View.ViewGitItemRevision(FileName, revision.Guid);
+                View.ViewGitItemRevision(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
             }
 
@@ -86,7 +93,7 @@ namespace GitUI
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid, FileName));
+                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid, fileName));
                         diff.Execute();
                         ///EditorOptions.SetSyntax(Diff, FileName);
                         Diff.ViewPatch(diff.Dto.Result);
@@ -100,7 +107,7 @@ namespace GitUI
 
                 if (tabControl1.SelectedTab == DiffTab)
                 {
-                    Diff diff = new Diff(new DiffDto(revision1.Guid + "^", revision1.Guid, FileName));
+                    Diff diff = new Diff(new DiffDto(revision1.Guid + "^", revision1.Guid, fileName));
                     diff.Execute();
                     Diff.ViewPatch(diff.Dto.Result);
                 }
@@ -112,12 +119,12 @@ namespace GitUI
         }
 
         private List<GitBlame> blameList;
-        private void FillBlameTab(string guid)
+        private void FillBlameTab(string guid, string fileName)
         {
             StringBuilder blameCommitter = new StringBuilder();
             StringBuilder blameFile = new StringBuilder();
 
-            blameList = GitCommands.GitCommands.Blame(FileName, guid);
+            blameList = GitCommands.GitCommands.Blame(fileName, guid);
 
             foreach (GitBlame blame in blameList)
             {
@@ -125,7 +132,7 @@ namespace GitUI
                 blameFile.AppendLine(blame.Text);
             }
 
-            EditorOptions.SetSyntax(BlameFile, FileName);
+            EditorOptions.SetSyntax(BlameFile, fileName);
 
             BlameCommitter.Text = blameCommitter.ToString();
             BlameFile.Text = blameFile.ToString();

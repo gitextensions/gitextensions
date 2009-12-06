@@ -33,6 +33,7 @@
             this.Filter = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ShowFiles = new System.Windows.Forms.Button();
+            this.force = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
@@ -72,11 +73,22 @@
             this.ShowFiles.UseVisualStyleBackColor = true;
             this.ShowFiles.Click += new System.EventHandler(this.ShowFiles_Click);
             // 
+            // force
+            // 
+            this.force.AutoSize = true;
+            this.force.Location = new System.Drawing.Point(71, 32);
+            this.force.Name = "force";
+            this.force.Size = new System.Drawing.Size(53, 17);
+            this.force.TabIndex = 4;
+            this.force.Text = "Force";
+            this.force.UseVisualStyleBackColor = true;
+            // 
             // FormAddFiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 36);
+            this.ClientSize = new System.Drawing.Size(443, 56);
+            this.Controls.Add(this.force);
             this.Controls.Add(this.ShowFiles);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Filter);
@@ -100,5 +112,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button ShowFiles;
+        private System.Windows.Forms.CheckBox force;
     }
 }
