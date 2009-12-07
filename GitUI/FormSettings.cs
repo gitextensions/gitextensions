@@ -89,6 +89,8 @@ namespace GitUI
                                     if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
                                         Encoding.Text = "Default";
 
+                FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
+
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
                 RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
                 RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
@@ -197,6 +199,8 @@ namespace GitUI
 
         private bool Save()
         {
+            GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
+
             GitCommands.Settings.Smtp = SmtpServer.Text;
 
             GitCommands.Settings.GitDir = GitPath.Text;

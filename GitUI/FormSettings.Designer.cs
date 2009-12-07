@@ -152,6 +152,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -393,7 +395,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(718, 348);
+            this.tabControl1.Size = new System.Drawing.Size(718, 384);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -553,6 +555,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.label40);
+            this.TabPageGitExtensions.Controls.Add(this.FollowRenamesInFileHistory);
             this.TabPageGitExtensions.Controls.Add(this.label39);
             this.TabPageGitExtensions.Controls.Add(this.label38);
             this.TabPageGitExtensions.Controls.Add(this.label37);
@@ -579,7 +583,7 @@
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
             this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 322);
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 358);
             this.TabPageGitExtensions.TabIndex = 3;
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
@@ -633,7 +637,7 @@
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(324, 291);
+            this.EncodingLabel.Location = new System.Drawing.Point(324, 318);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(52, 13);
             this.EncodingLabel.TabIndex = 20;
@@ -649,7 +653,7 @@
             "UTF7",
             "UTF8",
             "UTF32"});
-            this.Encoding.Location = new System.Drawing.Point(382, 288);
+            this.Encoding.Location = new System.Drawing.Point(382, 315);
             this.Encoding.Name = "Encoding";
             this.Encoding.Size = new System.Drawing.Size(242, 21);
             this.Encoding.TabIndex = 19;
@@ -1508,8 +1512,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(718, 381);
-            this.splitContainer1.SplitterDistance = 348;
+            this.splitContainer1.Size = new System.Drawing.Size(718, 417);
+            this.splitContainer1.SplitterDistance = 384;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -1553,11 +1557,30 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(8, 285);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(208, 13);
+            this.label40.TabIndex = 27;
+            this.label40.Text = "Follow renames in file history (experimental)";
+            // 
+            // FollowRenamesInFileHistory
+            // 
+            this.FollowRenamesInFileHistory.AutoSize = true;
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 284);
+            this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
+            this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
+            this.FollowRenamesInFileHistory.TabIndex = 26;
+            this.FollowRenamesInFileHistory.UseVisualStyleBackColor = true;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(718, 381);
+            this.ClientSize = new System.Drawing.Size(718, 417);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1728,6 +1751,8 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.CheckBox FollowRenamesInFileHistory;
 
     }
 }

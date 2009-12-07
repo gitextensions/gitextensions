@@ -10,6 +10,20 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static bool followRenamesInFileHistory = true;
+        public static bool FollowRenamesInFileHistory
+        {
+            get
+            {
+                return followRenamesInFileHistory;
+            }
+            set
+            {
+                followRenamesInFileHistory = value;
+            }
+        }
+         
+
         private static int revisionGraphWidth = 6;
         public static int RevisionGraphWidth
         {
@@ -559,6 +573,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("pullmerge", Settings.PullMerge);
 
                 Application.UserAppDataRegistry.SetValue("autostash", Settings.AutoStash);
+                Application.UserAppDataRegistry.SetValue("followrenamesinfilehistory", Settings.FollowRenamesInFileHistory);
 
                 Application.UserAppDataRegistry.SetValue("plink", Settings.Plink);
                 Application.UserAppDataRegistry.SetValue("puttygen", Settings.Puttygen);
@@ -635,6 +650,10 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("dictionary") != null) Settings.Dictionary = Application.UserAppDataRegistry.GetValue("dictionary").ToString();
                 if (Application.UserAppDataRegistry.GetValue("smtp") != null) Settings.Smtp = Application.UserAppDataRegistry.GetValue("smtp").ToString();
 
+
+
+
+                if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
                 if (Application.UserAppDataRegistry.GetValue("relativedate") != null) Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
