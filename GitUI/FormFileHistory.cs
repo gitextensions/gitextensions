@@ -22,7 +22,11 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
-            FileChanges.Filter = "  --name-only --follow -- \"" + fileName + "\"";
+            
+            if (GitCommands.Settings.FollowRenamesInFileHistory)
+                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
+            else
+                FileChanges.Filter = " -- \"" + fileName + "\"";
             FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
@@ -75,7 +79,10 @@ namespace GitUI
             if (tabControl1.SelectedTab == Blame)
             {
                 //BlameGrid.DataSource = GitCommands.GitCommands.Blame(FileName, revision.CommitGuid);
+
+                int scrollpos = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
                 FillBlameTab(revision.Guid, fileName);
+                BlameFile.ActiveTextAreaControl.VScrollBar.Value = scrollpos;
             }
             if (tabControl1.SelectedTab == ViewTab)
             {
