@@ -755,16 +755,19 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
-        static public string CloneCmd(string from, string to, bool central)
+        static public string CloneCmd(string from, string to, bool central, int? depth)
         {
             from = FixPath(from);
             to = FixPath(to);
-
+            List<string> options = new List<string> { "-v" };
             if (central)
-                return "clone -v --bare \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
-            else
-                return "clone -v \"" + from.Trim() + "\" \"" + to.Trim() + "\"";
+                options.Add("--bare");
+            if (depth.HasValue)
+                options.Add("--depth " + depth);
+            options.Add("\"" + from.Trim() + "\"");
+            options.Add("\"" + to.Trim() + "\"");
 
+            return "clone " + string.Join(" ", options.ToArray());
         }
 
         static public string ResetFile(string file)
