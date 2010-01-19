@@ -2113,6 +2113,13 @@ namespace GitCommands
             return heads;
         }
 
+        static public string[] GetFiles(string filePattern)
+        {
+            string tree = RunCmd(Settings.GitDir + "git.cmd", "ls-files -o -m -c \"" + filePattern + "\"");
+
+            return tree.Split('\n');
+        }
+
         static public List<GitItem> GetFileChanges(string file)
         {
             file = FixPath(file);

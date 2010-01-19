@@ -626,5 +626,16 @@ namespace GitUI
         {
             Message.Text = (string)e.ClickedItem.Tag;
         }
+
+        private void addFileTogitignoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0)
+            {
+                SelectedDiff.ViewText("", "");
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                new FormAddToGitIgnore(item.Name).ShowDialog();
+                Initialize();
+            }
+        }
     }
 }
