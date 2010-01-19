@@ -156,12 +156,12 @@ namespace GitUI
             return true;
         }
         
-        public bool StartDeleteBranchDialog()
+        public bool StartDeleteBranchDialog(string branch)
         {
             if (!InvokeEvent(PreDeleteBranch))
                 return false;
 
-            FormDeleteBranch form = new FormDeleteBranch();
+            FormDeleteBranch form = new FormDeleteBranch(branch);
             form.ShowDialog();
 
             InvokeEvent(PostDeleteBranch);

@@ -921,7 +921,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartDeleteBranchDialog();
+            GitUICommands.Instance.StartDeleteBranchDialog(toolStripItem.Text);
 
             ForceRefreshRevisions();
         }

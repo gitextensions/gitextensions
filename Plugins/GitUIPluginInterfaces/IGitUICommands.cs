@@ -87,7 +87,7 @@ namespace GitUIPluginInterfaces
         bool StartCompareRevisionsDialog();
         bool StartCreateBranchDialog();
         bool StartCreateTagDialog();
-        bool StartDeleteBranchDialog();
+        bool StartDeleteBranchDialog(string branch);
         bool StartDeleteTagDialog();
         bool StartEditGitIgnoreDialog();
         bool StartFileHistoryDialog(string fileName);

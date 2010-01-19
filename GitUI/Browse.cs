@@ -714,7 +714,7 @@ namespace GitUI
 
         private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartDeleteBranchDialog())
+            if (GitUICommands.Instance.StartDeleteBranchDialog(null))
                 Initialize();
         }
 
