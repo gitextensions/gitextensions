@@ -196,7 +196,7 @@ namespace GitExtensions
             if (args.Length > 1 && args[1] == "merge")
             {
                 //Application.Run();
-                GitUICommands.Instance.StartMergeBranchDialog();
+                GitUICommands.Instance.StartMergeBranchDialog(null);
             } else
             if (args.Length > 1 && args[1] == "cherry")
             {

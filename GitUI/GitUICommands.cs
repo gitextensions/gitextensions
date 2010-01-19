@@ -407,12 +407,12 @@ namespace GitUI
             return true;
         }
 
-        public bool StartMergeBranchDialog()
+        public bool StartMergeBranchDialog(string branch)
         {
             if (!InvokeEvent(PreMergeBranch))
                 return true; 
             
-            FormMergeBranch form = new FormMergeBranch();
+            FormMergeBranch form = new FormMergeBranch(branch);
             form.ShowDialog();
 
             InvokeEvent(PostMergeBranch);

@@ -731,7 +731,7 @@ namespace GitUI
 
         private void mergeBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartMergeBranchDialog()) 
+            if (GitUICommands.Instance.StartMergeBranchDialog(null)) 
                 Initialize();
         }
 
