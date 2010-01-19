@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 1.82
+	Added 'Add to .gitignore' button in context menu in commit dialog
+	When no commit message is entered and 'Amend to last commit' is pressed, the last commit message will be entered as commit message.
+	A menu is added to the 'Commit message' label.
+	Menu's under labels in the commit dialog are indicated by a icon
+	'Show ignored files' option added to the 'Working dir changes' menu in the commit dialog
+	
 Version 1.81
 	Fixed bug in file history
 	Scroll position in blame view will be saved when selecting other revision

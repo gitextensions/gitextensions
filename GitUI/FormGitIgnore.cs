@@ -40,15 +40,21 @@ namespace GitUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-            GitIgnoreFile = Environment.NewLine + GitIgnoreEdit.Text.Trim();
-            using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+            try
             {
-                tw.Write(GitIgnoreFile);
-                tw.Close();
+                //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
+                GitIgnoreFile = Environment.NewLine + GitIgnoreEdit.Text.Trim();
+                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+                {
+                    tw.Write(GitIgnoreFile);
+                    tw.Close();
+                }
+                Close();
             }
-            Close();
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void FormGitIgnore_Load(object sender, EventArgs e)

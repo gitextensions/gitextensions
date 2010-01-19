@@ -45,10 +45,12 @@
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UnstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ResetChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.UnstageFiles = new System.Windows.Forms.Button();
@@ -60,6 +62,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Staged = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -81,9 +84,7 @@
             this.OutPut = new System.Windows.Forms.RichTextBox();
             this.splitContainer10 = new System.Windows.Forms.SplitContainer();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -97,6 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
             this.UnstagedFileContext.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -120,7 +122,6 @@
             this.splitContainer9.SuspendLayout();
             this.splitContainer10.Panel2.SuspendLayout();
             this.splitContainer10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -296,6 +297,14 @@
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
             this.Unstaged.Click += new System.EventHandler(this.Unstaged_Click);
             // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
             // ChangeString
             // 
             this.ChangeString.DataPropertyName = "ChangeString";
@@ -307,23 +316,28 @@
             // 
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ResetChanges,
-            this.deleteFileToolStripMenuItem});
+            this.deleteFileToolStripMenuItem,
+            this.addFileTogitignoreToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(174, 48);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(184, 92);
             // 
             // ResetChanges
             // 
             this.ResetChanges.Name = "ResetChanges";
-            this.ResetChanges.Size = new System.Drawing.Size(173, 22);
+            this.ResetChanges.Size = new System.Drawing.Size(183, 22);
             this.ResetChanges.Text = "Reset file changes";
             this.ResetChanges.Click += new System.EventHandler(this.ResetSoft_Click);
             // 
             // deleteFileToolStripMenuItem
             // 
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
-            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.deleteFileToolStripMenuItem.Text = "Delete file";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
+            // 
+            // gitItemStatusBindingSource
+            // 
+            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
             // splitContainer5
             // 
@@ -451,6 +465,14 @@
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
             this.Staged.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Staged_CellContentClick);
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // ChangeString2
             // 
@@ -717,25 +739,12 @@
             this.CloseDialogAfterCommit.Text = "Close dialog after commit";
             this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
             // 
-            // nameDataGridViewTextBoxColumn1
+            // addFileTogitignoreToolStripMenuItem
             // 
-            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // gitItemStatusBindingSource
-            // 
-            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
+            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
+            this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.addFileTogitignoreToolStripMenuItem_Click);
             // 
             // FormCommit
             // 
@@ -768,6 +777,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).EndInit();
             this.UnstagedFileContext.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
@@ -796,7 +806,6 @@
             this.splitContainer10.Panel2.ResumeLayout(false);
             this.splitContainer10.Panel2.PerformLayout();
             this.splitContainer10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -859,5 +868,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.MenuStrip menuStrip3;
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
     }
 }

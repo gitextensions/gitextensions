@@ -110,6 +110,12 @@
     <Compile Include="FormAddSubmodule.Designer.cs">
       <DependentUpon>FormAddSubmodule.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormAddToGitIgnore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddToGitIgnore.Designer.cs">
+      <DependentUpon>FormAddToGitIgnore.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormArchive.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -451,6 +457,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAddSubmodule.resx">
       <DependentUpon>FormAddSubmodule.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAddToGitIgnore.resx">
+      <DependentUpon>FormAddToGitIgnore.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormArchive.resx">
