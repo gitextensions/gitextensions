@@ -10,21 +10,23 @@ using System.Windows.Forms;
 namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
-    {
-        public FormDeleteBranch()
+    {        private readonly string defaultBranch;
+
+        public FormDeleteBranch(string defaultBranch)
         {
             InitializeComponent();
+            this.defaultBranch = defaultBranch;
         }
 
         private void FormDeleteBranch_Load(object sender, EventArgs e)
         {
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
-        }
 
-        public void SetBranch(string branchName)
-        {
-            Branches.Text = branchName;
+            if (defaultBranch != null)
+            {
+                Branches.Text = defaultBranch;
+            }
         }
 
         private void Ok_Click(object sender, EventArgs e)
