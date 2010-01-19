@@ -91,7 +91,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormMailMap";
             this.Text = "Edit .mailmap";
             this.Load += new System.EventHandler(this.FormMailMap_Load);
