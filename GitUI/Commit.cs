@@ -50,7 +50,7 @@ namespace GitUI
 
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
-            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd);
+            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd(!showIgnoredFilesToolStripMenuItem.Checked));
             Loading.Visible = true;
             AddFiles.Enabled = false;
 
@@ -392,6 +392,13 @@ namespace GitUI
         private void Amend_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            if (string.IsNullOrEmpty(Message.Text))
+            {
+                Message.Text = GitCommands.GitCommands.GetPreviousCommitMessage(0);
+                return;
+            }
+
             if (MessageBox.Show("You are about to rewrite history." + Environment.NewLine + "Only use amend if the commit is not published yet!" + Environment.NewLine + Environment.NewLine + "Do you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
@@ -586,6 +593,38 @@ namespace GitUI
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void showIgnoredFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
+            Scan_Click(null, null);
+        }
+
+        private void commitMessageToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            commitMessageToolStripMenuItem.DropDownItems.Clear();
+            AddCommitMessageToMenu(0);
+            AddCommitMessageToMenu(1);
+            AddCommitMessageToMenu(2);
+        }
+
+        private void AddCommitMessageToMenu(int numberBack)
+        {
+            string commitMessage = GitCommands.GitCommands.GetPreviousCommitMessage(numberBack);
+            if (string.IsNullOrEmpty(commitMessage))
+                return;
+            
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem();
+            toolStripItem.Tag = commitMessage;
+            toolStripItem.Text = commitMessage.Substring(0, Math.Min(Math.Min(50, commitMessage.Length), commitMessage.IndexOf('\n'))) + "...";
+            
+            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
+        }
+
+        private void commitMessageToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            Message.Text = (string)e.ClickedItem.Tag;
         }
     }
 }

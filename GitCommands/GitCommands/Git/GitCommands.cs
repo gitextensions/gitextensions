@@ -8,6 +8,7 @@ using PatchApply;
 using System.Diagnostics;
 using System.Drawing;
 using GitUIPluginInterfaces;
+using System.ComponentModel;
 
 namespace GitCommands
 {
@@ -1482,11 +1483,20 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        public const string GetAllChangedFilesCmd = "ls-files --deleted --modified --others --no-empty-directory --exclude-standard -t";
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles)
+        {
+            StringBuilder stringBuilder = new StringBuilder("ls-files --deleted --modified --others --no-empty-directory -t");
+            if (excludeIgnoredFiles)
+                stringBuilder.Append(" --exclude-standard");
+
+            return stringBuilder.ToString();
+        }
+
+
 
         static public List<GitItemStatus> GetAllChangedFiles()
         {
-            string status = RunCmd(Settings.GitDir + "git.cmd", GetAllChangedFilesCmd);
+            string status = RunCmd(Settings.GitDir + "git.cmd", GetAllChangedFilesCmd(true));
 
             return GetAllChangedFilesFromString(status);
         }
@@ -1496,7 +1506,7 @@ namespace GitCommands
             string[] statusStrings = status.Split('\n');
 
             List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
-
+            
             GitItemStatus itemStatus = null;
             foreach (string statusString in statusStrings)
             {
@@ -2303,6 +2313,11 @@ namespace GitCommands
             }
 
             return null;
+        }
+
+        public static string GetPreviousCommitMessage(int numberBack)
+        {
+            return RunCmd(Settings.GitDir + "git.cmd", "log -n 1 HEAD~" + numberBack.ToString() + " --pretty=format:%s%n%n%b");
         }
 
         public static string MergeBranch(string branch)
