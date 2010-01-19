@@ -10,10 +10,12 @@ using System.Windows.Forms;
 namespace GitUI
 {
     public partial class FormMergeBranch : GitExtensionsForm
-    {
-        public FormMergeBranch()
+    {        private readonly string defaultBranch;
+
+        public FormMergeBranch(string defaultBranch)
         {
             InitializeComponent();
+            this.defaultBranch = defaultBranch;
         }
 
         private void FormMergeBranch_Load(object sender, EventArgs e)
@@ -23,6 +25,12 @@ namespace GitUI
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
+            
+            if (defaultBranch != null)
+            {
+                Branches.Text = defaultBranch;
+            }
+
             Branches.Select();
         }
 

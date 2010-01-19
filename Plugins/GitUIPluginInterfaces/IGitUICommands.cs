@@ -96,7 +96,7 @@ namespace GitUIPluginInterfaces
         bool StartInitializeDialog();
         bool StartInitializeDialog(string dir);
         bool StartMailMapDialog();
-        bool StartMergeBranchDialog();
+        bool StartMergeBranchDialog(string branch);
         bool StartPluginSettingsDialog();
         bool StartPullDialog();
         bool StartPushDialog();

@@ -65,6 +65,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
+            this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
@@ -166,6 +167,7 @@
             this.createNewBranchToolStripMenuItem,
             this.deleteBranchToolStripMenuItem,
             this.toolStripSeparator2,
+            this.mergeBranchToolStripMenuItem,
             this.resetCurrentBranchToHereToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
@@ -178,7 +180,7 @@
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 308);
+            this.CreateTag.Size = new System.Drawing.Size(224, 352);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
@@ -388,6 +390,12 @@
             this.Loading.TabStop = false;
             this.Loading.Visible = false;
             // 
+            // mergeBranchToolStripMenuItem
+            // 
+            this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
+            this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.mergeBranchToolStripMenuItem.Text = "Merge with branch";
+            // 
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
@@ -451,5 +459,6 @@
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
     }
 }
