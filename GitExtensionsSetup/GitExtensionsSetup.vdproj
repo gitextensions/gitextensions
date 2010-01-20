@@ -364,12 +364,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_47EF1544D2424C339560C5A33AC40CD3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -425,6 +419,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C34F9899D9E94EB54A631A40DE514FC5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_47EF1544D2424C339560C5A33AC40CD3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -877,7 +877,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.33421, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_47EF1544D2424C339560C5A33AC40CD3"
@@ -890,7 +890,7 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A95B4CEA936A48AE8DFCA21437C85274"
-            "Condition" = "8:"
+            "Condition" = "8:INSTALLVS2010"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1141,7 +1141,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3672.32686, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -1425,7 +1425,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3672.32686, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1540,7 +1540,7 @@
             "TargetName" = "8:GitPlugin.AddIn"
             "Tag" = "8:"
             "Folder" = "8:_A95B4CEA936A48AE8DFCA21437C85274"
-            "Condition" = "8:"
+            "Condition" = "8:INSTALLVS2010"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1622,7 +1622,7 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_2C2A1E96E1CA473B985A1871D29C338F"
-            "Condition" = "8:"
+            "Condition" = "8:INSTALLVS2010"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1741,7 +1741,7 @@
                     {
                     "Name" = "8:Visual Studio 2010"
                     "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
+                    "Condition" = "8:INSTALLVS2010"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_A2205A0E01794F64B5140C089DD69450"
                         "Folders"
@@ -1750,7 +1750,7 @@
                             {
                             "Name" = "8:Addins"
                             "AlwaysCreate" = "11:FALSE"
-                            "Condition" = "8:"
+                            "Condition" = "8:INSTALLVS2010"
                             "Transitive" = "11:FALSE"
                             "Property" = "8:_6EC2048476D14482B39461E093EAF5E5"
                                 "Folders"
@@ -1759,7 +1759,7 @@
                                     {
                                     "Name" = "8:en-US"
                                     "AlwaysCreate" = "11:FALSE"
-                                    "Condition" = "8:"
+                                    "Condition" = "8:INSTALLVS2010"
                                     "Transitive" = "11:FALSE"
                                     "Property" = "8:_A77CFF4FD5A7424E8E1B918A35D1270A"
                                         "Folders"
