@@ -123,6 +123,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4C33D53393CB41B69FCE2476D23AD9E5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_541547E1975CB00612B445737C3060A5"
         "OwnerKey" = "8:_E0632321D8A1A935B401762EFED1CA9C"
         "MsmSig" = "8:_UNDEFINED"
@@ -237,12 +243,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_AE39E14C3F99441696FE4DACBA9E55A9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B13F9D40D75E49C6808E8D198E8B2B9F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -352,12 +352,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9D158F5830D04CBFA67325F4C44B0CD6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C3932A45827610DF258DE5DC31F5A2CB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -371,6 +365,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B69F3C7DC17475F47F5F0863B51FE856"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9D158F5830D04CBFA67325F4C44B0CD6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -824,6 +824,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C33D53393CB41B69FCE2476D23AD9E5"
+            {
+            "SourcePath" = "8:..\\GitPlugin\\bin\\GitPlugin.AddIn"
+            "TargetName" = "8:GitPlugin.AddIn"
+            "Tag" = "8:"
+            "Folder" = "8:_D48840AEEABD4EE88BE4CDB644624F5A"
+            "Condition" = "8:INSTALLVS2010"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_541547E1975CB00612B445737C3060A5"
             {
             "AssemblyRegister" = "3:1"
@@ -990,7 +1010,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3672.32686, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_86F0ECA201E04185A17208ABF277D125"
@@ -1152,7 +1172,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.33421, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_9D158F5830D04CBFA67325F4C44B0CD6"
@@ -1165,7 +1185,7 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D48840AEEABD4EE88BE4CDB644624F5A"
-            "Condition" = "8:"
+            "Condition" = "8:INSTALLVS2010"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1259,26 +1279,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AE39E14C3F99441696FE4DACBA9E55A9"
-            {
-            "SourcePath" = "8:..\\GitPlugin\\bin\\GitPlugin.pdb"
-            "TargetName" = "8:GitPlugin.pdb"
-            "Tag" = "8:"
-            "Folder" = "8:_D48840AEEABD4EE88BE4CDB644624F5A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B13F9D40D75E49C6808E8D198E8B2B9F"
             {
             "SourcePath" = "8:..\\Bin\\Dictionaries\\fr-FR.dic"
@@ -1334,7 +1334,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3671.39056, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GitPlugin, Version=1.0.3672.32686, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C016F84D735B4E51936169EB8510C89D"
@@ -1471,7 +1471,7 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4362153FC0354195BF736EE486188969"
-            "Condition" = "8:"
+            "Condition" = "8:INSTALLVS2010"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1661,7 +1661,7 @@
                     {
                     "Name" = "8:Visual Studio 2010"
                     "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
+                    "Condition" = "8:INSTALLVS2010"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_9C2511C9B63A4A36912E51E6DC359C42"
                         "Folders"
@@ -1670,7 +1670,7 @@
                             {
                             "Name" = "8:Addins"
                             "AlwaysCreate" = "11:FALSE"
-                            "Condition" = "8:"
+                            "Condition" = "8:INSTALLVS2010"
                             "Transitive" = "11:FALSE"
                             "Property" = "8:_68F1D076CF7640AF9948AE1BE4D80C66"
                                 "Folders"
@@ -1679,7 +1679,7 @@
                                     {
                                     "Name" = "8:en-US"
                                     "AlwaysCreate" = "11:FALSE"
-                                    "Condition" = "8:"
+                                    "Condition" = "8:INSTALLVS2010"
                                     "Transitive" = "11:FALSE"
                                     "Property" = "8:_DA75050AE96148B18E4AD8F77D14935B"
                                         "Folders"
