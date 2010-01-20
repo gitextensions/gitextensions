@@ -3,6 +3,7 @@ Changelog
 
 Version 1.84
 	Added support for Visual Studio 2010 (beta)
+	Fixed 'Add to .gitignore' function in commit dialog.
 
 Version 1.83
 	Added "Merge with branch" context menu item to the revision grid

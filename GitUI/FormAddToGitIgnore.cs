@@ -25,19 +25,9 @@ namespace GitUI
             {
                 StringBuilder gitIgnoreFile = new StringBuilder();
                 gitIgnoreFile.Append(Environment.NewLine);
-                if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                {
-                    using (StreamReader re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding))
-                    {
-                        gitIgnoreFile.Append(re.ReadToEnd());
-                        re.Close();
-                    }
-                }
-
-                gitIgnoreFile.Append(Environment.NewLine);
                 gitIgnoreFile.Append(FilePattern.Text);
 
-                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", true, Settings.Encoding))
                 {
                     tw.Write(gitIgnoreFile);
                     tw.Close();

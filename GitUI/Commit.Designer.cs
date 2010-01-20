@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCommit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -50,17 +49,19 @@
             this.UnstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ResetChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.UnstageFiles = new System.Windows.Forms.Button();
-            this.AddFiles = new System.Windows.Forms.Button();
+            this.splitContainer11 = new System.Windows.Forms.SplitContainer();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.UnstageFiles = new System.Windows.Forms.Button();
+            this.AddFiles = new System.Windows.Forms.Button();
             this.Staged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -84,7 +85,6 @@
             this.OutPut = new System.Windows.Forms.RichTextBox();
             this.splitContainer10 = new System.Windows.Forms.SplitContainer();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
-            this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -102,6 +102,9 @@
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
+            this.splitContainer11.Panel1.SuspendLayout();
+            this.splitContainer11.Panel2.SuspendLayout();
+            this.splitContainer11.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -140,7 +143,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(895, 648);
-            this.splitContainer1.SplitterDistance = 389;
+            this.splitContainer1.SplitterDistance = 393;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -157,7 +160,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer2.Size = new System.Drawing.Size(389, 648);
+            this.splitContainer2.Size = new System.Drawing.Size(393, 648);
             this.splitContainer2.SplitterDistance = 286;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -177,7 +180,7 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Loading);
             this.splitContainer4.Panel2.Controls.Add(this.Unstaged);
-            this.splitContainer4.Size = new System.Drawing.Size(389, 286);
+            this.splitContainer4.Size = new System.Drawing.Size(393, 286);
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 1;
             // 
@@ -187,7 +190,7 @@
             this.workingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(389, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(393, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -267,7 +270,7 @@
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(389, 257);
+            this.Loading.Size = new System.Drawing.Size(393, 257);
             this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 2;
             this.Loading.TabStop = false;
@@ -290,7 +293,7 @@
             this.Unstaged.ReadOnly = true;
             this.Unstaged.RowHeadersVisible = false;
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Unstaged.Size = new System.Drawing.Size(389, 257);
+            this.Unstaged.Size = new System.Drawing.Size(393, 257);
             this.Unstaged.TabIndex = 0;
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
             this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
@@ -319,7 +322,7 @@
             this.deleteFileToolStripMenuItem,
             this.addFileTogitignoreToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(184, 92);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(184, 70);
             // 
             // ResetChanges
             // 
@@ -335,6 +338,13 @@
             this.deleteFileToolStripMenuItem.Text = "Delete file";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
             // 
+            // addFileTogitignoreToolStripMenuItem
+            // 
+            this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
+            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
+            this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.addFileTogitignoreToolStripMenuItem_Click);
+            // 
             // gitItemStatusBindingSource
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
@@ -349,59 +359,45 @@
             // 
             // splitContainer5.Panel1
             // 
-            this.splitContainer5.Panel1.Controls.Add(this.progressBar);
-            this.splitContainer5.Panel1.Controls.Add(this.UnstageFiles);
-            this.splitContainer5.Panel1.Controls.Add(this.AddFiles);
-            this.splitContainer5.Panel1.Controls.Add(this.menuStrip2);
+            this.splitContainer5.Panel1.Controls.Add(this.splitContainer11);
             // 
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Staged);
-            this.splitContainer5.Size = new System.Drawing.Size(389, 358);
+            this.splitContainer5.Size = new System.Drawing.Size(393, 358);
             this.splitContainer5.SplitterDistance = 25;
             this.splitContainer5.TabIndex = 1;
             // 
-            // progressBar
+            // splitContainer11
             // 
-            this.progressBar.Location = new System.Drawing.Point(125, 1);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(262, 25);
-            this.progressBar.TabIndex = 1;
-            this.progressBar.Visible = false;
+            this.splitContainer11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer11.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer11.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer11.Name = "splitContainer11";
             // 
-            // UnstageFiles
+            // splitContainer11.Panel1
             // 
-            this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
-            this.UnstageFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.UnstageFiles.Location = new System.Drawing.Point(124, 3);
-            this.UnstageFiles.Name = "UnstageFiles";
-            this.UnstageFiles.Size = new System.Drawing.Size(133, 23);
-            this.UnstageFiles.TabIndex = 1;
-            this.UnstageFiles.Text = "Unstage selected files";
-            this.UnstageFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.UnstageFiles.UseVisualStyleBackColor = true;
-            this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
+            this.splitContainer11.Panel1.Controls.Add(this.menuStrip2);
             // 
-            // AddFiles
+            // splitContainer11.Panel2
             // 
-            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
-            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddFiles.Location = new System.Drawing.Point(263, 3);
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(123, 23);
-            this.AddFiles.TabIndex = 4;
-            this.AddFiles.Text = "Stage selected files";
-            this.AddFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
+            this.splitContainer11.Panel2.Controls.Add(this.progressBar);
+            this.splitContainer11.Panel2.Controls.Add(this.UnstageFiles);
+            this.splitContainer11.Panel2.Controls.Add(this.AddFiles);
+            this.splitContainer11.Size = new System.Drawing.Size(393, 25);
+            this.splitContainer11.SplitterDistance = 131;
+            this.splitContainer11.SplitterWidth = 1;
+            this.splitContainer11.TabIndex = 0;
             // 
             // menuStrip2
             // 
+            this.menuStrip2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.filesListedToCommitToolStripMenuItem});
+            this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(389, 24);
+            this.menuStrip2.Size = new System.Drawing.Size(131, 25);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -414,8 +410,8 @@
             this.stageChunkOfFileToolStripMenuItem});
             this.filesListedToCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.filesListedToCommitToolStripMenuItem.Name = "filesListedToCommitToolStripMenuItem";
-            this.filesListedToCommitToolStripMenuItem.Size = new System.Drawing.Size(105, 20);
-            this.filesListedToCommitToolStripMenuItem.Text = "Files to commit";
+            this.filesListedToCommitToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
+            this.filesListedToCommitToolStripMenuItem.Text = "Staged files";
             // 
             // stageAllToolStripMenuItem
             // 
@@ -443,6 +439,41 @@
             this.stageChunkOfFileToolStripMenuItem.Text = "Stage chunk of file";
             this.stageChunkOfFileToolStripMenuItem.Click += new System.EventHandler(this.stageChunkOfFileToolStripMenuItem_Click);
             // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar.Location = new System.Drawing.Point(0, 0);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(261, 25);
+            this.progressBar.TabIndex = 1;
+            this.progressBar.Visible = false;
+            // 
+            // UnstageFiles
+            // 
+            this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
+            this.UnstageFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.UnstageFiles.Location = new System.Drawing.Point(0, 1);
+            this.UnstageFiles.Name = "UnstageFiles";
+            this.UnstageFiles.Size = new System.Drawing.Size(133, 23);
+            this.UnstageFiles.TabIndex = 1;
+            this.UnstageFiles.Text = "Unstage selected files";
+            this.UnstageFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UnstageFiles.UseVisualStyleBackColor = true;
+            this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
+            // 
+            // AddFiles
+            // 
+            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
+            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AddFiles.Location = new System.Drawing.Point(135, 1);
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(123, 23);
+            this.AddFiles.TabIndex = 4;
+            this.AddFiles.Text = "Stage selected files";
+            this.AddFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddFiles.UseVisualStyleBackColor = true;
+            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
+            // 
             // Staged
             // 
             this.Staged.AllowUserToAddRows = false;
@@ -460,7 +491,7 @@
             this.Staged.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Staged.RowHeadersVisible = false;
             this.Staged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Staged.Size = new System.Drawing.Size(389, 329);
+            this.Staged.Size = new System.Drawing.Size(393, 329);
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
@@ -504,7 +535,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer3.Size = new System.Drawing.Size(502, 648);
+            this.splitContainer3.Size = new System.Drawing.Size(498, 648);
             this.splitContainer3.SplitterDistance = 316;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -515,7 +546,7 @@
             this.SelectedDiff.Margin = new System.Windows.Forms.Padding(4);
             this.SelectedDiff.Name = "SelectedDiff";
             this.SelectedDiff.ScrollPos = 0;
-            this.SelectedDiff.Size = new System.Drawing.Size(502, 316);
+            this.SelectedDiff.Size = new System.Drawing.Size(498, 316);
             this.SelectedDiff.TabIndex = 0;
             // 
             // splitContainer6
@@ -537,7 +568,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(502, 328);
+            this.splitContainer6.Size = new System.Drawing.Size(498, 328);
             this.splitContainer6.SplitterDistance = 134;
             this.splitContainer6.TabIndex = 6;
             // 
@@ -619,7 +650,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.splitContainer10);
-            this.splitContainer7.Size = new System.Drawing.Size(364, 328);
+            this.splitContainer7.Size = new System.Drawing.Size(360, 328);
             this.splitContainer7.SplitterDistance = 299;
             this.splitContainer7.TabIndex = 0;
             // 
@@ -638,7 +669,7 @@
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.splitContainer9);
-            this.splitContainer8.Size = new System.Drawing.Size(364, 299);
+            this.splitContainer8.Size = new System.Drawing.Size(360, 299);
             this.splitContainer8.SplitterDistance = 25;
             this.splitContainer8.TabIndex = 0;
             this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
@@ -649,7 +680,7 @@
             this.commitMessageToolStripMenuItem});
             this.menuStrip3.Location = new System.Drawing.Point(0, 0);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(364, 24);
+            this.menuStrip3.Size = new System.Drawing.Size(360, 24);
             this.menuStrip3.TabIndex = 0;
             this.menuStrip3.Text = "menuStrip3";
             // 
@@ -677,7 +708,7 @@
             // splitContainer9.Panel2
             // 
             this.splitContainer9.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer9.Size = new System.Drawing.Size(364, 270);
+            this.splitContainer9.Size = new System.Drawing.Size(360, 270);
             this.splitContainer9.SplitterDistance = 198;
             this.splitContainer9.TabIndex = 0;
             // 
@@ -688,7 +719,7 @@
             this.Message.Margin = new System.Windows.Forms.Padding(4);
             this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(364, 198);
+            this.Message.Size = new System.Drawing.Size(360, 198);
             this.Message.TabIndex = 0;
             this.Message.Load += new System.EventHandler(this.Message_Load);
             // 
@@ -709,7 +740,7 @@
             this.OutPut.Location = new System.Drawing.Point(0, 0);
             this.OutPut.Name = "OutPut";
             this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(364, 68);
+            this.OutPut.Size = new System.Drawing.Size(360, 68);
             this.OutPut.TabIndex = 0;
             this.OutPut.Text = "";
             // 
@@ -723,8 +754,8 @@
             // splitContainer10.Panel2
             // 
             this.splitContainer10.Panel2.Controls.Add(this.CloseDialogAfterCommit);
-            this.splitContainer10.Size = new System.Drawing.Size(364, 25);
-            this.splitContainer10.SplitterDistance = 154;
+            this.splitContainer10.Size = new System.Drawing.Size(360, 25);
+            this.splitContainer10.SplitterDistance = 150;
             this.splitContainer10.TabIndex = 0;
             // 
             // CloseDialogAfterCommit
@@ -738,13 +769,6 @@
             this.CloseDialogAfterCommit.TabIndex = 0;
             this.CloseDialogAfterCommit.Text = "Close dialog after commit";
             this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
-            // 
-            // addFileTogitignoreToolStripMenuItem
-            // 
-            this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
-            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
-            this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.addFileTogitignoreToolStripMenuItem_Click);
             // 
             // FormCommit
             // 
@@ -779,9 +803,12 @@
             this.UnstagedFileContext.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel1.PerformLayout();
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
+            this.splitContainer11.Panel1.ResumeLayout(false);
+            this.splitContainer11.Panel1.PerformLayout();
+            this.splitContainer11.Panel2.ResumeLayout(false);
+            this.splitContainer11.ResumeLayout(false);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).EndInit();
@@ -869,5 +896,6 @@
         private System.Windows.Forms.MenuStrip menuStrip3;
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer11;
     }
 }
