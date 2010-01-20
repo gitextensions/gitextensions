@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 1.84
+	Added support for Visual Studio 2010 (beta)
+
+Version 1.83
+	Added "Merge with branch" context menu item to the revision grid
+	Added Ctrl+M as a shortcut key for Merge
+	Added Ctrl+. as a shortcut key for Checkout Branch
+
 Version 1.82
 	Added 'Add to .gitignore' button in context menu in commit dialog
 	When no commit message is entered and 'Amend to last commit' is pressed, the last commit message will be entered as commit message.

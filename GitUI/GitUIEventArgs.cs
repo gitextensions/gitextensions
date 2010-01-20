@@ -53,7 +53,7 @@ namespace GitUI
         {
             get
             {
-                return "182";
+                return "184";
             }
         }
 
