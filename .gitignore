@@ -40,3 +40,4 @@ _ReSharper.*/
 !/Bin/puttygen.exe
 !/Bin/[Kk][dD]iff3*.exe
 !/Bin/Git-1*.exe
+SimpleExt/SimpleExt_h.h
