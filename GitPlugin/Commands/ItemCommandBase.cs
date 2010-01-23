@@ -36,7 +36,13 @@ namespace GitPlugin.Commands
 
             public override bool IsEnabled(DTE2 application)
             {
-                return application.SelectedItems.Count > 0;
+                return
+                    ("Tool" == application.ActiveWindow.Kind &&
+                    application.ActiveWindow.Caption.StartsWith("Solution Explorer") &&
+                    application.SelectedItems.Count > 0) ||
+                    ("Document" == application.ActiveWindow.Kind &&
+                    application.ActiveDocument != null);
+
             }
 
             public abstract void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane);

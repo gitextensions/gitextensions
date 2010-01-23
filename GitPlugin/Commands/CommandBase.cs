@@ -10,8 +10,8 @@ namespace GitPlugin.Commands
 	public abstract class CommandBase
     {
         abstract public void OnCommand(DTE2 application, OutputWindowPane pane);
-        abstract public bool IsEnabled(DTE2 application);
 
+        abstract public bool IsEnabled(DTE2 application);
         public void RunGitEx(string command, string filename)
         {
             command += " \"" + filename + "\"";
@@ -21,7 +21,6 @@ namespace GitPlugin.Commands
 
             if (string.IsNullOrEmpty(path))
                 path = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
-
 
             Run(path + "\\GitExtensions.exe", command);
         }
