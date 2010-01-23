@@ -115,7 +115,7 @@ namespace GitPlugin.Commands
         {
             foreach (CommandBarControl control in commandBar.Controls)
             {
-                if (control.Caption.Trim().Equals(caption, StringComparison.CurrentCultureIgnoreCase))
+                if (control.Caption.Trim().Equals(caption.Trim(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     return true;
                 }
@@ -162,6 +162,7 @@ namespace GitPlugin.Commands
             }
 
             bar.Visible = true;
+            bar.Position = MsoBarPosition.msoBarTop;
 
 
             return bar;
@@ -180,6 +181,7 @@ namespace GitPlugin.Commands
 
             // Add command
             Command command = GetCommand(commandName);
+            if (!m_visualStudioCommands.ContainsKey(commandName))
             if (command == null)
             {
                 if (iconIndex > 0)
@@ -286,6 +288,7 @@ namespace GitPlugin.Commands
 
             // Add command
             Command command = GetCommand(commandName);
+            if (!m_visualStudioCommands.ContainsKey(commandName))
             if (command == null)
             {
                 if (iconIndex > 0)
