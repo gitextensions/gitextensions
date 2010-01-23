@@ -14,7 +14,8 @@ namespace GitPlugin.Commands
         abstract public bool IsEnabled(DTE2 application);
         public void RunGitEx(string command, string filename)
         {
-            command += " \"" + filename + "\"";
+            if (!string.IsNullOrEmpty(filename))
+                command += " \"" + filename + "\"";
 
 
             string path = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");

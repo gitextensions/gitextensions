@@ -25,12 +25,18 @@ namespace GitPlugin.Commands
 
             public override void OnCommand(DTE2 application, OutputWindowPane pane)
             {
+                if (application.SelectedItems.Count == 0)
+                {
+                    OnExecute(null, null, pane);
+                }
+
                 foreach (SelectedItem sel in application.SelectedItems)
                 {
                     if (m_executeForFileItems && sel.ProjectItem != null && m_fileItemGUID == sel.ProjectItem.Kind)
                         OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
                     else if (m_executeForProjectItems && sel.Project != null)
                         OnExecute(sel, sel.Project.FullName, pane);
+
                 }
             }
 

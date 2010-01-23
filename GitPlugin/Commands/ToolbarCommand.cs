@@ -11,20 +11,7 @@ namespace GitPlugin.Commands
         {
             public override void OnCommand(DTE2 application, OutputWindowPane pane)
             {
-                // Check if we've selected stuff in the solution explorer and we currently have this as the active window.
-                if ("Tool" == application.ActiveWindow.Kind &&
-                    application.ActiveWindow.Caption.StartsWith("Solution Explorer") &&
-                    application.SelectedItems.Count > 0)
-                {
-                    new ItemCommandT().OnCommand(application, pane);
-                }
-                // let's just see if the text editor is active
-                else if ("Document" == application.ActiveWindow.Kind && application.ActiveDocument != null)
-                {
-					// Let's go through the filesystem to figure out the correct case of the file.
-					string realname = ResolveFileNameWithCase(application.ActiveDocument.FullName);
-					new ItemCommandT().OnExecute(null, realname, pane);
-                }
+                new ItemCommandT().OnCommand(application, pane);
             }
 
             static public string ResolveFileNameWithCase(string fullpath)
