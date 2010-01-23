@@ -144,8 +144,6 @@ namespace GitPlugin.Commands
             {
                 // Try to find an existing CommandBar
                 bar = cmdBars[name];
-                if (bar != null)
-                    return bar;
             }
             catch(Exception ex)
             {
@@ -153,14 +151,18 @@ namespace GitPlugin.Commands
 
             try
             {
-                
-                // Create the new CommandBar
-                bar = cmdBars.Add(name, position, System.Type.Missing, false);
-                bar.Visible = true;
+
+                if (bar == null)
+
+                    // Create the new CommandBar
+                    bar = cmdBars.Add(name, position, System.Type.Missing, false);
             }
             catch 
             {
             }
+
+            bar.Visible = true;
+
 
             return bar;
         }
