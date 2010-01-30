@@ -15,6 +15,7 @@ namespace GitUI
         public bool IgnoreWhitespaceChanges { get; set; }
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
+        public bool TreatAllFilesAsText { get; set; }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
@@ -35,11 +36,15 @@ namespace GitUI
             else
                 diffArguments.AppendFormat(" --unified={0}", NumberOfVisibleLines);
 
+            if (TreatAllFilesAsText)
+                diffArguments.Append(" --text");
+
             return diffArguments.ToString();
         }
 
         public FileViewer()
         {
+            TreatAllFilesAsText = false;
             ShowEntireFile = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
@@ -464,6 +469,13 @@ namespace GitUI
             showEntireFileToolStripMenuItem.Checked = !showEntireFileToolStripMenuItem.Checked;
 
             ShowEntireFile = showEntireFileToolStripMenuItem.Checked;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void treatAllFilesAsTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treatAllFilesAsTextToolStripMenuItem.Checked = !treatAllFilesAsTextToolStripMenuItem.Checked;
+            TreatAllFilesAsText = treatAllFilesAsTextToolStripMenuItem.Checked;
             OnExtraDiffArgumentsChanged();
         }
     }
