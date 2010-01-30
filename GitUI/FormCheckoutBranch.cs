@@ -41,6 +41,8 @@ namespace GitUI
 
                 Branches.DataSource = remoteHeads;
             }
+
+            Branches.Text = null;
         }
 
         private void Ok_Click(object sender, EventArgs e)

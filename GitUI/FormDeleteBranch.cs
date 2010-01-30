@@ -10,7 +10,8 @@ using System.Windows.Forms;
 namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
-    {        private readonly string defaultBranch;
+    {
+        private readonly string defaultBranch;
 
         public FormDeleteBranch(string defaultBranch)
         {
