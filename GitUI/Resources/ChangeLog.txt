@@ -4,6 +4,8 @@ Changelog
 Version 1.85
 	Added context menu options to manipulate Diff viewer.
 	Fixed alt-c as shortcut to commit.
+	Added cherry pick commit to context menu of revision grid
+	Added 'treat file as text' option to diff viewer
 	
 Version 1.84
 	Added support for Visual Studio 2010 (beta)

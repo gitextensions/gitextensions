@@ -385,7 +385,7 @@
             this.splitContainer11.Panel2.Controls.Add(this.UnstageFiles);
             this.splitContainer11.Panel2.Controls.Add(this.AddFiles);
             this.splitContainer11.Size = new System.Drawing.Size(397, 25);
-            this.splitContainer11.SplitterDistance = 141;
+            this.splitContainer11.SplitterDistance = 135;
             this.splitContainer11.SplitterWidth = 1;
             this.splitContainer11.TabIndex = 0;
             // 
@@ -397,7 +397,7 @@
             this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(141, 25);
+            this.menuStrip2.Size = new System.Drawing.Size(135, 25);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -444,7 +444,7 @@
             this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar.Location = new System.Drawing.Point(0, 0);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(255, 25);
+            this.progressBar.Size = new System.Drawing.Size(261, 25);
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
@@ -551,6 +551,7 @@
             this.SelectedDiff.ShowEntireFile = false;
             this.SelectedDiff.Size = new System.Drawing.Size(494, 316);
             this.SelectedDiff.TabIndex = 0;
+            this.SelectedDiff.TreatAllFilesAsText = false;
             // 
             // splitContainer6
             // 
