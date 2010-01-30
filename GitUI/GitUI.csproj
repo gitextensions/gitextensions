@@ -741,8 +741,6 @@
     <None Include="Icons\3.png" />
     <None Include="Resources\error.png" />
     <None Include="Resources\error_button.png" />
-    <None Include="Resources\loading2.gif" />
-    <None Include="Resources\loading.gif" />
     <None Include="Resources\loadingpanel.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
