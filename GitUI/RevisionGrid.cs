@@ -882,19 +882,23 @@ namespace GitUI
                     toolStripItem.Click += new EventHandler(toolStripItem_Click);
                     tagDropDown.Items.Add(toolStripItem);
                 } else
-                if (head.IsHead && !head.IsRemote)
+                if (head.IsHead || head.IsRemote)
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
-                    branchDropDown.Items.Add(toolStripItem);
-
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click +=new EventHandler(toolStripItem_ClickCheckoutBranch);
-                    checkoutBranchDropDown.Items.Add(toolStripItem);
-                    
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click +=new EventHandler(toolStripItem_ClickMergeBranch);
+                    toolStripItem.Click += new EventHandler(toolStripItem_ClickMergeBranch);
                     mergeBranchDropDown.Items.Add(toolStripItem);
+
+                    if (head.IsHead && !head.IsRemote)
+                    {
+                        toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
+                        branchDropDown.Items.Add(toolStripItem);
+
+                        toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Click += new EventHandler(toolStripItem_ClickCheckoutBranch);
+                        checkoutBranchDropDown.Items.Add(toolStripItem);
+                    }
+
                 }
             }
 
@@ -991,7 +995,8 @@ namespace GitUI
 
         private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (GitUICommands.Instance.StartCheckoutBranchDialog())
+                this.RefreshRevisions();
         }
 
         private void label1_Click(object sender, EventArgs e)
