@@ -999,5 +999,16 @@ namespace GitUI
 
         }
 
+        private void cherryPickCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RevisionList.Count > LastRow && LastRow >= 0)
+            {
+                FormCherryPickCommitSmall frm = new FormCherryPickCommitSmall((GitRevision)RevisionList[LastRow]);
+                frm.ShowDialog();
+                RefreshRevisions();
+            }
+
+        }
+
     }
 }

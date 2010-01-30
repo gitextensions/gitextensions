@@ -78,6 +78,12 @@
     <Compile Include="Commit.Designer.cs">
       <DependentUpon>Commit.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCherryPickCommitSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCherryPickCommitSmall.Designer.cs">
+      <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditNetSpell.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -437,6 +443,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
+      <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EditNetSpell.resx">

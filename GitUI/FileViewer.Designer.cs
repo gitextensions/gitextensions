@@ -38,6 +38,8 @@
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descreaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.ContextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -76,9 +78,11 @@
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
             this.descreaseNumberOfLinesToolStripMenuItem,
-            this.showEntireFileToolStripMenuItem});
+            this.showEntireFileToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.treatAllFilesAsTextToolStripMenuItem});
             this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(239, 142);
+            this.ContextMenu.Size = new System.Drawing.Size(239, 170);
             // 
             // findToolStripMenuItem
             // 
@@ -120,6 +124,18 @@
             this.showEntireFileToolStripMenuItem.Text = "Show entire file";
             this.showEntireFileToolStripMenuItem.Click += new System.EventHandler(this.showEntireFileToolStripMenuItem_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(235, 6);
+            // 
+            // treatAllFilesAsTextToolStripMenuItem
+            // 
+            this.treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
+            this.treatAllFilesAsTextToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
+            this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.treatAllFilesAsTextToolStripMenuItem_Click);
+            // 
             // FileViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,5 +161,7 @@
         private System.Windows.Forms.ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem descreaseNumberOfLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showEntireFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
     }
 }

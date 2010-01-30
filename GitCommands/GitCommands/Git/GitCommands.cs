@@ -518,6 +518,15 @@ namespace GitCommands
                 return RunCmd(Settings.GitDir + "git.cmd", "init");
         }
 
+        static public string CherryPickCmd(string cherry, bool commit)
+        {
+            if (commit)
+                return "cherry-pick \"" + cherry + "\"";
+            else
+                return "cherry-pick --no-commit \"" + cherry + "\"";
+        }
+
+
         static public string CherryPick(string cherry, bool commit)
         {
             if (commit)

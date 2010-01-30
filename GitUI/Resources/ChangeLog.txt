@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.85
+	Added context menu options to manipulate Diff viewer.
+	Fixed alt-c as shortcut to commit.
+	
 Version 1.84
 	Added support for Visual Studio 2010 (beta)
 	Fixed 'Add to .gitignore' function in commit dialog.
