@@ -123,7 +123,7 @@ namespace GitUI
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid + "^", revision1.Guid, fileName, Diff.GetExtraDiffArguments()).Text);
+                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName, Diff.GetExtraDiffArguments()).Text);
                     }
                 }
                 else
