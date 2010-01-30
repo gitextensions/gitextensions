@@ -62,6 +62,8 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label40 = new System.Windows.Forms.Label();
+            this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.label37 = new System.Windows.Forms.Label();
@@ -152,8 +154,6 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -196,7 +196,7 @@
             this.LocalSettings.Location = new System.Drawing.Point(4, 22);
             this.LocalSettings.Name = "LocalSettings";
             this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(710, 322);
+            this.LocalSettings.Size = new System.Drawing.Size(710, 358);
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
@@ -379,9 +379,9 @@
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(8, 144);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(159, 13);
+            this.label23.Size = new System.Drawing.Size(200, 13);
             this.label23.TabIndex = 18;
-            this.label23.Text = "Smtp server for sending patches";
+            this.label23.Text = "Smtp server for sending patches by email";
             // 
             // tabControl1
             // 
@@ -412,7 +412,7 @@
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(710, 322);
+            this.tabPage3.Size = new System.Drawing.Size(710, 358);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -588,6 +588,25 @@
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(8, 285);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(208, 13);
+            this.label40.TabIndex = 27;
+            this.label40.Text = "Follow renames in file history (experimental)";
+            // 
+            // FollowRenamesInFileHistory
+            // 
+            this.FollowRenamesInFileHistory.AutoSize = true;
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 284);
+            this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
+            this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
+            this.FollowRenamesInFileHistory.TabIndex = 26;
+            this.FollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
             // label39
             // 
@@ -820,7 +839,7 @@
             this.AppearancePage.Controls.Add(this.groupBox3);
             this.AppearancePage.Location = new System.Drawing.Point(4, 22);
             this.AppearancePage.Name = "AppearancePage";
-            this.AppearancePage.Size = new System.Drawing.Size(710, 322);
+            this.AppearancePage.Size = new System.Drawing.Size(710, 358);
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
@@ -1083,7 +1102,7 @@
             this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
             this.GlobalSettingsPage.Name = "GlobalSettingsPage";
             this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 322);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 358);
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
@@ -1304,7 +1323,7 @@
             this.Ssh.Location = new System.Drawing.Point(4, 22);
             this.Ssh.Name = "Ssh";
             this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(710, 322);
+            this.Ssh.Size = new System.Drawing.Size(710, 358);
             this.Ssh.TabIndex = 4;
             this.Ssh.Text = "Ssh";
             this.Ssh.UseVisualStyleBackColor = true;
@@ -1556,25 +1575,6 @@
             this.pictureBox2.Size = new System.Drawing.Size(54, 50);
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(8, 285);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(208, 13);
-            this.label40.TabIndex = 27;
-            this.label40.Text = "Follow renames in file history (experimental)";
-            // 
-            // FollowRenamesInFileHistory
-            // 
-            this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 284);
-            this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
-            this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
-            this.FollowRenamesInFileHistory.TabIndex = 26;
-            this.FollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 

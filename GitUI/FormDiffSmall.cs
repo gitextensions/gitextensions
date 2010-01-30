@@ -15,6 +15,7 @@ namespace GitUI
         public FormDiffSmall()
         {
             InitializeComponent();
+            DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
         }
 
         private void FormDiffSmall_Load(object sender, EventArgs e)
@@ -48,28 +49,25 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if (DiffFiles.SelectedItem is Patch)
-            {
-                {
-                    Patch patch = (Patch)DiffFiles.SelectedItem;
-                    DiffText.ViewPatch(patch.Text);
-                }
+            ViewSelectedDiff();
+        }
 
-            }
-            else
-                if (DiffFiles.SelectedItem is string)
+        private void ViewSelectedDiff()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (DiffFiles.SelectedItem is string)
+            {
+                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
+                if (selectedPatch != null)
                 {
-                    Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
-                    if (selectedPatch != null)
-                    {
-                        DiffText.ViewPatch(selectedPatch.Text);
-                    }
-                    else
-                    {
-                        DiffText.ViewPatch("");
-                    }
+                    DiffText.ViewPatch(selectedPatch.Text);
                 }
+                else
+                {
+                    DiffText.ViewPatch("");
+                }
+            }
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -81,5 +79,11 @@ namespace GitUI
                 }
             }
         }
+
+        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            ViewSelectedDiff();
+        }
+
     }
 }

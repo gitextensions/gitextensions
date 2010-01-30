@@ -12,11 +12,39 @@ namespace GitUI
 {
     public partial class FileViewer : UserControl
     {
+        public bool IgnoreWhitespaceChanges { get; set; }
+        public int NumberOfVisibleLines { get; set; }
+        public bool ShowEntireFile { get; set; }
+
+        public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
+
+        private void OnExtraDiffArgumentsChanged()
+        {
+            if (ExtraDiffArgumentsChanged != null)
+                ExtraDiffArgumentsChanged(this, new EventArgs());
+        }
+        
+        public string GetExtraDiffArguments()
+        {
+            StringBuilder diffArguments = new StringBuilder();
+            if (IgnoreWhitespaceChanges)
+                diffArguments.Append(" --ignore-space-change");
+
+            if (ShowEntireFile)
+                diffArguments.AppendFormat(" --inter-hunk-context=9000 --unified=9000");
+            else
+                diffArguments.AppendFormat(" --unified={0}", NumberOfVisibleLines);
+
+            return diffArguments.ToString();
+        }
+
         public FileViewer()
         {
+            ShowEntireFile = false;
+            NumberOfVisibleLines = 3;
             InitializeComponent();
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += new KeyEventHandler(TextArea_KeyUp);
-
+            IgnoreWhitespaceChanges = false;
         }
 
         void TextArea_KeyUp(object sender, KeyEventArgs e)
@@ -164,7 +192,7 @@ namespace GitUI
             TextEditor.Visible = true;
 
             TextEditor.SetHighlighting("Patch");
-            TextEditor.Text = GitCommands.GitCommands.GetCurrentChanges(fileName, staged);
+            TextEditor.Text = GitCommands.GitCommands.GetCurrentChanges(fileName, staged, GetExtraDiffArguments());
             
             AddPatchHighlighting();
 
@@ -407,6 +435,36 @@ namespace GitUI
         private void TextEditor_KeyDown(object sender, KeyEventArgs e)
         {
 
+        }
+
+        private void ignoreWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
+            ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void increaseNumberOfLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NumberOfVisibleLines++;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void descreaseNumberOfLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (NumberOfVisibleLines > 0)
+                NumberOfVisibleLines--;
+            else
+                NumberOfVisibleLines = 0;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void showEntireFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showEntireFileToolStripMenuItem.Checked = !showEntireFileToolStripMenuItem.Checked;
+
+            ShowEntireFile = showEntireFileToolStripMenuItem.Checked;
+            OnExtraDiffArgumentsChanged();
         }
     }
 }

@@ -22,7 +22,9 @@ namespace GitUI
             this.FileName = fileName;
 
             InitializeComponent();
-            
+
+            Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
+
             if (GitCommands.Settings.FollowRenamesInFileHistory)
                 FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
             else
@@ -47,6 +49,11 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += new EventHandler(ActiveTextAreaControl_DoubleClick);
         }
 
+        void Diff_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedFileViewers();
+        }
+
         public string FileName { get; set; }
 
         private void FormFileHistory_Load(object sender, EventArgs e)
@@ -60,6 +67,11 @@ namespace GitUI
         }
 
         private void FileChanges_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedFileViewers();
+        }
+
+        private void UpdateSelectedFileViewers()
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -86,7 +98,7 @@ namespace GitUI
             }
             if (tabControl1.SelectedTab == ViewTab)
             {
-                int scrollpos =View.ScrollPos;
+                int scrollpos = View.ScrollPos;
 
                 View.ViewGitItemRevision(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
@@ -100,29 +112,24 @@ namespace GitUI
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff diff = new Diff(new DiffDto(revision1.Guid, revision2.Guid, fileName));
-                        diff.Execute();
-                        ///EditorOptions.SetSyntax(Diff, FileName);
-                        Diff.ViewPatch(diff.Dto.Result);
-                   }
+                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision2.Guid, fileName, Diff.GetExtraDiffArguments()).Text);
+                    }
                 }
             }
             else
                 if (selectedRows.Count == 1)
-            {
-                IGitItem revision1 = selectedRows[0];
-
-                if (tabControl1.SelectedTab == DiffTab)
                 {
-                    Diff diff = new Diff(new DiffDto(revision1.Guid + "^", revision1.Guid, fileName));
-                    diff.Execute();
-                    Diff.ViewPatch(diff.Dto.Result);
+                    IGitItem revision1 = selectedRows[0];
+
+                    if (tabControl1.SelectedTab == DiffTab)
+                    {
+                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid + "^", revision1.Guid, fileName, Diff.GetExtraDiffArguments()).Text);
+                    }
                 }
-            }
-            else
-            {
-                Diff.ViewPatch("You need to select 2 files to view diff.");
-            }
+                else
+                {
+                    Diff.ViewPatch("You need to select 2 files to view diff.");
+                }
         }
 
         private List<GitBlame> blameList;

@@ -18,6 +18,7 @@ namespace GitUI
         public FormCommit()
         {
             InitializeComponent();
+            SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
         }
 
         ~FormCommit()  // destructor
@@ -99,8 +100,17 @@ namespace GitUI
 
         }
 
+        private GitItemStatus currentItem;
+        private bool currentItemStaged;
         protected void ShowChanges(GitItemStatus item, bool staged)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            currentItem = item;
+            currentItemStaged = staged;
+
+            if (item == null)
+                return;
+
             if (item.Name.EndsWith(".png"))
             {
                 SelectedDiff.ViewFile(item.Name);
@@ -637,5 +647,11 @@ namespace GitUI
                 Initialize();
             }
         }
+
+        void SelectedDiff_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            ShowChanges(currentItem, currentItemStaged);
+        }
+
     }
 }
