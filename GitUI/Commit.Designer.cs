@@ -385,7 +385,7 @@
             this.splitContainer11.Panel2.Controls.Add(this.UnstageFiles);
             this.splitContainer11.Panel2.Controls.Add(this.AddFiles);
             this.splitContainer11.Size = new System.Drawing.Size(393, 25);
-            this.splitContainer11.SplitterDistance = 131;
+            this.splitContainer11.SplitterDistance = 134;
             this.splitContainer11.SplitterWidth = 1;
             this.splitContainer11.TabIndex = 0;
             // 
@@ -397,7 +397,7 @@
             this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(131, 25);
+            this.menuStrip2.Size = new System.Drawing.Size(134, 25);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -444,7 +444,7 @@
             this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar.Location = new System.Drawing.Point(0, 0);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(261, 25);
+            this.progressBar.Size = new System.Drawing.Size(258, 25);
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
@@ -689,7 +689,7 @@
             this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(115, 20);
-            this.commitMessageToolStripMenuItem.Text = "Commit message";
+            this.commitMessageToolStripMenuItem.Text = "Commit &message";
             this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.commitMessageToolStripMenuItem_DropDownItemClicked);
             this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitMessageToolStripMenuItem_DropDownOpening);
             // 
