@@ -1380,14 +1380,14 @@ namespace GitCommands
             return stashes;
         }
 
-        static public Patch GetSingleDiff(string from, string to, string filter)
+        static public Patch GetSingleDiff(string from, string to, string filter, string extraDiffArguments)
         {
             filter = FixPath(filter);
             from = FixPath(from);
             to = FixPath(to);
 
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff --ignore-submodules \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff" + extraDiffArguments + " --ignore-submodules \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
 
             if (patchManager.patches.Count > 0)
                 return patchManager.patches[0];
@@ -1395,10 +1395,10 @@ namespace GitCommands
             return null;
         }
 
-        static public List<Patch> GetDiff(string from, string to)
+        static public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff \"" + from + "\" \"" + to + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitDir + "git.cmd", "diff" + extraDiffArguments + " \"" + from + "\" \"" + to + "\""), false);
 
             return patchManager.patches;
         }
@@ -1665,13 +1665,13 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        static public string GetCurrentChanges(string name, bool staged)
+        static public string GetCurrentChanges(string name, bool staged, string extraDiffArguments)
         {
             name = FixPath(name);
             if (staged)
-                return RunCmd(Settings.GitDir + "git.cmd", "diff --cached -- \"" + name + "\"");
+                return RunCmd(Settings.GitDir + "git.cmd", "diff --cached" + extraDiffArguments + " -- \"" + name + "\"");
             else
-                return RunCmd(Settings.GitDir + "git.cmd", "diff -- " + name);
+                return RunCmd(Settings.GitDir + "git.cmd", "diff" + extraDiffArguments + " -- " + name);
         }
 
         static public List<GitRevision> GitRevisionGraph()

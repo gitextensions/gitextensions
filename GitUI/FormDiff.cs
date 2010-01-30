@@ -17,14 +17,14 @@ namespace GitUI
         public FormDiff()
         {
             InitializeComponent();
-            //EditorOptions.SetSyntax(DiffText, "output.cs");
-            //DiffText.SetHighlighting("Patch");
+
+            DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
         }
 
         public FormDiff(GitRevision revision)
         {
             InitializeComponent();
-            //EditorOptions.SetSyntax(DiffText, "output.cs");
+            
 
             RevisionGrid.SetSelectedRevision( revision);
         }
@@ -102,46 +102,36 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ViewSelectedFileDiff();
+        }
+
+        private void ViewSelectedFileDiff()
+        {
             Cursor.Current = Cursors.WaitCursor;
-            if (DiffFiles.SelectedItem is Patch)
+
+            if (DiffFiles.SelectedItem is string)
             {
+                Patch selectedPatch = null;
+
+                if (RevisionGrid.GetRevisions().Count == 2)
                 {
-                    Patch patch = (Patch)DiffFiles.SelectedItem;
-                    //DiffText.Text = patch.Text;
-                    //DiffText.Refresh();
-                    DiffText.ViewPatch(patch.Text);
-                    //EditorOptions.SetSyntax(DiffText, patch.FileNameB);
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
+                }
+                else
+                {
+                    GitRevision revision = RevisionGrid.GetRevisions()[0];
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
                 }
 
-                //string changedFile = (string)DiffFiles.SelectedItem;
-
-
-                //DiffText.Text = changedFile.PatchText;
+                if (selectedPatch != null)
+                {
+                    DiffText.ViewPatch(selectedPatch.Text);
+                }
+                else
+                {
+                    DiffText.ViewPatch("");
+                }
             }
-            else
-                if (DiffFiles.SelectedItem is string)
-                {
-                    Patch selectedPatch = null;
-
-                    if (RevisionGrid.GetRevisions().Count == 2)
-                    {
-                        selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem);
-                    }
-                    else
-                    {
-                        GitRevision revision = RevisionGrid.GetRevisions()[0];
-                        selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
-                    }
-
-                    if (selectedPatch != null)
-                    {
-                        DiffText.ViewPatch(selectedPatch.Text);
-                    }
-                    else
-                    {
-                        DiffText.ViewPatch("");
-                    }
-                }
         }
 
         private void RevisionGrid_SelectionChanged(object sender, EventArgs e)
@@ -158,5 +148,11 @@ namespace GitUI
                 }
             }
         }
+
+        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            ViewSelectedFileDiff();
+        }
+
     }
 }

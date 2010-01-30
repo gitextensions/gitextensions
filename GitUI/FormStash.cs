@@ -16,6 +16,12 @@ namespace GitUI
         public FormStash()
         {
             InitializeComponent();
+            View.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(View_ExtraDiffArgumentsChanged);
+        }
+
+        void View_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            ViewCurrentChanges();
         }
 
         private void FormStash_Load(object sender, EventArgs e)
@@ -113,8 +119,13 @@ namespace GitUI
 
         private void Changes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ViewCurrentChanges();
+        }
+
+        private void ViewCurrentChanges()
+        {
             Cursor.Current = Cursors.WaitCursor;
-            View.ViewPatch(GitCommands.GitCommands.GetCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false));
+            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, "Patch", false);
         }
 
         public bool NeedRefresh = false;

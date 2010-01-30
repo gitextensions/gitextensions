@@ -21,8 +21,8 @@ namespace GitUI
         {
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
+            DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
         }
-
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -950,6 +950,11 @@ namespace GitUI
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ShowSelectedFileDiff();
+        }
+
+        private void ShowSelectedFileDiff()
+        {
             if (DiffFiles.SelectedItem is string)
             {
                 if (RevisionGrid.GetRevisions().Count == 0)
@@ -959,12 +964,12 @@ namespace GitUI
 
                 if (RevisionGrid.GetRevisions().Count == 2)
                 {
-                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem);
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
                 }
                 else
                 {
                     GitRevision revision = RevisionGrid.GetRevisions()[0];
-                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem);
+                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
                 }
 
                 if (selectedPatch != null)
@@ -1315,5 +1320,9 @@ namespace GitUI
             System.Diagnostics.Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
         }
 
+        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            ShowSelectedFileDiff();
+        }
     }
 }
