@@ -70,6 +70,13 @@ namespace GitStatistics
                         }
                     }
                 }
+
+                NumberLines = Math.Max(0, NumberLines);
+                NumberBlankLines = Math.Max(0, NumberBlankLines);
+                NumberLinesInDesignerFiles = Math.Max(0, NumberLinesInDesignerFiles);
+                NumberCommentsLines = Math.Max(0, NumberCommentsLines);
+                NumberCodeLines = Math.Max(0, NumberCodeLines);
+                NumberTestCodeLines = Math.Max(0, NumberTestCodeLines);
             }
         }
     }
