@@ -122,7 +122,7 @@ namespace GitUI
 
         public string GitCommand(string arguments)
         {
-            return GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", arguments);
+            return GitCommands.GitCommands.RunCmd(Settings.GitCommand, arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)

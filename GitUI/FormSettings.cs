@@ -127,7 +127,7 @@ namespace GitUI
 
                 GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-                GitPath.Text = GitCommands.Settings.GitDir;
+                GitPath.Text = GitCommands.Settings.GitCommand;
                 GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
                 UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
@@ -203,7 +203,7 @@ namespace GitUI
 
             GitCommands.Settings.Smtp = SmtpServer.Text;
 
-            GitCommands.Settings.GitDir = GitPath.Text;
+            GitCommands.Settings.GitCommand = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
@@ -539,7 +539,7 @@ namespace GitUI
 
         private static bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", ""));
+            return !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, ""));
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -671,34 +671,42 @@ namespace GitUI
         {
             SolveGitCmdDir();
 
-            if (string.IsNullOrEmpty(GitCommands.Settings.GitDir))
+            if (string.IsNullOrEmpty(GitCommands.Settings.GitCommand))
             {
-                MessageBox.Show("The path to git.cmd could not be found automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
+                MessageBox.Show("The command to run git could not be determined automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
 
                 tabControl1.SelectTab("TabPageGitExtensions");
                 return;
             }
 
-            MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitDir + "git.cmd", "Locate git.cmd");
-            GitPath.Text = GitCommands.Settings.GitDir;
+            MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitCommand, "Locate git.cmd");
+            GitPath.Text = GitCommands.Settings.GitCommand;
             Rescan_Click(null, null);
         }
 
         public static bool SolveGitCmdDir()
         {
-            GitCommands.Settings.GitDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\cmd\\";
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
+            GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
             {
-                GitCommands.Settings.GitDir = @"c:\Program Files (x86)\Git\cmd\";
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
+                GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                 {
-                    GitCommands.Settings.GitDir = @"c:\Program Files\Git\cmd\";
-                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
+                    GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
+                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                     {
-                        GitCommands.Settings.GitDir = "";
-                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.cmd", "")))
+                        GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
+                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                         {
-                            return false;
+                            GitCommands.Settings.GitCommand = "git.cmd";
+                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                            {
+                                GitCommands.Settings.GitCommand = "git";
+                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                                {
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }
@@ -758,23 +766,24 @@ namespace GitUI
         {
             SolveGitCmdDir();
 
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-            browseDialog.SelectedPath = GitCommands.Settings.GitDir;
+            OpenFileDialog browseDialog = new OpenFileDialog();
+            browseDialog.FileName = GitCommands.Settings.GitCommand;
+            browseDialog.Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git";
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
-                GitPath.Text = browseDialog.SelectedPath;
+                GitPath.Text = browseDialog.FileName;
             }
         }
 
         private void TabPageGitExtensions_Click(object sender, EventArgs e)
         {
-            GitPath.Text = GitCommands.Settings.GitDir;
+            GitPath.Text = GitCommands.Settings.GitCommand;
         }
 
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-            GitCommands.Settings.GitDir = GitPath.Text;
+            GitCommands.Settings.GitCommand = GitPath.Text;
             LoadSettings();
         }
 
@@ -802,17 +811,21 @@ namespace GitUI
                 GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                 {
-                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitDir;
-                    GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\", "\\bin\\");
-                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin";
+                    if (!Directory.Exists(GitCommands.Settings.GitBinDir))
                     {
-                        GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
+                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\");
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                         {
-                            GitCommands.Settings.GitBinDir = "";
-                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitDir + "git.exe", "")))
+                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
                             {
-                                return false;
+                                GitCommands.Settings.GitBinDir = "";
+                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand.Replace("git.cmd", "git.exe"))))
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -839,6 +852,10 @@ namespace GitUI
         {
             if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
             if (AutoFindPuttyPathsInDir("c:\\Program Files (x86)\\PuTTY\\")) return true;
+            if (AutoFindPuttyPathsInDir("C:\\Program Files\\TortoiseGit\\bin")) return true;
+            if (AutoFindPuttyPathsInDir("C:\\Program Files (x86)\\TortoiseGit\\bin")) return true;
+            if (AutoFindPuttyPathsInDir("C:\\Program Files\\TortoiseSvn\\bin")) return true;
+            if (AutoFindPuttyPathsInDir("C:\\Program Files (x86)\\TortoiseSvn\\bin")) return true;
             if (AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1", "InstallLocation"))) return true;
             if (AutoFindPuttyPathsInDir(GitCommands.Settings.GetInstallDir() + "\\PuTTY\\")) return true;
 
@@ -856,6 +873,12 @@ namespace GitUI
                     PlinkPath.Text = installdir + "plink.exe";
             }
 
+            if (!File.Exists(PlinkPath.Text))
+            {
+                if (File.Exists(installdir + "TortoisePlink.exe"))
+                    PlinkPath.Text = installdir + "TortoisePlink.exe";
+            }
+
             if (!File.Exists(PuttygenPath.Text))
             {
                 if (File.Exists(installdir + "puttygen.exe"))
@@ -868,9 +891,7 @@ namespace GitUI
                     PageantPath.Text = installdir + "pageant.exe";
             }
 
-            if (File.Exists(PageantPath.Text) &&
-                File.Exists(PuttygenPath.Text) &&
-                File.Exists(PlinkPath.Text))
+            if (File.Exists(PlinkPath.Text) && File.Exists(PuttygenPath.Text) && File.Exists(PageantPath.Text))
                 return true;
             else
                 return false;
@@ -911,7 +932,7 @@ namespace GitUI
 
         private void PuttyBrowse_Click(object sender, EventArgs e)
         {
-            PlinkPath.Text = SelectFile(".", "Plink.exe (plink.exe)|plink.exe", PlinkPath.Text);
+            PlinkPath.Text = SelectFile(".", "Plink.exe (plink.exe)|plink.exe|TortoisePlink.exe (tortoiseplink.exe)|tortoiseplink.exe", PlinkPath.Text);
         }
 
         private void PuttygenBrowse_Click(object sender, EventArgs e)

@@ -7,7 +7,7 @@ namespace GitUIPluginInterfaces
         IGitUICommands GitUICommands { get; }
         IGitCommands GitCommands { get; }
         string GitWorkingDir { get; }
-        string GitDir { get; }
+        string GitCommand { get; }
         string GitVersion { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace GitUI
                 //commit.Execute();
 
                 FormProcess fromProcess;
-                fromProcess = new FormProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.CloneCmd(From.Text, dirTo, CentralRepository.Checked, null));
+                fromProcess = new FormProcess(Settings.GitCommand, GitCommands.GitCommands.CloneCmd(From.Text, dirTo, CentralRepository.Checked, null));
 
                 if (!fromProcess.ErrorOccured() && !GitCommands.GitCommands.InTheMiddleOfPatch())
                 {

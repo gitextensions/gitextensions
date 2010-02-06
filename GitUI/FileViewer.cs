@@ -19,12 +19,21 @@ namespace GitUI
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
+        private void EnableDiffContextMenu(bool enable)
+        {
+            ignoreWhitespaceChangesToolStripMenuItem.Enabled = enable;
+            increaseNumberOfLinesToolStripMenuItem.Enabled = enable;
+            descreaseNumberOfLinesToolStripMenuItem.Enabled = enable;
+            showEntireFileToolStripMenuItem.Enabled = enable;
+            treatAllFilesAsTextToolStripMenuItem.Enabled = enable;
+        }
+
         private void OnExtraDiffArgumentsChanged()
         {
             if (ExtraDiffArgumentsChanged != null)
                 ExtraDiffArgumentsChanged(this, new EventArgs());
         }
-        
+
         public string GetExtraDiffArguments()
         {
             StringBuilder diffArguments = new StringBuilder();
@@ -60,12 +69,12 @@ namespace GitUI
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
                 findAndReplaceForm.FindNext(true, true, "Text not found");
             else
-            if (e.KeyCode == Keys.F3)
-                findAndReplaceForm.FindNext(true, false, "Text not found");
+                if (e.KeyCode == Keys.F3)
+                    findAndReplaceForm.FindNext(true, false, "Text not found");
 
         }
 
-        public int ScrollPos 
+        public int ScrollPos
         {
             get
             {
@@ -100,6 +109,7 @@ namespace GitUI
 
         public void ViewFile(string fileName)
         {
+            EnableDiffContextMenu(false);
             try
             {
                 /*
@@ -192,13 +202,14 @@ namespace GitUI
 
         public void ViewCurrentChanges(string fileName, string format, bool staged)
         {
+            EnableDiffContextMenu(true);
             ClearImage();
             PictureBox.Visible = false;
             TextEditor.Visible = true;
 
             TextEditor.SetHighlighting("Patch");
             TextEditor.Text = GitCommands.GitCommands.GetCurrentChanges(fileName, staged, GetExtraDiffArguments());
-            
+
             AddPatchHighlighting();
 
             TextEditor.Refresh();
@@ -206,6 +217,7 @@ namespace GitUI
 
         public void ViewPatch(string text)
         {
+            EnableDiffContextMenu(true);
             ClearImage();
             PictureBox.Visible = false;
             TextEditor.Visible = true;
@@ -220,6 +232,7 @@ namespace GitUI
 
         private void AddPatchHighlighting()
         {
+            EnableDiffContextMenu(true);
             //DIFF HIGHLIGHTING!
             for (int line = 0; line < TextEditor.Document.TotalNumberOfLines; line++)
             {
@@ -242,7 +255,7 @@ namespace GitUI
                         endLine = TextEditor.Document.GetLineSegment(line);
 
                         TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    } 
+                    }
                     if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '-')
                     {
                         Color color = Settings.DiffRemovedColor;
@@ -283,6 +296,7 @@ namespace GitUI
 
         public void ViewText(string fileName, string text)
         {
+            EnableDiffContextMenu(false);
             ClearImage();
             PictureBox.Visible = false;
             TextEditor.Visible = true;
@@ -300,6 +314,7 @@ namespace GitUI
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
+            EnableDiffContextMenu(false);
             ClearImage();
             PictureBox.Visible = false;
             TextEditor.Visible = true;
@@ -362,6 +377,7 @@ namespace GitUI
 
         public void ViewGitItem(string fileName, string guid)
         {
+            EnableDiffContextMenu(false);
             ClearImage();
             PictureBox.Visible = false;
             TextEditor.Visible = true;
@@ -424,7 +440,7 @@ namespace GitUI
 
         private void TextEditor_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+
         }
 
         private void TextEditor_KeyUp(object sender, KeyEventArgs e)

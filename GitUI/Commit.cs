@@ -51,7 +51,7 @@ namespace GitUI
 
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
-            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd(!showIgnoredFilesToolStripMenuItem.Checked, showUntrackedFilesToolStripMenuItem.Checked));
+            gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, GitCommands.GitCommands.GetAllChangedFilesCmd(!showIgnoredFilesToolStripMenuItem.Checked, showUntrackedFilesToolStripMenuItem.Checked));
             Loading.Visible = true;
             AddFiles.Enabled = false;
 
@@ -596,7 +596,7 @@ namespace GitUI
             {
                 GitItemStatus item = (GitItemStatus)row.DataBoundItem;
 
-                GitCommands.GitCommands.RunRealCmd(Settings.GitDir + "git.cmd", "add -p \"" + item.Name + "\"");
+                GitCommands.GitCommands.RunRealCmd(Settings.GitCommand, "add -p \"" + item.Name + "\"");
                 Initialize();
             }
         }
