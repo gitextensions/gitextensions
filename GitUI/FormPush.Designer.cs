@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPush));
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Push = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.ComboBox();
@@ -75,6 +74,8 @@
             // 
             // Push
             // 
+            this.Push.Image = global::GitUI.Properties.Resources._31;
+            this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Push.Location = new System.Drawing.Point(447, 247);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(101, 23);
