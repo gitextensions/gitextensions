@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Sat Feb 28 19:42:13 2009
+/* at Sat Feb 06 17:23:04 2010
  */
 /* Compiler settings for .\SimpleExt.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

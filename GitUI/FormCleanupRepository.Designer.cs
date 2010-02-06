@@ -150,10 +150,12 @@
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Cleanup);
             this.Controls.Add(this.Preview);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCleanupRepository";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Cleanup repository";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
