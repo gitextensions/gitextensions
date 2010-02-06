@@ -33,6 +33,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +66,6 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstageFiles = new System.Windows.Forms.Button();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.Staged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -84,7 +85,6 @@
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -94,6 +94,7 @@
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
@@ -112,7 +113,6 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.menuStrip3.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -174,6 +174,30 @@
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.SplitterWidth = 1;
             this.splitContainer4.TabIndex = 1;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.menuStrip1, 0, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 1;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 25);
+            this.tableLayoutPanel5.TabIndex = 0;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar.Location = new System.Drawing.Point(201, 3);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(193, 19);
+            this.progressBar.TabIndex = 1;
+            this.progressBar.Visible = false;
             // 
             // menuStrip1
             // 
@@ -482,15 +506,6 @@
             this.UnstageFiles.UseVisualStyleBackColor = true;
             this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
             // 
-            // progressBar
-            // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(201, 3);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(193, 19);
-            this.progressBar.TabIndex = 1;
-            this.progressBar.Visible = false;
-            // 
             // Staged
             // 
             this.Staged.AllowUserToAddRows = false;
@@ -639,11 +654,14 @@
             // 
             // Commit
             // 
+            this.Commit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Commit.Image = global::GitUI.Properties.Resources._10;
             this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Commit.Location = new System.Drawing.Point(372, 3);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(116, 23);
+            this.Commit.Size = new System.Drawing.Size(119, 24);
             this.Commit.TabIndex = 2;
             this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
@@ -651,9 +669,12 @@
             // 
             // Reset
             // 
+            this.Reset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Reset.Location = new System.Drawing.Point(126, 3);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(116, 23);
+            this.Reset.Size = new System.Drawing.Size(117, 24);
             this.Reset.TabIndex = 5;
             this.Reset.Text = "Reset changes";
             this.Reset.UseVisualStyleBackColor = true;
@@ -661,9 +682,12 @@
             // 
             // Amend
             // 
+            this.Amend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Amend.Location = new System.Drawing.Point(249, 3);
             this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(116, 23);
+            this.Amend.Size = new System.Drawing.Size(117, 24);
             this.Amend.TabIndex = 7;
             this.Amend.Text = "&Amend last commit";
             this.Amend.UseVisualStyleBackColor = true;
@@ -671,9 +695,12 @@
             // 
             // Scan
             // 
+            this.Scan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Scan.Location = new System.Drawing.Point(3, 3);
             this.Scan.Name = "Scan";
-            this.Scan.Size = new System.Drawing.Size(116, 23);
+            this.Scan.Size = new System.Drawing.Size(117, 24);
             this.Scan.TabIndex = 3;
             this.Scan.Text = "&Rescan changes";
             this.Scan.UseVisualStyleBackColor = true;
@@ -740,21 +767,6 @@
             this.CloseDialogAfterCommit.Text = "Close dialog after commit";
             this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.menuStrip1, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 1;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 25);
-            this.tableLayoutPanel5.TabIndex = 0;
-            // 
             // FormCommit
             // 
             this.AcceptButton = this.Commit;
@@ -780,6 +792,8 @@
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
@@ -803,8 +817,6 @@
             this.tableLayoutPanel3.PerformLayout();
             this.menuStrip3.ResumeLayout(false);
             this.menuStrip3.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
