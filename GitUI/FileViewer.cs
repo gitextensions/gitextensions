@@ -161,6 +161,9 @@ namespace GitUI
 
                 }
                 else
+                {
+                    ClearImage();
+                    PictureBox.Visible = false;
                     if (fileName.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase) ||
                         fileName.EndsWith(".gif", StringComparison.CurrentCultureIgnoreCase) ||
                         fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
@@ -168,21 +171,18 @@ namespace GitUI
                         fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
                         fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        ClearImage();
-                        PictureBox.Visible = false;
                         TextEditor.Visible = true;
                         TextEditor.Text = "Binary file: " + fileName;
                         TextEditor.Refresh();
                     }
                     else
                     {
-                        ClearImage();
-                        PictureBox.Visible = false;
                         TextEditor.Visible = true;
 
                         if (File.Exists(GitCommands.Settings.WorkingDir + fileName))
                             TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
                     }
+                }
             }
             catch
             {

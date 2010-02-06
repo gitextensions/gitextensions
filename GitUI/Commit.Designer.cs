@@ -29,12 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCommit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +44,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.eToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rescanChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,39 +55,36 @@
             this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer11 = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.AddFiles = new System.Windows.Forms.Button();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.UnstageFiles = new System.Windows.Forms.Button();
-            this.AddFiles = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.Staged = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Cancel = new System.Windows.Forms.Button();
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.SelectedDiff = new GitUI.FileViewer();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
-            this.Amend = new System.Windows.Forms.Button();
-            this.AddManyFiles = new System.Windows.Forms.Button();
+            this.SelectedDiff = new GitUI.FileViewer();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
+            this.Amend = new System.Windows.Forms.Button();
             this.Scan = new System.Windows.Forms.Button();
-            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer8 = new System.Windows.Forms.SplitContainer();
+            this.Message = new GitUI.EditNetSpell();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer9 = new System.Windows.Forms.SplitContainer();
-            this.Message = new GitUI.EditNetSpell();
-            this.Cancel = new System.Windows.Forms.Button();
-            this.OutPut = new System.Windows.Forms.RichTextBox();
-            this.splitContainer10 = new System.Windows.Forms.SplitContainer();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -102,33 +102,22 @@
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
-            this.splitContainer11.Panel1.SuspendLayout();
-            this.splitContainer11.Panel2.SuspendLayout();
-            this.splitContainer11.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-            this.splitContainer6.Panel1.SuspendLayout();
-            this.splitContainer6.Panel2.SuspendLayout();
-            this.splitContainer6.SuspendLayout();
-            this.splitContainer7.Panel1.SuspendLayout();
-            this.splitContainer7.Panel2.SuspendLayout();
-            this.splitContainer7.SuspendLayout();
-            this.splitContainer8.Panel1.SuspendLayout();
-            this.splitContainer8.Panel2.SuspendLayout();
-            this.splitContainer8.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.menuStrip3.SuspendLayout();
-            this.splitContainer9.Panel1.SuspendLayout();
-            this.splitContainer9.Panel2.SuspendLayout();
-            this.splitContainer9.SuspendLayout();
-            this.splitContainer10.Panel2.SuspendLayout();
-            this.splitContainer10.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -169,12 +158,13 @@
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer4.Name = "splitContainer4";
             this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.menuStrip1);
+            this.splitContainer4.Panel1.Controls.Add(this.tableLayoutPanel5);
             // 
             // splitContainer4.Panel2
             // 
@@ -182,15 +172,18 @@
             this.splitContainer4.Panel2.Controls.Add(this.Unstaged);
             this.splitContainer4.Size = new System.Drawing.Size(397, 286);
             this.splitContainer4.SplitterDistance = 25;
+            this.splitContainer4.SplitterWidth = 1;
             this.splitContainer4.TabIndex = 1;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.workingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(397, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(198, 25);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -198,16 +191,19 @@
             // 
             this.workingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showIgnoredFilesToolStripMenuItem,
+            this.showUntrackedFilesToolStripMenuItem,
             this.toolStripSeparator3,
             this.deleteSelectedFilesToolStripMenuItem,
             this.resetSelectedFilesToolStripMenuItem,
             this.resetAlltrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.eToolStripMenuItem,
-            this.deleteAllUntrackedFilesToolStripMenuItem});
+            this.deleteAllUntrackedFilesToolStripMenuItem,
+            this.rescanChangesToolStripMenuItem});
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
-            this.workingToolStripMenuItem.Size = new System.Drawing.Size(132, 20);
+            this.workingToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(132, 21);
             this.workingToolStripMenuItem.Text = "Working dir changes";
             // 
             // showIgnoredFilesToolStripMenuItem
@@ -216,6 +212,15 @@
             this.showIgnoredFilesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.showIgnoredFilesToolStripMenuItem.Text = "Show ignored files";
             this.showIgnoredFilesToolStripMenuItem.Click += new System.EventHandler(this.showIgnoredFilesToolStripMenuItem_Click);
+            // 
+            // showUntrackedFilesToolStripMenuItem
+            // 
+            this.showUntrackedFilesToolStripMenuItem.Checked = true;
+            this.showUntrackedFilesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showUntrackedFilesToolStripMenuItem.Name = "showUntrackedFilesToolStripMenuItem";
+            this.showUntrackedFilesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.showUntrackedFilesToolStripMenuItem.Text = "Show untracked files";
+            this.showUntrackedFilesToolStripMenuItem.Click += new System.EventHandler(this.showUntrackedFilesToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -262,6 +267,15 @@
             this.deleteAllUntrackedFilesToolStripMenuItem.Text = "Delete all untracked files";
             this.deleteAllUntrackedFilesToolStripMenuItem.Click += new System.EventHandler(this.deleteAllUntrackedFilesToolStripMenuItem_Click);
             // 
+            // rescanChangesToolStripMenuItem
+            // 
+            this.rescanChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.rescanChangesToolStripMenuItem.Name = "rescanChangesToolStripMenuItem";
+            this.rescanChangesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.rescanChangesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.rescanChangesToolStripMenuItem.Text = "Rescan changes";
+            this.rescanChangesToolStripMenuItem.Click += new System.EventHandler(this.rescanChangesToolStripMenuItem_Click);
+            // 
             // Loading
             // 
             this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -270,7 +284,7 @@
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(397, 257);
+            this.Loading.Size = new System.Drawing.Size(397, 260);
             this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 2;
             this.Loading.TabStop = false;
@@ -293,7 +307,7 @@
             this.Unstaged.ReadOnly = true;
             this.Unstaged.RowHeadersVisible = false;
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Unstaged.Size = new System.Drawing.Size(397, 257);
+            this.Unstaged.Size = new System.Drawing.Size(397, 260);
             this.Unstaged.TabIndex = 0;
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
             this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
@@ -354,55 +368,71 @@
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer5.Name = "splitContainer5";
             this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer5.Panel1
             // 
-            this.splitContainer5.Panel1.Controls.Add(this.splitContainer11);
+            this.splitContainer5.Panel1.Controls.Add(this.tableLayoutPanel4);
             // 
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.Staged);
+            this.splitContainer5.Panel2.Controls.Add(this.Cancel);
             this.splitContainer5.Size = new System.Drawing.Size(397, 358);
-            this.splitContainer5.SplitterDistance = 25;
+            this.splitContainer5.SplitterDistance = 27;
+            this.splitContainer5.SplitterWidth = 1;
             this.splitContainer5.TabIndex = 1;
             // 
-            // splitContainer11
+            // tableLayoutPanel4
             // 
-            this.splitContainer11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer11.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer11.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer11.Name = "splitContainer11";
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tableLayoutPanel4.Controls.Add(this.AddFiles, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.menuStrip2, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.UnstageFiles, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(397, 27);
+            this.tableLayoutPanel4.TabIndex = 0;
             // 
-            // splitContainer11.Panel1
+            // AddFiles
             // 
-            this.splitContainer11.Panel1.Controls.Add(this.menuStrip2);
-            // 
-            // splitContainer11.Panel2
-            // 
-            this.splitContainer11.Panel2.Controls.Add(this.progressBar);
-            this.splitContainer11.Panel2.Controls.Add(this.UnstageFiles);
-            this.splitContainer11.Panel2.Controls.Add(this.AddFiles);
-            this.splitContainer11.Size = new System.Drawing.Size(397, 25);
-            this.splitContainer11.SplitterDistance = 135;
-            this.splitContainer11.SplitterWidth = 1;
-            this.splitContainer11.TabIndex = 0;
+            this.AddFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
+            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AddFiles.Location = new System.Drawing.Point(268, 3);
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(126, 21);
+            this.AddFiles.TabIndex = 4;
+            this.AddFiles.Text = "Stage";
+            this.AddFiles.UseVisualStyleBackColor = true;
+            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
             // 
             // menuStrip2
             // 
+            this.menuStrip2.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.filesListedToCommitToolStripMenuItem});
             this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(135, 25);
+            this.menuStrip2.Size = new System.Drawing.Size(134, 27);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
             // filesListedToCommitToolStripMenuItem
             // 
+            this.filesListedToCommitToolStripMenuItem.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.filesListedToCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stageAllToolStripMenuItem,
             this.unstageAllToolStripMenuItem,
@@ -439,40 +469,27 @@
             this.stageChunkOfFileToolStripMenuItem.Text = "Stage chunk of file";
             this.stageChunkOfFileToolStripMenuItem.Click += new System.EventHandler(this.stageChunkOfFileToolStripMenuItem_Click);
             // 
-            // progressBar
-            // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(0, 0);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(261, 25);
-            this.progressBar.TabIndex = 1;
-            this.progressBar.Visible = false;
-            // 
             // UnstageFiles
             // 
+            this.UnstageFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UnstageFiles.Image = global::GitUI.Properties.Resources._3;
             this.UnstageFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.UnstageFiles.Location = new System.Drawing.Point(0, 1);
+            this.UnstageFiles.Location = new System.Drawing.Point(137, 3);
             this.UnstageFiles.Name = "UnstageFiles";
-            this.UnstageFiles.Size = new System.Drawing.Size(133, 23);
+            this.UnstageFiles.Size = new System.Drawing.Size(125, 21);
             this.UnstageFiles.TabIndex = 1;
-            this.UnstageFiles.Text = "Unstage selected files";
-            this.UnstageFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UnstageFiles.Text = "Unstage";
             this.UnstageFiles.UseVisualStyleBackColor = true;
             this.UnstageFiles.Click += new System.EventHandler(this.UnstageFiles_Click);
             // 
-            // AddFiles
+            // progressBar
             // 
-            this.AddFiles.Image = global::GitUI.Properties.Resources._4;
-            this.AddFiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddFiles.Location = new System.Drawing.Point(135, 1);
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(123, 23);
-            this.AddFiles.TabIndex = 4;
-            this.AddFiles.Text = "Stage selected files";
-            this.AddFiles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar.Location = new System.Drawing.Point(201, 3);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(193, 19);
+            this.progressBar.TabIndex = 1;
+            this.progressBar.Visible = false;
             // 
             // Staged
             // 
@@ -491,7 +508,7 @@
             this.Staged.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Staged.RowHeadersVisible = false;
             this.Staged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Staged.Size = new System.Drawing.Size(397, 329);
+            this.Staged.Size = new System.Drawing.Size(397, 330);
             this.Staged.TabIndex = 0;
             this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
             this.Staged.Click += new System.EventHandler(this.Staged_Click);
@@ -512,6 +529,17 @@
             this.ChangeString2.Name = "ChangeString2";
             this.ChangeString2.ReadOnly = true;
             // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(139, 143);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(129, 23);
+            this.Cancel.TabIndex = 9;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(334, 10);
@@ -530,14 +558,32 @@
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer3.Panel1.Controls.Add(this.SelectedDiff);
+            this.splitContainer3.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer3_Panel1_Paint);
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer6);
+            this.splitContainer3.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer3.Size = new System.Drawing.Size(494, 648);
-            this.splitContainer3.SplitterDistance = 316;
+            this.splitContainer3.SplitterDistance = 452;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // SolveMergeconflicts
+            // 
+            this.SolveMergeconflicts.BackColor = System.Drawing.Color.SeaShell;
+            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeconflicts.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SolveMergeconflicts.Image = ((System.Drawing.Image)(resources.GetObject("SolveMergeconflicts.Image")));
+            this.SolveMergeconflicts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(284, 389);
+            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(188, 42);
+            this.SolveMergeconflicts.TabIndex = 8;
+            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeconflicts.Visible = false;
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
             // 
             // SelectedDiff
             // 
@@ -549,71 +595,55 @@
             this.SelectedDiff.NumberOfVisibleLines = 3;
             this.SelectedDiff.ScrollPos = 0;
             this.SelectedDiff.ShowEntireFile = false;
-            this.SelectedDiff.Size = new System.Drawing.Size(494, 316);
+            this.SelectedDiff.Size = new System.Drawing.Size(494, 452);
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TreatAllFilesAsText = false;
             // 
-            // splitContainer6
+            // tableLayoutPanel1
             // 
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer6.Name = "splitContainer6";
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.Message, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(494, 192);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // splitContainer6.Panel1
+            // tableLayoutPanel2
             // 
-            this.splitContainer6.Panel1.Controls.Add(this.SolveMergeconflicts);
-            this.splitContainer6.Panel1.Controls.Add(this.Amend);
-            this.splitContainer6.Panel1.Controls.Add(this.AddManyFiles);
-            this.splitContainer6.Panel1.Controls.Add(this.Commit);
-            this.splitContainer6.Panel1.Controls.Add(this.Reset);
-            this.splitContainer6.Panel1.Controls.Add(this.Scan);
-            // 
-            // splitContainer6.Panel2
-            // 
-            this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(494, 328);
-            this.splitContainer6.SplitterDistance = 134;
-            this.splitContainer6.TabIndex = 6;
-            // 
-            // SolveMergeconflicts
-            // 
-            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
-            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 168);
-            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(129, 42);
-            this.SolveMergeconflicts.TabIndex = 8;
-            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
-            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
-            this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
-            // 
-            // Amend
-            // 
-            this.Amend.Location = new System.Drawing.Point(4, 29);
-            this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(127, 23);
-            this.Amend.TabIndex = 7;
-            this.Amend.Text = "&Amend to last commit";
-            this.Amend.UseVisualStyleBackColor = true;
-            this.Amend.Click += new System.EventHandler(this.Amend_Click);
-            // 
-            // AddManyFiles
-            // 
-            this.AddManyFiles.Location = new System.Drawing.Point(4, 139);
-            this.AddManyFiles.Name = "AddManyFiles";
-            this.AddManyFiles.Size = new System.Drawing.Size(127, 23);
-            this.AddManyFiles.TabIndex = 6;
-            this.AddManyFiles.Text = "Add many files";
-            this.AddManyFiles.UseVisualStyleBackColor = true;
-            this.AddManyFiles.Click += new System.EventHandler(this.AddManyFiles_Click);
+            this.tableLayoutPanel2.ColumnCount = 4;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.Controls.Add(this.Commit, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Reset, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Amend, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Scan, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 162);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(494, 30);
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
             // Commit
             // 
-            this.Commit.Location = new System.Drawing.Point(3, 3);
+            this.Commit.Image = global::GitUI.Properties.Resources._10;
+            this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Commit.Location = new System.Drawing.Point(372, 3);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(129, 23);
+            this.Commit.Size = new System.Drawing.Size(116, 23);
             this.Commit.TabIndex = 2;
             this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
@@ -621,70 +651,70 @@
             // 
             // Reset
             // 
-            this.Reset.Location = new System.Drawing.Point(4, 110);
+            this.Reset.Location = new System.Drawing.Point(126, 3);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(128, 23);
+            this.Reset.Size = new System.Drawing.Size(116, 23);
             this.Reset.TabIndex = 5;
-            this.Reset.Text = "Reset changed";
+            this.Reset.Text = "Reset changes";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
+            // Amend
+            // 
+            this.Amend.Location = new System.Drawing.Point(249, 3);
+            this.Amend.Name = "Amend";
+            this.Amend.Size = new System.Drawing.Size(116, 23);
+            this.Amend.TabIndex = 7;
+            this.Amend.Text = "&Amend last commit";
+            this.Amend.UseVisualStyleBackColor = true;
+            this.Amend.Click += new System.EventHandler(this.Amend_Click);
+            // 
             // Scan
             // 
-            this.Scan.Location = new System.Drawing.Point(3, 68);
+            this.Scan.Location = new System.Drawing.Point(3, 3);
             this.Scan.Name = "Scan";
-            this.Scan.Size = new System.Drawing.Size(129, 23);
+            this.Scan.Size = new System.Drawing.Size(116, 23);
             this.Scan.TabIndex = 3;
             this.Scan.Text = "&Rescan changes";
             this.Scan.UseVisualStyleBackColor = true;
             this.Scan.Click += new System.EventHandler(this.Scan_Click);
             // 
-            // splitContainer7
+            // Message
             // 
-            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer7.Name = "splitContainer7";
-            this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Message.Location = new System.Drawing.Point(4, 29);
+            this.Message.Margin = new System.Windows.Forms.Padding(4);
+            this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
+            this.Message.Name = "Message";
+            this.Message.Size = new System.Drawing.Size(486, 129);
+            this.Message.TabIndex = 0;
+            this.Message.Load += new System.EventHandler(this.Message_Load);
             // 
-            // splitContainer7.Panel1
+            // tableLayoutPanel3
             // 
-            this.splitContainer7.Panel1.Controls.Add(this.splitContainer8);
-            // 
-            // splitContainer7.Panel2
-            // 
-            this.splitContainer7.Panel2.Controls.Add(this.splitContainer10);
-            this.splitContainer7.Size = new System.Drawing.Size(356, 328);
-            this.splitContainer7.SplitterDistance = 299;
-            this.splitContainer7.TabIndex = 0;
-            // 
-            // splitContainer8
-            // 
-            this.splitContainer8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer8.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer8.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer8.Name = "splitContainer8";
-            this.splitContainer8.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer8.Panel1
-            // 
-            this.splitContainer8.Panel1.Controls.Add(this.menuStrip3);
-            // 
-            // splitContainer8.Panel2
-            // 
-            this.splitContainer8.Panel2.Controls.Add(this.splitContainer9);
-            this.splitContainer8.Size = new System.Drawing.Size(356, 299);
-            this.splitContainer8.SplitterDistance = 25;
-            this.splitContainer8.TabIndex = 0;
-            this.splitContainer8.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer8_SplitterMoved);
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.menuStrip3, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.CloseDialogAfterCommit, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(494, 25);
+            this.tableLayoutPanel3.TabIndex = 1;
             // 
             // menuStrip3
             // 
+            this.menuStrip3.BackColor = System.Drawing.SystemColors.Control;
+            this.menuStrip3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem});
             this.menuStrip3.Location = new System.Drawing.Point(0, 0);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(356, 24);
+            this.menuStrip3.Size = new System.Drawing.Size(247, 25);
             this.menuStrip3.TabIndex = 0;
             this.menuStrip3.Text = "menuStrip3";
             // 
@@ -692,87 +722,38 @@
             // 
             this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
-            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(115, 20);
+            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(115, 21);
             this.commitMessageToolStripMenuItem.Text = "Commit &message";
             this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.commitMessageToolStripMenuItem_DropDownItemClicked);
             this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitMessageToolStripMenuItem_DropDownOpening);
-            // 
-            // splitContainer9
-            // 
-            this.splitContainer9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer9.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer9.Name = "splitContainer9";
-            this.splitContainer9.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer9.Panel1
-            // 
-            this.splitContainer9.Panel1.Controls.Add(this.Message);
-            this.splitContainer9.Panel1.Controls.Add(this.Cancel);
-            // 
-            // splitContainer9.Panel2
-            // 
-            this.splitContainer9.Panel2.Controls.Add(this.OutPut);
-            this.splitContainer9.Size = new System.Drawing.Size(356, 270);
-            this.splitContainer9.SplitterDistance = 198;
-            this.splitContainer9.TabIndex = 0;
-            // 
-            // Message
-            // 
-            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Location = new System.Drawing.Point(0, 0);
-            this.Message.Margin = new System.Windows.Forms.Padding(4);
-            this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(356, 198);
-            this.Message.TabIndex = 0;
-            this.Message.Load += new System.EventHandler(this.Message_Load);
-            // 
-            // Cancel
-            // 
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(223, 95);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(129, 23);
-            this.Cancel.TabIndex = 9;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
-            // 
-            // OutPut
-            // 
-            this.OutPut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OutPut.Location = new System.Drawing.Point(0, 0);
-            this.OutPut.Name = "OutPut";
-            this.OutPut.ReadOnly = true;
-            this.OutPut.Size = new System.Drawing.Size(356, 68);
-            this.OutPut.TabIndex = 0;
-            this.OutPut.Text = "";
-            // 
-            // splitContainer10
-            // 
-            this.splitContainer10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer10.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer10.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer10.Name = "splitContainer10";
-            // 
-            // splitContainer10.Panel2
-            // 
-            this.splitContainer10.Panel2.Controls.Add(this.CloseDialogAfterCommit);
-            this.splitContainer10.Size = new System.Drawing.Size(356, 25);
-            this.splitContainer10.SplitterDistance = 146;
-            this.splitContainer10.TabIndex = 0;
+            this.commitMessageToolStripMenuItem.Click += new System.EventHandler(this.commitMessageToolStripMenuItem_Click);
             // 
             // CloseDialogAfterCommit
             // 
             this.CloseDialogAfterCommit.AutoSize = true;
             this.CloseDialogAfterCommit.Checked = true;
             this.CloseDialogAfterCommit.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CloseDialogAfterCommit.Location = new System.Drawing.Point(3, 5);
+            this.CloseDialogAfterCommit.Location = new System.Drawing.Point(250, 3);
             this.CloseDialogAfterCommit.Name = "CloseDialogAfterCommit";
             this.CloseDialogAfterCommit.Size = new System.Drawing.Size(143, 17);
             this.CloseDialogAfterCommit.TabIndex = 0;
             this.CloseDialogAfterCommit.Text = "Close dialog after commit";
             this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.menuStrip1, 0, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 1;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 25);
+            this.tableLayoutPanel5.TabIndex = 0;
             // 
             // FormCommit
             // 
@@ -797,7 +778,6 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
@@ -809,34 +789,22 @@
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
-            this.splitContainer11.Panel1.ResumeLayout(false);
-            this.splitContainer11.Panel1.PerformLayout();
-            this.splitContainer11.Panel2.ResumeLayout(false);
-            this.splitContainer11.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Staged)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
-            this.splitContainer6.Panel1.ResumeLayout(false);
-            this.splitContainer6.Panel2.ResumeLayout(false);
-            this.splitContainer6.ResumeLayout(false);
-            this.splitContainer7.Panel1.ResumeLayout(false);
-            this.splitContainer7.Panel2.ResumeLayout(false);
-            this.splitContainer7.ResumeLayout(false);
-            this.splitContainer8.Panel1.ResumeLayout(false);
-            this.splitContainer8.Panel1.PerformLayout();
-            this.splitContainer8.Panel2.ResumeLayout(false);
-            this.splitContainer8.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.menuStrip3.ResumeLayout(false);
             this.menuStrip3.PerformLayout();
-            this.splitContainer9.Panel1.ResumeLayout(false);
-            this.splitContainer9.Panel2.ResumeLayout(false);
-            this.splitContainer9.ResumeLayout(false);
-            this.splitContainer10.Panel2.ResumeLayout(false);
-            this.splitContainer10.Panel2.PerformLayout();
-            this.splitContainer10.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -845,7 +813,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.RichTextBox OutPut;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.DataGridView Unstaged;
@@ -860,12 +827,8 @@
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isChangedDataGridViewCheckBoxColumn1;
         private System.Windows.Forms.Button UnstageFiles;
-        private System.Windows.Forms.SplitContainer splitContainer6;
-        private System.Windows.Forms.SplitContainer splitContainer7;
-        private System.Windows.Forms.SplitContainer splitContainer8;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn ChangeString;
-        private System.Windows.Forms.Button AddManyFiles;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Button Amend;
         private System.Windows.Forms.ProgressBar progressBar;
@@ -892,14 +855,18 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private System.Windows.Forms.Button Cancel;
-        private System.Windows.Forms.SplitContainer splitContainer9;
         private System.Windows.Forms.CheckBox CloseDialogAfterCommit;
-        private System.Windows.Forms.SplitContainer splitContainer10;
         private System.Windows.Forms.ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.MenuStrip menuStrip3;
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer11;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rescanChangesToolStripMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
     }
 }

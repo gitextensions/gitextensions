@@ -1492,9 +1492,12 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles)
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
         {
-            StringBuilder stringBuilder = new StringBuilder("ls-files --deleted --modified --others --no-empty-directory -t");
+            StringBuilder stringBuilder = new StringBuilder("ls-files --deleted --modified --no-empty-directory -t");
+
+            if (showUntrackedFiles)
+                stringBuilder.Append(" --others");
             if (excludeIgnoredFiles)
                 stringBuilder.Append(" --exclude-standard");
 
@@ -1505,7 +1508,7 @@ namespace GitCommands
 
         static public List<GitItemStatus> GetAllChangedFiles()
         {
-            string status = RunCmd(Settings.GitDir + "git.cmd", GetAllChangedFilesCmd(true));
+            string status = RunCmd(Settings.GitDir + "git.cmd", GetAllChangedFilesCmd(true, true));
 
             return GetAllChangedFilesFromString(status);
         }

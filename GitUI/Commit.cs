@@ -51,7 +51,7 @@ namespace GitUI
 
             //Load unstaged files
             gitGetUnstagedCommand.Exited += new EventHandler(gitCommands_Exited);
-            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd(!showIgnoredFilesToolStripMenuItem.Checked));
+            gitGetUnstagedCommand.CmdStartProcess(Settings.GitDir + "git.cmd", GitCommands.GitCommands.GetAllChangedFilesCmd(!showIgnoredFilesToolStripMenuItem.Checked, showUntrackedFilesToolStripMenuItem.Checked));
             Loading.Visible = true;
             AddFiles.Enabled = false;
 
@@ -202,7 +202,7 @@ namespace GitUI
                 {
                     Message.Text = string.Empty;
 
-                    if (CloseDialogAfterCommit.Checked)
+                    if (CloseDialogAfterCommit.Checked && Unstaged.RowCount == 0)
                         Close();
                     else
                         InitializedStaged();
@@ -252,7 +252,7 @@ namespace GitUI
                     }
                 }
 
-                OutPut.Text = GitCommands.GitCommands.StageFiles(files);
+                /*OutPut.Text = */GitCommands.GitCommands.StageFiles(files);
 
                 InitializedStaged();
                 List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.DataSource;
@@ -307,7 +307,7 @@ namespace GitUI
                 if (Staged.SelectedRows.Count == Staged.RowCount && Staged.RowCount > 10)
                 {
                     Loading.Visible = true;
-                    OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
+                    /*OutPut.Text =*/ GitCommands.GitCommands.ResetMixed("HEAD");
                     Initialize();
                 }
                 else
@@ -341,7 +341,7 @@ namespace GitUI
                         }
                     }
 
-                    OutPut.Text = result + Environment.NewLine + GitCommands.GitCommands.UnstageFiles(files);
+                    /*OutPut.Text = result + Environment.NewLine + */GitCommands.GitCommands.UnstageFiles(files);
 
                     InitializedStaged();
                     List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.DataSource;
@@ -391,12 +391,6 @@ namespace GitUI
         private void Unstaged_Click(object sender, EventArgs e)
         {
             Untracked_SelectionChanged(sender, e);
-        }
-
-        private void AddManyFiles_Click(object sender, EventArgs e)
-        {
-            if (GitUICommands.Instance.StartAddFilesDialog())
-               Initialize();
         }
 
         private void Amend_Click(object sender, EventArgs e)
@@ -472,10 +466,17 @@ namespace GitUI
         {
             if (MessageBox.Show("Are you sure you want to delete all selected files?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                foreach (DataGridViewRow row in Unstaged.SelectedRows)
+                try
                 {
-                    GitItemStatus item = (GitItemStatus)row.DataBoundItem;
-                    File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                    foreach (DataGridViewRow row in Unstaged.SelectedRows)
+                    {
+                        GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                        File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Delete failed:" + Environment.NewLine + ex.ToString());
                 }
                 Initialize();
             }
@@ -515,7 +516,7 @@ namespace GitUI
 
         private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OutPut.Text = GitCommands.GitCommands.ResetMixed("HEAD");
+            /*OutPut.Text =*/ GitCommands.GitCommands.ResetMixed("HEAD");
             Initialize();
         }
 
@@ -617,6 +618,7 @@ namespace GitUI
             AddCommitMessageToMenu(0);
             AddCommitMessageToMenu(1);
             AddCommitMessageToMenu(2);
+            AddCommitMessageToMenu(3);
         }
 
         private void AddCommitMessageToMenu(int numberBack)
@@ -651,6 +653,27 @@ namespace GitUI
         void SelectedDiff_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ShowChanges(currentItem, currentItemStaged);
+        }
+
+        private void splitContainer3_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void showUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
+            Scan_Click(null, null);
+        }
+
+        private void commitMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rescanChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Scan_Click(null, null);
         }
 
     }

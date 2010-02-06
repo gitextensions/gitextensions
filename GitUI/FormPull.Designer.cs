@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPull));
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -94,6 +93,8 @@
             // 
             // Pull
             // 
+            this.Pull.Image = global::GitUI.Properties.Resources._4;
+            this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(447, 256);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
