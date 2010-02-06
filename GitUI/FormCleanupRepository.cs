@@ -24,8 +24,11 @@ namespace GitUI
 
         private void Cleanup_Click(object sender, EventArgs e)
         {
-            FormProcess form = new FormProcess(GitCommands.GitCommands.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
-            PreviewOutput.Text = form.outputString.ToString();
+            if (MessageBox.Show("Are you sure you want to cleanup the repository?", "Cleanup", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                FormProcess form = new FormProcess(GitCommands.GitCommands.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
+                PreviewOutput.Text = form.outputString.ToString();
+            }
         }
 
         private void Cancel_Click(object sender, EventArgs e)
