@@ -1324,5 +1324,10 @@ namespace GitUI
         {
             ShowSelectedFileDiff();
         }
+
+        private void cleanupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCleanupRepository().ShowDialog();
+        }
     }
 }

@@ -1304,6 +1304,24 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "remote show").Split('\n');
         }
 
+        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored)
+        {
+            StringBuilder stringBuilder = new StringBuilder("clean");
+
+            if (directories)
+                stringBuilder.Append(" -d");
+            if (!nonignored && !ignored)
+                stringBuilder.Append(" -x");
+            if (ignored)
+                stringBuilder.Append(" -X");
+            if (dryrun)
+                stringBuilder.Append(" --dry-run");
+            if (!dryrun)
+                stringBuilder.Append(" -f");  
+          
+            return stringBuilder.ToString();
+        }
+
         public string GetGlobalSetting(string setting)
         {
             return RunCmd(Settings.GitCommand, "config --global --get \"" + setting + "\"").Trim();
