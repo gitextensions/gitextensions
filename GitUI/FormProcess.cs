@@ -138,12 +138,13 @@ namespace GitUI
                     SuccessImage.Visible = false;
                     if (Plink)
                     {
-                        if (ProcessArguments.Contains("pull") ||
-                            ProcessArguments.Contains("push") ||
-                            ProcessArguments.Contains("plink") ||
-                            ProcessArguments.Contains("remote") ||
-                            ProcessString.Contains("clone") ||
-                            ProcessArguments.Contains("clone"))
+                        if (ProcessArguments.ToLower().Contains("pull") ||
+                            ProcessArguments.ToLower().Contains("push") ||
+                            ProcessArguments.ToLower().Contains("plink") ||
+                            ProcessArguments.ToLower().Contains("tortoiseplink") ||
+                            ProcessArguments.ToLower().Contains("remote") ||
+                            ProcessString.ToLower().Contains("clone") ||
+                            ProcessArguments.ToLower().Contains("clone"))
                         {
                             if (Output.Text.Contains("successfully authenticated"))
                             {

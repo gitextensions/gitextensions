@@ -83,12 +83,13 @@ namespace GitCommands
                 return;
 
             //First line found!
-            if (e.Data.IndexOf("Commit ") > 0 && e.Data.IndexOf("*") >= 0 || (e.Data.IndexOf("Commit ") == 0))
+            int commitIndex = e.Data.IndexOf("Commit ");
+            if (commitIndex > 0 && e.Data.IndexOf("*") >= 0 || (commitIndex == 0))
             {
                 revision = new GitRevision();
                 Revisions.Add(revision);
 
-                graphIndex = e.Data.IndexOf("Commit ");
+                graphIndex = commitIndex;
                 if (e.Data.Length > graphIndex)
                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                 /*revision.Name = */
@@ -106,9 +107,11 @@ namespace GitCommands
 
             }
             else
-                if (e.Data.IndexOf("Tree:   ", graphIndex) >= 0)
+            {
+                int treeIndex = e.Data.IndexOf("Tree:   ", graphIndex);
+                if (treeIndex >= 0)
                 {
-                    revision.TreeGuid = e.Data.Substring(e.Data.IndexOf("Tree:   ", graphIndex) + 8).Trim();
+                    revision.TreeGuid = e.Data.Substring(treeIndex + 8).Trim();
                     if (e.Data.Length > graphIndex)
                         revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                 }
@@ -120,24 +123,30 @@ namespace GitCommands
                             revision.GraphLines.Add(e.Data.Substring(0, graphIndex).Trim());
                     }
                     else
-                        if (e.Data.IndexOf("Author: ", graphIndex) >= 0)
+                    {
+                        int authorIndex = e.Data.IndexOf("Author: ", graphIndex);
+                        if (authorIndex >= 0)
                         {
-                            revision.Author = e.Data.Substring(e.Data.IndexOf("Author: ", graphIndex) + 8).Trim();
+                            revision.Author = e.Data.Substring(authorIndex + 8).Trim();
                             if (e.Data.Length > graphIndex)
                                 revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                         }
                         else
-                            if (e.Data.IndexOf("Date:   ", graphIndex) >= 0)
+                        {
+                            int dateIndex = e.Data.IndexOf("Date:   ", graphIndex);
+                            if (dateIndex >= 0)
                             {
-                                revision.Date = e.Data.Substring(e.Data.IndexOf("Date:   ", graphIndex) + 8).Trim();
+                                revision.Date = e.Data.Substring(dateIndex + 8).Trim();
                                 if (e.Data.Length > graphIndex)
                                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                             }
                             else
-                                if (e.Data.IndexOf("Parents:", graphIndex) >= 0)
+                            {
+                                int parentsIndex = e.Data.IndexOf("Parents:", graphIndex);
+                                if (parentsIndex >= 0)
                                 {
                                     List<string> parentGuids = new List<string>();
-                                    foreach (string s in e.Data.Substring(e.Data.IndexOf("Parents:", graphIndex) + 8).Split(' '))
+                                    foreach (string s in e.Data.Substring(parentsIndex + 8).Split(' '))
                                     {
                                         parentGuids.Add(s.Trim());
                                     }
@@ -169,6 +178,10 @@ namespace GitCommands
                                                 }
 
                                     }
+                            }
+                        }
+                    }
+            }
 
 
         }
