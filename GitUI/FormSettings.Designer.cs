@@ -796,9 +796,9 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(8, 14);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(273, 13);
+            this.label13.Size = new System.Drawing.Size(213, 13);
             this.label13.TabIndex = 3;
-            this.label13.Text = "Path to git.cmd (leave empty when git.cmd is in the path)";
+            this.label13.Text = "Command used to run git (git.cmd or git.exe)";
             // 
             // MaxCommits
             // 

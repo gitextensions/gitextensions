@@ -39,7 +39,7 @@ namespace GitUI
         {
             InitializeComponent();
 
-            ProcessString = GitCommands.Settings.GitDir + "git.cmd";
+            ProcessString = GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
 

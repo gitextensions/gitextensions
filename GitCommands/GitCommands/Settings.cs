@@ -349,7 +349,20 @@ namespace GitCommands
             }
         }
 
+        private static string gitCommand = "git.cmd";
+        public static string GitCommand
+        {
+            get
+            {
+                return gitCommand;
+            }
+            set
+            {
+                gitCommand = value;
+            }
+        }
 
+        /*
         private static string gitDir = "";
         public static string GitDir
         {
@@ -366,7 +379,7 @@ namespace GitCommands
                 gitDir = gitDir.Replace("//", "/");
 
             }
-        }
+        }*/
 
         private static string gitBinDir = "";
         public static string GitBinDir
@@ -558,7 +571,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("othertagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.OtherTagColor));
 
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
-                Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitDir);
+                Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitCommand);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
                 Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowAllBranches);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", Settings.CloseProcessDialog);
@@ -663,7 +676,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate") != null) Settings.OrderRevisionByDate = Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate").ToString() == "True";
-                if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitDir = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
+                if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitCommand = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("dir13") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir13").ToString());
                 if (Application.UserAppDataRegistry.GetValue("dir12") != null) RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue("dir12").ToString());

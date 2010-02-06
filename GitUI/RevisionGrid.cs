@@ -340,7 +340,7 @@ namespace GitUI
                         grep = " --grep=\"" + Filter + "\" ";
 
                     gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitDir + "git.cmd\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc.exe\" -l\"");
+                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
                 

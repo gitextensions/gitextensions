@@ -32,7 +32,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool");
+            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
             Initialize();
         }
 
@@ -120,7 +120,7 @@ namespace GitUI
                     {
                         if (MessageBox.Show("The selected mergeconflict is a submodule. Mark conflict as resolved?", "Merge", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + filename + "\"");
+                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
                             Initialize();
                         }
                         return;
@@ -151,7 +151,7 @@ namespace GitUI
 
                 if (MessageBox.Show("Is the mergeconflict solved?", "Merge", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + filename + "\"");
+                    GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
                     Initialize();
 
                 }
@@ -176,7 +176,7 @@ namespace GitUI
                         File.Delete(Settings.WorkingDir + filename + ".REMOTE");
 
                         Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-                        GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitDir + "git.cmd", "mergetool \"" + filename + "\"");
+                        GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
                         Initialize();
                         return;
                     }
@@ -192,10 +192,10 @@ namespace GitUI
                 }
                 else
                     if (frm.Delete)
-                        GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "rm -- \"" + filename + "\"");
+                        GitCommands.GitCommands.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
                     else
                         if (!frm.Delete)
-                            GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + filename + "\"");
+                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
 
                 Initialize();
             }
@@ -377,7 +377,7 @@ namespace GitUI
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "add -- \"" + GetFileName() + "\"");
+            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + GetFileName() + "\"");
             Initialize();
         }
 

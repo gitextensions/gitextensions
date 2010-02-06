@@ -41,11 +41,12 @@ namespace GitUI
             }
         }
 
-        public string GitDir
+
+        public string GitCommand
         {
             get
             {
-                return Settings.GitDir;
+                return Settings.GitCommand;
             }
         }
 

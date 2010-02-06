@@ -56,7 +56,7 @@ namespace GitUI
             if (String.IsNullOrEmpty(sha1))
                 return warning;
 
-            string commitInfo = GitCommands.GitCommands.RunCmd(Settings.GitDir + "git.cmd", "log -n1 --pretty=format:\"%aN, %s, %cd\" " + FindSha1(warning));
+            string commitInfo = GitCommands.GitCommands.RunCmd(Settings.GitCommand, "log -n1 --pretty=format:\"%aN, %s, %cd\" " + FindSha1(warning));
 
             if (String.IsNullOrEmpty(commitInfo))
                 return warning;

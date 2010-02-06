@@ -19,8 +19,7 @@ namespace GitStatistics
 
         public void Count()
         {
-            //cmd.CmdStartProcess("cmd.exe", "/c \"\"" + GitCommands.Settings.GitDir + "git.cmd\" log --all --pretty=short | \"" + GitCommands.Settings.GitDir + "git.cmd\" shortlog --all -s -n\"");
-            string[] userCommitCounts = GitUIEventArgs.GitUICommands.CommandLineCommand("cmd.exe", "/c \"\"" + GitUIEventArgs.GitDir + "git.cmd\" log --all --pretty=short | \"" + GitUIEventArgs.GitDir + "git.cmd\" shortlog --all -s -n\"").Split('\n');
+            string[] userCommitCounts = GitUIEventArgs.GitUICommands.CommandLineCommand("cmd.exe", "/c \"\"" + GitUIEventArgs.GitCommand + "\" log --all --pretty=short | \"" + GitUIEventArgs.GitCommand + "\" shortlog --all -s -n\"").Split('\n');
 
             foreach (string userCommitCount in userCommitCounts)
             {
