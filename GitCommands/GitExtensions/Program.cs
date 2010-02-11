@@ -155,7 +155,7 @@ namespace GitExtensions
                 if (args.Length > 2)
                 {
                     //Application.Run();
-                    GitUICommands.Instance.StartFileHistoryDialog(args[2]);
+                    GitUICommands.Instance.StartFileHistoryDialog(args[2].Replace('\\', '/' ));
                 }
                 else
                     MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");

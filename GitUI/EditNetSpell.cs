@@ -284,6 +284,7 @@ namespace GitUI
 
         private void TextBox_TextChanged_1(object sender, EventArgs e)
         {
+
             if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
