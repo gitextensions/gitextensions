@@ -683,5 +683,27 @@ namespace GitUI
             Scan_Click(null, null);
         }
 
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                string fileName = item.Name;
+
+                System.Diagnostics.Process.Start(Settings.WorkingDir + fileName);
+            }
+        }
+
+        private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                string fileName = item.Name;
+
+                OpenWith.OpenAs(Settings.WorkingDir + fileName);
+            }
+        }
+
     }
 }
