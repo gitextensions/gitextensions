@@ -202,8 +202,15 @@ namespace GitUI
                 {
                     Message.Text = string.Empty;
 
-                    if (CloseDialogAfterCommit.Checked && Unstaged.RowCount == 0)
+                    if (CloseDialogAfterCommit.Checked)
+                    {
+                        foreach (DataGridViewRow row in Unstaged.Rows)
+                        {
+                            if (((GitItemStatus)row.DataBoundItem).IsTracked)
+                                return;
+                        }
                         Close();
+                    }
                     else
                         InitializedStaged();
                         

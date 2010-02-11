@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.87
+	Small fixes in layout commit dialog
+	Only close commit dialog when no modified files are left
+	
 Version 1.86
 	Changed the layout of the commit dialog
 	Added support for Cygwin
