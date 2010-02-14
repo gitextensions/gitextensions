@@ -10,6 +10,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static bool closeCommitDialogAfterCommit = false;
+        public static bool CloseCommitDialogAfterCommit
+        {
+            get
+            {
+                return closeCommitDialogAfterCommit;
+            }
+            set
+            {
+                closeCommitDialogAfterCommit = value;
+            }
+        }
+
         private static bool followRenamesInFileHistory = true;
         public static bool FollowRenamesInFileHistory
         {
@@ -560,6 +573,10 @@ namespace GitCommands
                                     if (Settings.Encoding == System.Text.Encoding.Default)
                                         Application.UserAppDataRegistry.SetValue("encoding", "Default");
 
+
+
+                Application.UserAppDataRegistry.SetValue("closeCommitDialogAfterCommit", Settings.CloseCommitDialogAfterCommit);
+
                 Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
                 Application.UserAppDataRegistry.SetValue("diffremovedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedColor));
                 Application.UserAppDataRegistry.SetValue("diffsectioncolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffSectionColor));
@@ -666,6 +683,7 @@ namespace GitCommands
 
 
 
+                if (Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit") != null) Settings.CloseCommitDialogAfterCommit = Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 

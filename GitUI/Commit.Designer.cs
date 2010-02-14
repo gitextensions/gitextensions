@@ -89,6 +89,7 @@
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
+            this.CloseCommitDialogTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -609,7 +610,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.tableLayoutPanel6);
             this.splitContainer3.Panel2MinSize = 134;
             this.splitContainer3.Size = new System.Drawing.Size(494, 648);
-            this.splitContainer3.SplitterDistance = 514;
+            this.splitContainer3.SplitterDistance = 510;
             this.splitContainer3.TabIndex = 0;
             // 
             // SolveMergeconflicts
@@ -638,7 +639,7 @@
             this.SelectedDiff.NumberOfVisibleLines = 3;
             this.SelectedDiff.ScrollPos = 0;
             this.SelectedDiff.ShowEntireFile = false;
-            this.SelectedDiff.Size = new System.Drawing.Size(494, 514);
+            this.SelectedDiff.Size = new System.Drawing.Size(494, 510);
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TreatAllFilesAsText = false;
             // 
@@ -655,7 +656,7 @@
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(494, 130);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(494, 134);
             this.tableLayoutPanel6.TabIndex = 2;
             // 
             // tableLayoutPanel2
@@ -676,7 +677,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(130, 130);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(130, 134);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // Scan
@@ -746,7 +747,7 @@
             this.tableLayoutPanel7.RowCount = 2;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(364, 130);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(364, 134);
             this.tableLayoutPanel7.TabIndex = 1;
             // 
             // Message
@@ -756,7 +757,7 @@
             this.Message.Margin = new System.Windows.Forms.Padding(4);
             this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(356, 92);
+            this.Message.Size = new System.Drawing.Size(356, 96);
             this.Message.TabIndex = 0;
             this.Message.Load += new System.EventHandler(this.Message_Load);
             // 
@@ -801,14 +802,21 @@
             // CloseDialogAfterCommit
             // 
             this.CloseDialogAfterCommit.AutoSize = true;
-            this.CloseDialogAfterCommit.Checked = true;
-            this.CloseDialogAfterCommit.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CloseDialogAfterCommit.Location = new System.Drawing.Point(185, 3);
             this.CloseDialogAfterCommit.Name = "CloseDialogAfterCommit";
             this.CloseDialogAfterCommit.Size = new System.Drawing.Size(143, 17);
             this.CloseDialogAfterCommit.TabIndex = 0;
             this.CloseDialogAfterCommit.Text = "Close dialog after commit";
             this.CloseDialogAfterCommit.UseVisualStyleBackColor = true;
+            this.CloseDialogAfterCommit.CheckedChanged += new System.EventHandler(this.CloseDialogAfterCommit_CheckedChanged);
+            // 
+            // CloseCommitDialogTooltip
+            // 
+            this.CloseCommitDialogTooltip.AutomaticDelay = 1;
+            this.CloseCommitDialogTooltip.AutoPopDelay = 5000;
+            this.CloseCommitDialogTooltip.InitialDelay = 1;
+            this.CloseCommitDialogTooltip.ReshowDelay = 0;
+            this.CloseCommitDialogTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // FormCommit
             // 
@@ -928,5 +936,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
+        private System.Windows.Forms.ToolTip CloseCommitDialogTooltip;
     }
 }

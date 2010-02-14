@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.88
+	Fixed a bug stopping the commit dialog from refreshing after a commit
+	Removed the tooltip delay on recent repository list	
+
 Version 1.87
 	Small fixes in layout commit dialog
 	Only close commit dialog when no modified files are left
