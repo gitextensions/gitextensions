@@ -41,6 +41,8 @@ namespace GitCommands
 
         public static void SetEnvironmentVariable()
         {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
+                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         public static void RunRealCmd(string cmd, string arguments)
