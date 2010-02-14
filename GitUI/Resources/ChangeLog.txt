@@ -4,6 +4,7 @@ Changelog
 Version 1.88
 	Fixed a bug stopping the commit dialog from refreshing after a commit
 	Removed the tooltip delay on recent repository list	
+	Fixed settings when using git.exe
 
 Version 1.87
 	Small fixes in layout commit dialog
