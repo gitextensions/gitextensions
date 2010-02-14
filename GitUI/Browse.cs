@@ -197,20 +197,21 @@ namespace GitUI
                     label.Text = historyItem;
                     label.Location = new Point(xStart, yStart);
                     label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
+                    label.AutoEllipsis = true;
                     label.Click += new EventHandler(label_Click);
                    
 
                     ToolTip toolTip = new ToolTip();
-                    toolTip.InitialDelay = 0;
-                    toolTip.AutomaticDelay = 0;
-                    toolTip.AutoPopDelay = 0;
+                    toolTip.InitialDelay = 1;
+                    toolTip.AutomaticDelay = 1;
+                    toolTip.AutoPopDelay = 5000;
                     toolTip.UseFading = false;
                     toolTip.UseAnimation = false;
-                    toolTip.ReshowDelay = 0;
+                    toolTip.ReshowDelay = 1;
                     toolTip.SetToolTip(label, label.Text);
 
                     RecentRepositoriesGroupBox.Controls.Add(label);
-                    yStart += 20;
+                    yStart += 25;
                 }
             }
 
@@ -264,6 +265,7 @@ namespace GitUI
 
         }
 
+ 
         void label_Click(object sender, EventArgs e)
         {
             LinkLabel label = sender as LinkLabel;

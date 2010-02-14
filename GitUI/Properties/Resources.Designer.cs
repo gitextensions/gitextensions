@@ -309,20 +309,24 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///Version 1.88
+        ///	Fixed a but stopping the commit dialog from refreshing after a commit
+        ///	
+        ///
+        ///Version 1.87
+        ///	Small fixes in layout commit dialog
+        ///	Only close commit dialog when no modified files are left
+        ///	Added &apos;Open&apos; and &apos;Open With&apos; to context menu of commit dialog
+        ///	
+        ///Version 1.86
+        ///	Changed the layout of the commit dialog
+        ///	Added support for Cygwin
+        ///	Added cleanup function
+        ///
         ///Version 1.85
         ///	Added context menu options to manipulate Diff viewer.
         ///	Fixed alt-c as shortcut to commit.
-        ///	Added cherry pick commit to context menu of revision grid
-        ///	Added &apos;treat file as text&apos; option to diff viewer
-        ///	
-        ///Version 1.84
-        ///	Added support for Visual Studio 2010 (beta)
-        ///	Fixed &apos;Add to .gitignore&apos; function in commit dialog.
-        ///
-        ///Version 1.83
-        ///	Added &quot;Merge with branch&quot; context menu item to the revision grid
-        ///	Added Ctrl+M as a shortcut key for Merge
-        ///	Added Ctrl+. as a shortcu [rest of string was truncated]&quot;;.
+        ///	A [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

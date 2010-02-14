@@ -19,6 +19,10 @@ namespace GitUI
         {
             InitializeComponent();
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
+
+            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, "When checked the commit dialog is closed after each commit.\nOtherwise the dialog will only close when there are no modified files left.");
+
+            CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
         }
 
         ~FormCommit()  // destructor
@@ -204,15 +208,21 @@ namespace GitUI
 
                     if (CloseDialogAfterCommit.Checked)
                     {
-                        foreach (DataGridViewRow row in Unstaged.Rows)
-                        {
-                            if (((GitItemStatus)row.DataBoundItem).IsTracked)
-                                return;
-                        }
                         Close();
                     }
                     else
-                        InitializedStaged();
+                    {
+                        foreach (DataGridViewRow row in Unstaged.Rows)
+                        {
+                            if (((GitItemStatus)row.DataBoundItem).IsTracked)
+                            {
+                                InitializedStaged();
+                                return;
+                            }
+                        }
+
+                        Close();
+                    }
                         
                 }
             }
@@ -703,6 +713,11 @@ namespace GitUI
 
                 OpenWith.OpenAs(Settings.WorkingDir + fileName);
             }
+        }
+
+        private void CloseDialogAfterCommit_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.CloseCommitDialogAfterCommit = CloseDialogAfterCommit.Checked;
         }
 
     }
