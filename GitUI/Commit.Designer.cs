@@ -815,7 +815,7 @@
             this.CloseCommitDialogTooltip.AutomaticDelay = 1;
             this.CloseCommitDialogTooltip.AutoPopDelay = 5000;
             this.CloseCommitDialogTooltip.InitialDelay = 1;
-            this.CloseCommitDialogTooltip.ReshowDelay = 0;
+            this.CloseCommitDialogTooltip.ReshowDelay = 1;
             this.CloseCommitDialogTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // FormCommit
