@@ -28,6 +28,9 @@ namespace GitUI
                     fileName.EndsWith(".xlsx", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".vsdx", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".pdb", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".dwg", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".pdb", StringComparison.CurrentCultureIgnoreCase) ||
+                    fileName.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase));
         }
     }
