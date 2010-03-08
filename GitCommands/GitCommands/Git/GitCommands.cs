@@ -1788,7 +1788,7 @@ namespace GitCommands
             if (staged)
                 return RunCmd(Settings.GitCommand, "diff --cached" + extraDiffArguments + " -- \"" + name + "\"");
             else
-                return RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " -- " + name);
+                return RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " -- \"" + name + "\"");
         }
 
         static public List<GitRevision> GitRevisionGraph()

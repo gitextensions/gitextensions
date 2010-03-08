@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.89
+	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces
+	Fixed bug: Filehistory not working when opened from Visual Studio because filename is too long
+
 Version 1.88
 	Fixed a bug stopping the commit dialog from refreshing after a commit
 	Removed the tooltip delay on recent repository list	
