@@ -138,38 +138,38 @@ namespace GitCommands
                 return true;
             }
 
-            int treeIndex = data.IndexOf("Tree:   ", graphIndex);
-            if (treeIndex >= 0)
+            string treeGuid = GetField(data, "Tree:   ");
+            if (treeGuid != null)
             {
-                revision.TreeGuid = data.Substring(treeIndex + 8).Trim();
+                revision.TreeGuid = treeGuid;
                 return true;
             }
 
-            if (data.IndexOf("Merge: ", graphIndex) >= 0)
+            if (GetField(data, "Merge: ") != null)
             {
                 //ignore
                 return true;
             }
 
-            int authorIndex = data.IndexOf("Author: ", graphIndex);
-            if (authorIndex >= 0)
+            string author = GetField(data, "Author: ");
+            if (author != null)
             {
-                revision.Author = data.Substring(authorIndex + 8).Trim();
+                revision.Author = author;
                 return true;
             }
 
-            int dateIndex = data.IndexOf("Date:   ", graphIndex);
-            if (dateIndex >= 0)
+            string commitDate = GetField(data, "Date:   ");
+            if (commitDate != null)
             {
-                revision.CommitDate = data.Substring(dateIndex + 8).Trim();
+                revision.CommitDate = commitDate;
                 return true;
             }
 
-            int parentsIndex = data.IndexOf("Parents:", graphIndex);
-            if (parentsIndex >= 0)
+            string parents = GetField(data, "Parents:");
+            if (parents != null)
             {
                 List<string> parentGuids = new List<string>();
-                foreach (string s in data.Substring(parentsIndex + 8).Split(' '))
+                foreach (string s in parents.Split(' '))
                 {
                     parentGuids.Add(s.Trim());
                 }
@@ -179,6 +179,18 @@ namespace GitCommands
             }
 
             return false;
+        }
+
+        private string GetField(string data, string header)
+        {
+            int index = data.IndexOf(header, graphIndex);
+
+            if (index >= 0)
+            {
+                return data.Substring(index + header.Length).Trim();
+            }
+
+            return null;
         }
     }
 }
