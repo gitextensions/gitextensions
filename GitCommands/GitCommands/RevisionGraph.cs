@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace GitCommands
@@ -45,9 +46,9 @@ namespace GitCommands
 
             string dateFormat;
             if (Settings.RelativeDate)
-                dateFormat = "%cr";
+                dateFormat = "r";
             else
-                dateFormat = "%cd";
+                dateFormat = "d";
 
             string limitRevisionsArgument;
             if (LogParam.Contains("--follow"))
@@ -55,13 +56,18 @@ namespace GitCommands
             else
                 limitRevisionsArgument = " -n " + LimitRevisions;
 
+            string arguments = String.Format(CultureInfo.InvariantCulture,
+                "log{0} --pretty=format:\"Commit %H %nTree:%T%nAuthor:%aN%nDate:%c{1}%nParents:%P%n%s\" {2}",
+                limitRevisionsArgument,
+                dateFormat,
+                LogParam);
+
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, "log" + limitRevisionsArgument + " --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   " + dateFormat + " %nParents:%P %n%s\" " + LogParam);
+            gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
             gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
             gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);
-
         }
 
         public event EventHandler Exited;
@@ -138,27 +144,27 @@ namespace GitCommands
                 return true;
             }
 
-            string treeGuid = GetField(data, "Tree:   ");
+            string treeGuid = GetField(data, "Tree:");
             if (treeGuid != null)
             {
                 revision.TreeGuid = treeGuid;
                 return true;
             }
 
-            if (GetField(data, "Merge: ") != null)
+            if (GetField(data, "Merge:") != null)
             {
                 //ignore
                 return true;
             }
 
-            string author = GetField(data, "Author: ");
+            string author = GetField(data, "Author:");
             if (author != null)
             {
                 revision.Author = author;
                 return true;
             }
 
-            string commitDate = GetField(data, "Date:   ");
+            string commitDate = GetField(data, "Date:");
             if (commitDate != null)
             {
                 revision.CommitDate = commitDate;
