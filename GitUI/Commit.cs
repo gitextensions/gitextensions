@@ -720,5 +720,16 @@ namespace GitUI
             Settings.CloseCommitDialogAfterCommit = CloseDialogAfterCommit.Checked;
         }
 
+        private void filenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                string fileName = Settings.WorkingDir + item.Name;
+
+                Clipboard.SetText(fileName.Replace('/', '\\'));
+            }
+        }
+
     }
 }

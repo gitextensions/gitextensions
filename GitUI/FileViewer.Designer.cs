@@ -40,6 +40,7 @@
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.ContextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +75,7 @@
             // 
             this.ContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.findToolStripMenuItem,
+            this.copyToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
@@ -82,59 +84,68 @@
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem});
             this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(239, 170);
+            this.ContextMenu.Size = new System.Drawing.Size(275, 192);
             // 
             // findToolStripMenuItem
             // 
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
-            this.findToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(271, 6);
             // 
             // ignoreWhitespaceChangesToolStripMenuItem
             // 
             this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
-            this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore whitespace changes";
             this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.ignoreWhitespaceChangesToolStripMenuItem_Click);
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
             this.increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
-            this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase number of lines visible";
             this.increaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.increaseNumberOfLinesToolStripMenuItem_Click);
             // 
             // descreaseNumberOfLinesToolStripMenuItem
             // 
             this.descreaseNumberOfLinesToolStripMenuItem.Name = "descreaseNumberOfLinesToolStripMenuItem";
-            this.descreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.descreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.descreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
             this.descreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.descreaseNumberOfLinesToolStripMenuItem_Click);
             // 
             // showEntireFileToolStripMenuItem
             // 
             this.showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
-            this.showEntireFileToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.showEntireFileToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.showEntireFileToolStripMenuItem.Text = "Show entire file";
             this.showEntireFileToolStripMenuItem.Click += new System.EventHandler(this.showEntireFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(271, 6);
             // 
             // treatAllFilesAsTextToolStripMenuItem
             // 
             this.treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
-            this.treatAllFilesAsTextToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.treatAllFilesAsTextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
             this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.treatAllFilesAsTextToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // FileViewer
             // 
@@ -163,5 +174,6 @@
         private System.Windows.Forms.ToolStripMenuItem showEntireFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }
