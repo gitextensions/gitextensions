@@ -472,5 +472,11 @@ namespace GitUI
             TreatAllFilesAsText = treatAllFilesAsTextToolStripMenuItem.Checked;
             OnExtraDiffArgumentsChanged();
         }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
+                Clipboard.SetText(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText);
+        }
     }
 }
