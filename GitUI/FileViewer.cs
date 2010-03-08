@@ -112,24 +112,7 @@ namespace GitUI
             EnableDiffContextMenu(false);
             try
             {
-                /*
-                ViewInWebBrowser.Visible = false;
-                ViewInWebBrowser.Url = null;
-
-                if (
-                    fileName.EndsWith(".doc", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".docx", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".vsd", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".html", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".xls", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".ppt", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".pps", StringComparison.CurrentCultureIgnoreCase)
-                    )
-                {
-                    ViewInWebBrowser.Visible = true;
-                    ViewInWebBrowser.Url = new Uri(GitCommands.Settings.WorkingDir + fileName);
-                    return;
-                } else*/
+ 
                 if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
                     fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
@@ -174,12 +157,7 @@ namespace GitUI
                 {
                     ClearImage();
                     PictureBox.Visible = false;
-                    if (fileName.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".gif", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".mpg", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".mpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase) ||
-                        fileName.EndsWith(".avi", StringComparison.CurrentCultureIgnoreCase))
+                    if (IsBinaryFile(fileName))
                     {
                         TextEditor.Visible = true;
                         TextEditor.Text = "Binary file: " + fileName;
