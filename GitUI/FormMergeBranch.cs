@@ -36,7 +36,7 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            FormProcess process = new FormProcess(GitCommands.GitCommands.MergeBranchCmd(Branches.Text));
+            FormProcess process = new FormProcess(GitCommands.GitCommands.MergeBranchCmd(Branches.Text, !NoFastForward.Checked));
 
             MergeConflictHandler.HandleMergeConflicts();
 

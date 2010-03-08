@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMergeBranch));
             this.label1 = new System.Windows.Forms.Label();
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -37,6 +36,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.NoFastForward = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -122,6 +122,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.NoFastForward);
             this.groupBox1.Controls.Add(this.Ok);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.Branches);
@@ -134,6 +135,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
+            // 
+            // NoFastForward
+            // 
+            this.NoFastForward.AutoSize = true;
+            this.NoFastForward.Location = new System.Drawing.Point(95, 102);
+            this.NoFastForward.Name = "NoFastForward";
+            this.NoFastForward.Size = new System.Drawing.Size(98, 17);
+            this.NoFastForward.TabIndex = 5;
+            this.NoFastForward.Text = "No fast-forward";
+            this.NoFastForward.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.NoFastForward.UseVisualStyleBackColor = true;
             // 
             // FormMergeBranch
             // 
@@ -170,5 +182,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox NoFastForward;
     }
 }
