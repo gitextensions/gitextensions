@@ -732,5 +732,16 @@ namespace GitUI
             }
         }
 
+        private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.Rows.Count > LastRow && LastRow >= 0)
+            {
+                GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
+                string fileName = item.Name;
+
+                GitCommands.GitCommands.OpenWithDifftool(fileName);
+            }
+        }
+
     }
 }

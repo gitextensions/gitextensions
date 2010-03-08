@@ -2449,6 +2449,11 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true));
         }
 
+        public static string OpenWithDifftool(string filename)
+        {
+            return RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+        }
+
         public static string MergeBranchCmd(string branch, bool allowFastForward)
         {
             if (!allowFastForward)
