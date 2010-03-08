@@ -57,7 +57,7 @@ namespace GitCommands
                 limitRevisionsArgument = " -n " + LimitRevisions;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log{0} --pretty=format:\"Commit %H %nTree:%T%nAuthor:%aN%nAuthorDate:%a{1}%nCommitter:%cN%nCommitDate:%c{1}%nParents:%P%n%s\" {2}",
+                "log{0} --pretty=format:\"Commit %H %nTree: %T %nAuthor: %aN %nAuthorDate: %a{1} %nCommitter: %cN %nCommitDate: %c{1} %nParents: %P %n%s\" {2}",
                 limitRevisionsArgument,
                 dateFormat,
                 LogParam);
