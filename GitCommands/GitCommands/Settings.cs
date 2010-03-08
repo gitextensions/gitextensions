@@ -313,7 +313,7 @@ namespace GitCommands
             }
         }
 
-        private static bool showAuthorDate = true;
+        private static bool showAuthorDate = false;
         public static bool ShowAuthorDate
         {
             get
