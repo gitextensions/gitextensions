@@ -154,8 +154,13 @@ namespace GitExtensions
             {
                 if (args.Length > 2)
                 {
+                    //Remove working dir from filename. This is to prevent filenames that are too
+                    //long while there is room left when the workingdir was not in the path.
+                    string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+
                     //Application.Run();
-                    GitUICommands.Instance.StartFileHistoryDialog(args[2].Replace('\\', '/' ));
+                    GitUICommands.Instance.StartFileHistoryDialog(fileName);
+                    
                 }
                 else
                     MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
