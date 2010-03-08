@@ -2446,12 +2446,15 @@ namespace GitCommands
 
         public static string MergeBranch(string branch)
         {
-            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch));
+            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true));
         }
 
-        public static string MergeBranchCmd(string branch)
+        public static string MergeBranchCmd(string branch, bool allowFastForward)
         {
-            return "merge \"" + branch + "\"";
+            if (!allowFastForward)
+                return "merge --no-ff \"" + branch + "\"";
+            else
+                return "merge \"" + branch + "\"";
         }
 
         public static string GetFileExtension(string fileName)
