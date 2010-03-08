@@ -57,7 +57,7 @@ namespace GitCommands
                 limitRevisionsArgument = " -n " + LimitRevisions;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log{0} --pretty=format:\"Commit %H %nTree:%T%nAuthor:%aN%nDate:%c{1}%nParents:%P%n%s\" {2}",
+                "log{0} --pretty=format:\"Commit %H %nTree:%T%nAuthor:%aN%nAuthorDate:%a{1}%nCommitter:%cN%nCommitDate:%c{1}%nParents:%P%n%s\" {2}",
                 limitRevisionsArgument,
                 dateFormat,
                 LogParam);
@@ -164,7 +164,21 @@ namespace GitCommands
                 return true;
             }
 
-            string commitDate = GetField(data, "Date:");
+            string authorDate = GetField(data, "AuthorDate:");
+            if (authorDate != null)
+            {
+                revision.AuthorDate = authorDate;
+                return true;
+            }
+
+            string committer = GetField(data, "Committer:");
+            if (committer != null)
+            {
+                revision.Committer = committer;
+                return true;
+            }
+
+            string commitDate = GetField(data, "CommitDate:");
             if (commitDate != null)
             {
                 revision.CommitDate = commitDate;
