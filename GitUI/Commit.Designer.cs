@@ -58,6 +58,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.filenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
@@ -91,7 +92,7 @@
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
             this.CloseCommitDialogTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -370,10 +371,11 @@
             this.toolStripSeparator4,
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
+            this.openWithDifftoolToolStripMenuItem,
             this.toolStripSeparator5,
             this.filenameToClipboardToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(213, 148);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(213, 192);
             // 
             // ResetChanges
             // 
@@ -414,6 +416,11 @@
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(209, 6);
             // 
             // filenameToClipboardToolStripMenuItem
             // 
@@ -829,10 +836,12 @@
             this.CloseCommitDialogTooltip.ReshowDelay = 1;
             this.CloseCommitDialogTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // toolStripSeparator5
+            // openWithDifftoolToolStripMenuItem
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(209, 6);
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open With Difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // FormCommit
             // 
@@ -955,5 +964,6 @@
         private System.Windows.Forms.ToolTip CloseCommitDialogTooltip;
         private System.Windows.Forms.ToolStripMenuItem filenameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
     }
 }

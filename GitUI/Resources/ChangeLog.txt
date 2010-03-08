@@ -9,6 +9,7 @@ Version 1.89
 	The author and committer are both shown when they differ
 	Added option to show author date in revision graph instead of commit date
 	Added no fast-forward option to merge dialog
+	Added Open With Difftool to context menu in commit dialog.
 
 Version 1.88
 	Fixed a bug stopping the commit dialog from refreshing after a commit
