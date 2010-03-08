@@ -82,20 +82,50 @@ namespace GitCommands
             if (e.Data.Length <= graphIndex)
                 return;
 
+            if (TryParseFields(e.Data))
+            {
+                AddGraphLine(e.Data);
+            }
+            else if (revision != null)
+            {
+                if (!string.IsNullOrEmpty(revision.Message) && e.Data.LastIndexOfAny(new char[] { '|', '*' }) < 0 && !e.Data.StartsWith("..."))
+                {
+                    revision.Name = e.Data;
+                }
+                else if (e.Data.Length > graphIndex && !e.Data.StartsWith("..."))
+                {
+                    if (string.IsNullOrEmpty(revision.Message))
+                        revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
+
+                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+
+                }
+                else if (e.Data.Length == graphIndex && !e.Data.StartsWith("..."))
+                {
+                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
+                }
+            }
+        }
+
+        private void AddGraphLine(string data)
+        {
+            if (data.Length > graphIndex)
+                revision.GraphLines.Add(data.Substring(0, graphIndex));
+        }
+
+        private bool TryParseFields(string data)
+        {
             //First line found!
-            int commitIndex = e.Data.IndexOf("Commit ");
-            if (commitIndex > 0 && e.Data.IndexOf("*") >= 0 || (commitIndex == 0))
+            int commitIndex = data.IndexOf("Commit ");
+            if (commitIndex > 0 && data.IndexOf("*") >= 0 || (commitIndex == 0))
             {
                 revision = new GitRevision();
                 Revisions.Add(revision);
 
                 graphIndex = commitIndex;
-                if (e.Data.Length > graphIndex)
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                /*revision.Name = */
-                revision.Guid = e.Data.Substring(graphIndex + 7).Trim();
 
-                List<GitHead> foundHeads = new List<GitHead>();
+                /*revision.Name = */
+                revision.Guid = data.Substring(graphIndex + 7).Trim();
 
                 foreach (GitHead h in heads)
                 {
@@ -105,86 +135,50 @@ namespace GitCommands
                     }
                 }
 
+                return true;
             }
-            else
+
+            int treeIndex = data.IndexOf("Tree:   ", graphIndex);
+            if (treeIndex >= 0)
             {
-                int treeIndex = e.Data.IndexOf("Tree:   ", graphIndex);
-                if (treeIndex >= 0)
-                {
-                    revision.TreeGuid = e.Data.Substring(treeIndex + 8).Trim();
-                    if (e.Data.Length > graphIndex)
-                        revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                }
-                else
-                    if (e.Data.IndexOf("Merge: ", graphIndex) >= 0)
-                    {
-                        //ignore
-                        if (e.Data.Length > graphIndex)
-                            revision.GraphLines.Add(e.Data.Substring(0, graphIndex).Trim());
-                    }
-                    else
-                    {
-                        int authorIndex = e.Data.IndexOf("Author: ", graphIndex);
-                        if (authorIndex >= 0)
-                        {
-                            revision.Author = e.Data.Substring(authorIndex + 8).Trim();
-                            if (e.Data.Length > graphIndex)
-                                revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                        }
-                        else
-                        {
-                            int dateIndex = e.Data.IndexOf("Date:   ", graphIndex);
-                            if (dateIndex >= 0)
-                            {
-                                revision.CommitDate = e.Data.Substring(dateIndex + 8).Trim();
-                                if (e.Data.Length > graphIndex)
-                                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                            }
-                            else
-                            {
-                                int parentsIndex = e.Data.IndexOf("Parents:", graphIndex);
-                                if (parentsIndex >= 0)
-                                {
-                                    List<string> parentGuids = new List<string>();
-                                    foreach (string s in e.Data.Substring(parentsIndex + 8).Split(' '))
-                                    {
-                                        parentGuids.Add(s.Trim());
-                                    }
-
-                                    revision.ParentGuids = parentGuids;
-                                    if (e.Data.Length > graphIndex)
-                                        revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                                }
-                                else
-                                    if (revision != null)
-                                    {
-                                        if (!string.IsNullOrEmpty(revision.Message) && e.Data.LastIndexOfAny(new char[] { '|', '*' }) < 0 && !e.Data.StartsWith("..."))
-                                        {
-                                            revision.Name = e.Data;
-                                        }
-                                        else
-                                            if (e.Data.Length > graphIndex && !e.Data.StartsWith("..."))
-                                            {
-                                                if (string.IsNullOrEmpty(revision.Message))
-                                                    revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
-
-                                                revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-
-                                            }
-                                            else
-                                                if (e.Data.Length == graphIndex && !e.Data.StartsWith("..."))
-                                                {
-                                                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                                                }
-
-                                    }
-                            }
-                        }
-                    }
+                revision.TreeGuid = data.Substring(treeIndex + 8).Trim();
+                return true;
             }
 
+            if (data.IndexOf("Merge: ", graphIndex) >= 0)
+            {
+                //ignore
+                return true;
+            }
 
+            int authorIndex = data.IndexOf("Author: ", graphIndex);
+            if (authorIndex >= 0)
+            {
+                revision.Author = data.Substring(authorIndex + 8).Trim();
+                return true;
+            }
+
+            int dateIndex = data.IndexOf("Date:   ", graphIndex);
+            if (dateIndex >= 0)
+            {
+                revision.CommitDate = data.Substring(dateIndex + 8).Trim();
+                return true;
+            }
+
+            int parentsIndex = data.IndexOf("Parents:", graphIndex);
+            if (parentsIndex >= 0)
+            {
+                List<string> parentGuids = new List<string>();
+                foreach (string s in data.Substring(parentsIndex + 8).Split(' '))
+                {
+                    parentGuids.Add(s.Trim());
+                }
+
+                revision.ParentGuids = parentGuids;
+                return true;
+            }
+
+            return false;
         }
-
     }
 }
