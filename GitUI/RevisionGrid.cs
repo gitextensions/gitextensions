@@ -621,7 +621,7 @@ namespace GitUI
             {
                 if (RevisionList != null && RevisionList.Count > e.RowIndex)
                 {
-                    GitRevision revision = (GitRevision)RevisionList[e.RowIndex];
+                    GitRevision revision = RevisionList[e.RowIndex];
 
                     e.Handled = true;
 
@@ -654,19 +654,19 @@ namespace GitUI
                                     offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
                                 }
                             }
-                            string text = (string)revision.Message;
+                            string text = revision.Message;
                             e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                         }
                         else
                             if (e.ColumnIndex == 2)
                             {
-                                string text = (string)revision.Author;
+                                string text = revision.Author;
                                 e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                             }
                             else
                                 if (e.ColumnIndex == 3)
                                 {
-                                    string text = (string)revision.CommitDate;
+                                    string text = revision.CommitDate;
                                     e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                                 }
                 }
