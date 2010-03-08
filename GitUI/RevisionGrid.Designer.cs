@@ -53,6 +53,7 @@
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
             this.showAllBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -178,11 +179,12 @@
             this.ShowRemoteBranches,
             this.showAllBranchesToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
+            this.showAuthorDateToolStripMenuItem,
             this.orderRevisionsByDateToolStripMenuItem,
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(226, 374);
+            this.CreateTag.Size = new System.Drawing.Size(224, 374);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
@@ -190,14 +192,14 @@
             this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.createTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.createTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.createTagToolStripMenuItem.Text = "Create new tag";
             this.createTagToolStripMenuItem.Click += new System.EventHandler(this.createTagToolStripMenuItem_Click);
             // 
             // deleteTagToolStripMenuItem
             // 
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
-            this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
             this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
@@ -206,67 +208,67 @@
             this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.createNewBranchToolStripMenuItem.Text = "Create new branch";
             this.createNewBranchToolStripMenuItem.Click += new System.EventHandler(this.createNewBranchToolStripMenuItem_Click);
             // 
             // deleteBranchToolStripMenuItem
             // 
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
-            this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
             this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
             // 
             // mergeBranchToolStripMenuItem
             // 
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
-            this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.mergeBranchToolStripMenuItem.Text = "Merge with branch";
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
-            this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchToHereToolStripMenuItem_Click);
             // 
             // checkoutBranchToolStripMenuItem
             // 
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
-            this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
             this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.checkoutBranchToolStripMenuItem_Click);
             // 
             // checkoutRevisionToolStripMenuItem
             // 
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
-            this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
             this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.checkoutRevisionToolStripMenuItem_Click);
             // 
             // revertCommitToolStripMenuItem
             // 
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
-            this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.revertCommitToolStripMenuItem.Text = "Revert commit";
             this.revertCommitToolStripMenuItem.Click += new System.EventHandler(this.revertCommitToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(220, 6);
             // 
             // ShowRemoteBranches
             // 
             this.ShowRemoteBranches.Checked = true;
             this.ShowRemoteBranches.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowRemoteBranches.Name = "ShowRemoteBranches";
-            this.ShowRemoteBranches.Size = new System.Drawing.Size(225, 22);
+            this.ShowRemoteBranches.Size = new System.Drawing.Size(223, 22);
             this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranches_Click);
             // 
@@ -275,33 +277,40 @@
             this.showAllBranchesToolStripMenuItem.Checked = true;
             this.showAllBranchesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
-            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
             this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
             // 
             // showRevisionGraphToolStripMenuItem
             // 
             this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
-            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.showRevisionGraphToolStripMenuItem_Click);
+            // 
+            // showAuthorDateToolStripMenuItem
+            // 
+            this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
+            this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
+            this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.showAuthorDateToolStripMenuItem_Click);
             // 
             // orderRevisionsByDateToolStripMenuItem
             // 
             this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
-            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
             this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.orderRevisionsByDateToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.filterToolStripMenuItem.Text = "Set advanced filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
@@ -405,7 +414,7 @@
             // cherryPickCommitToolStripMenuItem
             // 
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
-            this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick commit";
             this.cherryPickCommitToolStripMenuItem.Click += new System.EventHandler(this.cherryPickCommitToolStripMenuItem_Click);
             // 
@@ -470,5 +479,6 @@
         private System.Windows.Forms.ToolStripMenuItem checkoutBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
     }
 }

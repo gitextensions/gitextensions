@@ -38,6 +38,7 @@ namespace GitUI
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
             
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
+            showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
 
             SetShowBranches();
@@ -324,7 +325,9 @@ namespace GitUI
                 Revisions.Visible = false;
                 return;
             }
+            
             Revisions.SuspendLayout();
+            Revisions.Columns[3].HeaderText = Settings.ShowAuthorDate ? "Author Date" : "Commit Date";
 
             if (!ScrollBarSet)
             {
@@ -666,7 +669,7 @@ namespace GitUI
                             else
                                 if (e.ColumnIndex == 3)
                                 {
-                                    string text = revision.CommitDate;
+                                    string text = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                                     e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                                 }
                 }
@@ -979,6 +982,13 @@ namespace GitUI
                     OnChangedCurrentBranch();
                 }
             }
+        }
+
+        private void showAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.ShowAuthorDate = !showAuthorDateToolStripMenuItem.Checked;
+            showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
+            this.ForceRefreshRevisions();
         }
 
         private void orderRevisionsByDateToolStripMenuItem_Click(object sender, EventArgs e)
