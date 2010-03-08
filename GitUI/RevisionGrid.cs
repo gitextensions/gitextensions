@@ -666,7 +666,7 @@ namespace GitUI
                             else
                                 if (e.ColumnIndex == 3)
                                 {
-                                    string text = (string)revision.Date;
+                                    string text = (string)revision.CommitDate;
                                     e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                                 }
                 }

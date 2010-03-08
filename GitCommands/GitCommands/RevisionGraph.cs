@@ -136,7 +136,7 @@ namespace GitCommands
                             int dateIndex = e.Data.IndexOf("Date:   ", graphIndex);
                             if (dateIndex >= 0)
                             {
-                                revision.Date = e.Data.Substring(dateIndex + 8).Trim();
+                                revision.CommitDate = e.Data.Substring(dateIndex + 8).Trim();
                                 if (e.Data.Length > graphIndex)
                                     revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
                             }
