@@ -544,11 +544,92 @@ namespace GitCommands
 
         static public string GetCommitInfo(string sha1)
         {
-            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN%nDate:\t\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
+            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN%nAuthor date:\t%ar (%ad)%nCommitter:\t%cN%nCommit date:\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
             if (info.Trim().StartsWith("fatal"))
                 return string.Empty;
 
+            return RemoveRedundancies(info);
+        }
+
+        static private string RemoveRedundancies(string info)
+        {
+            string author = GetField(info, "Author:");
+            string committer = GetField(info, "Committer:");
+
+            if (String.Equals(author, committer, StringComparison.CurrentCulture))
+            {
+                info = ReplaceField(info, "Committer:", "(same as author)");
+            }
+
+            string authorDate = GetField(info, "Author date:");
+            string commitDate = GetField(info, "Commit date:");
+
+            if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
+            {
+                info = ReplaceField(info, "Commit date:", "(same as author)");
+            }
+
             return info;
+        }
+
+        static private string ReplaceField(string data, string header, string newValue)
+        {
+            StringBuilder newData = new StringBuilder(data);
+
+            int valueIndex = IndexOfValue(data, header);
+
+            if (valueIndex == -1)
+                return data;
+
+            int length = LengthOfValue(data, valueIndex);
+            newData.Remove(valueIndex, length);
+            newData.Insert(valueIndex, newValue);
+
+            return newData.ToString();
+        }
+
+        static private string GetField(string data, string header)
+        {
+            int valueIndex = IndexOfValue(data, header);
+
+            if (valueIndex == -1)
+                return null;
+
+            int length = LengthOfValue(data, valueIndex);
+            return data.Substring(valueIndex, length);
+        }
+
+        static private int LengthOfValue(string data, int valueIndex)
+        {
+            if (valueIndex == -1)
+                return 0;
+
+            int endIndex = data.IndexOf('\n', valueIndex);
+            
+            if (endIndex == -1)
+                endIndex = data.Length - 1;
+
+            return endIndex - valueIndex;
+        }
+
+        static private int IndexOfValue(string data, string header)
+        {
+            int headerIndex = data.IndexOf(header);
+
+            if (headerIndex == -1)
+                return -1;
+
+            int valueIndex = headerIndex + header.Length;
+
+            while (data[valueIndex] == '\t')
+            {
+                valueIndex++;
+
+                if (valueIndex == data.Length)
+                    return -1;
+            }
+
+            return valueIndex;
         }
 
         static public string UserCommitCount()
