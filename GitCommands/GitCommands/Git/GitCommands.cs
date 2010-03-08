@@ -1773,7 +1773,7 @@ namespace GitCommands
 
                 if (line.IndexOf("Date:   ") > 0)
                 {
-                    revision.Date = line.Substring(line.LastIndexOf("Date:   ") + 8).Trim();
+                    revision.CommitDate = line.Substring(line.LastIndexOf("Date:   ") + 8).Trim();
                     if (line.LastIndexOfAny(graphChars) >= 0)
                         revision.GraphLines.Add(line.Substring(0, graphIndex));
                     n++;

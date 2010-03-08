@@ -24,7 +24,7 @@ namespace GitUI
         {
             Commit.Text = string.Format("Commit: {0}", Revision.Guid);
             Author.Text = string.Format("Author: {0}", Revision.Author);
-            Date.Text = string.Format("Commit date: {0}", Revision.Date);
+            Date.Text = string.Format("Commit date: {0}", Revision.CommitDate);
             Message.Text = string.Format("Message: {0}", Revision.Message);
         }
 
