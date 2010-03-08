@@ -558,7 +558,7 @@ namespace GitCommands
 
             if (String.Equals(author, committer, StringComparison.CurrentCulture))
             {
-                info = ReplaceField(info, "Committer:", "(same as author)");
+                info = RemoveField(info, "Committer:");
             }
 
             string authorDate = GetField(info, "Author date:");
@@ -566,26 +566,27 @@ namespace GitCommands
 
             if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
             {
-                info = ReplaceField(info, "Commit date:", "(same as author)");
+                info = RemoveField(info, "Commit date:").Replace("Author date:\t", "Date:\t\t");
             }
 
             return info;
         }
 
-        static private string ReplaceField(string data, string header, string newValue)
+        private static string RemoveField(string data, string header)
         {
-            StringBuilder newData = new StringBuilder(data);
+            int headerIndex = data.IndexOf(header);
 
-            int valueIndex = IndexOfValue(data, header);
-
-            if (valueIndex == -1)
+            if (headerIndex == -1)
                 return data;
 
-            int length = LengthOfValue(data, valueIndex);
-            newData.Remove(valueIndex, length);
-            newData.Insert(valueIndex, newValue);
+            int endIndex = data.IndexOf('\n', headerIndex);
 
-            return newData.ToString();
+            if (endIndex == -1)
+                endIndex = data.Length - 1;
+
+            int length = endIndex - headerIndex + 1;
+
+            return data.Remove(headerIndex, length);
         }
 
         static private string GetField(string data, string header)
