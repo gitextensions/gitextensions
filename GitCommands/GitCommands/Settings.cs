@@ -313,6 +313,19 @@ namespace GitCommands
             }
         }
 
+        private static bool showAuthorDate = true;
+        public static bool ShowAuthorDate
+        {
+            get
+            {
+                return showAuthorDate;
+            }
+            set
+            {
+                showAuthorDate = value;
+            }
+        }
+
         private static bool closeProcessDialog = false;
         public static bool CloseProcessDialog
         {
@@ -593,6 +606,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowAllBranches);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", Settings.CloseProcessDialog);
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", Settings.ShowRevisionGraph);
+                Application.UserAppDataRegistry.SetValue("showauthordate", Settings.ShowAuthorDate);
                 Application.UserAppDataRegistry.SetValue("orderrevisiongraphbydate", Settings.OrderRevisionByDate);
 
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", Settings.ShowGitCommandLine);
@@ -691,6 +705,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("showauthordate") != null) Settings.ShowAuthorDate = Application.UserAppDataRegistry.GetValue("showauthordate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate") != null) Settings.OrderRevisionByDate = Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate").ToString() == "True";
