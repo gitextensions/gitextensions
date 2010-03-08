@@ -739,7 +739,10 @@ namespace GitUI
                 GitItemStatus item = (GitItemStatus)Unstaged.Rows[LastRow].DataBoundItem;
                 string fileName = item.Name;
 
-                GitCommands.GitCommands.OpenWithDifftool(fileName);
+                string cmdOutput = GitCommands.GitCommands.OpenWithDifftool(fileName);
+
+                if (!string.IsNullOrEmpty(cmdOutput))
+                    MessageBox.Show(cmdOutput);
             }
         }
 
