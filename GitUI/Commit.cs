@@ -553,7 +553,8 @@ namespace GitUI
         private void FormCommit_Shown(object sender, EventArgs e)
         {
             Initialize();
-            this.Text = "Commit (" + GitCommands.Settings.WorkingDir + ")";
+            
+            this.Text = "Commit to " + GitCommands.GitCommands.GetSelectedBranch() + " (" + GitCommands.Settings.WorkingDir + ")";
             Message.Text = GitCommands.GitCommands.GetMergeMessage();
 
             if (string.IsNullOrEmpty(Message.Text) && File.Exists(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
