@@ -51,6 +51,7 @@
             this.label23 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.DiffTool2 = new System.Windows.Forms.Button();
             this.SshConfig = new System.Windows.Forms.Button();
             this.GitBinFound = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
@@ -108,6 +109,11 @@
             this.label29 = new System.Windows.Forms.Label();
             this.ColorAddedLineLabel = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.BrowseDiffTool = new System.Windows.Forms.Button();
+            this.label42 = new System.Windows.Forms.Label();
+            this.DifftoolPath = new System.Windows.Forms.TextBox();
+            this.GlobalDiffTool = new System.Windows.Forms.ComboBox();
+            this.label41 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
             this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
@@ -397,9 +403,11 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(718, 384);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.DiffTool2);
             this.tabPage3.Controls.Add(this.SshConfig);
             this.tabPage3.Controls.Add(this.GitBinFound);
             this.tabPage3.Controls.Add(this.Rescan);
@@ -417,6 +425,21 @@
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // DiffTool2
+            // 
+            this.DiffTool2.BackColor = System.Drawing.Color.Gray;
+            this.DiffTool2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.DiffTool2.FlatAppearance.BorderSize = 0;
+            this.DiffTool2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.DiffTool2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DiffTool2.Location = new System.Drawing.Point(9, 174);
+            this.DiffTool2.Name = "DiffTool2";
+            this.DiffTool2.Size = new System.Drawing.Size(693, 23);
+            this.DiffTool2.TabIndex = 11;
+            this.DiffTool2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.DiffTool2.UseVisualStyleBackColor = false;
+            this.DiffTool2.Click += new System.EventHandler(this.DiffTool2_Click);
+            // 
             // SshConfig
             // 
             this.SshConfig.BackColor = System.Drawing.Color.Gray;
@@ -424,7 +447,7 @@
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SshConfig.Location = new System.Drawing.Point(9, 203);
+            this.SshConfig.Location = new System.Drawing.Point(9, 232);
             this.SshConfig.Name = "SshConfig";
             this.SshConfig.Size = new System.Drawing.Size(693, 23);
             this.SshConfig.TabIndex = 10;
@@ -545,7 +568,7 @@
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 174);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 203);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
             this.GitExtensionsInstall.Size = new System.Drawing.Size(693, 23);
             this.GitExtensionsInstall.TabIndex = 1;
@@ -1080,6 +1103,11 @@
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.BrowseDiffTool);
+            this.GlobalSettingsPage.Controls.Add(this.label42);
+            this.GlobalSettingsPage.Controls.Add(this.DifftoolPath);
+            this.GlobalSettingsPage.Controls.Add(this.GlobalDiffTool);
+            this.GlobalSettingsPage.Controls.Add(this.label41);
             this.GlobalSettingsPage.Controls.Add(this.label28);
             this.GlobalSettingsPage.Controls.Add(this.lblGlobalAutoCRLF);
             this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCRLF);
@@ -1106,6 +1134,63 @@
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
+            // 
+            // BrowseDiffTool
+            // 
+            this.BrowseDiffTool.Location = new System.Drawing.Point(506, 256);
+            this.BrowseDiffTool.Name = "BrowseDiffTool";
+            this.BrowseDiffTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseDiffTool.TabIndex = 27;
+            this.BrowseDiffTool.Text = "Browse";
+            this.BrowseDiffTool.UseVisualStyleBackColor = true;
+            this.BrowseDiffTool.Click += new System.EventHandler(this.BrowseDiffTool_Click);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(9, 263);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(75, 13);
+            this.label42.TabIndex = 26;
+            this.label42.Text = "Path to difftool";
+            // 
+            // DifftoolPath
+            // 
+            this.DifftoolPath.Location = new System.Drawing.Point(153, 259);
+            this.DifftoolPath.Name = "DifftoolPath";
+            this.DifftoolPath.Size = new System.Drawing.Size(347, 20);
+            this.DifftoolPath.TabIndex = 25;
+            // 
+            // GlobalDiffTool
+            // 
+            this.GlobalDiffTool.FormattingEnabled = true;
+            this.GlobalDiffTool.Items.AddRange(new object[] {
+            "kdiff3",
+            "kompare",
+            "tkdiff",
+            "meld",
+            "xxdiff",
+            "emerge",
+            "vimdiff",
+            "gvimdiff",
+            "ecmerge",
+            "diffuse",
+            "opendiff",
+            "araxis"});
+            this.GlobalDiffTool.Location = new System.Drawing.Point(153, 232);
+            this.GlobalDiffTool.Name = "GlobalDiffTool";
+            this.GlobalDiffTool.Size = new System.Drawing.Size(164, 21);
+            this.GlobalDiffTool.TabIndex = 24;
+            this.GlobalDiffTool.TextChanged += new System.EventHandler(this.ExternalDiffTool_TextChanged);
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(10, 235);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(40, 13);
+            this.label41.TabIndex = 23;
+            this.label41.Text = "Difftool";
             // 
             // label28
             // 
@@ -1753,6 +1838,12 @@
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.CheckBox FollowRenamesInFileHistory;
+        private System.Windows.Forms.ComboBox GlobalDiffTool;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Button BrowseDiffTool;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox DifftoolPath;
+        private System.Windows.Forms.Button DiffTool2;
 
     }
 }
