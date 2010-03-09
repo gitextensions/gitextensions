@@ -183,9 +183,9 @@
             // 
             // TagAllCommits
             // 
-            this.TagAllCommits.Location = new System.Drawing.Point(234, 3);
+            this.TagAllCommits.Location = new System.Drawing.Point(300, 3);
             this.TagAllCommits.Name = "TagAllCommits";
-            this.TagAllCommits.Size = new System.Drawing.Size(123, 23);
+            this.TagAllCommits.Size = new System.Drawing.Size(173, 23);
             this.TagAllCommits.TabIndex = 6;
             this.TagAllCommits.Text = "Tag all lost commits";
             this.TagAllCommits.UseVisualStyleBackColor = true;
@@ -193,9 +193,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(6, 28);
+            this.button3.Location = new System.Drawing.Point(4, 29);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(221, 23);
+            this.button3.Size = new System.Drawing.Size(290, 23);
             this.button3.TabIndex = 5;
             this.button3.Text = "Delete all LOST_AND_FOUND tags";
             this.button3.UseVisualStyleBackColor = true;
@@ -203,9 +203,9 @@
             // 
             // TagAllObjects
             // 
-            this.TagAllObjects.Location = new System.Drawing.Point(118, 3);
+            this.TagAllObjects.Location = new System.Drawing.Point(150, 3);
             this.TagAllObjects.Name = "TagAllObjects";
-            this.TagAllObjects.Size = new System.Drawing.Size(109, 23);
+            this.TagAllObjects.Size = new System.Drawing.Size(144, 23);
             this.TagAllObjects.TabIndex = 4;
             this.TagAllObjects.Text = "Tag all lost objects";
             this.TagAllObjects.UseVisualStyleBackColor = true;
@@ -213,9 +213,9 @@
             // 
             // ViewObject
             // 
-            this.ViewObject.Location = new System.Drawing.Point(233, 28);
+            this.ViewObject.Location = new System.Drawing.Point(300, 29);
             this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(124, 23);
+            this.ViewObject.Size = new System.Drawing.Size(173, 23);
             this.ViewObject.TabIndex = 3;
             this.ViewObject.Text = "View selected object";
             this.ViewObject.UseVisualStyleBackColor = true;
@@ -225,7 +225,7 @@
             // 
             this.button2.Location = new System.Drawing.Point(3, 3);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(109, 23);
+            this.button2.Size = new System.Drawing.Size(141, 23);
             this.button2.TabIndex = 2;
             this.button2.Text = "Tag selected object";
             this.button2.UseVisualStyleBackColor = true;
@@ -233,9 +233,9 @@
             // 
             // Remove
             // 
-            this.Remove.Location = new System.Drawing.Point(659, 3);
+            this.Remove.Location = new System.Drawing.Point(610, 3);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(158, 23);
+            this.Remove.Size = new System.Drawing.Size(207, 23);
             this.Remove.TabIndex = 1;
             this.Remove.Text = "Remove all dangling objects";
             this.Remove.UseVisualStyleBackColor = true;
@@ -243,9 +243,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(659, 28);
+            this.button1.Location = new System.Drawing.Point(610, 29);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(159, 23);
+            this.button1.Size = new System.Drawing.Size(208, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "Save objects to .git/lost-found";
             this.button1.UseVisualStyleBackColor = true;
