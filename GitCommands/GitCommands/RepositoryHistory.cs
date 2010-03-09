@@ -18,7 +18,10 @@ namespace GitCommands
                 return;
 
             repo = repo.Replace('/', '\\');
-            if (!repo.EndsWith("\\"))
+            if (!repo.EndsWith("\\") && 
+                !repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
+                !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
+                !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
                 repo += "\\";
 
             foreach (string recentRepository in MostRecentRepositories)
