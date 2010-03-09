@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using System.IO;
 using System.Collections;
+using System.Collections.Specialized;
 
 namespace GitUI
 {
@@ -23,6 +24,76 @@ namespace GitUI
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, "When checked the commit dialog is closed after each commit.\nOtherwise the dialog will only close when there are no modified files left.");
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
+
+            Unstaged.MouseMove += new MouseEventHandler(Unstaged_MouseMove);
+            Unstaged.MouseDown += new MouseEventHandler(Unstaged_MouseDown);
+        }
+
+        private Rectangle dragBoxFromMouseDown;
+
+        void Unstaged_MouseDown(object sender, MouseEventArgs e)
+        {
+            System.Drawing.Point pt = Unstaged.PointToClient(Cursor.Position);
+            DataGridView.HitTestInfo hti = Unstaged.HitTest(pt.X, pt.Y);
+            LastRow = hti.RowIndex;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                Unstaged.ClearSelection();
+
+                if (LastRow >= 0 && Unstaged.Rows.Count > LastRow)
+                    Unstaged.Rows[LastRow].Selected = true;
+            }
+
+            if (e.Button == MouseButtons.Left)
+            {
+                if (LastRow != -1)
+                {
+                    // Remember the point where the mouse down occurred. 
+                    // The DragSize indicates the size that the mouse can move 
+                    // before a drag event should be started.               
+                    Size dragSize = SystemInformation.DragSize;
+
+                    // Create a rectangle using the DragSize, with the mouse position being
+                    // at the center of the rectangle.
+                    dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
+                                                                   e.Y - (dragSize.Height / 2)),
+                                                            dragSize);
+                }
+                else
+                    // Reset the rectangle if the mouse is not over an item in the ListBox.
+                    dragBoxFromMouseDown = Rectangle.Empty;
+            }
+        }
+
+        void Unstaged_MouseMove(object sender, MouseEventArgs e)
+        {
+            // If the mouse moves outside the rectangle, start the drag.
+            if (dragBoxFromMouseDown != Rectangle.Empty &&
+                !dragBoxFromMouseDown.Contains(e.X, e.Y))
+            {
+                if (Unstaged.SelectedRows.Count > 0)
+                {
+                    StringCollection fileList = new StringCollection();
+
+                    foreach (DataGridViewRow row in Unstaged.SelectedRows)
+                    {
+                        GitItemStatus item = (GitItemStatus)row.DataBoundItem;
+                        string fileName = Settings.WorkingDir + item.Name;
+
+                        fileList.Add(fileName.Replace('/', '\\'));
+                    }
+
+                    DataObject obj = new DataObject();
+                    obj.SetFileDropList(fileList);
+
+                    // Proceed with the drag and drop, passing in the list item.                   
+                    DragDropEffects dropEffect = Unstaged.DoDragDrop(
+                                                     obj,
+                                                     DragDropEffects.Copy);
+                    dragBoxFromMouseDown = Rectangle.Empty;
+                }
+            }
         }
 
         ~FormCommit()  // destructor
@@ -444,15 +515,6 @@ namespace GitUI
 
         private void Unstaged_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                System.Drawing.Point pt = Unstaged.PointToClient(Cursor.Position);
-                DataGridView.HitTestInfo hti = Unstaged.HitTest(pt.X, pt.Y);
-                LastRow = hti.RowIndex;
-                Unstaged.ClearSelection();
-                if (LastRow >= 0 && Unstaged.Rows.Count > LastRow)
-                    Unstaged.Rows[LastRow].Selected = true;
-            }
         }
 
         private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
