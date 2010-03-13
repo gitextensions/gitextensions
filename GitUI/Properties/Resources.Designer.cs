@@ -309,24 +309,13 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 1.88
-        ///	Fixed a but stopping the commit dialog from refreshing after a commit
-        ///	
-        ///
-        ///Version 1.87
-        ///	Small fixes in layout commit dialog
-        ///	Only close commit dialog when no modified files are left
-        ///	Added &apos;Open&apos; and &apos;Open With&apos; to context menu of commit dialog
-        ///	
-        ///Version 1.86
-        ///	Changed the layout of the commit dialog
-        ///	Added support for Cygwin
-        ///	Added cleanup function
-        ///
-        ///Version 1.85
-        ///	Added context menu options to manipulate Diff viewer.
-        ///	Fixed alt-c as shortcut to commit.
-        ///	A [rest of string was truncated]&quot;;.
+        ///Version 1.89
+        ///	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces
+        ///	Fixed bug: Filehistory not working when opened from Visual Studio because filename is too long
+        ///	Fixed bug: Copy selected text from file viewer now copies the complete selected text
+        ///	Fixed bug: A slash is added at the end of all url&apos;s in the history, breaking some urls
+        ///	The author date and commit date are both shown when they differ
+        ///	The author and committer are both shown when [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -344,6 +333,41 @@ namespace GitUI.Properties {
         internal static System.Drawing.Icon cow_head {
             get {
                 object obj = ResourceManager.GetObject("cow_head", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon cow_head_blue {
+            get {
+                object obj = ResourceManager.GetObject("cow_head_blue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon cow_head_green {
+            get {
+                object obj = ResourceManager.GetObject("cow_head_green", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon cow_head_purple {
+            get {
+                object obj = ResourceManager.GetObject("cow_head_purple", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon cow_head_red {
+            get {
+                object obj = ResourceManager.GetObject("cow_head_red", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon cow_head_yellow {
+            get {
+                object obj = ResourceManager.GetObject("cow_head_yellow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

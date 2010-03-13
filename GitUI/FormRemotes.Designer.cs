@@ -611,7 +611,7 @@
             this.ClientSize = new System.Drawing.Size(656, 221);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormRemotes";

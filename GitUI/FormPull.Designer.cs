@@ -328,7 +328,7 @@
             this.ClientSize = new System.Drawing.Size(639, 290);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPull";

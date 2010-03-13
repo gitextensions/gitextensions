@@ -46,7 +46,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 571);
             this.Controls.Add(this.Viewer);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View";

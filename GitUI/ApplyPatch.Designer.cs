@@ -184,7 +184,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.splitContainer4);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "ViewPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View patch file";

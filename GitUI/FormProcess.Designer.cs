@@ -233,7 +233,7 @@
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormProcess";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";

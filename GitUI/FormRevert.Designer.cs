@@ -71,7 +71,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Revert);
             this.Controls.Add(this.RevertLabel);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormRevert";
             this.Text = "Revert file changes";
             this.Load += new System.EventHandler(this.FormRevert_Load);

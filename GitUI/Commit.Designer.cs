@@ -851,7 +851,7 @@
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(895, 648);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

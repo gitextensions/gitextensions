@@ -151,6 +151,12 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                     MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
 
+                DefaultIcon.Checked = GitCommands.Settings.IconColor.Equals("default" , StringComparison.CurrentCultureIgnoreCase);
+                BlueIcon.Checked = GitCommands.Settings.IconColor.Equals("blue", StringComparison.CurrentCultureIgnoreCase);
+                GreenIcon.Checked = GitCommands.Settings.IconColor.Equals("green", StringComparison.CurrentCultureIgnoreCase);
+                PurpleIcon.Checked = GitCommands.Settings.IconColor.Equals("purple", StringComparison.CurrentCultureIgnoreCase);
+                RedIcon.Checked = GitCommands.Settings.IconColor.Equals("red", StringComparison.CurrentCultureIgnoreCase);
+                YellowIcon.Checked = GitCommands.Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
 
                 GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.tool");
 
@@ -259,6 +265,19 @@ namespace GitUI
             Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
             Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
             Settings.DiffSectionColor = ColorSectionLabel.BackColor;
+
+            if (DefaultIcon.Checked)
+                GitCommands.Settings.IconColor = "default";
+            if (BlueIcon.Checked)
+                GitCommands.Settings.IconColor = "blue";
+            if (GreenIcon.Checked)
+                GitCommands.Settings.IconColor = "green";
+            if (PurpleIcon.Checked)
+                GitCommands.Settings.IconColor = "purple";
+            if (RedIcon.Checked)
+                GitCommands.Settings.IconColor = "red";
+            if (YellowIcon.Checked)
+                GitCommands.Settings.IconColor = "yellow";
 
             EnableSettings();
 

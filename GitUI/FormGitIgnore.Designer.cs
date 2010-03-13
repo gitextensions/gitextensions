@@ -103,7 +103,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(634, 473);
 			this.Controls.Add(this.splitContainer1);
-			this.Icon = global::GitUI.Properties.Resources.cow_head;
+			//this.Icon = global::GitUI.Properties.Resources.cow_head;
 			this.Name = "FormGitIgnore";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Edit .gitignore";

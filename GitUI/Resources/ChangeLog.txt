@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.90
+	The application icon can be changed
+
 Version 1.89
 	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces
 	Fixed bug: Filehistory not working when opened from Visual Studio because filename is too long

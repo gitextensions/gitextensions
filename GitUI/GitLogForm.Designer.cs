@@ -47,7 +47,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 470);
             this.Controls.Add(this.Log);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "GitLogForm";
             this.Text = "Log";
             this.Load += new System.EventHandler(this.GitLogForm_Load);
