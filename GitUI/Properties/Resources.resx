@@ -277,4 +277,19 @@
   <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="cow_head_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head-blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cow_head_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head-green.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cow_head_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head-purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cow_head_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head-red.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cow_head_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head-yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

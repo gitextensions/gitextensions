@@ -10,6 +10,19 @@ namespace GitCommands
 {
     public class Settings
     {
+        private static string iconColor = "default";
+        public static string IconColor
+        {
+            get
+            {
+                return iconColor;
+            }
+            set
+            {
+                iconColor = value;
+            }
+        }
+
         private static bool closeCommitDialogAfterCommit = false;
         public static bool CloseCommitDialogAfterCommit
         {
@@ -600,6 +613,8 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("remotebranchcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RemoteBranchColor));
                 Application.UserAppDataRegistry.SetValue("othertagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.OtherTagColor));
 
+                Application.UserAppDataRegistry.SetValue("iconcolor", Settings.IconColor);
+
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitCommand);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
@@ -701,6 +716,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
+                if (Application.UserAppDataRegistry.GetValue("iconcolor") != null) Settings.IconColor = Application.UserAppDataRegistry.GetValue("iconcolor").ToString();
                 if (Application.UserAppDataRegistry.GetValue("relativedate") != null) Settings.RelativeDate = Application.UserAppDataRegistry.GetValue("relativedate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("usefastchecks") != null) Settings.UseFastChecks = Application.UserAppDataRegistry.GetValue("usefastchecks").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showgitcommandline") != null) Settings.ShowGitCommandLine = Application.UserAppDataRegistry.GetValue("showgitcommandline").ToString() == "True";

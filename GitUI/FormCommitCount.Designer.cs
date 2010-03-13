@@ -63,7 +63,7 @@
             this.ClientSize = new System.Drawing.Size(367, 317);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.CommitCount);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormCommitCount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit count";

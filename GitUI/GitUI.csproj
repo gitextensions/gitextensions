@@ -696,6 +696,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\cow-head-yellow.ico" />
+    <None Include="Icons\cow-head-red.ico" />
+    <None Include="Icons\cow-head-green.ico" />
+    <None Include="Icons\cow-head-blue.ico" />
+    <None Include="Icons\cow-head-purple.ico" />
     <None Include="Icons\stash.png" />
     <None Include="Icons\stash.bmp" />
     <None Include="Icons\90.png" />

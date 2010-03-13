@@ -132,7 +132,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(712, 484);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
+            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormBranch";
             this.Text = "Create Branch";
             this.Load += new System.EventHandler(this.FormBranch_Load);

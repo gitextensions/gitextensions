@@ -116,7 +116,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(271, 17);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "Version 1.89";
+            this.labelVersion.Text = "Version 1.90";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelVersion.Click += new System.EventHandler(this.labelVersion_Click);
             // 
@@ -165,7 +165,6 @@
             this.ClientSize = new System.Drawing.Size(435, 283);
             this.Controls.Add(this.tableLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AboutBox";

@@ -88,6 +88,13 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.AppearancePage = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.YellowIcon = new System.Windows.Forms.RadioButton();
+            this.RedIcon = new System.Windows.Forms.RadioButton();
+            this.GreenIcon = new System.Windows.Forms.RadioButton();
+            this.PurpleIcon = new System.Windows.Forms.RadioButton();
+            this.BlueIcon = new System.Windows.Forms.RadioButton();
+            this.DefaultIcon = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label33 = new System.Windows.Forms.Label();
             this.ColorRemoteBranchLabel = new System.Windows.Forms.Label();
@@ -168,6 +175,7 @@
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.AppearancePage.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.GlobalSettingsPage.SuspendLayout();
@@ -858,6 +866,7 @@
             // 
             // AppearancePage
             // 
+            this.AppearancePage.Controls.Add(this.groupBox5);
             this.AppearancePage.Controls.Add(this.groupBox4);
             this.AppearancePage.Controls.Add(this.groupBox3);
             this.AppearancePage.Location = new System.Drawing.Point(4, 22);
@@ -866,6 +875,87 @@
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.YellowIcon);
+            this.groupBox5.Controls.Add(this.RedIcon);
+            this.groupBox5.Controls.Add(this.GreenIcon);
+            this.groupBox5.Controls.Add(this.PurpleIcon);
+            this.groupBox5.Controls.Add(this.BlueIcon);
+            this.groupBox5.Controls.Add(this.DefaultIcon);
+            this.groupBox5.Location = new System.Drawing.Point(327, 3);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(312, 205);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Application Icon";
+            // 
+            // YellowIcon
+            // 
+            this.YellowIcon.AutoSize = true;
+            this.YellowIcon.Location = new System.Drawing.Point(6, 159);
+            this.YellowIcon.Name = "YellowIcon";
+            this.YellowIcon.Size = new System.Drawing.Size(56, 17);
+            this.YellowIcon.TabIndex = 5;
+            this.YellowIcon.TabStop = true;
+            this.YellowIcon.Text = "Yellow";
+            this.YellowIcon.UseVisualStyleBackColor = true;
+            // 
+            // RedIcon
+            // 
+            this.RedIcon.AutoSize = true;
+            this.RedIcon.Location = new System.Drawing.Point(6, 131);
+            this.RedIcon.Name = "RedIcon";
+            this.RedIcon.Size = new System.Drawing.Size(45, 17);
+            this.RedIcon.TabIndex = 4;
+            this.RedIcon.TabStop = true;
+            this.RedIcon.Text = "Red";
+            this.RedIcon.UseVisualStyleBackColor = true;
+            // 
+            // GreenIcon
+            // 
+            this.GreenIcon.AutoSize = true;
+            this.GreenIcon.Location = new System.Drawing.Point(6, 102);
+            this.GreenIcon.Name = "GreenIcon";
+            this.GreenIcon.Size = new System.Drawing.Size(54, 17);
+            this.GreenIcon.TabIndex = 3;
+            this.GreenIcon.TabStop = true;
+            this.GreenIcon.Text = "Green";
+            this.GreenIcon.UseVisualStyleBackColor = true;
+            // 
+            // PurpleIcon
+            // 
+            this.PurpleIcon.AutoSize = true;
+            this.PurpleIcon.Location = new System.Drawing.Point(6, 74);
+            this.PurpleIcon.Name = "PurpleIcon";
+            this.PurpleIcon.Size = new System.Drawing.Size(55, 17);
+            this.PurpleIcon.TabIndex = 2;
+            this.PurpleIcon.TabStop = true;
+            this.PurpleIcon.Text = "Purple";
+            this.PurpleIcon.UseVisualStyleBackColor = true;
+            // 
+            // BlueIcon
+            // 
+            this.BlueIcon.AutoSize = true;
+            this.BlueIcon.Location = new System.Drawing.Point(6, 45);
+            this.BlueIcon.Name = "BlueIcon";
+            this.BlueIcon.Size = new System.Drawing.Size(46, 17);
+            this.BlueIcon.TabIndex = 1;
+            this.BlueIcon.TabStop = true;
+            this.BlueIcon.Text = "Blue";
+            this.BlueIcon.UseVisualStyleBackColor = true;
+            // 
+            // DefaultIcon
+            // 
+            this.DefaultIcon.AutoSize = true;
+            this.DefaultIcon.Location = new System.Drawing.Point(6, 19);
+            this.DefaultIcon.Name = "DefaultIcon";
+            this.DefaultIcon.Size = new System.Drawing.Size(59, 17);
+            this.DefaultIcon.TabIndex = 0;
+            this.DefaultIcon.TabStop = true;
+            this.DefaultIcon.Text = "Default";
+            this.DefaultIcon.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -1668,7 +1758,6 @@
             this.ClientSize = new System.Drawing.Size(718, 417);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormSettings";
@@ -1689,6 +1778,8 @@
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.AppearancePage.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1844,6 +1935,13 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox DifftoolPath;
         private System.Windows.Forms.Button DiffTool2;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton GreenIcon;
+        private System.Windows.Forms.RadioButton PurpleIcon;
+        private System.Windows.Forms.RadioButton BlueIcon;
+        private System.Windows.Forms.RadioButton DefaultIcon;
+        private System.Windows.Forms.RadioButton YellowIcon;
+        private System.Windows.Forms.RadioButton RedIcon;
 
     }
 }
