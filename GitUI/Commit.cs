@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using System.IO;
@@ -139,11 +140,18 @@ namespace GitUI
         private void InitializedStaged()
         {
             Cursor.Current = Cursors.WaitCursor;
-            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
-            //Load staged files
-            List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
-            Staged.DataSource = stagedFiles;
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                bool inTheMiddleOfConflictedMerge = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+                List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
+
+                BeginInvoke((Action)delegate
+                {
+                    SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
+                    Staged.DataSource = stagedFiles;
+                });
+            });
         }
 
         // This method is passed in to the SetTextCallBack delegate
@@ -614,13 +622,21 @@ namespace GitUI
         private void FormCommit_Shown(object sender, EventArgs e)
         {
             Initialize();
-            
-            this.Text = "Commit to " + GitCommands.GitCommands.GetSelectedBranch() + " (" + GitCommands.Settings.WorkingDir + ")";
-            Message.Text = GitCommands.GitCommands.GetMergeMessage();
 
-            if (string.IsNullOrEmpty(Message.Text) && File.Exists(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
-                Message.Text = File.ReadAllText(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                string text = "Commit to " + GitCommands.GitCommands.GetSelectedBranch() + " (" + Settings.WorkingDir + ")";
+                string message = GitCommands.GitCommands.GetMergeMessage();
 
+                if (string.IsNullOrEmpty(message) && File.Exists(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
+                    message = File.ReadAllText(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
+
+                BeginInvoke((Action)delegate
+                {
+                    Text = text;
+                    Message.Text = message;
+                });
+            });
         }
 
         private void Staged_CellContentClick(object sender, DataGridViewCellEventArgs e)
