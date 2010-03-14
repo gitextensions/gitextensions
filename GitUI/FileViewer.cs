@@ -124,6 +124,11 @@ namespace GitUI
             TextEditor.Refresh();
         }
 
+        public void ViewPatch(Func<string> loadPatchText)
+        {
+            async.Load(loadPatchText, ViewPatch);
+        }
+
         private void AddPatchHighlighting()
         {
             IDocument document = TextEditor.Document;
