@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GitCommands;
+using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
+using Git = GitCommands.GitCommands;
 
 namespace GitUI
 {
@@ -18,6 +18,8 @@ namespace GitUI
         public bool TreatAllFilesAsText { get; set; }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
+        
+        private readonly AsyncLoader async;
 
         private void EnableDiffContextMenu(bool enable)
         {
@@ -57,8 +59,16 @@ namespace GitUI
             ShowEntireFile = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
-            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += new KeyEventHandler(TextArea_KeyUp);
+            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyUp;
             IgnoreWhitespaceChanges = false;
+
+            async = new AsyncLoader(this);
+            async.LoadingError += delegate
+            {
+                ResetForText(null);
+                TextEditor.Text = "Unsupported file";
+                TextEditor.Refresh();
+            };
         }
 
         void TextArea_KeyUp(object sender, KeyEventArgs e)
@@ -89,17 +99,6 @@ namespace GitUI
             }
         }
 
-        private void ClearImage()
-        {
-            PictureBox.ImageLocation = "";
-
-            if (PictureBox.Image is Image)
-            {
-                PictureBox.Image.Dispose();
-                PictureBox.Image = null;
-            }
-        }
-
         FindAndReplaceForm findAndReplaceForm = new FindAndReplaceForm();
 
         public void Find()
@@ -109,36 +108,109 @@ namespace GitUI
 
         public void ViewFile(string fileName)
         {
-            EnableDiffContextMenu(false);
-            try
+            ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName));
+        }
+
+        public void ViewCurrentChanges(string fileName, bool staged)
+        {
+            async.Load(() => Git.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
+        }
+
+        public void ViewPatch(string text)
+        {
+            ResetForDiff();
+            TextEditor.Text = text;
+            AddPatchHighlighting();
+            TextEditor.Refresh();
+        }
+
+        private void AddPatchHighlighting()
+        {
+            IDocument document = TextEditor.Document;
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
+
+            for (int line = 0; line < document.TotalNumberOfLines; line++)
             {
- 
-                if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase)
-                    )
+                LineSegment lineSegment = document.GetLineSegment(line);
+
+                if (lineSegment.TotalLength != 0)
                 {
-                    Image image;
-
-                    if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
+                    if (document.GetCharAt(lineSegment.Offset) == '+')
                     {
-                        Icon icon = new Icon(GitCommands.Settings.WorkingDir + fileName);
-                        image = icon.ToBitmap();
-                        icon.Dispose();
-                    }
-                    else
-                    {
-                        Image fileImage = Image.FromFile(GitCommands.Settings.WorkingDir + fileName);
-                        image = (Image)fileImage.Clone();
-                        fileImage.Dispose();
-                    }
+                        Color color = Settings.DiffAddedColor;
+                        LineSegment endLine = document.GetLineSegment(line);
 
-                    PictureBox.Visible = true;
-                    TextEditor.Visible = false;
+                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '+'; line++)
+                        {
+                            endLine = document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = document.GetLineSegment(line);
+
+                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
+                    }
+                    if (document.GetCharAt(lineSegment.Offset) == '-')
+                    {
+                        Color color = Settings.DiffRemovedColor;
+                        LineSegment endLine = document.GetLineSegment(line);
+
+                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '-'; line++)
+                        {
+                            endLine = document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = document.GetLineSegment(line);
+
+                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
+                    }
+                    if (document.GetCharAt(lineSegment.Offset) == '@')
+                    {
+                        Color color = Settings.DiffSectionColor;
+                        LineSegment endLine = document.GetLineSegment(line);
+
+                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '@'; line++)
+                        {
+                            endLine = document.GetLineSegment(line);
+
+                        }
+                        line--;
+                        line--;
+                        endLine = document.GetLineSegment(line);
+
+                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
+                    }
+                }
+            }
+        }
+
+        public void ViewText(string fileName, string text)
+        {
+            ResetForText(fileName);
+            TextEditor.Text = text;
+            TextEditor.Refresh();
+        }
+
+        public void ViewGitItemRevision(string fileName, string guid)
+        {
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Git.GetFileRevisionText(fileName, guid));
+        }
+
+        public void ViewGitItem(string fileName, string guid)
+        {
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Git.GetFileText(guid));
+        }
+
+        private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
+        {
+            if (IsImage(fileName))
+            {
+                async.Load(getImage, image =>
+                {
+                    ResetForImage();
 
                     if (image.Size.Height > PictureBox.Size.Height ||
                         image.Size.Width > PictureBox.Size.Width)
@@ -149,271 +221,115 @@ namespace GitUI
                     {
                         PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
                     }
+
                     PictureBox.Image = image;
-
-
-                }
-                else
-                {
-                    ClearImage();
-                    PictureBox.Visible = false;
-                    if (IsBinaryFile(fileName))
-                    {
-                        TextEditor.Visible = true;
-                        TextEditor.Text = "Binary file: " + fileName;
-                        TextEditor.Refresh();
-                    }
-                    else
-                    {
-                        TextEditor.Visible = true;
-
-                        if (File.Exists(GitCommands.Settings.WorkingDir + fileName))
-                            TextEditor.LoadFile(GitCommands.Settings.WorkingDir + fileName);
-                    }
-                }
+                });
             }
-            catch
+            else if (IsBinaryFile(fileName))
             {
+                ViewText(null, "Binary file: " + fileName);
             }
-        }
-
-
-        public void ViewCurrentChanges(string fileName, string format, bool staged)
-        {
-            EnableDiffContextMenu(true);
-            ClearImage();
-            PictureBox.Visible = false;
-            TextEditor.Visible = true;
-
-            TextEditor.SetHighlighting("Patch");
-            TextEditor.Text = GitCommands.GitCommands.GetCurrentChanges(fileName, staged, GetExtraDiffArguments());
-
-            AddPatchHighlighting();
-
-            TextEditor.Refresh();
-        }
-
-        public void ViewPatch(string text)
-        {
-            EnableDiffContextMenu(true);
-            ClearImage();
-            PictureBox.Visible = false;
-            TextEditor.Visible = true;
-
-            TextEditor.SetHighlighting("Patch");
-            TextEditor.Text = text;
-
-            AddPatchHighlighting();
-
-            TextEditor.Refresh();
-        }
-
-        private void AddPatchHighlighting()
-        {
-            EnableDiffContextMenu(true);
-            //DIFF HIGHLIGHTING!
-            for (int line = 0; line < TextEditor.Document.TotalNumberOfLines; line++)
+            else
             {
-                ICSharpCode.TextEditor.Document.LineSegment lineSegment = TextEditor.Document.GetLineSegment(line);
-
-                if (lineSegment.TotalLength != 0)
-                {
-                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '+')
-                    {
-                        Color color = Settings.DiffAddedColor;
-                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
-
-                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '+'; line++)
-                        {
-                            endLine = TextEditor.Document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
-                        endLine = TextEditor.Document.GetLineSegment(line);
-
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    }
-                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '-')
-                    {
-                        Color color = Settings.DiffRemovedColor;
-                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
-
-                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '-'; line++)
-                        {
-                            endLine = TextEditor.Document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
-                        endLine = TextEditor.Document.GetLineSegment(line);
-
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    }
-                    if (TextEditor.Document.GetCharAt(lineSegment.Offset) == '@')
-                    {
-                        Color color = Settings.DiffSectionColor;
-                        ICSharpCode.TextEditor.Document.LineSegment endLine = TextEditor.Document.GetLineSegment(line);
-
-                        for (; line < TextEditor.Document.TotalNumberOfLines && TextEditor.Document.GetCharAt(endLine.Offset) == '@'; line++)
-                        {
-                            endLine = TextEditor.Document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
-                        endLine = TextEditor.Document.GetLineSegment(line);
-
-                        TextEditor.Document.MarkerStrategy.AddMarker(new ICSharpCode.TextEditor.Document.TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, ICSharpCode.TextEditor.Document.TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    }
-
-                }
+                async.Load(getFileText, text => ViewText(fileName, text));
             }
-            //END
         }
 
-        public void ViewText(string fileName, string text)
-        {
-            EnableDiffContextMenu(false);
-            ClearImage();
-            PictureBox.Visible = false;
-            TextEditor.Visible = true;
-
-            EditorOptions.SetSyntax(TextEditor, fileName);
-
-            TextEditor.Text = text;
-            TextEditor.Refresh();
-        }
-
-        public bool IsBinaryFile(string fileName)
+        private static bool IsBinaryFile(string fileName)
         {
             return FileHelper.IsBinaryFile(fileName);
         }
 
-        public void ViewGitItemRevision(string fileName, string guid)
+        private static bool IsImage(string fileName)
         {
-            EnableDiffContextMenu(false);
-            ClearImage();
-            PictureBox.Visible = false;
-            TextEditor.Visible = true;
-
-            try
-            {
-
-                if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    Stream stream = GitCommands.GitCommands.GetFileStream(guid);
-                    Image images;
-
-                    if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
-                        images = new Icon(stream).ToBitmap();
-                    else
-                        images = Image.FromStream(stream);
-
-                    stream.Close();
-
-                    PictureBox.Visible = true;
-                    TextEditor.Visible = false;
-
-                    if (images.Size.Height > PictureBox.Size.Height ||
-                        images.Size.Width > PictureBox.Size.Width)
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                    }
-                    else
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                    }
-                    PictureBox.Image = images;
-                }
-                else
-                    if (IsBinaryFile(fileName))
-                    {
-                        ClearImage();
-                        TextEditor.Text = "Binary file: " + fileName;
-                    }
-                    else
-                    {
-                        ClearImage();
-                        EditorOptions.SetSyntax(TextEditor, fileName);
-
-                        TextEditor.Text = GitCommands.GitCommands.GetFileRevisionText(fileName, guid);
-                    }
-            }
-            catch
-            {
-                TextEditor.Text = "Unsupported file";
-            }
-            TextEditor.Refresh();
+            return FileHelper.IsImage(fileName);
         }
 
-        public void ViewGitItem(string fileName, string guid)
+        private static bool IsIcon(string fileName)
         {
-            EnableDiffContextMenu(false);
-            ClearImage();
-            PictureBox.Visible = false;
-            TextEditor.Visible = true;
+            return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
+        }
 
-            try
+        private static Image GetImage(string fileName, string guid)
+        {
+            using (Stream stream = Git.GetFileStream(guid))
             {
+                if (IsIcon(fileName))
+                    return new Icon(stream).ToBitmap();
+                
+                return Image.FromStream(stream);
+            }
+        }
 
-                if (fileName.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".jpeg", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase) ||
-                    fileName.EndsWith(".tiff", StringComparison.CurrentCultureIgnoreCase))
+        private static Image GetImage(string fileName)
+        {
+            string path = Settings.WorkingDir + fileName;
+
+            if (IsIcon(fileName))
+            {
+                using (Icon icon = new Icon(path))
                 {
-                    Stream stream = GitCommands.GitCommands.GetFileStream(guid);
-                    Image images;
-
-                    if (fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase))
-                        images = new Icon(stream).ToBitmap();
-                    else
-                        images = Image.FromStream(stream);
-
-                    stream.Close();
-
-                    PictureBox.Visible = true;
-                    TextEditor.Visible = false;
-
-                    if (images.Size.Height > PictureBox.Size.Height ||
-                        images.Size.Width > PictureBox.Size.Width)
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                    }
-                    else
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                    }
-                    PictureBox.Image = images;
+                    return icon.ToBitmap();
                 }
-                else
-                    if (IsBinaryFile(fileName))
-                    {
-                        ClearImage();
-                        TextEditor.Text = "Binary file: " + fileName;
-                    }
-                    else
-                    {
-                        ClearImage();
-                        EditorOptions.SetSyntax(TextEditor, fileName);
-
-                        TextEditor.Text = GitCommands.GitCommands.GetFileText(guid);
-                    }
             }
-            catch
+            
+            using (Image fileImage = Image.FromFile(path))
             {
-                TextEditor.Text = "Unsupported file";
+                return (Image)fileImage.Clone();
             }
-            TextEditor.Refresh();
+        }
+
+        private static string GetFileText(string fileName)
+        {
+            string path = Settings.WorkingDir + fileName;
+
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            return FileReader.ReadFileContent(path, Encoding.ASCII);
+        }
+
+        private void ResetForImage()
+        {
+            Reset(false, false);
+            TextEditor.SetHighlighting("Default");
+        }
+
+        private void ResetForText(string fileName)
+        {
+            Reset(false, true);
+
+            if (fileName == null)
+                TextEditor.SetHighlighting("Default");
+            else
+                EditorOptions.SetSyntax(TextEditor, fileName);
+        }
+
+        private void ResetForDiff()
+        {
+            Reset(true, true);
+            TextEditor.SetHighlighting("Patch");
+        }
+
+        private void Reset(bool diff, bool text)
+        {
+            EnableDiffContextMenu(diff);
+            ClearImage();
+            PictureBox.Visible = !text;
+            TextEditor.Visible = text;
+        }
+
+        private void ClearImage()
+        {
+            PictureBox.ImageLocation = "";
+
+            if (PictureBox.Image != null)
+            {
+                PictureBox.Image.Dispose();
+                PictureBox.Image = null;
+            }
         }
 
         private void TextEditor_KeyPress(object sender, KeyPressEventArgs e)

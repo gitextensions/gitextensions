@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -65,6 +65,7 @@
     <Compile Include="ApplyPatch.designer.cs">
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="AsyncLoader.cs" />
     <Compile Include="Browse.cs">
       <SubType>Form</SubType>
     </Compile>

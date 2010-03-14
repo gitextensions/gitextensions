@@ -125,7 +125,7 @@ namespace GitUI
         private void ViewCurrentChanges()
         {
             Cursor.Current = Cursors.WaitCursor;
-            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, "Patch", false);
+            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
         }
 
         public bool NeedRefresh = false;

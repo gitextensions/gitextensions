@@ -192,7 +192,7 @@ namespace GitUI
             } else
             if (item.IsTracked)
             {
-                SelectedDiff.ViewCurrentChanges(item.Name, "Patch", staged);
+                SelectedDiff.ViewCurrentChanges(item.Name, staged);
             }
             else
             {
