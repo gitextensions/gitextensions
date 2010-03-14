@@ -131,13 +131,20 @@ namespace GitUI
             Loading.Visible = true;
             AddFiles.Enabled = false;
 
-            InitializedStaged();
+            InitializedStagedAsync();
 
             Commit.Focus();
             AcceptButton = Commit;
         }
 
         private void InitializedStaged()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+            Staged.DataSource = GitCommands.GitCommands.GetStagedFiles();
+        }
+
+        private void InitializedStagedAsync()
         {
             Cursor.Current = Cursors.WaitCursor;
 
