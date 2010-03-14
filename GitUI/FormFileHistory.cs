@@ -73,8 +73,6 @@ namespace GitUI
 
         private void UpdateSelectedFileViewers()
         {
-            Cursor.Current = Cursors.WaitCursor;
-
             List<GitRevision> selectedRows = FileChanges.GetRevisions();
 
             if (selectedRows.Count == 0) return;
@@ -106,14 +104,12 @@ namespace GitUI
 
             if (selectedRows.Count == 2)
             {
-                {
-                    IGitItem revision1 = selectedRows[0];
-                    IGitItem revision2 = selectedRows[1];
+                IGitItem revision1 = selectedRows[0];
+                IGitItem revision2 = selectedRows[1];
 
-                    if (tabControl1.SelectedTab == DiffTab)
-                    {
-                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision2.Guid, fileName, Diff.GetExtraDiffArguments()).Text);
-                    }
+                if (tabControl1.SelectedTab == DiffTab)
+                {
+                    Diff.ViewPatch(() => GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision2.Guid, fileName, Diff.GetExtraDiffArguments()).Text);
                 }
             }
             else
@@ -123,7 +119,7 @@ namespace GitUI
 
                     if (tabControl1.SelectedTab == DiffTab)
                     {
-                        Diff.ViewPatch(GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName, Diff.GetExtraDiffArguments()).Text);
+                        Diff.ViewPatch(() => GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName, Diff.GetExtraDiffArguments()).Text);
                     }
                 }
                 else
