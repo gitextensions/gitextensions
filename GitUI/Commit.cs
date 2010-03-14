@@ -179,7 +179,6 @@ namespace GitUI
         private bool currentItemStaged;
         protected void ShowChanges(GitItemStatus item, bool staged)
         {
-            Cursor.Current = Cursors.WaitCursor;
             currentItem = item;
             currentItemStaged = staged;
 
