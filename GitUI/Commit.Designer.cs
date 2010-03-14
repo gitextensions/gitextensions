@@ -327,6 +327,7 @@
             this.Unstaged.AllowUserToAddRows = false;
             this.Unstaged.AllowUserToDeleteRows = false;
             this.Unstaged.AllowUserToOrderColumns = true;
+            this.Unstaged.AllowUserToResizeRows = false;
             this.Unstaged.AutoGenerateColumns = false;
             this.Unstaged.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Unstaged.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -556,6 +557,7 @@
             // 
             this.Staged.AllowUserToAddRows = false;
             this.Staged.AllowUserToDeleteRows = false;
+            this.Staged.AllowUserToResizeRows = false;
             this.Staged.AutoGenerateColumns = false;
             this.Staged.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Staged.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
