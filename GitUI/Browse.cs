@@ -957,32 +957,35 @@ namespace GitUI
 
         private void ShowSelectedFileDiff()
         {
-            if (DiffFiles.SelectedItem is string)
+            string selectedItem = DiffFiles.SelectedItem as string;
+
+            if (selectedItem == null)
+                return;
+
+            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+            DiffText.ViewPatch(delegate
             {
-                if (RevisionGrid.GetRevisions().Count == 0)
-                    return;
+                Patch selectedPatch = GetSelectedPatch(revisions, selectedItem);
 
-                Patch selectedPatch = null;
+                if (selectedPatch == null)
+                    return String.Empty;
 
-                if (RevisionGrid.GetRevisions().Count == 2)
-                {
-                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid, (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
-                }
-                else
-                {
-                    GitRevision revision = RevisionGrid.GetRevisions()[0];
-                    selectedPatch = GitCommands.GitCommands.GetSingleDiff(revision.Guid, revision.ParentGuids[0], (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
-                }
+                return selectedPatch.Text;
+            });
+        }
 
-                if (selectedPatch != null)
-                {
-                    DiffText.ViewPatch(selectedPatch.Text);
-                }
-                else
-                {
-                    DiffText.ViewText("", "");
-                }
+        private Patch GetSelectedPatch(IList<GitRevision> revisions, string fileName)
+        {
+            if (revisions.Count == 2)
+            {
+                return GitCommands.GitCommands.GetSingleDiff(revisions[0].Guid, revisions[1].Guid, fileName, DiffText.GetExtraDiffArguments());
             }
+
+            return GitCommands.GitCommands.GetSingleDiff(revisions[0].Guid, revisions[0].ParentGuids[0], fileName, DiffText.GetExtraDiffArguments());
         }
 
         private void changelogToolStripMenuItem_Click(object sender, EventArgs e)
