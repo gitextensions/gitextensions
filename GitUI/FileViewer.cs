@@ -254,29 +254,34 @@ namespace GitUI
         {
             using (Stream stream = Git.GetFileStream(guid))
             {
-                if (IsIcon(fileName))
-                    return new Icon(stream).ToBitmap();
-                
-                return Image.FromStream(stream);
+                return CreateImage(fileName, stream);
             }
         }
 
         private static Image GetImage(string fileName)
         {
-            string path = Settings.WorkingDir + fileName;
+            using (Stream stream = File.OpenRead(Settings.WorkingDir + fileName))
+            {
+                return CreateImage(fileName, stream);
+            }
+        }
 
+        private static Image CreateImage(string fileName, Stream stream)
+        {
             if (IsIcon(fileName))
             {
-                using (Icon icon = new Icon(path))
+                using (Icon icon = new Icon(stream))
                 {
                     return icon.ToBitmap();
                 }
             }
-            
-            using (Image fileImage = Image.FromFile(path))
-            {
-                return (Image)fileImage.Clone();
-            }
+
+            return new Bitmap(CreateCopy(stream));
+        }
+
+        private static MemoryStream CreateCopy(Stream stream)
+        {
+            return new MemoryStream(new BinaryReader(stream).ReadBytes((int)stream.Length));
         }
 
         private static string GetFileText(string fileName)
