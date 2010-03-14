@@ -2427,7 +2427,8 @@ namespace GitCommands
                 process.Start();
 
                 StreamCopy(process.StandardOutput.BaseStream, newStream);
-                
+                newStream.Position = 0;
+
                 process.WaitForExit();
 
                 return newStream;
