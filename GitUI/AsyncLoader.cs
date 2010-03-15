@@ -69,10 +69,15 @@ namespace GitUI
                 this.onError = onError;
             }
 
+            public void Cancel()
+            {
+                cancelled = true;
+            }
+
             public void RunAsync()
             {
                 if (cancelled) return;
-                ThreadPool.QueueUserWorkItem(delegate
+                RunOnWorker(delegate
                 {
                     try
                     {
@@ -80,7 +85,7 @@ namespace GitUI
                         T content = loadContent();
 
                         if (cancelled) return;
-                        BeginInvoke(delegate
+                        RunOnUI(delegate
                         {
                             try
                             {
@@ -96,7 +101,8 @@ namespace GitUI
                     }
                     catch (Exception exception)
                     {
-                        BeginInvoke(delegate
+                        if (cancelled) return;
+                        RunOnUI(delegate
                         {
                             if (cancelled) return;
                             onError(exception);
@@ -105,14 +111,14 @@ namespace GitUI
                 });
             }
 
-            private void BeginInvoke(Action action)
+            private void RunOnWorker(Action action)
             {
-                control.BeginInvoke(action, null);
+                ThreadPool.QueueUserWorkItem(_ => action());
             }
 
-            public void Cancel()
+            private void RunOnUI(Action action)
             {
-                cancelled = true;
+                control.BeginInvoke(action, null);
             }
         }
     }
