@@ -436,8 +436,10 @@ namespace GitUI
 
             GitRevision prevRevision = null;
             GitRevision nextRevision = null;
-            
-            for (int r = firstVisibleRow; r < Math.Min(RevisionList.Count, firstVisibleRow + numberOfVisibleRows); r++)
+
+            int lastVisibleRow = Math.Min(RevisionList.Count - 1, firstVisibleRow + numberOfVisibleRows);
+
+            for (int r = firstVisibleRow; r <= lastVisibleRow; r++)
             {
                 revision = RevisionList[r];
 
