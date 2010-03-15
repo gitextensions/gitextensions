@@ -115,9 +115,16 @@ namespace GitUI
                 ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
                 ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
                 ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
+                ColorAddedLineDiffLabel.BackColor = Settings.DiffAddedExtraColor;
+                ColorAddedLineDiffLabel.Text = Settings.DiffAddedExtraColor.Name;
+                ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineDiffLabel.BackColor);
+
                 ColorRemovedLine.BackColor = Settings.DiffRemovedColor;
                 ColorRemovedLine.Text = Settings.DiffRemovedColor.Name;
                 ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLine.BackColor);
+                ColorRemovedLineDiffLabel.BackColor = Settings.DiffRemovedExtraColor;
+                ColorRemovedLineDiffLabel.Text = Settings.DiffRemovedExtraColor.Name;
+                ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLineDiffLabel.BackColor);
                 ColorSectionLabel.BackColor = Settings.DiffSectionColor;
                 ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
                 ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
@@ -265,6 +272,9 @@ namespace GitUI
 
             Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
             Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
+            Settings.DiffAddedExtraColor = ColorAddedLineDiffLabel.BackColor;
+            Settings.DiffRemovedExtraColor = ColorRemovedLineDiffLabel.BackColor;
+
             Settings.DiffSectionColor = ColorSectionLabel.BackColor;
 
             if (DefaultIcon.Checked)
@@ -1413,6 +1423,18 @@ namespace GitUI
             RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
         }
 
+
+        private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorAddedLineDiffLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
+            ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
+            ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineDiffLabel.BackColor);
+        }
+
+
         private void label28_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
@@ -1421,6 +1443,17 @@ namespace GitUI
             ColorAddedLineLabel.BackColor = colorDialog.Color;
             ColorAddedLineLabel.Text = colorDialog.Color.Name;
             ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
+        }
+
+        private void ColorRemovedLineDiffLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = ColorRemovedLineDiffLabel.BackColor;
+            colorDialog.ShowDialog();
+            ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
+            ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
+            ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLineDiffLabel.BackColor);
+
         }
 
         private void ColorRemovedLine_Click(object sender, EventArgs e)

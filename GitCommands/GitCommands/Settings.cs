@@ -143,7 +143,7 @@ namespace GitCommands
             }
         }
 
-        private static Color diffRemoved = Color.FromArgb(255, 200, 200);
+        private static Color diffRemoved = Color.FromArgb(255, 221, 221);
         public static Color DiffRemovedColor
         {
             get
@@ -156,7 +156,20 @@ namespace GitCommands
             }
         }
 
-        private static Color diffAdded = Color.FromArgb(200, 255, 200);
+        private static Color diffRemovedExtra = Color.FromArgb(255, 150, 150);
+        public static Color DiffRemovedExtraColor
+        {
+            get
+            {
+                return diffRemovedExtra;
+            }
+            set
+            {
+                diffRemovedExtra = value;
+            }
+        }
+
+        private static Color diffAdded = Color.FromArgb(221, 255, 221);
         public static Color DiffAddedColor
         {
             get
@@ -166,6 +179,19 @@ namespace GitCommands
             set
             {
                 diffAdded = value;
+            }
+        }
+
+        private static Color diffAddedExtra = Color.FromArgb(160, 255, 160);
+        public static Color DiffAddedExtraColor
+        {
+            get
+            {
+                return diffAddedExtra;
+            }
+            set
+            {
+                diffAddedExtra = value;
             }
         }
 
@@ -605,6 +631,8 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
                 Application.UserAppDataRegistry.SetValue("diffremovedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedColor));
+                Application.UserAppDataRegistry.SetValue("diffaddedextracolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedExtraColor));
+                Application.UserAppDataRegistry.SetValue("diffremovedextracolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedExtraColor));
                 Application.UserAppDataRegistry.SetValue("diffsectioncolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffSectionColor));
                 Application.UserAppDataRegistry.SetValue("revisiongraphcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColor));
                 Application.UserAppDataRegistry.SetValue("revisiongraphcolorselected", System.Drawing.ColorTranslator.ToHtml(Settings.RevisionGraphColorSelected));
@@ -688,6 +716,8 @@ namespace GitCommands
                 {
                     if (Application.UserAppDataRegistry.GetValue("diffaddedcolor") != null) Settings.DiffAddedColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffaddedcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("diffremovedcolor") != null) Settings.DiffRemovedColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffremovedcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("diffaddedextracolor") != null) Settings.DiffAddedExtraColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffaddedextracolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("diffremovedextracolor") != null) Settings.DiffRemovedExtraColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffremovedextracolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("diffsectioncolor") != null) Settings.DiffSectionColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffsectioncolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("revisiongraphcolor") != null) Settings.RevisionGraphColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected") != null) Settings.RevisionGraphColorSelected = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("revisiongraphcolorselected").ToString());
