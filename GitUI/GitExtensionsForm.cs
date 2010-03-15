@@ -3,32 +3,39 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using GitUI.Properties;
+using System.Drawing;
 
 namespace GitUI
 {
     public class GitExtensionsForm : Form
     {
+        private static Icon ApplicationIcon = GetApplicationIcon();
+
+        private static Icon GetApplicationIcon()
+        {
+            int randomIcon = -1;
+            if (GitCommands.Settings.IconColor.Equals("random"))
+                randomIcon = new Random(DateTime.Now.Millisecond).Next(6);
+
+            if (GitCommands.Settings.IconColor.Equals("default") || randomIcon == 0)
+                return Resources.cow_head;
+            if (GitCommands.Settings.IconColor.Equals("blue") || randomIcon == 1)
+                return Resources.cow_head_blue;
+            if (GitCommands.Settings.IconColor.Equals("purple") || randomIcon == 2)
+                return Resources.cow_head_purple;
+            if (GitCommands.Settings.IconColor.Equals("green") || randomIcon == 3)
+                return Resources.cow_head_green;
+            if (GitCommands.Settings.IconColor.Equals("red") || randomIcon == 4)
+                return Resources.cow_head_red;
+            if (GitCommands.Settings.IconColor.Equals("yellow") || randomIcon == 5)
+                return Resources.cow_head_yellow;
+
+            return Resources.cow_head;
+        }
+
         public GitExtensionsForm()
         {
-            if (GitCommands.Settings.IconColor.Equals("default"))
-                this.Icon = Resources.cow_head;
-            else
-            if (GitCommands.Settings.IconColor.Equals("blue"))
-                this.Icon = Resources.cow_head_blue;
-            else
-            if (GitCommands.Settings.IconColor.Equals("purple"))
-                this.Icon = Resources.cow_head_purple;
-            else
-            if (GitCommands.Settings.IconColor.Equals("green"))
-                this.Icon = Resources.cow_head_green;
-            else
-            if (GitCommands.Settings.IconColor.Equals("red"))
-                this.Icon = Resources.cow_head_red;
-            else
-            if (GitCommands.Settings.IconColor.Equals("yellow"))
-                this.Icon = Resources.cow_head_yellow;
-            else
-                this.Icon = Resources.cow_head;
+            this.Icon = ApplicationIcon;
 
             if (Application.OpenForms.Count > 0)
                 this.ShowInTaskbar = false;

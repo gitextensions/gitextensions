@@ -18,7 +18,7 @@ namespace GitUI
         public bool TreatAllFilesAsText { get; set; }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
-        
+
         private readonly AsyncLoader async;
 
         private void EnableDiffContextMenu(bool enable)
@@ -129,8 +129,68 @@ namespace GitUI
             async.Load(loadPatchText, ViewPatch);
         }
 
+        private void AddExtraPatchHighlighting()
+        {
+            IDocument document = TextEditor.Document;
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
+
+            Color color;
+
+            for (int line = 0; line+3 < document.TotalNumberOfLines; line++)
+            {
+                LineSegment lineSegment1 = document.GetLineSegment(line);
+                LineSegment lineSegment2 = document.GetLineSegment(line+1);
+                LineSegment lineSegment3 = document.GetLineSegment(line+2);
+                LineSegment lineSegment4 = document.GetLineSegment(line+3);
+
+                if (document.GetCharAt(lineSegment1.Offset) == ' ' &&
+                    document.GetCharAt(lineSegment2.Offset) == '-' &&
+                    document.GetCharAt(lineSegment3.Offset) == '+' &&
+                    document.GetCharAt(lineSegment4.Offset) == ' ')
+                {
+                    int beginOffset = 0;
+                    int endOffset = lineSegment3.Length;
+                    int reverseOffset = 0;
+
+                    for (; beginOffset < endOffset; beginOffset++)
+                    {
+                        if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+'))
+                            if (!document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-'))
+                                if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(document.GetCharAt(lineSegment2.Offset + beginOffset)))
+                                    break;
+                    }
+
+                    for (; endOffset > beginOffset; endOffset--)
+                    {
+                        reverseOffset = lineSegment3.Length - endOffset;
+
+                        if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).Equals('+'))
+                            if (!document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset).Equals('-'))
+                                if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset)))
+                                    break;
+                    }
+
+                    if (lineSegment3.Length - beginOffset - reverseOffset > 0)
+                    {
+                        color = Color.Green;
+                        markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset, lineSegment3.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
+                        color = Settings.DiffAddedColor;
+                    }
+
+                    if (lineSegment2.Length - beginOffset - reverseOffset > 0)
+                    {
+                        color = Color.Red;
+                        markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset, lineSegment2.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
+                    }
+                    //END FIND CHANGED CHARS IN CHANGES
+                }
+            }
+        }
+
         private void AddPatchHighlighting()
         {
+            AddExtraPatchHighlighting();
+
             IDocument document = TextEditor.Document;
             MarkerStrategy markerStrategy = document.MarkerStrategy;
 

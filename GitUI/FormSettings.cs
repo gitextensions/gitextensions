@@ -157,6 +157,7 @@ namespace GitUI
                 PurpleIcon.Checked = GitCommands.Settings.IconColor.Equals("purple", StringComparison.CurrentCultureIgnoreCase);
                 RedIcon.Checked = GitCommands.Settings.IconColor.Equals("red", StringComparison.CurrentCultureIgnoreCase);
                 YellowIcon.Checked = GitCommands.Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
+                RandomIcon.Checked = GitCommands.Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
                 GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.tool");
 
@@ -278,6 +279,8 @@ namespace GitUI
                 GitCommands.Settings.IconColor = "red";
             if (YellowIcon.Checked)
                 GitCommands.Settings.IconColor = "yellow";
+            if (RandomIcon.Checked)
+                GitCommands.Settings.IconColor = "random";
 
             EnableSettings();
 
@@ -1486,6 +1489,16 @@ namespace GitUI
                 MergeToolCmd.Enabled = false;
             else
                 MergeToolCmd.Enabled = true;
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox5_Enter(object sender, EventArgs e)
+        {
+
         }
 
 
