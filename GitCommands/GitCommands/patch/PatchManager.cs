@@ -109,7 +109,7 @@ namespace PatchApply
                     if (line.Length > 0 && line.StartsWith("+"))
                     {
                         if (line.Length > 4 && line.StartsWith("+ï»¿"))
-                            patch.Text += line.Substring(4);
+                            patch.AppendText(line.Substring(4));
                         else
                         if (line.Length > 1)
                             patch.FileTextB += line.Substring(1);
@@ -439,7 +439,7 @@ namespace PatchApply
                 }
 
                 if (patch != null)
-                    patch.Text += input + "\n";
+                    patch.AppendTextLine(input);
 
                 if ((input = re.ReadLine()) == null)
                     break;

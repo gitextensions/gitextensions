@@ -6,6 +6,8 @@ namespace PatchApply
 {
     public class Patch
     {
+        private StringBuilder textBuilder;
+
         public Patch()
         {
             Apply = true;
@@ -27,7 +29,6 @@ namespace PatchApply
         }
 
         public FileType File { get; set; }
-        public string Text { get; set; }
         public string FileNameA { get; set; }
         public string FileNameB { get; set; }
         public string FileTextB { get; set; }
@@ -37,5 +38,25 @@ namespace PatchApply
         public List<int> BookMarks { get; set; }
 
         public PatchType Type { get; set; }
+
+        public string Text
+        { 
+            get { return textBuilder == null ? null : textBuilder.ToString(); }
+        }
+
+        public void AppendText(string text)
+        {
+            GetTextBuilder().Append(text);
+        }
+
+        public void AppendTextLine(string line)
+        {
+            GetTextBuilder().Append(line).Append('\n');
+        }
+
+        private StringBuilder GetTextBuilder()
+        {
+            return textBuilder ?? (textBuilder = new StringBuilder());
+        }
     }
 }
