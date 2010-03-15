@@ -89,6 +89,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.RandomIcon = new System.Windows.Forms.RadioButton();
             this.YellowIcon = new System.Windows.Forms.RadioButton();
             this.RedIcon = new System.Windows.Forms.RadioButton();
             this.GreenIcon = new System.Windows.Forms.RadioButton();
@@ -109,6 +110,10 @@
             this.RevisionGraphColorSelected = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.ColorRemovedLineDiffLabel = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.ColorAddedLineDiffLabel = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.ColorSectionLabel = new System.Windows.Forms.Label();
             this.ColorRemovedLine = new System.Windows.Forms.Label();
@@ -167,7 +172,6 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.RandomIcon = new System.Windows.Forms.RadioButton();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -894,6 +898,18 @@
             this.groupBox5.Text = "Application Icon";
             this.groupBox5.Enter += new System.EventHandler(this.groupBox5_Enter);
             // 
+            // RandomIcon
+            // 
+            this.RandomIcon.AutoSize = true;
+            this.RandomIcon.Location = new System.Drawing.Point(6, 187);
+            this.RandomIcon.Name = "RandomIcon";
+            this.RandomIcon.Size = new System.Drawing.Size(65, 17);
+            this.RandomIcon.TabIndex = 6;
+            this.RandomIcon.TabStop = true;
+            this.RandomIcon.Text = "Random";
+            this.RandomIcon.UseVisualStyleBackColor = true;
+            this.RandomIcon.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
             // YellowIcon
             // 
             this.YellowIcon.AutoSize = true;
@@ -976,7 +992,7 @@
             this.groupBox4.Controls.Add(this.label26);
             this.groupBox4.Location = new System.Drawing.Point(8, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(313, 205);
+            this.groupBox4.Size = new System.Drawing.Size(313, 190);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Revision graph";
@@ -1115,23 +1131,71 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label43);
+            this.groupBox3.Controls.Add(this.ColorRemovedLineDiffLabel);
+            this.groupBox3.Controls.Add(this.label45);
+            this.groupBox3.Controls.Add(this.ColorAddedLineDiffLabel);
             this.groupBox3.Controls.Add(this.label27);
             this.groupBox3.Controls.Add(this.ColorSectionLabel);
             this.groupBox3.Controls.Add(this.ColorRemovedLine);
             this.groupBox3.Controls.Add(this.label31);
             this.groupBox3.Controls.Add(this.label29);
             this.groupBox3.Controls.Add(this.ColorAddedLineLabel);
-            this.groupBox3.Location = new System.Drawing.Point(8, 214);
+            this.groupBox3.Location = new System.Drawing.Point(8, 198);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(313, 102);
+            this.groupBox3.Size = new System.Drawing.Size(313, 160);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Difference view";
             // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(6, 79);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(150, 13);
+            this.label43.TabIndex = 10;
+            this.label43.Text = "Color removed line highlighting";
+            // 
+            // ColorRemovedLineDiffLabel
+            // 
+            this.ColorRemovedLineDiffLabel.AutoSize = true;
+            this.ColorRemovedLineDiffLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorRemovedLineDiffLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorRemovedLineDiffLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorRemovedLineDiffLabel.Location = new System.Drawing.Point(208, 79);
+            this.ColorRemovedLineDiffLabel.Name = "ColorRemovedLineDiffLabel";
+            this.ColorRemovedLineDiffLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorRemovedLineDiffLabel.TabIndex = 11;
+            this.ColorRemovedLineDiffLabel.Text = "Red";
+            this.ColorRemovedLineDiffLabel.Click += new System.EventHandler(this.ColorRemovedLineDiffLabel_Click);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(6, 109);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(139, 13);
+            this.label45.TabIndex = 12;
+            this.label45.Text = "Color added line highlighting";
+            // 
+            // ColorAddedLineDiffLabel
+            // 
+            this.ColorAddedLineDiffLabel.AutoSize = true;
+            this.ColorAddedLineDiffLabel.BackColor = System.Drawing.Color.Red;
+            this.ColorAddedLineDiffLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColorAddedLineDiffLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorAddedLineDiffLabel.Location = new System.Drawing.Point(208, 109);
+            this.ColorAddedLineDiffLabel.Name = "ColorAddedLineDiffLabel";
+            this.ColorAddedLineDiffLabel.Size = new System.Drawing.Size(29, 15);
+            this.ColorAddedLineDiffLabel.TabIndex = 13;
+            this.ColorAddedLineDiffLabel.Text = "Red";
+            this.ColorAddedLineDiffLabel.Click += new System.EventHandler(this.ColorAddedLineDiffLabel_Click);
+            // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 19);
+            this.label27.Location = new System.Drawing.Point(6, 18);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(94, 13);
             this.label27.TabIndex = 4;
@@ -1143,7 +1207,7 @@
             this.ColorSectionLabel.BackColor = System.Drawing.Color.Red;
             this.ColorSectionLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ColorSectionLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorSectionLabel.Location = new System.Drawing.Point(208, 78);
+            this.ColorSectionLabel.Location = new System.Drawing.Point(208, 138);
             this.ColorSectionLabel.Name = "ColorSectionLabel";
             this.ColorSectionLabel.Size = new System.Drawing.Size(29, 15);
             this.ColorSectionLabel.TabIndex = 9;
@@ -1156,7 +1220,7 @@
             this.ColorRemovedLine.BackColor = System.Drawing.Color.Red;
             this.ColorRemovedLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ColorRemovedLine.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorRemovedLine.Location = new System.Drawing.Point(208, 19);
+            this.ColorRemovedLine.Location = new System.Drawing.Point(208, 18);
             this.ColorRemovedLine.Name = "ColorRemovedLine";
             this.ColorRemovedLine.Size = new System.Drawing.Size(29, 15);
             this.ColorRemovedLine.TabIndex = 5;
@@ -1166,7 +1230,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 78);
+            this.label31.Location = new System.Drawing.Point(6, 139);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(68, 13);
             this.label31.TabIndex = 8;
@@ -1175,7 +1239,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(6, 49);
+            this.label29.Location = new System.Drawing.Point(6, 48);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(83, 13);
             this.label29.TabIndex = 6;
@@ -1187,7 +1251,7 @@
             this.ColorAddedLineLabel.BackColor = System.Drawing.Color.Red;
             this.ColorAddedLineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ColorAddedLineLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorAddedLineLabel.Location = new System.Drawing.Point(208, 49);
+            this.ColorAddedLineLabel.Location = new System.Drawing.Point(208, 48);
             this.ColorAddedLineLabel.Name = "ColorAddedLineLabel";
             this.ColorAddedLineLabel.Size = new System.Drawing.Size(29, 15);
             this.ColorAddedLineLabel.TabIndex = 7;
@@ -1754,18 +1818,6 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
-            // RandomIcon
-            // 
-            this.RandomIcon.AutoSize = true;
-            this.RandomIcon.Location = new System.Drawing.Point(6, 187);
-            this.RandomIcon.Name = "RandomIcon";
-            this.RandomIcon.Size = new System.Drawing.Size(65, 17);
-            this.RandomIcon.TabIndex = 6;
-            this.RandomIcon.TabStop = true;
-            this.RandomIcon.Text = "Random";
-            this.RandomIcon.UseVisualStyleBackColor = true;
-            this.RandomIcon.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1958,6 +2010,10 @@
         private System.Windows.Forms.RadioButton YellowIcon;
         private System.Windows.Forms.RadioButton RedIcon;
         private System.Windows.Forms.RadioButton RandomIcon;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label ColorRemovedLineDiffLabel;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label ColorAddedLineDiffLabel;
 
     }
 }

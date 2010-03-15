@@ -172,17 +172,15 @@ namespace GitUI
 
                     if (lineSegment3.Length - beginOffset - reverseOffset > 0)
                     {
-                        color = Color.Green;
+                        color = Settings.DiffAddedExtraColor;
                         markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset, lineSegment3.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                        color = Settings.DiffAddedColor;
                     }
 
                     if (lineSegment2.Length - beginOffset - reverseOffset > 0)
                     {
-                        color = Color.Red;
+                        color = Settings.DiffRemovedExtraColor;
                         markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset, lineSegment2.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
-                    //END FIND CHANGED CHARS IN CHANGES
                 }
             }
         }
