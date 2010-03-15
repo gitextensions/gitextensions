@@ -349,17 +349,18 @@ namespace GitUI
             if (tabControl1.SelectedTab == Diff)
             {
                 DiffFiles.DataSource = null;
+                List<GitRevision> revisions = RevisionGrid.GetRevisions();
                 
-                if (RevisionGrid.GetRevisions().Count == 0)
+                if (revisions.Count == 0)
                     return;
 
-                if (RevisionGrid.GetRevisions().Count == 2)
+                if (revisions.Count == 2)
                 {
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(((GitRevision)RevisionGrid.GetRevisions()[0]).Guid, ((GitRevision)RevisionGrid.GetRevisions()[1]).Guid);
+                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                 }
                 else
                 {
-                    GitRevision revision = RevisionGrid.GetRevisions()[0];
+                    GitRevision revision = revisions[0];
 
                     if (revision.ParentGuids.Count > 0)
                         DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
