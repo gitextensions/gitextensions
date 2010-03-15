@@ -349,7 +349,6 @@ namespace GitUI
             if (tabControl1.SelectedTab == Diff)
             {
                 DiffFiles.DataSource = null;
-                DiffFiles.DisplayMember = "FileNameB"; 
                 
                 if (RevisionGrid.GetRevisions().Count == 0)
                     return;
