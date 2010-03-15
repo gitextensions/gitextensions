@@ -62,7 +62,7 @@ namespace GitUI
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyUp;
             IgnoreWhitespaceChanges = false;
 
-            async = new AsyncLoader(this);
+            async = new AsyncLoader();
             async.LoadingError += delegate
             {
                 ResetForText(null);

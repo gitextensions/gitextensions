@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 
@@ -12,6 +13,8 @@ namespace GitUI
     delegate void DataCallback(string text);
     public partial class FormProcess : GitExtensionsForm
     {
+        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+
         public FormProcess(string process, string arguments, string remote)
         {
             InitializeComponent();
@@ -246,16 +249,7 @@ namespace GitUI
 
         void gitCommand_Exited(object sender, EventArgs e)
         {
-            if (Ok.InvokeRequired)
-            {
-                // It's on a different thread, so use Invoke.
-                DoneCallback d = new DoneCallback(Done);
-                this.Invoke(d, new object[] {  });
-            }
-            else
-            {
-                Done();
-            }
+            syncContext.Post(_ => Done(), null);
         }
 
         private void Abort_Click(object sender, EventArgs e)
