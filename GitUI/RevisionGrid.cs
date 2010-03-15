@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using System.Drawing.Drawing2D;
@@ -22,7 +23,7 @@ namespace GitUI
                 ChangedCurrentBranch(this, null);
         }
 
-
+        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
         IndexWatcher indexWatcher = new IndexWatcher();
 
         public RevisionGrid()
@@ -244,11 +245,7 @@ namespace GitUI
 
         private void gitCountCommitsCommand_Exited(object sender, EventArgs e)
         {
-            if (Revisions.InvokeRequired)
-            {
-                DoneCallback d = new DoneCallback(SetRowCount);
-                this.Invoke(d, new object[] { });
-            }
+            syncContext.Post(_ => SetRowCount(), null);
         }
 
         private void InternalRefresh()
@@ -297,13 +294,7 @@ namespace GitUI
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
             RevisionList = revisionGraphCommand.Revisions;
-
-            if (Revisions.InvokeRequired)
-            {
-                // It's on a different thread, so use Invoke.
-                DoneCallback d = new DoneCallback(LoadRevisions);
-                this.Invoke(d, new object[] { });
-            }
+            syncContext.Post(_ => LoadRevisions(), null);
         }
 
         public string currentCheckout { get; set; }

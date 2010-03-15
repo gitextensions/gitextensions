@@ -13,10 +13,10 @@ using System.Collections.Specialized;
 
 namespace GitUI
 {
-    delegate void DoneCallback();
-
     public partial class FormCommit : GitExtensionsForm
     {
+        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+
         public FormCommit()
         {
             InitializeComponent();
@@ -153,11 +153,11 @@ namespace GitUI
                 bool inTheMiddleOfConflictedMerge = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
                 List<GitItemStatus> stagedFiles = GitCommands.GitCommands.GetStagedFiles();
 
-                BeginInvoke((Action)delegate
+                syncContext.Post(delegate
                 {
                     SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
                     Staged.DataSource = stagedFiles;
-                });
+                }, null);
             });
         }
 
@@ -177,17 +177,7 @@ namespace GitUI
 
         void gitCommands_Exited(object sender, EventArgs e)
         {
-            if (Unstaged.InvokeRequired)
-            {
-                // It's on a different thread, so use Invoke.
-                DoneCallback d = new DoneCallback(LoadUnstagedOutput);
-                this.Invoke(d, new object[] {});
-            }
-            else
-            {
-                LoadUnstagedOutput();
-            }
-
+            syncContext.Post(_ => LoadUnstagedOutput(), null);
         }
 
         private GitItemStatus currentItem;
@@ -638,11 +628,11 @@ namespace GitUI
                 if (string.IsNullOrEmpty(message) && File.Exists(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
                     message = File.ReadAllText(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
 
-                BeginInvoke((Action)delegate
+                syncContext.Post(delegate
                 {
                     Text = text;
                     Message.Text = message;
-                });
+                }, null);
             });
         }
 

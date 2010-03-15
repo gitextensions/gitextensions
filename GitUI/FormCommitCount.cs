@@ -4,12 +4,15 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GitUI
 {
     public partial class FormCommitCount : GitExtensionsForm
     {
+        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+
         public FormCommitCount()
         {
             InitializeComponent();
@@ -39,11 +42,7 @@ namespace GitUI
 
         void cmd_Exited(object sender, EventArgs e)
         {
-            if (CommitCount.InvokeRequired)
-            {
-                DoneCallback d = new DoneCallback(SetCount);
-                this.Invoke(d, new object[] { });
-            }
+            syncContext.Post(_ => SetCount(), null);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 
 namespace GitUI
@@ -8,20 +7,25 @@ namespace GitUI
     {
         public event EventHandler<ErrorEventArgs> LoadingError = delegate { };
 
-        private readonly ISynchronizeInvoke control;
+        private readonly SynchronizationContext context;
         private readonly object taskLock;
         private ILoadingTask currentTask;
 
-        public AsyncLoader(ISynchronizeInvoke control)
+        public AsyncLoader()
+            : this(SynchronizationContext.Current)
         {
-            this.control = control;
+        }
+
+        public AsyncLoader(SynchronizationContext context)
+        {
+            this.context = context;
             taskLock = new object();
             currentTask = new LoadingTask<object>();
         }
 
         public void Load<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            var newTask = new LoadingTask<T>(control, loadContent, onLoaded, OnLoadingError);
+            var newTask = new LoadingTask<T>(context, loadContent, onLoaded, OnLoadingError);
 
             lock (taskLock)
             {
@@ -46,7 +50,7 @@ namespace GitUI
 
         private sealed class LoadingTask<T> : ILoadingTask
         {
-            private readonly ISynchronizeInvoke control;
+            private readonly SynchronizationContext context;
             private readonly Func<T> loadContent;
             private readonly Action<T> onLoaded;
             private readonly Action<Exception> onError;
@@ -58,12 +62,12 @@ namespace GitUI
             }
 
             public LoadingTask(
-                ISynchronizeInvoke control,
+                SynchronizationContext context,
                 Func<T> loadContent,
                 Action<T> onLoaded,
                 Action<Exception> onError)
             {
-                this.control = control;
+                this.context = context;
                 this.loadContent = loadContent;
                 this.onLoaded = onLoaded;
                 this.onError = onError;
@@ -118,7 +122,7 @@ namespace GitUI
 
             private void RunOnUI(Action action)
             {
-                control.BeginInvoke(action, null);
+                context.Post(_ => action(), null);
             }
         }
     }
