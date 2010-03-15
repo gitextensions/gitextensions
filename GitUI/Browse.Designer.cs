@@ -72,7 +72,7 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.FileText = new GitUI.FileViewer();
-            this.Commit = new System.Windows.Forms.TabPage();
+            this.Diff = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
             this.DiffText = new GitUI.FileViewer();
@@ -181,7 +181,7 @@
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
-            this.Commit.SuspendLayout();
+            this.Diff.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -589,7 +589,7 @@
             // 
             this.tabControl1.Controls.Add(this.CommitInfo);
             this.tabControl1.Controls.Add(this.Tree);
-            this.tabControl1.Controls.Add(this.Commit);
+            this.tabControl1.Controls.Add(this.Diff);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -681,13 +681,13 @@
             // 
             // Commit
             // 
-            this.Commit.Controls.Add(this.splitContainer1);
-            this.Commit.Location = new System.Drawing.Point(4, 22);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(788, 260);
-            this.Commit.TabIndex = 1;
-            this.Commit.Text = "Diff";
-            this.Commit.UseVisualStyleBackColor = true;
+            this.Diff.Controls.Add(this.splitContainer1);
+            this.Diff.Location = new System.Drawing.Point(4, 22);
+            this.Diff.Name = "Diff";
+            this.Diff.Size = new System.Drawing.Size(788, 260);
+            this.Diff.TabIndex = 1;
+            this.Diff.Text = "Diff";
+            this.Diff.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
@@ -1415,7 +1415,7 @@
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
-            this.Commit.ResumeLayout(false);
+            this.Diff.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -1502,7 +1502,7 @@
         private System.Windows.Forms.ToolStripMenuItem generateOrImportKeyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
-        private System.Windows.Forms.TabPage Commit;
+        private System.Windows.Forms.TabPage Diff;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox DiffFiles;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;

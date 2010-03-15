@@ -346,7 +346,7 @@ namespace GitUI
 
         private void FillDiff()
         {
-            if (tabControl1.SelectedTab == Commit)
+            if (tabControl1.SelectedTab == Diff)
             {
                 DiffFiles.DataSource = null;
                 DiffFiles.DisplayMember = "FileNameB"; 
