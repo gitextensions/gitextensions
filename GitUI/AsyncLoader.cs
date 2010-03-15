@@ -138,15 +138,3 @@ namespace GitUI
         }
     }
 }
-
-namespace System
-{
-    // Copy of .NET 3.5 delegates, remove if GitExtensions
-    // starts targetting a newer version of .NET
-
-    public delegate void Action();
-
-    public delegate void Action<T>(T arg);
-
-    public delegate T Func<T>();
-}
