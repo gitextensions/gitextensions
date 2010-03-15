@@ -167,6 +167,7 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.RandomIcon = new System.Windows.Forms.RadioButton();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -878,6 +879,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.RandomIcon);
             this.groupBox5.Controls.Add(this.YellowIcon);
             this.groupBox5.Controls.Add(this.RedIcon);
             this.groupBox5.Controls.Add(this.GreenIcon);
@@ -886,10 +888,11 @@
             this.groupBox5.Controls.Add(this.DefaultIcon);
             this.groupBox5.Location = new System.Drawing.Point(327, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(312, 205);
+            this.groupBox5.Size = new System.Drawing.Size(312, 219);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Application Icon";
+            this.groupBox5.Enter += new System.EventHandler(this.groupBox5_Enter);
             // 
             // YellowIcon
             // 
@@ -1751,6 +1754,18 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // RandomIcon
+            // 
+            this.RandomIcon.AutoSize = true;
+            this.RandomIcon.Location = new System.Drawing.Point(6, 187);
+            this.RandomIcon.Name = "RandomIcon";
+            this.RandomIcon.Size = new System.Drawing.Size(65, 17);
+            this.RandomIcon.TabIndex = 6;
+            this.RandomIcon.TabStop = true;
+            this.RandomIcon.Text = "Random";
+            this.RandomIcon.UseVisualStyleBackColor = true;
+            this.RandomIcon.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1942,6 +1957,7 @@
         private System.Windows.Forms.RadioButton DefaultIcon;
         private System.Windows.Forms.RadioButton YellowIcon;
         private System.Windows.Forms.RadioButton RedIcon;
+        private System.Windows.Forms.RadioButton RandomIcon;
 
     }
 }
