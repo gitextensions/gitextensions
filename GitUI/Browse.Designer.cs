@@ -75,6 +75,8 @@
             this.Diff = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffText = new GitUI.FileViewer();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,6 +187,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.DiffContextMenu.SuspendLayout();
             this.TreeContextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -679,7 +682,7 @@
             this.FileText.TabIndex = 0;
             this.FileText.TreatAllFilesAsText = false;
             // 
-            // Commit
+            // Diff
             // 
             this.Diff.Controls.Add(this.splitContainer1);
             this.Diff.Location = new System.Drawing.Point(4, 22);
@@ -709,6 +712,7 @@
             // 
             // DiffFiles
             // 
+            this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.FormattingEnabled = true;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
@@ -718,6 +722,20 @@
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
+            // 
+            // DiffContextMenu
+            // 
+            this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openWithDifftoolToolStripMenuItem});
+            this.DiffContextMenu.Name = "DiffContextMenu";
+            this.DiffContextMenu.Size = new System.Drawing.Size(191, 26);
+            // 
+            // openWithDifftoolToolStripMenuItem
+            // 
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // DiffText
             // 
@@ -1419,6 +1437,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.DiffContextMenu.ResumeLayout(false);
             this.TreeContextMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1557,5 +1576,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem userManualToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanupToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
     }
 }
