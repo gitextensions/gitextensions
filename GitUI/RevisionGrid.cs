@@ -43,6 +43,7 @@ namespace GitUI
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
+            showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
 
             SetShowBranches();
             filter = "";
@@ -1018,6 +1019,13 @@ namespace GitUI
                 RefreshRevisions();
             }
 
+        }
+
+        private void showRelativeDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.RelativeDate = !showRelativeDateToolStripMenuItem.Checked;
+            showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
+            this.ForceRefreshRevisions();
         }
 
     }

@@ -16,6 +16,7 @@ namespace GitUI
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
+        private bool currentViewIsPatch = false;
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
@@ -23,6 +24,7 @@ namespace GitUI
 
         private void EnableDiffContextMenu(bool enable)
         {
+            currentViewIsPatch = enable;
             ignoreWhitespaceChangesToolStripMenuItem.Enabled = enable;
             increaseNumberOfLinesToolStripMenuItem.Enabled = enable;
             descreaseNumberOfLinesToolStripMenuItem.Enabled = enable;
@@ -460,7 +462,40 @@ namespace GitUI
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
+            {
+                string code;
+                if (currentViewIsPatch)
+                {
+                    code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
+                    
+                    if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
+                        code = code.Substring(1);
+
+                    code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
+                }
+                else
+                    code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
+
+                Clipboard.SetText(code);
+            } 
+        }
+
+        private void copyCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
                 Clipboard.SetText(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText);
+        }
+
+        private void copyPatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
+            {
+                Clipboard.SetText(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText);
+            }
+            else
+            {
+                Clipboard.SetText(TextEditor.Text);
+            }
         }
     }
 }

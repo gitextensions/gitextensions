@@ -33,6 +33,7 @@
             this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.ContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +41,7 @@
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.ContextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -76,6 +77,7 @@
             this.ContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.findToolStripMenuItem,
             this.copyToolStripMenuItem,
+            this.copyPatchToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
@@ -84,7 +86,7 @@
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem});
             this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(275, 192);
+            this.ContextMenu.Size = new System.Drawing.Size(275, 214);
             // 
             // findToolStripMenuItem
             // 
@@ -93,6 +95,14 @@
             this.findToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -139,13 +149,12 @@
             this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
             this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.treatAllFilesAsTextToolStripMenuItem_Click);
             // 
-            // copyToolStripMenuItem
+            // copyPatchToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
+            this.copyPatchToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.copyPatchToolStripMenuItem.Text = "Copy patch";
+            this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.copyPatchToolStripMenuItem_Click);
             // 
             // FileViewer
             // 
@@ -175,5 +184,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyPatchToolStripMenuItem;
     }
 }
