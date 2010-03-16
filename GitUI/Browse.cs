@@ -1334,5 +1334,21 @@ namespace GitUI
         {
             new FormCleanupRepository().ShowDialog();
         }
+
+        private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string selectedItem = DiffFiles.SelectedItem as string;
+
+            if (selectedItem == null)
+                return;
+
+            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+
+            GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
+        }
     }
 }
