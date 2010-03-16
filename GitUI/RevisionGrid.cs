@@ -23,11 +23,13 @@ namespace GitUI
                 ChangedCurrentBranch(this, null);
         }
 
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
         IndexWatcher indexWatcher = new IndexWatcher();
 
         public RevisionGrid()
         {
+            syncContext = SynchronizationContext.Current;
+
             base.InitLayout();
             InitializeComponent();
             Revisions.Columns[0].Width = 40;

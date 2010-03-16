@@ -15,10 +15,12 @@ namespace GitUI
 {
     public partial class FormCommit : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
 
         public FormCommit()
         {
+            syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
 
