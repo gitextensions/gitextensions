@@ -2,7 +2,10 @@ Changelog
 =========
 
 Version 1.90
+	Fixed bug: images in .gif and .ico format could not be displayed.
 	The application icon can be changed
+	Added extra diff highlighting
+	Added asynchronous loading of files for diffs and general viewing to improve responsiveness
 
 Version 1.89
 	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces
