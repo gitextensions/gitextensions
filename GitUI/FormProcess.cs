@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -13,13 +9,15 @@ namespace GitUI
     delegate void DataCallback(string text);
     public partial class FormProcess : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
 
         public FormProcess(string process, string arguments, string remote)
         {
+            syncContext = SynchronizationContext.Current;
+            
             InitializeComponent();
 
-            ProcessString = process;
+            ProcessString = process ?? GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;
             Remote = remote;
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
@@ -28,25 +26,13 @@ namespace GitUI
         }
 
         public FormProcess(string process, string arguments)
+            : this(process, arguments, null)
         {
-            InitializeComponent();
-
-            ProcessString = process;
-            ProcessArguments = arguments;
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
-
-            ShowDialog();
         }
 
         public FormProcess(string arguments)
+            : this(null, arguments, null)
         {
-            InitializeComponent();
-
-            ProcessString = GitCommands.Settings.GitCommand;
-            ProcessArguments = arguments;
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
-
-            ShowDialog();
         }
 
         private bool restart = false;

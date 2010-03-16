@@ -11,10 +11,12 @@ namespace GitUI
 {
     public partial class FormCommitCount : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
 
         public FormCommitCount()
         {
+            syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
         }
 
