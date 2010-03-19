@@ -143,7 +143,7 @@ namespace GitCommands
             }
         }
 
-        private static Color diffRemoved = Color.FromArgb(255, 221, 221);
+        private static Color diffRemoved = Color.FromArgb(255, 200, 200);
         public static Color DiffRemovedColor
         {
             get
@@ -169,7 +169,7 @@ namespace GitCommands
             }
         }
 
-        private static Color diffAdded = Color.FromArgb(221, 255, 221);
+        private static Color diffAdded = Color.FromArgb(200, 255, 200);
         public static Color DiffAddedColor
         {
             get
@@ -182,7 +182,7 @@ namespace GitCommands
             }
         }
 
-        private static Color diffAddedExtra = Color.FromArgb(160, 255, 160);
+        private static Color diffAddedExtra = Color.FromArgb(135, 255, 135);
         public static Color DiffAddedExtraColor
         {
             get

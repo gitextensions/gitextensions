@@ -3,6 +3,7 @@ Changelog
 
 Version 1.90
 	Fixed bug: images in .gif and .ico format could not be displayed.
+	Fixed bug: extra empty lines are shown in the blame view.
 	The application icon can be changed
 	Added extra diff highlighting for single line changes
 	Added asynchronous loading of files for diffs and general viewing to improve responsiveness
