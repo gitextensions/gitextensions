@@ -58,6 +58,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.filenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -92,7 +93,7 @@
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
             this.CloseCommitDialogTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -343,6 +344,7 @@
             this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Unstaged.Size = new System.Drawing.Size(397, 260);
             this.Unstaged.TabIndex = 0;
+            this.Unstaged.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Unstaged_MouseMove);
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
             this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
             this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
@@ -376,7 +378,7 @@
             this.toolStripSeparator5,
             this.filenameToClipboardToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(213, 192);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(213, 170);
             // 
             // ResetChanges
             // 
@@ -417,6 +419,13 @@
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
+            // 
+            // openWithDifftoolToolStripMenuItem
+            // 
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open With Difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -838,13 +847,6 @@
             this.CloseCommitDialogTooltip.ReshowDelay = 1;
             this.CloseCommitDialogTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // openWithDifftoolToolStripMenuItem
-            // 
-            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.openWithDifftoolToolStripMenuItem.Text = "Open With Difftool";
-            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
-            // 
             // FormCommit
             // 
             this.AcceptButton = this.Commit;
@@ -853,7 +855,6 @@
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(895, 648);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -967,5 +968,6 @@
         private System.Windows.Forms.ToolStripMenuItem filenameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private System.Windows.Forms.ToolTip fileTooltip;
     }
 }

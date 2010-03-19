@@ -10,6 +10,8 @@ Version 1.90
 	Added "Show relative date" option to context menu of revision grid
 	Copy from diff viewer copies code without '+', '-' or ' ' markings
 	Added "Open with difftool" option to diff view in browse dialog
+	Added tooltip to show long filenames in commit dialog 
+	Added tooltip to show long filenames in diff view of browse
 
 Version 1.89
 	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces

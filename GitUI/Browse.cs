@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using PatchApply;
 using System.IO;
 using GitUI.Properties;
-using Settings=GitCommands.Settings;
+using Settings = GitCommands.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -41,8 +41,8 @@ namespace GitUI
         private void Browse_Load(object sender, EventArgs e)
         {
             bool t = Application.MessageLoop;
-			// Restore eventual saved Windows state
-        	RestoreWindowsPositionAndState();
+            // Restore eventual saved Windows state
+            RestoreWindowsPositionAndState();
 
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
@@ -75,45 +75,45 @@ namespace GitUI
             }
         }
 
-		private void RestoreWindowsPositionAndState()
-		{
-			// this is the default
-			this.WindowState = FormWindowState.Normal;
-			this.StartPosition = FormStartPosition.WindowsDefaultBounds;
+        private void RestoreWindowsPositionAndState()
+        {
+            // this is the default
+            this.WindowState = FormWindowState.Normal;
+            this.StartPosition = FormStartPosition.WindowsDefaultBounds;
 
-			// check if the saved bounds are nonzero and visible on any screen
-			if (GitUI.Properties.Settings.Default.WindowPosition != Rectangle.Empty &&
-				IsVisibleOnAnyScreen(GitUI.Properties.Settings.Default.WindowPosition))
-			{
-				// first set the bounds
-				this.StartPosition = FormStartPosition.Manual;
-				this.DesktopBounds = GitUI.Properties.Settings.Default.WindowPosition;
+            // check if the saved bounds are nonzero and visible on any screen
+            if (GitUI.Properties.Settings.Default.WindowPosition != Rectangle.Empty &&
+                IsVisibleOnAnyScreen(GitUI.Properties.Settings.Default.WindowPosition))
+            {
+                // first set the bounds
+                this.StartPosition = FormStartPosition.Manual;
+                this.DesktopBounds = GitUI.Properties.Settings.Default.WindowPosition;
 
-				// afterwards set the window state to the saved value (which could be Maximized)
-				this.WindowState = GitUI.Properties.Settings.Default.WindowState;
-			}
-			else
-			{
-				this.StartPosition = FormStartPosition.WindowsDefaultLocation;
-			}
-		}
+                // afterwards set the window state to the saved value (which could be Maximized)
+                this.WindowState = GitUI.Properties.Settings.Default.WindowState;
+            }
+            else
+            {
+                this.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            }
+        }
 
-		/// <summary>
-		/// Check to see if a windows position is visible on any screen (multi-monitor setup)
-		/// </summary>
-		/// <param name="rect"></param>
-		/// <returns></returns>
-		private static bool IsVisibleOnAnyScreen(Rectangle rect)
-		{
-			foreach (Screen screen in Screen.AllScreens)
-			{
-				if (screen.WorkingArea.IntersectsWith(rect))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+        /// <summary>
+        /// Check to see if a windows position is visible on any screen (multi-monitor setup)
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private static bool IsVisibleOnAnyScreen(Rectangle rect)
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.WorkingArea.IntersectsWith(rect))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         void RevisionGrid_ChangedCurrentBranch(object sender, EventArgs e)
         {
@@ -153,7 +153,7 @@ namespace GitUI
             {
                 InternalInitialize(true);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -199,7 +199,7 @@ namespace GitUI
                     label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
                     label.AutoEllipsis = true;
                     label.Click += new EventHandler(label_Click);
-                   
+
 
                     ToolTip toolTip = new ToolTip();
                     toolTip.InitialDelay = 1;
@@ -265,7 +265,7 @@ namespace GitUI
 
         }
 
- 
+
         void label_Click(object sender, EventArgs e)
         {
             LinkLabel label = sender as LinkLabel;
@@ -303,7 +303,7 @@ namespace GitUI
             }
             indexWatcher.Reset();
         }
-        
+
         private void FillFileTree()
         {
             if (tabControl1.SelectedTab == Tree)
@@ -350,7 +350,7 @@ namespace GitUI
             {
                 DiffFiles.DataSource = null;
                 List<GitRevision> revisions = RevisionGrid.GetRevisions();
-                
+
                 if (revisions.Count == 0)
                     return;
 
@@ -424,20 +424,20 @@ namespace GitUI
             object item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-            if (((GitItem)item).ItemType == "blob")
-            {
-                SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.FileName = Settings.WorkingDir + ((GitItem)item).FileName;
-                fileDialog.AddExtension = true;
-                fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
-                fileDialog.Filter = "Current format (*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
-                //GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
-
-                if (fileDialog.ShowDialog() == DialogResult.OK)
+                if (((GitItem)item).ItemType == "blob")
                 {
-                    GitCommands.GitCommands.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileDialog.FileName + "\"");
+                    SaveFileDialog fileDialog = new SaveFileDialog();
+                    fileDialog.FileName = Settings.WorkingDir + ((GitItem)item).FileName;
+                    fileDialog.AddExtension = true;
+                    fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
+                    fileDialog.Filter = "Current format (*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
+                    //GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
+
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        GitCommands.GitCommands.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileDialog.FileName + "\"");
+                    }
                 }
-            }
         }
 
         public void OpenWithOnClick(object sender, EventArgs e)
@@ -456,7 +456,7 @@ namespace GitUI
                     fileName = Path.GetTempPath() + fileName;
                     GitCommands.GitCommands.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\" > \"" + fileName + "\"");
                     OpenWith.OpenAs(fileName);
-                }            
+                }
         }
 
         public void OpenOnClick(object sender, EventArgs e)
@@ -484,7 +484,7 @@ namespace GitUI
             {
                 TreeNode subNode = node.Add(item.Name);
                 subNode.Tag = item;
-                
+
                 if (item is GitItem)
                 {
                     if (((GitItem)item).ItemType == "tree")
@@ -522,7 +522,7 @@ namespace GitUI
                 FillCommitInfo();
             }
             catch
-            { 
+            {
             }
         }
 
@@ -605,14 +605,14 @@ namespace GitUI
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartPushDialog());
-                Initialize();
+            if (GitUICommands.Instance.StartPushDialog()) ;
+            Initialize();
         }
 
         private void pullToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartPullDialog());
-                Initialize();
+            if (GitUICommands.Instance.StartPullDialog()) ;
+            Initialize();
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -733,7 +733,7 @@ namespace GitUI
 
         private void mergeBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartMergeBranchDialog(null)) 
+            if (GitUICommands.Instance.StartMergeBranchDialog(null))
                 Initialize();
         }
 
@@ -811,37 +811,37 @@ namespace GitUI
 
         private void FormBrowse_FormClosing(object sender, FormClosingEventArgs e)
         {
-			// Save current window position
-        	SaveWindowsPositionAndState();
+            // Save current window position
+            SaveWindowsPositionAndState();
         }
 
-		/// <summary>
-		/// Save the current form position and state to user settings.
-		/// </summary>
-		private void SaveWindowsPositionAndState()
-		{
-			switch (WindowState)
-			{
-				case FormWindowState.Normal:
-				case FormWindowState.Maximized:
-				{
-					GitUI.Properties.Settings.Default.WindowState = this.WindowState;
-					break;
-				}
+        /// <summary>
+        /// Save the current form position and state to user settings.
+        /// </summary>
+        private void SaveWindowsPositionAndState()
+        {
+            switch (WindowState)
+            {
+                case FormWindowState.Normal:
+                case FormWindowState.Maximized:
+                    {
+                        GitUI.Properties.Settings.Default.WindowState = this.WindowState;
+                        break;
+                    }
 
-				default:
-				{
-					GitUI.Properties.Settings.Default.WindowState = FormWindowState.Normal;
-					break;					
-				}
-			}
+                default:
+                    {
+                        GitUI.Properties.Settings.Default.WindowState = FormWindowState.Normal;
+                        break;
+                    }
+            }
 
-			this.Visible = false;
-			this.WindowState = FormWindowState.Normal;
+            this.Visible = false;
+            this.WindowState = FormWindowState.Normal;
 
-			GitUI.Properties.Settings.Default.WindowPosition = this.DesktopBounds;
-			GitUI.Properties.Settings.Default.Save();
-		}
+            GitUI.Properties.Settings.Default.WindowPosition = this.DesktopBounds;
+            GitUI.Properties.Settings.Default.Save();
+        }
 
         private void editgitignoreToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -901,7 +901,7 @@ namespace GitUI
         }
 
         private void generateOrImportKeyToolStripMenuItem_Click(object sender, EventArgs e)
-        {   
+        {
             GitCommands.GitCommands.Run(GitCommands.Settings.Puttygen, "");
         }
 
@@ -1031,7 +1031,7 @@ namespace GitUI
             if (GitUICommands.Instance.StartCloneDialog())
                 Initialize();
         }
-        
+
         private void Init_Click(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartInitializeDialog(GitCommands.Settings.WorkingDir);
@@ -1052,7 +1052,7 @@ namespace GitUI
 
                 proc.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -1171,7 +1171,7 @@ namespace GitUI
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void toolStripSplitStash_ButtonClick(object sender, EventArgs e)
@@ -1301,7 +1301,8 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.WorkingDir))
             {
                 Close();
-            } else
+            }
+            else
             {
                 Settings.WorkingDir = "";
 
@@ -1349,6 +1350,31 @@ namespace GitUI
 
 
             GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
+        }
+
+        private void DiffFiles_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is ListBox)
+            {
+                ListBox listBox = (ListBox)sender;
+                Point point = new Point(e.X, e.Y);
+                int hoverIndex = listBox.IndexFromPoint(point);
+                if (hoverIndex >= 0 && hoverIndex < listBox.Items.Count)
+                {
+                    string text = listBox.Items[hoverIndex].ToString();
+
+                    float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
+
+                    if (fTextWidth > DiffFiles.Width)
+                        DiffFilesTooltip.SetToolTip(listBox, text);
+                    else
+                        DiffFilesTooltip.RemoveAll();
+                }
+                else
+                {
+                    DiffFilesTooltip.RemoveAll();
+                }
+            }
         }
     }
 }

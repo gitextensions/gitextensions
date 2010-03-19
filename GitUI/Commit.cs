@@ -71,6 +71,7 @@ namespace GitUI
 
         void Unstaged_MouseMove(object sender, MouseEventArgs e)
         {
+            //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
                 !dragBoxFromMouseDown.Contains(e.X, e.Y))
@@ -97,6 +98,31 @@ namespace GitUI
                     dragBoxFromMouseDown = Rectangle.Empty;
                 }
             }
+
+            //TOOLTIP
+            if (sender is DataGridView)
+            {
+                DataGridView dataGridView = (DataGridView)sender;
+                int hoverIndex = dataGridView.HitTest(e.X, e.Y).RowIndex;
+
+                if (e.X < dataGridView.Location.X + nameDataGridViewTextBoxColumn1.Width &&
+                    hoverIndex >= 0 && hoverIndex < dataGridView.Rows.Count)
+                {
+                    string text = ((GitItemStatus)dataGridView.Rows[hoverIndex].DataBoundItem).Name;
+
+                    float fTextWidth = dataGridView.CreateGraphics().MeasureString(text, dataGridView.Font).Width;
+
+                    if (fTextWidth > nameDataGridViewTextBoxColumn1.Width)
+                        fileTooltip.SetToolTip(dataGridView, text);
+                    else
+                        fileTooltip.RemoveAll();
+                }
+                else
+                {
+                    fileTooltip.RemoveAll();
+                }
+            }
+
         }
 
         ~FormCommit()  // destructor
