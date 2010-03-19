@@ -2363,7 +2363,7 @@ namespace GitCommands
 
                         if (!string.IsNullOrEmpty(item.Text))
                             item.Text += Environment.NewLine;
-                        item.Text += itemsString.Substring(codeIndex);
+                        item.Text += itemsString.Substring(codeIndex).Trim(new char[]{'\r'});
                     }
                     
                     lastCommitGuid = commitGuid;
