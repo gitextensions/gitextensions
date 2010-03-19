@@ -158,6 +158,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -722,6 +723,7 @@
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
+            this.DiffFiles.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiffFiles_MouseMove);
             // 
             // DiffContextMenu
             // 
@@ -1578,5 +1580,6 @@
         private System.Windows.Forms.ToolStripMenuItem cleanupToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private System.Windows.Forms.ToolTip DiffFilesTooltip;
     }
 }
