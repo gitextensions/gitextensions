@@ -1365,14 +1365,17 @@ namespace GitUI
 
                     float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
 
-                    if (fTextWidth > DiffFiles.Width)
-                        DiffFilesTooltip.SetToolTip(listBox, text);
-                    else
-                        DiffFilesTooltip.RemoveAll();
+					if (fTextWidth > DiffFiles.Width)
+					{
+						if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
+							DiffFilesTooltip.SetToolTip(listBox, text);
+					}
+					else
+						DiffFilesTooltip.RemoveAll();
                 }
                 else
                 {
-                    DiffFilesTooltip.RemoveAll();
+					DiffFilesTooltip.RemoveAll();
                 }
             }
         }

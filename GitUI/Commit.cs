@@ -98,32 +98,44 @@ namespace GitUI
                     dragBoxFromMouseDown = Rectangle.Empty;
                 }
             }
+			
+			//TOOLTIP
+			if (sender is DataGridView)
+			{
+				DataGridView dataGridView = (DataGridView)sender;
+				int hoverIndex = dataGridView.HitTest(e.X, e.Y).RowIndex;
 
-            //TOOLTIP
-            if (sender is DataGridView)
-            {
-                DataGridView dataGridView = (DataGridView)sender;
-                int hoverIndex = dataGridView.HitTest(e.X, e.Y).RowIndex;
+				if (e.X < dataGridView.Location.X + nameDataGridViewTextBoxColumn1.Width &&
+					hoverIndex >= 0 && hoverIndex < dataGridView.Rows.Count)
+				{
+					string text = ((GitItemStatus)dataGridView.Rows[hoverIndex].DataBoundItem).Name;
 
-                if (e.X < dataGridView.Location.X + nameDataGridViewTextBoxColumn1.Width &&
-                    hoverIndex >= 0 && hoverIndex < dataGridView.Rows.Count)
-                {
-                    string text = ((GitItemStatus)dataGridView.Rows[hoverIndex].DataBoundItem).Name;
+					float fTextWidth = dataGridView.CreateGraphics().MeasureString(text, dataGridView.Font).Width;
 
-                    float fTextWidth = dataGridView.CreateGraphics().MeasureString(text, dataGridView.Font).Width;
+					if (fTextWidth > nameDataGridViewTextBoxColumn1.Width)
+					{
+						if (!fileTooltip.GetToolTip(dataGridView).Equals(text))
+						{
+							fileTooltip.InitialDelay = 1;
+							fileTooltip.AutomaticDelay = 1;
+							fileTooltip.AutoPopDelay = 5000;
+							fileTooltip.UseFading = false;
+							fileTooltip.UseAnimation = false;
+							fileTooltip.ReshowDelay = 1;
 
-                    if (fTextWidth > nameDataGridViewTextBoxColumn1.Width)
-                        fileTooltip.SetToolTip(dataGridView, text);
-                    else
-                        fileTooltip.RemoveAll();
-                }
-                else
-                {
-                    fileTooltip.RemoveAll();
-                }
-            }
+							fileTooltip.SetToolTip(dataGridView, text);
+						}
+					}
+					else
+						fileTooltip.RemoveAll();
+				}
+				else
+				{
+					fileTooltip.RemoveAll();
+				}
+			}
 
-        }
+		}
 
         ~FormCommit()  // destructor
         {
