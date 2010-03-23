@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.91
+	Fixed bug: tooltips drawn incorrect
+
 Version 1.90
 	Fixed bug: images in .gif and .ico format could not be displayed.
 	Fixed bug: extra empty lines are shown in the blame view.
