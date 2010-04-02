@@ -605,14 +605,14 @@ namespace GitUI
 
         private void pushToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartPushDialog()) ;
-            Initialize();
+            if (GitUICommands.Instance.StartPushDialog())
+                Initialize();
         }
 
         private void pullToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartPullDialog()) ;
-            Initialize();
+            if (GitUICommands.Instance.StartPullDialog())
+                Initialize();
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
