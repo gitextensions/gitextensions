@@ -77,8 +77,8 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-        lRet = reg.SetValue ( _T("GitExtensions2"), 
-                              _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"), 
+                                    _T("GitExtensions2") );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -98,7 +98,7 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-        lRet = reg.SetValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -117,7 +117,7 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-        lRet = reg.SetValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -136,7 +136,7 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-        lRet = reg.SetValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
