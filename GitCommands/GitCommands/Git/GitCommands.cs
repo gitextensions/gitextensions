@@ -111,7 +111,7 @@ namespace GitCommands
 
                 process.Start();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 
             }

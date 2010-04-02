@@ -44,7 +44,7 @@ namespace GitPlugin.Commands
 
                 return value;
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 MessageBox.Show("GitExtensions has insufficient permisions to check the registry.");
             }
