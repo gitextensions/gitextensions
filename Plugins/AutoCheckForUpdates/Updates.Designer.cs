@@ -95,7 +95,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button Close;
+        private new System.Windows.Forms.Button Close;
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.LinkLabel link;
         private System.Windows.Forms.ProgressBar progressBar1;

@@ -374,7 +374,7 @@
         private System.Windows.Forms.ComboBox Remotes;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button LoadSSHKey;
-        private System.Windows.Forms.ComboBox Tag;
+        private new System.Windows.Forms.ComboBox Tag;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl TabControlTagBranch;
