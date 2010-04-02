@@ -100,7 +100,7 @@ namespace GitPlugin.Commands
                 Command command = commands.Item(fullName, -1);
                 return command;
             }
-            catch (System.ArgumentException ex)
+            catch (ArgumentException)
             {
                 return null;
             }
@@ -145,7 +145,7 @@ namespace GitPlugin.Commands
                 // Try to find an existing CommandBar
                 bar = cmdBars[name];
             }
-            catch(Exception ex)
+            catch(Exception)
             {
             }
 

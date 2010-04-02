@@ -388,7 +388,7 @@ namespace GitUI
 
                 return value;
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 MessageBox.Show("GitExtensions has insufficient permisions to check the registry.");
             }
@@ -409,7 +409,7 @@ namespace GitUI
                 tw.Close();
                 GitCommands.GitCommands.RunCmd("regedit", "\"" + System.IO.Path.GetTempPath() + "GitExtensions.reg" + "\"");
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 MessageBox.Show("GitExtensions has insufficient permisions to modify the registry." + Environment.NewLine + "Please add this key to the registry manually." + Environment.NewLine + "Path:   " + root.ToString() + "\\" + subkey + Environment.NewLine + "Value:  " + key + " = " + value);
             }

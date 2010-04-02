@@ -16,8 +16,6 @@ namespace GitUI
             InitializeComponent();
         }
 
-        private bool IsDirty = false;
-
         private void FormRemotes_Load(object sender, EventArgs e)
         {
             Initialize();

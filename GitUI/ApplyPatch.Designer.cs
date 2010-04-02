@@ -213,7 +213,6 @@
         private System.Windows.Forms.TextBox PatchFileNameEdit;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.BindingSource patchBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn fileNameADataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameA;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
