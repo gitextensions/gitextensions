@@ -1680,7 +1680,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_DLL;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_DLL;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1690,7 +1690,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_DLL;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_DLL;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1722,7 +1722,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_STATIC_REGISTRY;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_STATIC_REGISTRY;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1732,7 +1732,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_STATIC_REGISTRY;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_STATIC_REGISTRY;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1742,7 +1742,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_DLL;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_DLL;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1752,7 +1752,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_DLL;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_UNICODE;_ATL_DLL;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1762,7 +1762,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
@@ -1772,7 +1772,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="1"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;$(NoInherit)"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
