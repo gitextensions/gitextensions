@@ -338,7 +338,7 @@
         private System.Windows.Forms.BindingSource gitStashBindingSource;
         private System.Windows.Forms.RichTextBox StashMessage;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button Refresh;
+        private new System.Windows.Forms.Button Refresh;
         private FileViewer View;
     }
 }

@@ -103,6 +103,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox Directory;
         private System.Windows.Forms.Button Browse;
-        private System.Windows.Forms.Button Load;
+        private new System.Windows.Forms.Button Load;
     }
 }

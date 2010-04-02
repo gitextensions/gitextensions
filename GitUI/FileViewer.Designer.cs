@@ -174,7 +174,7 @@
 
         private System.Windows.Forms.PictureBox PictureBox;
         private ICSharpCode.TextEditor.TextEditorControl TextEditor;
-        private System.Windows.Forms.ContextMenuStrip ContextMenu;
+        private new System.Windows.Forms.ContextMenuStrip ContextMenu;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;

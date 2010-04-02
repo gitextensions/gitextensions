@@ -100,6 +100,6 @@
         public System.Windows.Forms.Label Label;
         private System.Windows.Forms.Button Deleted;
         private System.Windows.Forms.Button Abort;
-        public System.Windows.Forms.Button Created;
+        public new System.Windows.Forms.Button Created;
     }
 }
