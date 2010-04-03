@@ -1069,6 +1069,7 @@ namespace GitCommands
             else
                 localbranch = "+refs/heads/" + branch + "";
 
+            /*
             string remotebranch;
             string remoteUrl = GetSetting("remote." + remote + ".url");
 
@@ -1078,10 +1079,10 @@ namespace GitCommands
             if (PathIsUrl(remote) || string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteUrl))
                 remotebranch = "";
             else
-                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
+                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";*/
 
 
-            return "fetch \"" + remote.Trim() + "\" " + localbranch + remotebranch;
+            return "fetch \"" + remote.Trim() + "\" " + localbranch /*+ remotebranch*/;
         }
 
 
