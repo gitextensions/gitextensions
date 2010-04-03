@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?include Config.wxi?>
+
+  <Product
+    Id="*" UpgradeCode="$(var.UpgradeCode)"
+    Name="$(var.ProductName) $(var.Version)"
+    Manufacturer="$(var.Manufacturer)"
+    Version="$(var.Version)"
+    Language="1033">
+
+    <Package
+      InstallerVersion="200"
+      Compressed="yes"
+      Description="$(var.ProductName)"/>
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
+
+    <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
+      Installed OR MsiNetAssemblySupport >= "2.0.50727"
+    </Condition>
+
+    <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
+
+    <?include EnableUpgrades.wxi?>
+    <?include AddRemove.wxi?>
+    
+    <UIRef Id="WixUI_GitExtensions"/>
+    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
+    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="InstallDir" Name="$(var.InstallName)">
+          <Directory Id="PuttyDir" Name="PuTTY"/>
+          <Directory Id="PluginsDir" Name="Plugins"/>
+          <Directory Id="InstallerDir" Name="Installer"/>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="InstallDir">
+      <Component Id="cow_head.ico" Guid="*">
+        <File Source="..\cow-head.ico"/>
+      </Component>
+      <Component Id="gitex.cmd" Guid="*">
+        <File Source="..\bin\gitex.cmd"/>
+      </Component>
+      <Component Id="GitExtensionsUserManual.pdf" Guid="*">
+        <File Source="..\bin\GitExtensionsUserManual.pdf"/>
+      </Component>
+      <Component Id="GitExtensions.exe" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitExtensions.exe"/>
+      </Component>
+      <Component Id="GitCommands.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitCommands.dll"/>
+      </Component>
+      <Component Id="GitUI.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUI.dll"/>
+      </Component>
+      <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\ICSharpCode.TextEditor.dll"/>
+      </Component>
+      <Component Id="SpellChecker.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\SpellChecker.dll"/>
+      </Component>
+      <Component Id="GitUIPluginInterfaces.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="PluginsDir">
+      <Component Id="AutoCheckForUpdates.dll" Guid="*">
+        <File Source="..\Plugins\AutoCheckForUpdates\bin\Release\AutoCheckForUpdates.dll"/>
+      </Component>
+      <Component Id="AutoCompileSubmodules.dll" Guid="*">
+        <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+      </Component>
+      <Component Id="GitStatistics.dll" Guid="*">
+        <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="PuttyDir">
+      <Component Id="plink.exe" Guid="*">
+        <File Source="..\Bin\plink.exe"/>
+      </Component>
+      <Component Id="pageant.exe" Guid="*">
+        <File Source="..\Bin\pageant.exe"/>
+      </Component>
+      <Component Id="puttygen.exe" Guid="*">
+        <File Source="..\Bin\puttygen.exe"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="InstallerDir">
+      <Component Id="KDiff3Setup_0.9.95.exe" Guid="*">
+        <File Source="..\Bin\KDiff3Setup_0.9.95.exe"/>
+      </Component>
+      <Component Id="Git_1.6.5.1_preview20091022.exe" Guid="*">
+        <File Source="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="StartMenuDir">
+      <Component Id="StartMenuShortcuts" Guid="*">
+        <RemoveFolder Id="StartMenuDir" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.InstallName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        <Shortcut
+          Id="GitExtensions.exe_shortcut"
+          Name="$(var.ProductName)"
+          Description="$(var.ProductName)"
+          Icon="cow_head.ico"
+          Target="[InstallDir]GitExtensions.exe"
+          WorkingDirectory="InstallDir"/>
+        <Shortcut
+          Id="GitExtensionsUserManual.pdf_shortcut"
+          Name="User Manual"
+          Description="$(var.ProductName) User Manual"
+          Target="[InstallDir]GitExtensionsUserManual.pdf"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="GitExtensions" Title="Git Extensions" Level="1">
+      <ComponentRef Id="cow_head.ico"/>
+      <ComponentRef Id="gitex.cmd"/>
+      <ComponentRef Id="GitExtensionsUserManual.pdf"/>
+      <ComponentRef Id="GitExtensions.exe"/>
+      <ComponentRef Id="GitCommands.dll"/>
+      <ComponentRef Id="GitUI.dll"/>
+      <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="GitUIPluginInterfaces.dll"/>
+
+      <ComponentRef Id="AutoCheckForUpdates.dll"/>
+      <ComponentRef Id="AutoCompileSubmodules.dll"/>
+      <ComponentRef Id="GitStatistics.dll"/>
+
+      <ComponentRef Id="plink.exe"/>
+      <ComponentRef Id="pageant.exe"/>
+      <ComponentRef Id="puttygen.exe"/>
+
+      <ComponentRef Id="StartMenuShortcuts"/>
+    </Feature>
+
+    <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1">
+      <ComponentRef Id="KDiff3Setup_0.9.95.exe"/>
+    </Feature>
+
+    <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1">
+      <ComponentRef Id="Git_1.6.5.1_preview20091022.exe"/>
+    </Feature>
+
+  </Product>
+
+</Wix>
