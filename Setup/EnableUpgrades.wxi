@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  
+  <Property Id="PREVIOUSVERSIONSINSTALLED" Secure="yes" />
+
+  <Upgrade Id="$(var.UpgradeCode)">
+    <UpgradeVersion
+       Minimum="1.0.0.0" Maximum="99.0.0.0"
+       Property="PREVIOUSVERSIONSINSTALLED"
+       IncludeMinimum="yes" IncludeMaximum="no" />
+  </Upgrade>
+
+  <InstallExecuteSequence>
+    <RemoveExistingProducts After="InstallInitialize" />
+  </InstallExecuteSequence>
+  
+</Include>
