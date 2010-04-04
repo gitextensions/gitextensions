@@ -23,9 +23,9 @@
 
     <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
 
-    <?include EnableUpgrades.wxi?>
     <?include AddRemove.wxi?>
-    
+    <?include EnableUpgrades.wxi?>
+
     <UIRef Id="WixUI_GitExtensions"/>
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
