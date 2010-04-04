@@ -71,6 +71,13 @@
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
         <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
       </Component>
+
+      <Component Id="checksettings.reg" Guid="*">
+        <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="InstallDir.reg" Guid="*">
+        <RegistryValue Name="InstallDir" Value="[InstallDir]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="PluginsDir">
@@ -94,6 +101,19 @@
       </Component>
       <Component Id="puttygen.exe" Guid="*">
         <File Source="..\Bin\puttygen.exe"/>
+      </Component>
+
+      <Component Id="gitssh.reg" Guid="*">
+        <RegistryValue Name="gitssh" Value="[InstallDir]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="plink.reg" Guid="*">
+        <RegistryValue Name="plink" Value="[InstallDir]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="pageant.reg" Guid="*">
+        <RegistryValue Name="pageant" Value="[InstallDir]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="puttygen.reg" Guid="*">
+        <RegistryValue Name="puttygen" Value="[InstallDir]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
     </DirectoryRef>
 
@@ -150,14 +170,20 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
       <ComponentRef Id="SpellChecker.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
+      <ComponentRef Id="checksettings.reg"/>
+      <ComponentRef Id="InstallDir.reg"/>
 
       <ComponentRef Id="AutoCheckForUpdates.dll"/>
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
 
+      <ComponentRef Id="gitssh.reg"/>
       <ComponentRef Id="plink.exe"/>
+      <ComponentRef Id="plink.reg"/>
       <ComponentRef Id="pageant.exe"/>
+      <ComponentRef Id="pageant.reg"/>
       <ComponentRef Id="puttygen.exe"/>
+      <ComponentRef Id="puttygen.reg"/>
 
       <ComponentRef Id="GitExtensions.shortcut"/>
       <ComponentRef Id="UserManual.shortcut"/>
