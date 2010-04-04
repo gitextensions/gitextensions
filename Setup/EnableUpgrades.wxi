@@ -5,7 +5,7 @@
 
   <Upgrade Id="$(var.UpgradeCode)">
     <UpgradeVersion
-       Minimum="1.0.0.0" Maximum="99.0.0.0"
+       Minimum="0.0.0.0" Maximum="99.0.0.0"
        Property="PREVIOUSVERSIONSINSTALLED"
        IncludeMinimum="yes" IncludeMaximum="no" />
   </Upgrade>
