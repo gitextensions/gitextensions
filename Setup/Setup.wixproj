@@ -21,6 +21,8 @@
     <WixVariables>
     </WixVariables>
     <DefineConstants>Version=1.92</DefineConstants>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <VerboseOutput>True</VerboseOutput>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CustomizeDlg.wxs" />
