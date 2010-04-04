@@ -72,6 +72,15 @@
         <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
       </Component>
 
+      <Component Id="GitExtensionsShellEx32.dll" Guid="*">
+        <File Name="GitExtensionsShellEx32.dll" Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"/>
+        <Condition>Not VersionNT64</Condition>
+      </Component>
+      <Component Id="GitExtensionsShellEx64.dll" Guid="*">
+        <File Name="GitExtensionsShellEx64.dll" Source="..\SimpleExt\ReleaseMinDependency64\GitExtensionsShellEx.dll"/>
+        <Condition>VersionNT64</Condition>
+      </Component>
+
       <Component Id="checksettings.reg" Guid="*">
         <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
@@ -160,7 +169,7 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id="GitExtensions" Title="Git Extensions" Level="1">
+    <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
       <ComponentRef Id="cow_head.ico"/>
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
@@ -187,14 +196,20 @@
 
       <ComponentRef Id="GitExtensions.shortcut"/>
       <ComponentRef Id="UserManual.shortcut"/>
+      
+      <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
+        <ComponentRef Id="GitExtensionsShellEx32.dll"/>
+        <ComponentRef Id="GitExtensionsShellEx64.dll"/>
+      </Feature>
     </Feature>
 
-    <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1">
-      <ComponentRef Id="KDiff3Setup_0.9.95.exe"/>
-    </Feature>
-
-    <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1">
-      <ComponentRef Id="Git_1.6.5.1_preview20091022.exe"/>
+    <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
+      <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1">
+        <ComponentRef Id="Git_1.6.5.1_preview20091022.exe"/>
+      </Feature>
+      <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1">
+        <ComponentRef Id="KDiff3Setup_0.9.95.exe"/>
+      </Feature>
     </Feature>
 
   </Product>
