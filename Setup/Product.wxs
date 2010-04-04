@@ -107,21 +107,36 @@
     </DirectoryRef>
 
     <DirectoryRef Id="StartMenuDir">
-      <Component Id="StartMenuShortcuts" Guid="*">
-        <RemoveFolder Id="StartMenuDir" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.InstallName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      <Component Id="GitExtensions.shortcut" Guid="*">
         <Shortcut
-          Id="GitExtensions.exe_shortcut"
+          Id="GitExtensions.shortcut"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
           Icon="cow_head.ico"
           Target="[InstallDir]GitExtensions.exe"
           WorkingDirectory="InstallDir"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="GitExtensions.shortcut" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="GitExtensions.shortcut"
+          On="uninstall"/>
+      </Component>
+
+      <Component Id="UserManual.shortcut" Guid="*">
         <Shortcut
-          Id="GitExtensionsUserManual.pdf_shortcut"
+          Id="UserManual.shortcut"
           Name="User Manual"
           Description="$(var.ProductName) User Manual"
           Target="[InstallDir]GitExtensionsUserManual.pdf"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="UserManual.shortcut" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="UserManual.shortcut"
+          On="uninstall"/>
       </Component>
     </DirectoryRef>
 
@@ -144,7 +159,8 @@
       <ComponentRef Id="pageant.exe"/>
       <ComponentRef Id="puttygen.exe"/>
 
-      <ComponentRef Id="StartMenuShortcuts"/>
+      <ComponentRef Id="GitExtensions.shortcut"/>
+      <ComponentRef Id="UserManual.shortcut"/>
     </Feature>
 
     <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1">
