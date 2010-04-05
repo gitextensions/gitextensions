@@ -72,13 +72,30 @@
         <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
       </Component>
 
+      <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
+      
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
-        <File Name="GitExtensionsShellEx32.dll" Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"/>
         <Condition>Not VersionNT64</Condition>
+        <File
+          Name="GitExtensionsShellEx32.dll"
+          Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"
+          KeyPath="yes"/>
+        
+        <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
+          <?include RegisterShellExtension.wxi?>
+        <?endforeach?>
       </Component>
-      <Component Id="GitExtensionsShellEx64.dll" Guid="*">
-        <File Name="GitExtensionsShellEx64.dll" Source="..\SimpleExt\ReleaseMinDependency64\GitExtensionsShellEx.dll"/>
+
+      <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
         <Condition>VersionNT64</Condition>
+        <File
+          Name="GitExtensionsShellEx64.dll"
+          Source="..\SimpleExt\ReleaseMinDependency64\GitExtensionsShellEx.dll"
+          KeyPath="yes"/>
+
+        <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
+          <?include RegisterShellExtension.wxi?>
+        <?endforeach?>
       </Component>
 
       <Component Id="checksettings.reg" Guid="*">
