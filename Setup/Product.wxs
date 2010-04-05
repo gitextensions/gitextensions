@@ -269,10 +269,10 @@
       </Feature>
 
       <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
-      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand=""/>
+      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
 
       <Binary Id="msysgit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
-      <CustomAction Id="msysgit" BinaryKey="msysgit" ExeCommand=""/>
+      <CustomAction Id="msysgit" BinaryKey="msysgit" ExeCommand="" Return="ignore"/>
 
       <InstallExecuteSequence>
         <Custom Action="KDiff" After="CostFinalize">
