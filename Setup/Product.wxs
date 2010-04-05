@@ -253,7 +253,7 @@
       <?endforeach?>
     </Feature>
 
-    <?ifdef IncludeRequiredSoftware?>
+    <?if $(var.IncludeRequiredSoftware) = 1 ?>
       <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
         <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1"/>
         <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1"/>

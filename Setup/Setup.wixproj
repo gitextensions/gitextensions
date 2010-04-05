@@ -2,27 +2,28 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Version Condition=" '$(Version)' == '' ">0.00</Version>
+    <IncludeRequiredSoftware Condition=" '$(IncludeRequiredSoftware)' == '' ">1</IncludeRequiredSoftware>
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{9380c29c-3c7f-47a8-a4c9-a5ee9d7b386a}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>GitExtensionsSetupComplete</OutputName>
+    <OutputName>GitExtensions</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;Version=1.92</DefineConstants>
+    <DefineConstants>Debug;Version=$(Version);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <WixVariables>
-    </WixVariables>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <VerboseOutput>True</VerboseOutput>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+    <DefineConstants>Version=$(Version);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
@@ -37,6 +38,9 @@
     <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
   <ItemGroup>
+    <WixExtension Include="WixFileVersionExtension">
+      <HintPath>WixFileVersionExtension.dll</HintPath>
+    </WixExtension>
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
     </WixExtension>
