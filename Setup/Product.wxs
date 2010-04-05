@@ -38,6 +38,11 @@
           <Directory Id="InstallerDir" Name="Installer"/>
         </Directory>
       </Directory>
+      <Directory Id="PersonalFolder">
+        <Directory Id="VS2005" Name="Visual Studio 2005"/>
+        <Directory Id="VS2008" Name="Visual Studio 2008"/>
+        <Directory Id="VS2010" Name="Visual Studio 2010"/>
+      </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
       </Directory>
@@ -152,6 +157,38 @@
       </Component>
     </DirectoryRef>
 
+    <?foreach VsVersion in VS2005;VS2008;VS2010?>
+    <DirectoryRef Id="$(var.VsVersion)">
+      
+      <Component Id="$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+        <File
+          Id="$(var.VsVersion)_GitPlugin.AddIn"
+          Source="..\GitPlugIn\GitPlugin.AddIn"/>
+        <RemoveFolder
+          Id="$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
+      </Component>
+      
+      <Component Id="$(var.VsVersion)_GitPlugin.dll" Guid="*">
+        <File
+          Id="$(var.VsVersion)_GitPlugin.dll"
+          Source="..\GitPlugIn\obj\Release\GitPlugin.dll"/>
+        <RemoveFolder
+          Id="$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
+      </Component>
+      
+      <Directory Id="$(var.VsVersion)_enUS" Name="en-US">
+        <Component Id="$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+          <File
+            Id="$(var.VsVersion)_GitPlugin.resources.dll"
+            Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll"/>
+          <RemoveFolder
+            Id="$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
+        </Component>
+      </Directory>
+      
+    </DirectoryRef>
+    <?endforeach?>
+
     <DirectoryRef Id="StartMenuDir">
       <Component Id="GitExtensions.shortcut" Guid="*">
         <Shortcut
@@ -213,11 +250,19 @@
 
       <ComponentRef Id="GitExtensions.shortcut"/>
       <ComponentRef Id="UserManual.shortcut"/>
-      
+
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll"/>
         <ComponentRef Id="GitExtensionsShellEx64.dll"/>
       </Feature>
+
+      <?foreach VsVersion in 2005;2008;2010?>
+      <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="2">
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn"/>
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll"/>
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll"/>
+      </Feature>
+      <?endforeach?>
     </Feature>
 
     <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
