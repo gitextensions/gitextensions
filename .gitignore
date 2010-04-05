@@ -1,3 +1,4 @@
+
 *.obj
 *.exe
 *.html
@@ -41,4 +42,4 @@ _ReSharper.*/
 !/Bin/Git-1*.exe
 SimpleExt/dlldata.c
 SimpleExt/SimpleExt.h
-SimpleExt/SimpleExt_h.h
+*.msi
