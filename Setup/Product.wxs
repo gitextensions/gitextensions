@@ -29,6 +29,7 @@
 
     <UIRef Id="WixUI_GitExtensions"/>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes"/>
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
 
@@ -144,7 +145,12 @@
         <File Source="..\Bin\puttygen.exe"/>
       </Component>
 
-      <Component Id="gitssh.reg" Guid="*">
+      <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
+        <Condition>SSHCLIENT="OpenSSH"</Condition>
+        <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="gitssh_putty.reg" Guid="2cb64776-8035-413e-9266-4ad9e5ecbad3">
+        <Condition>SSHCLIENT="PuTTY"</Condition>
         <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
       <Component Id="plink.reg" Guid="*">
@@ -236,7 +242,8 @@
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
 
-      <ComponentRef Id="gitssh.reg"/>
+      <ComponentRef Id="gitssh_openssh.reg"/>
+      <ComponentRef Id="gitssh_putty.reg"/>
       <ComponentRef Id="plink.exe"/>
       <ComponentRef Id="plink.reg"/>
       <ComponentRef Id="pageant.exe"/>

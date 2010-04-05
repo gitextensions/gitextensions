@@ -59,12 +59,16 @@
 
       <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="1">Installed</Publish>
       <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="GitEx_InstallDirDlg" Order="2">NOT Installed</Publish>
-      <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg" Order="1">Installed</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="2">NOT Installed</Publish>
 
-      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_CustomizeDlg" Order="1">
-        NOT Installed OR WixUI_InstallMode = "Change"
+      <Publish Dialog="GitEx_SSHClientDlg" Control="Back" Event="NewDialog" Value="GitEx_CustomizeDlg">1</Publish>
+      <Publish Dialog="GitEx_SSHClientDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+
+      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="1">
+        NOT Installed
       </Publish>
-      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="2">
+      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="3">
         Installed
       </Publish>
 

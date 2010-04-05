@@ -38,6 +38,7 @@
     <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
     <Compile Include="UI\ProgressDlg.wxs" />
     <Compile Include="UI\RequiredSoftwareDlg.wxs" />
+    <Compile Include="UI\SSHClientDlg.wxs" />
     <Compile Include="UI\UserExit.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />
     <Compile Include="UI\WelcomeDlg.wxs" />
