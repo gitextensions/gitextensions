@@ -26,19 +26,23 @@
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CustomizeDlg.wxs" />
     <Compile Include="Product.wxs" />
-    <Compile Include="UI.wxs" />
+    <Compile Include="UI\CustomizeDlg.wxs" />
+    <Compile Include="UI\WixUI.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AddRemove.wxi" />
     <Content Include="Config.wxi" />
     <Content Include="EnableUpgrades.wxi" />
+    <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
     </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
