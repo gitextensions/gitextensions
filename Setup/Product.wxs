@@ -17,8 +17,9 @@
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
 
+    <PropertyRef Id="NETFRAMEWORK20"/>
     <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
-      Installed OR MsiNetAssemblySupport >= "2.0.50727"
+      Installed OR NETFRAMEWORK20
     </Condition>
 
     <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
