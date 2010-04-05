@@ -46,7 +46,7 @@
       <Publish Dialog="GitEx_InstallDirDlg" Control="Next" Event="NewDialog" Value="GitEx_CustomizeDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
 
       <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
-      <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="GitEx_InstallDirDlg" Order="2">NOT Installed</Publish>
       <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
 
       <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_CustomizeDlg" Order="1">
