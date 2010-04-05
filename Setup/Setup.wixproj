@@ -23,7 +23,7 @@
     <DefineConstants>Version=1.92</DefineConstants>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <VerboseOutput>True</VerboseOutput>
-    <SuppressIces>ICE61</SuppressIces>
+    <SuppressIces>ICE61;ICE80</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
