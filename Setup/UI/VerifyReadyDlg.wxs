@@ -14,7 +14,7 @@
   <Fragment>
     <UI>
       <Dialog Id="GitEx_VerifyReadyDlg" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
-        <Control Id="Install" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgInstall)">
+        <Control Id="Install" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="18" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgInstall)">
           <Condition Action="show">
             NOT Installed AND ALLUSERS
           </Condition>
@@ -34,7 +34,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="InstallNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgInstall)">
+        <Control Id="InstallNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="18" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgInstall)">
           <Condition Action="show">
             NOT Installed AND NOT ALLUSERS
           </Condition>
@@ -54,7 +54,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="Change" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgChange)">
+        <Control Id="Change" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="18" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgChange)">
           <Condition Action="show">
             WixUI_InstallMode = "Change" AND ALLUSERS AND (ADDLOCAL OR REMOVE)
           </Condition>
@@ -78,7 +78,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="ChangeNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgChange)">
+        <Control Id="ChangeNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="18" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgChange)">
           <Condition Action="show">
             WixUI_InstallMode = "Change" AND (NOT ALLUSERS OR (NOT ADDLOCAL AND NOT REMOVE))
           </Condition>
@@ -102,7 +102,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="Repair" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRepair)">
+        <Control Id="Repair" Type="PushButton" X="236" Y="243" Width="56" Height="18" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRepair)">
           <Condition Action="show">
             WixUI_InstallMode = "Repair"
           </Condition>
@@ -128,7 +128,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="Remove" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="17" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRemove)">
+        <Control Id="Remove" Type="PushButton" ElevationShield="yes" X="236" Y="243" Width="56" Height="18" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRemove)">
           <Condition Action="show">
             WixUI_InstallMode = "Remove" AND ALLUSERS
           </Condition>
@@ -150,7 +150,7 @@
             (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
           </Publish>
         </Control>
-        <Control Id="RemoveNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="17" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRemove)">
+        <Control Id="RemoveNoShield" Type="PushButton" ElevationShield="no" X="236" Y="243" Width="56" Height="18" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgRemove)">
           <Condition Action="show">
             WixUI_InstallMode = "Remove" AND NOT ALLUSERS
           </Condition>
@@ -210,10 +210,10 @@
           </Condition>
         </Control>
 
-        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
-          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="18" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="GitEx_CancelDlg">1</Publish>
         </Control>
-        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)">
+        <Control Id="Back" Type="PushButton" X="177" Y="243" Width="56" Height="18" Text="!(loc.WixUIBack)">
           <Condition Action="default">
             WixUI_InstallMode = "Remove"
           </Condition>
