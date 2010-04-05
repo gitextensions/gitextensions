@@ -17,6 +17,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;Version=$(Version);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -28,6 +29,7 @@
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CustomizeDlg.wxs" />
+    <Compile Include="UI\InstallDirDlg.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />
     <Compile Include="UI\WixUI.wxs" />
   </ItemGroup>
@@ -38,9 +40,6 @@
     <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="WixFileVersionExtension">
-      <HintPath>WixFileVersionExtension.dll</HintPath>
-    </WixExtension>
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
     </WixExtension>

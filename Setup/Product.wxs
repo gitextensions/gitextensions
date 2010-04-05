@@ -28,12 +28,13 @@
     <?include EnableUpgrades.wxi?>
 
     <UIRef Id="WixUI_GitExtensions"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="InstallDir" Name="$(var.InstallName)">
+        <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
           <Directory Id="PuttyDir" Name="PuTTY"/>
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
@@ -57,7 +58,7 @@
     </Property>
     <?endforeach?>
 
-    <DirectoryRef Id="InstallDir">
+    <DirectoryRef Id="INSTALLDIR">
       <Component Id="cow_head.ico" Guid="*">
         <File Source="..\cow-head.ico"/>
       </Component>
@@ -116,7 +117,7 @@
         <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
       <Component Id="InstallDir.reg" Guid="*">
-        <RegistryValue Name="InstallDir" Value="[InstallDir]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+        <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
     </DirectoryRef>
 
@@ -144,16 +145,16 @@
       </Component>
 
       <Component Id="gitssh.reg" Guid="*">
-        <RegistryValue Name="gitssh" Value="[InstallDir]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+        <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
       <Component Id="plink.reg" Guid="*">
-        <RegistryValue Name="plink" Value="[InstallDir]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+        <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
       <Component Id="pageant.reg" Guid="*">
-        <RegistryValue Name="pageant" Value="[InstallDir]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+        <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
       <Component Id="puttygen.reg" Guid="*">
-        <RegistryValue Name="puttygen" Value="[InstallDir]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+        <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
     </DirectoryRef>
 
@@ -183,8 +184,8 @@
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
           Icon="cow_head.ico"
-          Target="[InstallDir]GitExtensions.exe"
-          WorkingDirectory="InstallDir"/>
+          Target="[INSTALLDIR]GitExtensions.exe"
+          WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
           Root="HKCU" Key="$(var.InstalledRegKey)"
           Name="GitExtensions.shortcut" Value="" Type="string"
@@ -199,7 +200,7 @@
           Id="UserManual.shortcut"
           Name="User Manual"
           Description="$(var.ProductName) User Manual"
-          Target="[InstallDir]GitExtensionsUserManual.pdf"/>
+          Target="[INSTALLDIR]GitExtensionsUserManual.pdf"/>
         <RegistryValue
           Root="HKCU" Key="$(var.InstalledRegKey)"
           Name="UserManual.shortcut" Value="" Type="string"
