@@ -28,10 +28,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
+    <Compile Include="UI\CancelDlg.wxs" />
     <Compile Include="UI\CustomizeDlg.wxs" />
+    <Compile Include="UI\ErrorDlg.wxs" />
+    <Compile Include="UI\ExitDialog.wxs" />
+    <Compile Include="UI\FatalError.wxs" />
     <Compile Include="UI\InstallDirDlg.wxs" />
+    <Compile Include="UI\MaintenanceTypeDlg.wxs" />
+    <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
+    <Compile Include="UI\ProgressDlg.wxs" />
     <Compile Include="UI\RequiredSoftwareDlg.wxs" />
+    <Compile Include="UI\UserExit.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />
+    <Compile Include="UI\WelcomeDlg.wxs" />
     <Compile Include="UI\WixUI.wxs" />
   </ItemGroup>
   <ItemGroup>
