@@ -263,25 +263,11 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-      <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
-        <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1"/>
-        <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1"/>
-      </Feature>
-
       <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
       <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
 
-      <Binary Id="msysgit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
-      <CustomAction Id="msysgit" BinaryKey="msysgit" ExeCommand="" Return="ignore"/>
-
-      <InstallExecuteSequence>
-        <Custom Action="KDiff" After="CostFinalize">
-          <![CDATA[&KDiff=3 AND NOT !KDiff=3]]>
-        </Custom>
-        <Custom Action="msysgit" After="CostFinalize">
-          <![CDATA[&msysgit=3 AND NOT !msysgit=3]]>
-        </Custom>
-      </InstallExecuteSequence>
+      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
+      <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
     <?endif?>
 
   </Product>
