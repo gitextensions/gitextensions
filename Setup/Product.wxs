@@ -159,7 +159,7 @@
 
     <?foreach VsVersion in $(var.VsVersions)?>
     <DirectoryRef Id="VS$(var.VsVersion)">
-      
+
       <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
         <File
           Id="VS$(var.VsVersion)_GitPlugin.AddIn"
@@ -167,7 +167,7 @@
         <RemoveFolder
           Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
       </Component>
-      
+
       <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
         <File
           Id="VS$(var.VsVersion)_GitPlugin.dll"
@@ -175,7 +175,7 @@
         <RemoveFolder
           Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
       </Component>
-      
+
       <Directory Id="VS$(var.VsVersion)_enUS" Name="en-US">
         <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
           <File
@@ -185,7 +185,7 @@
             Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
         </Component>
       </Directory>
-      
+
     </DirectoryRef>
     <?endforeach?>
 
@@ -266,25 +266,27 @@
       <?endforeach?>
     </Feature>
 
-    <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
-      <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1"/>
-      <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1"/>
-    </Feature>
+    <?ifdef IncludeRequiredSoftware?>
+      <Feature Id="RequiredSoftware" Title="Required Software" Level="1" Display="expand">
+        <Feature Id="msysgit" Title="msysgit (1.6.5.1)" Level="1"/>
+        <Feature Id="KDiff" Title="KDiff3 (0.9.95)" Level="1"/>
+      </Feature>
 
-    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
-    <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand=""/>
+      <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
+      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand=""/>
 
-    <Binary Id="msysgit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
-    <CustomAction Id="msysgit" BinaryKey="msysgit" ExeCommand=""/>
+      <Binary Id="msysgit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
+      <CustomAction Id="msysgit" BinaryKey="msysgit" ExeCommand=""/>
 
-    <InstallExecuteSequence>
-      <Custom Action="KDiff" After="CostFinalize">
-        <![CDATA[&KDiff=3 AND NOT !KDiff=3]]>
-      </Custom>
-      <Custom Action="msysgit" After="CostFinalize">
-        <![CDATA[&msysgit=3 AND NOT !msysgit=3]]>
-      </Custom>
-    </InstallExecuteSequence>
+      <InstallExecuteSequence>
+        <Custom Action="KDiff" After="CostFinalize">
+          <![CDATA[&KDiff=3 AND NOT !KDiff=3]]>
+        </Custom>
+        <Custom Action="msysgit" After="CostFinalize">
+          <![CDATA[&msysgit=3 AND NOT !msysgit=3]]>
+        </Custom>
+      </InstallExecuteSequence>
+    <?endif?>
 
   </Product>
 
