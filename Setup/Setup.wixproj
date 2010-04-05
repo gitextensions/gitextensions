@@ -27,6 +27,7 @@
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CustomizeDlg.wxs" />
+    <Compile Include="UI\VerifyReadyDlg.wxs" />
     <Compile Include="UI\WixUI.wxs" />
   </ItemGroup>
   <ItemGroup>
