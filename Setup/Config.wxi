@@ -3,7 +3,8 @@
 
   <?define Manufacturer = "Henk" ?>
   <?define ProductName = "Git Extensions" ?>
-  <?define InstallName = "GitExtensions" ?>
+  <?define InstallName = GitExtensions ?>
+  <?define Version = 1.92 ?>
 
   <?define AppRegKey = "Software\GitExtensions\GitExtensions\1.0.0.0" ?>
   <?define InstalledRegKey = "Software\GitExtensions\Installed" ?>

@@ -20,7 +20,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WixVariables>
     </WixVariables>
-    <DefineConstants>Version=1.92</DefineConstants>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <VerboseOutput>True</VerboseOutput>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
