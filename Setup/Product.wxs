@@ -160,19 +160,27 @@
 
     <?foreach VsVersion in $(var.VsVersions)?>
     <DirectoryRef Id="VS$(var.VsVersion)">
-      <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-        <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn"/>
-        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
-      </Component>
-      <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-        <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll"/>
-        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
-      </Component>
-      <Directory Id="VS$(var.VsVersion)_enUS" Name="en-US">
-        <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll"/>
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
+      <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
+        
+        <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+          <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
         </Component>
+        
+        <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
+          <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
+        </Component>
+        
+        <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
+          <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll"/>
+            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
+          </Component>
+        </Directory>
+        
       </Directory>
     </DirectoryRef>
     <?endforeach?>
