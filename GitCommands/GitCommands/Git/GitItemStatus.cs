@@ -33,5 +33,10 @@ namespace GitCommands
         public bool IsDeleted { get; set; }
         public bool IsChanged { get; set; }
         public bool IsNew { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -291,6 +291,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Added {
+            get {
+                object obj = ResourceManager.GetObject("Added", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_refresh {
             get {
                 object obj = ResourceManager.GetObject("arrow_refresh", resourceCulture);
@@ -309,13 +316,17 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 1.89
-        ///	Fixed bug: Changes of an unstaged file are not shown when the file path contains spaces
-        ///	Fixed bug: Filehistory not working when opened from Visual Studio because filename is too long
-        ///	Fixed bug: Copy selected text from file viewer now copies the complete selected text
-        ///	Fixed bug: A slash is added at the end of all url&apos;s in the history, breaking some urls
-        ///	The author date and commit date are both shown when they differ
-        ///	The author and committer are both shown when [rest of string was truncated]&quot;;.
+        ///Version 1.91
+        ///	Fixed bug: tooltips drawn incorrect
+        ///
+        ///Version 1.90
+        ///	Fixed bug: images in .gif and .ico format could not be displayed.
+        ///	Fixed bug: extra empty lines are shown in the blame view.
+        ///	The application icon can be changed
+        ///	Added extra diff highlighting for single line changes
+        ///	Added asynchronous loading of files for diffs and general viewing to improve responsiveness
+        ///	Added &quot;Show relative date&quot; option to context menu of revision grid
+        ///	Copy from diff viewer copies code  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -421,6 +432,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Modified {
+            get {
+                object obj = ResourceManager.GetObject("Modified", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap pageant {
             get {
                 object obj = ResourceManager.GetObject("pageant", resourceCulture);
@@ -445,6 +463,13 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap Rebase {
             get {
                 object obj = ResourceManager.GetObject("Rebase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Removed {
+            get {
+                object obj = ResourceManager.GetObject("Removed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
