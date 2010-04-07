@@ -48,7 +48,6 @@ namespace GitUI
             InternalInitialize(false);
             RevisionGrid.Focus();
             RevisionGrid.ChangedCurrentBranch += RevisionGrid_ChangedCurrentBranch;
-            indexWatcher.Changed += new EventHandler(indexWatcher_Changed);
             indexWatcher.Reset();
 
             foreach (IGitPlugin plugin in GitUIPluginCollection.Plugins)
@@ -118,19 +117,6 @@ namespace GitUI
         void RevisionGrid_ChangedCurrentBranch(object sender, EventArgs e)
         {
             Initialize();
-        }
-
-        void indexWatcher_Changed(object sender, EventArgs e)
-        {
-            /*if (ToolStrip.InvokeRequired)
-            {
-                DoneCallback d = new DoneCallback(SetIndexDirty);
-                this.Invoke(d, new object[] { });
-            }
-            else
-            {
-                SetIndexDirty();
-            }*/
         }
 
         private void SetIndexDirty()

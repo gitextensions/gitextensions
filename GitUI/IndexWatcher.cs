@@ -47,15 +47,6 @@ namespace GitUI
             }
         }
 
-        public event EventHandler Changed;
-
-        private void OnChanged()
-        {
-            // If there are registered clients raise event
-            if (Changed != null)
-                Changed(this, new EventArgs());
-        }
-
         private bool indexChanged;
         public bool IndexChanged 
         { 
@@ -72,6 +63,7 @@ namespace GitUI
             set
             {
                 indexChanged = value;
+                GitIndexWatcher.EnableRaisingEvents = !IndexChanged;
             }
         }
 
@@ -83,7 +75,6 @@ namespace GitUI
         void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             IndexChanged = true;
-            OnChanged();
         }
 
         public void Reset()
