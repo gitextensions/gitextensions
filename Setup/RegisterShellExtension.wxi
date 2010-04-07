@@ -7,7 +7,7 @@
     Value="GitExtensions Shell Extension" Type="string"/>
   <RegistryValue
     Root="HKCR" Key="CLSID\$(var.ShellExCLSID)\InprocServer32"
-    Value="[InstallDir]$(var.ShellExFileName)" Type="string"/>
+    Value="[INSTALLDIR]$(var.ShellExFileName)" Type="string"/>
   <RegistryValue
     Root="HKCR" Key="CLSID\$(var.ShellExCLSID)\InprocServer32"
     Name="ThreadingModel" Value="Apartment" Type="string"/>
