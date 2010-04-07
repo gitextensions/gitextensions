@@ -49,6 +49,7 @@
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
       </Directory>
+      <Directory Id="DesktopFolder"/>
     </Directory>
 
     <?define VsVersions = 2005;2008;2010?>
@@ -191,9 +192,9 @@
     <?endforeach?>
 
     <DirectoryRef Id="StartMenuDir">
-      <Component Id="GitExtensions.shortcut" Guid="*">
+      <Component Id="GitExtensions.startmenu" Guid="*">
         <Shortcut
-          Id="GitExtensions.shortcut"
+          Id="GitExtensions.startmenu"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
           Icon="cow_head.ico"
@@ -201,25 +202,44 @@
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
           Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="GitExtensions.shortcut" Value="" Type="string"
+          Name="GitExtensions.startmenu" Value="" Type="string"
           KeyPath="yes"/>
         <RemoveFolder
-          Id="GitExtensions.shortcut"
+          Id="GitExtensions.startmenu"
           On="uninstall"/>
       </Component>
 
-      <Component Id="UserManual.shortcut" Guid="*">
+      <Component Id="UserManual.startmenu" Guid="*">
         <Shortcut
-          Id="UserManual.shortcut"
+          Id="UserManual.startmenu"
           Name="User Manual"
           Description="$(var.ProductName) User Manual"
           Target="[INSTALLDIR]GitExtensionsUserManual.pdf"/>
         <RegistryValue
           Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="UserManual.shortcut" Value="" Type="string"
+          Name="UserManual.startmenu" Value="" Type="string"
           KeyPath="yes"/>
         <RemoveFolder
-          Id="UserManual.shortcut"
+          Id="UserManual.startmenu"
+          On="uninstall"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="GitExtensions.desktop" Guid="*">
+        <Shortcut
+          Id="GitExtensions.desktop"
+          Name="$(var.ProductName)"
+          Description="$(var.ProductName)"
+          Icon="cow_head.ico"
+          Target="[INSTALLDIR]GitExtensions.exe"
+          WorkingDirectory="INSTALLDIR"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="GitExtensions.desktop" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="GitExtensions.desktop"
           On="uninstall"/>
       </Component>
     </DirectoryRef>
@@ -250,8 +270,9 @@
       <ComponentRef Id="puttygen.exe"/>
       <ComponentRef Id="puttygen.reg"/>
 
-      <ComponentRef Id="GitExtensions.shortcut"/>
-      <ComponentRef Id="UserManual.shortcut"/>
+      <ComponentRef Id="GitExtensions.startmenu"/>
+      <ComponentRef Id="GitExtensions.desktop"/>
+      <ComponentRef Id="UserManual.startmenu"/>
 
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll"/>
