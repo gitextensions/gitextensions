@@ -1533,17 +1533,26 @@ namespace GitCommands
             return retVal;
         }
 
-        static public List<string> GetDiffFiles(string from, string to)
+        static public List<GitItemStatus> GetDiffFiles(string from, string to)
         {
-            string result = RunCmd(Settings.GitCommand, "diff --name-only \"" + from + "\" \"" + to + "\"");
+            string result = RunCmd(Settings.GitCommand, "diff --name-status \"" + to + "\" \"" + from + "\"");
 
             string[] files = result.Split('\n');
 
-            List<string> retVal = new List<string>();
+            List<GitItemStatus> retVal = new List<GitItemStatus>();
             foreach (string s in files)
             {
                 if (!string.IsNullOrEmpty(s))
-                    retVal.Add(s);
+                {
+                    GitItemStatus gitItemStatus = new GitItemStatus();
+                    gitItemStatus.Name = s.Substring(1).Trim();
+
+                    gitItemStatus.IsNew = s[0] == 'A';
+                    gitItemStatus.IsChanged = s[0] == 'M';
+                    gitItemStatus.IsDeleted = s[0] == 'D';
+                    gitItemStatus.IsTracked = true;
+                    retVal.Add(gitItemStatus);
+                }
             }
 
             return retVal;

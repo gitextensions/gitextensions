@@ -22,6 +22,27 @@ namespace GitUI
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            DiffFiles.DrawMode = DrawMode.OwnerDrawFixed;
+            DiffFiles.DrawItem += new DrawItemEventHandler(DiffFiles_DrawItem);
+        }
+
+        void DiffFiles_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            e.DrawFocusRectangle();
+
+            GitItemStatus gitItemStatus = (GitItemStatus)DiffFiles.Items[e.Index];
+
+            if (gitItemStatus.IsChanged)
+                e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+            else
+                if (gitItemStatus.IsDeleted)
+                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                else
+                    if (gitItemStatus.IsNew)
+                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+
+            e.Graphics.DrawString(gitItemStatus.Name, DiffFiles.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -943,10 +964,10 @@ namespace GitUI
 
         private void ShowSelectedFileDiff()
         {
-            string selectedItem = DiffFiles.SelectedItem as string;
-
-            if (selectedItem == null)
+            if (DiffFiles.SelectedItem == null)
                 return;
+
+            string selectedItem = ((GitItemStatus)DiffFiles.SelectedItem).Name;
 
             IList<GitRevision> revisions = RevisionGrid.GetRevisions();
 
@@ -981,10 +1002,10 @@ namespace GitUI
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem is string)
+            if (DiffFiles.SelectedItem != null)
             {
                 {
-                    if (GitUICommands.Instance.StartFileHistoryDialog((string)DiffFiles.SelectedItem))
+                    if (GitUICommands.Instance.StartFileHistoryDialog(((GitItemStatus)DiffFiles.SelectedItem).Name))
                         Initialize();
                 }
             }
@@ -1324,10 +1345,9 @@ namespace GitUI
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string selectedItem = DiffFiles.SelectedItem as string;
-
-            if (selectedItem == null)
+            if (DiffFiles.SelectedItem == null)
                 return;
+            string selectedItem = ((GitItemStatus)DiffFiles.SelectedItem).Name;
 
             IList<GitRevision> revisions = RevisionGrid.GetRevisions();
 
@@ -1351,17 +1371,17 @@ namespace GitUI
 
                     float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
 
-					if (fTextWidth > DiffFiles.Width)
-					{
-						if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
-							DiffFilesTooltip.SetToolTip(listBox, text);
-					}
-					else
-						DiffFilesTooltip.RemoveAll();
+                    if (fTextWidth > DiffFiles.Width)
+                    {
+                        if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
+                            DiffFilesTooltip.SetToolTip(listBox, text);
+                    }
+                    else
+                        DiffFilesTooltip.RemoveAll();
                 }
                 else
                 {
-					DiffFilesTooltip.RemoveAll();
+                    DiffFilesTooltip.RemoveAll();
                 }
             }
         }
