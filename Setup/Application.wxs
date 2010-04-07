@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="Application">
+            <Component Id="cmp69C82FD1FD1302C5D6C6526CFB8F9F8E" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="filA66260797434BCE2A0840022E4069114" KeyPath="yes" Source="SourceDir\cow-head.ico" />
+            </Component>
+            <Component Id="cmp2C484B904E38C7D4EDE1DB11101A674F" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="filC592D14D1A927314C63F7B2D135D7766" KeyPath="yes" Source="SourceDir\GitCommands.dll" />
+            </Component>
+            <Component Id="cmp82E05F1C305FEDA358119937EAA6F98C" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil6CAEBEE2162BAFABAC565EFCAF0B0DDA" KeyPath="yes" Source="SourceDir\gitex.cmd" />
+            </Component>
+            <Component Id="cmpCEC53375E61F3D632D7E8C0296F192AA" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil4259CD3980846AF98711D3839C94B6FB" KeyPath="yes" Source="SourceDir\GitExtensions.exe" />
+            </Component>
+            <Component Id="cmp041907B02D55CC47202264F41D57912D" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="filE59D75FE1179CE37C85DC4B9D96800E8" KeyPath="yes" Source="SourceDir\GitExtensionsShellEx32.dll" />
+            </Component>
+            <Component Id="cmp954E678615F1A35D2091433268DFFE38" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="filC104AB5DB5447B1E811EAB1D6B143CCA" KeyPath="yes" Source="SourceDir\GitExtensionsShellEx64.dll" />
+            </Component>
+            <Component Id="cmp47D70C7854C155F5137D42FDFD83149C" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil35C8915BFF1A0E9130CDEF0E93787586" KeyPath="yes" Source="SourceDir\GitExtensionsUserManual.pdf" />
+            </Component>
+            <Component Id="cmp4B9C9766E6C1F028D3DAACECD3CC956B" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil5470BA95D20F87F967BC37EA350DA40E" KeyPath="yes" Source="SourceDir\GitUI.dll" />
+            </Component>
+            <Component Id="cmpA07CA31A3EB21AF6B25C8D99B4A907B7" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil8DEED2495D8CBE38A2C200B635D26356" KeyPath="yes" Source="SourceDir\GitUIPluginInterfaces.dll" />
+            </Component>
+            <Component Id="cmp231F68DFF770F22D1B0DF3404E8F4BE1" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="filFBB5DC0C870944EB3942B31FED66CB76" KeyPath="yes" Source="SourceDir\ICSharpCode.TextEditor.dll" />
+            </Component>
+            <Component Id="cmp440EC3A20C93BF4F43A9D2388B7A0E5A" Directory="dir523C8ACE75883F7969998F86030263C5" Guid="*">
+                <File Id="fil2027E15B2F1606F5EBE55BA75327F3B6" KeyPath="yes" Source="SourceDir\SpellChecker.dll" />
+            </Component>
+            <Component Id="cmp1C57266DA940AD4464B9153DC21B1B50" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="fil413B83163BED4889BB341F3BF7952D5D" KeyPath="yes" Source="SourceDir\Dictionaries\de-DE.dic" />
+            </Component>
+            <Component Id="cmpC10C86163F4F24916699D8353D20EAD6" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="fil2ADCE42C127CADB04D5807B43F459FA2" KeyPath="yes" Source="SourceDir\Dictionaries\en-AU.dic" />
+            </Component>
+            <Component Id="cmpBFD8978AF6B402D8A16909999FBE3D6B" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="fil29131D051E76ECA083A7EF601780A1A7" KeyPath="yes" Source="SourceDir\Dictionaries\en-CA.dic" />
+            </Component>
+            <Component Id="cmpAEBFEFD810422A3EFC6322BBD6646FE3" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="filD0221FD98A0A8A3582D9C67C50FE599B" KeyPath="yes" Source="SourceDir\Dictionaries\en-GB.dic" />
+            </Component>
+            <Component Id="cmp85BBAA4BA09B8E7D414513A05A72E070" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="filBB3C4E6F9D0220B8C91C51E52C0F6AA2" KeyPath="yes" Source="SourceDir\Dictionaries\en-US.dic" />
+            </Component>
+            <Component Id="cmp394AB56140551DC51776E0807963F427" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="filE51971A4514221552A3A406EE6000F75" KeyPath="yes" Source="SourceDir\Dictionaries\es-ES.dic" />
+            </Component>
+            <Component Id="cmp9B23513C147DF93B3FE95E9CA9E4896A" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="fil9A771F104195E5E15F09F46F246AAECA" KeyPath="yes" Source="SourceDir\Dictionaries\es-MX.dic" />
+            </Component>
+            <Component Id="cmp95D6A75C0B107C5C4BFBCF5C14945417" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="filB0D624984EEE9F96989C7EF4CE2BF906" KeyPath="yes" Source="SourceDir\Dictionaries\fr-FR.dic" />
+            </Component>
+            <Component Id="cmpE88640ABC74B9DC6F4E1260B33ABAB1D" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="filDD94822586296665C65E5FF915C30E2B" KeyPath="yes" Source="SourceDir\Dictionaries\it-IT.dic" />
+            </Component>
+            <Component Id="cmp131E71D107B782D7E87481B43CBD3B7B" Directory="dir51E82DE82776D41DF984243DDDD12DEE" Guid="*">
+                <File Id="fil45F3C2D6A13B64EED3A50FCFC6A2CF67" KeyPath="yes" Source="SourceDir\Dictionaries\nl-NL.dic" />
+            </Component>
+            <Component Id="cmp88412412C2AE72D216F7126492D2FD05" Directory="dir0D44E0DCB7597B737C7C4D0D405845DB" Guid="*">
+                <File Id="fil87FCD4584B01CB301EA805FE818E2B62" KeyPath="yes" Source="SourceDir\Installer\Git-1.6.5.1-preview20091022.exe" />
+            </Component>
+            <Component Id="cmp7B045E0B0B805C00A26100E6273F6BB3" Directory="dir0D44E0DCB7597B737C7C4D0D405845DB" Guid="*">
+                <File Id="filF03E82927B956269355E4EB6A0DEB49F" KeyPath="yes" Source="SourceDir\Installer\KDiff3Setup_0.9.95.exe" />
+            </Component>
+            <Component Id="cmp5AD5003E8D28FA0323B3C7EC82608677" Directory="dirD70DD1E1F8DC85BA178143508E6FA13B" Guid="*">
+                <File Id="fil1182F789D716798A8C63171C4FD2752F" KeyPath="yes" Source="SourceDir\Plugins\AutoCheckForUpdates.dll" />
+            </Component>
+            <Component Id="cmpA3F47140053EE8BBDEB0ABE17F045D43" Directory="dirD70DD1E1F8DC85BA178143508E6FA13B" Guid="*">
+                <File Id="fil73EE1BD4C7587514A8A8D24582CEFF5A" KeyPath="yes" Source="SourceDir\Plugins\AutoCompileSubmodules.dll" />
+            </Component>
+            <Component Id="cmp594F5E6485BF066984EECD69F2077A81" Directory="dirD70DD1E1F8DC85BA178143508E6FA13B" Guid="*">
+                <File Id="filE626B9674D734A529818CD4747DAFCF2" KeyPath="yes" Source="SourceDir\Plugins\GitStatistics.dll" />
+            </Component>
+            <Component Id="cmpEFA6989D0F3EC4A288272A26FC867CC6" Directory="dir83DE0C78589ABF419647FA6512C68FDC" Guid="*">
+                <File Id="fil29CB0AB73D5CE7B73D75C09173C5D65D" KeyPath="yes" Source="SourceDir\PuTTY\pageant.exe" />
+            </Component>
+            <Component Id="cmpFA34223CE3886796B9B8883CE838ED75" Directory="dir83DE0C78589ABF419647FA6512C68FDC" Guid="*">
+                <File Id="filC76E572F0C6345052A812324AAD6B43C" KeyPath="yes" Source="SourceDir\PuTTY\plink.exe" />
+            </Component>
+            <Component Id="cmp8888860D97BE2BE392AF2A2C3742641A" Directory="dir83DE0C78589ABF419647FA6512C68FDC" Guid="*">
+                <File Id="filF7E70FFF14996FCB4C8412C684BD22C6" KeyPath="yes" Source="SourceDir\PuTTY\puttygen.exe" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id="dir523C8ACE75883F7969998F86030263C5" Name="InstallDir" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirD70DD1E1F8DC85BA178143508E6FA13B" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirD70DD1E1F8DC85BA178143508E6FA13B" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir0D44E0DCB7597B737C7C4D0D405845DB" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir0D44E0DCB7597B737C7C4D0D405845DB" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir83DE0C78589ABF419647FA6512C68FDC" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirD70DD1E1F8DC85BA178143508E6FA13B" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir51E82DE82776D41DF984243DDDD12DEE" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir83DE0C78589ABF419647FA6512C68FDC" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir83DE0C78589ABF419647FA6512C68FDC" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5">
+            <Directory Id="dir0D44E0DCB7597B737C7C4D0D405845DB" Name="Installer" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5">
+            <Directory Id="dir51E82DE82776D41DF984243DDDD12DEE" Name="Dictionaries" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5">
+            <Directory Id="dir83DE0C78589ABF419647FA6512C68FDC" Name="PuTTY" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir523C8ACE75883F7969998F86030263C5">
+            <Directory Id="dirD70DD1E1F8DC85BA178143508E6FA13B" Name="Plugins" />
+        </DirectoryRef>
+    </Fragment>
+</Wix>

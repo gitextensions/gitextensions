@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?include Config.wxi?>
+
+  <Product
+    Id="*" UpgradeCode="$(var.UpgradeCode)"
+    Name="$(var.ProductName) $(var.Version)"
+    Manufacturer="$(var.Manufacturer)"
+    Version="$(var.Version)"
+    Language="1033">
+
+    <Package
+      InstallerVersion="200"
+      Compressed="yes"
+      Description="$(var.ProductName)"/>
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
+
+    <PropertyRef Id="NETFRAMEWORK20"/>
+    <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
+      Installed OR NETFRAMEWORK20
+    </Condition>
+
+    <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
+
+    <?include AddRemove.wxi?>
+    <?include EnableUpgrades.wxi?>
+
+    <UIRef Id="WixUI_GitExtensions"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes"/>
+    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
+    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
+          <Directory Id="PuttyDir" Name="PuTTY"/>
+          <Directory Id="PluginsDir" Name="Plugins"/>
+          <Directory Id="InstallerDir" Name="Installer"/>
+        </Directory>
+      </Directory>
+      <Directory Id="PersonalFolder">
+        <Directory Id="VS2005" Name="Visual Studio 2005"/>
+        <Directory Id="VS2008" Name="Visual Studio 2008"/>
+        <Directory Id="VS2010" Name="Visual Studio 2010"/>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
+      </Directory>
+      <Directory Id="DesktopFolder"/>
+    </Directory>
+
+    <?define VsVersions = 2005;2008;2010?>
+    
+    <?foreach VsVersion in $(var.VsVersions)?>
+    <Property Id="VS$(var.VsVersion)">
+      <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)"/>
+    </Property>
+    <?endforeach?>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="cow_head.ico" Guid="*">
+        <File Source="..\cow-head.ico"/>
+      </Component>
+      <Component Id="gitex.cmd" Guid="*">
+        <File Source="..\bin\gitex.cmd"/>
+      </Component>
+      <Component Id="GitExtensionsUserManual.pdf" Guid="*">
+        <File Source="..\bin\GitExtensionsUserManual.pdf"/>
+      </Component>
+      <Component Id="GitExtensions.exe" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitExtensions.exe"/>
+      </Component>
+      <Component Id="GitCommands.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitCommands.dll"/>
+      </Component>
+      <Component Id="GitUI.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUI.dll"/>
+      </Component>
+      <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\ICSharpCode.TextEditor.dll"/>
+      </Component>
+      <Component Id="SpellChecker.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\SpellChecker.dll"/>
+      </Component>
+      <Component Id="GitUIPluginInterfaces.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
+      </Component>
+
+      <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
+      
+      <Component Id="GitExtensionsShellEx32.dll" Guid="*">
+        <File
+          Name="GitExtensionsShellEx32.dll"
+          Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"
+          KeyPath="yes"/>
+        
+        <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
+          <?include RegisterShellExtension.wxi?>
+        <?endforeach?>
+      </Component>
+
+      <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
+        <Condition>VersionNT64</Condition>
+        <File
+          Name="GitExtensionsShellEx64.dll"
+          Source="..\SimpleExt\ReleaseMinDependency64\GitExtensionsShellEx.dll"
+          KeyPath="yes"/>
+
+        <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
+          <?include RegisterShellExtension.wxi?>
+        <?endforeach?>
+      </Component>
+
+      <Component Id="checksettings.reg" Guid="*">
+        <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="InstallDir.reg" Guid="*">
+        <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="PluginsDir">
+      <Component Id="AutoCheckForUpdates.dll" Guid="*">
+        <File Source="..\Plugins\AutoCheckForUpdates\bin\Release\AutoCheckForUpdates.dll"/>
+      </Component>
+      <Component Id="AutoCompileSubmodules.dll" Guid="*">
+        <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+      </Component>
+      <Component Id="GitStatistics.dll" Guid="*">
+        <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="PuttyDir">
+      <Component Id="plink.exe" Guid="*">
+        <File Source="..\Bin\plink.exe"/>
+      </Component>
+      <Component Id="pageant.exe" Guid="*">
+        <File Source="..\Bin\pageant.exe"/>
+      </Component>
+      <Component Id="puttygen.exe" Guid="*">
+        <File Source="..\Bin\puttygen.exe"/>
+      </Component>
+
+      <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
+        <Condition>SSHCLIENT="OpenSSH"</Condition>
+        <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="gitssh_putty.reg" Guid="2cb64776-8035-413e-9266-4ad9e5ecbad3">
+        <Condition>SSHCLIENT="PuTTY"</Condition>
+        <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="plink.reg" Guid="*">
+        <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="pageant.reg" Guid="*">
+        <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+      <Component Id="puttygen.reg" Guid="*">
+        <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
+      </Component>
+    </DirectoryRef>
+
+    <?foreach VsVersion in $(var.VsVersions)?>
+    <DirectoryRef Id="VS$(var.VsVersion)">
+      <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
+        
+        <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+          <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
+        </Component>
+        
+        <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
+          <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
+          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
+        </Component>
+        
+        <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
+          <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll"/>
+            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
+          </Component>
+        </Directory>
+        
+      </Directory>
+    </DirectoryRef>
+    <?endforeach?>
+
+    <DirectoryRef Id="StartMenuDir">
+      <Component Id="GitExtensions.startmenu" Guid="*">
+        <Shortcut
+          Id="GitExtensions.startmenu"
+          Name="$(var.ProductName)"
+          Description="$(var.ProductName)"
+          Icon="cow_head.ico"
+          Target="[INSTALLDIR]GitExtensions.exe"
+          WorkingDirectory="INSTALLDIR"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="GitExtensions.startmenu" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="GitExtensions.startmenu"
+          On="uninstall"/>
+      </Component>
+
+      <Component Id="UserManual.startmenu" Guid="*">
+        <Shortcut
+          Id="UserManual.startmenu"
+          Name="User Manual"
+          Description="$(var.ProductName) User Manual"
+          Target="[INSTALLDIR]GitExtensionsUserManual.pdf"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="UserManual.startmenu" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="UserManual.startmenu"
+          On="uninstall"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="GitExtensions.desktop" Guid="*">
+        <Shortcut
+          Id="GitExtensions.desktop"
+          Name="$(var.ProductName)"
+          Description="$(var.ProductName)"
+          Icon="cow_head.ico"
+          Target="[INSTALLDIR]GitExtensions.exe"
+          WorkingDirectory="INSTALLDIR"/>
+        <RegistryValue
+          Root="HKCU" Key="$(var.InstalledRegKey)"
+          Name="GitExtensions.desktop" Value="" Type="string"
+          KeyPath="yes"/>
+        <RemoveFolder
+          Id="GitExtensions.desktop"
+          On="uninstall"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
+      <ComponentRef Id="cow_head.ico"/>
+      <ComponentRef Id="gitex.cmd"/>
+      <ComponentRef Id="GitExtensionsUserManual.pdf"/>
+      <ComponentRef Id="GitExtensions.exe"/>
+      <ComponentRef Id="GitCommands.dll"/>
+      <ComponentRef Id="GitUI.dll"/>
+      <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="GitUIPluginInterfaces.dll"/>
+      <ComponentRef Id="checksettings.reg"/>
+      <ComponentRef Id="InstallDir.reg"/>
+
+      <ComponentRef Id="AutoCheckForUpdates.dll"/>
+      <ComponentRef Id="AutoCompileSubmodules.dll"/>
+      <ComponentRef Id="GitStatistics.dll"/>
+
+      <ComponentRef Id="gitssh_openssh.reg"/>
+      <ComponentRef Id="gitssh_putty.reg"/>
+      <ComponentRef Id="plink.exe"/>
+      <ComponentRef Id="plink.reg"/>
+      <ComponentRef Id="pageant.exe"/>
+      <ComponentRef Id="pageant.reg"/>
+      <ComponentRef Id="puttygen.exe"/>
+      <ComponentRef Id="puttygen.reg"/>
+
+      <ComponentRef Id="GitExtensions.startmenu"/>
+      <ComponentRef Id="GitExtensions.desktop"/>
+      <ComponentRef Id="UserManual.startmenu"/>
+
+      <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
+        <ComponentRef Id="GitExtensionsShellEx32.dll"/>
+        <ComponentRef Id="GitExtensionsShellEx64.dll"/>
+      </Feature>
+
+      <?foreach VsVersion in $(var.VsVersions)?>
+      <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+        <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn"/>
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll"/>
+        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll"/>
+      </Feature>
+      <?endforeach?>
+    </Feature>
+
+    <?if $(var.IncludeRequiredSoftware) = 1 ?>
+      <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
+      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
+
+      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
+      <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
+    <?endif?>
+
+  </Product>
+
+</Wix>

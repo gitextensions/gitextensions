@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <UI Id="WixUI_GitExtensions">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="9"/>
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" Bold="yes"/>
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="10" Bold="yes"/>
+
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal"/>
+      <Property Id="WixUI_Mode" Value="FeatureTree"/>
+
+      <DialogRef Id="BrowseDlg"/>
+      <DialogRef Id="FilesInUse"/>
+      <DialogRef Id="MsiRMFilesInUse"/>
+      <DialogRef Id="PrepareDlg"/>
+      <DialogRef Id="ResumeDlg"/>
+      <DialogRef Id="GitEx_ErrorDlg"/>
+      <DialogRef Id="GitEx_FatalError"/>
+      <DialogRef Id="GitEx_UserExit"/>
+
+      <Publish Dialog="GitEx_ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+      <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+      <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+
+      <?include ../Config.wxi ?>
+      
+      <?if $(var.IncludeRequiredSoftware) = 1 ?>
+        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>
+
+        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg">1</Publish>
+        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="MsysGit" Event="DoAction" Value="MsysGit">1</Publish>
+        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="KDiff" Event="DoAction" Value="KDiff">1</Publish>
+        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg">1</Publish>
+
+        <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>
+      <?else?>
+        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg">1</Publish>
+        <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg">1</Publish>
+      <?endif?>
+      
+      <Publish Dialog="GitEx_InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="GitEx_InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="GitEx_InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="GitEx_InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+      <Publish Dialog="GitEx_InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="GitEx_InstallDirDlg" Control="Next" Event="NewDialog" Value="GitEx_CustomizeDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="1">Installed</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Back" Event="NewDialog" Value="GitEx_InstallDirDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg" Order="1">Installed</Publish>
+      <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="2">NOT Installed</Publish>
+
+      <Publish Dialog="GitEx_SSHClientDlg" Control="Back" Event="NewDialog" Value="GitEx_CustomizeDlg">1</Publish>
+      <Publish Dialog="GitEx_SSHClientDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+
+      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="1">
+        NOT Installed
+      </Publish>
+      <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg" Order="3">
+        Installed
+      </Publish>
+
+      <Publish Dialog="GitEx_MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_MaintenanceTypeDlg">1</Publish>
+
+      <Publish Dialog="GitEx_MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="GitEx_CustomizeDlg">1</Publish>
+      <Publish Dialog="GitEx_MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+      <Publish Dialog="GitEx_MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+      <Publish Dialog="GitEx_MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="GitEx_MaintenanceWelcomeDlg">1</Publish>
+    </UI>
+
+    <UIRef Id="WixUI_Common"/>
+  </Fragment>
+</Wix>

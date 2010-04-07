@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+  <Property Id="PREVIOUSVERSIONSINSTALLED" Secure="yes"/>
+
+  <!-- Upgrade WiX installations -->
+  <Upgrade Id="$(var.UpgradeCode)">
+    <UpgradeVersion
+      Minimum="0.0.0.0" Maximum="99.0.0.0"
+      Property="PREVIOUSVERSIONSINSTALLED"
+      IncludeMinimum="yes" IncludeMaximum="no"/>
+  </Upgrade>
+
+  <!-- Upgrade old Visual Studio Setup installations -->
+  <Upgrade Id="{21C47884-2F47-492D-84AA-4AACAB569651}">
+    <UpgradeVersion
+      Minimum="0.0.0.0" Maximum="99.0.0.0"
+      Property="PREVIOUSVERSIONSINSTALLED"
+      IncludeMinimum="yes" IncludeMaximum="no"/>
+  </Upgrade>
+
+  <InstallExecuteSequence>
+    <RemoveExistingProducts After="InstallInitialize"/>
+  </InstallExecuteSequence>
+
+</Include>
