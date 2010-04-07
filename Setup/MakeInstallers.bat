@@ -18,8 +18,13 @@ set build=%msbuild% %project% /t:Rebuild /p:Version=%Version% /p:Configuration=R
 echo Creating installers for Git Extensions %version%
 echo.
 
-del %normal%
-del %complete%
+echo Removing %normal%
+del %normal% 2> nul
+
+echo Removing %complete%
+del %complete% 2> nul
+
+echo.
 
 echo Building %normal%
 %build% /p:IncludeRequiredSoftware=0
