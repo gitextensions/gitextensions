@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace GitCommands
 {
-    public class Settings
+    public static class Settings
     {
         private static string iconColor = "default";
         public static string IconColor

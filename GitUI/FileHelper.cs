@@ -21,6 +21,7 @@ namespace GitUI
             ".jpeg",
             ".mpg",
             ".mpeg",
+            ".msi",
             ".pdf",
             ".png",
             ".pdb",
