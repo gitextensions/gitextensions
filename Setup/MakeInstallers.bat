@@ -6,8 +6,8 @@ rem
 set version=1.92
 
 set msiversion=%version:.=%
-set normal=GitExtensions%msiversion%.msi
-set complete=GitExtensions%msiversion%Complete.msi
+set normal=GitExtensions%msiversion%Setup.msi
+set complete=GitExtensions%msiversion%SetupComplete.msi
 
 set msbuild="%windir%\Microsoft.NET\Framework\v3.5\MSBuild.exe"
 set output=bin\Release\GitExtensions.msi
