@@ -91,7 +91,6 @@
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
-        <Condition>Not VersionNT64</Condition>
         <File
           Name="GitExtensionsShellEx32.dll"
           Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"
