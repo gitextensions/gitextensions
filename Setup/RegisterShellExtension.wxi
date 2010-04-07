@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  
+  <!-- COM Registration -->
+  <RegistryValue
+    Root="HKCR" Key="CLSID\$(var.ShellExCLSID)"
+    Value="GitExtensions Shell Extension" Type="string"/>
+  <RegistryValue
+    Root="HKCR" Key="CLSID\$(var.ShellExCLSID)\InprocServer32"
+    Value="[INSTALLDIR]$(var.ShellExFileName)" Type="string"/>
+  <RegistryValue
+    Root="HKCR" Key="CLSID\$(var.ShellExCLSID)\InprocServer32"
+    Name="ThreadingModel" Value="Apartment" Type="string"/>
+  
+  <!-- Shell Extension Registration -->
+  <RegistryValue
+    Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved"
+    Name="$(var.ShellExCLSID)" Value="GitExtensions2" Type="string"/>
+  <RegistryValue
+    Root="HKCR" Key="*\shellex\ContextMenuHandlers\GitExtensions2"
+    Value="$(var.ShellExCLSID)" Type="string"/>
+  <RegistryValue
+    Root="HKCR" Key="Directory\shellex\ContextMenuHandlers\GitExtensions2"
+    Value="$(var.ShellExCLSID)" Type="string"/>
+  <RegistryValue
+    Root="HKCR" Key="Directory\Background\shellex\ContextMenuHandlers\GitExtensions2"
+    Value="$(var.ShellExCLSID)" Type="string"/>
+  
+</Include>

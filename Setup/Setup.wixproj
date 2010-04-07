@@ -1,0 +1,73 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Version Condition=" '$(Version)' == '' ">0.00</Version>
+    <IncludeRequiredSoftware Condition=" '$(IncludeRequiredSoftware)' == '' ">1</IncludeRequiredSoftware>
+    <ProductVersion>3.0</ProductVersion>
+    <ProjectGuid>{9380c29c-3c7f-47a8-a4c9-a5ee9d7b386a}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>GitExtensions</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;Version=$(Version);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+    <DefineConstants>Version=$(Version);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <Compile Include="UI\CancelDlg.wxs" />
+    <Compile Include="UI\CustomizeDlg.wxs" />
+    <Compile Include="UI\ErrorDlg.wxs" />
+    <Compile Include="UI\ExitDialog.wxs" />
+    <Compile Include="UI\FatalError.wxs" />
+    <Compile Include="UI\InstallDirDlg.wxs" />
+    <Compile Include="UI\MaintenanceTypeDlg.wxs" />
+    <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
+    <Compile Include="UI\ProgressDlg.wxs" />
+    <Compile Include="UI\RequiredSoftwareDlg.wxs" />
+    <Compile Include="UI\SSHClientDlg.wxs" />
+    <Compile Include="UI\UserExit.wxs" />
+    <Compile Include="UI\VerifyReadyDlg.wxs" />
+    <Compile Include="UI\WelcomeDlg.wxs" />
+    <Compile Include="UI\WixUI.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AddRemove.wxi" />
+    <Content Include="Config.wxi" />
+    <Content Include="EnableUpgrades.wxi" />
+    <Content Include="RegisterShellExtension.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

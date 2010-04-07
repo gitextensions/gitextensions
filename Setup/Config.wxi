@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+  <?define Manufacturer = "Henk" ?>
+  <?define ProductName = "Git Extensions" ?>
+  <?define InstallName = GitExtensions ?>
+
+  <?define AppRegKey = "Software\GitExtensions\GitExtensions\1.0.0.0" ?>
+  <?define InstalledRegKey = "Software\GitExtensions\Installed" ?>
+
+  <!-- upgrade code never changes -->
+  <?define UpgradeCode = "140e80ea-5053-42dc-ab0e-6ff0e49e6bcf" ?>
+
+</Include>
