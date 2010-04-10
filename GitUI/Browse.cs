@@ -22,27 +22,6 @@ namespace GitUI
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
-            DiffFiles.DrawMode = DrawMode.OwnerDrawFixed;
-            DiffFiles.DrawItem += new DrawItemEventHandler(DiffFiles_DrawItem);
-        }
-
-        void DiffFiles_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-
-            GitItemStatus gitItemStatus = (GitItemStatus)DiffFiles.Items[e.Index];
-
-            if (gitItemStatus.IsChanged)
-                e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-            else
-                if (gitItemStatus.IsDeleted)
-                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-                else
-                    if (gitItemStatus.IsNew)
-                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-
-            e.Graphics.DrawString(gitItemStatus.Name, DiffFiles.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -192,35 +171,7 @@ namespace GitUI
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
 
-            if (NoGit.Visible)
-            {
-                int xStart = 10;
-                int yStart = 25;
-                RecentRepositoriesGroupBox.Controls.Clear();
-
-                foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
-                {
-                    LinkLabel label = new LinkLabel();
-                    label.Text = historyItem;
-                    label.Location = new Point(xStart, yStart);
-                    label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
-                    label.AutoEllipsis = true;
-                    label.Click += new EventHandler(label_Click);
-
-
-                    ToolTip toolTip = new ToolTip();
-                    toolTip.InitialDelay = 1;
-                    toolTip.AutomaticDelay = 1;
-                    toolTip.AutoPopDelay = 5000;
-                    toolTip.UseFading = false;
-                    toolTip.UseAnimation = false;
-                    toolTip.ReshowDelay = 1;
-                    toolTip.SetToolTip(label, label.Text);
-
-                    RecentRepositoriesGroupBox.Controls.Add(label);
-                    yStart += 25;
-                }
-            }
+            ShowRecentRepositories();
 
             if (hard)
                 ShowRevisions();
@@ -270,6 +221,39 @@ namespace GitUI
                 }
             }
 
+        }
+
+        private void ShowRecentRepositories()
+        {
+            if (NoGit.Visible)
+            {
+                int xStart = 10;
+                int yStart = 25;
+                RecentRepositoriesGroupBox.Controls.Clear();
+
+                foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
+                {
+                    LinkLabel label = new LinkLabel();
+                    label.Text = historyItem;
+                    label.Location = new Point(xStart, yStart);
+                    label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
+                    label.AutoEllipsis = true;
+                    label.Click += new EventHandler(label_Click);
+
+
+                    ToolTip toolTip = new ToolTip();
+                    toolTip.InitialDelay = 1;
+                    toolTip.AutomaticDelay = 1;
+                    toolTip.AutoPopDelay = 5000;
+                    toolTip.UseFading = false;
+                    toolTip.UseAnimation = false;
+                    toolTip.ReshowDelay = 1;
+                    toolTip.SetToolTip(label, label.Text);
+
+                    RecentRepositoriesGroupBox.Controls.Add(label);
+                    yStart += 25;
+                }
+            }
         }
 
 
@@ -355,7 +339,7 @@ namespace GitUI
         {
             if (tabControl1.SelectedTab == Diff)
             {
-                DiffFiles.DataSource = null;
+                DiffFiles.GitItemStatusses = null;
                 List<GitRevision> revisions = RevisionGrid.GetRevisions();
 
                 if (revisions.Count == 0)
@@ -363,16 +347,16 @@ namespace GitUI
 
                 if (revisions.Count == 2)
                 {
-                    DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                 }
                 else
                 {
                     GitRevision revision = revisions[0];
 
                     if (revision.ParentGuids.Count > 0)
-                        DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                     else
-                        DiffFiles.DataSource = null;
+                        DiffFiles.GitItemStatusses = null;
                 }
             }
         }
@@ -1358,32 +1342,9 @@ namespace GitUI
             GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
         }
 
-        private void DiffFiles_MouseMove(object sender, MouseEventArgs e)
+        private void splitContainer5_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            if (sender is ListBox)
-            {
-                ListBox listBox = (ListBox)sender;
-                Point point = new Point(e.X, e.Y);
-                int hoverIndex = listBox.IndexFromPoint(point);
-                if (hoverIndex >= 0 && hoverIndex < listBox.Items.Count)
-                {
-                    string text = listBox.Items[hoverIndex].ToString();
-
-                    float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
-
-                    if (fTextWidth > DiffFiles.Width)
-                    {
-                        if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
-                            DiffFilesTooltip.SetToolTip(listBox, text);
-                    }
-                    else
-                        DiffFilesTooltip.RemoveAll();
-                }
-                else
-                {
-                    DiffFilesTooltip.RemoveAll();
-                }
-            }
+            ShowRecentRepositories();
         }
     }
 }
