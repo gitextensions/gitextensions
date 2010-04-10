@@ -44,7 +44,6 @@ namespace GitUI
 
                 if (hoverIndex >= 0)
                 {
-
                     foreach (int selectionIndex in FileStatusListBox.SelectedIndices)
                     {
                         FileStatusListBox.SetSelected(selectionIndex, false);
@@ -174,7 +173,7 @@ namespace GitUI
             }
         }
 
-        public GitItemStatus SelectedItem 
+        public GitItemStatus SelectedItem
         {
             get
             {
@@ -216,12 +215,12 @@ namespace GitUI
                     else
                         if (gitItemStatus.IsNew)
                             e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-                
+
                 e.Graphics.DrawString(gitItemStatus.Name, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
             }
         }
 
-        public IList<GitItemStatus> GitItemStatusses 
+        public IList<GitItemStatus> GitItemStatusses
         {
             get
             {
