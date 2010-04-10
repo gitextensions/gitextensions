@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 1.92
+	Fixed bug: the application hangs randomly
+	There is a new installer to address the following issues (thanks to Jacob Stanley)
+		Updating existing installations
+		Install both 32bits and 64bits shell extension ont 64bit systems
+	Added icons to indicate if a files is added, modified or removed
+
 Version 1.91
 	Fixed bug: tooltips drawn incorrect
 
