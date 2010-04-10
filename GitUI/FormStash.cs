@@ -52,19 +52,8 @@ namespace GitUI
         private void InitializeTracked()
         {
             List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GetAllChangedFiles();// GitStatus(false);
-            /*
-            List<GitItemStatus> untrackedItemStatus = new List<GitItemStatus>();
-            List<GitItemStatus> trackedItemStatus = new List<GitItemStatus>();
-            foreach (GitItemStatus itemStatus in itemStatusList)
-            {
-                if (itemStatus.IsTracked == false)
-                    untrackedItemStatus.Add(itemStatus);
-                else
-                trackedItemStatus.Add(itemStatus);
-            }*/
 
             Changes.DisplayMember = "Name";
-            //Changes.DataSource = trackedItemStatus;
             Changes.DataSource = itemStatusList;
         }
 
@@ -79,41 +68,6 @@ namespace GitUI
 
         private void ShowPatch(Patch patch)
         {
-            /*
-            string syntax = "XML";
-            if ((patch.FileNameB.LastIndexOf('.') > 0))
-            {
-                string extension = patch.FileNameB.Substring(patch.FileNameB.LastIndexOf('.') + 1).ToUpper();
-
-                switch (extension)
-                {
-                    case "BAS":
-                    case "VBS":
-                    case "VB":
-                        syntax = "VBNET";
-                        break;
-                    case "CS":
-                        syntax = "C#";
-                        break;
-                    case "CMD":
-                    case "BAT":
-                        syntax = "BAT";
-                        break;
-                    case "C":
-                    case "RC":
-                    case "IDL":
-                    case "H":
-                    case "CPP":
-                        syntax = "C#";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            View.SetHighlighting(syntax);
-
-            View.Text = patch.Text;
-            View.Refresh();*/
             View.ViewPatch(patch.Text);
         }
 
