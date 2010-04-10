@@ -25,6 +25,13 @@ namespace GitUI
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
+
+            NoFiles.Visible = false;
+        }
+
+        public void SetNoFilesText(string text)
+        {
+            NoFiles.Text = text;
         }
 
         void FileStatusListBox_MouseDown(object sender, MouseEventArgs e)
@@ -223,8 +230,19 @@ namespace GitUI
 
             set
             {
+                if (value == null || value.Count == 0)
+                    NoFiles.Visible = true;
+                else
+                    NoFiles.Visible = false;
+
                 FileStatusListBox.DataSource = value;
             }
+        }
+
+        private void NoFiles_SizeChanged(object sender, EventArgs e)
+        {
+            NoFiles.Location = new Point(3, 3);
+            NoFiles.Size = new Size(Size.Width - 6, Size.Height - 6);
         }
 
 

@@ -28,6 +28,9 @@ namespace GitUI
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
 
+            Unstaged.SetNoFilesText("There are no unstaged changes");
+            Staged.SetNoFilesText("There are no staged changes");
+
             Unstaged.SelectedIndexChanged += new EventHandler(Untracked_SelectionChanged);
             Staged.SelectedIndexChanged += new EventHandler(Tracked_SelectionChanged);
         }
