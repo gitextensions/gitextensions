@@ -39,6 +39,7 @@
           <Directory Id="PuttyDir" Name="PuTTY"/>
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
+          <Directory Id="DictionariesDir" Name="Dictionaries"/>
         </Directory>
       </Directory>
       <Directory Id="PersonalFolder">
@@ -131,6 +132,39 @@
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DictionariesDir">
+      <Component Id="deDE.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\de-DE.dic"/>
+      </Component>
+      <Component Id="enAU.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\en-AU.dic"/>
+      </Component>
+      <Component Id="enCA.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\en-CA.dic"/>
+      </Component>
+      <Component Id="enGB.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\en-GB.dic"/>
+      </Component>
+      <Component Id="enUS.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\en-US.dic"/>
+      </Component>
+      <Component Id="esES.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\es-ES.dic"/>
+      </Component>
+      <Component Id="esMX.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\es-MX.dic"/>
+      </Component>
+      <Component Id="frFRE.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\fr-FR.dic"/>
+      </Component>
+      <Component Id="itIT.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\it-IT.dic"/>
+      </Component>
+      <Component Id="nlNL.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\nl-NL.dic"/>
       </Component>
     </DirectoryRef>
 
@@ -261,6 +295,17 @@
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
 
+      <ComponentRef Id="deDE.dic"/>
+      <ComponentRef Id="enAU.dic"/>
+      <ComponentRef Id="enCA.dic"/>
+      <ComponentRef Id="enGB.dic"/>
+      <ComponentRef Id="enUS.dic"/>
+      <ComponentRef Id="esES.dic"/>
+      <ComponentRef Id="esMX.dic"/>
+      <ComponentRef Id="frFRE.dic"/>
+      <ComponentRef Id="itIT.dic"/>
+      <ComponentRef Id="nlNL.dic"/>
+      
       <ComponentRef Id="gitssh_openssh.reg"/>
       <ComponentRef Id="gitssh_putty.reg"/>
       <ComponentRef Id="plink.exe"/>
