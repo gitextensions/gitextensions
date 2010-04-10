@@ -40,6 +40,7 @@
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
           <Directory Id="DictionariesDir" Name="Dictionaries"/>
+          <Directory Id="IconsDir" Name="Icons"/>
         </Directory>
       </Directory>
       <Directory Id="PersonalFolder">
@@ -135,6 +136,24 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="IconsDir">
+      <Component Id="CowHeadBlue.ico" Guid="*">
+        <File Source="..\GitUI\Icons\cow-head-blue.ico"/>
+      </Component>
+      <Component Id="CowHeadGreen.ico" Guid="*">
+        <File Source="..\GitUI\Icons\cow-head-green.ico"/>
+      </Component>
+      <Component Id="CowHeadPurple.ico" Guid="*">
+        <File Source="..\GitUI\Icons\cow-head-purple.ico"/>
+      </Component>
+      <Component Id="CowHeadRed.ico" Guid="*">
+        <File Source="..\GitUI\Icons\cow-head-red.ico"/>
+      </Component>
+      <Component Id="CowHeadYellow.ico" Guid="*">
+        <File Source="..\GitUI\Icons\cow-head-yellow.ico"/>
+      </Component>
+    </DirectoryRef>
+    
     <DirectoryRef Id="DictionariesDir">
       <Component Id="deDE.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\de-DE.dic"/>
@@ -157,7 +176,7 @@
       <Component Id="esMX.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\es-MX.dic"/>
       </Component>
-      <Component Id="frFRE.dic" Guid="*">
+      <Component Id="frFR.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\fr-FR.dic"/>
       </Component>
       <Component Id="itIT.dic" Guid="*">
@@ -295,17 +314,6 @@
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
 
-      <ComponentRef Id="deDE.dic"/>
-      <ComponentRef Id="enAU.dic"/>
-      <ComponentRef Id="enCA.dic"/>
-      <ComponentRef Id="enGB.dic"/>
-      <ComponentRef Id="enUS.dic"/>
-      <ComponentRef Id="esES.dic"/>
-      <ComponentRef Id="esMX.dic"/>
-      <ComponentRef Id="frFRE.dic"/>
-      <ComponentRef Id="itIT.dic"/>
-      <ComponentRef Id="nlNL.dic"/>
-      
       <ComponentRef Id="gitssh_openssh.reg"/>
       <ComponentRef Id="gitssh_putty.reg"/>
       <ComponentRef Id="plink.exe"/>
@@ -318,6 +326,47 @@
       <ComponentRef Id="GitExtensions.startmenu"/>
       <ComponentRef Id="GitExtensions.desktop"/>
       <ComponentRef Id="UserManual.startmenu"/>
+
+      <Feature Id="Icons" Title="Extra application icons" Level="2">
+        <ComponentRef Id="CowHeadBlue.ico"/>
+        <ComponentRef Id="CowHeadGreen.ico"/>
+        <ComponentRef Id="CowHeadPurple.ico"/>
+        <ComponentRef Id="CowHeadRed.ico"/>
+        <ComponentRef Id="CowHeadYellow.ico"/>
+      </Feature>
+      
+      <Feature Id="Dictionaries" Title="Spelling dictionaries" Level="1">
+        <Feature Id="deDE" Title="de-DE" Level="1">
+          <ComponentRef Id="deDE.dic"/>
+        </Feature>
+        <Feature Id="enAU" Title="en-AU" Level="1">
+          <ComponentRef Id="enAU.dic"/>
+        </Feature>
+        <Feature Id="enCA" Title="en-CA" Level="1">
+          <ComponentRef Id="enCA.dic"/>
+        </Feature>
+        <Feature Id="enGB" Title="en-GB" Level="1">
+          <ComponentRef Id="enGB.dic"/>
+        </Feature>
+        <Feature Id="enUS" Title="en-US" Level="1">
+          <ComponentRef Id="enUS.dic"/>
+        </Feature>
+        <Feature Id="esES" Title="es-ES" Level="1">
+          <ComponentRef Id="esES.dic"/>
+        </Feature>
+        <Feature Id="esMX" Title="es-MX" Level="1">
+          <ComponentRef Id="esMX.dic"/>
+        </Feature>
+        <Feature Id="frFR" Title="fr-FR" Level="1">
+          <ComponentRef Id="frFR.dic"/>
+        </Feature>
+        <Feature Id="itIT" Title="it-IT" Level="1">
+          <ComponentRef Id="itIT.dic"/>
+        </Feature>
+        <Feature Id="nlNL" Title="nl-NL" Level="1">
+          <ComponentRef Id="nlNL.dic"/>
+        </Feature>
+      </Feature>
 
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll"/>
