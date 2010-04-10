@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using System.Collections.Specialized;
 
 namespace GitUI
 {
@@ -28,6 +29,7 @@ namespace GitUI
 
         void FileStatusListBox_MouseDown(object sender, MouseEventArgs e)
         {
+            //SELECT
             if (e.Button == MouseButtons.Right)
             {
                 Point point = new Point(e.X, e.Y);
@@ -43,6 +45,27 @@ namespace GitUI
 
                     FileStatusListBox.SetSelected(hoverIndex, true);
                 }
+            }
+
+            //DRAG
+            if (e.Button == MouseButtons.Left)
+            {
+                if (SelectedItems.Count > 0)
+                {
+                    // Remember the point where the mouse down occurred. 
+                    // The DragSize indicates the size that the mouse can move 
+                    // before a drag event should be started.               
+                    Size dragSize = SystemInformation.DragSize;
+
+                    // Create a rectangle using the DragSize, with the mouse position being
+                    // at the center of the rectangle.
+                    dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
+                                                                   e.Y - (dragSize.Height / 2)),
+                                                            dragSize);
+                }
+                else
+                    // Reset the rectangle if the mouse is not over an item in the ListBox.
+                    dragBoxFromMouseDown = Rectangle.Empty;
             }
         }
 
@@ -71,8 +94,38 @@ namespace GitUI
             }
         }
 
+        private Rectangle dragBoxFromMouseDown;
+
         void FileStatusListBox_MouseMove(object sender, MouseEventArgs e)
         {
+            //DRAG
+            // If the mouse moves outside the rectangle, start the drag.
+            if (dragBoxFromMouseDown != Rectangle.Empty &&
+                !dragBoxFromMouseDown.Contains(e.X, e.Y))
+            {
+                if (SelectedItems.Count > 0)
+                {
+                    StringCollection fileList = new StringCollection();
+
+                    foreach (GitItemStatus item in SelectedItems)
+                    {
+                        string fileName = GitCommands.Settings.WorkingDir + item.Name;
+
+                        fileList.Add(fileName.Replace('/', '\\'));
+                    }
+
+                    DataObject obj = new DataObject();
+                    obj.SetFileDropList(fileList);
+
+                    // Proceed with the drag and drop, passing in the list item.                   
+                    DragDropEffects dropEffect = DoDragDrop(
+                                                     obj,
+                                                     DragDropEffects.Copy);
+                    dragBoxFromMouseDown = Rectangle.Empty;
+                }
+            }
+
+            //TOOLTIP
             ListBox listBox = sender as ListBox;
             if (listBox != null)
             {
