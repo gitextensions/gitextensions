@@ -31,7 +31,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -89,30 +89,33 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.DiffText);
             this.splitContainer3.Size = new System.Drawing.Size(750, 320);
-            this.splitContainer3.SplitterDistance = 136;
+            this.splitContainer3.SplitterDistance = 188;
             this.splitContainer3.TabIndex = 1;
             // 
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.GitItemStatusses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(136, 316);
-            this.DiffFiles.Sorted = true;
+            this.DiffFiles.SelectedItem = null;
+            this.DiffFiles.Size = new System.Drawing.Size(188, 320);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
-            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
             // 
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IgnoreWhitespaceChanges = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(4);
             this.DiffText.Name = "DiffText";
+            this.DiffText.NumberOfVisibleLines = 3;
             this.DiffText.ScrollPos = 0;
-            this.DiffText.Size = new System.Drawing.Size(610, 320);
+            this.DiffText.ShowEntireFile = false;
+            this.DiffText.Size = new System.Drawing.Size(558, 320);
             this.DiffText.TabIndex = 1;
+            this.DiffText.TreatAllFilesAsText = false;
             // 
             // FormDiff
             // 
@@ -120,7 +123,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormDiff";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
@@ -139,7 +141,7 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.ListBox DiffFiles;
+        private FileStatusList DiffFiles;
         private RevisionGrid RevisionGrid;
         private FileViewer DiffText;
     }

@@ -28,13 +28,11 @@ namespace GitUI
         public void SetRevision(GitRevision revision)
         {
             Revision = revision;
-            DiffFiles.DataSource = null;
-            DiffFiles.DisplayMember = "FileNameB";
+            DiffFiles.GitItemStatusses = null;
 
             if (revision.ParentGuids.Count > 0)
-                DiffFiles.DataSource = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
-            else
-                DiffFiles.DataSource = null;
+                DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+
             RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision.Guid);
         }
 
@@ -56,9 +54,9 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (DiffFiles.SelectedItem is string)
+            if (DiffFiles.SelectedItem != null)
             {
-                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], (string)DiffFiles.SelectedItem, DiffText.GetExtraDiffArguments());
+                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffText.GetExtraDiffArguments());
                 if (selectedPatch != null)
                 {
                     DiffText.ViewPatch(selectedPatch.Text);
@@ -66,16 +64,6 @@ namespace GitUI
                 else
                 {
                     DiffText.ViewPatch("");
-                }
-            }
-        }
-
-        private void DiffFiles_DoubleClick(object sender, EventArgs e)
-        {
-            if (DiffFiles.SelectedItem is string)
-            {
-                {
-                    GitUICommands.Instance.StartFileHistoryDialog((string)DiffFiles.SelectedItem);
                 }
             }
         }

@@ -78,13 +78,14 @@ namespace GitUI
             {
                 Point point = new Point(e.X, e.Y);
                 int hoverIndex = listBox.IndexFromPoint(point);
-                if (hoverIndex >= 0 && hoverIndex < listBox.Items.Count)
+                if (hoverIndex >= 0 && hoverIndex <= listBox.Items.Count)
                 {
                     string text = listBox.Items[hoverIndex].ToString();
 
                     float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
 
-                    if (fTextWidth > FileStatusListBox.Width)
+                    //Use width-itemheight because the icon drawn in front of the text is the itemheight
+                    if (fTextWidth > (FileStatusListBox.Width - FileStatusListBox.ItemHeight))
                     {
                         if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
                             DiffFilesTooltip.SetToolTip(listBox, text);
@@ -155,7 +156,7 @@ namespace GitUI
                     else
                         if (gitItemStatus.IsNew)
                             e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-
+                
                 e.Graphics.DrawString(gitItemStatus.Name, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
             }
         }

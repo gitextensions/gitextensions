@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffFiles = new FileStatusList();
             this.DiffText = new GitUI.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
@@ -62,14 +62,11 @@
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.FormattingEnabled = true;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
             this.DiffFiles.Size = new System.Drawing.Size(239, 407);
-            this.DiffFiles.Sorted = true;
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
-            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
             // 
             // DiffText
             // 
@@ -135,7 +132,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListBox DiffFiles;
+        private FileStatusList DiffFiles;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.HelpProvider helpProvider1;
