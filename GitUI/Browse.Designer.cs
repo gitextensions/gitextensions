@@ -74,7 +74,7 @@
             this.FileText = new GitUI.FileViewer();
             this.Diff = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new System.Windows.Forms.ListBox();
+            this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffText = new GitUI.FileViewer();
@@ -158,7 +158,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -429,8 +428,9 @@
             // 
             this.splitContainer5.Panel2.Controls.Add(this.label2);
             this.splitContainer5.Size = new System.Drawing.Size(796, 520);
-            this.splitContainer5.SplitterDistance = 254;
+            this.splitContainer5.SplitterDistance = 282;
             this.splitContainer5.TabIndex = 8;
+            this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
             // 
             // splitContainer6
             // 
@@ -447,7 +447,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(254, 520);
+            this.splitContainer6.Size = new System.Drawing.Size(282, 520);
             this.splitContainer6.SplitterDistance = 126;
             this.splitContainer6.TabIndex = 0;
             // 
@@ -459,7 +459,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(254, 126);
+            this.groupBox1.Size = new System.Drawing.Size(282, 126);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Getting started";
@@ -468,7 +468,7 @@
             // 
             this.Open.Location = new System.Drawing.Point(48, 19);
             this.Open.Name = "Open";
-            this.Open.Size = new System.Drawing.Size(143, 28);
+            this.Open.Size = new System.Drawing.Size(179, 28);
             this.Open.TabIndex = 7;
             this.Open.Text = "Open repository";
             this.Open.UseVisualStyleBackColor = true;
@@ -478,7 +478,7 @@
             // 
             this.Init.Location = new System.Drawing.Point(48, 87);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(143, 28);
+            this.Init.Size = new System.Drawing.Size(179, 28);
             this.Init.TabIndex = 4;
             this.Init.Text = "Create new repository";
             this.Init.UseVisualStyleBackColor = true;
@@ -488,7 +488,7 @@
             // 
             this.Clone.Location = new System.Drawing.Point(48, 53);
             this.Clone.Name = "Clone";
-            this.Clone.Size = new System.Drawing.Size(143, 28);
+            this.Clone.Size = new System.Drawing.Size(179, 28);
             this.Clone.TabIndex = 6;
             this.Clone.Text = "Clone repository";
             this.Clone.UseVisualStyleBackColor = true;
@@ -509,7 +509,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer7.Size = new System.Drawing.Size(254, 390);
+            this.splitContainer7.Size = new System.Drawing.Size(282, 390);
             this.splitContainer7.SplitterDistance = 324;
             this.splitContainer7.TabIndex = 0;
             // 
@@ -518,7 +518,7 @@
             this.RecentRepositoriesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RecentRepositoriesGroupBox.Location = new System.Drawing.Point(0, 0);
             this.RecentRepositoriesGroupBox.Name = "RecentRepositoriesGroupBox";
-            this.RecentRepositoriesGroupBox.Size = new System.Drawing.Size(254, 324);
+            this.RecentRepositoriesGroupBox.Size = new System.Drawing.Size(282, 324);
             this.RecentRepositoriesGroupBox.TabIndex = 0;
             this.RecentRepositoriesGroupBox.TabStop = false;
             this.RecentRepositoriesGroupBox.Text = "Recent repositories";
@@ -529,7 +529,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(254, 62);
+            this.groupBox2.Size = new System.Drawing.Size(282, 62);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Donate";
@@ -715,15 +715,14 @@
             // 
             this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.FormattingEnabled = true;
+            this.DiffFiles.GitItemStatusses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(217, 251);
-            this.DiffFiles.Sorted = true;
+            this.DiffFiles.SelectedItem = null;
+            this.DiffFiles.Size = new System.Drawing.Size(217, 260);
             this.DiffFiles.TabIndex = 1;
-            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
-            this.DiffFiles.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiffFiles_MouseMove);
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             // 
             // DiffContextMenu
             // 
@@ -1525,7 +1524,7 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.TabPage Diff;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListBox DiffFiles;
+        private FileStatusList DiffFiles;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem changelogToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonPull;
@@ -1580,6 +1579,5 @@
         private System.Windows.Forms.ToolStripMenuItem cleanupToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private System.Windows.Forms.ToolTip DiffFilesTooltip;
     }
 }

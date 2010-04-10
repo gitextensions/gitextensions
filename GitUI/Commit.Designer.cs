@@ -48,9 +48,7 @@
 			this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rescanChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.Loading = new System.Windows.Forms.PictureBox();
-			this.Unstaged = new System.Windows.Forms.DataGridView();
-			this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.ChangeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Unstaged = new FileStatusList();
 			this.UnstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.ResetChanges = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,9 +70,7 @@
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.UnstageFiles = new System.Windows.Forms.Button();
-			this.Staged = new System.Windows.Forms.DataGridView();
-			this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.ChangeString2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Staged = new FileStatusList();
 			this.Cancel = new System.Windows.Forms.Button();
 			this.Ok = new System.Windows.Forms.Button();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -106,7 +102,7 @@
 			this.tableLayoutPanel5.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
+			//((System.ComponentModel.ISupportInitialize)(this.Unstaged)).BeginInit();
 			this.UnstagedFileContext.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
@@ -114,7 +110,7 @@
 			this.splitContainer5.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
 			this.menuStrip2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.Staged)).BeginInit();
+			//((System.ComponentModel.ISupportInitialize)(this.Staged)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
@@ -325,47 +321,12 @@
 			// 
 			// Unstaged
 			// 
-			this.Unstaged.AllowUserToAddRows = false;
-			this.Unstaged.AllowUserToDeleteRows = false;
-			this.Unstaged.AllowUserToOrderColumns = true;
-			this.Unstaged.AllowUserToResizeRows = false;
-			this.Unstaged.AutoGenerateColumns = false;
-			this.Unstaged.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.Unstaged.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn1,
-            this.ChangeString});
 			this.Unstaged.ContextMenuStrip = this.UnstagedFileContext;
-			this.Unstaged.DataSource = this.gitItemStatusBindingSource;
 			this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Unstaged.Location = new System.Drawing.Point(0, 0);
 			this.Unstaged.Name = "Unstaged";
-			this.Unstaged.ReadOnly = true;
-			this.Unstaged.RowHeadersVisible = false;
-			this.Unstaged.RowTemplate.Height = 24;
-			this.Unstaged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.Unstaged.ShowCellToolTips = false;
 			this.Unstaged.Size = new System.Drawing.Size(397, 260);
 			this.Unstaged.TabIndex = 0;
-			this.Unstaged.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Unstaged_MouseMove);
-			this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
-			this.Unstaged.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Unstaged_CellMouseDown);
-			this.Unstaged.SelectionChanged += new System.EventHandler(this.Untracked_SelectionChanged);
-			this.Unstaged.Click += new System.EventHandler(this.Unstaged_Click);
-			// 
-			// nameDataGridViewTextBoxColumn1
-			// 
-			this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-			this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-			this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-			this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-			// 
-			// ChangeString
-			// 
-			this.ChangeString.DataPropertyName = "ChangeString";
-			this.ChangeString.HeaderText = "Change";
-			this.ChangeString.Name = "ChangeString";
-			this.ChangeString.ReadOnly = true;
 			// 
 			// UnstagedFileContext
 			// 
@@ -566,42 +527,12 @@
 			// 
 			// Staged
 			// 
-			this.Staged.AllowUserToAddRows = false;
-			this.Staged.AllowUserToDeleteRows = false;
-			this.Staged.AllowUserToResizeRows = false;
-			this.Staged.AutoGenerateColumns = false;
-			this.Staged.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.Staged.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn,
-            this.ChangeString2});
-			this.Staged.DataSource = this.gitItemStatusBindingSource;
 			this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Staged.Location = new System.Drawing.Point(0, 0);
 			this.Staged.Name = "Staged";
-			this.Staged.ReadOnly = true;
-			this.Staged.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-			this.Staged.RowHeadersVisible = false;
-			this.Staged.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.Staged.Size = new System.Drawing.Size(397, 327);
 			this.Staged.TabIndex = 0;
-			this.Staged.SelectionChanged += new System.EventHandler(this.Tracked_SelectionChanged);
-			this.Staged.Click += new System.EventHandler(this.Staged_Click);
-			this.Staged.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Staged_CellContentClick);
-			// 
-			// nameDataGridViewTextBoxColumn
-			// 
-			this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-			this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-			this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-			this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// ChangeString2
-			// 
-			this.ChangeString2.DataPropertyName = "ChangeString";
-			this.ChangeString2.HeaderText = "Change";
-			this.ChangeString2.Name = "ChangeString2";
-			this.ChangeString2.ReadOnly = true;
+
 			// 
 			// Cancel
 			// 
@@ -885,7 +816,7 @@
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.Unstaged)).EndInit();
+			//((System.ComponentModel.ISupportInitialize)(this.Unstaged)).EndInit();
 			this.UnstagedFileContext.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
 			this.splitContainer5.Panel1.ResumeLayout(false);
@@ -895,7 +826,7 @@
 			this.tableLayoutPanel4.PerformLayout();
 			this.menuStrip2.ResumeLayout(false);
 			this.menuStrip2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.Staged)).EndInit();
+			//((System.ComponentModel.ISupportInitialize)(this.Staged)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
@@ -916,20 +847,16 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.DataGridView Unstaged;
-        private System.Windows.Forms.DataGridView Staged;
+        private FileStatusList Unstaged;
+        private FileStatusList Staged;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.BindingSource gitItemStatusBindingSource;
         private System.Windows.Forms.Button UnstageFiles;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ChangeString;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ChangeString2;
         private System.Windows.Forms.ContextMenuStrip UnstagedFileContext;
         private System.Windows.Forms.ToolStripMenuItem ResetChanges;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;

@@ -1980,7 +1980,7 @@ namespace GitCommands
             return GetHeads(true);
         }
 
-        static public string StageFiles(List<GitItemStatus> files)
+        static public string StageFiles(IList<GitItemStatus> files)
         {
             GitCommands gitCommand = new GitCommands();
 
