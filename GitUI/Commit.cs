@@ -30,6 +30,7 @@ namespace GitUI
 
             Unstaged.SetNoFilesText("There are no unstaged changes");
             Staged.SetNoFilesText("There are no staged changes");
+            Message.SetEmptyMessage("Enter commit message");
 
             Unstaged.SelectedIndexChanged += new EventHandler(Untracked_SelectionChanged);
             Staged.SelectedIndexChanged += new EventHandler(Tracked_SelectionChanged);
@@ -420,13 +421,16 @@ namespace GitUI
 
         private void ResetSoft_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want to reset the changes of this?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want to reset the changes of the selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                GitItemStatus item = Unstaged.SelectedItem;
-                string output = GitCommands.GitCommands.ResetFile(item.Name);
+                StringBuilder output = new StringBuilder();
+                foreach (GitItemStatus item in Unstaged.SelectedItems)
+                {
+                    output.Append(GitCommands.GitCommands.ResetFile(item.Name));
+                }
 
-                if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(output, "Reset changes");
+                if (!string.IsNullOrEmpty(output.ToString()))
+                    MessageBox.Show(output.ToString(), "Reset changes");
 
                 Initialize();
             }
@@ -441,10 +445,13 @@ namespace GitUI
             try
             {
                 SelectedDiff.ViewText("", "");
-                if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want delete this file?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want delete the selected file(s)?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitItemStatus item = Unstaged.SelectedItem;
-                    File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                    foreach (GitItemStatus item in Unstaged.SelectedItems)
+                    {
+                        File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                    }
+
                     Initialize();
                 }
             }
@@ -518,18 +525,19 @@ namespace GitUI
         {
             Initialize();
 
+            string message = GitCommands.GitCommands.GetMergeMessage();
+            if (string.IsNullOrEmpty(message) && File.Exists(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
+                message = File.ReadAllText(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
+            if (!string.IsNullOrEmpty(message))
+                Message.Text = message;
+
             ThreadPool.QueueUserWorkItem(delegate
             {
                 string text = "Commit to " + GitCommands.GitCommands.GetSelectedBranch() + " (" + Settings.WorkingDir + ")";
-                string message = GitCommands.GitCommands.GetMergeMessage();
-
-                if (string.IsNullOrEmpty(message) && File.Exists(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE"))
-                    message = File.ReadAllText(Settings.WorkingDirGitDir() + "\\COMMITMESSAGE", Settings.Encoding);
 
                 syncContext.Post(delegate
                 {
                     Text = text;
-                    Message.Text = message;
                 }, null);
             });
         }

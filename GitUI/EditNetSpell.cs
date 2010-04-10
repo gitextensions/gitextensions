@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -23,6 +23,11 @@ namespace GitUI
             customUnderlines = new CustomPaintTextBox(TextBox);
         }
 
+        public void SetEmptyMessage(string message)
+        {
+            EmptyLabel.Text = message;
+        }
+
         public override string Text
         {
             get
@@ -32,6 +37,8 @@ namespace GitUI
             set
             {
                 TextBox.Text = value;
+
+                UpdateEmptyLabel();
             }
         }
 
@@ -299,6 +306,31 @@ namespace GitUI
         private void TextBox_TextChanged_3(object sender, EventArgs e)
         {
             TextBox_TextChanged(sender, e);
+        }
+
+        private void TextBox_SizeChanged(object sender, EventArgs e)
+        {
+            EmptyLabel.Location = new Point(3, 3);
+            EmptyLabel.Size = new Size(Size.Width - 6, Size.Height - 6);
+        }
+
+        private void UpdateEmptyLabel()
+        {
+            if (TextBox.TextLength == 0)
+                EmptyLabel.Visible = true;
+            else
+                EmptyLabel.Visible = false;
+        }
+
+        private void EmptyLabel_Click(object sender, EventArgs e)
+        {
+            EmptyLabel.Visible = false;
+            TextBox.Focus();
+        }
+
+        private void TextBox_Leave(object sender, EventArgs e)
+        {
+            UpdateEmptyLabel();
         }
     }
 }
