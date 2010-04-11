@@ -1076,33 +1076,8 @@ namespace GitCommands
 
         public static string FetchCmd(string remote, string branch)
         {
-            remote = FixPath(remote);
-
-            branch = branch.Replace(" ", "");
-
-            string localbranch;
-
-            if (string.IsNullOrEmpty(branch))
-                localbranch = "";
-            else
-                localbranch = "+refs/heads/" + branch + "";
-
-            string remotebranch;
-            string remoteUrl = GetSetting("remote." + remote + ".url");
-
-            if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
-                remotebranch = ":refs/heads/" + branch + "";
-            else
-            if (PathIsUrl(remote) || string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteUrl))
-                remotebranch = "";
-            else
-                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
-
-
-            return "fetch \"" + remote.Trim() + "\" " + localbranch + remotebranch;
+            return "fetch " + GetFetchArgs(remote, branch);
         }
-
-
 
         static public string Pull(string remote, string branch, bool rebase)
         {
@@ -1117,13 +1092,18 @@ namespace GitCommands
 
         public static string PullCmd(string remote, string branch, bool rebase)
         {
-            remote = FixPath(remote);
-
-            branch = branch.Replace(" ", "");
-
             string rebaseOption = "";
             if (rebase)
                 rebaseOption = "--rebase ";
+
+            return "pull " + rebaseOption + GetFetchArgs(remote, branch);
+        }
+
+        private static string GetFetchArgs(string remote, string branch)
+        {
+            remote = FixPath(remote);
+
+            branch = branch.Replace(" ", "");
 
             string localbranch;
 
@@ -1138,13 +1118,12 @@ namespace GitCommands
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
                 remotebranch = ":refs/heads/" + branch + "";
             else
-            if (string.IsNullOrEmpty(branch)  || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
-                remotebranch = "";
-            else
-                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
+                if (string.IsNullOrEmpty(branch)  || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
+                    remotebranch = "";
+                else
+                    remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
 
-
-            return "pull " + rebaseOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
+            return "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
         }
 
         static public string ContinueRebase()
