@@ -6,6 +6,7 @@ namespace GitCommands
     public class GitVersion : IComparable<GitVersion>
     {
         private static readonly GitVersion v1_7_0 = new GitVersion("1.7.0");
+        private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
 
         private const string Prefix = "git version";
 
@@ -26,9 +27,14 @@ namespace GitCommands
             d = Get(numbers, 3);
         }
 
-        public bool MustAskForProgress
+        public bool CloneCanAskForProgress
         {
             get { return this >= v1_7_0; }
+        }
+
+        public bool FetchCanAskForProgress
+        {
+            get { return this >= v1_7_1; }
         }
 
         public bool IsUnknown
