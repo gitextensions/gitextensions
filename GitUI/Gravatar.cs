@@ -9,11 +9,14 @@ using GitUI.Properties;
 using System.Net;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Threading;
 
 namespace GitUI
 {
     public partial class Gravatar : UserControl
     {
+        private readonly SynchronizationContext syncContext;
+
         /// <summary>
         /// Base URL for the Gravatar image
         /// </summary>
@@ -21,6 +24,8 @@ namespace GitUI
 
         public Gravatar()
         {
+            syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
             imgGravatar.Visible = false;
         }
@@ -78,42 +83,56 @@ namespace GitUI
                 return;
             }
 
-            string imageFileName = string.Concat(theEmail, ".png");
-
-            IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-
-            //If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-            if (isolatedStorage.GetFileNames(imageFileName).Length == 0)
-                GetImageFromGravatar(imageFileName, isolatedStorage);
-
-
-            //resize our control (I'm not using AutoSize for a reason)
-            this.Size = new System.Drawing.Size(80, 80);
-            imgGravatar.Size = new System.Drawing.Size(80, 80);
-
-
-            if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
+            ThreadPool.QueueUserWorkItem(delegate
             {
-                try
+                string imageFileName = string.Concat(theEmail, ".png");
+
+                IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+                //If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
+                if (isolatedStorage.GetFileNames(imageFileName).Length == 0)
                 {
-                    using (IsolatedStorageFileStream iStream = new IsolatedStorageFileStream(imageFileName, FileMode.Open, isolatedStorage))
+                    syncContext.Post(delegate
                     {
+                        imgGravatar.Image = Resources.User;
+                    }, null
+                    );
 
-                        imgGravatar.Image = Image.FromStream(iStream);
-                    }
+                    GetImageFromGravatar(imageFileName, isolatedStorage);
                 }
-                catch (ArgumentException)
+
+                syncContext.Post(delegate
                 {
-                    //The file is not a valid image, delete it
-                    isolatedStorage.DeleteFile(imageFileName);
 
-                    imgGravatar.Image = Resources.User;
-                }
-            }
-            else
-            {
-                imgGravatar.Image = Resources.User;
-            }
+                    //resize our control (I'm not using AutoSize for a reason)
+                    this.Size = new System.Drawing.Size(80, 80);
+                    imgGravatar.Size = new System.Drawing.Size(80, 80);
+
+                    if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
+                    {
+                        try
+                        {
+                            using (IsolatedStorageFileStream iStream = new IsolatedStorageFileStream(imageFileName, FileMode.Open, isolatedStorage))
+                            {
+
+                                imgGravatar.Image = Image.FromStream(iStream);
+                            }
+                        }
+                        catch (ArgumentException)
+                        {
+                            //The file is not a valid image, delete it
+                            isolatedStorage.DeleteFile(imageFileName);
+
+                            imgGravatar.Image = Resources.User;
+                        }
+                    }
+                    else
+                    {
+                        imgGravatar.Image = Resources.User;
+                    }
+
+                }, null);
+            });
         }
 
         private void GetImageFromGravatar(string imageFileName, IsolatedStorageFile isolatedStorage)
