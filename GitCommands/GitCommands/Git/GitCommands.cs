@@ -874,7 +874,7 @@ namespace GitCommands
                 options.Add("--bare");
             if (depth.HasValue)
                 options.Add("--depth " + depth);
-            if (VersionInUse.MustAskForProgress)
+            if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
             options.Add("\"" + from.Trim() + "\"");
             options.Add("\"" + to.Trim() + "\"");
@@ -1123,7 +1123,11 @@ namespace GitCommands
                 else
                     remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
 
-            return "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
+            string progressOption = "";
+            if (VersionInUse.FetchCanAskForProgress)
+                progressOption = "--progress ";
+
+            return progressOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
         }
 
         static public string ContinueRebase()
