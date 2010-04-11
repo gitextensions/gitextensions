@@ -849,6 +849,22 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
+        private static GitVersion versionInUse;
+
+        public static GitVersion VersionInUse
+        {
+            get
+            {
+                if (versionInUse == null || versionInUse.IsUnknown)
+                {
+                    string result = RunCmd(Settings.GitCommand, "--version");
+                    versionInUse = new GitVersion(result);
+                }
+
+                return versionInUse;
+            }
+        }
+
         static public string CloneCmd(string from, string to, bool central, int? depth)
         {
             from = FixPath(from);
