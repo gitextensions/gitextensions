@@ -68,7 +68,7 @@
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.CommitInfo = new System.Windows.Forms.TabPage();
-            this.RevisionInfo = new CommitInfo();
+            this.RevisionInfo = new GitUI.CommitInfo();
             this.Tree = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
@@ -417,6 +417,7 @@
             // 
             // splitContainer5
             // 
+            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
             this.splitContainer5.Name = "splitContainer5";
@@ -631,7 +632,6 @@
             // RevisionInfo
             // 
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);

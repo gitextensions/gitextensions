@@ -263,7 +263,7 @@ namespace GitUI
                 Cursor.Current = Cursors.WaitCursor;
                 //Loading.Visible = true;
                 progressBar.Visible = true;
-                progressBar.Maximum = Unstaged.SelectedItems.Count * 2;
+                progressBar.Maximum = gitItemStatusses.Count * 2;
                 progressBar.Value = 0;
 
                 List<GitItemStatus> files = new List<GitItemStatus>();
