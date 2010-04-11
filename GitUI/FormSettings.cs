@@ -92,6 +92,8 @@ namespace GitUI
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
+                ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
+
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
                 RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
                 RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
@@ -226,6 +228,8 @@ namespace GitUI
 
             GitCommands.Settings.GitCommand = GitPath.Text;
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
+
+            GitCommands.Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
 
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;

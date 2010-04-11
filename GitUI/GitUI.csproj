@@ -79,6 +79,12 @@
     <Compile Include="Commit.Designer.cs">
       <DependentUpon>Commit.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommitInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommitInfo.Designer.cs">
+      <DependentUpon>CommitInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileStatusList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -399,6 +405,12 @@
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="GitUIPluginCollection.cs" />
+    <Compile Include="Gravatar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gravatar.Designer.cs">
+      <DependentUpon>Gravatar.cs</DependentUpon>
+    </Compile>
     <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="MergePatch.cs">
@@ -457,6 +469,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommitInfo.resx">
+      <DependentUpon>CommitInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FileStatusList.resx">
@@ -667,6 +683,10 @@
       <DependentUpon>GitLogForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gravatar.resx">
+      <DependentUpon>Gravatar.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="MergePatch.resx">
       <DependentUpon>MergePatch.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -708,6 +728,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\User.PNG" />
     <None Include="Resources\Modified.bmp" />
     <None Include="Resources\Removed.bmp" />
     <None Include="Resources\Added.bmp" />

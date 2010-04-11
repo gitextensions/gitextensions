@@ -544,7 +544,7 @@ namespace GitCommands
 
         static public string GetCommitInfo(string sha1)
         {
-            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN%nAuthor date:\t%ar (%ad)%nCommitter:\t%cN%nCommit date:\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
+            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN (%aE)%nAuthor date:\t%ar (%ad)%nCommitter:\t%cN (%cE)%nCommit date:\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
             if (info.Trim().StartsWith("fatal"))
                 return string.Empty;
 

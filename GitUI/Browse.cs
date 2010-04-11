@@ -371,7 +371,7 @@ namespace GitUI
 
                 GitRevision revision = RevisionGrid.GetRevisions()[0];
 
-                RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision.Guid);
+                RevisionInfo.SetRevision(revision.Guid);
             }
         }
 
@@ -1031,22 +1031,6 @@ namespace GitUI
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
             indexWatcher.Reset();
-        }
-
-        private void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            try
-            {
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.EnableRaisingEvents = false;
-                proc.StartInfo.FileName = e.LinkText;
-
-                proc.Start();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         private void toolStripTextBoxFilter_KeyPress(object sender, KeyPressEventArgs e)
