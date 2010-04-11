@@ -44,12 +44,15 @@ namespace GitUI
 
                 if (hoverIndex >= 0)
                 {
-                    foreach (int selectionIndex in FileStatusListBox.SelectedIndices)
+                    if (!FileStatusListBox.GetSelected(hoverIndex))
                     {
-                        FileStatusListBox.SetSelected(selectionIndex, false);
-                    }
+                        while (FileStatusListBox.SelectedIndices.Count > 0)
+                        {
+                            FileStatusListBox.SetSelected(FileStatusListBox.SelectedIndices[0], false);
+                        }
 
-                    FileStatusListBox.SetSelected(hoverIndex, true);
+                        FileStatusListBox.SetSelected(hoverIndex, true);
+                    }
                 }
             }
 
