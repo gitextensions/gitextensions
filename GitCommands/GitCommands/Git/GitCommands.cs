@@ -874,6 +874,8 @@ namespace GitCommands
                 options.Add("--bare");
             if (depth.HasValue)
                 options.Add("--depth " + depth);
+            if (VersionInUse.MustAskForProgress)
+                options.Add("--progress");
             options.Add("\"" + from.Trim() + "\"");
             options.Add("\"" + to.Trim() + "\"");
 
