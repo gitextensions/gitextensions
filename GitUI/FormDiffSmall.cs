@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using PatchApply;
 using GitCommands;
+using System.Text.RegularExpressions;
 
 namespace GitUI
 {
@@ -16,6 +17,7 @@ namespace GitUI
         {
             InitializeComponent();
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            DiffFiles.Focus();
         }
 
         private void FormDiffSmall_Load(object sender, EventArgs e)
@@ -33,7 +35,8 @@ namespace GitUI
             if (revision.ParentGuids.Count > 0)
                 DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
 
-            RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision.Guid);
+            commitInfo.SetRevision(revision.Guid);
+
         }
 
         public void SetRevision(string revision)

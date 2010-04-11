@@ -316,17 +316,19 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///Version 1.92
+        ///	Fixed bug: the application hangs randomly
+        ///	There is a new installer to address the following issues (thanks to Jacob Stanley)
+        ///		Updating existing installations
+        ///		Install both 32bits and 64bits shell extension ont 64bit systems
+        ///	Added icons to indicate if a files is added, modified or removed
+        ///
         ///Version 1.91
         ///	Fixed bug: tooltips drawn incorrect
         ///
         ///Version 1.90
         ///	Fixed bug: images in .gif and .ico format could not be displayed.
-        ///	Fixed bug: extra empty lines are shown in the blame view.
-        ///	The application icon can be changed
-        ///	Added extra diff highlighting for single line changes
-        ///	Added asynchronous loading of files for diffs and general viewing to improve responsiveness
-        ///	Added &quot;Show relative date&quot; option to context menu of revision grid
-        ///	Copy from diff viewer copies code  [rest of string was truncated]&quot;;.
+        ///	Fixed bug: extra empty lines are sho [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -498,6 +500,13 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap success1 {
             get {
                 object obj = ResourceManager.GetObject("success1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap User {
+            get {
+                object obj = ResourceManager.GetObject("User", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

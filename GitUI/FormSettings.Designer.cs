@@ -172,6 +172,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -193,6 +195,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -871,6 +874,7 @@
             // 
             // AppearancePage
             // 
+            this.AppearancePage.Controls.Add(this.groupBox6);
             this.AppearancePage.Controls.Add(this.groupBox5);
             this.AppearancePage.Controls.Add(this.groupBox4);
             this.AppearancePage.Controls.Add(this.groupBox3);
@@ -1818,6 +1822,26 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
+            this.groupBox6.Location = new System.Drawing.Point(328, 229);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(311, 129);
+            this.groupBox6.TabIndex = 13;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Gravatar";
+            // 
+            // ShowAuthorGravatar
+            // 
+            this.ShowAuthorGravatar.AutoSize = true;
+            this.ShowAuthorGravatar.Location = new System.Drawing.Point(7, 20);
+            this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
+            this.ShowAuthorGravatar.Size = new System.Drawing.Size(195, 17);
+            this.ShowAuthorGravatar.TabIndex = 0;
+            this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
+            this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1865,6 +1889,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2014,6 +2040,8 @@
         private System.Windows.Forms.Label ColorRemovedLineDiffLabel;
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label ColorAddedLineDiffLabel;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.CheckBox ShowAuthorGravatar;
 
     }
 }

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new FileStatusList();
+            this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new GitUI.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.commitInfo = new GitUI.CommitInfo();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,21 +62,27 @@
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.GitItemStatusses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(239, 407);
+            this.DiffFiles.SelectedItem = null;
+            this.DiffFiles.Size = new System.Drawing.Size(239, 410);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             // 
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.IgnoreWhitespaceChanges = false;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(4);
             this.DiffText.Name = "DiffText";
+            this.DiffText.NumberOfVisibleLines = 3;
             this.DiffText.ScrollPos = 0;
+            this.DiffText.ShowEntireFile = false;
             this.DiffText.Size = new System.Drawing.Size(474, 410);
             this.DiffText.TabIndex = 0;
+            this.DiffText.TreatAllFilesAsText = false;
             // 
             // splitContainer2
             // 
@@ -87,7 +93,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.RevisionInfo);
+            this.splitContainer2.Panel1.Controls.Add(this.commitInfo);
             // 
             // splitContainer2.Panel2
             // 
@@ -96,17 +102,13 @@
             this.splitContainer2.SplitterDistance = 115;
             this.splitContainer2.TabIndex = 1;
             // 
-            // RevisionInfo
+            // commitInfo
             // 
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(717, 115);
-            this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.Text = "";
+            this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commitInfo.Location = new System.Drawing.Point(0, 0);
+            this.commitInfo.Name = "commitInfo";
+            this.commitInfo.Size = new System.Drawing.Size(717, 115);
+            this.commitInfo.TabIndex = 0;
             // 
             // FormDiffSmall
             // 
@@ -114,7 +116,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 529);
             this.Controls.Add(this.splitContainer2);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormDiffSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
@@ -134,8 +135,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private FileStatusList DiffFiles;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private FileViewer DiffText;
+        private CommitInfo commitInfo;
     }
 }

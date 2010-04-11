@@ -23,6 +23,19 @@ namespace GitCommands
             }
         }
 
+        private static bool showAuthorGravatar = true;
+        public static bool ShowAuthorGravatar
+        {
+            get
+            {
+                return showAuthorGravatar;
+            }
+            set
+            {
+                showAuthorGravatar = value;
+            }
+        }
+
         private static bool closeCommitDialogAfterCommit = false;
         public static bool CloseCommitDialogAfterCommit
         {
@@ -625,6 +638,8 @@ namespace GitCommands
 
 
 
+                Application.UserAppDataRegistry.SetValue("showauthorgravatar", Settings.showAuthorGravatar);
+
                 Application.UserAppDataRegistry.SetValue("closeCommitDialogAfterCommit", Settings.CloseCommitDialogAfterCommit);
 
                 Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
@@ -736,6 +751,8 @@ namespace GitCommands
 
                 if (Application.UserAppDataRegistry.GetValue("dictionary") != null) Settings.Dictionary = Application.UserAppDataRegistry.GetValue("dictionary").ToString();
                 if (Application.UserAppDataRegistry.GetValue("smtp") != null) Settings.Smtp = Application.UserAppDataRegistry.GetValue("smtp").ToString();
+
+                if (Application.UserAppDataRegistry.GetValue("showauthorgravatar") != null) Settings.showAuthorGravatar = Application.UserAppDataRegistry.GetValue("showauthorgravatar").ToString() == "True";
 
                 if (Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit") != null) Settings.CloseCommitDialogAfterCommit = Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";
