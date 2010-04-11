@@ -213,7 +213,7 @@ namespace GitUI
                     if (gitItemStatus.IsDeleted)
                         e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
                     else
-                        if (gitItemStatus.IsNew)
+                        if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
                             e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
 
                 e.Graphics.DrawString(gitItemStatus.Name, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);

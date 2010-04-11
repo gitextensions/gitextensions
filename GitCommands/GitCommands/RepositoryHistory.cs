@@ -35,9 +35,9 @@ namespace GitCommands
 
             MostRecentRepositories.Insert(0, repo);
 
-            if (MostRecentRepositories.Count > 13)
+            if (MostRecentRepositories.Count > 30)
             {
-                MostRecentRepositories.RemoveAt(13);
+                MostRecentRepositories.RemoveAt(30);
             }
         }
     }
