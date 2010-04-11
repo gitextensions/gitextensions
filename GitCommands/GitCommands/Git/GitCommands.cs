@@ -1433,17 +1433,21 @@ namespace GitCommands
         {
             if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
             {
-
-                value = value.Replace("\"", "$QUOTE$");
-                value = FixPath(value);
-                value = value.Replace("$QUOTE$", "\\\"");
-
+                value = FixPathAndEscapeQuotes(value);
                 GitCommands.RunCmd(Settings.GitCommand, "config --global --replace-all \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
             }
             else
             {
                 GitCommands.RunCmd(Settings.GitCommand, "config --global --unset-all \"" + setting + "\"").Trim();
             }
+        }
+
+        private static string FixPathAndEscapeQuotes(string path)
+        {
+            path = path.Replace("\"", "$QUOTE$");
+            path = FixPath(path);
+            path = path.Replace("$QUOTE$", "\\\"");
+            return path;
         }
 
         static public string GetSetting(string setting)
@@ -1469,10 +1473,7 @@ namespace GitCommands
 
             if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
             {
-                value = value.Replace("\"", "$QUOTE$");
-                value = FixPath(value);
-                value = value.Replace("$QUOTE$", "\"");
-
+                value = FixPathAndEscapeQuotes(value);
                 GitCommands.RunCmd(Settings.GitCommand, "config --replace-all  \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
             }
             else
