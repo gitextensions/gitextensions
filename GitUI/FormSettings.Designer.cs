@@ -88,6 +88,8 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.AppearancePage = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.RandomIcon = new System.Windows.Forms.RadioButton();
             this.YellowIcon = new System.Windows.Forms.RadioButton();
@@ -172,8 +174,7 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
+            this.ClearImageCache = new System.Windows.Forms.Button();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -182,6 +183,7 @@
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
             this.AppearancePage.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -195,7 +197,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -884,6 +885,27 @@
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.ClearImageCache);
+            this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
+            this.groupBox6.Location = new System.Drawing.Point(328, 229);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(311, 129);
+            this.groupBox6.TabIndex = 13;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Author images";
+            // 
+            // ShowAuthorGravatar
+            // 
+            this.ShowAuthorGravatar.AutoSize = true;
+            this.ShowAuthorGravatar.Location = new System.Drawing.Point(7, 20);
+            this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
+            this.ShowAuthorGravatar.Size = new System.Drawing.Size(195, 17);
+            this.ShowAuthorGravatar.TabIndex = 0;
+            this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
+            this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
@@ -1822,25 +1844,15 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
-            // groupBox6
+            // ClearImageCache
             // 
-            this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
-            this.groupBox6.Location = new System.Drawing.Point(328, 229);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(311, 129);
-            this.groupBox6.TabIndex = 13;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Gravatar";
-            // 
-            // ShowAuthorGravatar
-            // 
-            this.ShowAuthorGravatar.AutoSize = true;
-            this.ShowAuthorGravatar.Location = new System.Drawing.Point(7, 20);
-            this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
-            this.ShowAuthorGravatar.Size = new System.Drawing.Size(195, 17);
-            this.ShowAuthorGravatar.TabIndex = 0;
-            this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
-            this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
+            this.ClearImageCache.Location = new System.Drawing.Point(6, 48);
+            this.ClearImageCache.Name = "ClearImageCache";
+            this.ClearImageCache.Size = new System.Drawing.Size(142, 23);
+            this.ClearImageCache.TabIndex = 1;
+            this.ClearImageCache.Text = "Clear image cache";
+            this.ClearImageCache.UseVisualStyleBackColor = true;
+            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
             // FormSettings
             // 
@@ -1869,6 +1881,8 @@
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
             this.AppearancePage.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1889,8 +1903,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2042,6 +2054,7 @@
         private System.Windows.Forms.Label ColorAddedLineDiffLabel;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
+        private System.Windows.Forms.Button ClearImageCache;
 
     }
 }

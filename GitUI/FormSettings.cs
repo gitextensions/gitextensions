@@ -1538,6 +1538,11 @@ namespace GitUI
 
         }
 
+        private void ClearImageCache_Click(object sender, EventArgs e)
+        {
+            Gravatar.ClearImageCache();
+        }
+
 
 
 
