@@ -35,7 +35,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -225,7 +225,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -319,7 +319,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
