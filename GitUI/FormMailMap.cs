@@ -24,7 +24,6 @@ namespace GitUI
                     using (StreamReader re = new StreamReader(Settings.WorkingDir + ".mailmap", Settings.Encoding))
                     {
                         MailMapFile = re.ReadToEnd();
-                        re.Close();
                     }
                 }
                 MailMapText.Text = MailMapFile;
@@ -43,7 +42,6 @@ namespace GitUI
             using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false, Settings.Encoding))
             {
                 tw.Write(MailMapFile);
-                tw.Close();
             }
             Close();
         }

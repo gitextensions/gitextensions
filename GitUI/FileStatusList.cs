@@ -17,7 +17,8 @@ namespace GitUI
         {
             InitializeComponent();
 
-            FileStatusListBox.DrawMode = DrawMode.OwnerDrawFixed;
+            FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
+            FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);
             FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
             FileStatusListBox.SelectedIndexChanged += new EventHandler(FileStatusListBox_SelectedIndexChanged);
             FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
@@ -27,6 +28,11 @@ namespace GitUI
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
 
             NoFiles.Visible = false;
+        }
+
+        void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
+        {
+            e.ItemHeight = (int)e.Graphics.MeasureString(FileStatusListBox.Items[e.Index].ToString(), FileStatusListBox.Font).Height;
         }
 
         public void SetNoFilesText(string text)
@@ -243,8 +249,8 @@ namespace GitUI
 
         private void NoFiles_SizeChanged(object sender, EventArgs e)
         {
-            NoFiles.Location = new Point(3, 3);
-            NoFiles.Size = new Size(Size.Width - 6, Size.Height - 6);
+            NoFiles.Location = new Point(5, 5);
+            NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
         }
 
 
