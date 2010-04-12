@@ -28,38 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.gravatar1 = new GitUI.Gravatar();
+            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.gravatar1 = new GitUI.Gravatar();
+            this.tableLayout.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // tableLayout
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.gravatar1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.RevisionInfo, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(766, 334);
-            this.tableLayoutPanel1.TabIndex = 3;
-            // 
-            // gravatar1
-            // 
-            this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
-            this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.email = null;
-            this.gravatar1.Location = new System.Drawing.Point(0, 0);
-            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
-            this.gravatar1.Name = "gravatar1";
-            this.gravatar1.Size = new System.Drawing.Size(90, 334);
-            this.gravatar1.TabIndex = 1;
+            this.tableLayout.ColumnCount = 2;
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.Controls.Add(this.gravatar1, 0, 0);
+            this.tableLayout.Controls.Add(this.RevisionInfo, 1, 0);
+            this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayout.Location = new System.Drawing.Point(0, 0);
+            this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayout.Name = "tableLayout";
+            this.tableLayout.RowCount = 1;
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.Size = new System.Drawing.Size(766, 334);
+            this.tableLayout.TabIndex = 3;
             // 
             // RevisionInfo
             // 
@@ -74,21 +63,32 @@
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             // 
+            // gravatar1
+            // 
+            this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
+            this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gravatar1.email = null;
+            this.gravatar1.Location = new System.Drawing.Point(0, 0);
+            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
+            this.gravatar1.Name = "gravatar1";
+            this.gravatar1.Size = new System.Drawing.Size(90, 334);
+            this.gravatar1.TabIndex = 1;
+            // 
             // CommitInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.tableLayout);
             this.Name = "CommitInfo";
             this.Size = new System.Drawing.Size(766, 334);
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayout.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayout;
         private Gravatar gravatar1;
         private System.Windows.Forms.RichTextBox RevisionInfo;
     }

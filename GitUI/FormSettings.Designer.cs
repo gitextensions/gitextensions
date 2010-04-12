@@ -89,6 +89,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ClearImageCache = new System.Windows.Forms.Button();
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.RandomIcon = new System.Windows.Forms.RadioButton();
@@ -174,7 +175,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.ClearImageCache = new System.Windows.Forms.Button();
+            this.authorImageSize = new System.Windows.Forms.NumericUpDown();
+            this.label44 = new System.Windows.Forms.Label();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -197,6 +199,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).BeginInit();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -888,6 +891,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.label44);
+            this.groupBox6.Controls.Add(this.authorImageSize);
             this.groupBox6.Controls.Add(this.ClearImageCache);
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
             this.groupBox6.Location = new System.Drawing.Point(328, 229);
@@ -896,6 +901,16 @@
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
+            // 
+            // ClearImageCache
+            // 
+            this.ClearImageCache.Location = new System.Drawing.Point(5, 98);
+            this.ClearImageCache.Name = "ClearImageCache";
+            this.ClearImageCache.Size = new System.Drawing.Size(142, 23);
+            this.ClearImageCache.TabIndex = 1;
+            this.ClearImageCache.Text = "Clear image cache";
+            this.ClearImageCache.UseVisualStyleBackColor = true;
+            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
             // ShowAuthorGravatar
             // 
@@ -1844,15 +1859,26 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
-            // ClearImageCache
+            // authorImageSize
             // 
-            this.ClearImageCache.Location = new System.Drawing.Point(6, 48);
-            this.ClearImageCache.Name = "ClearImageCache";
-            this.ClearImageCache.Size = new System.Drawing.Size(142, 23);
-            this.ClearImageCache.TabIndex = 1;
-            this.ClearImageCache.Text = "Clear image cache";
-            this.ClearImageCache.UseVisualStyleBackColor = true;
-            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
+            this.authorImageSize.Location = new System.Drawing.Point(125, 46);
+            this.authorImageSize.Maximum = new decimal(new int[] {
+            400,
+            0,
+            0,
+            0});
+            this.authorImageSize.Name = "authorImageSize";
+            this.authorImageSize.Size = new System.Drawing.Size(77, 20);
+            this.authorImageSize.TabIndex = 3;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(7, 49);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(57, 13);
+            this.label44.TabIndex = 4;
+            this.label44.Text = "Image size";
             // 
             // FormSettings
             // 
@@ -1903,6 +1929,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2055,6 +2082,8 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
         private System.Windows.Forms.Button ClearImageCache;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.NumericUpDown authorImageSize;
 
     }
 }

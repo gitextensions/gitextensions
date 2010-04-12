@@ -92,6 +92,7 @@ namespace GitUI
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
+                authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
@@ -223,6 +224,12 @@ namespace GitUI
         private bool Save()
         {
             GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
+
+            if ((int)authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
+            {
+                GitCommands.Settings.AuthorImageSize = (int)authorImageSize.Value;
+                Gravatar.ClearImageCache();
+            }
 
             GitCommands.Settings.Smtp = SmtpServer.Text;
 

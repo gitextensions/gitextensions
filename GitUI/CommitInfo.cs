@@ -15,6 +15,10 @@ namespace GitUI
         {
             InitializeComponent();
 
+            tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayout.AutoSize = true;
+
             RevisionInfo.LinkClicked += new LinkClickedEventHandler(RevisionInfo_LinkClicked);
         }
 
