@@ -45,7 +45,7 @@ namespace GitExtensions
             {
             }
 
-            if (args.Length == 3)
+            if (args.Length >= 3)
             {
                 if (Directory.Exists(args[2]))
                     GitCommands.Settings.WorkingDir = args[2];

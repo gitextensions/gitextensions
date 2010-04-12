@@ -49,11 +49,11 @@
             // 
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
             this.NoFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NoFiles.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.NoFiles.Location = new System.Drawing.Point(5, 5);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.NoFiles.Size = new System.Drawing.Size(104, 41);
+            this.NoFiles.Size = new System.Drawing.Size(172, 49);
             this.NoFiles.TabIndex = 1;
             this.NoFiles.Text = "No changes";
             // 
