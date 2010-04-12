@@ -7,7 +7,7 @@
     Id="*" UpgradeCode="$(var.UpgradeCode)"
     Name="$(var.ProductName) $(var.Version)"
     Manufacturer="$(var.Manufacturer)"
-    Version="$(var.Version)"
+    Version="$(var.NumericVersion)"
     Language="1033">
 
     <Package
