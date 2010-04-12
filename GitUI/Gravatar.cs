@@ -17,16 +17,12 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-        /// <summary>
-        /// Base URL for the Gravatar image
-        /// </summary>
-        private string BaseURL = "http://www.gravatar.com/avatar/{0}?d=identicon&s=80&r=g";
-
         public Gravatar()
         {
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+
             imgGravatar.Visible = false;
         }
 
@@ -77,6 +73,10 @@ namespace GitUI
         /// </summary>
         private void UpdateGravatar()
         {
+            //resize our control (I'm not using AutoSize for a reason)
+            this.Size = new System.Drawing.Size(GitCommands.Settings.AuthorImageSize, GitCommands.Settings.AuthorImageSize);
+            imgGravatar.Size = new System.Drawing.Size(GitCommands.Settings.AuthorImageSize, GitCommands.Settings.AuthorImageSize);
+
             if (!GitCommands.Settings.ShowAuthorGravatar || string.IsNullOrEmpty(theEmail))
             {
                 imgGravatar.Image = Resources.User;
@@ -103,11 +103,6 @@ namespace GitUI
 
                 syncContext.Post(delegate
                 {
-
-                    //resize our control (I'm not using AutoSize for a reason)
-                    this.Size = new System.Drawing.Size(80, 80);
-                    imgGravatar.Size = new System.Drawing.Size(80, 80);
-
                     if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
                     {
                         try
@@ -139,6 +134,8 @@ namespace GitUI
         {
             try
             {
+                string BaseURL = string.Concat("http://www.gravatar.com/avatar/{0}?d=identicon&s=", GitCommands.Settings.AuthorImageSize, "&r=g");
+
                 //hash the email address
                 string emailHash = MD5(theEmail.ToLower());
                 //format our url to the Gravatar

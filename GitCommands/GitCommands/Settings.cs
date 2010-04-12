@@ -23,6 +23,19 @@ namespace GitCommands
             }
         }
 
+        private static int authorImageSize = 80;
+        public static int AuthorImageSize
+        {
+            get
+            {
+                return authorImageSize;
+            }
+            set
+            {
+                authorImageSize = value;
+            }
+        }
+
         private static bool showAuthorGravatar = true;
         public static bool ShowAuthorGravatar
         {
@@ -656,6 +669,8 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("iconcolor", Settings.IconColor);
 
+                Application.UserAppDataRegistry.SetValue("authorimagesize", Settings.AuthorImageSize);
+
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitCommand);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
@@ -699,6 +714,15 @@ namespace GitCommands
                     if (int.TryParse(Application.UserAppDataRegistry.GetValue("maxcommits").ToString(), out result) == true)
                     {
                         Settings.MaxCommits = result;
+                    }
+                }
+
+                if (Application.UserAppDataRegistry.GetValue("authorimagesize") != null)
+                {
+                    int result;
+                    if (int.TryParse(Application.UserAppDataRegistry.GetValue("authorimagesize").ToString(), out result) == true)
+                    {
+                        Settings.AuthorImageSize = result;
                     }
                 }
 

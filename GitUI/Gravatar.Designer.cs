@@ -32,8 +32,8 @@
             this.imgGravatar = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registerAtGravatarcomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearImagecacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registerAtGravatarcomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.imgGravatar)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -41,11 +41,11 @@
             // imgGravatar
             // 
             this.imgGravatar.ContextMenuStrip = this.contextMenuStrip;
-            this.imgGravatar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.imgGravatar.Image = global::GitUI.Properties.Resources.User;
             this.imgGravatar.Location = new System.Drawing.Point(0, 0);
             this.imgGravatar.Name = "imgGravatar";
-            this.imgGravatar.Size = new System.Drawing.Size(150, 150);
+            this.imgGravatar.Size = new System.Drawing.Size(80, 80);
+            this.imgGravatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgGravatar.TabIndex = 0;
             this.imgGravatar.TabStop = false;
             // 
@@ -56,7 +56,7 @@
             this.clearImagecacheToolStripMenuItem,
             this.registerAtGravatarcomToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(207, 92);
+            this.contextMenuStrip.Size = new System.Drawing.Size(207, 70);
             // 
             // refreshToolStripMenuItem
             // 
@@ -65,19 +65,19 @@
             this.refreshToolStripMenuItem.Text = "Refresh image";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
-            // registerAtGravatarcomToolStripMenuItem
-            // 
-            this.registerAtGravatarcomToolStripMenuItem.Name = "registerAtGravatarcomToolStripMenuItem";
-            this.registerAtGravatarcomToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.registerAtGravatarcomToolStripMenuItem.Text = "Register at gravatar.com";
-            this.registerAtGravatarcomToolStripMenuItem.Click += new System.EventHandler(this.registerAtGravatarcomToolStripMenuItem_Click);
-            // 
             // clearImagecacheToolStripMenuItem
             // 
             this.clearImagecacheToolStripMenuItem.Name = "clearImagecacheToolStripMenuItem";
             this.clearImagecacheToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.clearImagecacheToolStripMenuItem.Text = "Clear image cache";
             this.clearImagecacheToolStripMenuItem.Click += new System.EventHandler(this.clearImagecacheToolStripMenuItem_Click);
+            // 
+            // registerAtGravatarcomToolStripMenuItem
+            // 
+            this.registerAtGravatarcomToolStripMenuItem.Name = "registerAtGravatarcomToolStripMenuItem";
+            this.registerAtGravatarcomToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.registerAtGravatarcomToolStripMenuItem.Text = "Register at gravatar.com";
+            this.registerAtGravatarcomToolStripMenuItem.Click += new System.EventHandler(this.registerAtGravatarcomToolStripMenuItem_Click);
             // 
             // Gravatar
             // 
