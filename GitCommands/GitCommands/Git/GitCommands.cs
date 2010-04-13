@@ -542,13 +542,21 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "show " + sha1);
         }
 
+        //Cache revision info. This is safe because sha1 keys are hashes
+        private static Dictionary<string, string> revisionInfoCache = new Dictionary<string, string>();
         static public string GetCommitInfo(string sha1)
         {
+            if (revisionInfoCache.ContainsKey(sha1))
+                return revisionInfoCache[sha1];
+
             string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN (%aE)%nAuthor date:\t%ar (%ad)%nCommitter:\t%cN (%cE)%nCommit date:\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
             if (info.Trim().StartsWith("fatal"))
                 return string.Empty;
 
-            return RemoveRedundancies(info);
+            info = RemoveRedundancies(info);
+            revisionInfoCache.Add(sha1, info);
+            
+            return info;
         }
 
         static private string RemoveRedundancies(string info)

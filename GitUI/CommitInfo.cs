@@ -40,6 +40,13 @@ namespace GitUI
 
         public void SetRevision(string revision)
         {
+            if (string.IsNullOrEmpty(revision))
+            {
+                RevisionInfo.Text = "";
+                gravatar1.email = "";
+                return;
+            }
+
             RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision);
 
             Match emailMatch = Regex.Match(RevisionInfo.Text, @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -40,6 +39,7 @@
             this.Blame = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
+            this.commitInfo = new GitUI.CommitInfo();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
             this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -121,11 +121,15 @@
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.IgnoreWhitespaceChanges = false;
             this.View.Location = new System.Drawing.Point(3, 3);
             this.View.Name = "View";
+            this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
+            this.View.ShowEntireFile = false;
             this.View.Size = new System.Drawing.Size(736, 298);
             this.View.TabIndex = 0;
+            this.View.TreatAllFilesAsText = false;
             // 
             // DiffTab
             // 
@@ -141,11 +145,15 @@
             // Diff
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Diff.IgnoreWhitespaceChanges = false;
             this.Diff.Location = new System.Drawing.Point(3, 3);
             this.Diff.Name = "Diff";
+            this.Diff.NumberOfVisibleLines = 3;
             this.Diff.ScrollPos = 0;
+            this.Diff.ShowEntireFile = false;
             this.Diff.Size = new System.Drawing.Size(736, 298);
             this.Diff.TabIndex = 0;
+            this.Diff.TreatAllFilesAsText = false;
             // 
             // Blame
             // 
@@ -170,6 +178,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.commitInfo);
             this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
             this.splitContainer2.Size = new System.Drawing.Size(742, 304);
             this.splitContainer2.SplitterDistance = 247;
@@ -183,6 +192,15 @@
             this.BlameCommitter.Name = "BlameCommitter";
             this.BlameCommitter.Size = new System.Drawing.Size(245, 302);
             this.BlameCommitter.TabIndex = 5;
+            // 
+            // commitInfo
+            // 
+            this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.commitInfo.Location = new System.Drawing.Point(250, 17);
+            this.commitInfo.Name = "commitInfo";
+            this.commitInfo.Size = new System.Drawing.Size(193, 85);
+            this.commitInfo.TabIndex = 5;
+            this.commitInfo.Visible = false;
             // 
             // BlameFile
             // 
@@ -220,7 +238,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 446);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
@@ -263,5 +280,6 @@
         private ICSharpCode.TextEditor.TextEditorControl BlameFile;
         private ICSharpCode.TextEditor.TextEditorControl BlameCommitter;
         private RevisionGrid FileChanges;
+        private CommitInfo commitInfo;
     }
 }

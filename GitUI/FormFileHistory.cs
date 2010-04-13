@@ -23,8 +23,10 @@ namespace GitUI
 
             InitializeComponent();
 
-            Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
+            commitInfo.Visible = false;
 
+            Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
+            
             if (GitCommands.Settings.FollowRenamesInFileHistory)
                 FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
             else
@@ -47,7 +49,54 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.KeyDown += new KeyEventHandler(BlameFile_KeyUp);
             BlameFile.ActiveTextAreaControl.KeyDown += new KeyEventHandler(BlameFile_KeyUp);
             BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += new EventHandler(ActiveTextAreaControl_DoubleClick);
+
+            BlameFile.ActiveTextAreaControl.TextArea.MouseMove += new MouseEventHandler(TextArea_MouseMove);
+            BlameFile.ActiveTextAreaControl.TextArea.MouseDown += new MouseEventHandler(TextArea_MouseDown);
+            BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(BlameFile_MouseLeave);
+            BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
         }
+
+        void TextArea_MouseEnter(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(lastRevision))
+                commitInfo.Visible = true;
+        }
+
+        string lastRevision;
+        void TextArea_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (blameList != null && BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= blameList.Count)
+                return;
+
+            commitInfo.Visible = true;
+
+            string newRevision = blameList[BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)].CommitGuid;
+            if (lastRevision != newRevision)
+            {
+                lastRevision = newRevision;
+                commitInfo.SetRevision(lastRevision);
+            }
+        }
+
+        void TextArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            commitInfo.Size = new Size(BlameFile.Width - 10, BlameFile.Height / 4);
+
+            if (e.Y > (BlameFile.Height / 3)*2)
+            {
+                commitInfo.Location = new Point(5, 5);
+            } else
+            if (e.Y < BlameFile.Height / 3)
+            {
+                commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
+            }
+        }
+
+        void BlameFile_MouseLeave(object sender, EventArgs e)
+        {
+            commitInfo.Visible = false;
+        }
+
 
         void Diff_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
