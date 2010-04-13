@@ -100,10 +100,9 @@ namespace GitUI
 
                     GetImageFromGravatar(imageFileName, isolatedStorage);
                 }
-
-                syncContext.Post(delegate
+                if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
                 {
-                    if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
+                    syncContext.Post(delegate
                     {
                         try
                         {
@@ -120,13 +119,17 @@ namespace GitUI
 
                             imgGravatar.Image = Resources.User;
                         }
-                    }
-                    else
-                    {
-                        imgGravatar.Image = Resources.User;
-                    }
-
-                }, null);
+                        catch
+                        {
+                            //Other erros, ignore
+                            imgGravatar.Image = Resources.User;
+                        }
+                    }, null);
+                }
+                else
+                {
+                    imgGravatar.Image = Resources.User;
+                }
             });
         }
 
