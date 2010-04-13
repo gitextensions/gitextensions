@@ -73,6 +73,7 @@
             // EmptyLabel
             // 
             this.EmptyLabel.BackColor = System.Drawing.SystemColors.Window;
+            this.EmptyLabel.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.EmptyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EmptyLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.EmptyLabel.Location = new System.Drawing.Point(3, 3);
