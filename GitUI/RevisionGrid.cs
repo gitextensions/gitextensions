@@ -39,6 +39,8 @@ namespace GitUI
             //RefreshRevisions();
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
+
+            Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
             
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
@@ -47,6 +49,56 @@ namespace GitUI
 
             SetShowBranches();
             filter = "";
+            quickSearchString = "";
+            quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
+
+ 
+
+        }
+
+
+
+        void quickSearchTimer_Tick(object sender, EventArgs e)
+        {
+            quickSearchTimer.Stop();
+            quickSearchString = "";
+        }
+
+        private string quickSearchString;
+        void Revisions_KeyDown(object sender, KeyEventArgs e)
+        {
+            char key = (char)e.KeyValue;
+            if (char.IsLetterOrDigit(key) || char.IsNumber(key))
+            {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = 500;
+                quickSearchTimer.Start();
+                quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
+
+                int index = -1;
+                int oldIndex = -1;
+                if (Revisions.SelectedRows.Count > 0)
+                    oldIndex = Revisions.SelectedRows[0].Index+1;
+
+                index = RevisionList.FindIndex(oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
+
+                if (index < 0 && oldIndex > 0)
+                    index = RevisionList.FindIndex(0, oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
+
+                if (index > -1)
+                {
+                    Revisions.ClearSelection();
+                    Revisions.Rows[index].Selected = true;
+
+                    Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
+                }
+            }
+            else
+            {
+                quickSearchString = "";
+
+                return;
+            }
         }
 
         public string LogParam = "HEAD --all --boundary";
@@ -111,7 +163,6 @@ namespace GitUI
 
         public void SetSelectedRevision(GitRevision revision)
         {
-            /*
             Revisions.ClearSelection();
 
             if (revision != null)
@@ -122,7 +173,7 @@ namespace GitUI
                             row.Selected = true;
                     }
                 }
-            Revisions.Select();*/
+            Revisions.Select();
         }
 
         void Revisions_SelectionChanged(object sender, EventArgs e)
