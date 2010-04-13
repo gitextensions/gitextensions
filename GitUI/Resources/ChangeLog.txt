@@ -11,6 +11,7 @@ Version 1.92
 	Added icons to indicate if a files is added, modified or removed
 	Author images from gravatar.com added to commit info panel
 	User Manual updated
+	Added quicksearch on author and message in revision grid
 
 Version 1.91
 	Fixed bug: tooltips drawn incorrect

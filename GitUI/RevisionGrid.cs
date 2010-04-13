@@ -51,12 +51,7 @@ namespace GitUI
             filter = "";
             quickSearchString = "";
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
-
- 
-
         }
-
-
 
         void quickSearchTimer_Tick(object sender, EventArgs e)
         {
@@ -73,12 +68,13 @@ namespace GitUI
                 quickSearchTimer.Stop();
                 quickSearchTimer.Interval = 500;
                 quickSearchTimer.Start();
+
                 quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
 
                 int index = -1;
                 int oldIndex = -1;
                 if (Revisions.SelectedRows.Count > 0)
-                    oldIndex = Revisions.SelectedRows[0].Index+1;
+                   oldIndex = Revisions.SelectedRows[0].Index;
 
                 index = RevisionList.FindIndex(oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
 

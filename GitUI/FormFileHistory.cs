@@ -54,6 +54,8 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.MouseDown += new MouseEventHandler(TextArea_MouseDown);
             BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(BlameFile_MouseLeave);
             BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
+
+            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
         }
 
         void TextArea_MouseEnter(object sender, EventArgs e)
