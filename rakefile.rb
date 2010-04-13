@@ -25,6 +25,9 @@ CONFIG = "Release"
 
 ENV["SkipShellExtRegistration"] = "yes"
 
+# don't write the command to be executed by 'sh' to stdout
+verbose(false)
+
 def tasks
   task :default => :compile
 
@@ -98,13 +101,20 @@ def run_msbuild(target, project, props)
   props.each{|k,v| cmd += "/p:#{k}=\"#{v}\" "}
   cmd += "/p:Configuration=#{CONFIG} "
   cmd += "/t:#{target} #{project}"
-  
+
+  prop_desc = props.to_a.map{|x| "#{x[0]} = #{x[1]}"}.join(', ')
+  desc = project
+  desc += " (#{prop_desc})" if prop_desc.size != 0
+
+  if target == 'clean' then
+    puts "Cleaning #{desc}"
+  else
+    puts "Building #{desc}"
+  end
+
   startTime = Time.now
   sh cmd
   endTime = Time.now
-
-  duration = endTime - startTime
-  printf "Duration: %.2fs\n\n", duration
 end
 
 tasks
