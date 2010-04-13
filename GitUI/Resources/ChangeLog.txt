@@ -3,6 +3,8 @@ Changelog
 
 Version 1.92
 	Fixed bug: the application hangs randomly
+	Fixed bug: quotes in local settings were not escaped properly
+	Fixed progress bar when pulling and fetching under git > 1.7.1
 	There is a new installer to address the following issues (thanks to Jacob Stanley)
 		Updating existing installations
 		Install both 32bits and 64bits shell extension ont 64bit systems
