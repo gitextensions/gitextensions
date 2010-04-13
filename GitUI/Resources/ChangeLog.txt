@@ -7,11 +7,12 @@ Version 1.92
 	Fixed progress bar when pulling and fetching under git > 1.7.1
 	There is a new installer to address the following issues (thanks to Jacob Stanley)
 		Updating existing installations
-		Install both 32bits and 64bits shell extension ont 64bit systems
+		Install both 32bits and 64bits shell extension on 64bit systems
 	Added icons to indicate if a files is added, modified or removed
 	Author images from gravatar.com added to commit info panel
 	User Manual updated
 	Added quicksearch on author and message in revision grid
+	Added commitinfo panel to blame view
 
 Version 1.91
 	Fixed bug: tooltips drawn incorrect
