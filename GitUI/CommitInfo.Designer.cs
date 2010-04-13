@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.gravatar1 = new GitUI.Gravatar();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayout
             // 
+            this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayout.ColumnCount = 2;
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -50,19 +51,6 @@
             this.tableLayout.Size = new System.Drawing.Size(766, 334);
             this.tableLayout.TabIndex = 3;
             // 
-            // RevisionInfo
-            // 
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(90, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(676, 334);
-            this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.Text = "";
-            // 
             // gravatar1
             // 
             this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
@@ -73,6 +61,19 @@
             this.gravatar1.Name = "gravatar1";
             this.gravatar1.Size = new System.Drawing.Size(90, 334);
             this.gravatar1.TabIndex = 1;
+            // 
+            // RevisionInfo
+            // 
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(95, 5);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(5);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(666, 324);
+            this.RevisionInfo.TabIndex = 0;
+            this.RevisionInfo.Text = "";
             // 
             // CommitInfo
             // 
