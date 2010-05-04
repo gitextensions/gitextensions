@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 1.93
+	Fixed bug: wrong icon drawn in commit dialog for deleted files
+	Reset selected files in the commit dialog asks to delete new files.
+
 Version 1.92
 	Fixed bug: the application hangs randomly
 	Fixed bug: quotes in local settings were not escaped properly
