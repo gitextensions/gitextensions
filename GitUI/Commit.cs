@@ -423,10 +423,31 @@ namespace GitUI
         {
             if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want to reset the changes of the selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+                bool deleteNewFiles = false;
+                bool askToDeleteNewFiles = true;
                 StringBuilder output = new StringBuilder();
                 foreach (GitItemStatus item in Unstaged.SelectedItems)
                 {
-                    output.Append(GitCommands.GitCommands.ResetFile(item.Name));
+                    if (item.IsNew)
+                    {
+                        if (!deleteNewFiles && askToDeleteNewFiles)
+                        {
+                            DialogResult result = MessageBox.Show("Do you also want to delete the new files that are in the selection?" + Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.", "Delete", MessageBoxButtons.YesNo);
+                            if (result == DialogResult.Yes)
+                                deleteNewFiles = true;
+
+                            askToDeleteNewFiles = false;
+                        }
+
+                        if (deleteNewFiles)
+                        {
+                            File.Delete(GitCommands.Settings.WorkingDir + item.Name);
+                        }
+                    }
+                    else
+                    {
+                        output.Append(GitCommands.GitCommands.ResetFile(item.Name));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(output.ToString()))
