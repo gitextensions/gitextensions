@@ -183,6 +183,7 @@
             this.splitContainer2.Size = new System.Drawing.Size(742, 304);
             this.splitContainer2.SplitterDistance = 247;
             this.splitContainer2.TabIndex = 0;
+            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             // 
             // BlameCommitter
             // 
@@ -210,6 +211,7 @@
             this.BlameFile.Name = "BlameFile";
             this.BlameFile.Size = new System.Drawing.Size(489, 302);
             this.BlameFile.TabIndex = 4;
+            this.BlameFile.Resize += new System.EventHandler(this.BlameFile_Resize);
             // 
             // gitItemBindingSource1
             // 

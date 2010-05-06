@@ -67,6 +67,9 @@ namespace GitUI
         string lastRevision;
         void TextArea_MouseDown(object sender, MouseEventArgs e)
         {
+            if (blameList == null)
+                return;
+
             if (blameList != null && BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= blameList.Count)
                 return;
 
@@ -82,6 +85,7 @@ namespace GitUI
 
         void TextArea_MouseMove(object sender, MouseEventArgs e)
         {
+
             commitInfo.Size = new Size(BlameFile.Width - 10, BlameFile.Height / 4);
 
             if (e.Y > (BlameFile.Height / 3)*2)
@@ -262,6 +266,16 @@ namespace GitUI
             //EditorOptions.SetSyntax(View, FileName);
 
             //FileChanges.DataSource = GitCommands.GitCommands.GetFileChanges(FileName);
+        }
+
+        private void BlameFile_Resize(object sender, EventArgs e)
+        {
+            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
         }
     }
 }
