@@ -34,8 +34,8 @@ namespace GitUI
 
                 dirTo += NewDirectory.Text;
 
-                RepositoryHistory.AddMostRecentRepository(From.Text);
-                RepositoryHistory.AddMostRecentRepository(dirTo);
+                Repositories.RepositoryHistory.AddMostRecentRepository(From.Text);
+                Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
                 //CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
                 //GitCommands.Clone commit = new GitCommands.Clone(dto);
@@ -118,12 +118,12 @@ namespace GitUI
 
         private void From_DropDown(object sender, EventArgs e)
         {
-            From.DataSource = RepositoryHistory.MostRecentRepositories.ToArray();
+            From.DataSource = Repositories.RepositoryHistory.MostRecentRepositories.ToArray();
         }
 
         private void To_DropDown(object sender, EventArgs e)
         {
-            To.DataSource = RepositoryHistory.MostRecentRepositories.ToArray();
+            To.DataSource = Repositories.RepositoryHistory.MostRecentRepositories.ToArray();
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)

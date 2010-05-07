@@ -316,19 +316,17 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///Version 1.93
+        ///	Fixed bug: wrong icon drawn in commit dialog for deleted files
+        ///	Reset selected files in the commit dialog asks to delete new files.
+        ///
         ///Version 1.92
         ///	Fixed bug: the application hangs randomly
+        ///	Fixed bug: quotes in local settings were not escaped properly
+        ///	Fixed progress bar when pulling and fetching under git &gt; 1.7.1
         ///	There is a new installer to address the following issues (thanks to Jacob Stanley)
         ///		Updating existing installations
-        ///		Install both 32bits and 64bits shell extension ont 64bit systems
-        ///	Added icons to indicate if a files is added, modified or removed
-        ///
-        ///Version 1.91
-        ///	Fixed bug: tooltips drawn incorrect
-        ///
-        ///Version 1.90
-        ///	Fixed bug: images in .gif and .ico format could not be displayed.
-        ///	Fixed bug: extra empty lines are sho [rest of string was truncated]&quot;;.
+        ///		Install both 32bits and 64bi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -392,6 +390,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Icon dollar {
+            get {
+                object obj = ResourceManager.GetObject("dollar", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Donate {
             get {
                 object obj = ResourceManager.GetObject("Donate", resourceCulture);
@@ -417,6 +422,13 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("fetch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon history {
+            get {
+                object obj = ResourceManager.GetObject("history", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

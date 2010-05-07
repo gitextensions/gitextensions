@@ -18,7 +18,7 @@ namespace GitUI
 
         private void PrivateKeypath_DropDown(object sender, EventArgs e)
         {
-            PrivateKeypath.DataSource = GitCommands.RepositoryHistory.MostRecentRepositories;
+            PrivateKeypath.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
         }
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
@@ -27,7 +27,7 @@ namespace GitUI
                 MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
             else
             {
-                GitCommands.RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
+                GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
                 if (!string.IsNullOrEmpty(PrivateKeypath.Text))
                 {
                     GitCommands.GitCommands.StartPageantWithKey(PrivateKeypath.Text);

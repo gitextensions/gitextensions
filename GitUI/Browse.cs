@@ -22,6 +22,15 @@ namespace GitUI
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            dashboard.WorkingDirChanged += new EventHandler(dashboard_WorkingDirChanged);
+        }
+
+        void dashboard_WorkingDirChanged(object sender, EventArgs e)
+        {
+            indexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(false);
+            indexWatcher.Reset();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -157,6 +166,8 @@ namespace GitUI
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
             NoGit.Visible = !validWorkingDir;
+            if (NoGit.Visible)
+                dashboard.ShowRecentRepositories();
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -170,8 +181,6 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
-
-            ShowRecentRepositories();
 
             if (hard)
                 ShowRevisions();
@@ -219,56 +228,6 @@ namespace GitUI
                     ToolStrip.Items.Remove(warning);
                     warning = null;
                 }
-            }
-
-        }
-
-        private void ShowRecentRepositories()
-        {
-            if (NoGit.Visible)
-            {
-                int xStart = 10;
-                int yStart = 25;
-                RecentRepositoriesGroupBox.Controls.Clear();
-
-                foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
-                {
-                    LinkLabel label = new LinkLabel();
-                    label.Text = historyItem;
-                    label.Location = new Point(xStart, yStart);
-                    label.Size = new Size(RecentRepositoriesGroupBox.Width - 20, 20);
-                    label.AutoEllipsis = true;
-                    label.Click += new EventHandler(label_Click);
-
-
-                    ToolTip toolTip = new ToolTip();
-                    toolTip.InitialDelay = 1;
-                    toolTip.AutomaticDelay = 1;
-                    toolTip.AutoPopDelay = 5000;
-                    toolTip.UseFading = false;
-                    toolTip.UseAnimation = false;
-                    toolTip.ReshowDelay = 1;
-                    toolTip.SetToolTip(label, label.Text);
-
-                    RecentRepositoriesGroupBox.Controls.Add(label);
-                    yStart += 25;
-                }
-            }
-        }
-
-
-        void label_Click(object sender, EventArgs e)
-        {
-            LinkLabel label = sender as LinkLabel;
-            if (label != null && !string.IsNullOrEmpty(label.Text))
-            {
-                Settings.WorkingDir = label.Text;
-                RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-
-                indexWatcher.Clear();
-                RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);
-                indexWatcher.Reset();
             }
 
         }
@@ -1006,32 +965,7 @@ namespace GitUI
         }
 
 
-        private void Open_Click(object sender, EventArgs e)
-        {
-            Open open = new Open();
-            open.ShowDialog();
-            indexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            indexWatcher.Reset();
 
-        }
-
-        private void Clone_Click(object sender, EventArgs e)
-        {
-            if (GitUICommands.Instance.StartCloneDialog())
-                Initialize();
-        }
-
-        private void Init_Click(object sender, EventArgs e)
-        {
-            GitUICommands.Instance.StartInitializeDialog(GitCommands.Settings.WorkingDir);
-
-            indexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            indexWatcher.Reset();
-        }
 
         private void toolStripTextBoxFilter_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1204,7 +1138,7 @@ namespace GitUI
             GitCommands.Settings.WorkingDir += GitCommands.GitCommands.GetSubmoduleLocalPath(button.Text);
 
             if (GitCommands.Settings.ValidWorkingDir())
-                RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
+                Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
 
             InternalInitialize(true);
         }
@@ -1223,7 +1157,7 @@ namespace GitUI
         {
             recentToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (string historyItem in RepositoryHistory.MostRecentRepositories)
+            foreach (string historyItem in Repositories.RepositoryHistory.MostRecentRepositories)
             {
                 if (!string.IsNullOrEmpty(historyItem))
                 {
@@ -1266,10 +1200,7 @@ namespace GitUI
             indexWatcher.Reset();
         }
 
-        private void Donate_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
-        }
+
 
         public override void cancelButton_Click(object sender, EventArgs e)
         {
@@ -1326,9 +1257,5 @@ namespace GitUI
             GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
         }
 
-        private void splitContainer5_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            ShowRecentRepositories();
-        }
     }
 }

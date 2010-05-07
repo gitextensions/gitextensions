@@ -16,7 +16,7 @@ namespace GitUI
         {
             InitializeComponent();
 
-            Directory.DataSource = RepositoryHistory.MostRecentRepositories;
+            Directory.DataSource = Repositories.RepositoryHistory.MostRecentRepositories;
 
             Load.Select();
 
@@ -42,7 +42,7 @@ namespace GitUI
             {
                 Settings.WorkingDir = Directory.Text;
 
-                RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 
                 Close();
             }
