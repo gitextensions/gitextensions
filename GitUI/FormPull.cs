@@ -141,7 +141,7 @@ namespace GitUI
 
             GitCommands.Settings.AutoStash = AutoStash.Checked;
 
-            GitCommands.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+            GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
             string source;
 
@@ -237,7 +237,7 @@ namespace GitUI
 
         private void PullSource_DropDown(object sender, EventArgs e)
         {
-            PullSource.DataSource = GitCommands.RepositoryHistory.MostRecentRepositories;
+            PullSource.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
         }
 
         private void Stash_Click(object sender, EventArgs e)

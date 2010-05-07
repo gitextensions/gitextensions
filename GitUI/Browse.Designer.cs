@@ -52,18 +52,6 @@
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.NoGit = new System.Windows.Forms.Panel();
-            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Open = new System.Windows.Forms.Button();
-            this.Init = new System.Windows.Forms.Button();
-            this.Clone = new System.Windows.Forms.Button();
-            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.RecentRepositoriesGroupBox = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Donate = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -159,23 +147,12 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dashboard = new GitUI.Dashboard();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.ToolStrip.SuspendLayout();
             this.NoGit.SuspendLayout();
-            this.splitContainer5.Panel1.SuspendLayout();
-            this.splitContainer5.Panel2.SuspendLayout();
-            this.splitContainer5.SuspendLayout();
-            this.splitContainer6.Panel1.SuspendLayout();
-            this.splitContainer6.Panel2.SuspendLayout();
-            this.splitContainer6.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.splitContainer7.Panel1.SuspendLayout();
-            this.splitContainer7.Panel2.SuspendLayout();
-            this.splitContainer7.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -407,169 +384,13 @@
             // NoGit
             // 
             this.NoGit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.NoGit.Controls.Add(this.splitContainer5);
+            this.NoGit.Controls.Add(this.dashboard);
             this.NoGit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoGit.Location = new System.Drawing.Point(0, 0);
             this.NoGit.Name = "NoGit";
             this.NoGit.Size = new System.Drawing.Size(796, 520);
             this.NoGit.TabIndex = 1;
             this.NoGit.Paint += new System.Windows.Forms.PaintEventHandler(this.NoGit_Paint);
-            // 
-            // splitContainer5
-            // 
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer5.Name = "splitContainer5";
-            // 
-            // splitContainer5.Panel1
-            // 
-            this.splitContainer5.Panel1.Controls.Add(this.splitContainer6);
-            // 
-            // splitContainer5.Panel2
-            // 
-            this.splitContainer5.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.splitContainer5.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer5.Panel2.Controls.Add(this.label2);
-            this.splitContainer5.Size = new System.Drawing.Size(796, 520);
-            this.splitContainer5.SplitterDistance = 282;
-            this.splitContainer5.TabIndex = 8;
-            this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
-            // 
-            // splitContainer6
-            // 
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer6.Name = "splitContainer6";
-            this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer6.Panel1
-            // 
-            this.splitContainer6.Panel1.Controls.Add(this.groupBox1);
-            // 
-            // splitContainer6.Panel2
-            // 
-            this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(282, 520);
-            this.splitContainer6.SplitterDistance = 126;
-            this.splitContainer6.TabIndex = 0;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.Open);
-            this.groupBox1.Controls.Add(this.Init);
-            this.groupBox1.Controls.Add(this.Clone);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(282, 126);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Getting started";
-            // 
-            // Open
-            // 
-            this.Open.Location = new System.Drawing.Point(48, 19);
-            this.Open.Name = "Open";
-            this.Open.Size = new System.Drawing.Size(179, 28);
-            this.Open.TabIndex = 7;
-            this.Open.Text = "Open repository";
-            this.Open.UseVisualStyleBackColor = true;
-            this.Open.Click += new System.EventHandler(this.Open_Click);
-            // 
-            // Init
-            // 
-            this.Init.Location = new System.Drawing.Point(48, 87);
-            this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(179, 28);
-            this.Init.TabIndex = 4;
-            this.Init.Text = "Create new repository";
-            this.Init.UseVisualStyleBackColor = true;
-            this.Init.Click += new System.EventHandler(this.Init_Click);
-            // 
-            // Clone
-            // 
-            this.Clone.Location = new System.Drawing.Point(48, 53);
-            this.Clone.Name = "Clone";
-            this.Clone.Size = new System.Drawing.Size(179, 28);
-            this.Clone.TabIndex = 6;
-            this.Clone.Text = "Clone repository";
-            this.Clone.UseVisualStyleBackColor = true;
-            this.Clone.Click += new System.EventHandler(this.Clone_Click);
-            // 
-            // splitContainer7
-            // 
-            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer7.Name = "splitContainer7";
-            this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer7.Panel1
-            // 
-            this.splitContainer7.Panel1.Controls.Add(this.RecentRepositoriesGroupBox);
-            // 
-            // splitContainer7.Panel2
-            // 
-            this.splitContainer7.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer7.Size = new System.Drawing.Size(282, 390);
-            this.splitContainer7.SplitterDistance = 324;
-            this.splitContainer7.TabIndex = 0;
-            // 
-            // RecentRepositoriesGroupBox
-            // 
-            this.RecentRepositoriesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositoriesGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.RecentRepositoriesGroupBox.Name = "RecentRepositoriesGroupBox";
-            this.RecentRepositoriesGroupBox.Size = new System.Drawing.Size(282, 324);
-            this.RecentRepositoriesGroupBox.TabIndex = 0;
-            this.RecentRepositoriesGroupBox.TabStop = false;
-            this.RecentRepositoriesGroupBox.Text = "Recent repositories";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.Donate);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(282, 62);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Donate";
-            // 
-            // Donate
-            // 
-            this.Donate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Donate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Donate.Location = new System.Drawing.Point(48, 20);
-            this.Donate.Name = "Donate";
-            this.Donate.Size = new System.Drawing.Size(143, 30);
-            this.Donate.TabIndex = 0;
-            this.Donate.Text = "Donate";
-            this.Donate.UseVisualStyleBackColor = true;
-            this.Donate.Click += new System.EventHandler(this.Donate_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow1;
-            this.pictureBox1.Location = new System.Drawing.Point(251, 260);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 15);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(218, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "The current working dir is not a git repository.";
             // 
             // splitContainer3
             // 
@@ -1405,6 +1226,14 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // dashboard
+            // 
+            this.dashboard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dashboard.Location = new System.Drawing.Point(0, 0);
+            this.dashboard.Name = "dashboard";
+            this.dashboard.Size = new System.Drawing.Size(796, 520);
+            this.dashboard.TabIndex = 0;
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1425,19 +1254,6 @@
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             this.NoGit.ResumeLayout(false);
-            this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel2.ResumeLayout(false);
-            this.splitContainer5.Panel2.PerformLayout();
-            this.splitContainer5.ResumeLayout(false);
-            this.splitContainer6.Panel1.ResumeLayout(false);
-            this.splitContainer6.Panel2.ResumeLayout(false);
-            this.splitContainer6.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.splitContainer7.Panel1.ResumeLayout(false);
-            this.splitContainer7.Panel2.ResumeLayout(false);
-            this.splitContainer7.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -1545,10 +1361,6 @@
         private FileViewer FileText;
         private FileViewer DiffText;
         private System.Windows.Forms.Panel NoGit;
-        private System.Windows.Forms.Button Open;
-        private System.Windows.Forms.Button Clone;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button Init;
         private System.Windows.Forms.TabPage CommitInfo;
         private CommitInfo RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
@@ -1578,20 +1390,13 @@
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-        private System.Windows.Forms.SplitContainer splitContainer5;
-        private System.Windows.Forms.SplitContainer splitContainer6;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox RecentRepositoriesGroupBox;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer7;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Donate;
         private System.Windows.Forms.ContextMenuStrip TreeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem userManualToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanupToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private Dashboard dashboard;
     }
 }

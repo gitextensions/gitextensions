@@ -5,12 +5,23 @@ using System.Windows.Forms;
 
 namespace GitCommands
 {
-    public static class RepositoryHistory
+    public class RepositoryHistory
     {
+        public List<string> MostRecentRepositories = new List<string>();
 
-        public static List<string> MostRecentRepositories = new List<string>();
+        public void RemoveRecentRepository(string repo)
+        {
+            foreach (string recentRepository in MostRecentRepositories)
+            {
+                if (recentRepository.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    MostRecentRepositories.Remove(recentRepository);
+                    break;
+                }
+            }
+        }
 
-        public static void AddMostRecentRepository(string repo)
+        public void AddMostRecentRepository(string repo)
         {
             repo = repo.Trim();
 

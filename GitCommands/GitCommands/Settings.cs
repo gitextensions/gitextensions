@@ -628,8 +628,8 @@ namespace GitCommands
         {
             try
             {
-                for (int n = 0; n < RepositoryHistory.MostRecentRepositories.Count; n++)
-                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), RepositoryHistory.MostRecentRepositories[n]);
+                for (int n = 0; n < Repositories.RepositoryHistory.MostRecentRepositories.Count; n++)
+                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), Repositories.RepositoryHistory.MostRecentRepositories[n]);
 
                 if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
                     Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
@@ -650,6 +650,8 @@ namespace GitCommands
                                         Application.UserAppDataRegistry.SetValue("encoding", "Default");
 
 
+
+                Application.UserAppDataRegistry.SetValue("repositories", Repositories.Serialize());
 
                 Application.UserAppDataRegistry.SetValue("showauthorgravatar", Settings.showAuthorGravatar);
 
@@ -797,8 +799,10 @@ namespace GitCommands
                 for (int i = 30; i >= 0; i--)
                 {
                     if (Application.UserAppDataRegistry.GetValue(string.Concat("dir", i)) != null)
-                        RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue(string.Concat("dir", i)).ToString());
+                        Repositories.RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue(string.Concat("dir", i)).ToString());
                 }
+
+                if (Application.UserAppDataRegistry.GetValue("repositories") != null) Repositories.Deserialize(Application.UserAppDataRegistry.GetValue("repositories").ToString());
             }
             catch
             {

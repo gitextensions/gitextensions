@@ -45,7 +45,7 @@ namespace GitUI
                 return;
             }
 
-            GitCommands.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
+            GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
             FormProcess form;
 
@@ -78,7 +78,7 @@ namespace GitUI
 
         private void PushDestination_DropDown(object sender, EventArgs e)
         {
-            PushDestination.DataSource = GitCommands.RepositoryHistory.MostRecentRepositories;
+            PushDestination.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
         }
 
         private void Branch_DropDown(object sender, EventArgs e)

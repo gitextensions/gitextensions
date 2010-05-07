@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.LocalSettings = new System.Windows.Forms.TabPage();
             this.label30 = new System.Windows.Forms.Label();
@@ -87,8 +88,11 @@
             this.label13 = new System.Windows.Forms.Label();
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
+            this.StartPage = new System.Windows.Forms.TabPage();
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.authorImageSize = new System.Windows.Forms.NumericUpDown();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -175,8 +179,8 @@
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.authorImageSize = new System.Windows.Forms.NumericUpDown();
-            this.label44 = new System.Windows.Forms.Label();
+            this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -184,8 +188,10 @@
             this.tabPage3.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).BeginInit();
+            this.StartPage.SuspendLayout();
             this.AppearancePage.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -199,7 +205,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -413,6 +419,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.TabPageGitExtensions);
+            this.tabControl1.Controls.Add(this.StartPage);
             this.tabControl1.Controls.Add(this.AppearancePage);
             this.tabControl1.Controls.Add(this.GlobalSettingsPage);
             this.tabControl1.Controls.Add(this.LocalSettings);
@@ -876,6 +883,17 @@
                 "aded when needed. Lower number \r\nresult is shorter startup time, but slower scro" +
                 "lling.";
             // 
+            // StartPage
+            // 
+            this.StartPage.Controls.Add(this.dashboardEditor1);
+            this.StartPage.Location = new System.Drawing.Point(4, 22);
+            this.StartPage.Name = "StartPage";
+            this.StartPage.Padding = new System.Windows.Forms.Padding(3);
+            this.StartPage.Size = new System.Drawing.Size(710, 358);
+            this.StartPage.TabIndex = 6;
+            this.StartPage.Text = "Start page";
+            this.StartPage.UseVisualStyleBackColor = true;
+            // 
             // AppearancePage
             // 
             this.AppearancePage.Controls.Add(this.groupBox6);
@@ -901,6 +919,27 @@
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(7, 49);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(57, 13);
+            this.label44.TabIndex = 4;
+            this.label44.Text = "Image size";
+            // 
+            // authorImageSize
+            // 
+            this.authorImageSize.Location = new System.Drawing.Point(125, 46);
+            this.authorImageSize.Maximum = new decimal(new int[] {
+            400,
+            0,
+            0,
+            0});
+            this.authorImageSize.Name = "authorImageSize";
+            this.authorImageSize.Size = new System.Drawing.Size(77, 20);
+            this.authorImageSize.TabIndex = 3;
             // 
             // ClearImageCache
             // 
@@ -1859,26 +1898,17 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
-            // authorImageSize
+            // repositoryBindingSource
             // 
-            this.authorImageSize.Location = new System.Drawing.Point(125, 46);
-            this.authorImageSize.Maximum = new decimal(new int[] {
-            400,
-            0,
-            0,
-            0});
-            this.authorImageSize.Name = "authorImageSize";
-            this.authorImageSize.Size = new System.Drawing.Size(77, 20);
-            this.authorImageSize.TabIndex = 3;
+            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
-            // label44
+            // dashboardEditor1
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(7, 49);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(57, 13);
-            this.label44.TabIndex = 4;
-            this.label44.Text = "Image size";
+            this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
+            this.dashboardEditor1.Name = "dashboardEditor1";
+            this.dashboardEditor1.Size = new System.Drawing.Size(704, 352);
+            this.dashboardEditor1.TabIndex = 0;
             // 
             // FormSettings
             // 
@@ -1906,9 +1936,11 @@
             this.TabPageGitExtensions.ResumeLayout(false);
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCommits)).EndInit();
+            this.StartPage.ResumeLayout(false);
             this.AppearancePage.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1929,7 +1961,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2084,6 +2116,9 @@
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.NumericUpDown authorImageSize;
+        private System.Windows.Forms.TabPage StartPage;
+        private System.Windows.Forms.BindingSource repositoryBindingSource;
+        private DashboardEditor dashboardEditor1;
 
     }
 }
