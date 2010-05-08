@@ -52,6 +52,7 @@
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.NoGit = new System.Windows.Forms.Panel();
+            this.dashboard = new GitUI.Dashboard();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -147,7 +148,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dashboard = new GitUI.Dashboard();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -390,7 +390,16 @@
             this.NoGit.Name = "NoGit";
             this.NoGit.Size = new System.Drawing.Size(796, 520);
             this.NoGit.TabIndex = 1;
+            this.NoGit.Visible = false;
             this.NoGit.Paint += new System.Windows.Forms.PaintEventHandler(this.NoGit_Paint);
+            // 
+            // dashboard
+            // 
+            this.dashboard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dashboard.Location = new System.Drawing.Point(0, 0);
+            this.dashboard.Name = "dashboard";
+            this.dashboard.Size = new System.Drawing.Size(796, 520);
+            this.dashboard.TabIndex = 0;
             // 
             // splitContainer3
             // 
@@ -1225,14 +1234,6 @@
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // dashboard
-            // 
-            this.dashboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboard.Location = new System.Drawing.Point(0, 0);
-            this.dashboard.Name = "dashboard";
-            this.dashboard.Size = new System.Drawing.Size(796, 520);
-            this.dashboard.TabIndex = 0;
             // 
             // FormBrowse
             // 

@@ -11,14 +11,16 @@ namespace GitCommands
         {
         }
 
-        public Repository(string path, string description, Icon icon)
+        public Repository(string path, string description, string title)
         {
             Path = path;
             Description = description;
-            Icon = icon;
+            Title = title;
+            FromRssFeed = false;
         }
+        public string Title { get; set; }
         public string Path { get; set; }
         public string Description { get; set; }
-        public Icon Icon { get; set; }
+        public bool FromRssFeed { get; set; }
     }
 }

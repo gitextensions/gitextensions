@@ -37,13 +37,18 @@
             this.Add = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
+            this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.Caption = new System.Windows.Forms.TextBox();
-            this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iconDataGridViewImageColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.RssFeed = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.RssFeedType = new System.Windows.Forms.RadioButton();
+            this.RepositoriesType = new System.Windows.Forms.RadioButton();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -51,8 +56,9 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
-            this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -148,8 +154,8 @@
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.83721F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.16279F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 27.90698F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 72.09303F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(491, 430);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
@@ -159,53 +165,17 @@
             this.RepositoriesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RepositoriesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.pathDataGridViewTextBoxColumn,
-            this.descriptionDataGridViewTextBoxColumn,
-            this.iconDataGridViewImageColumn});
+            this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
             this.RepositoriesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RepositoriesGrid.Location = new System.Drawing.Point(3, 41);
+            this.RepositoriesGrid.Location = new System.Drawing.Point(3, 122);
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RepositoriesGrid.Size = new System.Drawing.Size(485, 386);
+            this.RepositoriesGrid.Size = new System.Drawing.Size(485, 305);
             this.RepositoriesGrid.TabIndex = 0;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.94845F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.05154F));
-            this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.Caption, 1, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(485, 32);
-            this.tableLayoutPanel4.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(115, 32);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Caption";
-            // 
-            // Caption
-            // 
-            this.Caption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Caption.Location = new System.Drawing.Point(124, 3);
-            this.Caption.Name = "Caption";
-            this.Caption.Size = new System.Drawing.Size(358, 20);
-            this.Caption.TabIndex = 1;
-            this.Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -220,15 +190,115 @@
             this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             // 
-            // iconDataGridViewImageColumn
-            // 
-            this.iconDataGridViewImageColumn.DataPropertyName = "Icon";
-            this.iconDataGridViewImageColumn.HeaderText = "Icon";
-            this.iconDataGridViewImageColumn.Name = "iconDataGridViewImageColumn";
-            // 
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.94845F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.05155F));
+            this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.Caption, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.label3, 0, 2);
+            this.tableLayoutPanel4.Controls.Add(this.RssFeed, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 1, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 3;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.47787F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 24.77876F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(485, 113);
+            this.tableLayoutPanel4.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(114, 37);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Caption";
+            // 
+            // Caption
+            // 
+            this.Caption.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Caption.Location = new System.Drawing.Point(123, 3);
+            this.Caption.Name = "Caption";
+            this.Caption.Size = new System.Drawing.Size(359, 20);
+            this.Caption.TabIndex = 1;
+            this.Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 37);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Type";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 84);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "RSS feed";
+            // 
+            // RssFeed
+            // 
+            this.RssFeed.Location = new System.Drawing.Point(123, 87);
+            this.RssFeed.Name = "RssFeed";
+            this.RssFeed.Size = new System.Drawing.Size(359, 20);
+            this.RssFeed.TabIndex = 5;
+            this.RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 1;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.Controls.Add(this.RssFeedType, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.RepositoriesType, 0, 1);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(120, 37);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(365, 47);
+            this.tableLayoutPanel5.TabIndex = 6;
+            // 
+            // RssFeedType
+            // 
+            this.RssFeedType.AutoSize = true;
+            this.RssFeedType.Location = new System.Drawing.Point(3, 3);
+            this.RssFeedType.Name = "RssFeedType";
+            this.RssFeedType.Size = new System.Drawing.Size(74, 17);
+            this.RssFeedType.TabIndex = 0;
+            this.RssFeedType.TabStop = true;
+            this.RssFeedType.Text = "RSS Feed";
+            this.RssFeedType.UseVisualStyleBackColor = true;
+            this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
+            // 
+            // RepositoriesType
+            // 
+            this.RepositoriesType.AutoSize = true;
+            this.RepositoriesType.Location = new System.Drawing.Point(3, 26);
+            this.RepositoriesType.Name = "RepositoriesType";
+            this.RepositoriesType.Size = new System.Drawing.Size(83, 17);
+            this.RepositoriesType.TabIndex = 1;
+            this.RepositoriesType.TabStop = true;
+            this.RepositoriesType.Text = "Repositories";
+            this.RepositoriesType.UseVisualStyleBackColor = true;
             // 
             // DashboardEditor
             // 
@@ -244,9 +314,11 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -267,6 +339,11 @@
         private System.Windows.Forms.TextBox Caption;
         private System.Windows.Forms.DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewImageColumn iconDataGridViewImageColumn;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox RssFeed;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.RadioButton RssFeedType;
+        private System.Windows.Forms.RadioButton RepositoriesType;
     }
 }

@@ -33,7 +33,25 @@ namespace GitPlugin.Commands
                 foreach (SelectedItem sel in application.SelectedItems)
                 {
                     if (m_executeForFileItems && sel.ProjectItem != null && m_fileItemGUID == sel.ProjectItem.Kind)
-                        OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
+                    {
+                        //The try catch block belowe fixed issue 57:
+                        //http://github.com/spdr870/gitextensions/issues/#issue/57
+                        try
+                        {
+                            OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            if (sel.ProjectItem.FileCount > 0)
+                            {
+                                OnExecute(sel, sel.ProjectItem.get_FileNames(1), pane);
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                    }
                     else if (m_executeForProjectItems && sel.Project != null)
                         OnExecute(sel, sel.Project.FullName, pane);
 

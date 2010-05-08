@@ -778,6 +778,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\rss.ico" />
     <None Include="Resources\dollar.ico" />
     <None Include="Resources\history.ico" />
     <None Include="Icons\User.PNG" />

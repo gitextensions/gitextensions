@@ -89,6 +89,7 @@
             this.MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.StartPage = new System.Windows.Forms.TabPage();
+            this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.label44 = new System.Windows.Forms.Label();
@@ -180,7 +181,9 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dashboardEditor1 = new GitUI.DashboardEditor();
+            this.label46 = new System.Windows.Forms.Label();
+            this.DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
+            this.label47 = new System.Windows.Forms.Label();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -206,6 +209,7 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).BeginInit();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -894,6 +898,14 @@
             this.StartPage.Text = "Start page";
             this.StartPage.UseVisualStyleBackColor = true;
             // 
+            // dashboardEditor1
+            // 
+            this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
+            this.dashboardEditor1.Name = "dashboardEditor1";
+            this.dashboardEditor1.Size = new System.Drawing.Size(704, 352);
+            this.dashboardEditor1.TabIndex = 0;
+            // 
             // AppearancePage
             // 
             this.AppearancePage.Controls.Add(this.groupBox6);
@@ -909,6 +921,9 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.label47);
+            this.groupBox6.Controls.Add(this.DaysToCacheImages);
+            this.groupBox6.Controls.Add(this.label46);
             this.groupBox6.Controls.Add(this.label44);
             this.groupBox6.Controls.Add(this.authorImageSize);
             this.groupBox6.Controls.Add(this.ClearImageCache);
@@ -1902,13 +1917,35 @@
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
-            // dashboardEditor1
+            // label46
             // 
-            this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
-            this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(704, 352);
-            this.dashboardEditor1.TabIndex = 0;
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(7, 77);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(74, 13);
+            this.label46.TabIndex = 5;
+            this.label46.Text = "Cache images";
+            // 
+            // DaysToCacheImages
+            // 
+            this.DaysToCacheImages.Location = new System.Drawing.Point(125, 73);
+            this.DaysToCacheImages.Maximum = new decimal(new int[] {
+            400,
+            0,
+            0,
+            0});
+            this.DaysToCacheImages.Name = "DaysToCacheImages";
+            this.DaysToCacheImages.Size = new System.Drawing.Size(77, 20);
+            this.DaysToCacheImages.TabIndex = 6;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(217, 77);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(29, 13);
+            this.label47.TabIndex = 7;
+            this.label47.Text = "days";
             // 
             // FormSettings
             // 
@@ -1962,6 +1999,7 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2119,6 +2157,9 @@
         private System.Windows.Forms.TabPage StartPage;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private DashboardEditor dashboardEditor1;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.NumericUpDown DaysToCacheImages;
+        private System.Windows.Forms.Label label46;
 
     }
 }

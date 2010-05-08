@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Properties;
 
 namespace GitUI
 {
@@ -15,38 +16,55 @@ namespace GitUI
         {
             InitializeComponent();
 
-            Bitmap icon = null;
-            if (repository.Icon != null)
-                icon = repository.Icon.ToBitmap();
-            Initialize(icon, repository.Path, repository.Description);
+            Bitmap icon;
+            if (repository.FromRssFeed)
+                icon = Resources.rss.ToBitmap();
+            else
+                icon = Resources._14;
+
+            Initialize(icon, repository.Path, repository.Title, repository.Description);
         }
 
         public DashboardItem(Bitmap icon, string title)
         {
             InitializeComponent();
 
-            Initialize(icon, title, null);
+            Initialize(icon, title, title, null);
         }
 
         public DashboardItem(Bitmap icon, string title, string text)
         {
             InitializeComponent();
 
-            Initialize(icon, title, text);
+            Initialize(icon, title, title, text);
         }
 
-        private void Initialize(Bitmap icon, string title, string text)
+        private void Initialize(Bitmap icon, string path, string title, string text)
         {
             Title.Text = title;
             Title.AutoEllipsis = true;
 
+            Path = path;
+
+            if (string.IsNullOrEmpty(Title.Text))
+                Title.Text = Path;
+
             Description.Visible = !string.IsNullOrEmpty(text);
             Description.Text = text;
 
+            //if (Description.Visible)
+            //{
+            //    SizeF size = Description.CreateGraphics().MeasureString(Description.Text, Description.Font);
+            //    int lines = ((int)size.Width / (int)Description.Width) + 1;
+            //    Description.Height = ((int)size.Height) * lines;
+            //}
+
+
+            this.Height = 20;
             if (Description.Visible)
-                this.Height = 35;
-            else
-                this.Height = 20;
+                this.Height += Description.Height;
+            
+                
 
             if (icon != null)
                 Icon.Image = icon;
@@ -63,6 +81,8 @@ namespace GitUI
 
             Title.MouseDown += new MouseEventHandler(Title_MouseDown);
             Title.Click += new EventHandler(Title_Click);
+            Description.Click += new EventHandler(Title_Click);
+            Icon.Click += new EventHandler(Title_Click);
         }
 
         void Title_Click(object sender, EventArgs e)
@@ -82,6 +102,39 @@ namespace GitUI
         public string GetTitle()
         {
             return Title.Text;
+        }
+
+        public string Path { get; set; }
+
+        private void DashboardItem_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DashboardItem_SizeChanged(object sender, EventArgs e)
+        {
+            Title.Width = Width - Title.Location.X;
+            Description.Width = Width - Title.Location.X;
+        }
+
+        private void DashboardItem_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DashboardItem_Leave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DashboardItem_MouseEnter(object sender, EventArgs e)
+        {
+            this.BackColor = SystemColors.ControlLight;
+        }
+
+        private void DashboardItem_MouseLeave(object sender, EventArgs e)
+        {
+            this.BackColor = SystemColors.Control;
         }
 
         //public override ContextMenuStrip ContextMenuStrip
