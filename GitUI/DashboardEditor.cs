@@ -32,8 +32,12 @@ namespace GitUI
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             RepositoriesGrid.DataSource = repositoryCategory.Repositories;
 
-
             Caption.Text = repositoryCategory.Description;
+            RssFeedType.Checked = repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed;
+            RepositoriesType.Checked = !RssFeedType.Checked;
+            RssFeed.Text = repositoryCategory.RssFeedUrl;
+
+            RssFeedType_CheckedChanged(this, null);
         }
 
         private void Add_Click(object sender, EventArgs e)
@@ -56,6 +60,41 @@ namespace GitUI
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.Description = Caption.Text;
+        }
+
+        private void RssFeedType_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Categories.SelectedItem == null)
+                return; 
+            
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+
+
+            if (RssFeedType.Checked)
+            {
+                RepositoriesGrid.ReadOnly = true;
+                RepositoriesGrid.Enabled = false;
+                RssFeed.Enabled = true;
+                repositoryCategory.CategoryType = RepositoryCategoryType.RssFeed;
+            }
+
+            if (RepositoriesType.Checked)
+            {
+                RepositoriesGrid.ReadOnly = false;
+                RepositoriesGrid.Enabled = true;
+                RssFeed.Enabled = false;
+                repositoryCategory.CategoryType = RepositoryCategoryType.Repositories;
+            }
+            
+        }
+
+        private void RssFeed_TextChanged(object sender, EventArgs e)
+        {
+                        if (Categories.SelectedItem == null)
+                return; 
+            
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.RssFeedUrl = RssFeed.Text;
         }
 
     }

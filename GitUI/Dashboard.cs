@@ -43,8 +43,13 @@ namespace GitUI
                 {
                     DashboardCategory dashboardCategory = new DashboardCategory(entry.Description, entry);
                     dashboardCategory.Location = new Point(0, y);
-                    dashboardCategory.DashboardItemClick += new EventHandler(dashboardItem_Click);
+                    dashboardCategory.Width = splitContainer5.Panel2.Width;
+                    if (entry.CategoryType == RepositoryCategoryType.Repositories)
+                        dashboardCategory.DashboardItemClick += new EventHandler(dashboardItem_Click);
+                    if (entry.CategoryType == RepositoryCategoryType.RssFeed)
+                        dashboardCategory.DashboardItemClick+=new EventHandler(dashboardItemRss_Click);
                     splitContainer5.Panel2.Controls.Add(dashboardCategory);
+                    dashboardCategory.BringToFront();
                     y += dashboardCategory.Height;
                 }
             }
@@ -60,7 +65,6 @@ namespace GitUI
                 foreach (string historyItem in Repositories.RepositoryHistory.MostRecentRepositories)
                 {
                     DashboardItem dashboardItem = new DashboardItem(Resources.history.ToBitmap(), historyItem);
-                    dashboardItem.ContextMenuStrip = RecentRepositoriesContextMenu;
                     dashboardItem.Click +=new EventHandler(dashboardItem_Click);
                     RecentRepositories.AddItem(dashboardItem);
                 }
@@ -86,12 +90,23 @@ namespace GitUI
             }
         }
 
-        void dashboardItem_Click(object sender, EventArgs e)
+        void dashboardItemRss_Click(object sender, EventArgs e)
         {
             DashboardItem label = sender as DashboardItem;
             if (label != null && !string.IsNullOrEmpty(label.GetTitle()))
             {
-                GitCommands.Settings.WorkingDir = label.GetTitle();
+                System.Diagnostics.Process.Start(label.Path);
+               
+            }
+        }
+
+
+        void dashboardItem_Click(object sender, EventArgs e)
+        {
+            DashboardItem label = sender as DashboardItem;
+            if (label != null && !string.IsNullOrEmpty(label.Path))
+            {
+                GitCommands.Settings.WorkingDir = label.Path;
                 Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
 
                 OnWorkingDirChanged();
@@ -134,14 +149,5 @@ namespace GitUI
             new FormDashboardEditor().ShowDialog();
             ShowRecentRepositories();
         }
-
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DashboardItem dashboardItem = (DashboardItem)sender;
-
-            Repositories.RepositoryHistory.RemoveRecentRepository(dashboardItem.GetTitle());
-            ShowRecentRepositories();
-        }
-
     }
 }

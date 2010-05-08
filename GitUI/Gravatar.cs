@@ -85,7 +85,7 @@ namespace GitUI
 
             ThreadPool.QueueUserWorkItem(delegate
             {
-                string imageFileName = string.Concat(theEmail, ".jpg");
+                string imageFileName = string.Concat(theEmail, ".png");
 
                 IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
@@ -108,7 +108,6 @@ namespace GitUI
                         {
                             using (IsolatedStorageFileStream iStream = new IsolatedStorageFileStream(imageFileName, FileMode.Open, isolatedStorage))
                             {
-
                                 imgGravatar.Image = Image.FromStream(iStream);
                             }
                         }
@@ -166,7 +165,7 @@ namespace GitUI
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string imageFileName = string.Concat(theEmail, ".jpg");
+            string imageFileName = string.Concat(theEmail, ".png");
             IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
             isolatedStorage.DeleteFile(imageFileName);
 
@@ -199,7 +198,7 @@ namespace GitUI
         public static void ClearImageCache()
         {
             IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-            foreach (string gravatarFileName in isolatedStorage.GetFileNames("*.jpg"))
+            foreach (string gravatarFileName in isolatedStorage.GetFileNames("*.png"))
                 isolatedStorage.DeleteFile(gravatarFileName);
         }
     }

@@ -488,6 +488,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Icon rss {
+            get {
+                object obj = ResourceManager.GetObject("rss", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap stash {
             get {
                 object obj = ResourceManager.GetObject("stash", resourceCulture);

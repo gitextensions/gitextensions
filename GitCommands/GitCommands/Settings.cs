@@ -36,6 +36,19 @@ namespace GitCommands
             }
         }
 
+        private static int authorImageCacheDays = 5;
+        public static int AuthorImageCacheDays
+        {
+            get
+            {
+                return authorImageCacheDays;
+            }
+            set
+            {
+                authorImageCacheDays = value;
+            }
+        }
+
         private static bool showAuthorGravatar = true;
         public static bool ShowAuthorGravatar
         {
@@ -671,6 +684,8 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("iconcolor", Settings.IconColor);
 
+
+                Application.UserAppDataRegistry.SetValue("authorImageCacheDays", Settings.AuthorImageCacheDays);
                 Application.UserAppDataRegistry.SetValue("authorimagesize", Settings.AuthorImageSize);
 
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
@@ -702,7 +717,7 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not load settigns.\n\n" + ex.Message);
+                MessageBox.Show("Could not load settings.\n\n" + ex.Message);
             }
         }
 
@@ -718,6 +733,16 @@ namespace GitCommands
                         Settings.MaxCommits = result;
                     }
                 }
+
+                if (Application.UserAppDataRegistry.GetValue("authorImageCacheDays") != null)
+                {
+                    int result;
+                    if (int.TryParse(Application.UserAppDataRegistry.GetValue("authorImageCacheDays").ToString(), out result) == true)
+                    {
+                        Settings.AuthorImageCacheDays = result;
+                    }
+                }
+
 
                 if (Application.UserAppDataRegistry.GetValue("authorimagesize") != null)
                 {
