@@ -16,7 +16,8 @@ namespace GitUI
         {
             InitializeComponent();
 
-            Directory.DataSource = Repositories.RepositoryHistory.MostRecentRepositories;
+            Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            Directory.DisplayMember = "Path";
 
             Load.Select();
 

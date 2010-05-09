@@ -37,9 +37,6 @@
             this.Add = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
-            this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.Caption = new System.Windows.Forms.TextBox();
@@ -49,6 +46,9 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.RssFeedType = new System.Windows.Forms.RadioButton();
             this.RepositoriesType = new System.Windows.Forms.RadioButton();
+            this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -56,9 +56,9 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -177,23 +177,6 @@
             this.RepositoriesGrid.Size = new System.Drawing.Size(485, 305);
             this.RepositoriesGrid.TabIndex = 0;
             // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            // 
-            // repositoryBindingSource
-            // 
-            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
-            // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 2;
@@ -233,6 +216,7 @@
             this.Caption.Size = new System.Drawing.Size(359, 20);
             this.Caption.TabIndex = 1;
             this.Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
+            this.Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
             // 
             // label2
             // 
@@ -259,6 +243,7 @@
             this.RssFeed.Size = new System.Drawing.Size(359, 20);
             this.RssFeed.TabIndex = 5;
             this.RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
+            this.RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
             // 
             // tableLayoutPanel5
             // 
@@ -287,6 +272,7 @@
             this.RssFeedType.TabStop = true;
             this.RssFeedType.Text = "RSS Feed";
             this.RssFeedType.UseVisualStyleBackColor = true;
+            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
             // 
             // RepositoriesType
@@ -299,6 +285,24 @@
             this.RepositoriesType.TabStop = true;
             this.RepositoriesType.Text = "Repositories";
             this.RepositoriesType.UseVisualStyleBackColor = true;
+            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            // 
+            // repositoryBindingSource
+            // 
+            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
             // DashboardEditor
             // 
@@ -314,11 +318,11 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

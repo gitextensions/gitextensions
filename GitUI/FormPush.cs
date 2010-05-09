@@ -78,7 +78,8 @@ namespace GitUI
 
         private void PushDestination_DropDown(object sender, EventArgs e)
         {
-            PushDestination.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
+            PushDestination.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            PushDestination.DisplayMember = "Path";
         }
 
         private void Branch_DropDown(object sender, EventArgs e)

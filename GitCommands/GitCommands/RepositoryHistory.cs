@@ -5,17 +5,15 @@ using System.Windows.Forms;
 
 namespace GitCommands
 {
-    public class RepositoryHistory
+    public class RepositoryHistory : RepositoryCategory
     {
-        public List<string> MostRecentRepositories = new List<string>();
-
         public void RemoveRecentRepository(string repo)
         {
-            foreach (string recentRepository in MostRecentRepositories)
+            foreach (Repository recentRepository in Repositories)
             {
-                if (recentRepository.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                if (recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    MostRecentRepositories.Remove(recentRepository);
+                    Repositories.Remove(recentRepository);
                     break;
                 }
             }
@@ -35,20 +33,22 @@ namespace GitCommands
                 !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
                 repo += "\\";
 
-            foreach (string recentRepository in MostRecentRepositories)
+            foreach (Repository recentRepository in Repositories)
             {
-                if (recentRepository.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                if (recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    MostRecentRepositories.Remove(recentRepository);
+                    Repositories.Remove(recentRepository);
                     break;
                 }
             }
 
-            MostRecentRepositories.Insert(0, repo);
+            Repository repository = new Repository(repo, null, null);
+            repository.RepositoryType = RepositoryType.History;
+            Repositories.Insert(0, repository);
 
-            if (MostRecentRepositories.Count > 30)
+            if (Repositories.Count > 30)
             {
-                MostRecentRepositories.RemoveAt(30);
+                Repositories.RemoveAt(30);
             }
         }
     }

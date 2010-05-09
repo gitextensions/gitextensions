@@ -641,8 +641,8 @@ namespace GitCommands
         {
             try
             {
-                for (int n = 0; n < Repositories.RepositoryHistory.MostRecentRepositories.Count; n++)
-                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), Repositories.RepositoryHistory.MostRecentRepositories[n]);
+                for (int n = 0; n < Repositories.RepositoryHistory.Repositories.Count; n++)
+                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), Repositories.RepositoryHistory.Repositories[n].Path);
 
                 if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
                     Application.UserAppDataRegistry.SetValue("encoding", "ASCII");

@@ -68,7 +68,8 @@ namespace GitUI
 
         private void Url_DropDown(object sender, EventArgs e)
         {
-            Url.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
+            Url.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            Url.DisplayMember = "Path";
         }
 
         private void Browse_Click(object sender, EventArgs e)

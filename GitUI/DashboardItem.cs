@@ -16,11 +16,13 @@ namespace GitUI
         {
             InitializeComponent();
 
-            Bitmap icon;
-            if (repository.FromRssFeed)
+            Bitmap icon = null;
+            if (repository.RepositoryType == RepositoryType.RssFeed)
                 icon = Resources.rss.ToBitmap();
-            else
+            if (repository.RepositoryType == RepositoryType.Repository)
                 icon = Resources._14;
+            if (repository.RepositoryType == RepositoryType.History)
+                icon = Resources.history.ToBitmap();
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
         }
@@ -136,30 +138,5 @@ namespace GitUI
         {
             this.BackColor = SystemColors.Control;
         }
-
-        //public override ContextMenuStrip ContextMenuStrip
-        //{
-        //    get
-        //    {
-        //        return Title.ContextMenuStrip;
-        //    }
-        //    set
-        //    {
-        //        Title.ContextMenuStrip = value;
-        //    }
-        //}
-
-        //public override ContextMenu ContextMenu
-        //{
-        //    get
-        //    {
-        //        return Title.ContextMenu;
-        //    }
-        //    set
-        //    {
-        //        Title.ContextMenu = value;
-        //    }
-        //}
-
     }
 }

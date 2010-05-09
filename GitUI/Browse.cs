@@ -1157,11 +1157,11 @@ namespace GitUI
         {
             recentToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (string historyItem in Repositories.RepositoryHistory.MostRecentRepositories)
+            foreach (Repository historyItem in Repositories.RepositoryHistory.Repositories)
             {
-                if (!string.IsNullOrEmpty(historyItem))
+                if (!string.IsNullOrEmpty(historyItem.Path))
                 {
-                    ToolStripButton historyItemMenu = new ToolStripButton(historyItem);
+                    ToolStripButton historyItemMenu = new ToolStripButton(historyItem.Path);
                     historyItemMenu.Click += new EventHandler(historyItemMenu_Click);
                     historyItemMenu.Width = 225;
                     recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);

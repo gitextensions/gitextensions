@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Xml.Serialization;
 
 namespace GitCommands
 {
+    public enum RepositoryType
+    {
+        Repository,
+        RssFeed,
+        History
+    }
+
     public class Repository
     {
         public Repository()
@@ -16,11 +24,12 @@ namespace GitCommands
             Path = path;
             Description = description;
             Title = title;
-            FromRssFeed = false;
+            RepositoryType = RepositoryType.Repository;
         }
         public string Title { get; set; }
         public string Path { get; set; }
         public string Description { get; set; }
-        public bool FromRssFeed { get; set; }
+        [XmlIgnore]
+        public RepositoryType RepositoryType { get; set; }
     }
 }
