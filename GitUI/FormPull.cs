@@ -237,7 +237,9 @@ namespace GitUI
 
         private void PullSource_DropDown(object sender, EventArgs e)
         {
-            PullSource.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
+            PullSource.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            PullSource.DisplayMember = "Path";
+
         }
 
         private void Stash_Click(object sender, EventArgs e)

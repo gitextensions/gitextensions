@@ -390,6 +390,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Icon develop {
+            get {
+                object obj = ResourceManager.GetObject("develop", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon dollar {
             get {
                 object obj = ResourceManager.GetObject("dollar", resourceCulture);

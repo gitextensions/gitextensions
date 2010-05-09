@@ -30,11 +30,11 @@
         {
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.CommonActions = new GitUI.DashboardCategory();
+            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.RecentRepositories = new GitUI.DashboardCategory();
             this.DonateCategory = new GitUI.DashboardCategory();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -86,6 +86,17 @@
             this.splitContainer6.SplitterDistance = 126;
             this.splitContainer6.TabIndex = 0;
             // 
+            // CommonActions
+            // 
+            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
+            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommonActions.Location = new System.Drawing.Point(0, 0);
+            this.CommonActions.Name = "CommonActions";
+            this.CommonActions.RepositoryCategory = null;
+            this.CommonActions.Size = new System.Drawing.Size(282, 126);
+            this.CommonActions.TabIndex = 8;
+            this.CommonActions.Title = "Common Actions";
+            // 
             // splitContainer7
             // 
             this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -102,8 +113,30 @@
             // 
             this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
             this.splitContainer7.Size = new System.Drawing.Size(282, 410);
-            this.splitContainer7.SplitterDistance = 344;
+            this.splitContainer7.SplitterDistance = 331;
             this.splitContainer7.TabIndex = 0;
+            // 
+            // RecentRepositories
+            // 
+            this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
+            this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
+            this.RecentRepositories.Name = "RecentRepositories";
+            this.RecentRepositories.RepositoryCategory = null;
+            this.RecentRepositories.Size = new System.Drawing.Size(282, 331);
+            this.RecentRepositories.TabIndex = 0;
+            this.RecentRepositories.Title = "Recent Repositories";
+            // 
+            // DonateCategory
+            // 
+            this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
+            this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DonateCategory.Location = new System.Drawing.Point(0, 0);
+            this.DonateCategory.Name = "DonateCategory";
+            this.DonateCategory.RepositoryCategory = null;
+            this.DonateCategory.Size = new System.Drawing.Size(282, 75);
+            this.DonateCategory.TabIndex = 0;
+            this.DonateCategory.Title = "Contribute";
             // 
             // pictureBox1
             // 
@@ -118,39 +151,6 @@
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
-            // CommonActions
-            // 
-            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommonActions.Location = new System.Drawing.Point(0, 0);
-            this.CommonActions.Name = "CommonActions";
-            this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(282, 126);
-            this.CommonActions.TabIndex = 8;
-            this.CommonActions.Title = "Common Actions";
-            // 
-            // RecentRepositories
-            // 
-            this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
-            this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
-            this.RecentRepositories.Name = "RecentRepositories";
-            this.RecentRepositories.RepositoryCategory = null;
-            this.RecentRepositories.Size = new System.Drawing.Size(282, 344);
-            this.RecentRepositories.TabIndex = 0;
-            this.RecentRepositories.Title = "Recent Repositories";
-            // 
-            // DonateCategory
-            // 
-            this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
-            this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Location = new System.Drawing.Point(0, 0);
-            this.DonateCategory.Name = "DonateCategory";
-            this.DonateCategory.RepositoryCategory = null;
-            this.DonateCategory.Size = new System.Drawing.Size(282, 62);
-            this.DonateCategory.TabIndex = 0;
-            this.DonateCategory.Title = "Donate";
             // 
             // Dashboard
             // 

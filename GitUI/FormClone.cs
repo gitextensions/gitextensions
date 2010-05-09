@@ -118,12 +118,15 @@ namespace GitUI
 
         private void From_DropDown(object sender, EventArgs e)
         {
-            From.DataSource = Repositories.RepositoryHistory.MostRecentRepositories.ToArray();
+            From.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            From.DisplayMember = "Path";
+
         }
 
         private void To_DropDown(object sender, EventArgs e)
         {
-            To.DataSource = Repositories.RepositoryHistory.MostRecentRepositories.ToArray();
+            To.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            To.DisplayMember = "Path";
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)

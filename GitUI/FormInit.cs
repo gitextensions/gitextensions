@@ -26,7 +26,8 @@ namespace GitUI
 
         private void Directory_DropDown(object sender, EventArgs e)
         {
-            Directory.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
+            Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            Directory.DisplayMember = "Path";
         }
 
         private void Init_Click(object sender, EventArgs e)

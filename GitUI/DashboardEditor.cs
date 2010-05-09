@@ -90,11 +90,48 @@ namespace GitUI
 
         private void RssFeed_TextChanged(object sender, EventArgs e)
         {
-                        if (Categories.SelectedItem == null)
+            if (Categories.SelectedItem == null)
                 return; 
             
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.RssFeedUrl = RssFeed.Text;
+        }
+
+        private void RssFeed_Validating(object sender, CancelEventArgs e)
+        {
+            if (Categories.SelectedItem == null)
+                return;
+
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            if (repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
+                repositoryCategory.DownloadRssFeed();
+        }
+
+        private void Caption_Validating(object sender, CancelEventArgs e)
+        {
+            if (Categories.SelectedItem == null)
+                return;
+
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.OnListChanged(null, null);
+        }
+
+        private void RssFeedType_Validating(object sender, CancelEventArgs e)
+        {
+            if (Categories.SelectedItem == null)
+                return;
+
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.OnListChanged(null, null);
+        }
+
+        private void RepositoriesType_Validating(object sender, CancelEventArgs e)
+        {
+            if (Categories.SelectedItem == null)
+                return;
+
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.OnListChanged(null, null);
         }
 
     }

@@ -18,7 +18,9 @@ namespace GitUI
 
         private void PrivateKeypath_DropDown(object sender, EventArgs e)
         {
-            PrivateKeypath.DataSource = GitCommands.Repositories.RepositoryHistory.MostRecentRepositories;
+            PrivateKeypath.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            PrivateKeypath.DisplayMember = "Path";
+
         }
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
