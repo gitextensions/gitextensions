@@ -57,18 +57,22 @@ namespace GitUI
                 if (index > 0 && index + 1 < Branches.Text.Length)
                     localBranchName = localBranchName.Substring(index + 1);
 
-                if (Remotebranch.Checked &&
-                    MessageBox.Show("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '" + localBranchName + "'" + Environment.NewLine + "that track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo) == DialogResult.Yes
-                    )
+                string command = "checkout";
+                if (Remotebranch.Checked)
                 {
-                    //git checkout --track -b localbranch origin/remotebranch 
-                    form = new FormProcess("checkout --track -b \"" + localBranchName + "\" \"" + Branches.Text + "\"");
+                    DialogResult result = MessageBox.Show( "You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '" + localBranchName + "'" + Environment.NewLine + "that track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo );
+                    if (result == DialogResult.Yes)
+                        command += string.Format( " -b " + localBranchName );
                 }
                 else
                 {
-                    form = new FormProcess("checkout \"" + Branches.Text + "\"");
+                    
                 }
 
+                if (Force.Checked)
+                    command += " --force";
+                command +=  " \"" + Branches.Text + "\"";
+                form = new FormProcess( command );
                 if (!form.ErrorOccured())
                     Close();
             }
