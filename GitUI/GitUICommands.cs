@@ -524,12 +524,12 @@ namespace GitUI
             return true;
         }
 
-        public bool StartRebaseDialog()
+        public bool StartRebaseDialog(string branch)
         {
             if (!InvokeEvent(PreRebase))
                 return true;
 
-            FormRebase form = new FormRebase();
+            FormRebase form = new FormRebase(branch);
             form.ShowDialog();
 
             InvokeEvent(PostRebase);

@@ -195,7 +195,7 @@ namespace GitExtensions
             if (args.Length > 1 && args[1] == "rebase")
             {
                 //Application.Run();
-                GitUICommands.Instance.StartRebaseDialog();
+                GitUICommands.Instance.StartRebaseDialog(null);
             }
             else
             if (args.Length > 1 && args[1] == "merge")

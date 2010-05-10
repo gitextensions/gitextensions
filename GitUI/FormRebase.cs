@@ -11,9 +11,12 @@ namespace GitUI
 {
     public partial class FormRebase : GitExtensionsForm
     {
-        public FormRebase()
+        private readonly string defaultBranch;
+
+        public FormRebase(string defaultBranch)
         {
             InitializeComponent();
+            this.defaultBranch = defaultBranch;
         }
 
         private void FormRebase_Load(object sender, EventArgs e)
@@ -23,6 +26,12 @@ namespace GitUI
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
+
+            if (defaultBranch != null)
+            {
+                Branches.Text = defaultBranch;
+            }
+
             Branches.Select();
 
             if (GitCommands.GitCommands.InTheMiddleOfRebase())

@@ -41,7 +41,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitUICommands.Instance.StartRebaseDialog();
+                    GitUICommands.Instance.StartRebaseDialog(null);
                 }
             }
       

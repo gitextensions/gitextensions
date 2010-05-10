@@ -62,9 +62,12 @@ namespace GitUI
             //}
 
 
-            this.Height = 20;
+            this.Height = Title.Height+6;
             if (Description.Visible)
-                this.Height += Description.Height;
+            {
+                Description.Top = Title.Height+4;
+                this.Height += Description.Height+2;
+            }
             
                 
 
@@ -79,8 +82,8 @@ namespace GitUI
             toolTip.UseFading = false;
             toolTip.UseAnimation = false;
             toolTip.ReshowDelay = 1;
-            toolTip.SetToolTip(Title, Title.Text);
-
+            toolTip.SetToolTip(Title, Path);
+            
             Title.MouseDown += new MouseEventHandler(Title_MouseDown);
             Title.Click += new EventHandler(Title_Click);
             Description.Click += new EventHandler(Title_Click);

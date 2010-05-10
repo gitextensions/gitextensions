@@ -740,5 +740,21 @@ namespace GitUI
                 MessageBox.Show(cmdOutput);
         }
 
+
+        private void resetPartOfFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItems.Count != 1)
+            {
+                MessageBox.Show("You can only use this option when selecting a single file", "Reset chunk fo file");
+                return;
+            }
+
+            foreach (GitItemStatus gitItemStatus in Unstaged.SelectedItems)
+            {
+                GitCommands.GitCommands.RunRealCmd(Settings.GitCommand, "checkout -p \"" + gitItemStatus.Name + "\"");
+                Initialize();
+            }
+        }
+
     }
 }

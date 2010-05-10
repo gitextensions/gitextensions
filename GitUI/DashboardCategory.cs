@@ -46,7 +46,7 @@ namespace GitUI
                 InitRepositoryCategory();
 
                 if (repositoryCategory != null && repositoryCategory.Repositories != null)
-                    repositoryCategory.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
+                    repositoryCategory.ListChanged += Repositories_ListChanged;
             }
         }
 
@@ -148,8 +148,6 @@ namespace GitUI
                 return;
 
             RepositoryCategory.RemoveRepository(repository);
-
-            InitRepositoryCategory();
         }
 
         void moveToMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -199,6 +197,7 @@ namespace GitUI
             RepositoryCategory newRepositoryCategory = new RepositoryCategory(formDashboardCategoryTitle.GetTitle());
 
             RepositoryCategory.RemoveRepository(repository);
+            repository.RepositoryType = RepositoryType.Repository;
             newRepositoryCategory.AddRepository(repository);
 
             Repositories.RepositoryCategories.Add(newRepositoryCategory);

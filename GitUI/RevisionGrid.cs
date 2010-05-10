@@ -41,7 +41,7 @@ namespace GitUI
             Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
 
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
-            
+
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
@@ -74,7 +74,7 @@ namespace GitUI
                 int index = -1;
                 int oldIndex = -1;
                 if (Revisions.SelectedRows.Count > 0)
-                   oldIndex = Revisions.SelectedRows[0].Index;
+                    oldIndex = Revisions.SelectedRows[0].Index;
 
                 index = RevisionList.FindIndex(oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
 
@@ -162,13 +162,13 @@ namespace GitUI
             Revisions.ClearSelection();
 
             if (revision != null)
+            {
+                foreach (DataGridViewRow row in Revisions.Rows)
                 {
-                    foreach (DataGridViewRow row in Revisions.Rows)
-                    {
-                        if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
-                            row.Selected = true;
-                    }
+                    if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
+                        row.Selected = true;
                 }
+            }
             Revisions.Select();
         }
 
@@ -186,13 +186,13 @@ namespace GitUI
         public List<GitRevision> GetRevisions()
         {
             List<GitRevision> retval = new List<GitRevision>();
-            
+
             if (RevisionList != null)
-            foreach (DataGridViewRow row in Revisions.SelectedRows)
-            {
-                if (RevisionList.Count > row.Index) 
-                    retval.Add(RevisionList[row.Index]);
-            }
+                foreach (DataGridViewRow row in Revisions.SelectedRows)
+                {
+                    if (RevisionList.Count > row.Index)
+                        retval.Add(RevisionList[row.Index]);
+                }
             return retval;
         }
 
@@ -231,7 +231,7 @@ namespace GitUI
 
                 if (!Settings.ShowRevisionGraph)
                     //Revisions.Columns[0].Width = 1;
-                //else
+                    //else
                     Revisions.Columns[0].Width = 0;
 
 
@@ -366,7 +366,7 @@ namespace GitUI
                 Revisions.Visible = false;
                 return;
             }
-            
+
             Revisions.SuspendLayout();
             Revisions.Columns[3].HeaderText = Settings.ShowAuthorDate ? "Author Date" : "Commit Date";
 
@@ -376,7 +376,7 @@ namespace GitUI
                 Revisions.ScrollBars = ScrollBars.None;
                 Revisions.RowCount = RevisionList.Count;
                 Revisions.ScrollBars = ScrollBars.Vertical;
-                
+
                 if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
                 {
                     string grep = "";
@@ -387,7 +387,7 @@ namespace GitUI
                     gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc\" -l\"");
                     gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
                 }
-                
+
             }
 
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
@@ -456,7 +456,7 @@ namespace GitUI
                 firstVisibleRow -= 1;
             }
 
-            if (graphImage!=null)
+            if (graphImage != null)
                 graphImage.Dispose();
 
             graphImage = new Bitmap(1000, (numberOfVisibleRows * height) + 50, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);//System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -646,7 +646,7 @@ namespace GitUI
                             {
                                 graph.DrawLine(linePen, hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
                             }
-//                            if (nextChar != ' ')
+                            //                            if (nextChar != ' ')
                         }
                         graphWidth = Math.Max(graphWidth, Math.Max(40, (currentLine.Length * width) + width));
                         graphWidth = Math.Min((100 * width) + width, graphWidth);
@@ -895,7 +895,7 @@ namespace GitUI
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (RevisionFilter == null)
-                RevisionFilter  = new FormRevisionFilter();
+                RevisionFilter = new FormRevisionFilter();
 
             RevisionFilter.ShowDialog();
             filter = RevisionFilter.GetFilter();
@@ -919,6 +919,7 @@ namespace GitUI
             ToolStripDropDown branchDropDown = new ToolStripDropDown();
             ToolStripDropDown checkoutBranchDropDown = new ToolStripDropDown();
             ToolStripDropDown mergeBranchDropDown = new ToolStripDropDown();
+            ToolStripDropDown rebaseDropDown = new ToolStripDropDown();
 
             foreach (GitHead head in revision.Heads)
             {
@@ -927,25 +928,30 @@ namespace GitUI
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += new EventHandler(toolStripItem_Click);
                     tagDropDown.Items.Add(toolStripItem);
-                } else
-                if (head.IsHead || head.IsRemote)
-                {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += new EventHandler(toolStripItem_ClickMergeBranch);
-                    mergeBranchDropDown.Items.Add(toolStripItem);
-
-                    if (head.IsHead && !head.IsRemote)
-                    {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
-                        branchDropDown.Items.Add(toolStripItem);
-
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += new EventHandler(toolStripItem_ClickCheckoutBranch);
-                        checkoutBranchDropDown.Items.Add(toolStripItem);
-                    }
-
                 }
+                else
+                    if (head.IsHead || head.IsRemote)
+                    {
+                        ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Click += new EventHandler(toolStripItem_ClickMergeBranch);
+                        mergeBranchDropDown.Items.Add(toolStripItem);
+
+                        toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Click += new EventHandler(toolStripItem_ClickRebaseBranch);
+                        rebaseDropDown.Items.Add(toolStripItem);
+
+                        if (head.IsHead && !head.IsRemote)
+                        {
+                            toolStripItem = new ToolStripMenuItem(head.Name);
+                            toolStripItem.Click += new EventHandler(toolStripItem_ClickBranch);
+                            branchDropDown.Items.Add(toolStripItem);
+
+                            toolStripItem = new ToolStripMenuItem(head.Name);
+                            toolStripItem.Click += new EventHandler(toolStripItem_ClickCheckoutBranch);
+                            checkoutBranchDropDown.Items.Add(toolStripItem);
+                        }
+
+                    }
             }
 
             deleteTagToolStripMenuItem.DropDown = tagDropDown;
@@ -956,9 +962,13 @@ namespace GitUI
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
             checkoutBranchToolStripMenuItem.Visible = checkoutBranchDropDown.Items.Count > 0;
-            
+
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
             mergeBranchToolStripMenuItem.Visible = mergeBranchDropDown.Items.Count > 0;
+
+            rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
+            rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
+            
         }
 
         void toolStripItem_Click(object sender, EventArgs e)
@@ -996,7 +1006,7 @@ namespace GitUI
             ForceRefreshRevisions();
             OnChangedCurrentBranch();
         }
-        
+
         void toolStripItem_ClickMergeBranch(object sender, EventArgs e)
         {
             ToolStripItem toolStripItem = sender as ToolStripItem;
@@ -1008,6 +1018,20 @@ namespace GitUI
 
             ForceRefreshRevisions();
         }
+
+        void toolStripItem_ClickRebaseBranch(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            GitUICommands.Instance.StartRebaseDialog(toolStripItem.Text);
+
+            ForceRefreshRevisions();
+        }
+
+        
 
         private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
         {

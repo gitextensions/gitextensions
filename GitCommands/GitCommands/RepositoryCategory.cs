@@ -37,8 +37,14 @@ namespace GitCommands
                 ListChanged(sender, e);
         }
 
-        void Repositories_ListChanged(object sender, ListChangedEventArgs e)
+        public virtual void Repositories_ListChanged(object sender, ListChangedEventArgs e)
         {
+            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            {
+                if (CategoryType == RepositoryCategoryType.RssFeed)
+                    Repositories[e.NewIndex].RepositoryType = RepositoryType.RssFeed;
+            }
+
             OnListChanged(this, e);
         }
 
@@ -139,7 +145,14 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading rssfeed from :" + RssFeedUrl + Environment.NewLine + ex.Message, "Error");
+                Repositories.Clear();
+
+                Repository repository = new Repository();
+                repository.Title = "Error loading rssfeed from :" + RssFeedUrl;
+                repository.Description = ex.Message;
+                repository.Path = RssFeedUrl;
+                repository.RepositoryType = RepositoryType.RssFeed;
+                Repositories.Add(repository);
             }
             finally
             {

@@ -10,7 +10,7 @@ namespace GitCommands
 {
     public static class Repositories
     {
-        public static string Serialize()
+        public static string SerializeRepositories()
         {
             StringWriter sw = new StringWriter();
             XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
@@ -18,7 +18,7 @@ namespace GitCommands
             return sw.ToString();
         }
 
-        public static void Deserialize(string xml)
+        public static void DeserializeRepositories(string xml)
         {
          XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
          using (StringReader stringReader = new StringReader(xml))
@@ -28,6 +28,26 @@ namespace GitCommands
              if (obj != null)
                  RepositoryCategories = obj;
          }
+        }
+
+        public static string SerializeHistory()
+        {
+            StringWriter sw = new StringWriter();
+            XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
+            serializer.Serialize(sw, RepositoryHistory);
+            return sw.ToString();
+        }
+
+        public static void DeserializeHistory(string xml)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
+            using (StringReader stringReader = new StringReader(xml))
+            using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+            {
+                RepositoryHistory obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
+                if (obj != null)
+                    RepositoryHistory = obj;
+            }
         }
 
         static Repositories()

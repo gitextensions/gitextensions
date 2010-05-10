@@ -4,6 +4,11 @@ Changelog
 Version 1.93
 	Fixed bug: wrong icon drawn in commit dialog for deleted files
 	Reset selected files in the commit dialog asks to delete new files.
+	Added start page
+	Author images are only cached for 5 days now
+	Added 'force' option to checkout revision and checkout branch
+	Added 'rebase' to context menu in revision grid
+	Added 'unstage chunk of file' option to commit dialog
 
 Version 1.92
 	Fixed bug: the application hangs randomly

@@ -36,14 +36,14 @@
             this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboardEditor1.Location = new System.Drawing.Point(0, 0);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(700, 449);
+            this.dashboardEditor1.Size = new System.Drawing.Size(698, 447);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // FormDashboardEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 449);
+            this.ClientSize = new System.Drawing.Size(698, 447);
             this.Controls.Add(this.dashboardEditor1);
             this.Name = "FormDashboardEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
