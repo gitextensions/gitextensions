@@ -34,6 +34,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.LocalBranch = new System.Windows.Forms.RadioButton();
             this.Remotebranch = new System.Windows.Forms.RadioButton();
+            this.Force = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -47,16 +48,18 @@
             // 
             // Branches
             // 
+            this.Branches.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(91, 42);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(236, 21);
+            this.Branches.Size = new System.Drawing.Size(235, 21);
             this.Branches.TabIndex = 1;
             this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(373, 40);
+            this.Ok.Location = new System.Drawing.Point(252, 76);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 2;
@@ -88,12 +91,22 @@
             this.Remotebranch.UseVisualStyleBackColor = true;
             this.Remotebranch.CheckedChanged += new System.EventHandler(this.Remotebranch_CheckedChanged);
             // 
+            // Force
+            // 
+            this.Force.AutoSize = true;
+            this.Force.Location = new System.Drawing.Point(13, 80);
+            this.Force.Name = "Force";
+            this.Force.Size = new System.Drawing.Size(53, 17);
+            this.Force.TabIndex = 5;
+            this.Force.Text = "Force";
+            this.Force.UseVisualStyleBackColor = true;
             // FormCheckoutBranck
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 78);
+            this.ClientSize = new System.Drawing.Size(338, 111);
+            this.Controls.Add( this.Force );
             this.Controls.Add(this.Remotebranch);
             this.Controls.Add(this.LocalBranch);
             this.Controls.Add(this.Ok);
@@ -103,7 +116,7 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormCheckoutBranck";
+            this.Name = "FormCheckoutBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout branch";
             this.Load += new System.EventHandler(this.FormCheckoutBranck_Load);
@@ -119,5 +132,6 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.RadioButton LocalBranch;
         private System.Windows.Forms.RadioButton Remotebranch;
+        private System.Windows.Forms.CheckBox Force;
     }
 }

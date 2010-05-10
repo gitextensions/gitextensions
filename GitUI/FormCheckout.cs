@@ -26,7 +26,11 @@ namespace GitUI
                     return;
                 }
 
-                new FormProcess("checkout \"" + RevisionGrid.GetRevisions()[0].Guid + "\"");
+                string command = "checkout \"" + RevisionGrid.GetRevisions()[0].Guid + "\"";
+                if(Force.Checked)
+                    command += " --force";
+
+                new FormProcess(command);
 
                 //CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
                 //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
