@@ -51,7 +51,6 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
-            this.NoGit = new System.Windows.Forms.Panel();
             this.dashboard = new GitUI.Dashboard();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
@@ -152,7 +151,6 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.ToolStrip.SuspendLayout();
-            this.NoGit.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -183,12 +181,13 @@
             // 
             // splitContainer2.Panel1
             // 
+
             this.splitContainer2.Panel1.Controls.Add(this.ToolStrip);
             this.splitContainer2.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer2_Panel1_Paint);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.NoGit);
+            this.splitContainer2.Panel2.Controls.Add(this.dashboard);
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Size = new System.Drawing.Size(796, 549);
             this.splitContainer2.SplitterDistance = 25;
@@ -381,25 +380,14 @@
             this.toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBoxFilter_KeyPress);
             this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
             // 
-            // NoGit
-            // 
-            this.NoGit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.NoGit.Controls.Add(this.dashboard);
-            this.NoGit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoGit.Location = new System.Drawing.Point(0, 0);
-            this.NoGit.Name = "NoGit";
-            this.NoGit.Size = new System.Drawing.Size(796, 520);
-            this.NoGit.TabIndex = 1;
-            this.NoGit.Visible = false;
-            this.NoGit.Paint += new System.Windows.Forms.PaintEventHandler(this.NoGit_Paint);
-            // 
             // dashboard
             // 
             this.dashboard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboard.Location = new System.Drawing.Point(0, 0);
             this.dashboard.Name = "dashboard";
-            this.dashboard.Size = new System.Drawing.Size(796, 520);
+            this.dashboard.Size = new System.Drawing.Size(796, 230);
             this.dashboard.TabIndex = 0;
+            this.dashboard.Visible = false;
             // 
             // splitContainer3
             // 
@@ -1254,7 +1242,6 @@
             this.splitContainer2.ResumeLayout(false);
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
-            this.NoGit.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -1361,7 +1348,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
         private FileViewer FileText;
         private FileViewer DiffText;
-        private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.TabPage CommitInfo;
         private CommitInfo RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;

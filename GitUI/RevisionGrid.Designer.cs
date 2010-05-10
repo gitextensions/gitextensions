@@ -71,6 +71,7 @@
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
+            this.rebaseOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -172,6 +173,7 @@
             this.deleteBranchToolStripMenuItem,
             this.toolStripSeparator2,
             this.mergeBranchToolStripMenuItem,
+            this.rebaseOnToolStripMenuItem,
             this.resetCurrentBranchToHereToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
@@ -187,7 +189,7 @@
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(226, 396);
+            this.CreateTag.Size = new System.Drawing.Size(226, 440);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTag_Opening);
             // 
             // createTagToolStripMenuItem
@@ -432,6 +434,12 @@
             // 
             this.quickSearchTimer.Interval = 500;
             // 
+            // rebaseOnToolStripMenuItem
+            // 
+            this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
+            this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.rebaseOnToolStripMenuItem.Text = "Rebase on";
+            // 
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -496,5 +504,6 @@
         private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.Timer quickSearchTimer;
+        private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
     }
 }

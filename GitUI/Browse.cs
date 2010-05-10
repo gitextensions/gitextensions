@@ -165,8 +165,8 @@ namespace GitUI
             CurrentBranch.Text = selectedHead;
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
-            NoGit.Visible = !validWorkingDir;
-            if (NoGit.Visible)
+            dashboard.Visible = !validWorkingDir;
+            if (dashboard.Visible)
                 dashboard.ShowRecentRepositories();
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
@@ -235,7 +235,7 @@ namespace GitUI
         void rebase_Click(object sender, EventArgs e)
         {
             if (GitCommands.GitCommands.InTheMiddleOfRebase())
-                GitUICommands.Instance.StartRebaseDialog();
+                GitUICommands.Instance.StartRebaseDialog(null);
             else
                 GitUICommands.Instance.StartApplyPatchDialog();
             Initialize();
@@ -841,7 +841,7 @@ namespace GitUI
 
         private void rebaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartRebaseDialog())
+            if (GitUICommands.Instance.StartRebaseDialog(null))
                 Initialize();
         }
 
@@ -973,11 +973,6 @@ namespace GitUI
             {
                 toolStripLabel2_Click(null, null);
             }
-        }
-
-        private void NoGit_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void manageSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)

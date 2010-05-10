@@ -7,6 +7,21 @@ namespace GitCommands
 {
     public class RepositoryHistory : RepositoryCategory
     {
+        public RepositoryHistory()
+        {
+            Description = "Recent Repositories";
+            //Repositories.ListChanged += new System.ComponentModel.ListChangedEventHandler(Repositories_ListChanged);
+        }
+
+        public override void Repositories_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        {
+            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            {
+                Repositories[e.NewIndex].RepositoryType = RepositoryType.History;
+            }
+            OnListChanged(this, e);
+        }
+
         public void RemoveRecentRepository(string repo)
         {
             foreach (Repository recentRepository in Repositories)

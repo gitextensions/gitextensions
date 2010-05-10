@@ -100,7 +100,7 @@ namespace GitUIPluginInterfaces
         bool StartPluginSettingsDialog();
         bool StartPullDialog();
         bool StartPushDialog();
-        bool StartRebaseDialog();
+        bool StartRebaseDialog(string branch);
         bool StartRemotesDialog();
         bool StartResolveConflictsDialog();
         bool StartSettingsDialog();

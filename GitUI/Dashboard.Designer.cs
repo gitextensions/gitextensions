@@ -30,11 +30,11 @@
         {
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.CommonActions = new GitUI.DashboardCategory();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.CommonActions = new GitUI.DashboardCategory();
             this.RecentRepositories = new GitUI.DashboardCategory();
             this.DonateCategory = new GitUI.DashboardCategory();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -49,6 +49,7 @@
             // 
             // splitContainer5
             // 
+            this.splitContainer5.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
@@ -60,6 +61,7 @@
             // 
             // splitContainer5.Panel2
             // 
+            this.splitContainer5.Panel2.AutoScroll = true;
             this.splitContainer5.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.splitContainer5.Panel2.Controls.Add(this.pictureBox1);
             this.splitContainer5.Size = new System.Drawing.Size(833, 540);
@@ -86,17 +88,6 @@
             this.splitContainer6.SplitterDistance = 126;
             this.splitContainer6.TabIndex = 0;
             // 
-            // CommonActions
-            // 
-            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommonActions.Location = new System.Drawing.Point(0, 0);
-            this.CommonActions.Name = "CommonActions";
-            this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(282, 126);
-            this.CommonActions.TabIndex = 8;
-            this.CommonActions.Title = "Common Actions";
-            // 
             // splitContainer7
             // 
             this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -115,6 +106,31 @@
             this.splitContainer7.Size = new System.Drawing.Size(282, 410);
             this.splitContainer7.SplitterDistance = 331;
             this.splitContainer7.TabIndex = 0;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow1;
+            this.pictureBox1.Location = new System.Drawing.Point(288, 284);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // CommonActions
+            // 
+            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
+            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommonActions.Location = new System.Drawing.Point(0, 0);
+            this.CommonActions.Name = "CommonActions";
+            this.CommonActions.RepositoryCategory = null;
+            this.CommonActions.Size = new System.Drawing.Size(282, 126);
+            this.CommonActions.TabIndex = 8;
+            this.CommonActions.Title = "Common Actions";
             // 
             // RecentRepositories
             // 
@@ -138,24 +154,11 @@
             this.DonateCategory.TabIndex = 0;
             this.DonateCategory.Title = "Contribute";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow1;
-            this.pictureBox1.Location = new System.Drawing.Point(288, 280);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.splitContainer5);
             this.Name = "Dashboard";
             this.Size = new System.Drawing.Size(833, 540);
@@ -179,9 +182,9 @@
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.SplitContainer splitContainer6;
         private System.Windows.Forms.SplitContainer splitContainer7;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private DashboardCategory RecentRepositories;
         private DashboardCategory CommonActions;
         private DashboardCategory DonateCategory;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

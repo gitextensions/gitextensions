@@ -177,7 +177,7 @@ namespace GitUI
             //Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                GitUICommands.Instance.StartRebaseDialog();
+                GitUICommands.Instance.StartRebaseDialog(null);
                 if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
                     Close();
             }

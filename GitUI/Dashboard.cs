@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using System.Text.RegularExpressions;
 
 namespace GitUI
 {
@@ -16,8 +17,8 @@ namespace GitUI
         {
             InitializeComponent();
 
-            ShowRecentRepositories();
-
+            RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
+            RecentRepositories.DisableContextMenu();
             Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
         }
 
@@ -54,16 +55,13 @@ namespace GitUI
             DashboardCategory dashboardCategory = new DashboardCategory(entry.Description, entry);
             dashboardCategory.Location = new Point(0, y);
             dashboardCategory.Width = splitContainer5.Panel2.Width;
-            if (entry.CategoryType == RepositoryCategoryType.Repositories)
-                dashboardCategory.DashboardItemClick += new EventHandler(dashboardItem_Click);
-            if (entry.CategoryType == RepositoryCategoryType.RssFeed)
-                dashboardCategory.DashboardItemClick += new EventHandler(dashboardItemRss_Click);
+            dashboardCategory.DashboardItemClick += new EventHandler(dashboardItem_Click);
             splitContainer5.Panel2.Controls.Add(dashboardCategory);
             dashboardCategory.BringToFront();
             y += dashboardCategory.Height;
 
             //Recalculate hieght when list is changed
-            entry.ListChanged += new ListChangedEventHandler(entry_ListChanged);
+            entry.ListChanged += entry_ListChanged;
             return y;
         }
 
@@ -137,8 +135,6 @@ namespace GitUI
             {
                 RecentRepositories.Clear();
                 RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
-                RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
-                RecentRepositories.DisableContextMenu();
 
 
                 CommonActions.Clear();
@@ -168,28 +164,28 @@ namespace GitUI
             System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
         }
 
-        void dashboardItemRss_Click(object sender, EventArgs e)
-        {
-            DashboardItem label = sender as DashboardItem;
-            if (label != null && !string.IsNullOrEmpty(label.GetTitle()))
-            {
-                System.Diagnostics.Process.Start(label.Path);
-               
-            }
-        }
-
-
         void dashboardItem_Click(object sender, EventArgs e)
         {
             DashboardItem label = sender as DashboardItem;
             if (label != null && !string.IsNullOrEmpty(label.Path))
             {
-                GitCommands.Settings.WorkingDir = label.Path;
-                Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
+                //Open urls in browser, but open directories in GitExtensions
+                if (Regex.IsMatch(label.Path, @"^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$"))
+                {
+                    System.Diagnostics.Process.Start(label.Path);
+                }
+                else
+                {
+                    GitCommands.Settings.WorkingDir = label.Path;
+                    Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
 
-                OnWorkingDirChanged();
+                    OnWorkingDirChanged();
+
+                }
+               
             }
         }
+
 
         private void openItem_Click(object sender, EventArgs e)
         {

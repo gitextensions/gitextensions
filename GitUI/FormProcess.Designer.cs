@@ -28,22 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProcess));
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.Output = new System.Windows.Forms.RichTextBox();
             this.SuccessImage = new System.Windows.Forms.PictureBox();
             this.ErrorImage = new System.Windows.Forms.PictureBox();
-            this.Output = new System.Windows.Forms.RichTextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
-            this.Abort = new System.Windows.Forms.Button();
-            this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
+            this.Abort = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.splitContainer5.Panel1.SuspendLayout();
+            this.splitContainer5.Panel2.SuspendLayout();
+            this.splitContainer5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SuccessImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorImage)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -55,9 +57,6 @@
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
-            this.splitContainer5.Panel1.SuspendLayout();
-            this.splitContainer5.Panel2.SuspendLayout();
-            this.splitContainer5.SuspendLayout();
             this.SuspendLayout();
             // 
             // Ok
@@ -74,6 +73,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -88,6 +88,36 @@
             this.splitContainer1.Size = new System.Drawing.Size(627, 261);
             this.splitContainer1.SplitterDistance = 232;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // splitContainer5
+            // 
+            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Name = "splitContainer5";
+            // 
+            // splitContainer5.Panel1
+            // 
+            this.splitContainer5.Panel1.Controls.Add(this.Output);
+            // 
+            // splitContainer5.Panel2
+            // 
+            this.splitContainer5.Panel2.Controls.Add(this.SuccessImage);
+            this.splitContainer5.Panel2.Controls.Add(this.ErrorImage);
+            this.splitContainer5.Size = new System.Drawing.Size(627, 232);
+            this.splitContainer5.SplitterDistance = 568;
+            this.splitContainer5.TabIndex = 3;
+            // 
+            // Output
+            // 
+            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Output.Location = new System.Drawing.Point(0, 0);
+            this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
+            this.Output.Size = new System.Drawing.Size(568, 232);
+            this.Output.TabIndex = 0;
+            this.Output.Text = "";
             // 
             // SuccessImage
             // 
@@ -108,17 +138,6 @@
             this.ErrorImage.TabIndex = 1;
             this.ErrorImage.TabStop = false;
             this.ErrorImage.Visible = false;
-            // 
-            // Output
-            // 
-            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(568, 232);
-            this.Output.TabIndex = 0;
-            this.Output.Text = "";
             // 
             // splitContainer2
             // 
@@ -141,6 +160,7 @@
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             // 
@@ -166,29 +186,6 @@
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
             // 
-            // Abort
-            // 
-            this.Abort.Location = new System.Drawing.Point(3, 2);
-            this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(75, 23);
-            this.Abort.TabIndex = 3;
-            this.Abort.Text = "Abort";
-            this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click_1);
-            // 
-            // KeepDialogOpen
-            // 
-            this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
-            this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.KeepDialogOpen.Size = new System.Drawing.Size(109, 17);
-            this.KeepDialogOpen.TabIndex = 3;
-            this.KeepDialogOpen.Text = "Keep dialog open";
-            this.KeepDialogOpen.UseVisualStyleBackColor = true;
-            this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
-            this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
-            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -207,24 +204,28 @@
             this.splitContainer4.SplitterDistance = 142;
             this.splitContainer4.TabIndex = 0;
             // 
-            // splitContainer5
+            // KeepDialogOpen
             // 
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer5.Name = "splitContainer5";
+            this.KeepDialogOpen.AutoSize = true;
+            this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
+            this.KeepDialogOpen.Name = "KeepDialogOpen";
+            this.KeepDialogOpen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.KeepDialogOpen.Size = new System.Drawing.Size(109, 17);
+            this.KeepDialogOpen.TabIndex = 3;
+            this.KeepDialogOpen.Text = "Keep dialog open";
+            this.KeepDialogOpen.UseVisualStyleBackColor = true;
+            this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
+            this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
             // 
-            // splitContainer5.Panel1
+            // Abort
             // 
-            this.splitContainer5.Panel1.Controls.Add(this.Output);
-            // 
-            // splitContainer5.Panel2
-            // 
-            this.splitContainer5.Panel2.Controls.Add(this.SuccessImage);
-            this.splitContainer5.Panel2.Controls.Add(this.ErrorImage);
-            this.splitContainer5.Size = new System.Drawing.Size(627, 232);
-            this.splitContainer5.SplitterDistance = 568;
-            this.splitContainer5.TabIndex = 3;
+            this.Abort.Location = new System.Drawing.Point(3, 2);
+            this.Abort.Name = "Abort";
+            this.Abort.Size = new System.Drawing.Size(75, 23);
+            this.Abort.TabIndex = 3;
+            this.Abort.Text = "Abort";
+            this.Abort.UseVisualStyleBackColor = true;
+            this.Abort.Click += new System.EventHandler(this.Abort_Click_1);
             // 
             // FormProcess
             // 
@@ -233,7 +234,6 @@
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormProcess";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
@@ -241,6 +241,9 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer5.Panel1.ResumeLayout(false);
+            this.splitContainer5.Panel2.ResumeLayout(false);
+            this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SuccessImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorImage)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -253,9 +256,6 @@
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
-            this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel2.ResumeLayout(false);
-            this.splitContainer5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

@@ -17,9 +17,15 @@ namespace GitUI
             Initialize();
         }
 
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.OnListChanged(null, null);
+        }
 
         public void Initialize()
         {
+            Categories.DataSource = null;
             Categories.DataSource = Repositories.RepositoryCategories;
             Categories.DisplayMember = "Description";
         }
@@ -60,6 +66,7 @@ namespace GitUI
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.Description = Caption.Text;
+            Initialize();
         }
 
         private void RssFeedType_CheckedChanged(object sender, EventArgs e)
@@ -130,6 +137,12 @@ namespace GitUI
             if (Categories.SelectedItem == null)
                 return;
 
+            RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
+            repositoryCategory.OnListChanged(null, null);
+        }
+
+        private void RepositoriesGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.OnListChanged(null, null);
         }

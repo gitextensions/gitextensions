@@ -77,8 +77,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(750, 446);
-            this.splitContainer1.SplitterDistance = 112;
+            this.splitContainer1.Size = new System.Drawing.Size(748, 444);
+            this.splitContainer1.SplitterDistance = 111;
             this.splitContainer1.TabIndex = 0;
             // 
             // FileChanges
@@ -91,7 +91,7 @@
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
             this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FileChanges.Size = new System.Drawing.Size(750, 112);
+            this.FileChanges.Size = new System.Drawing.Size(748, 111);
             this.FileChanges.TabIndex = 2;
             // 
             // tabControl1
@@ -103,7 +103,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(750, 330);
+            this.tabControl1.Size = new System.Drawing.Size(748, 329);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -113,7 +113,7 @@
             this.ViewTab.Location = new System.Drawing.Point(4, 22);
             this.ViewTab.Name = "ViewTab";
             this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ViewTab.Size = new System.Drawing.Size(742, 304);
+            this.ViewTab.Size = new System.Drawing.Size(740, 303);
             this.ViewTab.TabIndex = 0;
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
             this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
             this.View.ShowEntireFile = false;
-            this.View.Size = new System.Drawing.Size(736, 298);
+            this.View.Size = new System.Drawing.Size(734, 297);
             this.View.TabIndex = 0;
             this.View.TreatAllFilesAsText = false;
             // 
@@ -238,7 +238,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 446);
+            this.ClientSize = new System.Drawing.Size(748, 444);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

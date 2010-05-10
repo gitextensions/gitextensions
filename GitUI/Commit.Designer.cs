@@ -90,6 +90,7 @@
             this.CloseCommitDialogTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.resetPartOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -332,6 +333,7 @@
             // 
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ResetChanges,
+            this.resetPartOfFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
             this.addFileTogitignoreToolStripMenuItem,
             this.toolStripSeparator4,
@@ -341,64 +343,64 @@
             this.toolStripSeparator5,
             this.filenameToClipboardToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(247, 184);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(187, 214);
             // 
             // ResetChanges
             // 
             this.ResetChanges.Name = "ResetChanges";
-            this.ResetChanges.Size = new System.Drawing.Size(246, 24);
+            this.ResetChanges.Size = new System.Drawing.Size(186, 22);
             this.ResetChanges.Text = "Reset file changes";
             this.ResetChanges.Click += new System.EventHandler(this.ResetSoft_Click);
             // 
             // deleteFileToolStripMenuItem
             // 
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
-            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.deleteFileToolStripMenuItem.Text = "Delete file";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
             // 
             // addFileTogitignoreToolStripMenuItem
             // 
             this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
-            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
             this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.addFileTogitignoreToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(243, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(183, 6);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openWithToolStripMenuItem
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open With Difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(243, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(183, 6);
             // 
             // filenameToClipboardToolStripMenuItem
             // 
             this.filenameToClipboardToolStripMenuItem.Name = "filenameToClipboardToolStripMenuItem";
-            this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.filenameToClipboardToolStripMenuItem.Text = "Filename to clipboard";
             this.filenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.filenameToClipboardToolStripMenuItem_Click);
             // 
@@ -788,6 +790,13 @@
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
+            // resetPartOfFileToolStripMenuItem
+            // 
+            this.resetPartOfFileToolStripMenuItem.Name = "resetPartOfFileToolStripMenuItem";
+            this.resetPartOfFileToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.resetPartOfFileToolStripMenuItem.Text = "Reset chunk of file";
+            this.resetPartOfFileToolStripMenuItem.Click += new System.EventHandler(this.resetPartOfFileToolStripMenuItem_Click);
+            // 
             // FormCommit
             // 
             this.AcceptButton = this.Commit;
@@ -902,5 +911,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.ToolTip fileTooltip;
+        private System.Windows.Forms.ToolStripMenuItem resetPartOfFileToolStripMenuItem;
     }
 }

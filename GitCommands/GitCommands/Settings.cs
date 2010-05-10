@@ -641,9 +641,6 @@ namespace GitCommands
         {
             try
             {
-                for (int n = 0; n < Repositories.RepositoryHistory.Repositories.Count; n++)
-                    Application.UserAppDataRegistry.SetValue("dir" + n.ToString(), Repositories.RepositoryHistory.Repositories[n].Path);
-
                 if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
                     Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
                 else
@@ -664,7 +661,8 @@ namespace GitCommands
 
 
 
-                Application.UserAppDataRegistry.SetValue("repositories", Repositories.Serialize());
+                Application.UserAppDataRegistry.SetValue("history", Repositories.SerializeHistory());
+                Application.UserAppDataRegistry.SetValue("repositories", Repositories.SerializeRepositories());
 
                 Application.UserAppDataRegistry.SetValue("showauthorgravatar", Settings.showAuthorGravatar);
 
@@ -821,13 +819,8 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitCommand = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
 
-                for (int i = 30; i >= 0; i--)
-                {
-                    if (Application.UserAppDataRegistry.GetValue(string.Concat("dir", i)) != null)
-                        Repositories.RepositoryHistory.AddMostRecentRepository(Application.UserAppDataRegistry.GetValue(string.Concat("dir", i)).ToString());
-                }
-
-                if (Application.UserAppDataRegistry.GetValue("repositories") != null) Repositories.Deserialize(Application.UserAppDataRegistry.GetValue("repositories").ToString());
+                if (Application.UserAppDataRegistry.GetValue("history") != null) Repositories.DeserializeHistory(Application.UserAppDataRegistry.GetValue("history").ToString());
+                if (Application.UserAppDataRegistry.GetValue("repositories") != null) Repositories.DeserializeRepositories(Application.UserAppDataRegistry.GetValue("repositories").ToString());
             }
             catch
             {

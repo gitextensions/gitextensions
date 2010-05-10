@@ -92,6 +92,9 @@
             this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
+            this.label46 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
             this.authorImageSize = new System.Windows.Forms.NumericUpDown();
             this.ClearImageCache = new System.Windows.Forms.Button();
@@ -181,9 +184,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label46 = new System.Windows.Forms.Label();
-            this.DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
-            this.label47 = new System.Windows.Forms.Label();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -194,6 +194,7 @@
             this.StartPage.SuspendLayout();
             this.AppearancePage.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -209,7 +210,6 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).BeginInit();
             this.SuspendLayout();
             // 
             // LocalSettings
@@ -934,6 +934,36 @@
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(217, 77);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(29, 13);
+            this.label47.TabIndex = 7;
+            this.label47.Text = "days";
+            // 
+            // DaysToCacheImages
+            // 
+            this.DaysToCacheImages.Location = new System.Drawing.Point(125, 73);
+            this.DaysToCacheImages.Maximum = new decimal(new int[] {
+            400,
+            0,
+            0,
+            0});
+            this.DaysToCacheImages.Name = "DaysToCacheImages";
+            this.DaysToCacheImages.Size = new System.Drawing.Size(77, 20);
+            this.DaysToCacheImages.TabIndex = 6;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(7, 77);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(74, 13);
+            this.label46.TabIndex = 5;
+            this.label46.Text = "Cache images";
             // 
             // label44
             // 
@@ -1917,36 +1947,6 @@
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(7, 77);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(74, 13);
-            this.label46.TabIndex = 5;
-            this.label46.Text = "Cache images";
-            // 
-            // DaysToCacheImages
-            // 
-            this.DaysToCacheImages.Location = new System.Drawing.Point(125, 73);
-            this.DaysToCacheImages.Maximum = new decimal(new int[] {
-            400,
-            0,
-            0,
-            0});
-            this.DaysToCacheImages.Name = "DaysToCacheImages";
-            this.DaysToCacheImages.Size = new System.Drawing.Size(77, 20);
-            this.DaysToCacheImages.TabIndex = 6;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(217, 77);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(29, 13);
-            this.label47.TabIndex = 7;
-            this.label47.Text = "days";
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1977,6 +1977,7 @@
             this.AppearancePage.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
@@ -1999,7 +2000,6 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).EndInit();
             this.ResumeLayout(false);
 
         }

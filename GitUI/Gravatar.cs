@@ -10,6 +10,7 @@ using System.Net;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Threading;
+using System.Reflection;
 
 namespace GitUI
 {
@@ -90,7 +91,7 @@ namespace GitUI
                 IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
                 //If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-                if (isolatedStorage.GetFileNames(imageFileName).Length == 0)
+                if (isolatedStorage.GetFileNames(imageFileName).Length == 0 || FileIsExpired(isolatedStorage, imageFileName))
                 {
                     syncContext.Post(delegate
                     {
@@ -130,6 +131,36 @@ namespace GitUI
                     imgGravatar.Image = Resources.User;
                 }
             });
+        }
+
+        //Very very very ugly function to determine lastwritetime of file in isolated storage
+        private bool FileIsExpired(IsolatedStorageFile isolatedStorage, string imageFileName)
+        {
+            if (GitCommands.Settings.AuthorImageCacheDays == 0)
+                return false;
+
+            try
+            {
+                FieldInfo propertyInfo = isolatedStorage.GetType().GetField("m_RootDir", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (propertyInfo != null)
+                {
+                    string rootDir = propertyInfo.GetValue(isolatedStorage) as string;
+                    if (rootDir != null)
+                    {
+                        FileInfo file = new FileInfo(rootDir + imageFileName);
+                        if (file != null && file.Exists)
+                        {
+                            if (file.LastWriteTime < DateTime.Now.AddDays(-GitCommands.Settings.AuthorImageCacheDays))
+                                return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            return false;
         }
 
         private void GetImageFromGravatar(string imageFileName, IsolatedStorageFile isolatedStorage)
