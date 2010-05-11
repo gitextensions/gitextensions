@@ -12,41 +12,67 @@ namespace GitCommands
     {
         public static string SerializeRepositories()
         {
-            StringWriter sw = new StringWriter();
-            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-            serializer.Serialize(sw, RepositoryCategories);
-            return sw.ToString();
+            try
+            {
+                StringWriter sw = new StringWriter();
+                XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
+                serializer.Serialize(sw, RepositoryCategories);
+                return sw.ToString();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static void DeserializeRepositories(string xml)
         {
-         XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-         using (StringReader stringReader = new StringReader(xml))
-         using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
-         {
-             BindingList<RepositoryCategory> obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-             if (obj != null)
-                 RepositoryCategories = obj;
-         }
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
+                using (StringReader stringReader = new StringReader(xml))
+                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                {
+                    BindingList<RepositoryCategory> obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                    if (obj != null)
+                        RepositoryCategories = obj;
+                }
+            }
+            catch
+            {
+            }
         }
 
         public static string SerializeHistory()
         {
-            StringWriter sw = new StringWriter();
-            XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
-            serializer.Serialize(sw, RepositoryHistory);
-            return sw.ToString();
+            try
+            {
+                StringWriter sw = new StringWriter();
+                XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
+                serializer.Serialize(sw, RepositoryHistory);
+                return sw.ToString();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static void DeserializeHistory(string xml)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
-            using (StringReader stringReader = new StringReader(xml))
-            using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+            try
             {
-                RepositoryHistory obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
-                if (obj != null)
-                    RepositoryHistory = obj;
+                XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
+                using (StringReader stringReader = new StringReader(xml))
+                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                {
+                    RepositoryHistory obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
+                    if (obj != null)
+                        RepositoryHistory = obj;
+                }
+            }
+            catch
+            {
             }
         }
 

@@ -20,6 +20,14 @@ namespace GitUI
             RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
             RecentRepositories.DisableContextMenu();
             Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
+
+
+            //Lemmings
+            if (DateTime.Now.Month == 12 && DateTime.Now.Day > 15 && DateTime.Now.Day < 27) //X-Mass
+            {
+                pictureBox1.Image = Resources.Cow_xmass;
+            }
+
         }
 
 

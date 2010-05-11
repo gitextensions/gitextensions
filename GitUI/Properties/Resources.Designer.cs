@@ -319,14 +319,15 @@ namespace GitUI.Properties {
         ///Version 1.93
         ///	Fixed bug: wrong icon drawn in commit dialog for deleted files
         ///	Reset selected files in the commit dialog asks to delete new files.
+        ///	Added start page
+        ///	Author images are only cached for 5 days now
+        ///	Added &apos;force&apos; option to checkout revision and checkout branch
+        ///	Added &apos;rebase&apos; to context menu in revision grid
+        ///	Added &apos;unstage chunk of file&apos; option to commit dialog
         ///
         ///Version 1.92
         ///	Fixed bug: the application hangs randomly
-        ///	Fixed bug: quotes in local settings were not escaped properly
-        ///	Fixed progress bar when pulling and fetching under git &gt; 1.7.1
-        ///	There is a new installer to address the following issues (thanks to Jacob Stanley)
-        ///		Updating existing installations
-        ///		Install both 32bits and 64bi [rest of string was truncated]&quot;;.
+        ///	Fixed bug: quotes in local settings were n [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -380,6 +381,13 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("cow_head_yellow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Cow_xmass {
+            get {
+                object obj = ResourceManager.GetObject("Cow_xmass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
