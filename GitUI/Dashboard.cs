@@ -27,6 +27,10 @@ namespace GitUI
             {
                 pictureBox1.Image = Resources.Cow_xmass;
             }
+            if (DateTime.Now.Month == 6 && DateTime.Now.Day > 17 && DateTime.Now.Day < 24) //summer
+            {
+                pictureBox1.Image = Resources.Cow_sunglass;
+            }
 
         }
 

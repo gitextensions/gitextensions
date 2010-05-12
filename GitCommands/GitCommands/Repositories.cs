@@ -78,13 +78,37 @@ namespace GitCommands
 
         static Repositories()
         {
-            RepositoryHistory = new RepositoryHistory();
-            RepositoryCategories = new BindingList<RepositoryCategory>();
         }
 
-        public static RepositoryHistory RepositoryHistory { get; private set; }
+        private static RepositoryHistory repositoryHistory;
+        public static RepositoryHistory RepositoryHistory 
+        {
+            get
+            {
+                if (repositoryHistory == null)
+                    repositoryHistory = new RepositoryHistory();
+                return repositoryHistory;
+            }
+            set
+            {
+                repositoryHistory = value;
+            }
+        }
 
-        public static BindingList<RepositoryCategory> RepositoryCategories { get; private set; }
+        private static BindingList<RepositoryCategory> repositoryCategories;
+        public static BindingList<RepositoryCategory> RepositoryCategories 
+        { 
+            get
+            {
+                if (repositoryCategories == null)
+                    repositoryCategories = new BindingList<RepositoryCategory>();
+                return repositoryCategories;
+            }
+            set
+            {
+                repositoryCategories = value;
+            }
+        }
 
         public static void AddCategory(string title)
         {
