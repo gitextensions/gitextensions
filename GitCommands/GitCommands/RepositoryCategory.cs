@@ -48,7 +48,20 @@ namespace GitCommands
             OnListChanged(this, e);
         }
 
-        public BindingList<Repository> Repositories = new BindingList<Repository>();
+        private BindingList<Repository> repositories;
+        public BindingList<Repository> Repositories
+        {
+            get
+            {
+                if (repositories == null)
+                    repositories = new BindingList<Repository>();
+                return repositories;
+            }
+            set
+            {
+                repositories = value;
+            }
+        }
 
         public string Description { get; set; }
 
@@ -90,9 +103,11 @@ namespace GitCommands
                             {
                                 // Create a new row in the ListView containing information from inside the nodes
                                 Repository repository = new Repository();
-                                repository.Title = nodeItem["title"].InnerText.Trim();
+                                if (nodeItem["title"] != null)
+                                    repository.Title = nodeItem["title"].InnerText.Trim();
                                 //repository.Description = nodeItem["content"].InnerText.Trim();
-                                repository.Path = nodeItem["link"].Attributes["href"].Value;
+                                if (nodeItem["link"] != null)
+                                    repository.Path = nodeItem["link"].Attributes["href"].Value;
                                 repository.RepositoryType = RepositoryType.RssFeed;
                                 Repositories.Add(repository);
                             }
@@ -130,9 +145,12 @@ namespace GitCommands
 
                                         // Create a new row in the ListView containing information from inside the nodes
                                         Repository repository = new Repository();
-                                        repository.Title = nodeItem["title"].InnerText.Trim();
-                                        repository.Description = nodeItem["description"].InnerText.Trim();
-                                        repository.Path = nodeItem["link"].InnerText.Trim();
+                                        if (nodeItem["title"] != null)
+                                            repository.Title = nodeItem["title"].InnerText.Trim();
+                                        if (nodeItem["description"] != null)
+                                            repository.Description = nodeItem["description"].InnerText.Trim();
+                                        if (nodeItem["link"] != null)
+                                            repository.Path = nodeItem["link"].InnerText.Trim();
                                         repository.RepositoryType = RepositoryType.RssFeed;
                                         Repositories.Add(repository);
                                     }
@@ -166,19 +184,6 @@ namespace GitCommands
             Repositories.Remove(repository);
         }
 
-        public Repository FindRepository(string title)
-        {
-            foreach (Repository repository in Repositories)
-            {
-                if ((repository.Title != null && repository.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)) ||
-                    (repository.Title == null && repository.Path.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    return repository;
-                }
-            }
-
-            return null;
-        }
 
         public void AddRepository(Repository repo)
         {

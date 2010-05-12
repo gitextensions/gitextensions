@@ -22,7 +22,31 @@ namespace GitUI
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
-            dashboard.WorkingDirChanged += new EventHandler(dashboard_WorkingDirChanged);
+            
+        }
+
+        Dashboard dashboard = null;
+        private void ShowDashboard()
+        {
+            if (dashboard == null)
+            {
+                dashboard = new Dashboard();
+                dashboard.WorkingDirChanged += new EventHandler(dashboard_WorkingDirChanged);
+                this.splitContainer2.Panel2.Controls.Add(dashboard);
+                dashboard.Dock = DockStyle.Fill;
+                dashboard.BringToFront();
+                dashboard.ShowRecentRepositories();
+            }
+        }
+
+        private void HideDashboard()
+        {
+            if (dashboard != null)
+            {
+                dashboard.WorkingDirChanged -= new EventHandler(dashboard_WorkingDirChanged);
+                this.splitContainer2.Panel2.Controls.Remove(dashboard);
+                dashboard = null;
+            }
         }
 
         void dashboard_WorkingDirChanged(object sender, EventArgs e)
@@ -165,9 +189,11 @@ namespace GitUI
             CurrentBranch.Text = selectedHead;
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
-            dashboard.Visible = !validWorkingDir;
-            if (dashboard.Visible)
-                dashboard.ShowRecentRepositories();
+            if (validWorkingDir)
+                HideDashboard();
+            else
+                ShowDashboard();
+                
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -571,6 +597,9 @@ namespace GitUI
             InternalInitialize(false);
             SetIndexClean();
             indexWatcher.Reset();
+
+            if (dashboard != null)
+                dashboard.ShowRecentRepositories();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1251,6 +1280,28 @@ namespace GitUI
 
             GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
         }
+
+        private void Workingdir_DropDownOpening(object sender, EventArgs e)
+        {
+            Workingdir.DropDownItems.Clear();
+            foreach(Repository repository in Repositories.RepositoryHistory.Repositories)
+            {
+                ToolStripItem toolStripItem = Workingdir.DropDownItems.Add(repository.Path);
+                toolStripItem.Click += new EventHandler(toolStripItem_Click);
+            }
+        }
+
+        void toolStripItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = (ToolStripItem)sender;
+            if (toolStripItem != null)
+            {
+                Settings.WorkingDir = toolStripItem.Text;
+                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                InternalInitialize(true);
+            }
+        }
+
 
     }
 }

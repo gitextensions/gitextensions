@@ -384,6 +384,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Cow_sunglass {
+            get {
+                object obj = ResourceManager.GetObject("Cow_sunglass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Cow_xmass {
             get {
                 object obj = ResourceManager.GetObject("Cow_xmass", resourceCulture);
