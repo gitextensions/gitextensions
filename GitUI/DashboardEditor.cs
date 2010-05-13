@@ -19,6 +19,9 @@ namespace GitUI
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
+            if (Categories.SelectedItem == null)
+                return;
+
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.OnListChanged(null, null);
         }
@@ -143,6 +146,8 @@ namespace GitUI
 
         private void RepositoriesGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            if (Categories.SelectedItem == null)
+                return;
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
             repositoryCategory.OnListChanged(null, null);
         }
