@@ -2471,12 +2471,12 @@ namespace GitCommands
 
         public static string OpenWithDifftool(string filename)
         {
-            return RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+            return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
         }
 
         public static string OpenWithDifftool(string filename, string revision1, string revision2)
         {
-            return RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+            return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
         }
 
 
