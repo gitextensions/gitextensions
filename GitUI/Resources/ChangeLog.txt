@@ -10,6 +10,7 @@ Version 1.93
 	Added 'rebase' to context menu in revision grid
 	Added 'unstage chunk of file' option to commit dialog
 	Added drop down menu to the 'open' button in the browse dialog
+	Added support for WinMerge as diff tool
 
 Version 1.92
 	Fixed bug: the application hangs randomly

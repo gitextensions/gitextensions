@@ -132,6 +132,9 @@
             this.label29 = new System.Windows.Forms.Label();
             this.ColorAddedLineLabel = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.DiffToolCmdSuggest = new System.Windows.Forms.Button();
+            this.DifftoolCmd = new System.Windows.Forms.ComboBox();
+            this.label48 = new System.Windows.Forms.Label();
             this.BrowseDiffTool = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
             this.DifftoolPath = new System.Windows.Forms.TextBox();
@@ -1385,6 +1388,9 @@
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.DiffToolCmdSuggest);
+            this.GlobalSettingsPage.Controls.Add(this.DifftoolCmd);
+            this.GlobalSettingsPage.Controls.Add(this.label48);
             this.GlobalSettingsPage.Controls.Add(this.BrowseDiffTool);
             this.GlobalSettingsPage.Controls.Add(this.label42);
             this.GlobalSettingsPage.Controls.Add(this.DifftoolPath);
@@ -1416,6 +1422,41 @@
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
+            // 
+            // DiffToolCmdSuggest
+            // 
+            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 285);
+            this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
+            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 23);
+            this.DiffToolCmdSuggest.TabIndex = 30;
+            this.DiffToolCmdSuggest.Text = "Suggest command";
+            this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
+            this.DiffToolCmdSuggest.Click += new System.EventHandler(this.DiffToolCmdSuggest_Click);
+            // 
+            // DifftoolCmd
+            // 
+            this.DifftoolCmd.FormattingEnabled = true;
+            this.DifftoolCmd.Items.AddRange(new object[] {
+            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
+            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
+                " /theirs:\"$REMOTE\" /merged:\"$MERGED\"",
+            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
+                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
+            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
+                "BASE\" \"$REMOTE\""});
+            this.DifftoolCmd.Location = new System.Drawing.Point(153, 287);
+            this.DifftoolCmd.Name = "DifftoolCmd";
+            this.DifftoolCmd.Size = new System.Drawing.Size(347, 21);
+            this.DifftoolCmd.TabIndex = 29;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(9, 291);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(89, 13);
+            this.label48.TabIndex = 28;
+            this.label48.Text = "Difftool command";
             // 
             // BrowseDiffTool
             // 
@@ -1458,11 +1499,13 @@
             "ecmerge",
             "diffuse",
             "opendiff",
-            "araxis"});
+            "araxis",
+            "winmerge"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(153, 232);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(164, 21);
             this.GlobalDiffTool.TabIndex = 24;
+            this.GlobalDiffTool.SelectedIndexChanged += new System.EventHandler(this.GlobalDiffTool_SelectedIndexChanged);
             this.GlobalDiffTool.TextChanged += new System.EventHandler(this.ExternalDiffTool_TextChanged);
             // 
             // label41
@@ -2160,6 +2203,9 @@
         private System.Windows.Forms.Label label47;
         private System.Windows.Forms.NumericUpDown DaysToCacheImages;
         private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Button DiffToolCmdSuggest;
+        private System.Windows.Forms.ComboBox DifftoolCmd;
+        private System.Windows.Forms.Label label48;
 
     }
 }

@@ -1278,7 +1278,9 @@ namespace GitUI
                 return;
 
 
-            GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
+            string output = GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid, revisions[0].ParentGuids[0]);
+            if (!string.IsNullOrEmpty(output))
+                MessageBox.Show(output);
         }
 
         private void Workingdir_DropDownOpening(object sender, EventArgs e)
