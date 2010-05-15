@@ -171,7 +171,10 @@ namespace GitUI
                 YellowIcon.Checked = GitCommands.Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
                 RandomIcon.Checked = GitCommands.Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
-                GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.guitool");
+                if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
+                    GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.guitool");
+                else
+                    GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.tool");
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     DifftoolPath.Text = gitCommands.GetGlobalSetting("difftool." + GlobalDiffTool.Text + ".path");
@@ -342,7 +345,10 @@ namespace GitUI
                     gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
                 gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
 
-                gitCommands.SetGlobalSetting("diff.guitool", GlobalDiffTool.Text);
+                if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
+                    gitCommands.SetGlobalSetting("diff.guitool", GlobalDiffTool.Text);
+                else
+                    gitCommands.SetGlobalSetting("diff.tool", GlobalDiffTool.Text);
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     gitCommands.SetGlobalSetting("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
@@ -1187,7 +1193,7 @@ namespace GitUI
             foreach (string location in locations)
             {
                 if (!string.IsNullOrEmpty(location) && File.Exists(location))
-                    return location + fileName;
+                    return location;
                 if (!string.IsNullOrEmpty(location) && File.Exists(location + fileName))
                     return location + fileName;
                 if (!string.IsNullOrEmpty(location) && File.Exists(location + "\\" + fileName))
