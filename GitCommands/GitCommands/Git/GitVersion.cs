@@ -37,6 +37,11 @@ namespace GitCommands
             get { return this >= v1_7_1; }
         }
 
+        public bool GuiDiffToolExist
+        {
+            get { return this >= v1_7_0; }
+        }
+
         public bool IsUnknown
         {
             get { return a == 0 && b == 0 && c == 0 && d == 0; }
