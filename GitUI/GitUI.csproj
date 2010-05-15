@@ -543,6 +543,9 @@
     <EmbeddedResource Include="FormBranch.ja.resx">
       <DependentUpon>FormBranch.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormBranchSmall.ja.resx">
+      <DependentUpon>FormBranchSmall.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
