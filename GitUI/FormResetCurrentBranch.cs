@@ -11,8 +11,11 @@ namespace GitUI
 {
     public partial class FormResetCurrentBranch : GitExtensionsForm
     {
+        System.ComponentModel.ComponentResourceManager resources;
+
         public FormResetCurrentBranch(GitRevision Revision)
         {
+            resources = new System.ComponentModel.ComponentResourceManager(typeof(FormResetCurrentBranch));
             this.Revision = Revision;
 
             InitializeComponent();
@@ -22,11 +25,11 @@ namespace GitUI
 
         private void FormResetCurrentBranch_Load(object sender, EventArgs e)
         {
-            BranchInfo.Text = string.Format("Reset {0} to:", GitCommands.GitCommands.GetSelectedBranch());
-            Commit.Text = string.Format("Commit: {0}", Revision.Guid);
-            Author.Text = string.Format("Author: {0}", Revision.Author);
-            Date.Text = string.Format("Commit date: {0}", Revision.CommitDate);
-            Message.Text = string.Format("Message: {0}", Revision.Message);
+            BranchInfo.Text = string.Format(resources.GetString("BranchInfo.Text"), GitCommands.GitCommands.GetSelectedBranch());
+            Commit.Text = string.Format(resources.GetString("Commit.Text"), Revision.Guid);
+            Author.Text = string.Format(resources.GetString("Author.Text"), Revision.Author);
+            Date.Text = string.Format(resources.GetString("Date.Text"), Revision.CommitDate);
+            Message.Text = string.Format(resources.GetString("Message.Text"), Revision.Message);
 
         }
 
@@ -44,7 +47,7 @@ namespace GitUI
                 else
                     if (Hard.Checked)
                     {
-                        if (MessageBox.Show("You are about to discard ALL local changes, are you sure?", "Reset branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(resources.GetString("msg:reset branch"), "Reset branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             new FormProcess(GitCommands.GitCommands.ResetHardCmd(Revision.Guid));
                         }
