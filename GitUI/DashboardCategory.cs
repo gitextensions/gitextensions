@@ -54,11 +54,12 @@ namespace GitUI
         {
             if (repositoryCategory != null)
             {
+                this.Height = top = 26;
                 foreach (Repository repository in repositoryCategory.Repositories)
                 {
                     DashboardItem dashboardItem = new DashboardItem(repository);
                     dashboardItem.Click += new EventHandler(dashboardItem_Click);
-                    AddItem(dashboardItem);
+                    AddItem(dashboardItem);                    
 
                     if (repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                     {
@@ -242,7 +243,7 @@ namespace GitUI
                 if (Controls[i - 1] is DashboardItem)
                     Controls.RemoveAt(i - 1);
             }
-            top = 26;
+            this.Height = top = 26;
         }
 
         private void DashboardCategory_SizeChanged(object sender, EventArgs e)
