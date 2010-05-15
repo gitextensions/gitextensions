@@ -44,6 +44,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
@@ -51,10 +52,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.RevisionGrid);
             // 
             // splitContainer1.Panel2
             // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.CheckoutAfterCreate);
             this.splitContainer1.Panel2.Controls.Add(this.Checkout);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
@@ -68,6 +71,7 @@
             // 
             this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.RevisionGrid, "RevisionGrid");
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
@@ -80,22 +84,22 @@
             // CheckoutAfterCreate
             // 
             this.CheckoutAfterCreate.AutoSize = true;
+            resources.ApplyResources(this.CheckoutAfterCreate, "CheckoutAfterCreate");
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckoutAfterCreate.Location = new System.Drawing.Point(322, 8);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
             this.CheckoutAfterCreate.TabIndex = 4;
-            this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // Checkout
             // 
             this.Checkout.Location = new System.Drawing.Point(483, 5);
+            resources.ApplyResources(this.Checkout, "Checkout");
             this.Checkout.Name = "Checkout";
             this.Checkout.Size = new System.Drawing.Size(103, 23);
             this.Checkout.TabIndex = 3;
-            this.Checkout.Text = "Checkout branch";
             this.Checkout.UseVisualStyleBackColor = true;
             this.Checkout.Click += new System.EventHandler(this.Checkout_Click);
             // 
@@ -103,24 +107,25 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 8);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Branch name";
             // 
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(592, 5);
+            resources.ApplyResources(this.Ok, "Ok");
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 1;
-            this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // BName
             // 
             this.BName.Location = new System.Drawing.Point(88, 5);
+            resources.ApplyResources(this.BName, "BName");
             this.BName.Name = "BName";
             this.BName.Size = new System.Drawing.Size(227, 20);
             this.BName.TabIndex = 0;
@@ -129,12 +134,12 @@
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(712, 484);
             this.Controls.Add(this.splitContainer1);
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormBranch";
-            this.Text = "Create Branch";
             this.Load += new System.EventHandler(this.FormBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
