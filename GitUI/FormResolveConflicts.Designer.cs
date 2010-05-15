@@ -58,6 +58,17 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SolveConflictButton = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commitGuidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            resources.ApplyResources(this.modeDataGridViewTextBoxColumn, "modeDataGridViewTextBoxColumn");
+            this.modeDataGridViewTextBoxColumn.Name = "modeDataGridViewTextBoxColumn";
+            this.modeDataGridViewTextBoxColumn.ReadOnly = true;
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).BeginInit();
             this.ConflictedFilesContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -76,6 +87,7 @@
             // 
             this.ConflictedFiles.AllowUserToAddRows = false;
             this.ConflictedFiles.AllowUserToDeleteRows = false;
+            resources.ApplyResources(this.ConflictedFiles, "ConflictedFiles");
             this.ConflictedFiles.AutoGenerateColumns = false;
             this.ConflictedFiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.ConflictedFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -99,6 +111,7 @@
             // 
             // ConflictedFilesContextMenu
             // 
+            resources.ApplyResources(this.ConflictedFilesContextMenu, "ConflictedFilesContextMenu");
             this.ConflictedFilesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenMergetool,
             this.ContextMarkAsSolved,
@@ -120,94 +133,97 @@
             // 
             // OpenMergetool
             // 
+            resources.ApplyResources(this.OpenMergetool, "OpenMergetool");
             this.OpenMergetool.Name = "OpenMergetool";
             this.OpenMergetool.Size = new System.Drawing.Size(195, 22);
-            this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
             // 
             // ContextMarkAsSolved
             // 
+            resources.ApplyResources(this.ContextMarkAsSolved, "ContextMarkAsSolved");
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
             this.ContextMarkAsSolved.Size = new System.Drawing.Size(195, 22);
-            this.ContextMarkAsSolved.Text = "Mark conlfict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3
             // 
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(192, 6);
             // 
             // ContextChooseBase
             // 
+            resources.ApplyResources(this.ContextChooseBase, "ContextChooseBase");
             this.ContextChooseBase.Name = "ContextChooseBase";
             this.ContextChooseBase.Size = new System.Drawing.Size(195, 22);
-            this.ContextChooseBase.Text = "Choose base";
             this.ContextChooseBase.Click += new System.EventHandler(this.ContextChooseBase_Click);
             // 
             // ContextChooseLocal
             // 
+            resources.ApplyResources(this.ContextChooseLocal, "ContextChooseLocal");
             this.ContextChooseLocal.Name = "ContextChooseLocal";
             this.ContextChooseLocal.Size = new System.Drawing.Size(195, 22);
-            this.ContextChooseLocal.Text = "Choose local";
             this.ContextChooseLocal.Click += new System.EventHandler(this.ContextChooseLocal_Click);
             // 
             // ContextChooseRemote
             // 
+            resources.ApplyResources(this.ContextChooseRemote, "ContextChooseRemote");
             this.ContextChooseRemote.Name = "ContextChooseRemote";
             this.ContextChooseRemote.Size = new System.Drawing.Size(195, 22);
-            this.ContextChooseRemote.Text = "Choose remote";
             this.ContextChooseRemote.Click += new System.EventHandler(this.ContextChooseRemote_Click);
             // 
             // toolStripSeparator1
             // 
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
             // 
             // ContextOpenBaseWith
             // 
+            resources.ApplyResources(this.ContextOpenBaseWith, "ContextOpenBaseWith");
             this.ContextOpenBaseWith.Name = "ContextOpenBaseWith";
             this.ContextOpenBaseWith.Size = new System.Drawing.Size(195, 22);
-            this.ContextOpenBaseWith.Text = "Open base with";
             this.ContextOpenBaseWith.Click += new System.EventHandler(this.ContextOpenBaseWith_Click);
             // 
             // ContextOpenLocalWith
             // 
+            resources.ApplyResources(this.ContextOpenLocalWith, "ContextOpenLocalWith");
             this.ContextOpenLocalWith.Name = "ContextOpenLocalWith";
             this.ContextOpenLocalWith.Size = new System.Drawing.Size(195, 22);
-            this.ContextOpenLocalWith.Text = "Open local with";
             this.ContextOpenLocalWith.Click += new System.EventHandler(this.ContextOpenLocalWith_Click);
             // 
             // ContextOpenRemoteWith
             // 
+            resources.ApplyResources(this.ContextOpenRemoteWith, "ContextOpenRemoteWith");
             this.ContextOpenRemoteWith.Name = "ContextOpenRemoteWith";
             this.ContextOpenRemoteWith.Size = new System.Drawing.Size(195, 22);
-            this.ContextOpenRemoteWith.Text = "Open remote with";
             this.ContextOpenRemoteWith.Click += new System.EventHandler(this.ContextOpenRemoteWith_Click);
             // 
             // toolStripSeparator2
             // 
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(192, 6);
             // 
             // ContextSaveBaseAs
             // 
+            resources.ApplyResources(this.ContextSaveBaseAs, "ContextSaveBaseAs");
             this.ContextSaveBaseAs.Name = "ContextSaveBaseAs";
             this.ContextSaveBaseAs.Size = new System.Drawing.Size(195, 22);
-            this.ContextSaveBaseAs.Text = "Save base as";
             this.ContextSaveBaseAs.Click += new System.EventHandler(this.ContextSaveBaseAs_Click);
             // 
             // ContextSaveLocalAs
             // 
+            resources.ApplyResources(this.ContextSaveLocalAs, "ContextSaveLocalAs");
             this.ContextSaveLocalAs.Name = "ContextSaveLocalAs";
             this.ContextSaveLocalAs.Size = new System.Drawing.Size(195, 22);
-            this.ContextSaveLocalAs.Text = "Save local as";
             this.ContextSaveLocalAs.Click += new System.EventHandler(this.ContextSaveLocalAs_Click);
             // 
             // ContextSaveRemoteAs
             // 
+            resources.ApplyResources(this.ContextSaveRemoteAs, "ContextSaveRemoteAs");
             this.ContextSaveRemoteAs.Name = "ContextSaveRemoteAs";
             this.ContextSaveRemoteAs.Size = new System.Drawing.Size(195, 22);
-            this.ContextSaveRemoteAs.Text = "Save remote as";
             this.ContextSaveRemoteAs.Click += new System.EventHandler(this.ContextSaveRemoteAs_Click);
             // 
             // gitItemBindingSource
@@ -216,6 +232,7 @@
             // 
             // splitContainer1
             // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -223,10 +240,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(723, 396);
             this.splitContainer1.SplitterDistance = 587;
@@ -234,6 +253,7 @@
             // 
             // splitContainer2
             // 
+            resources.ApplyResources(this.splitContainer2, "splitContainer2");
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
@@ -242,10 +262,12 @@
             // 
             // splitContainer2.Panel1
             // 
+            resources.ApplyResources(this.splitContainer2.Panel1, "splitContainer2.Panel1");
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer2.Panel2
             // 
+            resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
             this.splitContainer2.Panel2.Controls.Add(this.ConflictedFiles);
             this.splitContainer2.Size = new System.Drawing.Size(587, 396);
             this.splitContainer2.SplitterDistance = 25;
@@ -253,15 +275,16 @@
             // 
             // label1
             // 
+            resources.ApplyResources(this.label1, "label1");
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(4, 4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Unresolved merge conflicts";
             // 
             // splitContainer3
             // 
+            resources.ApplyResources(this.splitContainer3, "splitContainer3");
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
@@ -270,11 +293,13 @@
             // 
             // splitContainer3.Panel1
             // 
+            resources.ApplyResources(this.splitContainer3.Panel1, "splitContainer3.Panel1");
             this.splitContainer3.Panel1.Controls.Add(this.button1);
             this.splitContainer3.Panel1.Controls.Add(this.Mergetool);
             // 
             // splitContainer3.Panel2
             // 
+            resources.ApplyResources(this.splitContainer3.Panel2, "splitContainer3.Panel2");
             this.splitContainer3.Panel2.Controls.Add(this.Rescan);
             this.splitContainer3.Panel2.Controls.Add(this.Reset);
             this.splitContainer3.Size = new System.Drawing.Size(132, 396);
@@ -283,41 +308,41 @@
             // 
             // button1
             // 
+            resources.ApplyResources(this.button1, "button1");
             this.button1.Location = new System.Drawing.Point(3, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(125, 23);
             this.button1.TabIndex = 2;
-            this.button1.Text = "Open in mergetool";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Mergetool
             // 
+            resources.ApplyResources(this.Mergetool, "Mergetool");
             this.Mergetool.Location = new System.Drawing.Point(3, 32);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(125, 23);
             this.Mergetool.TabIndex = 0;
-            this.Mergetool.Text = "Run mergetool";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
             // 
             // Rescan
             // 
+            resources.ApplyResources(this.Rescan, "Rescan");
             this.Rescan.Location = new System.Drawing.Point(3, 3);
             this.Rescan.Name = "Rescan";
             this.Rescan.Size = new System.Drawing.Size(125, 23);
             this.Rescan.TabIndex = 1;
-            this.Rescan.Text = "Rescan mergeconflicts";
             this.Rescan.UseVisualStyleBackColor = true;
             this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
             // 
             // Reset
             // 
+            resources.ApplyResources(this.Reset, "Reset");
             this.Reset.Location = new System.Drawing.Point(3, 32);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(125, 23);
             this.Reset.TabIndex = 6;
-            this.Reset.Text = "Abort";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
@@ -325,23 +350,80 @@
             // 
             this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Namex.DataPropertyName = "FileName";
-            this.Namex.HeaderText = "Filename";
+            resources.ApplyResources(this.Namex, "Namex");
             this.Namex.Name = "Namex";
             this.Namex.ReadOnly = true;
             // 
             // SolveConflictButton
             // 
             this.SolveConflictButton.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.SolveConflictButton.HeaderText = "";
+            resources.ApplyResources(this.SolveConflictButton, "SolveConflictButton");
             this.SolveConflictButton.Name = "SolveConflictButton";
             this.SolveConflictButton.ReadOnly = true;
             this.SolveConflictButton.Text = "Solve";
             this.SolveConflictButton.UseColumnTextForButtonValue = true;
             this.SolveConflictButton.Width = 60;
             // 
+            // guidDataGridViewTextBoxColumn
+            // 
+            this.guidDataGridViewTextBoxColumn.DataPropertyName = "Guid";
+            resources.ApplyResources(this.guidDataGridViewTextBoxColumn, "guidDataGridViewTextBoxColumn");
+            this.guidDataGridViewTextBoxColumn.Name = "guidDataGridViewTextBoxColumn";
+            this.guidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // commitGuidDataGridViewTextBoxColumn
+            // 
+            this.commitGuidDataGridViewTextBoxColumn.DataPropertyName = "CommitGuid";
+            resources.ApplyResources(this.commitGuidDataGridViewTextBoxColumn, "commitGuidDataGridViewTextBoxColumn");
+            this.commitGuidDataGridViewTextBoxColumn.Name = "commitGuidDataGridViewTextBoxColumn";
+            this.commitGuidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // itemTypeDataGridViewTextBoxColumn
+            // 
+            this.itemTypeDataGridViewTextBoxColumn.DataPropertyName = "ItemType";
+            resources.ApplyResources(this.itemTypeDataGridViewTextBoxColumn, "itemTypeDataGridViewTextBoxColumn");
+            this.itemTypeDataGridViewTextBoxColumn.Name = "itemTypeDataGridViewTextBoxColumn";
+            this.itemTypeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            resources.ApplyResources(this.nameDataGridViewTextBoxColumn, "nameDataGridViewTextBoxColumn");
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // authorDataGridViewTextBoxColumn
+            // 
+            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
+            resources.ApplyResources(this.authorDataGridViewTextBoxColumn, "authorDataGridViewTextBoxColumn");
+            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // dateDataGridViewTextBoxColumn
+            // 
+            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
+            resources.ApplyResources(this.dateDataGridViewTextBoxColumn, "dateDataGridViewTextBoxColumn");
+            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // fileNameDataGridViewTextBoxColumn
+            // 
+            this.fileNameDataGridViewTextBoxColumn.DataPropertyName = "FileName";
+            resources.ApplyResources(this.fileNameDataGridViewTextBoxColumn, "fileNameDataGridViewTextBoxColumn");
+            this.fileNameDataGridViewTextBoxColumn.Name = "fileNameDataGridViewTextBoxColumn";
+            this.fileNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // modeDataGridViewTextBoxColumn
+            // 
+            this.modeDataGridViewTextBoxColumn.DataPropertyName = "Mode";
+            resources.ApplyResources(this.modeDataGridViewTextBoxColumn, "modeDataGridViewTextBoxColumn");
+            this.modeDataGridViewTextBoxColumn.Name = "modeDataGridViewTextBoxColumn";
+            this.modeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // FormResolveConflicts
             // 
             this.AcceptButton = this.button1;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(723, 396);
@@ -349,7 +431,6 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormResolveConflicts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Resolve merge conflicts";
             this.Load += new System.EventHandler(this.FormResolveConflicts_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).EndInit();
             this.ConflictedFilesContextMenu.ResumeLayout(false);
@@ -398,5 +479,13 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
         private System.Windows.Forms.DataGridViewButtonColumn SolveConflictButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commitGuidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn itemTypeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fileNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn modeDataGridViewTextBoxColumn;
     }
 }
