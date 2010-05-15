@@ -11,8 +11,12 @@ namespace GitUI
 {
     public partial class FormVerify : GitExtensionsForm
     {
+        System.ComponentModel.ComponentResourceManager resources;
+
         public FormVerify()
         {
+            resources = new ComponentResourceManager(typeof(FormVerify));
+
             InitializeComponent();
         }
 
@@ -106,7 +110,7 @@ namespace GitUI
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete all dangling objects?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:remove"), "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("prune");
                 FormVerify_Shown(null, null);
@@ -160,7 +164,7 @@ namespace GitUI
                 }
             }
 
-            MessageBox.Show(currentTag + " Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.", "Tags created");
+            MessageBox.Show(string.Format(resources.GetString("msg:tags created"), currentTag), "Tags created");
         }
 
         private void button3_Click(object sender, EventArgs e)
