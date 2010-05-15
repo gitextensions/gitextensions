@@ -11,10 +11,13 @@ namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
     {
+        private System.ComponentModel.ComponentResourceManager resources;
         private readonly string defaultBranch;
 
         public FormDeleteBranch(string defaultBranch)
         {
+            resources = new ComponentResourceManager(typeof(FormDeleteBranch));
+
             InitializeComponent();
             this.defaultBranch = defaultBranch;
         }
@@ -34,9 +37,9 @@ namespace GitUI
         {
             try
             {
-                if (MessageBox.Show("Are you sure you want to delete this branch?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!", "Delete branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(resources.GetString("msg:delete branch"), "Delete branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    MessageBox.Show("Command executed " + Environment.NewLine + "" + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), "Delete branch");
+                    MessageBox.Show(resources.GetString("msg:deleted") + Environment.NewLine + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), "Delete branch");
                 }
             }
             catch
