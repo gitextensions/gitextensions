@@ -17,12 +17,16 @@ namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
+        System.ComponentModel.ComponentResourceManager resources;
+
         public FormBrowse()
         {
+            resources = new ComponentResourceManager(typeof(FormBrowse));
+
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
-            
+
         }
 
         Dashboard dashboard = null;
@@ -31,6 +35,7 @@ namespace GitUI
             if (dashboard == null)
             {
                 dashboard = new Dashboard();
+                resources.ApplyResources(this.dashboard, "dashboard");
                 dashboard.WorkingDirChanged += new EventHandler(dashboard_WorkingDirChanged);
                 this.splitContainer2.Panel2.Controls.Add(dashboard);
                 dashboard.Dock = DockStyle.Fill;
@@ -193,7 +198,7 @@ namespace GitUI
                 HideDashboard();
             else
                 ShowDashboard();
-                
+
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -375,10 +380,10 @@ namespace GitUI
             if (treeContextMenu == null)
             {
                 treeContextMenu = new ContextMenu();
-                treeContextMenu.MenuItems.Add(new MenuItem("Save as", new EventHandler(saveAsOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem("Open", new EventHandler(OpenOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem("Open With", new EventHandler(OpenWithOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem("File History", new EventHandler(FileHistoryOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:save as"), new EventHandler(saveAsOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:open"), new EventHandler(OpenOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:open with"), new EventHandler(OpenWithOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:file history"), new EventHandler(FileHistoryOnClick)));
 
             }
             return treeContextMenu;
@@ -1286,7 +1291,7 @@ namespace GitUI
         private void Workingdir_DropDownOpening(object sender, EventArgs e)
         {
             Workingdir.DropDownItems.Clear();
-            foreach(Repository repository in Repositories.RepositoryHistory.Repositories)
+            foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
                 ToolStripItem toolStripItem = Workingdir.DropDownItems.Add(repository.Path);
                 toolStripItem.Click += new EventHandler(toolStripItem_Click);
