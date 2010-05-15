@@ -117,21 +117,272 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>385, 17</value>
-  </metadata>
-  <metadata name="UnstagedFileContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>220, 17</value>
-  </metadata>
-  <metadata name="menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>500, 17</value>
-  </metadata>
+  <data name="&gt;&gt;tableLayoutPanel7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer5.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="menuStrip3.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;Staged.Name" xml:space="preserve">
+    <value>Staged</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel2.Name" xml:space="preserve">
+    <value>splitContainer3.Panel2</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tableLayoutPanel2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;Staged.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;workingToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="Scan" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="Reset" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="Amend" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="Commit" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,32,Absolute,32,Absolute,32,Absolute,32,AutoSize,0,Absolute,32,Absolute,32,Absolute,32,Absolute,32,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="&gt;&gt;Unstaged.Type" xml:space="preserve">
+    <value>GitUI.FileStatusList, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="msg:delete selected" xml:space="preserve">
+    <value>Are you sure you want to delete all selected files?</value>
+  </data>
+  <data name="splitContainer5.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Scan.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 26</value>
+  </data>
+  <data name="AddFiles.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="eToolStripMenuItem.Text" xml:space="preserve">
+    <value>Edit ignored files</value>
+  </data>
+  <data name="msg:no files staged" xml:space="preserve">
+    <value>There are no files staged for this commit. Are you sure you want to commit?</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="eToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="deleteAllUntrackedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel6.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="menuStrip1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="resetAlltrackedChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="splitContainer5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="splitContainer5.Panel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="progressBar.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;unstageAllToolStripMenuItem.Name" xml:space="preserve">
+    <value>unstageAllToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>tableLayoutPanel5</value>
+  </data>
+  <data name="&gt;&gt;fileTooltip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 25</value>
+  </data>
+  <data name="tableLayoutPanel5.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="splitContainer2.Panel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel7.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel4.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="AddFiles" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="menuStrip2" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="UnstageFiles" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,34,Percent,33,Percent,33" /&gt;&lt;Rows Styles="Percent,100,Absolute,30,Percent,100,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="&gt;&gt;Scan.Name" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="SelectedDiff.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;Amend.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel6.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel2.RowCount" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="Scan.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 99</value>
+  </data>
+  <data name="&gt;&gt;Reset.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="tableLayoutPanel6.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="AddFiles.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;Staged.Type" xml:space="preserve">
+    <value>GitUI.FileStatusList, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="tableLayoutPanel4.ColumnCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel3.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="UnstagedFileContext.Size" type="System.Drawing.Size, System.Drawing">
+    <value>202, 192</value>
+  </data>
+  <data name="AddFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 24</value>
+  </data>
+  <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 6</value>
+  </data>
+  <data name="menuStrip2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="resetAlltrackedChangesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reset all (tracked) changes</value>
+  </data>
+  <data name="SelectedDiff.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>364, 134</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>GitUI.GitExtensionsForm, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="SelectedDiff.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 506</value>
+  </data>
+  <data name="&gt;&gt;Commit.Name" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="&gt;&gt;Cancel.Name" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>891, 644</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 6</value>
+  </data>
+  <data name="tableLayoutPanel4.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;deleteFileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Message.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 34</value>
+  </data>
+  <data name="rescanChangesToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>F5</value>
+  </data>
+  <data name="&gt;&gt;menuStrip3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="deleteFileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete file</value>
+  </data>
+  <data name="&gt;&gt;Unstaged.Parent" xml:space="preserve">
+    <value>splitContainer4.Panel2</value>
+  </data>
+  <data name="Unstaged.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 6</value>
+  </data>
+  <data name="tableLayoutPanel6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 134</value>
+  </data>
+  <data name="deleteFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="CloseDialogAfterCommit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 16</value>
+  </data>
+  <data name="&gt;&gt;deleteSelectedFilesToolStripMenuItem.Name" xml:space="preserve">
+    <value>deleteSelectedFilesToolStripMenuItem</value>
+  </data>
+  <data name="Loading.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 258</value>
+  </data>
+  <data name="Ok.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="&gt;&gt;eToolStripMenuItem.Name" xml:space="preserve">
+    <value>eToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;filenameToClipboardToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;Ok.Name" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="progressBar.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel7.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="There are no staged changes" xml:space="preserve">
+    <value>There are no staged changes</value>
+  </data>
+  <data name="&gt;&gt;AddFiles.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="SolveMergeconflicts.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEAAA
-        CxABrSO9dQAAAgJJREFUOE+dk8FLFHEcxWc9DEjCQpdwMapLB5OwU3YI8RAEQpc6rOhhFdoyarXyEKSg
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALDQAA
+        Cw0B7QfALAAAAgJJREFUOE+dk8FLFHEcxWc9DEjCQpdwMapLB5OwU3YI8RAEQpc6rOhhFdoyarXyEKSg
         K5QnZUlaEZdoFKUQg2hZhGoPKlsRBHWoVqKD/0CUe3AXfL03M7+ZrW794LFf3vfzffubmd8vAsAq9x+2
         6pbNOkldos74fom/q9Q8VTXs8Uc7lqWAr4kWo2R54Cj2nRvAVg54m/fEWp56ZJOG12wQ8Lkvdm3nZjtQ
         WgJePQZWb+Hn6ClXql2PPTFiFVIfYCsd7zj8Yhp4Mga8cdj3l2p56pHxd2IHAR97m4equavA+gNgeQRY
@@ -143,25 +394,1466 @@
         RK5CYII=
 </value>
   </data>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>385, 17</value>
-  </metadata>
-  <metadata name="menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>500, 17</value>
-  </metadata>
-  <metadata name="menuStrip3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>609, 17</value>
-  </metadata>
-  <metadata name="menuStrip3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>609, 17</value>
-  </metadata>
-  <metadata name="CloseCommitDialogTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>729, 17</value>
-  </metadata>
-  <metadata name="fileTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Name" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;filenameToClipboardToolStripMenuItem.Name" xml:space="preserve">
+    <value>filenameToClipboardToolStripMenuItem</value>
+  </data>
+  <data name="Ok.Location" type="System.Drawing.Point, System.Drawing">
+    <value>334, 10</value>
+  </data>
+  <data name="&gt;&gt;Amend.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="menuStrip2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 30</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Scan.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;openToolStripMenuItem.Name" xml:space="preserve">
+    <value>openToolStripMenuItem</value>
+  </data>
+  <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="menuStrip2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Reset.Text" xml:space="preserve">
+    <value>Reset changes</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel6.Name" xml:space="preserve">
+    <value>tableLayoutPanel6</value>
+  </data>
+  <data name="tableLayoutPanel7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Scan.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;addFileTogitignoreToolStripMenuItem.Name" xml:space="preserve">
+    <value>addFileTogitignoreToolStripMenuItem</value>
+  </data>
+  <data name="menuStrip3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="menuStrip2.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;openWithToolStripMenuItem.Name" xml:space="preserve">
+    <value>openWithToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="SolveMergeconflicts.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="Message.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
+    <value>284</value>
+  </data>
+  <data name="splitContainer3.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="&gt;&gt;unstageAllToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Staged.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Enter commit message" xml:space="preserve">
+    <value>Enter commit message</value>
+  </data>
+  <data name="SolveMergeconflicts.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="rescanChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="&gt;&gt;Cancel.Parent" xml:space="preserve">
+    <value>splitContainer5.Panel2</value>
+  </data>
+  <data name="AddFiles.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="There are no unstaged changes" xml:space="preserve">
+    <value>There are no unstaged changes</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="tableLayoutPanel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;CloseDialogAfterCommit.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;SelectedDiff.Name" xml:space="preserve">
+    <value>SelectedDiff</value>
+  </data>
+  <data name="Commit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 26</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;UnstagedFileContext.Name" xml:space="preserve">
+    <value>UnstagedFileContext</value>
+  </data>
+  <data name="Amend.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 26</value>
+  </data>
+  <data name="splitContainer3.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;fileTooltip.Name" xml:space="preserve">
+    <value>fileTooltip</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 134</value>
+  </data>
+  <data name="Cancel.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer5</value>
+  </data>
+  <data name="Commit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="&gt;&gt;Ok.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="Message.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainer5.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel5.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;UnstageFiles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Cancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="UnstageFiles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 3</value>
+  </data>
+  <data name="AddFiles.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;Message.Type" xml:space="preserve">
+    <value>GitUI.EditNetSpell, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="tableLayoutPanel5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 25</value>
+  </data>
+  <data name="CloseDialogAfterCommitToolTip" xml:space="preserve">
+    <value>When checked the commit dialog is closed after each commit.
+Otherwise the dialog will only close when there are no modified files left.</value>
+  </data>
+  <data name="&gt;&gt;Cancel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel3.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel6.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel3.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;SolveMergeconflicts.Name" xml:space="preserve">
+    <value>SolveMergeconflicts</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;showUntrackedFilesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SolveMergeconflicts.Parent" xml:space="preserve">
+    <value>splitContainer3.Panel1</value>
+  </data>
+  <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="addFileTogitignoreToolStripMenuItem.Text" xml:space="preserve">
+    <value>Add file to .gitignore</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 30</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel7.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="UnstagedFileContext.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;deleteFileToolStripMenuItem.Name" xml:space="preserve">
+    <value>deleteFileToolStripMenuItem</value>
+  </data>
+  <data name="tableLayoutPanel5.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer3</value>
+  </data>
+  <data name="splitContainer4.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="&gt;&gt;Cancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Ok.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel5.Name" xml:space="preserve">
+    <value>tableLayoutPanel5</value>
+  </data>
+  <data name="&gt;&gt;rescanChangesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;SelectedDiff.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainer4.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer4.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Name" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="SolveMergeconflicts.Text" xml:space="preserve">
+    <value>There are unresolved mergeconflicts
+</value>
+  </data>
+  <data name="Amend.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="showIgnoredFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show ignored files</value>
+  </data>
+  <data name="tableLayoutPanel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>364, 30</value>
+  </data>
+  <data name="AddFiles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>268, 3</value>
+  </data>
+  <data name="Unstaged.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Cancel.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;resetSelectedFilesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Loading.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="&gt;&gt;Message.Parent" xml:space="preserve">
+    <value>tableLayoutPanel7</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 6</value>
+  </data>
+  <data name="splitContainer3.SplitterDistance" type="System.Int32, mscorlib">
+    <value>506</value>
+  </data>
+  <data name="&gt;&gt;showIgnoredFilesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SolveMergeconflicts.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;resetAlltrackedChangesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainer4.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CloseDialogAfterCommit.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Unstaged.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="&gt;&gt;openWithToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="resetPartOfFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="Scan.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;Loading.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Amend.Name" xml:space="preserve">
+    <value>Amend</value>
+  </data>
+  <data name="&gt;&gt;Scan.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;UnstageFiles.Name" xml:space="preserve">
+    <value>UnstageFiles</value>
+  </data>
+  <data name="Message.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="UnstageFiles.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Staged.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainer4.Panel1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="deleteAllUntrackedFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete all untracked files</value>
+  </data>
+  <data name="&gt;&gt;Staged.Parent" xml:space="preserve">
+    <value>splitContainer5.Panel2</value>
+  </data>
+  <data name="&gt;&gt;menuStrip2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 6</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainer4.Panel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer4.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel7.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;Message.Name" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="ResetChanges.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="&gt;&gt;Unstaged.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="msg:reset selected" xml:space="preserve">
+    <value>Are you sure you want to reset all selected files?</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Parent" xml:space="preserve">
+    <value>tableLayoutPanel6</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="msg:delete" xml:space="preserve">
+    <value>Are you sure you want delete the selected file(s)?</value>
+  </data>
+  <data name="msg:delete:failed" xml:space="preserve">
+    <value>Delete file failed</value>
+  </data>
+  <data name="tableLayoutPanel5.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;Scan.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="filenameToClipboardToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="&gt;&gt;menuStrip3.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="AddFiles.Text" xml:space="preserve">
+    <value>Stage</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Parent" xml:space="preserve">
+    <value>splitContainer5.Panel1</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainer4.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;SolveMergeconflicts.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CloseDialogAfterCommit.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="UnstageFiles.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="Reset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 67</value>
+  </data>
+  <data name="Cancel.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CloseDialogAfterCommit.Text" xml:space="preserve">
+    <value>Close dialog after commit</value>
+  </data>
+  <data name="splitContainer5.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel4.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="ResetChanges.Text" xml:space="preserve">
+    <value>Reset file changes</value>
+  </data>
+  <data name="splitContainer4.SplitterWidth" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Commit.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="msg:reset" xml:space="preserve">
+    <value>Are you sure you want to reset the changes of the selected files?</value>
+  </data>
+  <data name="tableLayoutPanel6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;progressBar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;addFileTogitignoreToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Reset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="workingToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>F5</value>
+  </data>
+  <data name="showUntrackedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="&gt;&gt;showUntrackedFilesToolStripMenuItem.Name" xml:space="preserve">
+    <value>showUntrackedFilesToolStripMenuItem</value>
+  </data>
+  <data name="AddFiles.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="Cancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 23</value>
+  </data>
+  <data name="progressBar.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="UnstageFiles.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="unstageAllToolStripMenuItem.Text" xml:space="preserve">
+    <value>Unstage all</value>
+  </data>
+  <data name="splitContainer1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="openWithToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="menuStrip3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel3.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="menuStrip3" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="CloseDialogAfterCommit" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="stageAllToolStripMenuItem.Text" xml:space="preserve">
+    <value>Stage all</value>
+  </data>
+  <data name="splitContainer3.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;UnstageFiles.Parent" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel6.Parent" xml:space="preserve">
+    <value>splitContainer3.Panel2</value>
+  </data>
+  <data name="Unstaged.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 258</value>
+  </data>
+  <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="workingToolStripMenuItem.Text" xml:space="preserve">
+    <value>Working dir changes</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer4</value>
+  </data>
+  <data name="progressBar.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterParent</value>
+  </data>
+  <data name="&gt;&gt;SelectedDiff.Parent" xml:space="preserve">
+    <value>splitContainer3.Panel1</value>
+  </data>
+  <data name="&gt;&gt;resetAlltrackedChangesToolStripMenuItem.Name" xml:space="preserve">
+    <value>resetAlltrackedChangesToolStripMenuItem</value>
+  </data>
+  <data name="splitContainer2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;gitItemStatusBindingSource.Name" xml:space="preserve">
+    <value>gitItemStatusBindingSource</value>
+  </data>
+  <data name="Loading.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;AddFiles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="menuStrip2.Text" xml:space="preserve">
+    <value>menuStrip2</value>
+  </data>
+  <data name="tableLayoutPanel7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="rescanChangesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Rescan changes</value>
+  </data>
+  <data name="msg:(un)stage chunk" xml:space="preserve">
+    <value>You can only use this option when selecting a single file</value>
+  </data>
+  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 644</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Name" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="&gt;&gt;menuStrip3.Name" xml:space="preserve">
+    <value>menuStrip3</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel5.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="Staged.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="stageChunkOfFileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Stage chunk of file</value>
+  </data>
+  <data name="splitContainer4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 284</value>
+  </data>
+  <data name="tableLayoutPanel5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="UnstageFiles.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Amend.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="msg:delete untracked" xml:space="preserve">
+    <value>Are you sure you want to delete all untracked?</value>
+  </data>
+  <data name="msg:delete selected:failed" xml:space="preserve">
+    <value>Delete failed:</value>
+  </data>
+  <data name="&gt;&gt;menuStrip2.Parent" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="&gt;&gt;AddFiles.Parent" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="splitContainer3.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SolveMergeconflicts.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 12</value>
+  </data>
+  <data name="&gt;&gt;Commit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Loading.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;Loading.Name" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="&gt;&gt;Scan.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="progressBar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 19</value>
+  </data>
+  <data name="msg:delete new files" xml:space="preserve">
+    <value>Do you also want to delete the new files that are in the selection?
+
+Choose 'No' to keep all new files.</value>
+  </data>
+  <data name="splitContainer5.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Staged.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Amend.Text" xml:space="preserve">
+    <value>&amp;Amend last commit</value>
+  </data>
+  <data name="Reset.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Name" xml:space="preserve">
+    <value>splitContainer4</value>
+  </data>
+  <data name="&gt;&gt;gitItemStatusBindingSource.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableLayoutPanel7.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="Message" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel3" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,30,Percent,100,Absolute,30,Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Ok.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="menuStrip3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="deleteSelectedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer3.Panel1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;openWithDifftoolToolStripMenuItem.Name" xml:space="preserve">
+    <value>openWithDifftoolToolStripMenuItem</value>
+  </data>
+  <data name="Loading.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="addFileTogitignoreToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="workingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 21</value>
+  </data>
+  <data name="SelectedDiff.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel2.Name" xml:space="preserve">
+    <value>splitContainer5.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel1.Name" xml:space="preserve">
+    <value>splitContainer3.Panel1</value>
+  </data>
+  <data name="tableLayoutPanel3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="&gt;&gt;SolveMergeconflicts.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;showIgnoredFilesToolStripMenuItem.Name" xml:space="preserve">
+    <value>showIgnoredFilesToolStripMenuItem</value>
+  </data>
+  <data name="splitContainer4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer5.SplitterWidth" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="filesListedToCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 22</value>
+  </data>
+  <data name="Commit.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;commitMessageToolStripMenuItem.Name" xml:space="preserve">
+    <value>commitMessageToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;CloseCommitDialogTooltip.Name" xml:space="preserve">
+    <value>CloseCommitDialogTooltip</value>
+  </data>
+  <data name="&gt;&gt;filesListedToCommitToolStripMenuItem.Name" xml:space="preserve">
+    <value>filesListedToCommitToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;ResetChanges.Name" xml:space="preserve">
+    <value>ResetChanges</value>
+  </data>
+  <data name="Commit.Text" xml:space="preserve">
+    <value>&amp;Commit</value>
+  </data>
+  <data name="&gt;&gt;CloseCommitDialogTooltip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Loading.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="msg:merge conflicts" xml:space="preserve">
+    <value>There are unresolved mergeconflicts, solve mergeconflicts before committing</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;CloseDialogAfterCommit.Name" xml:space="preserve">
+    <value>CloseDialogAfterCommit</value>
+  </data>
+  <data name="deleteSelectedFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete selected files</value>
+  </data>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>891, 644</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="UnstagedFileContext.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CloseDialogAfterCommit.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Parent" xml:space="preserve">
+    <value>tableLayoutPanel7</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="openWithToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open With</value>
+  </data>
+  <data name="&gt;&gt;workingToolStripMenuItem.Name" xml:space="preserve">
+    <value>workingToolStripMenuItem</value>
+  </data>
+  <data name="SelectedDiff.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel7.Name" xml:space="preserve">
+    <value>tableLayoutPanel7</value>
+  </data>
+  <data name="&gt;&gt;stageChunkOfFileToolStripMenuItem.Name" xml:space="preserve">
+    <value>stageChunkOfFileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FormCommit</value>
+  </data>
+  <data name="Commit.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="Message.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel5.Parent" xml:space="preserve">
+    <value>splitContainer4.Panel1</value>
+  </data>
+  <data name="&gt;&gt;Ok.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="menuStrip2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Loading.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rescanChangesToolStripMenuItem.Name" xml:space="preserve">
+    <value>rescanChangesToolStripMenuItem</value>
+  </data>
+  <data name="filesListedToCommitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Staged files</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="splitContainer5.SplitterDistance" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="&gt;&gt;progressBar.Parent" xml:space="preserve">
+    <value>tableLayoutPanel5</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;Amend.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="splitContainer4.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="stageChunkOfFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>184, 22</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="tableLayoutPanel4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="&gt;&gt;Reset.Name" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="msg:amend commit" xml:space="preserve">
+    <value>You are about to rewrite history.
+Only use amend if the commit is not published yet!
+
+Do you want to continue?</value>
+  </data>
+  <data name="tableLayoutPanel3.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;Commit.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="SolveMergeconflicts.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="splitContainer2.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="Amend.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="Scan.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 12</value>
+  </data>
+  <data name="stageAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>184, 22</value>
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SelectedDiff.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="progressBar.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;deleteSelectedFilesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CloseDialogAfterCommit.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel1.Name" xml:space="preserve">
+    <value>splitContainer4.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Loading.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;progressBar.Name" xml:space="preserve">
+    <value>progressBar</value>
+  </data>
+  <data name="UnstageFiles.Text" xml:space="preserve">
+    <value>Unstage</value>
+  </data>
+  <data name="msg:please enter commit message" xml:space="preserve">
+    <value>Please enter commit message</value>
+  </data>
+  <data name="SolveMergeconflicts.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel7.Parent" xml:space="preserve">
+    <value>tableLayoutPanel6</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer4.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;UnstageFiles.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Amend.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 35</value>
+  </data>
+  <data name="&gt;&gt;AddFiles.Name" xml:space="preserve">
+    <value>AddFiles</value>
+  </data>
+  <data name="Unstaged.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="Commit.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="Reset.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuStrip3.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;Reset.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;stageChunkOfFileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Scan.Text" xml:space="preserve">
+    <value>&amp;Rescan changes</value>
+  </data>
+  <data name="progressBar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>201, 3</value>
+  </data>
+  <data name="commitMessageToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commit &amp;message</value>
+  </data>
+  <data name="Commit.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="menuStrip2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainer2.Panel1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="UnstageFiles.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="tableLayoutPanel4.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer3.Name" xml:space="preserve">
+    <value>splitContainer3</value>
+  </data>
+  <data name="splitContainer4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="filenameToClipboardToolStripMenuItem.Text" xml:space="preserve">
+    <value>Filename to clipboard</value>
+  </data>
+  <data name="SolveMergeconflicts.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="splitContainer3.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Name" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;progressBar.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainer5.Panel1.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;ResetChanges.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 356</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SelectedDiff.Type" xml:space="preserve">
+    <value>GitUI.FileViewer, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="Reset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 26</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Name" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="showIgnoredFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="SelectedDiff.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainer2.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;splitContainer5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 644</value>
+  </data>
+  <data name="splitContainer5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Staged.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="commitMessageToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 26</value>
+  </data>
+  <data name="&gt;&gt;CloseDialogAfterCommit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer5</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SolveMergeconflicts.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 42</value>
+  </data>
+  <data name="Ok.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;filesListedToCommitToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuStrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Name" xml:space="preserve">
+    <value>splitContainer5</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;resetPartOfFileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Message.Size" type="System.Drawing.Size, System.Drawing">
+    <value>356, 96</value>
+  </data>
+  <data name="Reset.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CloseDialogAfterCommit.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tableLayoutPanel4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open With Difftool</value>
+  </data>
+  <data name="&gt;&gt;menuStrip2.Name" xml:space="preserve">
+    <value>menuStrip2</value>
+  </data>
+  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Message.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Ok.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="Reset.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>397</value>
+  </data>
+  <data name="unstageAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>184, 22</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;Loading.Parent" xml:space="preserve">
+    <value>splitContainer4.Panel2</value>
+  </data>
+  <data name="tableLayoutPanel6.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="tableLayoutPanel2" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel7" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,130,AutoSize,0" /&gt;&lt;Rows Styles="Percent,100,Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="splitContainer3.Panel2.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tableLayoutPanel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;Commit.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="resetSelectedFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reset selected files</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer3</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer4</value>
+  </data>
+  <data name="&gt;&gt;splitContainer4.Panel2.Name" xml:space="preserve">
+    <value>splitContainer4.Panel2</value>
+  </data>
+  <data name="showUntrackedFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show untracked files</value>
+  </data>
+  <data name="&gt;&gt;eToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;deleteAllUntrackedFilesToolStripMenuItem.Name" xml:space="preserve">
+    <value>deleteAllUntrackedFilesToolStripMenuItem</value>
+  </data>
+  <data name="tableLayoutPanel6.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 0</value>
+  </data>
+  <data name="&gt;&gt;stageAllToolStripMenuItem.Name" xml:space="preserve">
+    <value>stageAllToolStripMenuItem</value>
+  </data>
+  <data name="menuStrip3.Text" xml:space="preserve">
+    <value>menuStrip3</value>
+  </data>
+  <data name="splitContainer2.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer4.SplitterDistance" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="Ok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msg:not on a branch" xml:space="preserve">
+    <value>You are not working on a branch.
+This commit will be unreferenced when switching to another brach and can be lost.
+
+Do you want to continue?</value>
+  </data>
+  <data name="CloseDialogAfterCommit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>185, 3</value>
+  </data>
+  <data name="&gt;&gt;Loading.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;stageAllToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;commitMessageToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuStrip3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 30</value>
+  </data>
+  <data name="splitContainer3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainer5.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="openWithDifftoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 22</value>
+  </data>
+  <data name="&gt;&gt;openToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Amend.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="splitContainer3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Cancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>139, 143</value>
+  </data>
+  <data name="&gt;&gt;menuStrip2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer3.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel5.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="progressBar" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="menuStrip1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="&gt;&gt;UnstagedFileContext.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator4.Name" xml:space="preserve">
+    <value>toolStripSeparator4</value>
+  </data>
+  <data name="splitContainer3.Panel2MinSize" type="System.Int32, mscorlib">
+    <value>134</value>
+  </data>
+  <data name="Unstaged.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;resetPartOfFileToolStripMenuItem.Name" xml:space="preserve">
+    <value>resetPartOfFileToolStripMenuItem</value>
+  </data>
+  <data name="tableLayoutPanel6.ToolTip1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Staged.Size" type="System.Drawing.Size, System.Drawing">
+    <value>397, 325</value>
+  </data>
+  <data name="UnstageFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 24</value>
+  </data>
+  <data name="tableLayoutPanel7.RowCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;resetSelectedFilesToolStripMenuItem.Name" xml:space="preserve">
+    <value>resetSelectedFilesToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;Unstaged.Name" xml:space="preserve">
+    <value>Unstaged</value>
+  </data>
+  <data name="SolveMergeconflicts.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;deleteAllUntrackedFilesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Name" xml:space="preserve">
+    <value>splitContainer2.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer5.Panel1.Name" xml:space="preserve">
+    <value>splitContainer5.Panel1</value>
+  </data>
+  <data name="tableLayoutPanel4.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openWithDifftoolToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;toolStripSeparator5.Name" xml:space="preserve">
+    <value>toolStripSeparator5</value>
+  </data>
+  <data name="resetSelectedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="openToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="&gt;&gt;Message.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="fileTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 56</value>
-  </metadata>
-  <metadata name="gitItemStatusBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="UnstagedFileContext.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>220, 17</value>
+  </data>
+  <data name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip3.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="CloseCommitDialogTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>729, 17</value>
+  </data>
+  <data name="$this.Localizable" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="gitItemStatusBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 17</value>
-  </metadata>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
+    <value>Japanese</value>
+  </data>
+  <data name="resetPartOfFileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reset chunk of file</value>
+  </data>
 </root>

@@ -16,21 +16,23 @@ namespace GitUI
     public partial class FormCommit : GitExtensionsForm
     {
         private readonly SynchronizationContext syncContext;
+        private readonly System.ComponentModel.ComponentResourceManager resouces;
 
         public FormCommit()
         {
+            resouces = new ComponentResourceManager(typeof(FormCommit));
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
 
-            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, "When checked the commit dialog is closed after each commit.\nOtherwise the dialog will only close when there are no modified files left.");
+            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, resouces.GetString("CloseDialogAfterCommitToolTip"));
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
 
-            Unstaged.SetNoFilesText("There are no unstaged changes");
-            Staged.SetNoFilesText("There are no staged changes");
-            Message.SetEmptyMessage("Enter commit message");
+            Unstaged.SetNoFilesText(resouces.GetString("There are no unstaged changes"));
+            Staged.SetNoFilesText(resouces.GetString("There are no staged changes"));
+            Message.SetEmptyMessage(resouces.GetString("Enter commit message"));
 
             Unstaged.SelectedIndexChanged += new EventHandler(Untracked_SelectionChanged);
             Staged.SelectedIndexChanged += new EventHandler(Tracked_SelectionChanged);
@@ -50,7 +52,7 @@ namespace GitUI
 
         private bool IsLoadingUnstagedFiles()
         {
-            if (gitGetUnstagedCommand.Process == null) 
+            if (gitGetUnstagedCommand.Process == null)
                 return false;
 
             return !gitGetUnstagedCommand.Process.HasExited;
@@ -133,15 +135,16 @@ namespace GitUI
             if (item.Name.EndsWith(".png"))
             {
                 SelectedDiff.ViewFile(item.Name);
-            } else
-            if (item.IsTracked)
-            {
-                SelectedDiff.ViewCurrentChanges(item.Name, staged);
             }
             else
-            {
-                SelectedDiff.ViewFile(item.Name);
-            }
+                if (item.IsTracked)
+                {
+                    SelectedDiff.ViewCurrentChanges(item.Name, staged);
+                }
+                else
+                {
+                    SelectedDiff.ViewFile(item.Name);
+                }
         }
 
         private void Tracked_SelectionChanged(object sender, EventArgs e)
@@ -164,7 +167,7 @@ namespace GitUI
         {
             if (Staged.GitItemStatusses.Count == 0)
             {
-                if (MessageBox.Show("There are no files staged for this commit. Are you sure you want to commit?", "No files staged", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(resouces.GetString("msg:no files staged"), "No files staged", MessageBoxButtons.YesNo) == DialogResult.No)
                     return;
             }
 
@@ -175,18 +178,18 @@ namespace GitUI
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show("There are unresolved mergeconflicts, solve mergeconflicts before committing", "Merge conflicts");
+                MessageBox.Show(resouces.GetString("msg:merge conflicts"), "Merge conflicts");
                 return;
             }
             if (Message.Text.Length == 0)
             {
-                MessageBox.Show("Please enter commit message");
+                MessageBox.Show(resouces.GetString("msg:please enter commit message"));
                 return;
             }
 
             if (GitCommands.GitCommands.GetSelectedBranch().CompareTo("(no branch)") == 0)
             {
-                if (MessageBox.Show("You are not working on a branch." + Environment.NewLine + "This commit will be unreferenced when switching to another brach and can be lost." + Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?", "Not on a branch.", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(resouces.GetString("msg:not on a branch"), "Not on a branch.", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     return;
                 }
@@ -208,7 +211,7 @@ namespace GitUI
                 }
 
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
-                
+
                 NeedRefresh = true;
 
                 if (!form.ErrorOccured())
@@ -232,10 +235,10 @@ namespace GitUI
 
                         Close();
                     }
-                        
+
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show("Exception: " + e.Message);
             }
@@ -274,7 +277,8 @@ namespace GitUI
                     files.Add(gitItemStatus);
                 }
 
-                /*OutPut.Text = */GitCommands.GitCommands.StageFiles(files);
+                /*OutPut.Text = */
+                GitCommands.GitCommands.StageFiles(files);
 
                 InitializedStaged();
                 List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
@@ -322,7 +326,8 @@ namespace GitUI
                 if (Staged.GitItemStatusses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatusses.Count)
                 {
                     Loading.Visible = true;
-                    /*OutPut.Text =*/ GitCommands.GitCommands.ResetMixed("HEAD");
+                    /*OutPut.Text =*/
+                    GitCommands.GitCommands.ResetMixed("HEAD");
                     Initialize();
                 }
                 else
@@ -351,7 +356,8 @@ namespace GitUI
                         allFiles.Add(item);
                     }
 
-                    /*OutPut.Text = result + Environment.NewLine + */GitCommands.GitCommands.UnstageFiles(files);
+                    /*OutPut.Text = result + Environment.NewLine + */
+                    GitCommands.GitCommands.UnstageFiles(files);
 
                     InitializedStaged();
                     List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
@@ -413,7 +419,7 @@ namespace GitUI
                 return;
             }
 
-            if (MessageBox.Show("You are about to rewrite history." + Environment.NewLine + "Only use amend if the commit is not published yet!" + Environment.NewLine + Environment.NewLine + "Do you want to continue?", "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resouces.GetString("msg:amend commit"), "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
             }
@@ -421,7 +427,7 @@ namespace GitUI
 
         private void ResetSoft_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want to reset the changes of the selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (Unstaged.SelectedItem != null && MessageBox.Show(resouces.GetString("msg:reset"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 bool deleteNewFiles = false;
                 bool askToDeleteNewFiles = true;
@@ -432,7 +438,7 @@ namespace GitUI
                     {
                         if (!deleteNewFiles && askToDeleteNewFiles)
                         {
-                            DialogResult result = MessageBox.Show("Do you also want to delete the new files that are in the selection?" + Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.", "Delete", MessageBoxButtons.YesNo);
+                            DialogResult result = MessageBox.Show(resouces.GetString("msg:delete new files"), "Delete", MessageBoxButtons.YesNo);
                             if (result == DialogResult.Yes)
                                 deleteNewFiles = true;
 
@@ -466,7 +472,7 @@ namespace GitUI
             try
             {
                 SelectedDiff.ViewText("", "");
-                if (Unstaged.SelectedItem != null && MessageBox.Show("Are you sure you want delete the selected file(s)?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (Unstaged.SelectedItem != null && MessageBox.Show(resouces.GetString("msg:delete"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     foreach (GitItemStatus item in Unstaged.SelectedItems)
                     {
@@ -478,7 +484,7 @@ namespace GitUI
             }
             catch
             {
-                MessageBox.Show("Delete file failed");
+                MessageBox.Show(resouces.GetString("msg:delete:failed"));
             }
         }
 
@@ -490,7 +496,7 @@ namespace GitUI
 
         private void deleteSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete all selected files?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resouces.GetString("msg:delete selected"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
@@ -501,7 +507,7 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Delete failed:" + Environment.NewLine + ex.ToString());
+                    MessageBox.Show(resouces.GetString("msg:delete selected:failed") + Environment.NewLine + ex.ToString());
                 }
                 Initialize();
             }
@@ -509,7 +515,7 @@ namespace GitUI
 
         private void resetSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to reset all selected files?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resouces.GetString("msg:reset selected"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 foreach (GitItemStatus gitItemStatus in Unstaged.SelectedItems)
                 {
@@ -538,7 +544,8 @@ namespace GitUI
 
         private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*OutPut.Text =*/ GitCommands.GitCommands.ResetMixed("HEAD");
+            /*OutPut.Text =*/
+            GitCommands.GitCommands.ResetMixed("HEAD");
             Initialize();
         }
 
@@ -596,7 +603,7 @@ namespace GitUI
 
         private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete all untracked?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resouces.GetString("msg:delete untracked"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("clean -f");
                 Initialize();
@@ -607,7 +614,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count != 1)
             {
-                MessageBox.Show("You can only use this option when selecting a single file", "Stage chunk");
+                MessageBox.Show(resouces.GetString("msg:(un)stage chunk"), "Stage chunk");
                 return;
             }
 
@@ -643,11 +650,11 @@ namespace GitUI
             string commitMessage = GitCommands.GitCommands.GetPreviousCommitMessage(numberBack);
             if (string.IsNullOrEmpty(commitMessage))
                 return;
-            
+
             ToolStripMenuItem toolStripItem = new ToolStripMenuItem();
             toolStripItem.Tag = commitMessage;
             toolStripItem.Text = commitMessage.Substring(0, Math.Min(Math.Min(50, commitMessage.Length), commitMessage.IndexOf('\n'))) + "...";
-            
+
             commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
         }
 
@@ -745,7 +752,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count != 1)
             {
-                MessageBox.Show("You can only use this option when selecting a single file", "Reset chunk fo file");
+                MessageBox.Show(resouces.GetString("msg:(un)stage chunk"), "Reset chunk fo file");
                 return;
             }
 

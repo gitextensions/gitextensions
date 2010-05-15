@@ -506,6 +506,9 @@
       <DependentUpon>Browse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Commit.ja.resx">
+      <DependentUpon>Commit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
       <SubType>Designer</SubType>
