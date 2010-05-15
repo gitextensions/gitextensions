@@ -10,7 +10,8 @@ using System.Windows.Forms;
 namespace GitUI
 {
     public partial class FormMergeBranch : GitExtensionsForm
-    {        private readonly string defaultBranch;
+    {
+        private System.ComponentModel.ComponentResourceManager resources;        private readonly string defaultBranch;
 
         public FormMergeBranch(string defaultBranch)
         {
@@ -20,8 +21,10 @@ namespace GitUI
 
         private void FormMergeBranch_Load(object sender, EventArgs e)
         {
+            resources = new ComponentResourceManager(typeof(FormMergeBranch));
+
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            Currentbranch.Text = "Current branch: " + selectedHead;
+            Currentbranch.Text = resources.GetString("Currentbranch.Text") + selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
