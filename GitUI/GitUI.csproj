@@ -722,6 +722,9 @@
       <DependentUpon>FormRemotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormResetCurrentBranch.ja.resx">
+      <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
