@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPull));
             this.BrowseSource = new System.Windows.Forms.Button();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -62,59 +63,65 @@
             // 
             // BrowseSource
             // 
+            resources.ApplyResources(this.BrowseSource, "BrowseSource");
             this.BrowseSource.Enabled = false;
             this.BrowseSource.Location = new System.Drawing.Point(431, 44);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(102, 23);
             this.BrowseSource.TabIndex = 4;
-            this.BrowseSource.Text = "Browse";
+            this.Tooltip.SetToolTip(this.BrowseSource, resources.GetString("BrowseSource.ToolTip"));
             this.BrowseSource.UseVisualStyleBackColor = true;
             this.BrowseSource.Click += new System.EventHandler(this.BrowseSource_Click);
             // 
             // Branches
             // 
+            resources.ApplyResources(this.Branches, "Branches");
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(128, 19);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(297, 21);
             this.Branches.TabIndex = 5;
+            this.Tooltip.SetToolTip(this.Branches, resources.GetString("Branches.ToolTip"));
             this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
             // label2
             // 
+            resources.ApplyResources(this.label2, "label2");
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 22);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Remote branch";
-            this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
+            this.Tooltip.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // Pull
             // 
+            resources.ApplyResources(this.Pull, "Pull");
             this.Pull.Image = global::GitUI.Properties.Resources._4;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(447, 256);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
             this.Pull.TabIndex = 7;
-            this.Pull.Text = "&Pull";
+            this.Tooltip.SetToolTip(this.Pull, resources.GetString("Pull.ToolTip"));
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.Pull_Click);
             // 
             // Mergetool
             // 
+            resources.ApplyResources(this.Mergetool, "Mergetool");
             this.Mergetool.Location = new System.Drawing.Point(3, 256);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 11;
-            this.Mergetool.Text = "Solve conflicts";
+            this.Tooltip.SetToolTip(this.Mergetool, resources.GetString("Mergetool.ToolTip"));
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
             // 
             // Merge
             // 
+            resources.ApplyResources(this.Merge, "Merge");
             this.Merge.AutoSize = true;
             this.Merge.Checked = true;
             this.Merge.Location = new System.Drawing.Point(7, 20);
@@ -122,24 +129,25 @@
             this.Merge.Size = new System.Drawing.Size(210, 17);
             this.Merge.TabIndex = 0;
             this.Merge.TabStop = true;
-            this.Merge.Text = "&Merge remote branch to current branch";
+            this.Tooltip.SetToolTip(this.Merge, resources.GetString("Merge.ToolTip"));
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.Merge_CheckedChanged);
             // 
             // Rebase
             // 
+            resources.ApplyResources(this.Rebase, "Rebase");
             this.Rebase.AutoSize = true;
             this.Rebase.Location = new System.Drawing.Point(7, 41);
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(411, 30);
             this.Rebase.TabIndex = 1;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
-                "d\r\nto choose a remote branch when using rebase. (use with caution)";
+            this.Tooltip.SetToolTip(this.Rebase, resources.GetString("Rebase.ToolTip"));
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.Rebase_CheckedChanged);
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.Fetch);
             this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Controls.Add(this.Merge);
@@ -148,28 +156,31 @@
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Merge options";
+            this.Tooltip.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
             // 
             // Fetch
             // 
+            resources.ApplyResources(this.Fetch, "Fetch");
             this.Fetch.AutoSize = true;
             this.Fetch.Location = new System.Drawing.Point(7, 75);
             this.Fetch.Name = "Fetch";
             this.Fetch.Size = new System.Drawing.Size(212, 17);
             this.Fetch.TabIndex = 2;
             this.Fetch.TabStop = true;
-            this.Fetch.Text = "Do not merge, only &fetch remote branch";
+            this.Tooltip.SetToolTip(this.Fetch, resources.GetString("Fetch.ToolTip"));
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.Fetch_CheckedChanged);
             // 
             // PullSource
             // 
+            resources.ApplyResources(this.PullSource, "PullSource");
             this.PullSource.Enabled = false;
             this.PullSource.FormattingEnabled = true;
             this.PullSource.Location = new System.Drawing.Point(128, 46);
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(297, 21);
             this.PullSource.TabIndex = 13;
+            this.Tooltip.SetToolTip(this.PullSource, resources.GetString("PullSource.ToolTip"));
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSource_Validating);
             this.PullSource.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.PullSource_DrawItem);
             this.PullSource.SelectedIndexChanged += new System.EventHandler(this.PullSource_SelectedIndexChanged);
@@ -177,21 +188,24 @@
             // 
             // Stash
             // 
+            resources.ApplyResources(this.Stash, "Stash");
             this.Stash.Location = new System.Drawing.Point(111, 256);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
             this.Stash.TabIndex = 14;
-            this.Stash.Text = "Stash changes";
+            this.Tooltip.SetToolTip(this.Stash, resources.GetString("Stash.ToolTip"));
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.Stash_Click);
             // 
             // Remotes
             // 
+            resources.ApplyResources(this.Remotes, "Remotes");
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(128, 19);
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
+            this.Tooltip.SetToolTip(this.Remotes, resources.GetString("Remotes.ToolTip"));
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.Remotes_Validating);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
             this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
@@ -199,16 +213,18 @@
             // 
             // AddRemote
             // 
+            resources.ApplyResources(this.AddRemote, "AddRemote");
             this.AddRemote.Location = new System.Drawing.Point(431, 18);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 23);
             this.AddRemote.TabIndex = 17;
-            this.AddRemote.Text = "Manage remotes";
+            this.Tooltip.SetToolTip(this.AddRemote, resources.GetString("AddRemote.ToolTip"));
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
             // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
@@ -220,22 +236,23 @@
             this.groupBox2.Size = new System.Drawing.Size(541, 80);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Pull from";
+            this.Tooltip.SetToolTip(this.groupBox2, resources.GetString("groupBox2.ToolTip"));
             // 
             // PullFromUrl
             // 
+            resources.ApplyResources(this.PullFromUrl, "PullFromUrl");
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 19;
-            this.PullFromUrl.Text = "Url";
-            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
+            this.Tooltip.SetToolTip(this.PullFromUrl, resources.GetString("PullFromUrl.ToolTip"));
             this.PullFromUrl.UseVisualStyleBackColor = true;
             this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
             // 
             // PullFromRemote
             // 
+            resources.ApplyResources(this.PullFromRemote, "PullFromRemote");
             this.PullFromRemote.AutoSize = true;
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
@@ -243,13 +260,13 @@
             this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 18;
             this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote";
-            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
+            this.Tooltip.SetToolTip(this.PullFromRemote, resources.GetString("PullFromRemote.ToolTip"));
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
             // 
             // groupBox3
             // 
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.Branches);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(3, 90);
@@ -257,21 +274,23 @@
             this.groupBox3.Size = new System.Drawing.Size(541, 52);
             this.groupBox3.TabIndex = 19;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Branch";
+            this.Tooltip.SetToolTip(this.groupBox3, resources.GetString("groupBox3.ToolTip"));
             // 
             // AutoStash
             // 
+            resources.ApplyResources(this.AutoStash, "AutoStash");
             this.AutoStash.AutoSize = true;
             this.AutoStash.Location = new System.Drawing.Point(219, 260);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(76, 17);
             this.AutoStash.TabIndex = 20;
-            this.AutoStash.Text = "Auto stash";
+            this.Tooltip.SetToolTip(this.AutoStash, resources.GetString("AutoStash.ToolTip"));
             this.AutoStash.UseVisualStyleBackColor = true;
             this.AutoStash.CheckedChanged += new System.EventHandler(this.AutoStash_CheckedChanged);
             // 
             // splitContainer1
             // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
@@ -280,10 +299,13 @@
             // 
             // splitContainer1.Panel1
             // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.PullImage);
+            this.Tooltip.SetToolTip(this.splitContainer1.Panel1, resources.GetString("splitContainer1.Panel1.ToolTip"));
             // 
             // splitContainer1.Panel2
             // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
             this.splitContainer1.Panel2.Controls.Add(this.Pull);
@@ -295,9 +317,12 @@
             this.splitContainer1.Size = new System.Drawing.Size(639, 290);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 25;
+            this.Tooltip.SetToolTip(this.splitContainer1.Panel2, resources.GetString("splitContainer1.Panel2.ToolTip"));
+            this.Tooltip.SetToolTip(this.splitContainer1, resources.GetString("splitContainer1.ToolTip"));
             // 
             // PullImage
             // 
+            resources.ApplyResources(this.PullImage, "PullImage");
             this.PullImage.BackColor = System.Drawing.Color.White;
             this.PullImage.BackgroundImage = global::GitUI.Properties.Resources.merge;
             this.PullImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -307,33 +332,34 @@
             this.PullImage.Size = new System.Drawing.Size(80, 290);
             this.PullImage.TabIndex = 0;
             this.PullImage.TabStop = false;
+            this.Tooltip.SetToolTip(this.PullImage, resources.GetString("PullImage.ToolTip"));
             // 
             // LoadSSHKey
             // 
+            resources.ApplyResources(this.LoadSSHKey, "LoadSSHKey");
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(320, 256);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
             this.LoadSSHKey.TabIndex = 24;
-            this.LoadSSHKey.Text = "Load SSH key";
+            this.Tooltip.SetToolTip(this.LoadSSHKey, resources.GetString("LoadSSHKey.ToolTip"));
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
             // 
             // FormPull
             // 
             this.AcceptButton = this.Pull;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(639, 290);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPull";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Pull";
+            this.Tooltip.SetToolTip(this, resources.GetString("$this.ToolTip"));
             this.Load += new System.EventHandler(this.FormPull_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

@@ -13,8 +13,12 @@ namespace GitUI
 {
     public partial class FormPull : GitExtensionsForm
     {
+        System.ComponentModel.ComponentResourceManager resources;
+
         public FormPull()
         {
+            resources = new ComponentResourceManager(typeof(FormPull));
+
             InitializeComponent();
         }
 
@@ -35,7 +39,7 @@ namespace GitUI
         {
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
 
-            if (MessageBox.Show("Resolved all conflicts? Commit?", "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:conflicts solved"), "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 //Output.Text += "\n";
                 FormCommit form = new FormCommit();
