@@ -768,6 +768,9 @@
       <DependentUpon>FormTagSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormVerify.ja.resx">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormVerify.resx">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Designer</SubType>
