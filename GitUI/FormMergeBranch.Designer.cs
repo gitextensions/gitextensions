@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMergeBranch));
             this.label1 = new System.Windows.Forms.Label();
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,31 +49,32 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 16);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(206, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Merge current branch with another branch";
             // 
             // Currentbranch
             // 
             this.Currentbranch.AutoSize = true;
             this.Currentbranch.Location = new System.Drawing.Point(10, 42);
+            resources.ApplyResources(this.Currentbranch, "Currentbranch");
             this.Currentbranch.Name = "Currentbranch";
             this.Currentbranch.Size = new System.Drawing.Size(41, 13);
             this.Currentbranch.TabIndex = 1;
-            this.Currentbranch.Text = "Current";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 68);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Merge with";
             // 
             // Branches
             // 
+            resources.ApplyResources(this.Branches, "Branches");
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(95, 65);
             this.Branches.Name = "Branches";
@@ -82,16 +84,17 @@
             // Ok
             // 
             this.Ok.Location = new System.Drawing.Point(347, 208);
+            resources.ApplyResources(this.Ok, "Ok");
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 4;
-            this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -99,10 +102,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
             // 
             // splitContainer1.Panel2
             // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(514, 243);
             this.splitContainer1.SplitterDistance = 80;
@@ -110,6 +115,7 @@
             // 
             // pictureBox1
             // 
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.merge;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -122,6 +128,7 @@
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.NoFastForward);
             this.groupBox1.Controls.Add(this.Ok);
             this.groupBox1.Controls.Add(this.label1);
@@ -134,16 +141,15 @@
             this.groupBox1.Size = new System.Drawing.Size(430, 243);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Merge";
             // 
             // NoFastForward
             // 
             this.NoFastForward.AutoSize = true;
             this.NoFastForward.Location = new System.Drawing.Point(95, 102);
+            resources.ApplyResources(this.NoFastForward, "NoFastForward");
             this.NoFastForward.Name = "NoFastForward";
             this.NoFastForward.Size = new System.Drawing.Size(98, 17);
             this.NoFastForward.TabIndex = 5;
-            this.NoFastForward.Text = "No fast-forward";
             this.NoFastForward.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.NoFastForward.UseVisualStyleBackColor = true;
             // 
@@ -151,6 +157,7 @@
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(514, 243);
             this.Controls.Add(this.splitContainer1);
@@ -160,7 +167,6 @@
             this.MinimizeBox = false;
             this.Name = "FormMergeBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Merge branches";
             this.Load += new System.EventHandler(this.FormMergeBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
