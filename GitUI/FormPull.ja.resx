@@ -295,7 +295,7 @@
     <value>プル(リモートから取得)</value>
   </data>
   <data name="AddRemote.Text" xml:space="preserve">
-    <value>Manage remotes</value>
+    <value>リモートの管理</value>
   </data>
   <data name="AutoStash.Text" xml:space="preserve">
     <value>自動で一時退避</value>
