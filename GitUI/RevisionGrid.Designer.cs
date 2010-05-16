@@ -85,6 +85,7 @@
             // 
             this.Revisions.AllowUserToAddRows = false;
             this.Revisions.AllowUserToDeleteRows = false;
+            resources.ApplyResources(this.Revisions, "Revisions");
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -138,7 +139,7 @@
             // 
             // Graph
             // 
-            this.Graph.HeaderText = "Graph";
+            resources.ApplyResources(this.Graph, "Graph");
             this.Graph.Name = "Graph";
             this.Graph.ReadOnly = true;
             this.Graph.Width = 200;
@@ -146,26 +147,27 @@
             // Message
             // 
             this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.HeaderText = "Message";
+            resources.ApplyResources(this.Message, "Message");
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
             // 
             // Author
             // 
-            this.Author.HeaderText = "Author";
+            resources.ApplyResources(this.Author, "Author");
             this.Author.Name = "Author";
             this.Author.ReadOnly = true;
             this.Author.Width = 150;
             // 
             // Date
             // 
-            this.Date.HeaderText = "Date";
+            resources.ApplyResources(this.Date, "Date");
             this.Date.Name = "Date";
             this.Date.ReadOnly = true;
             this.Date.Width = 180;
             // 
             // CreateTag
             // 
+            resources.ApplyResources(this.CreateTag, "CreateTag");
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
@@ -194,143 +196,146 @@
             // 
             // createTagToolStripMenuItem
             // 
+            resources.ApplyResources(this.createTagToolStripMenuItem, "createTagToolStripMenuItem");
             this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.createTagToolStripMenuItem.Text = "Create new tag";
             this.createTagToolStripMenuItem.Click += new System.EventHandler(this.createTagToolStripMenuItem_Click);
             // 
             // deleteTagToolStripMenuItem
             // 
+            resources.ApplyResources(this.deleteTagToolStripMenuItem, "deleteTagToolStripMenuItem");
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteTagToolStripMenuItem.Text = "Delete tag";
             this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
             // createNewBranchToolStripMenuItem
             // 
+            resources.ApplyResources(this.createNewBranchToolStripMenuItem, "createNewBranchToolStripMenuItem");
             this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.createNewBranchToolStripMenuItem.Text = "Create new branch";
             this.createNewBranchToolStripMenuItem.Click += new System.EventHandler(this.createNewBranchToolStripMenuItem_Click);
             // 
             // deleteBranchToolStripMenuItem
             // 
+            resources.ApplyResources(this.deleteBranchToolStripMenuItem, "deleteBranchToolStripMenuItem");
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteBranchToolStripMenuItem.Text = "Delete branch";
             this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(222, 6);
             // 
             // mergeBranchToolStripMenuItem
             // 
+            resources.ApplyResources(this.mergeBranchToolStripMenuItem, "mergeBranchToolStripMenuItem");
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.mergeBranchToolStripMenuItem.Text = "Merge with branch";
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
+            resources.ApplyResources(this.resetCurrentBranchToHereToolStripMenuItem, "resetCurrentBranchToHereToolStripMenuItem");
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
             this.resetCurrentBranchToHereToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchToHereToolStripMenuItem_Click);
             // 
             // checkoutBranchToolStripMenuItem
             // 
+            resources.ApplyResources(this.checkoutBranchToolStripMenuItem, "checkoutBranchToolStripMenuItem");
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
             this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.checkoutBranchToolStripMenuItem_Click);
             // 
             // checkoutRevisionToolStripMenuItem
             // 
+            resources.ApplyResources(this.checkoutRevisionToolStripMenuItem, "checkoutRevisionToolStripMenuItem");
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
             this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.checkoutRevisionToolStripMenuItem_Click);
             // 
             // revertCommitToolStripMenuItem
             // 
+            resources.ApplyResources(this.revertCommitToolStripMenuItem, "revertCommitToolStripMenuItem");
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
             this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.revertCommitToolStripMenuItem.Text = "Revert commit";
             this.revertCommitToolStripMenuItem.Click += new System.EventHandler(this.revertCommitToolStripMenuItem_Click);
             // 
             // cherryPickCommitToolStripMenuItem
             // 
+            resources.ApplyResources(this.cherryPickCommitToolStripMenuItem, "cherryPickCommitToolStripMenuItem");
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
             this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick commit";
             this.cherryPickCommitToolStripMenuItem.Click += new System.EventHandler(this.cherryPickCommitToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
             // 
             // ShowRemoteBranches
             // 
+            resources.ApplyResources(this.ShowRemoteBranches, "ShowRemoteBranches");
             this.ShowRemoteBranches.Checked = true;
             this.ShowRemoteBranches.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowRemoteBranches.Name = "ShowRemoteBranches";
             this.ShowRemoteBranches.Size = new System.Drawing.Size(225, 22);
-            this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranches_Click);
             // 
             // showAllBranchesToolStripMenuItem
             // 
+            resources.ApplyResources(this.showAllBranchesToolStripMenuItem, "showAllBranchesToolStripMenuItem");
             this.showAllBranchesToolStripMenuItem.Checked = true;
             this.showAllBranchesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
             this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
             this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
             // 
             // showRevisionGraphToolStripMenuItem
             // 
+            resources.ApplyResources(this.showRevisionGraphToolStripMenuItem, "showRevisionGraphToolStripMenuItem");
             this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
             this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.showRevisionGraphToolStripMenuItem_Click);
             // 
             // showAuthorDateToolStripMenuItem
             // 
+            resources.ApplyResources(this.showAuthorDateToolStripMenuItem, "showAuthorDateToolStripMenuItem");
             this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
             this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
             this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.showAuthorDateToolStripMenuItem_Click);
             // 
             // showRelativeDateToolStripMenuItem
             // 
+            resources.ApplyResources(this.showRelativeDateToolStripMenuItem, "showRelativeDateToolStripMenuItem");
             this.showRelativeDateToolStripMenuItem.Name = "showRelativeDateToolStripMenuItem";
             this.showRelativeDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showRelativeDateToolStripMenuItem.Text = "Show relative date";
             this.showRelativeDateToolStripMenuItem.Click += new System.EventHandler(this.showRelativeDateToolStripMenuItem_Click);
             // 
             // orderRevisionsByDateToolStripMenuItem
             // 
+            resources.ApplyResources(this.orderRevisionsByDateToolStripMenuItem, "orderRevisionsByDateToolStripMenuItem");
             this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
             this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
             this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.orderRevisionsByDateToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(222, 6);
             // 
             // filterToolStripMenuItem
             // 
+            resources.ApplyResources(this.filterToolStripMenuItem, "filterToolStripMenuItem");
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.filterToolStripMenuItem.Text = "Set advanced filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
             // SelecctionTimer
@@ -344,6 +349,7 @@
             // 
             // NoCommits
             // 
+            resources.ApplyResources(this.NoCommits, "NoCommits");
             this.NoCommits.Controls.Add(this.NoGit);
             this.NoCommits.Controls.Add(this.GitIgnore);
             this.NoCommits.Controls.Add(this.Commit);
@@ -356,6 +362,7 @@
             // 
             // NoGit
             // 
+            resources.ApplyResources(this.NoGit, "NoGit");
             this.NoGit.Controls.Add(this.label2);
             this.NoGit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoGit.Location = new System.Drawing.Point(0, 0);
@@ -367,28 +374,28 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 10);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(218, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "The current working dir is not a git repository.";
             // 
             // GitIgnore
             // 
             this.GitIgnore.Location = new System.Drawing.Point(401, 10);
+            resources.ApplyResources(this.GitIgnore, "GitIgnore");
             this.GitIgnore.Name = "GitIgnore";
             this.GitIgnore.Size = new System.Drawing.Size(86, 23);
             this.GitIgnore.TabIndex = 3;
-            this.GitIgnore.Text = "Edit .gitignore";
             this.GitIgnore.UseVisualStyleBackColor = true;
             this.GitIgnore.Click += new System.EventHandler(this.GitIgnore_Click);
             // 
             // Commit
             // 
             this.Commit.Location = new System.Drawing.Point(401, 39);
+            resources.ApplyResources(this.Commit, "Commit");
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(87, 23);
             this.Commit.TabIndex = 2;
-            this.Commit.Text = "Commit";
             this.Commit.UseVisualStyleBackColor = true;
             this.Commit.Click += new System.EventHandler(this.Commit_Click);
             // 
@@ -396,15 +403,16 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 10);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(315, 104);
             this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Error
             // 
             this.Error.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.Error, "Error");
             this.Error.Image = global::GitUI.Properties.Resources.error;
             this.Error.Location = new System.Drawing.Point(0, 0);
             this.Error.Name = "Error";
@@ -415,6 +423,7 @@
             // 
             // Loading
             // 
+            resources.ApplyResources(this.Loading, "Loading");
             this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -443,6 +452,7 @@
             // RevisionGrid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
