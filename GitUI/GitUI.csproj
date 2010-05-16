@@ -800,6 +800,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="RevisionGrid.ja.resx">
+      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -352,6 +352,12 @@ namespace GitUI
         private int LastRevision = 0;
         private bool initialLoad = true;
 
+        private string GetDateHeaderText()
+        {
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
+            return Settings.ShowAuthorDate ? resources.GetString("AuthorDate") : resources.GetString("CommitDate");
+        }
+
         private void LoadRevisions()
         {
             if (RevisionList == null)
@@ -368,7 +374,7 @@ namespace GitUI
             }
 
             Revisions.SuspendLayout();
-            Revisions.Columns[3].HeaderText = Settings.ShowAuthorDate ? "Author Date" : "Commit Date";
+            Revisions.Columns[3].HeaderText = GetDateHeaderText();
 
             if (!ScrollBarSet)
             {
@@ -968,7 +974,7 @@ namespace GitUI
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
             rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
-            
+
         }
 
         void toolStripItem_Click(object sender, EventArgs e)
@@ -1031,7 +1037,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        
+
 
         private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
