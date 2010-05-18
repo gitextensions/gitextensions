@@ -111,8 +111,14 @@ namespace GitUI
 
         public string FileName { get; set; }
 
+        private void FormFileHistory_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("file-history");
+        }
+
         private void FormFileHistory_Load(object sender, EventArgs e)
         {
+            RestorePosition("file-history");
             this.Text = "File History (" + FileName + ")";
         }
 

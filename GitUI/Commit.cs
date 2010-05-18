@@ -46,6 +46,7 @@ namespace GitUI
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
+            RestorePosition("commit");
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
@@ -599,6 +600,7 @@ namespace GitUI
             {
                 File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
             }
+            SavePosition("commit");
         }
 
         private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)

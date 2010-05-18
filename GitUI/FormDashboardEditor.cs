@@ -14,5 +14,15 @@ namespace GitUI
         {
             InitializeComponent();
         }
+
+        private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("dashboard-editor");
+        }
+
+        private void FormDashboardEditor_Load(object sender, EventArgs e)
+        {
+            RestorePosition("dashboard-editor");
+        }
     }
 }

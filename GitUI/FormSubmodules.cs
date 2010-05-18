@@ -16,9 +16,14 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void FormSubmodules_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("submodules");
+        }
+
         private void FormSubmodules_Load(object sender, EventArgs e)
         {
-            
+            RestorePosition("submodules");
         }
 
         private void AddSubmodule_Click(object sender, EventArgs e)

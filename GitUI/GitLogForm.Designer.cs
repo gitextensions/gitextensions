@@ -50,6 +50,7 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "GitLogForm";
             this.Text = "Log";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GitLogForm_FormClosing);
             this.Load += new System.EventHandler(this.GitLogForm_Load);
             this.ResumeLayout(false);
 
