@@ -489,6 +489,7 @@
     <Compile Include="SpellCheckEditControl.cs" />
     <Compile Include="System.cs" />
     <Compile Include="TextBoxAPIHelper.cs" />
+    <Compile Include="WindowPositionList.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutBox.resx">

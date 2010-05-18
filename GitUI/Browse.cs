@@ -79,8 +79,7 @@ namespace GitUI
         private void Browse_Load(object sender, EventArgs e)
         {
             bool t = Application.MessageLoop;
-            // Restore eventual saved Windows state
-            RestoreWindowsPositionAndState();
+            RestorePosition("browse");
 
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
@@ -110,46 +109,6 @@ namespace GitUI
                     plugin.Execute(eventArgs);
                 }
             }
-        }
-
-        private void RestoreWindowsPositionAndState()
-        {
-            // this is the default
-            this.WindowState = FormWindowState.Normal;
-            this.StartPosition = FormStartPosition.WindowsDefaultBounds;
-
-            // check if the saved bounds are nonzero and visible on any screen
-            if (GitUI.Properties.Settings.Default.WindowPosition != Rectangle.Empty &&
-                IsVisibleOnAnyScreen(GitUI.Properties.Settings.Default.WindowPosition))
-            {
-                // first set the bounds
-                this.StartPosition = FormStartPosition.Manual;
-                this.DesktopBounds = GitUI.Properties.Settings.Default.WindowPosition;
-
-                // afterwards set the window state to the saved value (which could be Maximized)
-                this.WindowState = GitUI.Properties.Settings.Default.WindowState;
-            }
-            else
-            {
-                this.StartPosition = FormStartPosition.WindowsDefaultLocation;
-            }
-        }
-
-        /// <summary>
-        /// Check to see if a windows position is visible on any screen (multi-monitor setup)
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <returns></returns>
-        private static bool IsVisibleOnAnyScreen(Rectangle rect)
-        {
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                if (screen.WorkingArea.IntersectsWith(rect))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         void RevisionGrid_ChangedCurrentBranch(object sender, EventArgs e)
@@ -795,36 +754,7 @@ namespace GitUI
 
         private void FormBrowse_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Save current window position
-            SaveWindowsPositionAndState();
-        }
-
-        /// <summary>
-        /// Save the current form position and state to user settings.
-        /// </summary>
-        private void SaveWindowsPositionAndState()
-        {
-            switch (WindowState)
-            {
-                case FormWindowState.Normal:
-                case FormWindowState.Maximized:
-                    {
-                        GitUI.Properties.Settings.Default.WindowState = this.WindowState;
-                        break;
-                    }
-
-                default:
-                    {
-                        GitUI.Properties.Settings.Default.WindowState = FormWindowState.Normal;
-                        break;
-                    }
-            }
-
-            this.Visible = false;
-            this.WindowState = FormWindowState.Normal;
-
-            GitUI.Properties.Settings.Default.WindowPosition = this.DesktopBounds;
-            GitUI.Properties.Settings.Default.Save();
+            SavePosition("browse");
         }
 
         private void editgitignoreToolStripMenuItem1_Click(object sender, EventArgs e)
