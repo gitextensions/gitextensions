@@ -19,8 +19,15 @@ namespace GitUI
             this.defaultBranch = defaultBranch;
         }
 
+        private void FormRebase_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("rebase");
+        }
+
         private void FormRebase_Load(object sender, EventArgs e)
         {
+            RestorePosition("rebase");
+
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             Currentbranch.Text = "Current branch: " + selectedHead;
 

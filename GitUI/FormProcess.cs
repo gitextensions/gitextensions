@@ -55,6 +55,7 @@ namespace GitUI
 
         private void FormProcess_Load(object sender, EventArgs e)
         {
+            RestorePosition("process");
             Start();
         }
 
@@ -274,6 +275,11 @@ namespace GitUI
                 Process.Kill();
                 outputString.Append(Environment.NewLine + "Aborted");
             }
+        }
+
+        private void FormProcess_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("process");
         }
     }
 }

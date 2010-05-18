@@ -107,7 +107,8 @@
 			this.Name = "FormGitIgnore";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Edit .gitignore";
-			this.Load += new System.EventHandler(this.FormGitIgnore_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitIgnore_FormClosing);
+            this.Load += new System.EventHandler(this.FormGitIgnore_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.Panel2.PerformLayout();

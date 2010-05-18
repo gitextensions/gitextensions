@@ -106,6 +106,8 @@
             this.Name = "FormTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tag";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTag_FormClosing);
+            this.Load += new System.EventHandler(this.FormTag_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

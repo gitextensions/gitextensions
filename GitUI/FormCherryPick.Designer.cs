@@ -135,6 +135,8 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormCherryPick";
             this.Text = "Cherry pick";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
+            this.Load += new System.EventHandler(this.FormCherryPick_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

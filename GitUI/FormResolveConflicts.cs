@@ -38,8 +38,14 @@ namespace GitUI
 
         public bool ThereWhereMergeConflicts { get; set; }
 
+        private void FormResolveConflicts_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("resolve-conflicts");
+        }
+
         private void FormResolveConflicts_Load(object sender, EventArgs e)
         {
+            RestorePosition("resolve-conflicts");
             Initialize();
         }
 

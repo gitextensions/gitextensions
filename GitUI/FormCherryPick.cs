@@ -16,6 +16,16 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void FormCherryPick_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("cherry-pick");
+        }
+
+        private void FormCherryPick_Load(object sender, EventArgs e)
+        {
+            RestorePosition("cherry-pick");
+        }
+
         private void CherryPick_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;

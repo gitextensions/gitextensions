@@ -431,6 +431,7 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormResolveConflicts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormResolveConflicts_FormClosing);
             this.Load += new System.EventHandler(this.FormResolveConflicts_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).EndInit();
             this.ConflictedFilesContextMenu.ResumeLayout(false);

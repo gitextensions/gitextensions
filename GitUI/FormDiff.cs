@@ -89,8 +89,14 @@ namespace GitUI
 
         }
 
+        private void FormDiff_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("diff");
+        }
+
         private void FormDiff_Load(object sender, EventArgs e)
         {
+            RestorePosition("diff");
             //From.DisplayMember = "Name";
             //From.DataSource = GitCommands.GitCommands.GetHeads();
             
