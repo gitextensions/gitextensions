@@ -12,6 +12,8 @@ using System.IO;
 using GitUI.Properties;
 using Settings = GitCommands.Settings;
 using GitUIPluginInterfaces;
+using System.Threading;
+using System.Globalization;
 
 namespace GitUI
 {

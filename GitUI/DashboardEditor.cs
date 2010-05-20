@@ -11,8 +11,12 @@ namespace GitUI
 {
     public partial class DashboardEditor : UserControl
     {
+        System.ComponentModel.ComponentResourceManager resources;
+
         public DashboardEditor()
         {
+            resources = new ComponentResourceManager(typeof(FormBrowse));
+
             InitializeComponent();
             Initialize();
         }

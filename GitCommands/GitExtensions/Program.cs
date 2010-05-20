@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using GitUI;
 using System.IO;
 using GitCommands;
+using System.Globalization;
+using System.Threading;
 
 namespace GitExtensions
 {
@@ -22,6 +24,8 @@ namespace GitExtensions
             string[] args = Environment.GetCommandLineArgs();
 
             GitCommands.Settings.LoadSettings();
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("nl-NL");
 
             //Register pugins
             PluginLoader.Load();

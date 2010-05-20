@@ -124,17 +124,23 @@
   <data name="CheckoutAfterCreate.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 16</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Checkout.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>GitUI.GitExtensionsForm, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;BName.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;Ok.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
+  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="RevisionGrid.TabIndex" type="System.Int32, mscorlib">
@@ -146,12 +152,6 @@
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
     <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="Ok.Location" type="System.Drawing.Point, System.Drawing">
-    <value>592, 5</value>
   </data>
   <data name="&gt;&gt;CheckoutAfterCreate.Parent" xml:space="preserve">
     <value>splitContainer1.Panel2</value>
@@ -180,17 +180,17 @@
   <data name="&gt;&gt;RevisionGrid.Parent" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
   </data>
+  <data name="&gt;&gt;Checkout.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="CheckoutAfterCreate.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
   <data name="&gt;&gt;Checkout.Name" xml:space="preserve">
     <value>Checkout</value>
   </data>
-  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Ok.Location" type="System.Drawing.Point, System.Drawing">
+    <value>592, 5</value>
   </data>
   <data name="&gt;&gt;Ok.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -210,9 +210,6 @@
   <data name="&gt;&gt;label1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="&gt;&gt;RevisionGrid.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -228,14 +225,11 @@
   <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="CheckoutAfterCreate.Text" xml:space="preserve">
+    <value>Checkout after create</value>
   </data>
-  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>712, 484</value>
-  </data>
-  <data name="Checkout.Location" type="System.Drawing.Point, System.Drawing">
-    <value>483, 5</value>
+  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;BName.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -249,8 +243,8 @@
   <data name="&gt;&gt;Ok.Name" xml:space="preserve">
     <value>Ok</value>
   </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;CheckoutAfterCreate.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -258,11 +252,11 @@
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 8</value>
   </data>
-  <data name="Ok.Text" xml:space="preserve">
-    <value>Create branch</value>
+  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
-    <value>splitContainer1.Panel1</value>
+  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="RevisionGrid.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
@@ -270,32 +264,35 @@
   <data name="CheckoutAfterCreate.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
   </data>
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;Ok.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
+  <data name="Checkout.Location" type="System.Drawing.Point, System.Drawing">
+    <value>483, 5</value>
   </data>
-  <data name="&gt;&gt;BName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Ok.Text" xml:space="preserve">
+    <value>Create branch</value>
   </data>
-  <data name="&gt;&gt;Checkout.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Create Branch</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>GitUI.GitExtensionsForm, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="&gt;&gt;BName.Name" xml:space="preserve">
     <value>BName</value>
   </data>
-  <data name="&gt;&gt;Checkout.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="Ok.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 23</value>
@@ -303,8 +300,8 @@
   <data name="RevisionGrid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="Checkout.Text" xml:space="preserve">
-    <value>Checkout branch</value>
+  <data name="&gt;&gt;BName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
     <value>445</value>
@@ -327,19 +324,19 @@
   <data name="BName.Location" type="System.Drawing.Point, System.Drawing">
     <value>88, 5</value>
   </data>
-  <data name="&gt;&gt;BName.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Ok.Parent" xml:space="preserve">
     <value>splitContainer1.Panel2</value>
   </data>
-  <data name="CheckoutAfterCreate.Text" xml:space="preserve">
-    <value>Checkout after create</value>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>712, 484</value>
+  </data>
+  <data name="Checkout.Text" xml:space="preserve">
+    <value>Checkout branch</value>
   </data>
   <data name="CheckoutAfterCreate.Location" type="System.Drawing.Point, System.Drawing">
     <value>322, 8</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Japanese</value>
   </metadata>
 </root>
