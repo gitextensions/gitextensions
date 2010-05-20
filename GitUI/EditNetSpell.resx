@@ -117,8 +117,104 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;EmptyLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TextBox.Name" xml:space="preserve">
+    <value>TextBox</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>331, 291</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="EmptyLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>EditNetSpell</value>
+  </data>
+  <data name="SpellCheckContextMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 10</value>
+  </data>
+  <data name="TextBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;TextBox.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="EmptyLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Italic</value>
+  </data>
+  <data name="TextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="EmptyLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="EmptyLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="TextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 6</value>
+  </data>
+  <data name="&gt;&gt;SpellCheckContextMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SpellCheckTimer.Name" xml:space="preserve">
+    <value>SpellCheckTimer</value>
+  </data>
+  <data name="&gt;&gt;TextBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TextBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;EmptyLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SpellCheckContextMenu.Name" xml:space="preserve">
+    <value>SpellCheckContextMenu</value>
+  </data>
+  <data name="TextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>331, 291</value>
+  </data>
+  <data name="EmptyLabel.Text" xml:space="preserve">
+    <value>Enter message</value>
+  </data>
+  <data name="&gt;&gt;SpellCheckTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;EmptyLabel.Name" xml:space="preserve">
+    <value>EmptyLabel</value>
+  </data>
+  <data name="&gt;&gt;EmptyLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;TextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <metadata name="SpellCheckContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
   <metadata name="SpellCheckTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>202, 17</value>

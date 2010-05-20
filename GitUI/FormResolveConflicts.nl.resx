@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,97 +117,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileStatusListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="commitGuidDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Commit guid</value>
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="ContextOpenLocalWith.Text" xml:space="preserve">
+    <value>Open lokale versie met</value>
   </data>
-  <data name="FileStatusListBox.ToolTip" xml:space="preserve">
-    <value />
+  <data name="ContextChooseLocal.Text" xml:space="preserve">
+    <value>Kies lokaal</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="itemTypeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Item type</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="ContextSaveBaseAs.Text" xml:space="preserve">
+    <value>Basis versie opslaan als</value>
   </data>
-  <data name="FileStatusListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
+  <data name="guidDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Guid</value>
   </data>
-  <data name="NoFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 49</value>
+  <data name="fileNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Bestandsnaam</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Name" xml:space="preserve">
-    <value>DiffFilesTooltip</value>
+  <data name="modeDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Mode</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Name" xml:space="preserve">
-    <value>FileStatusListBox</value>
+  <data name="authorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Auteur</value>
   </data>
-  <data name="NoFiles.Text" xml:space="preserve">
-    <value>No changes</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Samenvoeg conflicten oplossen</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Niet opgeloste samenvoeg conflicten</value>
   </data>
-  <data name="&gt;&gt;NoFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="button1.Text" xml:space="preserve">
+    <value>Openen in samenvoeg tool</value>
   </data>
-  <data name="FileStatusListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="authorDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Auteur</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="ContextSaveRemoteAs.Text" xml:space="preserve">
+    <value>Externe versie opslaan als</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Name" xml:space="preserve">
-    <value>NoFiles</value>
+  <data name="guidDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Guid</value>
   </data>
-  <data name="NoFiles.ToolTip" xml:space="preserve">
-    <value />
+  <data name="ContextOpenRemoteWith.Text" xml:space="preserve">
+    <value>Open externe versie met</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>FileStatusList</value>
+  <data name="Reset.Text" xml:space="preserve">
+    <value>Stoppen</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="OpenMergetool.Text" xml:space="preserve">
+    <value>Openen in samenvoeg tool</value>
   </data>
-  <data name="NoFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
+  <data name="ContextOpenBaseWith.Text" xml:space="preserve">
+    <value>Openen basis versie met</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="dateDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Datum</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="ContextChooseBase.Text" xml:space="preserve">
+    <value>Kies basis versie</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="Namex.HeaderText" xml:space="preserve">
+    <value>Bestandsnaam</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="dateDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Datum</value>
   </data>
-  <data name="FileStatusListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="Mergetool.Text" xml:space="preserve">
+    <value>Samenvoeg tool starten</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="itemTypeDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Item type</value>
   </data>
-  <data name="NoFiles.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Italic</value>
+  <data name="commitGuidDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Commit guid</value>
   </data>
-  <data name="FileStatusListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="ContextChooseRemote.Text" xml:space="preserve">
+    <value>Kies externe versie</value>
   </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
+  <data name="ContextSaveLocalAs.Text" xml:space="preserve">
+    <value>Lokale versie opslaan als</value>
   </data>
-  <metadata name="DiffFilesTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <data name="nameDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="ContextMarkAsSolved.Text" xml:space="preserve">
+    <value>Markeer conflict als opgelost</value>
+  </data>
+  <data name="nameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="Rescan.Text" xml:space="preserve">
+    <value>Samenvoeg conflicten scannen</value>
+  </data>
+  <data name="modeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Mode</value>
+  </data>
 </root>

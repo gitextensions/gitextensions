@@ -55,67 +55,75 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.AccessibleDescription = null;
+            this.splitContainer1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.BackgroundImage = null;
+            this.splitContainer1.Font = null;
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.AccessibleDescription = null;
+            this.splitContainer1.Panel1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
+            this.splitContainer1.Panel1.BackgroundImage = null;
             this.splitContainer1.Panel1.Controls.Add(this.GridChangedFiles);
+            this.splitContainer1.Panel1.Font = null;
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AccessibleDescription = null;
+            this.splitContainer1.Panel2.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
+            this.splitContainer1.Panel2.BackgroundImage = null;
             this.splitContainer1.Panel2.Controls.Add(this.ChangesList);
-            this.splitContainer1.Size = new System.Drawing.Size(689, 457);
-            this.splitContainer1.SplitterDistance = 161;
-            this.splitContainer1.TabIndex = 1;
+            this.splitContainer1.Panel2.Font = null;
             // 
             // GridChangedFiles
             // 
+            this.GridChangedFiles.AccessibleDescription = null;
+            this.GridChangedFiles.AccessibleName = null;
             this.GridChangedFiles.AllowUserToAddRows = false;
             this.GridChangedFiles.AllowUserToDeleteRows = false;
+            resources.ApplyResources(this.GridChangedFiles, "GridChangedFiles");
             this.GridChangedFiles.AutoGenerateColumns = false;
+            this.GridChangedFiles.BackgroundImage = null;
             this.GridChangedFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.GridChangedFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FileNameA,
             this.typeDataGridViewTextBoxColumn,
             this.File});
             this.GridChangedFiles.DataSource = this.patchBindingSource;
-            this.GridChangedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GridChangedFiles.Location = new System.Drawing.Point(0, 0);
+            this.GridChangedFiles.Font = null;
             this.GridChangedFiles.MultiSelect = false;
             this.GridChangedFiles.Name = "GridChangedFiles";
             this.GridChangedFiles.ReadOnly = true;
             this.GridChangedFiles.RowHeadersVisible = false;
             this.GridChangedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.GridChangedFiles.Size = new System.Drawing.Size(689, 161);
-            this.GridChangedFiles.TabIndex = 0;
             this.GridChangedFiles.SelectionChanged += new System.EventHandler(this.GridChangedFiles_SelectionChanged);
             // 
             // FileNameA
             // 
             this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.FileNameA.DataPropertyName = "FileNameA";
-            this.FileNameA.HeaderText = "Filename";
+            resources.ApplyResources(this.FileNameA, "FileNameA");
             this.FileNameA.Name = "FileNameA";
             this.FileNameA.ReadOnly = true;
             // 
             // typeDataGridViewTextBoxColumn
             // 
             this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
-            this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
+            resources.ApplyResources(this.typeDataGridViewTextBoxColumn, "typeDataGridViewTextBoxColumn");
             this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
             this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
             // 
             // File
             // 
             this.File.DataPropertyName = "File";
-            this.File.HeaderText = "Type";
+            resources.ApplyResources(this.File, "File");
             this.File.Name = "File";
             this.File.ReadOnly = true;
-            this.File.Width = 50;
             // 
             // patchBindingSource
             // 
@@ -123,71 +131,87 @@
             // 
             // ChangesList
             // 
-            this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangesList.Location = new System.Drawing.Point(0, 0);
+            this.ChangesList.AccessibleDescription = null;
+            this.ChangesList.AccessibleName = null;
+            resources.ApplyResources(this.ChangesList, "ChangesList");
+            this.ChangesList.BackgroundImage = null;
+            this.ChangesList.Font = null;
+            this.ChangesList.IgnoreWhitespaceChanges = false;
             this.ChangesList.Name = "ChangesList";
+            this.ChangesList.NumberOfVisibleLines = 3;
             this.ChangesList.ScrollPos = 0;
-            this.ChangesList.Size = new System.Drawing.Size(689, 292);
-            this.ChangesList.TabIndex = 1;
+            this.ChangesList.ShowEntireFile = false;
+            this.ChangesList.TreatAllFilesAsText = false;
             // 
             // splitContainer4
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.AccessibleDescription = null;
+            this.splitContainer4.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer4, "splitContainer4");
+            this.splitContainer4.BackgroundImage = null;
             this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Font = null;
             this.splitContainer4.Name = "splitContainer4";
-            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer4.Panel1
             // 
+            this.splitContainer4.Panel1.AccessibleDescription = null;
+            this.splitContainer4.Panel1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer4.Panel1, "splitContainer4.Panel1");
+            this.splitContainer4.Panel1.BackgroundImage = null;
             this.splitContainer4.Panel1.Controls.Add(this.BrowsePatch);
             this.splitContainer4.Panel1.Controls.Add(this.PatchFileNameEdit);
             this.splitContainer4.Panel1.Controls.Add(this.label1);
+            this.splitContainer4.Panel1.Font = null;
             // 
             // splitContainer4.Panel2
             // 
+            this.splitContainer4.Panel2.AccessibleDescription = null;
+            this.splitContainer4.Panel2.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer4.Panel2, "splitContainer4.Panel2");
+            this.splitContainer4.Panel2.BackgroundImage = null;
             this.splitContainer4.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer4.Size = new System.Drawing.Size(689, 501);
-            this.splitContainer4.SplitterDistance = 40;
-            this.splitContainer4.TabIndex = 2;
+            this.splitContainer4.Panel2.Font = null;
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(339, 9);
+            this.BrowsePatch.AccessibleDescription = null;
+            this.BrowsePatch.AccessibleName = null;
+            resources.ApplyResources(this.BrowsePatch, "BrowsePatch");
+            this.BrowsePatch.BackgroundImage = null;
+            this.BrowsePatch.Font = null;
             this.BrowsePatch.Name = "BrowsePatch";
-            this.BrowsePatch.Size = new System.Drawing.Size(75, 23);
-            this.BrowsePatch.TabIndex = 5;
-            this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
             this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
             // PatchFileNameEdit
             // 
-            this.PatchFileNameEdit.Location = new System.Drawing.Point(76, 9);
+            this.PatchFileNameEdit.AccessibleDescription = null;
+            this.PatchFileNameEdit.AccessibleName = null;
+            resources.ApplyResources(this.PatchFileNameEdit, "PatchFileNameEdit");
+            this.PatchFileNameEdit.BackgroundImage = null;
+            this.PatchFileNameEdit.Font = null;
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
-            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 20);
-            this.PatchFileNameEdit.TabIndex = 3;
             this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 9);
+            this.label1.AccessibleDescription = null;
+            this.label1.AccessibleName = null;
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Font = null;
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Patch";
             // 
             // ViewPatch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AccessibleDescription = null;
+            this.AccessibleName = null;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(689, 501);
+            this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer4);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
+            this.Font = null;
             this.Name = "ViewPatch";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "View patch file";
             this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

@@ -43,102 +43,112 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.AccessibleDescription = null;
+            this.splitContainer1.AccessibleName = null;
             resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.BackgroundImage = null;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Font = null;
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.AccessibleDescription = null;
+            this.splitContainer1.Panel1.AccessibleName = null;
             resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
+            this.splitContainer1.Panel1.BackgroundImage = null;
             this.splitContainer1.Panel1.Controls.Add(this.RevisionGrid);
+            this.splitContainer1.Panel1.Font = null;
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AccessibleDescription = null;
+            this.splitContainer1.Panel2.AccessibleName = null;
             resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
+            this.splitContainer1.Panel2.BackgroundImage = null;
             this.splitContainer1.Panel2.Controls.Add(this.CheckoutAfterCreate);
             this.splitContainer1.Panel2.Controls.Add(this.Checkout);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
             this.splitContainer1.Panel2.Controls.Add(this.BName);
-            this.splitContainer1.Size = new System.Drawing.Size(712, 484);
-            this.splitContainer1.SplitterDistance = 445;
-            this.splitContainer1.TabIndex = 0;
+            this.splitContainer1.Panel2.Font = null;
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.currentCheckout = null;
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.AccessibleDescription = null;
+            this.RevisionGrid.AccessibleName = null;
             resources.ApplyResources(this.RevisionGrid, "RevisionGrid");
+            this.RevisionGrid.BackgroundImage = null;
+            this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.Font = null;
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
-            this.RevisionGrid.TabIndex = 0;
             // 
             // CheckoutAfterCreate
             // 
-            this.CheckoutAfterCreate.AutoSize = true;
+            this.CheckoutAfterCreate.AccessibleDescription = null;
+            this.CheckoutAfterCreate.AccessibleName = null;
             resources.ApplyResources(this.CheckoutAfterCreate, "CheckoutAfterCreate");
+            this.CheckoutAfterCreate.BackgroundImage = null;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(322, 8);
+            this.CheckoutAfterCreate.Font = null;
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
-            this.CheckoutAfterCreate.TabIndex = 4;
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // Checkout
             // 
-            this.Checkout.Location = new System.Drawing.Point(483, 5);
+            this.Checkout.AccessibleDescription = null;
+            this.Checkout.AccessibleName = null;
             resources.ApplyResources(this.Checkout, "Checkout");
+            this.Checkout.BackgroundImage = null;
+            this.Checkout.Font = null;
             this.Checkout.Name = "Checkout";
-            this.Checkout.Size = new System.Drawing.Size(103, 23);
-            this.Checkout.TabIndex = 3;
             this.Checkout.UseVisualStyleBackColor = true;
             this.Checkout.Click += new System.EventHandler(this.Checkout_Click);
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 8);
+            this.label1.AccessibleDescription = null;
+            this.label1.AccessibleName = null;
             resources.ApplyResources(this.label1, "label1");
+            this.label1.Font = null;
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
-            this.label1.TabIndex = 2;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(592, 5);
+            this.Ok.AccessibleDescription = null;
+            this.Ok.AccessibleName = null;
             resources.ApplyResources(this.Ok, "Ok");
+            this.Ok.BackgroundImage = null;
+            this.Ok.Font = null;
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
-            this.Ok.TabIndex = 1;
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // BName
             // 
-            this.BName.Location = new System.Drawing.Point(88, 5);
+            this.BName.AccessibleDescription = null;
+            this.BName.AccessibleName = null;
             resources.ApplyResources(this.BName, "BName");
+            this.BName.BackgroundImage = null;
+            this.BName.Font = null;
             this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(227, 20);
-            this.BName.TabIndex = 0;
             // 
             // FormBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AccessibleDescription = null;
+            this.AccessibleName = null;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 484);
+            this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
+            this.Font = null;
+            this.Icon = null;
             this.Name = "FormBranch";
             this.Load += new System.EventHandler(this.FormBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

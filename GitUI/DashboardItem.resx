@@ -117,4 +117,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Icon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Zoom</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Icon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 2</value>
+  </data>
+  <data name="Icon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Icon.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;Icon.Name" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="&gt;&gt;Icon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Icon.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Icon.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Title.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Title.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 2</value>
+  </data>
+  <data name="Title.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 13</value>
+  </data>
+  <data name="Title.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="Title.Text" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;Title.Name" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="&gt;&gt;Title.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Title.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Title.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Description.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Description.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 22</value>
+  </data>
+  <data name="Description.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 13</value>
+  </data>
+  <data name="Description.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="Description.Text" xml:space="preserve">
+    <value>text</value>
+  </data>
+  <data name="&gt;&gt;Description.Name" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="&gt;&gt;Description.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Description.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Description.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>723, 35</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>DashboardItem</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

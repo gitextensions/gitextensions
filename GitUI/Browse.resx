@@ -128,7 +128,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="stashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="commitToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
@@ -138,7 +138,7 @@
     <value>splitContainer3.Panel2</value>
   </data>
   <data name="deleteBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
     <value>toolStripSeparator1</value>
@@ -150,7 +150,7 @@
     <value>Cleanup</value>
   </data>
   <data name="toolStripSeparator14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>287, 6</value>
+    <value>297, 6</value>
   </data>
   <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
     <value>Synchronize al submodules recursive</value>
@@ -159,7 +159,7 @@
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripSeparator10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>287, 6</value>
+    <value>297, 6</value>
   </data>
   <data name="&gt;&gt;editgitignoreToolStripMenuItem1.Name" xml:space="preserve">
     <value>editgitignoreToolStripMenuItem1</value>
@@ -180,10 +180,10 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="openWithDifftoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>179, 22</value>
+    <value>190, 22</value>
   </data>
   <data name="pullToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
     <value>Delete branch</value>
@@ -222,13 +222,13 @@
     <value>changelogToolStripMenuItem</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 26</value>
+    <value>796, 24</value>
   </data>
   <data name="toolStripSplitStash.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 22</value>
   </data>
   <data name="checkoutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="pullToolStripMenuItem.Text" xml:space="preserve">
     <value>Pull</value>
@@ -304,7 +304,7 @@
     <value>0</value>
   </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 12</value>
+    <value>6, 13</value>
   </data>
   <data name="commitToolStripMenuItem.Text" xml:space="preserve">
     <value>Commit</value>
@@ -316,16 +316,16 @@
     <value>Push</value>
   </data>
   <data name="closeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="gitGUIToolStripMenuItem.Text" xml:space="preserve">
     <value>Git GUI</value>
   </data>
   <data name="toolStripSeparator12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 6</value>
+    <value>199, 6</value>
   </data>
   <data name="toolStripSeparator15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 6</value>
+    <value>132, 6</value>
   </data>
   <data name="&gt;&gt;GitTree.Parent" xml:space="preserve">
     <value>splitContainer4.Panel1</value>
@@ -368,7 +368,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripSeparator9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 6</value>
+    <value>148, 6</value>
   </data>
   <data name="&gt;&gt;startAuthenticationAgentToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -377,7 +377,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 6</value>
+    <value>188, 6</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
@@ -386,7 +386,7 @@
     <value>ToolStrip</value>
   </data>
   <data name="commandsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 22</value>
+    <value>84, 20</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator5.Name" xml:space="preserve">
     <value>toolStripSeparator5</value>
@@ -395,7 +395,7 @@
     <value>tabControl1</value>
   </data>
   <data name="compressGitDatabaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 22</value>
+    <value>220, 22</value>
   </data>
   <data name="&gt;&gt;CurrentBranch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -410,13 +410,13 @@
     <value>compressGitDatabaseToolStripMenuItem</value>
   </data>
   <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 6</value>
+    <value>188, 6</value>
   </data>
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="toolStripButton1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
+    <value>72, 22</value>
   </data>
   <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
     <value>About</value>
@@ -471,13 +471,13 @@
     <value>4</value>
   </data>
   <data name="CurrentBranch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 22</value>
+    <value>67, 22</value>
   </data>
   <data name="Workingdir.Text" xml:space="preserve">
     <value>WorkingDir</value>
   </data>
   <data name="branchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;gitToolStripMenuItem.Name" xml:space="preserve">
     <value>gitToolStripMenuItem</value>
@@ -535,13 +535,13 @@
     <value>editmailmapToolStripMenuItem</value>
   </data>
   <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 22</value>
+    <value>40, 20</value>
   </data>
   <data name="stashChangesToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Stash changes</value>
   </data>
   <data name="CommitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>788, 259</value>
+    <value>788, 261</value>
   </data>
   <data name="&gt;&gt;initNewRepositoryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -556,7 +556,7 @@
     <value>tabControl1</value>
   </data>
   <data name="checkoutBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -580,16 +580,16 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="commitcountPerUserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="refreshToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="viewStashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 22</value>
+    <value>151, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -604,16 +604,16 @@
     <value>Checkout revision</value>
   </data>
   <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="gitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 22</value>
+    <value>35, 20</value>
   </data>
   <data name="&gt;&gt;deleteBranchToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="userManualToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="&gt;&gt;RefreshButton.Name" xml:space="preserve">
     <value>RefreshButton</value>
@@ -634,7 +634,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripSeparator13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 6</value>
+    <value>178, 6</value>
   </data>
   <data name="&gt;&gt;FileText.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -649,10 +649,10 @@
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 285</value>
+    <value>796, 287</value>
   </data>
   <data name="exitToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+Q</value>
@@ -670,7 +670,7 @@
     <value>rebaseToolStripMenuItem</value>
   </data>
   <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 26</value>
+    <value>0, 24</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -685,10 +685,10 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="manageSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>135, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Panel2.Parent" xml:space="preserve">
     <value>splitContainer3</value>
@@ -748,7 +748,7 @@
     <value>gitGUIToolStripMenuItem</value>
   </data>
   <data name="gitcommandLogToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -760,7 +760,7 @@
     <value>Settings</value>
   </data>
   <data name="changelogToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="GitTree.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -787,7 +787,7 @@
     <value>3</value>
   </data>
   <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>287, 6</value>
+    <value>297, 6</value>
   </data>
   <data name="&gt;&gt;RevisionInfo.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -820,19 +820,19 @@
     <value>splitContainer2</value>
   </data>
   <data name="donateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="gitBashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>179, 22</value>
   </data>
   <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>237, 6</value>
+    <value>247, 6</value>
   </data>
   <data name="editmailmapToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>181, 22</value>
   </data>
   <data name="settingsToolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>181, 22</value>
   </data>
   <data name="&gt;&gt;commitcountPerUserToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -844,7 +844,7 @@
     <value>splitContainer4.Panel2</value>
   </data>
   <data name="updateAllSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="&gt;&gt;Workingdir.Name" xml:space="preserve">
     <value>Workingdir</value>
@@ -859,7 +859,7 @@
     <value>toolStripSeparator9</value>
   </data>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 6</value>
+    <value>178, 6</value>
   </data>
   <data name="viewStashToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>View stash</value>
@@ -892,19 +892,19 @@
     <value>Stash pop</value>
   </data>
   <data name="applyPatchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator15.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="verifyGitDatabaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 22</value>
+    <value>220, 22</value>
   </data>
   <data name="splitContainer2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <data name="pluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 22</value>
+    <value>60, 20</value>
   </data>
   <data name="GitBash.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -1000,7 +1000,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 22</value>
+    <value>101, 22</value>
   </data>
   <data name="cherryPickToolStripMenuItem.Text" xml:space="preserve">
     <value>Cherry pick</value>
@@ -1009,7 +1009,7 @@
     <value>Init new repository</value>
   </data>
   <data name="syncronizeAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="&gt;&gt;stashPopToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1036,7 +1036,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="gitGUIToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>179, 22</value>
   </data>
   <data name="&gt;&gt;gitGUIToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1051,16 +1051,16 @@
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="initializeAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer4.Panel2.Parent" xml:space="preserve">
     <value>splitContainer4</value>
   </data>
   <data name="toolStripLabel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 22</value>
+    <value>42, 22</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1069,7 +1069,7 @@
     <value>Manage remote repositories</value>
   </data>
   <data name="viewDiffToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;PuTTYToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1093,7 +1093,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 547</value>
+    <value>796, 549</value>
   </data>
   <data name="&gt;&gt;toolStripButton1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1114,7 +1114,7 @@
     <value>Compress git database</value>
   </data>
   <data name="Workingdir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 22</value>
+    <value>103, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -1168,7 +1168,7 @@
     <value>helpToolStripMenuItem</value>
   </data>
   <data name="cloneToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;viewStashToolStripMenuItem.Name" xml:space="preserve">
     <value>viewStashToolStripMenuItem</value>
@@ -1192,7 +1192,7 @@
     <value>gitRevisionBindingSource</value>
   </data>
   <data name="cherryPickToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;CurrentBranch.Name" xml:space="preserve">
     <value>CurrentBranch</value>
@@ -1213,7 +1213,7 @@
     <value>1</value>
   </data>
   <data name="mergeBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;toolStripLabel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1249,7 +1249,7 @@
     <value>Filter:</value>
   </data>
   <data name="submodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 22</value>
+    <value>90, 20</value>
   </data>
   <data name="&gt;&gt;toolStripTextBoxFilter.Name" xml:space="preserve">
     <value>toolStripTextBoxFilter</value>
@@ -1270,7 +1270,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="patchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator12.Name" xml:space="preserve">
     <value>toolStripSeparator12</value>
@@ -1288,7 +1288,7 @@
     <value>splitContainer1</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="&gt;&gt;updateAllSubmodulesToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1321,13 +1321,186 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="rebaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="Tree.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
   </data>
   <data name="fileToolStripMenuItem.Text" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAYAICAQAAAAAADoAgAAZgAAABAQEAAAAAAAKAEAAE4DAAAgIAAAAQAIAKgIAAB2BAAAEBAAAAEA
+        CABoBQAAHg0AACAgAAABACAAqBAAAIYSAAAQEAAAAQAgAGgEAAAuIwAAKAAAACAAAABAAAAAAQAEAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAACAgACAAAAAgACAAICAAACAgIAAwMDAAAAA
+        /wAA/wAAAP//AP8AAAD/AP8A//8AAP///wAiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIoiI
+        iIiIiIiIiIiIiIiIiIiCIigiIiIozMzMzMzMyCIogiIoIiIiKM7m5ubm5sgiKIIiKCIiIijObm5ubm7I
+        IiiCIigiIiIozubm5ubmyCIogiIoIiIiKM5ubm5ubsgiKIIiKCIiIijO5ubm5ubIIiiIiIiIiIiIzm5u
+        bm5uyCIogRERERERGM7u7u7u7sgiKIHZWVlZWRjMzMzMzMzIIiiB1ZWVlZUYiIiIiIiIiIiIgdlZWVlZ
+        GDMzMzMzMzMzOIHVlZWVlRg/uLi4uLi4uDiB2VlZWVkYP7uLi4uLi4s4gdWVlZWVGD+4uLi4uLi4OIHZ
+        WVlZWRg/u4uLi4uLiziB1ZWVlZUYP7i4uLi4uLg4gdlZWVlZGD+7i4uLi4uLOIHVlZWVlRg/uLi4uLi4
+        uDiB3d3d3d0YP7uLi4uLi4s4gRERERERGD+4uLi4uLi4OIiIiIiIiIg/u4uLi4uLiziCIiIiIiIoP7i4
+        uLi4uLg4giIiIiIiKD+7i4uLi4uLOIIiIiIiIig/uLi4uLi4uDiCIiIiIiIoP7u7u7u7u7s4giIiIiIi
+        KD//////////OIIiIiIiIigzMzMzMzMzMziIiIiIiIiIiIiIiIiIiIiIIiIiIiIiIiIiIiIiIiIiIv//
+        ////////AAAAAHv4AA57+AAOe/gADnv4AA57+AAOe/gADgAAAA4AAAAOAAAADgAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH/4AAB/+AAAf/gAAH/4AAB/+AAAf/gAAAAA
+        AAD/////KAAAABAAAAAgAAAAAQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAACA
+        gACAAAAAgACAAICAAACAgIAAwMDAAAAA/wAA/wAAAP//AP8AAAD/AP8A//8AAP///wAiIiIiIiIiIoiI
+        iIiIiIiIgigijMzMyCiCKCKM5mbIKIiIiIzu7sgogRERjMzMyCiB2ZGIiIiIiIHZkYMzMzM4gdmRg/u7
+        uziB3dGD+7u7OIEREYP7u7s4iIiIg/u7uziCIiKD+7u7OIIiIoP///84giIigzMzMziIiIiIiIiIiP//
+        KCIAACjObALm5mwCIigAAoiIAAKIzgAAbm4AACIoAAAREQAAGM4AAO7uAAAiKHwAWVl8ABjMfADMzAAA
+        IigoAAAAIAAAAEAAAAABAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAAAICAAIAA
+        AACAAIAAgIAAAICAgADA3MAA8MqmAKo/KgD/PyoAAF8qAFVfKgCqXyoA/18qAAB/KgBVfyoAqn8qAP9/
+        KgAAnyoAVZ8qAKqfKgD/nyoAAL8qAFW/KgCqvyoA/78qAADfKgBV3yoAqt8qAP/fKgAA/yoAVf8qAKr/
+        KgD//yoAAABVAFUAVQCqAFUA/wBVAAAfVQBVH1UAqh9VAP8fVQAAP1UAVT9VAKo/VQD/P1UAAF9VAFVf
+        VQCqX1UA/19VAAB/VQBVf1UAqn9VAP9/VQAAn1UAVZ9VAKqfVQD/n1UAAL9VAFW/VQCqv1UA/79VAADf
+        VQBV31UAqt9VAP/fVQAA/1UAVf9VAKr/VQD//1UAAAB/AFUAfwCqAH8A/wB/AAAffwBVH38Aqh9/AP8f
+        fwAAP38AVT9/AKo/fwD/P38AAF9/AFVffwCqX38A/19/AAB/fwBVf38Aqn9/AP9/fwAAn38AVZ9/AKqf
+        fwD/n38AAL9/AFW/fwCqv38A/79/AADffwBV338Aqt9/AP/ffwAA/38AVf9/AKr/fwD//38AAACqAFUA
+        qgCqAKoA/wCqAAAfqgBVH6oAqh+qAP8fqgAAP6oAVT+qAKo/qgD/P6oAAF+qAFVfqgCqX6oA/1+qAAB/
+        qgBVf6oAqn+qAP9/qgAAn6oAVZ+qAKqfqgD/n6oAAL+qAFW/qgCqv6oA/7+qAADfqgBV36oAqt+qAP/f
+        qgAA/6oAVf+qAKr/qgD//6oAAADUAFUA1ACqANQA/wDUAAAf1ABVH9QAqh/UAP8f1AAAP9QAVT/UAKo/
+        1AD/P9QAAF/UAFVf1ACqX9QA/1/UAAB/1ABVf9QAqn/UAP9/1AAAn9QAVZ/UAKqf1AD/n9QAAL/UAFW/
+        1ACqv9QA/7/UAADf1ABV39QAqt/UAP/f1AAA/9QAVf/UAKr/1AD//9QAVQD/AKoA/wAAH/8AVR//AKof
+        /wD/H/8AAD//AFU//wCqP/8A/z//AABf/wBVX/8Aql//AP9f/wAAf/8AVX//AKp//wD/f/8AAJ//AFWf
+        /wCqn/8A/5//AAC//wBVv/8Aqr//AP+//wAA3/8AVd//AKrf/wD/3/8AVf//AKr//wD/zMwA/8z/AP//
+        MwD//2YA//+ZAP//zAAAfwAAVX8AAKp/AAD/fwAAAJ8AAFWfAACqnwAA/58AAAC/AABVvwAAqr8AAP+/
+        AAAA3wAAVd8AAKrfAAD/3wAAVf8AAKr/AAAAACoAVQAqAKoAKgD/ACoAAB8qAFUfKgCqHyoA/x8qAAA/
+        KgBVPyoA8Pv/AKSgoACAgIAAAAD/AAD/AAAA//8A/wAAAAAAAAD//wAA////AP39/f39/f39/f39/f39
+        /f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39
+        /f39/f39/f39/f39/f39/f39/f39/f39qoYIqoYIhqoIqgiqCaoIqgiqhqqGhoYIhoYIqv39/f0I/f39
+        /ar9/f39/YY2Ng4yDg4ODgoOCgoKCgqG/f39/Yb9/f39CP39/f39qjY7Ozs3Nzc3NjMSMjIOCqr9/f39
+        qv39/f2G/f39/f0IN19fOzs3Nzc3NjcODg4KCP39/f0I/f39/ar9/f39/ao6X19fXzs7Ozc3NzY3NgqG
+        /f39/Yb9/f39CP39/f39hl9jY19jX187Ozs7Nzc3Dqr9/f39qv39/f2G/f39/f0IOodjh19jX19fXztf
+        OzcOCP39/f0ICAmqCAiqCKoICapfCYdjh2ODY19fXzs7Ow6q/f39/QhITEwoSCUoKSQoqmMJCYcJCWNj
+        Y2NfY19fNgj9/f39qkyZmZmYmJRwlCmqX19fXl9fX186WzY3Njc2gv39/f0JcJ2dmZmZlJmUJAmqCaoJ
+        hggIqggICKoIqggI/f39/YZwnp2dnZmZmJVMqnx8fHx8fFR8VHhUVFRUVKr9/f39CHChoZ2dnZ2ZmUwJ
+        fKSkxqSkxqSkpKSkpKBUCP39/f2qcKLDoqGdnZ2ZTKp8ysakxqSkxqSkxqSkpFSq/f39/QiUpqbDoqHE
+        nZ1Mq3ykqMakyqSkxqSkpKSkVAj9/f39hpTIyKbHoqGhoXAIfMrLpMqkxqSkxqTGpKRUqv39/f0IlMym
+        yKbIpcShcAh8y6jKpMqkxsqkpKSkxlQI/f39/aqUzMzMyKbIpqJwqnzLy8qpxsqkpMakxqSkeAj9/f39
+        CJSUlJSUlJSUlJQJgMupy8qpysqkyqSkxqRUqv39/f2GCKoIqgiqCKoIhgigrcvPqcuoy8qkxsqkxnyG
+        /f39/ar9/f39/f39/f39qnzPz6nLy8uoyqnKpKTKVAj9/f39CP39/f39/f39/f0IfNDPz8+py8upyqjG
+        yqR8hv39/f2G/f39/f39/f39/Qik0K7P0M+ty8vLy6jKpXyq/f39/ar9/f39/f39/f39CHzQ09Ctz8/P
+        qcupy6jKeAj9/f39CP39/f39/f39/f2qoNPQ0NPQ0M/Qz8vLy6l8CP39/f2G/f39/f39/f39/QmkfKR8
+        oHx8fHx8fHx8fHyG/f39/aoIqgiqCKoIqgiqCKoIqgiqCKoIqgiqCKoIqgj9/f39/f39/f39/f39/f39
+        /f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f3/////////////
+        ///AAAAD3vgAA974AAPe+AAD3vgAA974AAPe+AADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AA
+        AAPAAAADwAAAA8AAAAPAAAADwAAAA9/4AAPf+AAD3/gAA9/4AAPf+AAD3/gAA8AAAAP//////////ygA
+        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
+        ff//p3f//6Jw//+eav//mWT//pRf//qQWv/0i1b/7IVS/+V/Tv+gWC7/wr/B/wAAAAAAAAAAAAAAAAAA
+        AADCv8H/AAAAAAAAAAAAAAAAAAAAAMK/wf8AAAAAAAAAAAAAAAAAAAAAAAAAAMK/wf/apnP//7+d//+7
+        mP//uJL//7WM//+whv//rH///6d4//+jcf//n2v//5ll//+VYP/6kVv/9YxY/6diN//Cv8H/AAAAAAAA
+        AAAAAAAAAAAAAMK/wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/96t
+        eP//wqL//8Gi//+/nv//vJn//7mT//+2jv//sYj//66A//+pev//pHP//6Bt//+bZ///l2L/r20//8K/
+        wf8AAAAAAAAAAAAAAAAAAAAAwr/B/xYXev8XF3b/GBVx/xkUbf8ZFGr/GhNm/xoSY/8bEV//HBFd/xwQ
+        W//Cv8H/4K96///Cov//wqL//8Ki///Cov//wJ///72b//+6lf//t4///7KJ//+ugv//qnv//6V0//+h
+        bv+3d0n/wr/B/wAAAAAAAAAAAAAAAAAAAADCv8H/FRqE/0dN1v8/RNL/Nz3Q/y40zv8nLcz/ISfK/xwh
+        yf8WHMf/GxJh/8K/wf/gr3r/4K96/+Cvev/gr3r/3614/9yqdf/apnL/16Nw/9Sea//Rmmj/zZZk/8qR
+        X//GjFz/w4dW/7+CUv/Cv8H/AAAAAAAAAAAAAAAAAAAAAMK/wf8SHZD/WF3a/05U1/9FS9X/PUPS/zU7
+        0P8uM83/JyzL/yAmyf8aFGn/wr/B/8K/wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/8K/
+        wf/Cv8H/wr/B/8K/wf/Cv8H/wr/B/8K/wf8AAAAAAAAAAAAAAAAAAAAAwr/B/xAfnP9obt7/YGTc/1Zb
+        2f9NU9f/RUrU/ztB0v80OdD/LDHO/xgWcv/Cv8H/Dn+n/w18pP8MeqH/DHie/wt1m/8Kc5j/CXGV/wlv
+        k/8JbJD/CGqN/wdpi/8HZ4j/BmWH/wZkhf8GYoP/wr/B/wAAAAAAAAAAAAAAAAAAAADCv8H/DiKp/3l+
+        4/9vdeH/Zmze/11i2/9UWtn/S1HW/0NI1P86P9H/Fhh9/8K/wf8Ogar/Barp/wGo6P8Apef/AKPm/wCi
+        5P8An+L/AJ7h/wCd3/8AnN7/AJnc/wCY2/8AmNn/AJbX/wZjhP/Cv8H/AAAAAAAAAAAAAAAAAAAAAMK/
+        wf8MJbX/iI7n/4CF5v93fOP/bnPg/2Vr3f9bYdv/UljY/0lP1v8UGoj/wr/B/w+Erf8Lrur/Bqvq/wOo
+        6f8Apuf/AKTm/wCi5f8AoOT/AJ/i/wCd4f8AnN//AJrd/wCZ2/8AmNr/BmWH/8K/wf8AAAAAAAAAAAAA
+        AAAAAAAAwr/B/wkowP+WnOz/jpTq/4aL6P9+hOX/dXri/2xx4P9jaN3/WV/b/xEek//Cv8H/EIaw/xay
+        7P8Or+z/Cavr/wWq6v8Bp+j/AKbn/wCj5f8AoeT/AJ/j/wCe4f8AnOD/AJve/wCa3f8HZ4n/wr/B/wAA
+        AAAAAAAAAAAAAAAAAADCv8H/CCrK/6Ko7/+coe7/lZrr/42T6f+Fiub/fIHl/3N54v9rcN//ECGg/8K/
+        wf8QiLP/I7nu/xq07f8Ssez/C63r/war6v8Cqen/AKbo/wCk5v8AouX/AKHk/wCf4f8AneH/AJzf/who
+        i//Cv8H/AAAAAAAAAAAAAAAAAAAAAMK/wf8GLNP/q7Hy/6as8P+hpu//mp/u/5OY6/+LkOj/g4nm/3qA
+        5P8NI6z/wr/B/xCKtv8xvvD/J7rv/x627f8Vsuz/Dq/s/wmr6/8Equn/Aafo/wCl5/8Ao+X/AKHk/wCf
+        4v8AnuH/CGqO/8K/wf8AAAAAAAAAAAAAAAAAAAAAwr/B/wUu2/+vtPP/r7Tz/6qv8v+mq/D/oKXv/5me
+        7f+Sl+v/io/p/wsmt//Cv8H/Eo24/0HF8f82wfD/LLzv/yK47v8atO3/EbHs/wut6/8Gq+r/A6np/wCm
+        6P8Apeb/AKLl/wCh5P8IbJD/wr/B/wAAAAAAAAAAAAAAAAAAAADCv8H/BC/h/wQv3/8FL9z/BS3Z/wYt
+        1v8GLNL/ByvP/wgqy/8IKcb/CSnC/8K/wf8Sjrv/Uszy/0fH8f87w/H/Mb7v/ye67/8et+7/FbPt/w6v
+        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
+</value>
   </data>
   <data name="&gt;&gt;commitcountPerUserToolStripMenuItem.Name" xml:space="preserve">
     <value>commitcountPerUserToolStripMenuItem</value>
@@ -1342,7 +1515,7 @@
     <value>788, 260</value>
   </data>
   <data name="editgitignoreToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>181, 22</value>
   </data>
   <data name="pullToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+Down</value>
@@ -1366,7 +1539,7 @@
     <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="pushToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
@@ -1390,13 +1563,13 @@
     <value>0, 0</value>
   </data>
   <data name="remotesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 22</value>
+    <value>70, 20</value>
   </data>
   <data name="CommitInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
   </data>
   <data name="TreeContextMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 26</value>
+    <value>118, 26</value>
   </data>
   <data name="recentToolStripMenuItem.Text" xml:space="preserve">
     <value>Recent Repositories</value>
@@ -1405,7 +1578,7 @@
     <value>23, 22</value>
   </data>
   <data name="initNewRepositoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="commitcountPerUserToolStripMenuItem.Text" xml:space="preserve">
     <value>Commits per user</value>
@@ -1489,7 +1662,7 @@
     <value>1</value>
   </data>
   <data name="kGitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>179, 22</value>
   </data>
   <data name="toolStripButtonPush.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 22</value>
@@ -1516,7 +1689,7 @@
     <value>1</value>
   </data>
   <data name="commitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
     <value>splitContainer2</value>
@@ -1525,7 +1698,7 @@
     <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="archiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;RevisionGrid.Name" xml:space="preserve">
     <value>RevisionGrid</value>
@@ -1564,7 +1737,7 @@
     <value>1</value>
   </data>
   <data name="RevisionInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>788, 259</value>
+    <value>788, 261</value>
   </data>
   <data name="&gt;&gt;openToolStripMenuItem.Name" xml:space="preserve">
     <value>openToolStripMenuItem</value>
@@ -1579,13 +1752,13 @@
     <value>GitUI.FileViewer, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="&gt;&gt;stashToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="DiffContextMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 26</value>
+    <value>191, 26</value>
   </data>
   <data name="stashPopToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Apply and drop single stash</value>
@@ -1594,7 +1767,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 518</value>
+    <value>796, 520</value>
   </data>
   <data name="viewStashToolStripMenuItem.Text" xml:space="preserve">
     <value>View stash</value>
@@ -1648,7 +1821,7 @@
     <value>splitContainer1.Panel2</value>
   </data>
   <data name="gitMaintenanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>181, 22</value>
   </data>
   <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
     <value>Open with difftool</value>
@@ -1666,10 +1839,10 @@
     <value>0, 0</value>
   </data>
   <data name="settingsToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 22</value>
+    <value>66, 20</value>
   </data>
   <data name="tagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="&gt;&gt;mergeBranchToolStripMenuItem.Name" xml:space="preserve">
     <value>mergeBranchToolStripMenuItem</value>
@@ -1687,10 +1860,10 @@
     <value>Gitcommand log</value>
   </data>
   <data name="deleteTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="formatPatchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
     <value>217</value>
@@ -1702,7 +1875,7 @@
     <value>commandsToolStripMenuItem</value>
   </data>
   <data name="recentToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="&gt;&gt;FileText.Parent" xml:space="preserve">
     <value>splitContainer4.Panel2</value>
@@ -1717,7 +1890,7 @@
     <value>567, 260</value>
   </data>
   <data name="runMergetoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
     <value>Initialize all submodules recursive</value>
@@ -1735,7 +1908,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="startAuthenticationAgentToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 22</value>
+    <value>237, 22</value>
   </data>
   <data name="CurrentBranch.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1810,10 +1983,10 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="stashPopToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 22</value>
+    <value>151, 22</value>
   </data>
   <data name="generateOrImportKeyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 22</value>
+    <value>237, 22</value>
   </data>
   <data name="&gt;&gt;tagToolStripMenuItem.Name" xml:space="preserve">
     <value>tagToolStripMenuItem</value>
@@ -1822,7 +1995,7 @@
     <value>Fill</value>
   </data>
   <data name="updateAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="toolStripButtonPush.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -1831,7 +2004,7 @@
     <value>toolStripMenuItem2</value>
   </data>
   <data name="stashChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 22</value>
+    <value>151, 22</value>
   </data>
   <data name="&gt;&gt;pluginsToolStripMenuItem.Name" xml:space="preserve">
     <value>pluginsToolStripMenuItem</value>
@@ -1840,7 +2013,7 @@
     <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="saveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 22</value>
+    <value>117, 22</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Panel2.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -1855,7 +2028,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="manageRemoteRepositoriesToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 22</value>
+    <value>250, 22</value>
   </data>
   <data name="&gt;&gt;CommitInfo.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -1867,13 +2040,13 @@
     <value>toolStripSeparator4</value>
   </data>
   <data name="PuTTYToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 22</value>
+    <value>250, 22</value>
   </data>
   <data name="&gt;&gt;FileText.Name" xml:space="preserve">
     <value>FileText</value>
   </data>
   <data name="cleanupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>227, 22</value>
   </data>
   <data name="RevisionInfo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>10, 10, 10, 10</value>
@@ -1900,10 +2073,10 @@
     <value>Create branch</value>
   </data>
   <data name="openSubmoduleToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 22</value>
+    <value>300, 22</value>
   </data>
   <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 22</value>
+    <value>45, 20</value>
   </data>
   <data name="editmailmapToolStripMenuItem.Text" xml:space="preserve">
     <value>Edit .mailmap</value>
@@ -1926,40 +2099,28 @@
   <data name="runMergetoolToolStripMenuItem.Text" xml:space="preserve">
     <value>Solve mergeconflicts</value>
   </data>
-  <data name="DiffContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="DiffContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>748, 17</value>
-  </data>
-  <data name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
-  </data>
-  <data name="ToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>491, 17</value>
-  </data>
-  <data name="gitRevisionBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </metadata>
+  <metadata name="gitRevisionBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>14, 17</value>
-  </data>
-  <data name="gitItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="gitItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 17</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="TreeContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="TreeContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>592, 17</value>
-  </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-    <value>Japanese</value>
-  </data>
-  <data name="menu:file history" xml:space="preserve">
-    <value>File History</value>
-  </data>
-  <data name="menu:open" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="menu:open with" xml:space="preserve">
-    <value>Opwn With</value>
-  </data>
-  <data name="menu:save as" xml:space="preserve">
-    <value>Save as</value>
-  </data>
+  </metadata>
+  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Dutch</value>
+  </metadata>
 </root>

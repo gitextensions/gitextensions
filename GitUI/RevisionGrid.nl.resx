@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,97 +117,92 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileStatusListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="createNewBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Nieuwe vertakking aanmaken</value>
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="showAllBranchesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Alle vertakkingen weergeven</value>
   </data>
-  <data name="FileStatusListBox.ToolTip" xml:space="preserve">
-    <value />
+  <data name="Graph.HeaderText" xml:space="preserve">
+    <value>Grafiek</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Er zijn nog geen commits in deze opslagplaats gemaakt.
+
+Als dit een persoonlijke opslagplaats betreft, deze stappen zijn aan te raden:
+- Zorg dat de juiste bestanden genegeerd worden (middels .gitingore)
+- Commit bestanden
+
+Als dit een centrale opslagplaats is (zonder werk directory)
+- Verzend wijzigingen vanuit een andere opslagplaats</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Verwijder vertakking</value>
   </data>
-  <data name="FileStatusListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
+  <data name="orderRevisionsByDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Sorteer revisies op datum</value>
   </data>
-  <data name="NoFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 49</value>
+  <data name="showRelativeDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Toon relative datum</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Name" xml:space="preserve">
-    <value>DiffFilesTooltip</value>
+  <data name="resetCurrentBranchToHereToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reset huidige vertakking naar hier</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Name" xml:space="preserve">
-    <value>FileStatusListBox</value>
+  <data name="revertCommitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commit ongedaan maken</value>
   </data>
-  <data name="NoFiles.Text" xml:space="preserve">
-    <value>No changes</value>
+  <data name="createTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Maak nieuw label</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="cherryPickCommitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commit opnieuw toepassen</value>
   </data>
-  <data name="&gt;&gt;NoFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Samenvoegen met vertakking...</value>
   </data>
-  <data name="FileStatusListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Vertakking uitchecken</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="GitIgnore.Text" xml:space="preserve">
+    <value>Wijzig .gitignore</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Name" xml:space="preserve">
-    <value>NoFiles</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>De huidige werk directorie is geen git opslagplaats</value>
   </data>
-  <data name="NoFiles.ToolTip" xml:space="preserve">
-    <value />
+  <data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Label verwijderen</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>FileStatusList</value>
+  <data name="Commit.Text" xml:space="preserve">
+    <value>Commit</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="checkoutRevisionToolStripMenuItem.Text" xml:space="preserve">
+    <value>Revisie uitchecken</value>
   </data>
-  <data name="NoFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
+  <data name="filterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Zet geavanceerd filter</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="ShowRemoteBranches.Text" xml:space="preserve">
+    <value>Toon externe vertakkingen</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="showRevisionGraphToolStripMenuItem.Text" xml:space="preserve">
+    <value>Toon rivisie grafiek</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="Author.HeaderText" xml:space="preserve">
+    <value>Auteur</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="Message.HeaderText" xml:space="preserve">
+    <value>Berich</value>
   </data>
-  <data name="FileStatusListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="showAuthorDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Toon auteur datum</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Date.HeaderText" xml:space="preserve">
+    <value>Datum</value>
   </data>
-  <data name="NoFiles.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Italic</value>
+  <data name="AuthorDate" xml:space="preserve">
+    <value>Autuer datum</value>
   </data>
-  <data name="FileStatusListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="CommitDate" xml:space="preserve">
+    <value>C</value>
   </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <metadata name="DiffFilesTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>

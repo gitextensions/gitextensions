@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardCategory));
             this.Caption = new System.Windows.Forms.Label();
             this.CategoryContextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,61 +41,77 @@
             // 
             // Caption
             // 
-            this.Caption.AutoSize = true;
+            this.Caption.AccessibleDescription = null;
+            this.Caption.AccessibleName = null;
+            resources.ApplyResources(this.Caption, "Caption");
             this.Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
-            this.Caption.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.Caption.Location = new System.Drawing.Point(3, 2);
             this.Caption.Name = "Caption";
-            this.Caption.Size = new System.Drawing.Size(84, 17);
-            this.Caption.TabIndex = 8;
-            this.Caption.Text = "Favourites";
             // 
             // CategoryContextMenuStrip1
             // 
+            this.CategoryContextMenuStrip1.AccessibleDescription = null;
+            this.CategoryContextMenuStrip1.AccessibleName = null;
+            resources.ApplyResources(this.CategoryContextMenuStrip1, "CategoryContextMenuStrip1");
+            this.CategoryContextMenuStrip1.BackgroundImage = null;
+            this.CategoryContextMenuStrip1.Font = null;
             this.CategoryContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
             this.removeToolStripMenuItem,
             this.editToolStripMenuItem});
             this.CategoryContextMenuStrip1.Name = "CategoryContextMenuStrip1";
-            this.CategoryContextMenuStrip1.Size = new System.Drawing.Size(142, 92);
             // 
             // moveUpToolStripMenuItem
             // 
+            this.moveUpToolStripMenuItem.AccessibleDescription = null;
+            this.moveUpToolStripMenuItem.AccessibleName = null;
+            resources.ApplyResources(this.moveUpToolStripMenuItem, "moveUpToolStripMenuItem");
+            this.moveUpToolStripMenuItem.BackgroundImage = null;
             this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.moveUpToolStripMenuItem.Text = "Move Up";
+            this.moveUpToolStripMenuItem.ShortcutKeyDisplayString = null;
             this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
             // 
             // moveDownToolStripMenuItem
             // 
+            this.moveDownToolStripMenuItem.AccessibleDescription = null;
+            this.moveDownToolStripMenuItem.AccessibleName = null;
+            resources.ApplyResources(this.moveDownToolStripMenuItem, "moveDownToolStripMenuItem");
+            this.moveDownToolStripMenuItem.BackgroundImage = null;
             this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.moveDownToolStripMenuItem.Text = "Move Down";
+            this.moveDownToolStripMenuItem.ShortcutKeyDisplayString = null;
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
+            this.removeToolStripMenuItem.AccessibleDescription = null;
+            this.removeToolStripMenuItem.AccessibleName = null;
+            resources.ApplyResources(this.removeToolStripMenuItem, "removeToolStripMenuItem");
+            this.removeToolStripMenuItem.BackgroundImage = null;
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.ShortcutKeyDisplayString = null;
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click_1);
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.AccessibleDescription = null;
+            this.editToolStripMenuItem.AccessibleName = null;
+            resources.ApplyResources(this.editToolStripMenuItem, "editToolStripMenuItem");
+            this.editToolStripMenuItem.BackgroundImage = null;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.ShortcutKeyDisplayString = null;
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // DashboardCategory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AccessibleDescription = null;
+            this.AccessibleName = null;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = null;
             this.Controls.Add(this.Caption);
+            this.Font = null;
             this.Name = "DashboardCategory";
-            this.Size = new System.Drawing.Size(716, 225);
             this.SizeChanged += new System.EventHandler(this.DashboardCategory_SizeChanged);
             this.CategoryContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

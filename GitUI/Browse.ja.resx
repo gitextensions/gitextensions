@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
   <data name="RefreshButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -134,6 +137,9 @@
         Af4CIbWLxz0wWegAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="RefreshButton.ToolTipText" xml:space="preserve">
+    <value>更新</value>
+  </data>
   <data name="Workingdir.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -143,6 +149,15 @@
         8H+gWkwDnlT9/3LekSj8H6gWw4Cfdwv/vz5mRhQGqcV0wasZ/79czyIK/weqRTFg11TxJaQkY5BakB7k
         bMQN5CgBsS6RGKQWpGcQAAD2YAI+EGdu+gAAAABJRU5ErkJggg==
 </value>
+  </data>
+  <data name="Workingdir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>144, 22</value>
+  </data>
+  <data name="Workingdir.Text" xml:space="preserve">
+    <value>作業ディレクトリ</value>
+  </data>
+  <data name="Workingdir.ToolTipText" xml:space="preserve">
+    <value>作業ディレクトリの変更</value>
   </data>
   <data name="CurrentBranch.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -155,6 +170,48 @@
         oHDDl77ghoA0bL71+X/Z7qf/X0I1g7wK1MxNKIGiuATkGpDNxGqGGQ43hBzNcEOADCUoJuhsQt7CkAcA
         NWKf9opd288AAAAASUVORK5CYII=
 </value>
+  </data>
+  <data name="CurrentBranch.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 22</value>
+  </data>
+  <data name="CurrentBranch.Text" xml:space="preserve">
+    <value>ブランチ</value>
+  </data>
+  <data name="CurrentBranch.ToolTipText" xml:space="preserve">
+    <value>ブランチの切替</value>
+  </data>
+  <data name="stashChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 22</value>
+  </data>
+  <data name="stashChangesToolStripMenuItem.Text" xml:space="preserve">
+    <value>変更の一時退避</value>
+  </data>
+  <data name="stashChangesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>変更の一時退避</value>
+  </data>
+  <data name="stashPopToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 22</value>
+  </data>
+  <data name="stashPopToolStripMenuItem.Text" xml:space="preserve">
+    <value>退避した変更を戻す</value>
+  </data>
+  <data name="stashPopToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>退避した変更を適用して削除</value>
+  </data>
+  <data name="toolStripSeparator9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 6</value>
+  </data>
+  <data name="viewStashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 22</value>
+  </data>
+  <data name="viewStashToolStripMenuItem.Text" xml:space="preserve">
+    <value>退避場所の表示</value>
+  </data>
+  <data name="viewStashToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>退避場所の表示</value>
+  </data>
+  <data name="toolStripSplitStash.ToolTipText" xml:space="preserve">
+    <value>変更の一時退避</value>
   </data>
   <data name="toolStripButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -170,6 +227,18 @@
         3Gpn4QTbR0MdcO2Y4YpYMB4xw71jkWf0yEh87l3XWZMy9BXD+b6GueKodO9591E/XxLjTPL1KYbsvYuv
         9lRSiaTSlLjnLOu1Hyp6lPcftiDAj9m4maMAAAAASUVORK5CYII=
 </value>
+  </data>
+  <data name="toolStripButton1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 22</value>
+  </data>
+  <data name="toolStripButton1.Text" xml:space="preserve">
+    <value>コミット</value>
+  </data>
+  <data name="toolStripButtonPull.Text" xml:space="preserve">
+    <value>プル(リモートから取得)</value>
+  </data>
+  <data name="toolStripButtonPush.Text" xml:space="preserve">
+    <value>プッシュ(リモートへ反映)</value>
   </data>
   <data name="GitBash.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -193,8 +262,17 @@
         RK5CYII=
 </value>
   </data>
+  <data name="EditSettings.ToolTipText" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="toolStripLabel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 22</value>
+  </data>
+  <data name="toolStripLabel2.Text" xml:space="preserve">
+    <value>フィルタ:</value>
+  </data>
   <data name="RevisionGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 228</value>
+    <value>796, 230</value>
   </data>
   <data name="RevisionInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>788, 260</value>
@@ -202,263 +280,443 @@
   <data name="CommitInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>788, 260</value>
   </data>
-  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>796, 286</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="splitContainer3.SplitterDistance" type="System.Int32, mscorlib">
-    <value>228</value>
-  </data>
-  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 22</value>
-  </data>
-  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
-    <value>このソフトウェアについて</value>
-  </data>
-  <data name="applyPatchToolStripMenuItem.Text" xml:space="preserve">
-    <value>パッチの適用</value>
-  </data>
-  <data name="archiveToolStripMenuItem.Text" xml:space="preserve">
-    <value>アーカイブ</value>
-  </data>
-  <data name="branchToolStripMenuItem.Text" xml:space="preserve">
-    <value>ブランチの作成</value>
-  </data>
-  <data name="changelogToolStripMenuItem.Text" xml:space="preserve">
-    <value>変更履歴</value>
-  </data>
-  <data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>ブランチの切替</value>
-  </data>
-  <data name="checkoutToolStripMenuItem.Text" xml:space="preserve">
-    <value>リビジョンのチェックアウト</value>
-  </data>
-  <data name="cherryPickToolStripMenuItem.Text" xml:space="preserve">
-    <value>チェリーピック</value>
-  </data>
-  <data name="cleanupToolStripMenuItem.Text" xml:space="preserve">
-    <value>クリーンアップ</value>
-  </data>
-  <data name="cloneToolStripMenuItem.Text" xml:space="preserve">
-    <value>リポジトリのクローン</value>
-  </data>
-  <data name="closeToolStripMenuItem.Text" xml:space="preserve">
-    <value>閉じる</value>
-  </data>
-  <data name="commandsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Gitコマンド</value>
-  </data>
-  <data name="commitcountPerUserToolStripMenuItem.Text" xml:space="preserve">
-    <value>ユーザ毎のコミット数</value>
-  </data>
   <data name="CommitInfo.Text" xml:space="preserve">
     <value>コミット</value>
-  </data>
-  <data name="commitToolStripMenuItem.Text" xml:space="preserve">
-    <value>コミット</value>
-  </data>
-  <data name="compressGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
-    <value>Gitデータベースの圧縮</value>
-  </data>
-  <data name="CurrentBranch.Text" xml:space="preserve">
-    <value>ブランチ</value>
-  </data>
-  <data name="CurrentBranch.ToolTipText" xml:space="preserve">
-    <value>ブランチの切替</value>
-  </data>
-  <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>ブランチの削除</value>
-  </data>
-  <data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
-    <value>タグの削除</value>
-  </data>
-  <data name="donateToolStripMenuItem.Text" xml:space="preserve">
-    <value>寄付</value>
-  </data>
-  <data name="editgitignoreToolStripMenuItem1.Text" xml:space="preserve">
-    <value>.gitignoreファイルの編集</value>
-  </data>
-  <data name="editmailmapToolStripMenuItem.Text" xml:space="preserve">
-    <value>.mailmapファイルの編集</value>
-  </data>
-  <data name="EditSettings.ToolTipText" xml:space="preserve">
-    <value>設定</value>
-  </data>
-  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
-    <value>終了</value>
-  </data>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>ファイル</value>
-  </data>
-  <data name="formatPatchToolStripMenuItem.Text" xml:space="preserve">
-    <value>Git用パッチの作成</value>
-  </data>
-  <data name="generateOrImportKeyToolStripMenuItem.Text" xml:space="preserve">
-    <value>キーの生成/インポート</value>
-  </data>
-  <data name="gitcommandLogToolStripMenuItem.Text" xml:space="preserve">
-    <value>コマンド履歴</value>
-  </data>
-  <data name="gitMaintenanceToolStripMenuItem.Text" xml:space="preserve">
-    <value>Gitのメンテナンス</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>ヘルプ</value>
-  </data>
-  <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールを初期化(再帰)</value>
-  </data>
-  <data name="initializeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールを初期化</value>
-  </data>
-  <data name="initNewRepositoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>リポジトリの作成</value>
-  </data>
-  <data name="manageRemoteRepositoriesToolStripMenuItem1.Text" xml:space="preserve">
-    <value>リモートリポジトリの管理</value>
-  </data>
-  <data name="manageSubmodulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>サブモジュールの管理</value>
-  </data>
-  <data name="menu:file history" xml:space="preserve">
-    <value>ファイルの歴史</value>
-  </data>
-  <data name="menu:open" xml:space="preserve">
-    <value>開く</value>
-  </data>
-  <data name="menu:open with" xml:space="preserve">
-    <value>プログラムから開く</value>
-  </data>
-  <data name="menu:save as" xml:space="preserve">
-    <value>名前を付けて保存</value>
-  </data>
-  <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>ブランチのマージ</value>
-  </data>
-  <data name="openSubmoduleToolStripMenuItem.Text" xml:space="preserve">
-    <value>サブモジュールの閲覧</value>
-  </data>
-  <data name="openToolStripMenuItem.Text" xml:space="preserve">
-    <value>開く</value>
-  </data>
-  <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
-    <value>Diffツールで開く</value>
-  </data>
-  <data name="patchToolStripMenuItem.Text" xml:space="preserve">
-    <value>パッチファイルの表示</value>
-  </data>
-  <data name="pluginsToolStripMenuItem.Text" xml:space="preserve">
-    <value>プラグイン</value>
-  </data>
-  <data name="pullToolStripMenuItem.Text" xml:space="preserve">
-    <value>プル(リモートから取得)</value>
-  </data>
-  <data name="pushToolStripMenuItem.Text" xml:space="preserve">
-    <value>プッシュ(リモートへ反映)</value>
-  </data>
-  <data name="rebaseToolStripMenuItem.Text" xml:space="preserve">
-    <value>リベース</value>
-  </data>
-  <data name="recentToolStripMenuItem.Text" xml:space="preserve">
-    <value>最近のリポジトリ</value>
-  </data>
-  <data name="RefreshButton.ToolTipText" xml:space="preserve">
-    <value>更新</value>
-  </data>
-  <data name="refreshToolStripMenuItem.Text" xml:space="preserve">
-    <value>更新</value>
-  </data>
-  <data name="remotesToolStripMenuItem.Text" xml:space="preserve">
-    <value>リモート</value>
-  </data>
-  <data name="runMergetoolToolStripMenuItem.Text" xml:space="preserve">
-    <value>競合の解決</value>
-  </data>
-  <data name="saveToolStripMenuItem.Text" xml:space="preserve">
-    <value>保存</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>設定</value>
-  </data>
-  <data name="settingsToolStripMenuItem1.Text" xml:space="preserve">
-    <value>設定</value>
-  </data>
-  <data name="settingsToolStripMenuItem2.Text" xml:space="preserve">
-    <value>設定</value>
-  </data>
-  <data name="startAuthenticationAgentToolStripMenuItem.Text" xml:space="preserve">
-    <value>認証エージェントの開始</value>
-  </data>
-  <data name="stashChangesToolStripMenuItem.Text" xml:space="preserve">
-    <value>変更の一時退避</value>
-  </data>
-  <data name="stashChangesToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>変更の一時退避</value>
-  </data>
-  <data name="stashPopToolStripMenuItem.Text" xml:space="preserve">
-    <value>退避した変更を戻す</value>
-  </data>
-  <data name="stashPopToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>退避した変更を適用して削除</value>
-  </data>
-  <data name="stashToolStripMenuItem.Text" xml:space="preserve">
-    <value>変更の一時退避</value>
-  </data>
-  <data name="submodulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>サブモジュール</value>
-  </data>
-  <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールの同期(再帰)</value>
-  </data>
-  <data name="syncronizeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールの同期</value>
-  </data>
-  <data name="tagToolStripMenuItem.Text" xml:space="preserve">
-    <value>タグの作成</value>
-  </data>
-  <data name="toolStripButton1.Text" xml:space="preserve">
-    <value>コミット</value>
-  </data>
-  <data name="toolStripButtonPull.Text" xml:space="preserve">
-    <value>プル(リモートから取得)</value>
-  </data>
-  <data name="toolStripButtonPush.Text" xml:space="preserve">
-    <value>プッシュ(リモートへ反映)</value>
-  </data>
-  <data name="toolStripLabel2.Text" xml:space="preserve">
-    <value>フィルタ:</value>
-  </data>
-  <data name="toolStripSplitStash.ToolTipText" xml:space="preserve">
-    <value>変更の一時退避</value>
   </data>
   <data name="Tree.Text" xml:space="preserve">
     <value>ファイルツリー</value>
   </data>
-  <data name="updateAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールの更新(再帰)</value>
+  <data name="openWithDifftoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>186, 22</value>
   </data>
-  <data name="updateAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>全てのサブモジュールの更新</value>
+  <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
+    <value>Diffツールで開く</value>
   </data>
-  <data name="userManualToolStripMenuItem.Text" xml:space="preserve">
-    <value>ユーザーマニュアル</value>
+  <data name="DiffContextMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>187, 26</value>
   </data>
-  <data name="verifyGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
-    <value>消してしまったオブジェクトの復元</value>
+  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>796, 286</value>
+  </data>
+  <data name="splitContainer3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>796, 520</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainer3.SplitterDistance" type="System.Int32, mscorlib">
+    <value>230</value>
+  </data>
+  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>796, 549</value>
+  </data>
+  <data name="saveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 22</value>
+  </data>
+  <data name="saveToolStripMenuItem.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="TreeContextMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 26</value>
+  </data>
+  <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 22</value>
+  </data>
+  <data name="openToolStripMenuItem.Text" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="closeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 22</value>
+  </data>
+  <data name="closeToolStripMenuItem.Text" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="refreshToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 22</value>
+  </data>
+  <data name="refreshToolStripMenuItem.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="toolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 22</value>
+  </data>
+  <data name="recentToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 22</value>
+  </data>
+  <data name="recentToolStripMenuItem.Text" xml:space="preserve">
+    <value>最近のリポジトリ</value>
+  </data>
+  <data name="toolStripSeparator12.Size" type="System.Drawing.Size, System.Drawing">
+    <value>190, 6</value>
+  </data>
+  <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 22</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 20</value>
+  </data>
+  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+  <data name="gitBashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>179, 22</value>
+  </data>
+  <data name="gitGUIToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>179, 22</value>
+  </data>
+  <data name="kGitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>179, 22</value>
+  </data>
+  <data name="gitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 20</value>
+  </data>
+  <data name="applyPatchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="applyPatchToolStripMenuItem.Text" xml:space="preserve">
+    <value>パッチの適用</value>
+  </data>
+  <data name="archiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="archiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>アーカイブ</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>ブランチの切替</value>
+  </data>
+  <data name="checkoutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="checkoutToolStripMenuItem.Text" xml:space="preserve">
+    <value>リビジョンのチェックアウト</value>
+  </data>
+  <data name="cherryPickToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="cherryPickToolStripMenuItem.Text" xml:space="preserve">
+    <value>チェリーピック</value>
+  </data>
+  <data name="cleanupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="cleanupToolStripMenuItem.Text" xml:space="preserve">
+    <value>クリーンアップ</value>
+  </data>
+  <data name="cloneToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="cloneToolStripMenuItem.Text" xml:space="preserve">
+    <value>リポジトリのクローン</value>
+  </data>
+  <data name="commitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="commitToolStripMenuItem.Text" xml:space="preserve">
+    <value>コミット</value>
+  </data>
+  <data name="branchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="branchToolStripMenuItem.Text" xml:space="preserve">
+    <value>ブランチの作成</value>
+  </data>
+  <data name="tagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="tagToolStripMenuItem.Text" xml:space="preserve">
+    <value>タグの作成</value>
+  </data>
+  <data name="deleteBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>ブランチの削除</value>
+  </data>
+  <data name="deleteTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>タグの削除</value>
+  </data>
+  <data name="formatPatchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="formatPatchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Git用パッチの作成</value>
+  </data>
+  <data name="initNewRepositoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="initNewRepositoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>リポジトリの作成</value>
+  </data>
+  <data name="mergeBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>ブランチのマージ</value>
+  </data>
+  <data name="pullToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="pullToolStripMenuItem.Text" xml:space="preserve">
+    <value>プル(リモートから取得)</value>
+  </data>
+  <data name="pushToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="pushToolStripMenuItem.Text" xml:space="preserve">
+    <value>プッシュ(リモートへ反映)</value>
+  </data>
+  <data name="rebaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="rebaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>リベース</value>
+  </data>
+  <data name="runMergetoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="runMergetoolToolStripMenuItem.Text" xml:space="preserve">
+    <value>競合の解決</value>
+  </data>
+  <data name="stashToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="stashToolStripMenuItem.Text" xml:space="preserve">
+    <value>変更の一時退避</value>
+  </data>
+  <data name="viewDiffToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
   </data>
   <data name="viewDiffToolStripMenuItem.Text" xml:space="preserve">
     <value>Diffの表示</value>
   </data>
-  <data name="viewStashToolStripMenuItem.Text" xml:space="preserve">
-    <value>退避場所の表示</value>
+  <data name="patchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
   </data>
-  <data name="viewStashToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>退避場所の表示</value>
+  <data name="patchToolStripMenuItem.Text" xml:space="preserve">
+    <value>パッチファイルの表示</value>
   </data>
-  <data name="Workingdir.Text" xml:space="preserve">
-    <value>作業ディレクトリ</value>
+  <data name="commandsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>87, 20</value>
   </data>
-  <data name="Workingdir.ToolTipText" xml:space="preserve">
-    <value>作業ディレクトリの変更</value>
+  <data name="commandsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gitコマンド</value>
+  </data>
+  <data name="manageRemoteRepositoriesToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="manageRemoteRepositoriesToolStripMenuItem1.Text" xml:space="preserve">
+    <value>リモートリポジトリの管理</value>
+  </data>
+  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 6</value>
+  </data>
+  <data name="startAuthenticationAgentToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 22</value>
+  </data>
+  <data name="startAuthenticationAgentToolStripMenuItem.Text" xml:space="preserve">
+    <value>認証エージェントの開始</value>
+  </data>
+  <data name="generateOrImportKeyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 22</value>
+  </data>
+  <data name="generateOrImportKeyToolStripMenuItem.Text" xml:space="preserve">
+    <value>キーの生成/インポート</value>
+  </data>
+  <data name="PuTTYToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="remotesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 20</value>
+  </data>
+  <data name="remotesToolStripMenuItem.Text" xml:space="preserve">
+    <value>リモート</value>
+  </data>
+  <data name="manageSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="manageSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>サブモジュールの管理</value>
+  </data>
+  <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>304, 6</value>
+  </data>
+  <data name="updateAllSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="updateAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールの更新(再帰)</value>
+  </data>
+  <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールを初期化(再帰)</value>
+  </data>
+  <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールの同期(再帰)</value>
+  </data>
+  <data name="toolStripSeparator14.Size" type="System.Drawing.Size, System.Drawing">
+    <value>304, 6</value>
+  </data>
+  <data name="updateAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="updateAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールの更新</value>
+  </data>
+  <data name="initializeAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="initializeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールを初期化</value>
+  </data>
+  <data name="syncronizeAllSubmodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="syncronizeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>全てのサブモジュールの同期</value>
+  </data>
+  <data name="toolStripSeparator10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>304, 6</value>
+  </data>
+  <data name="openSubmoduleToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="openSubmoduleToolStripMenuItem.Text" xml:space="preserve">
+    <value>サブモジュールの閲覧</value>
+  </data>
+  <data name="submodulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 20</value>
+  </data>
+  <data name="submodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>サブモジュール</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 22</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="toolStripSeparator15.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 6</value>
+  </data>
+  <data name="pluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 20</value>
+  </data>
+  <data name="pluginsToolStripMenuItem.Text" xml:space="preserve">
+    <value>プラグイン</value>
+  </data>
+  <data name="compressGitDatabaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="compressGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gitデータベースの圧縮</value>
+  </data>
+  <data name="verifyGitDatabaseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 22</value>
+  </data>
+  <data name="verifyGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>消してしまったオブジェクトの復元</value>
+  </data>
+  <data name="gitMaintenanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 22</value>
+  </data>
+  <data name="gitMaintenanceToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gitのメンテナンス</value>
+  </data>
+  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 6</value>
+  </data>
+  <data name="editgitignoreToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 22</value>
+  </data>
+  <data name="editgitignoreToolStripMenuItem1.Text" xml:space="preserve">
+    <value>.gitignoreファイルの編集</value>
+  </data>
+  <data name="editmailmapToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 22</value>
+  </data>
+  <data name="editmailmapToolStripMenuItem.Text" xml:space="preserve">
+    <value>.mailmapファイルの編集</value>
+  </data>
+  <data name="toolStripSeparator13.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 6</value>
+  </data>
+  <data name="settingsToolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 22</value>
+  </data>
+  <data name="settingsToolStripMenuItem2.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="settingsToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 20</value>
+  </data>
+  <data name="settingsToolStripMenuItem1.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="commitcountPerUserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="commitcountPerUserToolStripMenuItem.Text" xml:space="preserve">
+    <value>ユーザ毎のコミット数</value>
+  </data>
+  <data name="gitcommandLogToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="gitcommandLogToolStripMenuItem.Text" xml:space="preserve">
+    <value>コマンド履歴</value>
+  </data>
+  <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 6</value>
+  </data>
+  <data name="userManualToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="userManualToolStripMenuItem.Text" xml:space="preserve">
+    <value>ユーザーマニュアル</value>
+  </data>
+  <data name="changelogToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="changelogToolStripMenuItem.Text" xml:space="preserve">
+    <value>変更履歴</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 6</value>
+  </data>
+  <data name="donateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="donateToolStripMenuItem.Text" xml:space="preserve">
+    <value>寄付</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
+    <value>このソフトウェアについて</value>
+  </data>
+  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>ヘルプ</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>796, 24</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,97 +117,56 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileStatusListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="ShowOnlyCommits.Text" xml:space="preserve">
+    <value>Toon alleen commits</value>
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="msg:remove" xml:space="preserve">
+    <value>Weet u zeker dat u alle rondzwevende objecten wilt verwijderen?</value>
   </data>
-  <data name="FileStatusListBox.ToolTip" xml:space="preserve">
-    <value />
+  <data name="ViewObject.Text" xml:space="preserve">
+    <value>Toon geselecteerd object</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="Remove.Text" xml:space="preserve">
+    <value>Verwijdere alle rondzwevende objecten</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="button3.Text" xml:space="preserve">
+    <value>Verwijder alle LOST_AND_FOUND labels</value>
   </data>
-  <data name="FileStatusListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
+  <data name="FullCheck.Text" xml:space="preserve">
+    <value>Controlleer niet alleen objecten in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), maar ook de alternatieve object opslagplaatsen.</value>
   </data>
-  <data name="NoFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 49</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Standaard worden alleen rondzwevende objecten verwijderd die ouder zijn dan 2 weken, bij het opruimen van de database. Alle overige objecten worden alleen verwijderd wanneer "Verwijder alle rondzwevende objecten" word gedaan.
+
+Om rondzwevende objeten te herstellen, label de commit and deze zal weer in het commit overzicht zichtbaar worden.</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Name" xml:space="preserve">
-    <value>DiffFilesTooltip</value>
+  <data name="button1.Text" xml:space="preserve">
+    <value>Sla opjecten op in .git/lost-found</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Name" xml:space="preserve">
-    <value>FileStatusListBox</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Controleer database</value>
   </data>
-  <data name="NoFiles.Text" xml:space="preserve">
-    <value>No changes</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Dubbel-klik op een rij om het object te bekijken</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="TagAllObjects.Text" xml:space="preserve">
+    <value>Label alle verloren objecten</value>
   </data>
-  <data name="&gt;&gt;NoFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="NoReflogs.Text" xml:space="preserve">
+    <value>Behandel commits dat alleen verwezen worden vanuit de reflog als niet zichtbaar.</value>
   </data>
-  <data name="FileStatusListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="msg:tags created" xml:space="preserve">
+    <value>{0} labels aangemaakt.
+
+Vergeen niet deze labels weer te verwijderen.</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="TagAllCommits.Text" xml:space="preserve">
+    <value>Label alle commits</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Name" xml:space="preserve">
-    <value>NoFiles</value>
+  <data name="button2.Text" xml:space="preserve">
+    <value>Label geselecteerde objecten</value>
   </data>
-  <data name="NoFiles.ToolTip" xml:space="preserve">
-    <value />
+  <data name="Unreachable.Text" xml:space="preserve">
+    <value>Toon objecten welke wel bestaan maar welke niet te bereiken zijn via een andere node.</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>FileStatusList</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="NoFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;NoFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="FileStatusListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="NoFiles.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Italic</value>
-  </data>
-  <data name="FileStatusListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <metadata name="DiffFilesTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>

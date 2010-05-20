@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,97 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileStatusListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="Ok.Text" xml:space="preserve">
+    <value>Ok</value>
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="Mixed.Text" xml:space="preserve">
+    <value>Gemixed: laat werk directorie ongedeerd, reset index</value>
   </data>
-  <data name="FileStatusListBox.ToolTip" xml:space="preserve">
-    <value />
+  <data name="Author.Text" xml:space="preserve">
+    <value>Auteur: {0}</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="Message.Text" xml:space="preserve">
+    <value>Bericht: {0}</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="Soft.Text" xml:space="preserve">
+    <value>Zacht: laat werk directory en index ongedeerd</value>
   </data>
-  <data name="FileStatusListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
+  <data name="BranchInfo.Text" xml:space="preserve">
+    <value>Reset {0} naar:</value>
   </data>
-  <data name="NoFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 49</value>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Reset type</value>
   </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Name" xml:space="preserve">
-    <value>DiffFilesTooltip</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Reset huidige vertakking</value>
   </data>
-  <data name="&gt;&gt;FileStatusListBox.Name" xml:space="preserve">
-    <value>FileStatusListBox</value>
+  <data name="Commit.Text" xml:space="preserve">
+    <value>Commit: {0}</value>
   </data>
-  <data name="NoFiles.Text" xml:space="preserve">
-    <value>No changes</value>
+  <data name="Date.Text" xml:space="preserve">
+    <value>Commit datum: {0}</value>
   </data>
-  <data name="&gt;&gt;NoFiles.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="Hard.Text" xml:space="preserve">
+    <value>Hard: reset werk directory en indes (maak ALLE lokale wijzigingen ongedaan, ook wijzigingen die nog niet gecommit zijn)</value>
   </data>
-  <data name="&gt;&gt;NoFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="Cancel.Text" xml:space="preserve">
+    <value>Annuleren</value>
   </data>
-  <data name="FileStatusListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>585, 420</value>
+  <data name="msg:reset branch" xml:space="preserve">
+    <value>U staat op het punt om ALLE lokale wijzigingen ongedaan te kaken, weet u dit zeker?</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;NoFiles.Name" xml:space="preserve">
-    <value>NoFiles</value>
-  </data>
-  <data name="NoFiles.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>FileStatusList</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="NoFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;NoFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FileStatusListBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="FileStatusListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;DiffFilesTooltip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="NoFiles.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Italic</value>
-  </data>
-  <data name="FileStatusListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <metadata name="DiffFilesTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>
