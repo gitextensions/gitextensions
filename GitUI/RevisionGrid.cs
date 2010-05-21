@@ -76,10 +76,25 @@ namespace GitUI
                 if (Revisions.SelectedRows.Count > 0)
                     oldIndex = Revisions.SelectedRows[0].Index;
 
-                index = RevisionList.FindIndex(oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
+				Predicate<GitRevision> match = delegate(GitRevision r)
+				{
+					foreach (GitHead gitHead in r.Heads)
+					{
+						if (gitHead.Name.Contains(quickSearchString))
+						{
+							return true;
+						}
+					}
+					return
+					r.Author.StartsWith(quickSearchString,
+										StringComparison.CurrentCultureIgnoreCase) ||
+					r.Message.ToLower().Contains(quickSearchString);
+				};
+
+				index = RevisionList.FindIndex(oldIndex, match);
 
                 if (index < 0 && oldIndex > 0)
-                    index = RevisionList.FindIndex(0, oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
+					index = RevisionList.FindIndex(0, oldIndex, match);
 
                 if (index > -1)
                 {
