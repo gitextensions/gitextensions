@@ -60,10 +60,31 @@ namespace GitUI
         }
 
         private string quickSearchString;
-		
+        private string lastQuickSearchString = string.Empty;
+        
         void Revisions_KeyDown(object sender, KeyEventArgs e)
         {
-		    char key = (char)e.KeyValue;
+            if (e.Alt && e.KeyCode == Keys.Up)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index - 1;
+
+                FindNextMatch(nextIndex, lastQuickSearchString, true);
+                e.Handled = true;
+                return;
+            }
+            if (e.Alt && e.KeyCode == Keys.Down)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index + 1;
+                
+                FindNextMatch(nextIndex, lastQuickSearchString, false);  
+                e.Handled = true;
+                return;  
+            }
+            char key = (char)e.KeyValue;
             if (char.IsLetterOrDigit(key) || char.IsNumber(key))
             {
                 quickSearchTimer.Stop();
@@ -72,53 +93,92 @@ namespace GitUI
 
                 quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
 
-                int index = -1;
-                int oldIndex = -1;
+                int oldIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     oldIndex = Revisions.SelectedRows[0].Index;
 
-            	Predicate<GitRevision> match = delegate(GitRevision r)
-				{
-					foreach (GitHead gitHead in r.Heads)
-					{
-						if (gitHead.Name.StartsWith(quickSearchString))
-						{
-							return true;
-						}
-					}
-
-					//Make sure it only matches the start of a word
-					string searchString = " " + quickSearchString;
-
-					if ((" " + r.Author.ToLower()).Contains(searchString))
-					{
-						return true;
-					}
-					
-					if ((" " + r.Message.ToLower()).Contains(searchString))
-					{
-						return true;
-					}
-					return false;
-				};
-
-				index = RevisionList.FindIndex(oldIndex, match);
-
-                if (index < 0 && oldIndex > 0)
-					index = RevisionList.FindIndex(0, oldIndex, match);
-
-                if (index > -1)
-                {
-                    Revisions.ClearSelection();
-                    Revisions.Rows[index].Selected = true;
-
-                    Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
-                }
+                FindNextMatch(oldIndex, quickSearchString, false);
+                lastQuickSearchString = quickSearchString;
+                System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+                e.Handled = true;
             }
             else
             {
                 quickSearchString = "";
                 return;
+            }
+        }
+
+        private void FindNextMatch(int startIndex, string searchString, bool reverse)
+        {
+            if (RevisionList.Count == 0)
+            {
+                return;
+            }
+            
+            Predicate<GitRevision> match = delegate(GitRevision r)
+            {
+                foreach (GitHead gitHead in r.Heads)
+                {
+                    if (gitHead.Name.StartsWith(searchString))
+                    {
+                        return true;
+                    }
+                }
+
+                //Make sure it only matches the start of a word
+                string modifiedSearchString = " " + searchString;
+
+                if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
+
+                if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
+                return false;
+            };
+            
+            int index;
+            
+            if (reverse)
+            {
+                //Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= RevisionList.Count)
+                    startIndex = RevisionList.Count - 1;
+                
+                index = RevisionList.FindLastIndex(startIndex, match);
+                
+                if (index == -1)
+                {
+                    //We didn't find it so start searching from the bottom
+                    int bottomIndex = RevisionList.Count - 1;
+                    index = RevisionList.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
+                }
+            }
+            else
+            {
+                //Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= RevisionList.Count)
+                    startIndex = 0;
+                
+                index = RevisionList.FindIndex(startIndex, match);
+
+                if (index == -1)
+                {
+                    //We didn't find it so start searching from the top
+                    index = RevisionList.FindIndex(0, startIndex, match);
+                }
+            }
+            
+            if (index > -1)
+            {
+                Revisions.ClearSelection();
+                Revisions.Rows[index].Selected = true;
+
+                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
             }
         }
 
