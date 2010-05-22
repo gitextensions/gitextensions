@@ -60,9 +60,10 @@ namespace GitUI
         }
 
         private string quickSearchString;
+		
         void Revisions_KeyDown(object sender, KeyEventArgs e)
         {
-            char key = (char)e.KeyValue;
+		    char key = (char)e.KeyValue;
             if (char.IsLetterOrDigit(key) || char.IsNumber(key))
             {
                 quickSearchTimer.Stop();
@@ -76,19 +77,29 @@ namespace GitUI
                 if (Revisions.SelectedRows.Count > 0)
                     oldIndex = Revisions.SelectedRows[0].Index;
 
-				Predicate<GitRevision> match = delegate(GitRevision r)
+            	Predicate<GitRevision> match = delegate(GitRevision r)
 				{
 					foreach (GitHead gitHead in r.Heads)
 					{
-						if (gitHead.Name.Contains(quickSearchString))
+						if (gitHead.Name.StartsWith(quickSearchString))
 						{
 							return true;
 						}
 					}
-					return
-					r.Author.StartsWith(quickSearchString,
-										StringComparison.CurrentCultureIgnoreCase) ||
-					r.Message.ToLower().Contains(quickSearchString);
+
+					//Make sure it only matches the start of a word
+					string searchString = " " + quickSearchString;
+
+					if ((" " + r.Author.ToLower()).Contains(searchString))
+					{
+						return true;
+					}
+					
+					if ((" " + r.Message.ToLower()).Contains(searchString))
+					{
+						return true;
+					}
+					return false;
 				};
 
 				index = RevisionList.FindIndex(oldIndex, match);
@@ -107,7 +118,6 @@ namespace GitUI
             else
             {
                 quickSearchString = "";
-
                 return;
             }
         }
