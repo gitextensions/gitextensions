@@ -27,6 +27,7 @@ namespace GitUI
         private Graphics bufferGraphics;
 
         public List<TextPos> Lines = new List<TextPos>();
+        public List<TextPos> IllFormedLines = new List<TextPos>();
 
 
         // this is where we intercept the Paint event for the TextBox at the OS level   
@@ -35,7 +36,7 @@ namespace GitUI
             switch (m.Msg)
             {
                 case 15: // this is the WM_PAINT message   
-                    // invalidate the TextBox so that it gets refreshed properly   
+                    // invalidate the TextBox so that it gets refreshed properly
                     textBox.Invalidate();
                     // call the default win32 Paint method for the TextBox first   
                     base.WndProc(ref m);
@@ -63,14 +64,32 @@ namespace GitUI
                 this.textBoxGraphics = Graphics.FromHwnd(textBox.Handle);
             }
 
-            // get the index of the first visible line in the TextBox   
-            int curPos = TextBoxAPIHelper.GetFirstVisibleLine(textBox);
-            curPos = TextBoxAPIHelper.GetLineIndex(textBox, curPos);
             // clear the graphics buffer   
             bufferGraphics.Clear(Color.Transparent);
 
             // * Here’s where the magic happens   
-            foreach (TextPos textPos in Lines)
+
+            //Mark ill formed parts of commit message
+            drawLines(IllFormedLines, drawType.Mark);
+
+            //Mark first line if it is blank
+            int lh = lineHeight();
+            int ypos = textBox.GetPositionFromCharIndex(0).Y;
+            if (textBox.Text.Length!=0 && textBox.Lines[0].Length == 0 
+                && ypos >=-lh && GitCommands.Settings.MarkIllFormedLinesInCommitMsg)
+                DrawMark(new Point(0, lh+ypos), new Point(textBox.Width-3, lh+ypos));
+
+            //Mark misspelled words
+            drawLines(Lines, drawType.Wave);
+            // Now we just draw our internal buffer on top of the TextBox.   
+            // Everything should be at the right place.   
+            textBoxGraphics.DrawImageUnscaled(bitmap, 0, 0);
+        }
+
+        private enum drawType { Wave, Mark };
+        private void drawLines(List<TextPos> list, drawType type)
+        {
+            foreach (TextPos textPos in list)
             {
 
                 Point start = textBox.GetPositionFromCharIndex(textPos.Start);
@@ -85,44 +104,83 @@ namespace GitUI
                 if (start.X == -1 || end.X == -1)
                     continue;
 
-                // Draw the wavy underline.   
-                //Multiline wiggle.....
-                if (start.Y < end.Y - 3 || start.Y > end.Y + 3)
+                // Draw the wavy underline/mark
+                if (start.Y < end.Y)
                 {
-                    if (start.X != end.X && start.Y < end.Y)
+                    switch (type)
                     {
-                        DrawWave(start, new Point(textBox.Width - 3, start.Y));
-                        DrawWave(new Point(3, end.Y), end);
+                        case drawType.Wave:
+                            DrawWave(start, new Point(textBox.Width - 3, start.Y));
+                            DrawWave(new Point(3, end.Y), end);
+                            break;
+                        case drawType.Mark:
+                            DrawMark(start, new Point(textBox.Width - 3, start.Y));
+                            DrawMark(new Point(0, end.Y), end);
+                            break;
                     }
                 }
                 else
-                    DrawWave(start, end);
+                    switch (type)
+                    {
+                        case drawType.Wave:
+                            DrawWave(start, end);
+                            break;
+                        case drawType.Mark:
+                            DrawMark(start, end);
+                            break;
+                    }
             }
-
-
-            // Now we just draw our internal buffer on top of the TextBox.   
-            // Everything should be at the right place.   
-            textBoxGraphics.DrawImageUnscaled(bitmap, 0, 0);
         }
 
-        private void DrawWave(Point start, Point end)   
-        {   
-            Pen pen = Pens.Red;   
+        private void DrawWave(Point start, Point end)
+        {
+            Pen pen = Pens.Red;
             if ((end.X - start.X) > 4)
-            {   
-                ArrayList pl = new ArrayList();   
-                for (int i = start.X; i <= (end.X - 2); i += 4)   
-                {   
-                    pl.Add(new Point(i, start.Y));   
-                    pl.Add(new Point(i + 2, start.Y + 2));   
-                }   
-                Point [] p = (Point[])pl.ToArray(typeof(Point));   
-                bufferGraphics.DrawLines(pen, p);   
-            }   
-            else    
-            {   
-                bufferGraphics.DrawLine(pen, start, end);   
-            }   
-        } 
+            {
+                ArrayList pl = new ArrayList();
+                for (int i = start.X; i <= (end.X - 2); i += 4)
+                {
+                    pl.Add(new Point(i, start.Y));
+                    pl.Add(new Point(i + 2, start.Y + 2));
+                }
+                Point[] p = (Point[])pl.ToArray(typeof(Point));
+                bufferGraphics.DrawLines(pen, p);
+            }
+            else
+            {
+                bufferGraphics.DrawLine(pen, start, end);
+            }
+        }
+        private void DrawMark(Point start, Point end)
+        {
+            Color col = Color.FromArgb(90, 255, 255, 0);
+            int linHeight = lineHeight();
+            Pen pen = new Pen(col, linHeight);
+            start.Offset(0, -linHeight / 2);
+            end.Offset(0, -linHeight / 2);
+            bufferGraphics.DrawLine(pen, start, end);
+        }
+        private int mLineHeight = 0;
+        private int lineHeight()
+        {
+            if (mLineHeight == 0)
+            {
+                int pos = 0;
+                foreach (string line in textBox.Lines)
+                {
+                    if (line.Length != 0)
+                    {
+                        mLineHeight = TextBoxAPIHelper.GetBaselineOffsetAtCharIndex(textBox, 0);
+                        break;
+                    }
+                    pos += line.Length + 1;
+                }
+            }
+            if (mLineHeight == 0)
+                return 12;
+            else
+                return mLineHeight;
+        }
+
     }
 }
