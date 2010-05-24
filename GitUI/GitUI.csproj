@@ -501,6 +501,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Browse.ja.resx">
       <DependentUpon>Browse.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Browse.resx">
       <DependentUpon>Browse.cs</DependentUpon>
@@ -508,6 +509,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.ja.resx">
       <DependentUpon>Commit.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Commit.resx">
       <DependentUpon>Commit.cs</DependentUpon>
@@ -539,12 +541,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileViewer.ja.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBranch.ja.resx">
       <DependentUpon>FormBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBranchSmall.ja.resx">
       <DependentUpon>FormBranchSmall.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
@@ -628,6 +633,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormDeleteBranch.ja.resx">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDeleteBranch.resx">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
@@ -679,6 +685,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.ja.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
@@ -698,6 +705,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPull.ja.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
@@ -705,6 +713,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.ja.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
@@ -724,6 +733,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.ja.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
@@ -731,6 +741,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormResolveConflicts.ja.resx">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormResolveConflicts.resx">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
@@ -770,6 +781,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormVerify.ja.resx">
       <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormVerify.resx">
       <DependentUpon>FormVerify.cs</DependentUpon>
@@ -802,6 +814,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.ja.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
