@@ -73,11 +73,6 @@ namespace GitUI
                 this.DesktopBounds = p.rect;
                 this.WindowState = p.state;
             }
-            else
-            {
-                this.StartPosition = FormStartPosition.WindowsDefaultBounds;
-                this.WindowState = FormWindowState.Normal;
-            }
         }
 
         /// <summary>
@@ -92,14 +87,12 @@ namespace GitUI
 
             // Get the windows's visibility state:
             p.state =
-                this.WindowState == FormWindowState.Normal ||
                 this.WindowState == FormWindowState.Maximized ?
-                this.WindowState : FormWindowState.Normal;
+                FormWindowState.Maximized : FormWindowState.Normal;
 
             // Get the window's position:
-            this.Visible = false;
-            this.WindowState = FormWindowState.Normal;
-            p.rect = this.DesktopBounds;
+            p.rect = this.WindowState == FormWindowState.Normal ?
+                this.DesktopBounds : this.RestoreBounds;
 
             // Write to the user settings:
             if (GitUI.Properties.Settings.Default.WindowPositions == null)
