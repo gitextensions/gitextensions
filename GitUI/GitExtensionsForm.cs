@@ -97,8 +97,8 @@ namespace GitUI
                 this.WindowState : FormWindowState.Normal;
 
             // Get the window's position:
-            //this.Visible = false;
-            //this.WindowState = FormWindowState.Normal;
+            this.Visible = false;
+            this.WindowState = FormWindowState.Normal;
             p.rect = this.DesktopBounds;
 
             // Write to the user settings:
