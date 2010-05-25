@@ -787,9 +787,6 @@ to choose a remote branch when using rebase. (use with caution)</value>
   <data name="splitContainer1.Locked" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-    <value>Japanese</value>
-  </data>
   <data name="msg:conflicts solved" xml:space="preserve">
     <value>Resolved all conflicts? Commit?</value>
   </data>

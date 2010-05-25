@@ -1947,9 +1947,6 @@
   <data name="TreeContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>592, 17</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-    <value>Japanese</value>
-  </data>
   <data name="menu:file history" xml:space="preserve">
     <value>File History</value>
   </data>
