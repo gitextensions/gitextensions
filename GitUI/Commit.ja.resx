@@ -119,142 +119,142 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="showIgnoredFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="showIgnoredFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>無視ファイルを表示</value>
   </data>
   <data name="showUntrackedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="showUntrackedFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>管理外ファイルの表示</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>306, 6</value>
+    <value>335, 6</value>
   </data>
   <data name="deleteSelectedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="deleteSelectedFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>選択されたファイルの削除</value>
   </data>
   <data name="resetSelectedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="resetSelectedFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>選択されたファイルの変更を元に戻す</value>
   </data>
   <data name="resetAlltrackedChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="resetAlltrackedChangesToolStripMenuItem.Text" xml:space="preserve">
     <value>Git管理下のファイルの変更を全て元に戻す</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>306, 6</value>
+    <value>335, 6</value>
   </data>
   <data name="eToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="deleteAllUntrackedFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="deleteAllUntrackedFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>管理外ファイルの全削除</value>
   </data>
   <data name="rescanChangesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 22</value>
+    <value>338, 22</value>
   </data>
   <data name="rescanChangesToolStripMenuItem.Text" xml:space="preserve">
     <value>変更の再調査</value>
   </data>
   <data name="workingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 21</value>
+    <value>192, 21</value>
   </data>
   <data name="workingToolStripMenuItem.Text" xml:space="preserve">
     <value>作業ディレクトリの変更点</value>
   </data>
   <data name="ResetChanges.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="ResetChanges.Text" xml:space="preserve">
     <value>ファイルの変更を元に戻す</value>
   </data>
   <data name="resetPartOfFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="resetPartOfFileToolStripMenuItem.Text" xml:space="preserve">
     <value>チャンクレベルでファイルの変更を元に戻す</value>
   </data>
   <data name="deleteFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="deleteFileToolStripMenuItem.Text" xml:space="preserve">
     <value>ファイルの削除</value>
   </data>
   <data name="addFileTogitignoreToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="addFileTogitignoreToolStripMenuItem.Text" xml:space="preserve">
     <value>このファイルを無視</value>
   </data>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>313, 6</value>
+    <value>346, 6</value>
   </data>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="openToolStripMenuItem.Text" xml:space="preserve">
     <value>開く</value>
   </data>
   <data name="openWithToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="openWithDifftoolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
     <value>Diffツールで開く</value>
   </data>
   <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>313, 6</value>
+    <value>346, 6</value>
   </data>
   <data name="filenameToClipboardToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>316, 22</value>
+    <value>349, 22</value>
   </data>
   <data name="filenameToClipboardToolStripMenuItem.Text" xml:space="preserve">
     <value>ファイル名をクリップボードへ</value>
   </data>
   <data name="UnstagedFileContext.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 192</value>
+    <value>350, 192</value>
   </data>
   <data name="AddFiles.Text" xml:space="preserve">
     <value>ステージ</value>
   </data>
   <data name="stageAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 22</value>
+    <value>328, 22</value>
   </data>
   <data name="stageAllToolStripMenuItem.Text" xml:space="preserve">
     <value>全てステージ</value>
   </data>
   <data name="unstageAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 22</value>
+    <value>328, 22</value>
   </data>
   <data name="unstageAllToolStripMenuItem.Text" xml:space="preserve">
     <value>全てをステージから除く</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 6</value>
+    <value>325, 6</value>
   </data>
   <data name="stageChunkOfFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 22</value>
+    <value>328, 22</value>
   </data>
   <data name="stageChunkOfFileToolStripMenuItem.Text" xml:space="preserve">
     <value>チャンクレベルでステージ/アンステージ</value>
   </data>
   <data name="filesListedToCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 22</value>
+    <value>88, 20</value>
   </data>
   <data name="filesListedToCommitToolStripMenuItem.Text" xml:space="preserve">
     <value>ステージ</value>
@@ -290,12 +290,6 @@
   <data name="SolveMergeconflicts.Text" xml:space="preserve">
     <value>解決されていない競合があります</value>
   </data>
-  <data name="SelectedDiff.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="SelectedDiff.ToolTip1" xml:space="preserve">
-    <value />
-  </data>
   <data name="Scan.Text" xml:space="preserve">
     <value>変更の再調査</value>
   </data>
@@ -309,16 +303,19 @@
     <value>コミット</value>
   </data>
   <data name="commitMessageToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 26</value>
+    <value>140, 26</value>
   </data>
   <data name="commitMessageToolStripMenuItem.Text" xml:space="preserve">
     <value>過去のメッセージ</value>
   </data>
   <data name="CloseDialogAfterCommit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>159, 16</value>
+    <value>71, 17</value>
   </data>
   <data name="CloseDialogAfterCommit.Text" xml:space="preserve">
     <value>コミット後にダイアログを閉じる</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>コミット</value>

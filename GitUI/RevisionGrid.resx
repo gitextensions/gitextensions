@@ -715,9 +715,6 @@ If this is a central repository (bare repository without a working dir):
 	<data name="SelecctionTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
 		<value>207, 17</value>
 	</data>
-	<data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-		<value>Japanese</value>
-	</data>
 	<data name="AuthorDate" xml:space="preserve">
     <value>Author Date</value>
   </data>

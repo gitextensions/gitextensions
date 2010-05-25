@@ -320,9 +320,6 @@ this using `force delete´.
   <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-    <value>Japanese</value>
-  </data>
   <data name="msg:delete branch" xml:space="preserve">
     <value>Are you sure you want to delete this branch?
 Deleting a branch can cause commits to be deleted too!</value>

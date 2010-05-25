@@ -188,7 +188,6 @@
             // splitContainer2.Panel2
             // 
             resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
-            this.splitContainer2.Panel2.Controls.Add(this.dashboard);
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Size = new System.Drawing.Size(796, 549);
             this.splitContainer2.SplitterDistance = 25;
