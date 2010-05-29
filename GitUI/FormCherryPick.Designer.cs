@@ -154,7 +154,6 @@
             this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer1);
             this.Font = null;
-            this.Icon = null;
             this.Name = "FormCherryPick";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
             this.Load += new System.EventHandler(this.FormCherryPick_Load);

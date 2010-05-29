@@ -64,6 +64,8 @@
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.Language = new System.Windows.Forms.ComboBox();
+            this.label49 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
@@ -235,7 +237,7 @@
             this.LocalSettings.Location = new System.Drawing.Point(4, 22);
             this.LocalSettings.Name = "LocalSettings";
             this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(710, 358);
+            this.LocalSettings.Size = new System.Drawing.Size(710, 383);
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
@@ -408,7 +410,7 @@
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(382, 140);
+            this.SmtpServer.Location = new System.Drawing.Point(382, 171);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 20);
             this.SmtpServer.TabIndex = 17;
@@ -416,7 +418,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(8, 144);
+            this.label23.Location = new System.Drawing.Point(8, 175);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(200, 13);
             this.label23.TabIndex = 18;
@@ -435,7 +437,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(718, 384);
+            this.tabControl1.Size = new System.Drawing.Size(718, 409);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -454,7 +456,7 @@
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(710, 358);
+            this.tabPage3.Size = new System.Drawing.Size(710, 383);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -612,6 +614,8 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.Language);
+            this.TabPageGitExtensions.Controls.Add(this.label49);
             this.TabPageGitExtensions.Controls.Add(this.label40);
             this.TabPageGitExtensions.Controls.Add(this.FollowRenamesInFileHistory);
             this.TabPageGitExtensions.Controls.Add(this.label39);
@@ -640,16 +644,37 @@
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
             this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 358);
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 383);
             this.TabPageGitExtensions.TabIndex = 3;
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // Language
+            // 
+            this.Language.FormattingEnabled = true;
+            this.Language.Items.AddRange(new object[] {
+            "en-US",
+            "ja-JP",
+            "nl-NL"});
+            this.Language.Location = new System.Drawing.Point(382, 109);
+            this.Language.Name = "Language";
+            this.Language.Size = new System.Drawing.Size(242, 21);
+            this.Language.TabIndex = 29;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(8, 118);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(134, 13);
+            this.label49.TabIndex = 28;
+            this.label49.Text = "Language (restart required)";
+            // 
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(8, 285);
+            this.label40.Location = new System.Drawing.Point(8, 316);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(208, 13);
             this.label40.TabIndex = 27;
@@ -658,7 +683,7 @@
             // FollowRenamesInFileHistory
             // 
             this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 284);
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 315);
             this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
             this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
@@ -668,7 +693,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(8, 263);
+            this.label39.Location = new System.Drawing.Point(8, 294);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(184, 13);
             this.label39.TabIndex = 25;
@@ -677,7 +702,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(8, 240);
+            this.label38.Location = new System.Drawing.Point(8, 271);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(256, 13);
             this.label38.TabIndex = 24;
@@ -686,7 +711,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(8, 218);
+            this.label37.Location = new System.Drawing.Point(8, 249);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(167, 13);
             this.label37.TabIndex = 23;
@@ -695,7 +720,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(8, 197);
+            this.label35.Location = new System.Drawing.Point(8, 228);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(264, 13);
             this.label35.TabIndex = 22;
@@ -704,7 +729,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(8, 175);
+            this.label34.Location = new System.Drawing.Point(8, 206);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(295, 13);
             this.label34.TabIndex = 21;
@@ -713,7 +738,7 @@
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(324, 318);
+            this.EncodingLabel.Location = new System.Drawing.Point(324, 349);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(52, 13);
             this.EncodingLabel.TabIndex = 20;
@@ -729,7 +754,7 @@
             "UTF7",
             "UTF8",
             "UTF32"});
-            this.Encoding.Location = new System.Drawing.Point(382, 315);
+            this.Encoding.Location = new System.Drawing.Point(382, 346);
             this.Encoding.Name = "Encoding";
             this.Encoding.Size = new System.Drawing.Size(242, 21);
             this.Encoding.TabIndex = 19;
@@ -737,7 +762,7 @@
             // Dictionary
             // 
             this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(382, 109);
+            this.Dictionary.Location = new System.Drawing.Point(382, 140);
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(242, 21);
             this.Dictionary.TabIndex = 15;
@@ -747,7 +772,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(8, 118);
+            this.label22.Location = new System.Drawing.Point(8, 148);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(152, 13);
             this.label22.TabIndex = 14;
@@ -756,7 +781,7 @@
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(382, 262);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(382, 293);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(15, 14);
@@ -766,7 +791,7 @@
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(382, 240);
+            this.UseFastChecks.Location = new System.Drawing.Point(382, 271);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(15, 14);
@@ -776,7 +801,7 @@
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(382, 196);
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(382, 227);
             this.ShowGitCommandLine.Name = "ShowGitCommandLine";
             this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitCommandLine.Size = new System.Drawing.Size(15, 14);
@@ -786,7 +811,7 @@
             // ShowRevisionGraph
             // 
             this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(382, 218);
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(382, 249);
             this.ShowRevisionGraph.Name = "ShowRevisionGraph";
             this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRevisionGraph.Size = new System.Drawing.Size(15, 14);
@@ -797,7 +822,7 @@
             // CloseProcessDialog
             // 
             this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(382, 174);
+            this.CloseProcessDialog.Location = new System.Drawing.Point(382, 205);
             this.CloseProcessDialog.Name = "CloseProcessDialog";
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(15, 14);
@@ -896,7 +921,7 @@
             this.StartPage.Location = new System.Drawing.Point(4, 22);
             this.StartPage.Name = "StartPage";
             this.StartPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StartPage.Size = new System.Drawing.Size(710, 358);
+            this.StartPage.Size = new System.Drawing.Size(710, 383);
             this.StartPage.TabIndex = 6;
             this.StartPage.Text = "Start page";
             this.StartPage.UseVisualStyleBackColor = true;
@@ -906,7 +931,7 @@
             this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(704, 352);
+            this.dashboardEditor1.Size = new System.Drawing.Size(704, 377);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // AppearancePage
@@ -917,7 +942,7 @@
             this.AppearancePage.Controls.Add(this.groupBox3);
             this.AppearancePage.Location = new System.Drawing.Point(4, 22);
             this.AppearancePage.Name = "AppearancePage";
-            this.AppearancePage.Size = new System.Drawing.Size(710, 358);
+            this.AppearancePage.Size = new System.Drawing.Size(710, 383);
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
@@ -1418,7 +1443,7 @@
             this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
             this.GlobalSettingsPage.Name = "GlobalSettingsPage";
             this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 358);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 383);
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
@@ -1733,7 +1758,7 @@
             this.Ssh.Location = new System.Drawing.Point(4, 22);
             this.Ssh.Name = "Ssh";
             this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(710, 358);
+            this.Ssh.Size = new System.Drawing.Size(710, 383);
             this.Ssh.TabIndex = 4;
             this.Ssh.Text = "Ssh";
             this.Ssh.UseVisualStyleBackColor = true;
@@ -1941,8 +1966,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(718, 417);
-            this.splitContainer1.SplitterDistance = 384;
+            this.splitContainer1.Size = new System.Drawing.Size(718, 442);
+            this.splitContainer1.SplitterDistance = 409;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -1994,7 +2019,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(718, 417);
+            this.ClientSize = new System.Drawing.Size(718, 442);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -2206,6 +2231,8 @@
         private System.Windows.Forms.Button DiffToolCmdSuggest;
         private System.Windows.Forms.ComboBox DifftoolCmd;
         private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.ComboBox Language;
+        private System.Windows.Forms.Label label49;
 
     }
 }
