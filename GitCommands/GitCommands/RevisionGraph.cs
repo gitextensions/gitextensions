@@ -189,7 +189,7 @@ namespace GitCommands
             if (parents != null)
             {
                 List<string> parentGuids = new List<string>();
-                foreach (string s in parents.Split(' '))
+                foreach (string s in parents.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     parentGuids.Add(s.Trim());
                 }

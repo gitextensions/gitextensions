@@ -34,7 +34,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new DvcsGraph();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -96,7 +95,6 @@
             this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Graph,
             this.Message,
             this.Author,
             this.Date});
@@ -134,13 +132,6 @@
             this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Revisions_CellMouseDown);
             this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Revisions_KeyUp);
-            // 
-            // Graph
-            // 
-            resources.ApplyResources(this.Graph, "Graph");
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            this.Graph.Width = 200;
             // 
             // Message
             // 
@@ -206,7 +197,6 @@
             resources.ApplyResources(this.deleteTagToolStripMenuItem, "deleteTagToolStripMenuItem");
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
             // createNewBranchToolStripMenuItem
             // 
@@ -477,7 +467,6 @@
         private System.Windows.Forms.Timer SelecctionTimer;
         private System.Windows.Forms.Timer ScrollTimer;
         public System.Windows.Forms.PictureBox Error;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
