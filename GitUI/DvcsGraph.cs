@@ -39,6 +39,16 @@ namespace GitUI
             VirtualMode = true;
         }
 
+        public object GetRowData(int aRow)
+        {
+            Lanes.LaneRow row = GetRow(aRow);
+            if (row == null)
+            {
+                return null;
+            }
+            return row.Node.Data;
+        }
+
         private Lanes.LaneRow GetRow(int aRow)
         {
             if (LaneEnum == null)
@@ -48,7 +58,8 @@ namespace GitUI
 
             while (aRow >= LaneRows.Count && LaneEnum.MoveNext())
             {
-                LaneRows.Add(new Lanes.LaneRow(LaneEnum.Current));
+                Lanes.LaneRow row = new Lanes.LaneRow(LaneEnum.Current);
+                LaneRows.Add(row);
             }
             if (aRow < 0 || aRow >= LaneRows.Count)
             {
@@ -292,8 +303,6 @@ namespace GitUI
 
                 GraphWorkArea.RenderingOrigin = new Point(x, y);
                 DrawItem(GraphWorkArea, row);
-                //GraphWorkArea.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                //GraphWorkArea.DrawString(rowIndex.ToString() + " " + isLast.ToString(), new Font("Arial", 8), new SolidBrush(Color.FromArgb(r.Next(256), r.Next(256), r.Next(256))), GraphWorkArea.RenderingOrigin.X + 20, GraphWorkArea.RenderingOrigin.Y);
 
                 GraphWorkArea.Clip = oldClip;
             }
@@ -443,8 +452,8 @@ namespace GitUI
             }
 
             // DEBUG
-            GraphWorkArea.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            GraphWorkArea.DrawString(row.Node.Id.ToString(), new Font("Arial", 8), new SolidBrush(Color.FromArgb(r.Next(256), r.Next(256), r.Next(256))), GraphWorkArea.RenderingOrigin.X + 20, GraphWorkArea.RenderingOrigin.Y);
+            //GraphWorkArea.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            //GraphWorkArea.DrawString(row.Node.Id.ToString(), new Font("Arial", 8), new SolidBrush(Color.FromArgb(r.Next(256), r.Next(256), r.Next(256))), GraphWorkArea.RenderingOrigin.X + 20, GraphWorkArea.RenderingOrigin.Y);
 
         }
 
@@ -576,7 +585,7 @@ namespace GitUI
         {
             public List<Junction> Junctions = new List<Junction>();
             public Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
-            public IComparer<object> Sorter = null;
+            public Comparison<object> Sorter = null;
 
             public Node Add(IComparable aId, IComparable[] aParentIds, object aData)
             {
@@ -941,7 +950,7 @@ namespace GitUI
             private class LaneEnumerator : IEnumerator<LaneRow>
             {
                 private Lanes Lanes;
-                private IComparer<object> Sorter;
+                private Comparison<object> Sorter;
 
                 private JunctionHierarchy JunctionLanes;
                 private List<List<Node>> LaneNodes = new List<List<Node>>();
@@ -955,7 +964,12 @@ namespace GitUI
                     Sorter = Lanes.Graph.Sorter;
                     if (Sorter == null)
                     {
-                        Sorter = Comparer<object>.Default;
+                        Sorter = delegate(object a, object b)
+                        {
+                            IComparable left = (IComparable) a;
+                            IComparable right = (IComparable) b;
+                            return left.CompareTo( right );
+                        };
                     }
                     Reset();
                 }
@@ -1054,7 +1068,7 @@ namespace GitUI
                         // We will wait to draw it until then.
                         if (lane.Count > 1 || (lane.Count != 0 && lane[lane.Count - 1].Ancestors.Count == 0))
                         {
-                            if (CurrentRow.Node == null || Sorter.Compare(lane[0].Data, CurrentRow.Node.Data) > 0)
+                            if (CurrentRow.Node == null || Sorter.Invoke(lane[0].Data, CurrentRow.Node.Data) > 0)
                             {
                                 CurrentRow.Node = lane[0];
                                 CurrentRow.NodeLane = curLane;
@@ -1330,6 +1344,15 @@ namespace GitUI
             public Lanes(Graph aGraph)
             {
                 Graph = aGraph;
+
+                foreach (Node n in Graph.Nodes.Values)
+                {
+                    if (n.Data == null)
+                    {
+                        string errMsg = string.Format("Incomplete graph. Node \"{0}\" has no data", n.Id);
+                        throw new ArgumentException(errMsg);
+                    }
+                }
 
                 JunctionLanes = new JunctionHierarchy();
                 // Add the heads

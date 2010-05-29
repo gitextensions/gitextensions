@@ -64,122 +64,122 @@ namespace GitUI
         
         void Revisions_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Alt && e.KeyCode == Keys.Up)
-            {
-                int nextIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    nextIndex = Revisions.SelectedRows[0].Index - 1;
+            //if (e.Alt && e.KeyCode == Keys.Up)
+            //{
+            //    int nextIndex = 0;
+            //    if (Revisions.SelectedRows.Count > 0)
+            //        nextIndex = Revisions.SelectedRows[0].Index - 1;
 
-                FindNextMatch(nextIndex, lastQuickSearchString, true);
-                e.Handled = true;
-                return;
-            }
-            if (e.Alt && e.KeyCode == Keys.Down)
-            {
-                int nextIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    nextIndex = Revisions.SelectedRows[0].Index + 1;
+            //    FindNextMatch(nextIndex, lastQuickSearchString, true);
+            //    e.Handled = true;
+            //    return;
+            //}
+            //if (e.Alt && e.KeyCode == Keys.Down)
+            //{
+            //    int nextIndex = 0;
+            //    if (Revisions.SelectedRows.Count > 0)
+            //        nextIndex = Revisions.SelectedRows[0].Index + 1;
                 
-                FindNextMatch(nextIndex, lastQuickSearchString, false);  
-                e.Handled = true;
-                return;  
-            }
-            char key = (char)e.KeyValue;
-            if (char.IsLetterOrDigit(key) || char.IsNumber(key))
-            {
-                quickSearchTimer.Stop();
-                quickSearchTimer.Interval = 500;
-                quickSearchTimer.Start();
+            //    FindNextMatch(nextIndex, lastQuickSearchString, false);  
+            //    e.Handled = true;
+            //    return;  
+            //}
+            //char key = (char)e.KeyValue;
+            //if (char.IsLetterOrDigit(key) || char.IsNumber(key))
+            //{
+            //    quickSearchTimer.Stop();
+            //    quickSearchTimer.Interval = 500;
+            //    quickSearchTimer.Start();
 
-                quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
+            //    quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
 
-                int oldIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    oldIndex = Revisions.SelectedRows[0].Index;
+            //    int oldIndex = 0;
+            //    if (Revisions.SelectedRows.Count > 0)
+            //        oldIndex = Revisions.SelectedRows[0].Index;
 
-                FindNextMatch(oldIndex, quickSearchString, false);
-                lastQuickSearchString = quickSearchString;
-                System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
-                e.Handled = true;
-            }
-            else
-            {
-                quickSearchString = "";
-                return;
-            }
+            //    FindNextMatch(oldIndex, quickSearchString, false);
+            //    lastQuickSearchString = quickSearchString;
+            //    System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+            //    e.Handled = true;
+            //}
+            //else
+            //{
+            //    quickSearchString = "";
+            //    return;
+            //}
         }
 
         private void FindNextMatch(int startIndex, string searchString, bool reverse)
         {
-            if (RevisionList.Count == 0)
-            {
-                return;
-            }
+            //if (Revisions.RowCount == 0)
+            //{
+            //    return;
+            //}
             
-            Predicate<GitRevision> match = delegate(GitRevision r)
-            {
-                foreach (GitHead gitHead in r.Heads)
-                {
-                    if (gitHead.Name.StartsWith(searchString))
-                    {
-                        return true;
-                    }
-                }
+            //Predicate<GitRevision> match = delegate(GitRevision r)
+            //{
+            //    foreach (GitHead gitHead in r.Heads)
+            //    {
+            //        if (gitHead.Name.StartsWith(searchString))
+            //        {
+            //            return true;
+            //        }
+            //    }
 
-                //Make sure it only matches the start of a word
-                string modifiedSearchString = " " + searchString;
+            //    //Make sure it only matches the start of a word
+            //    string modifiedSearchString = " " + searchString;
 
-                if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
-                {
-                    return true;
-                }
+            //    if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
+            //    {
+            //        return true;
+            //    }
 
-                if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
-                {
-                    return true;
-                }
-                return false;
-            };
+            //    if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //};
             
-            int index;
+            //int index;
             
-            if (reverse)
-            {
-                //Check for out of bounds roll over if required
-                if (startIndex < 0 || startIndex >= RevisionList.Count)
-                    startIndex = RevisionList.Count - 1;
+            //if (reverse)
+            //{
+            //    //Check for out of bounds roll over if required
+            //    if (startIndex < 0 || startIndex >= Revisions.RowCount)
+            //        startIndex = Revisions.RowCount - 1;
                 
-                index = RevisionList.FindLastIndex(startIndex, match);
+            //    index = RevisionList.FindLastIndex(startIndex, match);
                 
-                if (index == -1)
-                {
-                    //We didn't find it so start searching from the bottom
-                    int bottomIndex = RevisionList.Count - 1;
-                    index = RevisionList.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
-                }
-            }
-            else
-            {
-                //Check for out of bounds roll over if required
-                if (startIndex < 0 || startIndex >= RevisionList.Count)
-                    startIndex = 0;
+            //    if (index == -1)
+            //    {
+            //        //We didn't find it so start searching from the bottom
+            //        int bottomIndex = Revisions.RowCount - 1;
+            //        index = RevisionList.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
+            //    }
+            //}
+            //else
+            //{
+            //    //Check for out of bounds roll over if required
+            //    if (startIndex < 0 || startIndex >= Revisions.RowCount)
+            //        startIndex = 0;
                 
-                index = RevisionList.FindIndex(startIndex, match);
+            //    index = RevisionList.FindIndex(startIndex, match);
 
-                if (index == -1)
-                {
-                    //We didn't find it so start searching from the top
-                    index = RevisionList.FindIndex(0, startIndex, match);
-                }
-            }
+            //    if (index == -1)
+            //    {
+            //        //We didn't find it so start searching from the top
+            //        index = RevisionList.FindIndex(0, startIndex, match);
+            //    }
+            //}
             
-            if (index > -1)
-            {
-                Revisions.ClearSelection();
-                Revisions.Rows[index].Selected = true;
+            //if (index > -1)
+            //{
+            //    Revisions.ClearSelection();
+            //    Revisions.Rows[index].Selected = true;
 
-                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
-            }
+            //    Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
+            //}
         }
 
         public string LogParam = "HEAD --all --boundary";
@@ -225,9 +225,6 @@ namespace GitUI
         {
             if (revisionGraphCommand != null)
                 revisionGraphCommand.Kill();
-
-            if (gitCountCommitsCommand != null)
-                gitCountCommitsCommand.Kill();
         }
 
         protected override void OnCreateControl()
@@ -272,17 +269,18 @@ namespace GitUI
         {
             List<GitRevision> retval = new List<GitRevision>();
 
-            if (RevisionList != null)
-                foreach (DataGridViewRow row in Revisions.SelectedRows)
-                {
-                    if (RevisionList.Count > row.Index)
-                        retval.Add(RevisionList[row.Index]);
-                }
+            foreach (DataGridViewRow row in Revisions.SelectedRows)
+            {
+                if (Revisions.RowCount > row.Index)
+                    retval.Add(GetRevision(row.Index));
+            }
             return retval;
         }
 
-
-        protected Bitmap graphImage;
+        GitRevision GetRevision(int aRow)
+        {
+            return Revisions.GetRowData(aRow) as GitRevision;
+        }
 
         GitCommands.GitCommands gitCountCommitsCommand = null;// = new GitCommands.GitCommands();
         GitCommands.RevisionGraph revisionGraphCommand = null;//new RevisionGraph();
@@ -304,8 +302,7 @@ namespace GitUI
             try
             {
                 initialLoad = true;
-                graphWidth = 0;
-
+                
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
                 LastSelectedRows.Clear();
 
@@ -315,10 +312,7 @@ namespace GitUI
                 }
 
                 if (!Settings.ShowRevisionGraph)
-                    //Revisions.Columns[0].Width = 1;
-                    //else
                     Revisions.Columns[0].Width = 0;
-
 
                 Error.Visible = false;
                 NoCommits.Visible = false;
@@ -366,23 +360,6 @@ namespace GitUI
             }
         }
 
-        private void SetRowCount()
-        {
-            int count;
-            if (int.TryParse(gitCountCommitsCommand.Output.ToString(), out count))
-            {
-                ScrollBarSet = true;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = count;
-                Revisions.ScrollBars = ScrollBars.Vertical;
-            }
-        }
-
-        private void gitCountCommitsCommand_Exited(object sender, EventArgs e)
-        {
-            syncContext.Post(_ => SetRowCount(), null);
-        }
-
         private void InternalRefresh()
         {
             Error.Visible = false;
@@ -428,12 +405,10 @@ namespace GitUI
 
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
-            RevisionList = revisionGraphCommand.Revisions;
             syncContext.Post(_ => LoadRevisions(), null);
         }
 
         public string currentCheckout { get; set; }
-        public List<GitRevision> RevisionList;
         private int LastRevision = 0;
         private bool initialLoad = true;
 
@@ -445,12 +420,17 @@ namespace GitUI
 
         private void LoadRevisions()
         {
-            if (RevisionList == null)
+            if (revisionGraphCommand == null)
+            {
+                return;
+            }
+            List<GitRevision> revisionList = revisionGraphCommand.Revisions;
+            if (revisionList == null)
             {
                 return;
             }
 
-            if (RevisionList != null && (RevisionList.Count == 0 && string.IsNullOrEmpty(Filter)))
+            if (revisionList != null && (Revisions.RowCount == 0 && string.IsNullOrEmpty(Filter)))
             {
                 Loading.Visible = false;
                 NoCommits.Visible = true;
@@ -465,20 +445,8 @@ namespace GitUI
             {
                 ScrollBarSet = true;
                 Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = RevisionList.Count;
+                Revisions.RowCount = Revisions.RowCount;
                 Revisions.ScrollBars = ScrollBars.Vertical;
-
-                if (RevisionList.Count >= GitCommands.Settings.MaxCommits)
-                {
-                    string grep = "";
-                    if (!string.IsNullOrEmpty(Filter))
-                        grep = " --grep=\"" + Filter + "\" ";
-
-                    gitCountCommitsCommand = new GitCommands.GitCommands();
-                    gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc\" -l\"");
-                    gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
-                }
-
             }
 
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
@@ -507,14 +475,18 @@ namespace GitUI
             }
 
             DvcsGraph.Graph graph = new DvcsGraph.Graph();
-            foreach (GitRevision rev in RevisionList)
+            graph.Sorter = delegate(object a, object b)
             {
-                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev.AuthorDate);
+                GitRevision left = (GitRevision)a;
+                GitRevision right = (GitRevision)b;
+                return left.AuthorDate.CompareTo(right.AuthorDate);
+            };
+            foreach (GitRevision rev in revisionList)
+            {
+                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
             }
             Revisions.SetGraph(graph);
             
-            DrawVisibleGraphPart();
-
             Loading.Visible = false;
             Revisions.Enabled = true;
             Revisions.Focus();
@@ -532,245 +504,24 @@ namespace GitUI
             }
         }
 
-        private bool skipFirst = false;
-        private int graphWidth = 0;
-        private void DrawVisibleGraphPart()
-        {
-            graphWidth = 0;
-            int height = Revisions.RowTemplate.Height;
-            int width = Settings.RevisionGraphWidth;
-            int y = -height;
-            int numberOfVisibleRows = Revisions.DisplayedRowCount(true);
-            int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
-            numberOfVisibleRows = Math.Min(/*20*/numberOfVisibleRows, RevisionList.Count);
-            if (firstVisibleRow < 1)
-            {
-                skipFirst = false;
-                firstVisibleRow = 0;
-            }
-            else
-            {
-                skipFirst = true;
-                firstVisibleRow -= 1;
-            }
-
-            if (graphImage != null)
-                graphImage.Dispose();
-
-            graphImage = new Bitmap(1000, (numberOfVisibleRows * height) + 50, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);//System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-            Graphics graph = Graphics.FromImage(graphImage);
-
-            string lastlastLine = "";
-            string lastLine = "";
-            string currentLine = "";
-
-            Pen linePen = new Pen(Settings.RevisionGraphColor, Settings.RevisionGraphThickness);
-            SolidBrush blueBrush = new SolidBrush(Settings.RevisionGraphColorSelected);
-            SolidBrush redBrush = new SolidBrush(Settings.RevisionGraphColor);
-            char[] calc = new char[100];
-
-            int nLine = 0;
-
-            GitRevision revision = null;
-
-            GitRevision prevRevision = null;
-            GitRevision nextRevision = null;
-
-            int lastVisibleRow = Math.Min(RevisionList.Count - 1, firstVisibleRow + numberOfVisibleRows);
-
-            for (int r = firstVisibleRow; r <= lastVisibleRow; r++)
-            {
-                revision = RevisionList[r];
-
-                if (r > 0)
-                    prevRevision = RevisionList[r - 1];
-                else
-                    prevRevision = null;
-
-                if (RevisionList.Count > r + 1)
-                    nextRevision = RevisionList[r + 1];
-                else
-                    nextRevision = null;
-
-                y += height;
-
-                for (int x = 0; x < 100; x++)
-                {
-                    calc[x] = '|';
-                }
-
-                for (int n = 0; n < revision.GraphLines.Count + 1; n++)
-                {
-                    string nextLine;
-
-                    if (n < revision.GraphLines.Count)
-                    {
-                        nextLine = revision.GraphLines[n];
-                    }
-                    else
-                    {
-                        if (nextRevision != null)
-                            nextLine = nextRevision.GraphLines[0];
-                        else
-                            nextLine = "";
-                    }
-
-
-                    nLine++;
-
-                    int x = 0;
-                    for (int nc = 0; nc < currentLine.Length && nc < 100; nc++)
-                    {
-
-                        x += width;
-
-                        char c = currentLine[nc];
-                        int top = y;
-                        int bottom = y + height;
-                        int left = x;
-                        int right = x + width;
-                        int hcenter = x + (width / 2);
-                        int vcenter = y + (height / 2);
-
-                        if (c == '*')
-                        {
-                            if (revision.Guid == currentCheckout)
-                                graph.FillEllipse(blueBrush, hcenter - 5, vcenter - 5, 9, 9);
-                            else
-                                graph.FillEllipse(redBrush, hcenter - 4, vcenter - 4, 7, 7);
-
-                            if (nextRevision != null && nextRevision.GraphLines[0].Length > nc && (nextRevision.GraphLines[0][nc] == '|' || nextRevision.GraphLines[0][nc] == '*'))
-                            {
-                                if (r == 0)
-                                    graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom);
-                                else
-                                    if (nextLine != null && nextLine.Length > nc && nextLine[nc] == '|')
-                                        graph.DrawLine(linePen, hcenter, vcenter, hcenter, bottom + (height / 2));
-                            }
-                        }
-                        if (c != '|' && c != '*')
-                        {
-                            calc[nc] = ' ';
-                        }
-                        if (c == '\\' && nc % 2 == 1)
-                        {
-                            if ((nextLine.Length > nc && nextLine[nc] == '/' || nextLine.Length <= nc) ||
-                                (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc))
-                            {
-                                if (lastLine.Length > nc && lastLine[nc] == '/' || lastLine.Length <= nc)
-                                {
-                                    if (nextLine.Length > nc + 1 && nextLine[nc + 1] == '|' || nextLine.Length <= nc + 1)
-                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
-                                }
-                            }
-                            else
-                            {
-                                if ((nextLine.Length > nc + 2 && nextLine[nc + 2] != '\\') || nextLine.Length <= nc + 2)
-                                {
-                                    //draw: 
-                                    //      \
-                                    graph.DrawLine(linePen, right, bottom, right + (width / 2), bottom + (height / 2));
-                                }
-                                if (nc - 2 >= 0 && lastLine.Length > (nc - 2) && lastLine[nc - 2] == '\\')
-                                {
-                                    //draw: _
-                                    graph.DrawLine(linePen, left - width, bottom, right, bottom);
-                                }
-                                else
-                                {
-                                    // draw: \_
-                                    graph.DrawLine(linePen, left - (width / 2), vcenter, left, bottom);
-                                    graph.DrawLine(linePen, left, bottom, right, bottom);
-                                }
-                            }
-                        }
-                        if (c == '/' && nc % 2 == 1)
-                        {
-                            if ((nextLine.Length > nc && nextLine[nc] == '\\' || nextLine.Length <= nc) ||
-                                (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc))
-                            {
-                                if (lastLine.Length > nc && lastLine[nc] == '\\' || lastLine.Length <= nc)
-                                {
-                                    if (nextLine.Length > nc - 1 && nextLine[nc - 1] == '|' || nextLine.Length <= nc - 1)
-                                        graph.DrawLine(linePen, left - (width / 2), vcenter, left - (width / 2), bottom + (height / 2));
-                                }
-                            }
-                            else
-                            {
-
-
-
-                                if ((lastLine.Length > nc + 2 && lastLine[nc + 2] != '/' || lastLine.Length <= nc + 2) ||
-                                    (lastLine.Length > nc + 2 && lastLine[nc + 2] == '/' &&
-                                     lastlastLine.Length > nc + 2 && lastlastLine[nc + 2] == '\\'))
-                                {
-                                    //draw: /
-                                    //      
-                                    graph.DrawLine(linePen, right, bottom, right + (width / 2), bottom - (height / 2));
-                                }
-                                if (nc - 2 >= 0 && nextLine.Length > (nc - 2) && nextLine[nc - 2] == '/')
-                                {
-                                    //draw: _
-                                    //      
-                                    graph.DrawLine(linePen, left - width, bottom, right, bottom);
-                                }
-                                else
-                                {
-                                    //draw:  _
-                                    //      /
-                                    graph.DrawLine(linePen, left - (width / 2), bottom + (height / 2), left, bottom);
-                                    graph.DrawLine(linePen, left, bottom, right, bottom);
-                                }
-                            }
-                        }
-
-                        if (n == revision.GraphLines.Count - 1)
-                        {
-                            char prevChar = ' ';
-                            char currentChar = calc[nc];
-                            char nextChar = ' ';
-
-                            if (prevRevision != null && prevRevision.GraphLines.Count > 0 && prevRevision.GraphLines[prevRevision.GraphLines.Count - 1].Length > nc)
-                                prevChar = prevRevision.GraphLines[prevRevision.GraphLines.Count - 1][nc];
-
-                            if (nextRevision != null && nextRevision.GraphLines[0].Length > nc)
-                                nextChar = nextRevision.GraphLines[0][nc];
-
-                            if ((prevChar == '|' && currentChar == '|') || (prevChar == '|' && currentChar == '*'))
-                            {
-                                graph.DrawLine(linePen, hcenter, top + (height / 2), hcenter, vcenter + (height / 2));
-                            }
-                            if ((nextChar == '|' && currentChar == '|') || (nextChar == '*' && currentChar == '|'))
-                            {
-                                graph.DrawLine(linePen, hcenter, vcenter + (height / 2), hcenter, bottom + (height / 2));
-                            }
-                            //                            if (nextChar != ' ')
-                        }
-                        graphWidth = Math.Max(graphWidth, Math.Max(40, (currentLine.Length * width) + width));
-                        graphWidth = Math.Min((100 * width) + width, graphWidth);
-
-                    }
-                    lastlastLine = lastLine;
-                    lastLine = currentLine;
-                    currentLine = nextLine;
-                }
-            }
-
-            Revisions.Columns[0].Width = graphWidth;
-        }
-
         void Revisions_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            // The graph column is handled by the DvcsGraph
             if (e.ColumnIndex == 0)
             {
                 return;
             }
-            int column = e.ColumnIndex - 1;
+
+            int column = e.ColumnIndex;
             if (e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
             {
-                if (RevisionList != null && RevisionList.Count > e.RowIndex)
+                if (Revisions.RowCount > e.RowIndex)
                 {
-                    GitRevision revision = RevisionList[e.RowIndex];
+                    GitRevision revision = GetRevision(e.RowIndex);
+                    if (revision == null)
+                    {
+                        return;
+                    }
 
                     e.Handled = true;
 
@@ -780,47 +531,35 @@ namespace GitUI
                     else
                         e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
-                    if (column == 0)
+                    if (column == 1)
                     {
-                        int top = ((e.RowIndex - Revisions.FirstDisplayedScrollingRowIndex) * Revisions.RowTemplate.Height);
-                        if (skipFirst)
-                            top += Revisions.RowTemplate.Height;
-
-                        e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, top/* e.RowIndex * Revisions.RowTemplate.Height*/, e.CellBounds.Width, Revisions.RowTemplate.Height), GraphicsUnit.Pixel);
-                    }
-                    else
-                        if (column == 1)
+                        float offset = 0;
+                        foreach (GitHead h in revision.Heads)
                         {
-                            float offset = 0;
-                            foreach (GitHead h in revision.Heads)
+                            if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
                             {
-                                if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
-                                {
-                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
+                                SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
 
-                                    e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                                    offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
-                                }
+                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
                             }
-                            string text = revision.Message;
-                            e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                         }
-                        else
-                            if (column == 2)
-                            {
-                                string text = revision.Author;
-                                e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                            }
-                            else
-                                if (column == 3)
-                                {
-                                    string text = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                                    e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                                }
+                        string text = revision.Message;
+                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                    }
+                    else if (column == 2)
+                    {
+                        string text = revision.Author;
+                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
+                    else if (column == 3)
+                    {
+                        string text = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
                 }
             }
-
         }
 
         private void Revisions_DoubleClick(object sender, EventArgs e)
@@ -866,21 +605,20 @@ namespace GitUI
 
         private void createTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
                 FormTagSmall frm = new FormTagSmall();
-                frm.Revision = (GitRevision)RevisionList[LastRow];
+                frm.Revision = GetRevision(LastRow);
                 frm.ShowDialog();
                 RefreshRevisions();
-
             }
         }
 
         private void resetCurrentBranchToHereToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
-                FormResetCurrentBranch frm = new FormResetCurrentBranch((GitRevision)RevisionList[LastRow]);
+                FormResetCurrentBranch frm = new FormResetCurrentBranch((GitRevision)GetRevision(LastRow));
                 frm.ShowDialog();
                 RefreshRevisions();
             }
@@ -888,10 +626,10 @@ namespace GitUI
 
         private void createNewBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
                 FormBranchSmall frm = new FormBranchSmall();
-                frm.Revision = (GitRevision)RevisionList[LastRow];
+                frm.Revision = (GitRevision)GetRevision(LastRow);
                 frm.ShowDialog();
                 RefreshRevisions();
                 OnChangedCurrentBranch();
@@ -932,7 +670,6 @@ namespace GitUI
             GitUICommands.Instance.StartEditGitIgnoreDialog();
         }
 
-
         private void ShowRemoteBranches_Click(object sender, EventArgs e)
         {
             ShowRemoteBranches.Checked = !ShowRemoteBranches.Checked;
@@ -959,14 +696,13 @@ namespace GitUI
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
-                FormRevertCommitSmall frm = new FormRevertCommitSmall((GitRevision)RevisionList[LastRow]);
+                FormRevertCommitSmall frm = new FormRevertCommitSmall((GitRevision)GetRevision(LastRow));
                 frm.ShowDialog();
                 RefreshRevisions();
             }
         }
-
 
         private void showRevisionGraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -994,10 +730,10 @@ namespace GitUI
 
         private void CreateTag_Opening(object sender, CancelEventArgs e)
         {
-            if (RevisionList.Count < LastRow || LastRow < 0 || RevisionList.Count == 0)
+            if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
 
-            GitRevision revision = RevisionList[LastRow] as GitRevision;
+            GitRevision revision = GetRevision(LastRow) as GitRevision;
 
             ToolStripDropDown tagDropDown = new ToolStripDropDown();
             ToolStripDropDown branchDropDown = new ToolStripDropDown();
@@ -1115,20 +851,13 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-
-
-        private void deleteTagToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void checkoutRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
                 if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormProcess("checkout \"" + RevisionList[LastRow].Guid + "\"");
+                    new FormProcess("checkout \"" + GetRevision(LastRow).Guid + "\"");
                     ForceRefreshRevisions();
                     OnChangedCurrentBranch();
                 }
@@ -1157,9 +886,9 @@ namespace GitUI
 
         private void cherryPickCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionList.Count > LastRow && LastRow >= 0)
+            if (Revisions.RowCount > LastRow && LastRow >= 0)
             {
-                FormCherryPickCommitSmall frm = new FormCherryPickCommitSmall((GitRevision)RevisionList[LastRow]);
+                FormCherryPickCommitSmall frm = new FormCherryPickCommitSmall((GitRevision)GetRevision(LastRow));
                 frm.ShowDialog();
                 RefreshRevisions();
             }
