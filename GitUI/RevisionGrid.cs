@@ -53,10 +53,37 @@ namespace GitUI
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
         }
 
+        Label quickSearchLabel;
+        private void ShowQuickSearchString()
+        {
+            if (quickSearchLabel == null)
+            {
+                quickSearchLabel = new Label();
+                quickSearchLabel.Location = new Point(10, 10);
+                quickSearchLabel.BorderStyle = BorderStyle.FixedSingle;
+                quickSearchLabel.ForeColor = SystemColors.InfoText;
+                quickSearchLabel.BackColor = SystemColors.Info;
+                //quickSearchLabel.Size = new Size(200, 50);
+                this.Controls.Add(quickSearchLabel);
+            }
+
+            quickSearchLabel.Visible = true;
+            quickSearchLabel.BringToFront();
+            quickSearchLabel.Text = quickSearchString;
+            quickSearchLabel.AutoSize = true;
+        }
+
+        private void HideQuickSearchString()
+        {
+            if (quickSearchLabel != null)
+                quickSearchLabel.Visible = false;
+        }
+
         void quickSearchTimer_Tick(object sender, EventArgs e)
         {
             quickSearchTimer.Stop();
             quickSearchString = "";
+            HideQuickSearchString();
         }
 
         private string quickSearchString;
@@ -85,10 +112,10 @@ namespace GitUI
                 return;  
             }
             char key = (char)e.KeyValue;
-            if (char.IsLetterOrDigit(key) || char.IsNumber(key))
+            if (char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
             {
                 quickSearchTimer.Stop();
-                quickSearchTimer.Interval = 500;
+                quickSearchTimer.Interval = 700;
                 quickSearchTimer.Start();
 
                 quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
@@ -99,12 +126,14 @@ namespace GitUI
 
                 FindNextMatch(oldIndex, quickSearchString, false);
                 lastQuickSearchString = quickSearchString;
-                System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+                //System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
                 e.Handled = true;
+                ShowQuickSearchString();
             }
             else
             {
                 quickSearchString = "";
+                HideQuickSearchString();
                 return;
             }
         }
