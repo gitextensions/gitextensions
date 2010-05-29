@@ -17,8 +17,14 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void GitLogForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("log");
+        }
+
         private void GitLogForm_Load(object sender, EventArgs e)
         {
+            RestorePosition("log");
             Log.Text = Settings.GitLog.ToString();
         }
     }

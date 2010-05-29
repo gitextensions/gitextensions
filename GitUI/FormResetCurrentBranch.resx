@@ -429,9 +429,6 @@
   <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-    <value>Japanese</value>
-  </data>
   <data name="msg:reset branch" xml:space="preserve">
     <value>You are about to discard ALL local changes, are you sure?</value>
   </data>

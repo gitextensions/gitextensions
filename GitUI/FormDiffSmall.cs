@@ -20,9 +20,14 @@ namespace GitUI
             DiffFiles.Focus();
         }
 
+        private void FormDiffSmall_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("diff-small");
+        }
+
         private void FormDiffSmall_Load(object sender, EventArgs e)
         {
-
+            RestorePosition("diff-small");
         }
 
         private GitRevision Revision = null;

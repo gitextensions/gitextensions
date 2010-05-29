@@ -25,9 +25,15 @@ namespace GitUI
             cmd.Kill();
         }
 
+        private void FormCommitCount_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("commit-count");
+        }
+
         private GitCommands.GitCommands cmd = new GitCommands.GitCommands();
         private void FormCommitCount_Load(object sender, EventArgs e)
         {
+            RestorePosition("commit-count");
             Loading.Visible = true;
             cmd.Exited += new EventHandler(cmd_Exited);
             //cmd.CmdStartProcess(GitCommands.Settings.GitCommand, "shortlog -s -n");

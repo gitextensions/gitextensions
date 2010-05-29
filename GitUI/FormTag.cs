@@ -15,6 +15,16 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void FormTag_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("tag");
+        }
+
+        private void FormTag_Load(object sender, EventArgs e)
+        {
+            RestorePosition("tag");
+        }
+
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
 

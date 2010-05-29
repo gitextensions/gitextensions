@@ -667,6 +667,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("showauthorgravatar", Settings.showAuthorGravatar);
 
                 Application.UserAppDataRegistry.SetValue("closeCommitDialogAfterCommit", Settings.CloseCommitDialogAfterCommit);
+                Application.UserAppDataRegistry.SetValue("markIllFormedLinesInCommitMsg", Settings.MarkIllFormedLinesInCommitMsg);
 
                 Application.UserAppDataRegistry.SetValue("diffaddedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffAddedColor));
                 Application.UserAppDataRegistry.SetValue("diffremovedcolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedColor));
@@ -804,6 +805,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("showauthorgravatar") != null) Settings.showAuthorGravatar = Application.UserAppDataRegistry.GetValue("showauthorgravatar").ToString() == "True";
 
                 if (Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit") != null) Settings.CloseCommitDialogAfterCommit = Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("markIllFormedLinesInCommitMsg") != null) Settings.MarkIllFormedLinesInCommitMsg = Application.UserAppDataRegistry.GetValue("markIllFormedLinesInCommitMsg").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("autostash") != null) Settings.AutoStash = Application.UserAppDataRegistry.GetValue("autostash").ToString() == "True";
 
@@ -826,5 +828,7 @@ namespace GitCommands
             {
             }
         }
+
+        public static bool MarkIllFormedLinesInCommitMsg { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
+  <!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,209 +59,374 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="metadata">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" />
-							</xsd:sequence>
-							<xsd:attribute name="name" use="required" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="assembly">
-						<xsd:complexType>
-							<xsd:attribute name="alias" type="xsd:string" />
-							<xsd:attribute name="name" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="&gt;&gt;deleteBranchToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <metadata name="Graph.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Graph.HeaderText" xml:space="preserve">
+    <value>Graph</value>
   </data>
-	<data name="&gt;&gt;orderRevisionsByDateToolStripMenuItem.Name" xml:space="preserve">
-    <value>orderRevisionsByDateToolStripMenuItem</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Graph.Width" type="System.Int32, mscorlib">
+    <value>200</value>
   </data>
-	<data name="createNewBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>Create new branch</value>
+  <metadata name="Message.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Message.HeaderText" xml:space="preserve">
+    <value>Message</value>
   </data>
-	<data name="&gt;&gt;gitRevisionBindingSource.Name" xml:space="preserve">
-    <value>gitRevisionBindingSource</value>
-  </data>
-	<assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-	<data name="Revisions.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="orderRevisionsByDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-	<data name="Loading.Visible" type="System.Boolean, mscorlib">
-		<value>False</value>
-	</data>
-	<data name="deleteBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="&gt;&gt;showRevisionGraphToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;Error.Name" xml:space="preserve">
-    <value>Error</value>
-  </data>
-	<data name="&gt;&gt;resetCurrentBranchToHereToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Loading.Location" type="System.Drawing.Point, System.Drawing">
-		<value>0, 0</value>
-	</data>
-	<data name="&gt;&gt;resetCurrentBranchToHereToolStripMenuItem.Name" xml:space="preserve">
-    <value>resetCurrentBranchToHereToolStripMenuItem</value>
-  </data>
-	<assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-	<data name="NoCommits.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-		<value>Fill</value>
-	</data>
-	<data name="&gt;&gt;Author.Name" xml:space="preserve">
+  <metadata name="Author.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Author.HeaderText" xml:space="preserve">
     <value>Author</value>
   </data>
-	<data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Author.Width" type="System.Int32, mscorlib">
+    <value>150</value>
   </data>
-	<data name="Revisions.TabIndex" type="System.Int32, mscorlib">
-		<value>0</value>
-	</data>
-	<data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;NoCommits.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="label1.AutoSize" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-		<value>241, 6</value>
-	</data>
-	<data name="resetCurrentBranchToHereToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="showAllBranchesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show all branches</value>
-  </data>
-	<data name="GitIgnore.Size" type="System.Drawing.Size, System.Drawing">
-		<value>86, 21</value>
-	</data>
-	<data name="createNewBranchToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-		<value>Ctrl+B</value>
-	</data>
-	<data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Loading.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-		<value>CenterImage</value>
-	</data>
-	<data name="label2.AutoSize" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="Graph.HeaderText" xml:space="preserve">
-    <value>Graph</value>
-  </data>
-	<data name="&gt;&gt;ScrollTimer.Name" xml:space="preserve">
-    <value>ScrollTimer</value>
-  </data>
-	<data name="&gt;&gt;Commit.Name" xml:space="preserve">
-    <value>Commit</value>
-  </data>
-	<data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="&gt;&gt;Date.Name" xml:space="preserve">
+  <metadata name="Date.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Date.HeaderText" xml:space="preserve">
     <value>Date</value>
   </data>
-	<data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Date.Width" type="System.Int32, mscorlib">
+    <value>180</value>
   </data>
-	<data name="&gt;&gt;SelecctionTimer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <metadata name="CreateTag.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>457, 17</value>
+  </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="createTagToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+T</value>
   </data>
-	<data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-		<value>13, 9</value>
-	</data>
-	<data name="showAllBranchesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="&gt;&gt;Loading.Name" xml:space="preserve">
-    <value>Loading</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="createTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
   </data>
-	<data name="&gt;&gt;Graph.Name" xml:space="preserve">
-    <value>Graph</value>
+  <data name="createTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Create new tag</value>
   </data>
-	<data name="&gt;&gt;createTagToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="deleteTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
   </data>
-	<data name="createTagToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-		<value>Ctrl+T</value>
-	</data>
-	<data name="&gt;&gt;Error.Parent" xml:space="preserve">
+  <data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete tag</value>
+  </data>
+  <data name="createNewBranchToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+B</value>
+  </data>
+  <data name="createNewBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="createNewBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Create new branch</value>
+  </data>
+  <data name="deleteBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete branch</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>251, 6</value>
+  </data>
+  <data name="mergeBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Merge with branch</value>
+  </data>
+  <data name="rebaseOnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="rebaseOnToolStripMenuItem.Text" xml:space="preserve">
+    <value>Rebase on</value>
+  </data>
+  <data name="resetCurrentBranchToHereToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="resetCurrentBranchToHereToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reset current branch to here</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Checkout branch</value>
+  </data>
+  <data name="checkoutRevisionToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="checkoutRevisionToolStripMenuItem.Text" xml:space="preserve">
+    <value>Checkout revision</value>
+  </data>
+  <data name="revertCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="revertCommitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Revert commit</value>
+  </data>
+  <data name="cherryPickCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="cherryPickCommitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Cherry pick commit</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>251, 6</value>
+  </data>
+  <data name="ShowRemoteBranches.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="ShowRemoteBranches.Text" xml:space="preserve">
+    <value>Show remote branches</value>
+  </data>
+  <data name="showAllBranchesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="showAllBranchesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show all branches</value>
+  </data>
+  <data name="showRevisionGraphToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="showRevisionGraphToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show revision graph</value>
+  </data>
+  <data name="showAuthorDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="showAuthorDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show author date</value>
+  </data>
+  <data name="showRelativeDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="showRelativeDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show relative date</value>
+  </data>
+  <data name="orderRevisionsByDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="orderRevisionsByDateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Order revisions by date</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>251, 6</value>
+  </data>
+  <data name="filterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 22</value>
+  </data>
+  <data name="filterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Set advanced filter</value>
+  </data>
+  <data name="CreateTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 418</value>
+  </data>
+  <data name="&gt;&gt;CreateTag.Name" xml:space="preserve">
+    <value>CreateTag</value>
+  </data>
+  <data name="&gt;&gt;CreateTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Revisions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="Revisions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Revisions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="Revisions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;Revisions.Name" xml:space="preserve">
+    <value>Revisions</value>
+  </data>
+  <data name="&gt;&gt;Revisions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Revisions.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-	<data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>RevisionGrid</value>
+  <data name="&gt;&gt;Revisions.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
-	<data name="&gt;&gt;Date.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <metadata name="SelecctionTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>207, 17</value>
+  </metadata>
+  <metadata name="ScrollTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>345, 17</value>
+  </metadata>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-	<data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-		<value>354, 96</value>
-	</data>
-	<data name="Error.Location" type="System.Drawing.Point, System.Drawing">
-		<value>0, 0</value>
-	</data>
-	<data name="revertCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="label1.Text" xml:space="preserve">
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 9</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>218, 13</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>The current working dir is not a git repository.</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>NoGit</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="NoGit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="NoGit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="NoGit.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;NoGit.Name" xml:space="preserve">
+    <value>NoGit</value>
+  </data>
+  <data name="&gt;&gt;NoGit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;NoGit.Parent" xml:space="preserve">
+    <value>NoCommits</value>
+  </data>
+  <data name="&gt;&gt;NoGit.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="GitIgnore.Location" type="System.Drawing.Point, System.Drawing">
+    <value>401, 9</value>
+  </data>
+  <data name="GitIgnore.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 23</value>
+  </data>
+  <data name="GitIgnore.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="GitIgnore.Text" xml:space="preserve">
+    <value>Edit .gitignore</value>
+  </data>
+  <data name="&gt;&gt;GitIgnore.Name" xml:space="preserve">
+    <value>GitIgnore</value>
+  </data>
+  <data name="&gt;&gt;GitIgnore.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GitIgnore.Parent" xml:space="preserve">
+    <value>NoCommits</value>
+  </data>
+  <data name="&gt;&gt;GitIgnore.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Commit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>401, 36</value>
+  </data>
+  <data name="Commit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>87, 23</value>
+  </data>
+  <data name="Commit.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="Commit.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="&gt;&gt;Commit.Name" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="&gt;&gt;Commit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Commit.Parent" xml:space="preserve">
+    <value>NoCommits</value>
+  </data>
+  <data name="&gt;&gt;Commit.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 9</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 104</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
     <value>There are no commits made to this repository yet.
 
 If this is a normal repository, these steps are recommended:
@@ -271,457 +436,292 @@ If this is a normal repository, these steps are recommended:
 If this is a central repository (bare repository without a working dir):
 - Push changes from another repository</value>
   </data>
-	<data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>Delete branch</value>
-  </data>
-	<data name="Error.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-		<value>CenterImage</value>
-	</data>
-	<data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-		<value>6, 12</value>
-	</data>
-	<data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
-  </data>
-	<data name="&gt;&gt;showAuthorDateToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;createNewBranchToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="CreateTag.Size" type="System.Drawing.Size, System.Drawing">
-		<value>245, 396</value>
-	</data>
-	<data name="&gt;&gt;Commit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;GitIgnore.Parent" xml:space="preserve">
-    <value>NoCommits</value>
-  </data>
-	<data name="&gt;&gt;quickSearchTimer.Name" xml:space="preserve">
-    <value>quickSearchTimer</value>
-  </data>
-	<data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-	<data name="checkoutBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="Error.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="&gt;&gt;Loading.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-	<data name="orderRevisionsByDateToolStripMenuItem.Text" xml:space="preserve">
-    <value>Order revisions by date</value>
-  </data>
-	<data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
-    <value>toolStripSeparator3</value>
-  </data>
-	<data name="&gt;&gt;Message.Name" xml:space="preserve">
-    <value>Message</value>
-  </data>
-	<data name="&gt;&gt;showRelativeDateToolStripMenuItem.Name" xml:space="preserve">
-    <value>showRelativeDateToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>NoCommits</value>
-  </data>
-	<data name="label2.TabIndex" type="System.Int32, mscorlib">
-		<value>1</value>
-	</data>
-	<data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Loading.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-		<value>Fill</value>
-	</data>
-	<data name="showRelativeDateToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show relative date</value>
-  </data>
-	<data name="&gt;&gt;showAllBranchesToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="resetCurrentBranchToHereToolStripMenuItem.Text" xml:space="preserve">
-    <value>Reset current branch to here</value>
-  </data>
-	<data name="label1.TabIndex" type="System.Int32, mscorlib">
-		<value>0</value>
-	</data>
-	<data name="NoGit.Location" type="System.Drawing.Point, System.Drawing">
-		<value>0, 0</value>
-	</data>
-	<data name="showRelativeDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="revertCommitToolStripMenuItem.Text" xml:space="preserve">
-    <value>Revert commit</value>
-  </data>
-	<data name="showRevisionGraphToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="&gt;&gt;revertCommitToolStripMenuItem.Name" xml:space="preserve">
-    <value>revertCommitToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;cherryPickCommitToolStripMenuItem.Name" xml:space="preserve">
-    <value>cherryPickCommitToolStripMenuItem</value>
-  </data>
-	<data name="NoGit.TabIndex" type="System.Int32, mscorlib">
-		<value>4</value>
-	</data>
-	<data name="&gt;&gt;GitIgnore.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;deleteBranchToolStripMenuItem.Name" xml:space="preserve">
-    <value>deleteBranchToolStripMenuItem</value>
-  </data>
-	<data name="NoGit.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-		<value>Fill</value>
-	</data>
-	<data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-		<value>13, 9</value>
-	</data>
-	<data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-	<data name="Error.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-		<value>Fill</value>
-	</data>
-	<data name="createTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-		<value>241, 12</value>
-	</data>
-	<data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-	<data name="Graph.Width" type="System.Int32, mscorlib">
-		<value>200</value>
-	</data>
-	<data name="createTagToolStripMenuItem.Text" xml:space="preserve">
-    <value>Create new tag</value>
-  </data>
-	<data name="&gt;&gt;orderRevisionsByDateToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="cherryPickCommitToolStripMenuItem.Text" xml:space="preserve">
-    <value>Cherry pick commit</value>
-  </data>
-	<data name="&gt;&gt;NoCommits.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-	<data name="&gt;&gt;NoCommits.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-	<data name="showAuthorDateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="Revisions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-		<value>Fill</value>
-	</data>
-	<data name="NoGit.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="&gt;&gt;checkoutBranchToolStripMenuItem.Name" xml:space="preserve">
-    <value>checkoutBranchToolStripMenuItem</value>
-  </data>
-	<data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>Merge with branch</value>
-  </data>
-	<data name="&gt;&gt;SelecctionTimer.Name" xml:space="preserve">
-    <value>SelecctionTimer</value>
-  </data>
-	<data name="GitIgnore.Location" type="System.Drawing.Point, System.Drawing">
-		<value>401, 9</value>
-	</data>
-	<data name="mergeBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="Loading.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="deleteTagToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="ShowRemoteBranches.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="GitIgnore.TabIndex" type="System.Int32, mscorlib">
-		<value>3</value>
-	</data>
-	<data name="&gt;&gt;Loading.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-	<data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-		<value>241, 6</value>
-	</data>
-	<data name="checkoutRevisionToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="&gt;&gt;quickSearchTimer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="filterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="&gt;&gt;checkoutRevisionToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;CreateTag.Name" xml:space="preserve">
-    <value>CreateTag</value>
-  </data>
-	<data name="&gt;&gt;CreateTag.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Date.Width" type="System.Int32, mscorlib">
-		<value>180</value>
-	</data>
-	<data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
-  </data>
-	<data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
-    <value>Checkout branch</value>
-  </data>
-	<data name="&gt;&gt;showAuthorDateToolStripMenuItem.Name" xml:space="preserve">
-    <value>showAuthorDateToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;Error.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-	<data name="GitIgnore.Text" xml:space="preserve">
-    <value>Edit .gitignore</value>
-  </data>
-	<data name="Commit.TabIndex" type="System.Int32, mscorlib">
-		<value>2</value>
-	</data>
-	<data name="label2.Text" xml:space="preserve">
-    <value>The current working dir is not a git repository.</value>
-  </data>
-	<data name="NoCommits.Location" type="System.Drawing.Point, System.Drawing">
-		<value>0, 0</value>
-	</data>
-	<data name="&gt;&gt;gitRevisionBindingSource.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Author.Width" type="System.Int32, mscorlib">
-		<value>150</value>
-	</data>
-	<data name="&gt;&gt;createNewBranchToolStripMenuItem.Name" xml:space="preserve">
-    <value>createNewBranchToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;NoGit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
-    <value>Delete tag</value>
-  </data>
-	<data name="&gt;&gt;createTagToolStripMenuItem.Name" xml:space="preserve">
-    <value>createTagToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;Revisions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Error.TabIndex" type="System.Int32, mscorlib">
-		<value>2</value>
-	</data>
-	<data name="&gt;&gt;Revisions.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-	<data name="&gt;&gt;Error.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;ScrollTimer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;checkoutBranchToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;ShowRemoteBranches.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Commit.Text" xml:space="preserve">
-    <value>Commit</value>
-  </data>
-	<data name="&gt;&gt;showAllBranchesToolStripMenuItem.Name" xml:space="preserve">
-    <value>showAllBranchesToolStripMenuItem</value>
-  </data>
-	<data name="createNewBranchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="checkoutRevisionToolStripMenuItem.Text" xml:space="preserve">
-    <value>Checkout revision</value>
-  </data>
-	<data name="&gt;&gt;Revisions.Name" xml:space="preserve">
-    <value>Revisions</value>
-  </data>
-	<data name="&gt;&gt;NoGit.Name" xml:space="preserve">
-    <value>NoGit</value>
-  </data>
-	<data name="NoCommits.Size" type="System.Drawing.Size, System.Drawing">
-		<value>585, 188</value>
-	</data>
-	<data name="&gt;&gt;deleteTagToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;Graph.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;mergeBranchToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;filterToolStripMenuItem.Name" xml:space="preserve">
-    <value>filterToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;Commit.Parent" xml:space="preserve">
-    <value>NoCommits</value>
-  </data>
-	<data name="filterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Set advanced filter</value>
-  </data>
-	<data name="&gt;&gt;Author.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;NoGit.Parent" xml:space="preserve">
-    <value>NoCommits</value>
-  </data>
-	<data name="ShowRemoteBranches.Text" xml:space="preserve">
-    <value>Show remote branches</value>
-  </data>
-	<data name="cherryPickCommitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-		<value>244, 22</value>
-	</data>
-	<data name="Commit.Size" type="System.Drawing.Size, System.Drawing">
-		<value>87, 21</value>
-	</data>
-	<data name="Commit.Location" type="System.Drawing.Point, System.Drawing">
-		<value>401, 36</value>
-	</data>
-	<data name="NoCommits.TabIndex" type="System.Int32, mscorlib">
-		<value>3</value>
-	</data>
-	<data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>NoGit</value>
-  </data>
-	<data name="&gt;&gt;Revisions.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-	<data name="&gt;&gt;revertCommitToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;Commit.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-	<data name="&gt;&gt;showRevisionGraphToolStripMenuItem.Name" xml:space="preserve">
-    <value>showRevisionGraphToolStripMenuItem</value>
-  </data>
-	<data name="&gt;&gt;ShowRemoteBranches.Name" xml:space="preserve">
-    <value>ShowRemoteBranches</value>
-  </data>
-	<data name="&gt;&gt;NoCommits.Name" xml:space="preserve">
-    <value>NoCommits</value>
-  </data>
-	<data name="Loading.TabIndex" type="System.Int32, mscorlib">
-		<value>1</value>
-	</data>
-	<data name="&gt;&gt;Message.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;Loading.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;cherryPickCommitToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="&gt;&gt;checkoutRevisionToolStripMenuItem.Name" xml:space="preserve">
-    <value>checkoutRevisionToolStripMenuItem</value>
-  </data>
-	<data name="showRevisionGraphToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show revision graph</value>
-  </data>
-	<data name="Author.HeaderText" xml:space="preserve">
-    <value>Author</value>
-  </data>
-	<data name="Message.HeaderText" xml:space="preserve">
-    <value>Message</value>
-  </data>
-	<data name="showAuthorDateToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show author date</value>
-  </data>
-	<data name="&gt;&gt;GitIgnore.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-	<data name="&gt;&gt;showRelativeDateToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-	<data name="Date.HeaderText" xml:space="preserve">
-    <value>Date</value>
-  </data>
-	<data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-		<value>241, 6</value>
-	</data>
-	<data name="&gt;&gt;label1.Name" xml:space="preserve">
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
   </data>
-	<data name="Revisions.Location" type="System.Drawing.Point, System.Drawing">
-		<value>0, 0</value>
-	</data>
-	<data name="&gt;&gt;mergeBranchToolStripMenuItem.Name" xml:space="preserve">
-    <value>mergeBranchToolStripMenuItem</value>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="&gt;&gt;GitIgnore.Name" xml:space="preserve">
-    <value>GitIgnore</value>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>NoCommits</value>
   </data>
-	<data name="&gt;&gt;NoGit.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
-	<data name="&gt;&gt;filterToolStripMenuItem.Type" xml:space="preserve">
+  <data name="NoCommits.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="NoCommits.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="NoCommits.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="NoCommits.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;NoCommits.Name" xml:space="preserve">
+    <value>NoCommits</value>
+  </data>
+  <data name="&gt;&gt;NoCommits.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;NoCommits.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;NoCommits.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Error.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="Error.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Error.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="Error.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="Error.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;Error.Name" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="&gt;&gt;Error.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Error.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Error.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Loading.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="Loading.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="Loading.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="Loading.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="Loading.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="Loading.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;Loading.Name" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="&gt;&gt;Loading.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Loading.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Loading.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="gitRevisionBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>73, 19</value>
+  </metadata>
+  <metadata name="quickSearchTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>560, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>585, 204</value>
+  </data>
+  <data name="&gt;&gt;Graph.Name" xml:space="preserve">
+    <value>Graph</value>
+  </data>
+  <data name="&gt;&gt;Graph.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Message.Name" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="&gt;&gt;Message.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Author.Name" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="&gt;&gt;Author.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Date.Name" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="&gt;&gt;Date.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;createTagToolStripMenuItem.Name" xml:space="preserve">
+    <value>createTagToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;createTagToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="&gt;&gt;deleteTagToolStripMenuItem.Name" xml:space="preserve">
+  <data name="&gt;&gt;deleteTagToolStripMenuItem.Name" xml:space="preserve">
     <value>deleteTagToolStripMenuItem</value>
   </data>
-	<data name="Date.UserAddedColumn" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="CreateTag.TrayLocation" type="System.Drawing.Point, System.Drawing">
-		<value>457, 17</value>
-	</data>
-	<data name="$this.Localizable" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="Graph.UserAddedColumn" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="Author.UserAddedColumn" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="gitRevisionBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing">
-		<value>73, 19</value>
-	</data>
-	<data name="Message.UserAddedColumn" type="System.Boolean, mscorlib">
-		<value>True</value>
-	</data>
-	<data name="ScrollTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
-		<value>345, 17</value>
-	</data>
-	<data name="quickSearchTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
-		<value>560, 17</value>
-	</data>
-	<data name="SelecctionTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
-		<value>207, 17</value>
-	</data>
-	<data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
-		<value>Japanese</value>
-	</data>
-	<data name="AuthorDate" xml:space="preserve">
-    <value>Author Date</value>
+  <data name="&gt;&gt;deleteTagToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="CommitDate" xml:space="preserve">
-    <value>Commit Date</value>
+  <data name="&gt;&gt;createNewBranchToolStripMenuItem.Name" xml:space="preserve">
+    <value>createNewBranchToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;createNewBranchToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;deleteBranchToolStripMenuItem.Name" xml:space="preserve">
+    <value>deleteBranchToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;deleteBranchToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mergeBranchToolStripMenuItem.Name" xml:space="preserve">
+    <value>mergeBranchToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;mergeBranchToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rebaseOnToolStripMenuItem.Name" xml:space="preserve">
+    <value>rebaseOnToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;rebaseOnToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;resetCurrentBranchToHereToolStripMenuItem.Name" xml:space="preserve">
+    <value>resetCurrentBranchToHereToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;resetCurrentBranchToHereToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkoutBranchToolStripMenuItem.Name" xml:space="preserve">
+    <value>checkoutBranchToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;checkoutBranchToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkoutRevisionToolStripMenuItem.Name" xml:space="preserve">
+    <value>checkoutRevisionToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;checkoutRevisionToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;revertCommitToolStripMenuItem.Name" xml:space="preserve">
+    <value>revertCommitToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;revertCommitToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cherryPickCommitToolStripMenuItem.Name" xml:space="preserve">
+    <value>cherryPickCommitToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cherryPickCommitToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ShowRemoteBranches.Name" xml:space="preserve">
+    <value>ShowRemoteBranches</value>
+  </data>
+  <data name="&gt;&gt;ShowRemoteBranches.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showAllBranchesToolStripMenuItem.Name" xml:space="preserve">
+    <value>showAllBranchesToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showAllBranchesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showRevisionGraphToolStripMenuItem.Name" xml:space="preserve">
+    <value>showRevisionGraphToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showRevisionGraphToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showAuthorDateToolStripMenuItem.Name" xml:space="preserve">
+    <value>showAuthorDateToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showAuthorDateToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showRelativeDateToolStripMenuItem.Name" xml:space="preserve">
+    <value>showRelativeDateToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showRelativeDateToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;orderRevisionsByDateToolStripMenuItem.Name" xml:space="preserve">
+    <value>orderRevisionsByDateToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;orderRevisionsByDateToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;filterToolStripMenuItem.Name" xml:space="preserve">
+    <value>filterToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;filterToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SelecctionTimer.Name" xml:space="preserve">
+    <value>SelecctionTimer</value>
+  </data>
+  <data name="&gt;&gt;SelecctionTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ScrollTimer.Name" xml:space="preserve">
+    <value>ScrollTimer</value>
+  </data>
+  <data name="&gt;&gt;ScrollTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gitRevisionBindingSource.Name" xml:space="preserve">
+    <value>gitRevisionBindingSource</value>
+  </data>
+  <data name="&gt;&gt;gitRevisionBindingSource.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;quickSearchTimer.Name" xml:space="preserve">
+    <value>quickSearchTimer</value>
+  </data>
+  <data name="&gt;&gt;quickSearchTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>RevisionGrid</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

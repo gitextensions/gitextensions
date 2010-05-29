@@ -24,10 +24,14 @@ namespace GitUI
             ViewCurrentChanges();
         }
 
+        private void FormStash_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("stash");
+        }
+
         private void FormStash_Load(object sender, EventArgs e)
         {
-
-
+            RestorePosition("stash");
         }
 
         private void Initialize()

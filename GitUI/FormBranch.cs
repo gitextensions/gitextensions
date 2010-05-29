@@ -43,8 +43,14 @@ namespace GitUI
             RevisionGrid.RefreshRevisions();
         }
 
+        private void FormBranch_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("branch");
+        }
+
         private void FormBranch_Load(object sender, EventArgs e)
         {
+            RestorePosition("branch");
             BName.Focus();
             AcceptButton = Ok;
         }

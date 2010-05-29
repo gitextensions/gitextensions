@@ -154,13 +154,15 @@ namespace GitUI
             GitUICommands.Instance.StartAddFilesDialog();
         }
 
-        private void MergePatch_Load(object sender, EventArgs e)
-        {
-            this.Text = "Apply patch (" + GitCommands.Settings.WorkingDir + ")";
-        }
-
         private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SavePosition("merge-patch");
+        }
+
+        private void MergePatch_Load(object sender, EventArgs e)
+        {
+            RestorePosition("merge-patch");
+            this.Text = "Apply patch (" + GitCommands.Settings.WorkingDir + ")";
         }
 
         private void BrowseDir_Click(object sender, EventArgs e)

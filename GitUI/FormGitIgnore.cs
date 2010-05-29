@@ -57,8 +57,14 @@ namespace GitUI
             }
         }
 
+        private void FormGitIgnore_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("edit-git-ignore");
+        }
+
         private void FormGitIgnore_Load(object sender, EventArgs e)
         {
+            RestorePosition("edit-git-ignore");
             if (Settings.IsBareRepository())
             {
                 MessageBox.Show(".gitignore is only supported when there is a working dir.");

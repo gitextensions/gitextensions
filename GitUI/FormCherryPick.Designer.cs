@@ -156,6 +156,8 @@
             this.Font = null;
             this.Icon = null;
             this.Name = "FormCherryPick";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
+            this.Load += new System.EventHandler(this.FormCherryPick_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

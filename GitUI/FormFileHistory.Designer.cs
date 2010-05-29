@@ -243,6 +243,7 @@
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistory_FormClosing);
             this.Load += new System.EventHandler(this.FormFileHistory_Load);
             this.Shown += new System.EventHandler(this.FormFileHistory_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
