@@ -46,9 +46,9 @@ namespace GitCommands
 
             string dateFormat;
             if (Settings.RelativeDate)
-                dateFormat = "r";
+                dateFormat = "i";
             else
-                dateFormat = "d";
+                dateFormat = "i";
 
             string limitRevisionsArgument;
             if (LogParam.Contains("--follow"))
