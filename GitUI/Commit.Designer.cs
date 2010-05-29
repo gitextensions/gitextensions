@@ -727,8 +727,8 @@
             this.splitContainer3.Panel1.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer3.Panel1.Controls.Add(this.SelectedDiff);
             this.splitContainer3.Panel1.Font = null;
-            this.CloseCommitDialogTooltip.SetToolTip(this.splitContainer3.Panel1, resources.GetString("splitContainer3.Panel1.ToolTip"));
-            this.fileTooltip.SetToolTip(this.splitContainer3.Panel1, resources.GetString("splitContainer3.Panel1.ToolTip1"));
+            this.fileTooltip.SetToolTip(this.splitContainer3.Panel1, resources.GetString("splitContainer3.Panel1.ToolTip"));
+            this.CloseCommitDialogTooltip.SetToolTip(this.splitContainer3.Panel1, resources.GetString("splitContainer3.Panel1.ToolTip1"));
             this.splitContainer3.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer3_Panel1_Paint);
             // 
             // splitContainer3.Panel2

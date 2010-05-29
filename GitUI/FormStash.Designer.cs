@@ -296,6 +296,7 @@
             this.Name = "FormStash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stash";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStash_FormClosing);
             this.Load += new System.EventHandler(this.FormStash_Load);
             this.Shown += new System.EventHandler(this.FormStash_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);

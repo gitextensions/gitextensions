@@ -45,9 +45,14 @@ namespace GitUI
             }
         }
 
+        private void FormCheckout_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("checkout");
+        }
+
         private void FormCheckout_Load(object sender, EventArgs e)
         {
-
+            RestorePosition("checkout");
         }
 
         private void Branch_SelectedIndexChanged(object sender, EventArgs e)

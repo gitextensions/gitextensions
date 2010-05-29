@@ -48,6 +48,8 @@
             this.Name = "FormDashboardEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Start Page";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDashboardEditor_FormClosing);
+            this.Load += new System.EventHandler(this.FormDashboardEditor_Load);
             this.ResumeLayout(false);
 
         }

@@ -90,10 +90,12 @@ namespace GitUI
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
+            customUnderlines.Lines.Clear();
+            customUnderlines.IllFormedLines.Clear();
+
             if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
-            customUnderlines.Lines.Clear();
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
@@ -101,8 +103,8 @@ namespace GitUI
 
         public void CheckSpelling()
         {
+            customUnderlines.IllFormedLines.Clear();
             customUnderlines.Lines.Clear();
-
             try
             {
                 this.spelling.Text = this.TextBox.Text;
@@ -112,10 +114,32 @@ namespace GitUI
             catch
             {
             }
-
+            markLines();
             TextBox.Refresh();
         }
-
+        private void markLines()
+        {
+            if(GitCommands.Settings.MarkIllFormedLinesInCommitMsg)
+            {
+                int numLines = TextBox.Lines.Length;
+                int chars = 0;
+                for (int curLine = 0; curLine < numLines; ++curLine)
+                {
+                    int curLength = TextBox.Lines[curLine].Length;
+                    int curMaxLength = 72;
+                    if (curLine == 0)
+                        curMaxLength = 50;
+                    if (curLine == 1)
+                        curMaxLength = 0;
+                    if (curLength > curMaxLength)
+                    {
+                        customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
+                    }
+                    //System.Diagnostics.Trace.WriteLine("len: " + curLength + " curMax: " + curMaxLength + " " + (chars + curMaxLength) + "->" + (chars + curLength) + "| " + TextBox.Lines[curLine]);
+                    chars += curLength + 1;
+                }
+            }
+        }
         private void spelling_DeletedWord(object sender, NetSpell.SpellChecker.SpellingEventArgs e)
         {
             int start = this.TextBox.SelectionStart;
@@ -238,6 +262,9 @@ namespace GitUI
             catch
             {
             }
+            ToolStripMenuItem mi = new ToolStripMenuItem("Mark ill formed lines");
+            mi.Checked = GitCommands.Settings.MarkIllFormedLinesInCommitMsg;
+            SpellCheckContextMenu.Items.Add(mi);
         }
 
         void dicToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,17 +284,24 @@ namespace GitUI
         {
             string selection = e.ClickedItem.Text;
 
-            if (selection == "Add to dictionary")
-                this.spelling.Dictionary.Add(this.spelling.CurrentWord);
-            else
-                if (selection == "Ignore word")
+            switch(selection)
+            {
+                case "Add to dictionary":
+                    this.spelling.Dictionary.Add(this.spelling.CurrentWord);
+                    break;
+                case "Ignore word":
                     this.spelling.IgnoreWord();
-                else
-                    if (selection == "Remove word")
-                        this.spelling.DeleteWord();
-                    else
-                        this.spelling.ReplaceWord(selection);
-
+                    break;
+                case "Remove word":
+                    this.spelling.DeleteWord();
+                    break;
+                case "Mark ill formed lines":
+                    GitCommands.Settings.MarkIllFormedLinesInCommitMsg = !GitCommands.Settings.MarkIllFormedLinesInCommitMsg;
+                    break;
+                default:
+                    this.spelling.ReplaceWord(selection);
+                    break;
+            }
             CheckSpelling();
         }
 
@@ -312,6 +346,7 @@ namespace GitUI
         {
             EmptyLabel.Location = new Point(3, 3);
             EmptyLabel.Size = new Size(Size.Width - 6, Size.Height - 6);
+            SpellCheckTimer.Enabled = true;
         }
 
         private void UpdateEmptyLabel()

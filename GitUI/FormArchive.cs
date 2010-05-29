@@ -15,6 +15,16 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void FormArchive_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("archive");
+        }
+
+        private void FormArchive_Load(object sender, EventArgs e)
+        {
+            RestorePosition("archive");
+        }
+
         private void Save_Click(object sender, EventArgs e)
         {
             if (revisionGrid1.GetRevisions().Count != 1)

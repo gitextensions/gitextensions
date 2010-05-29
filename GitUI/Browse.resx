@@ -2123,4 +2123,19 @@
   <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Dutch</value>
   </metadata>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib">
+    <value>Japanese</value>
+  </data>
+  <data name="menu:file history" xml:space="preserve">
+    <value>File History</value>
+  </data>
+  <data name="menu:open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="menu:open with" xml:space="preserve">
+    <value>Opwn With</value>
+  </data>
+  <data name="menu:save as" xml:space="preserve">
+    <value>Save as</value>
+  </data>
 </root>

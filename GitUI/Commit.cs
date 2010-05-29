@@ -46,6 +46,7 @@ namespace GitUI
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
+            RestorePosition("commit");
         }
 
         GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
@@ -181,7 +182,7 @@ namespace GitUI
                 MessageBox.Show(resouces.GetString("msg:merge conflicts"), "Merge conflicts");
                 return;
             }
-            if (Message.Text.Length == 0)
+            if (Message.Text.Length < 2)
             {
                 MessageBox.Show(resouces.GetString("msg:please enter commit message"));
                 return;
@@ -599,6 +600,7 @@ namespace GitUI
             {
                 File.Delete(GitCommands.Settings.WorkingDirGitDir() + "\\COMMITMESSAGE");
             }
+            SavePosition("commit");
         }
 
         private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)

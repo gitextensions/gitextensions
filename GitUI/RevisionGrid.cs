@@ -53,47 +53,161 @@ namespace GitUI
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
         }
 
+        Label quickSearchLabel;
+        private void ShowQuickSearchString()
+        {
+            if (quickSearchLabel == null)
+            {
+                quickSearchLabel = new Label();
+                quickSearchLabel.Location = new Point(10, 10);
+                quickSearchLabel.BorderStyle = BorderStyle.FixedSingle;
+                quickSearchLabel.ForeColor = SystemColors.InfoText;
+                quickSearchLabel.BackColor = SystemColors.Info;
+                //quickSearchLabel.Size = new Size(200, 50);
+                this.Controls.Add(quickSearchLabel);
+            }
+
+            quickSearchLabel.Visible = true;
+            quickSearchLabel.BringToFront();
+            quickSearchLabel.Text = quickSearchString;
+            quickSearchLabel.AutoSize = true;
+        }
+
+        private void HideQuickSearchString()
+        {
+            if (quickSearchLabel != null)
+                quickSearchLabel.Visible = false;
+        }
+
         void quickSearchTimer_Tick(object sender, EventArgs e)
         {
             quickSearchTimer.Stop();
             quickSearchString = "";
+            HideQuickSearchString();
         }
 
         private string quickSearchString;
+        private string lastQuickSearchString = string.Empty;
+        
         void Revisions_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Alt && e.KeyCode == Keys.Up)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index - 1;
+
+                FindNextMatch(nextIndex, lastQuickSearchString, true);
+                e.Handled = true;
+                return;
+            }
+            if (e.Alt && e.KeyCode == Keys.Down)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index + 1;
+                
+                FindNextMatch(nextIndex, lastQuickSearchString, false);  
+                e.Handled = true;
+                return;  
+            }
             char key = (char)e.KeyValue;
-            if (char.IsLetterOrDigit(key) || char.IsNumber(key))
+            if (char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
             {
                 quickSearchTimer.Stop();
-                quickSearchTimer.Interval = 500;
+                quickSearchTimer.Interval = 700;
                 quickSearchTimer.Start();
 
                 quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
 
-                int index = -1;
-                int oldIndex = -1;
+                int oldIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     oldIndex = Revisions.SelectedRows[0].Index;
 
-                index = RevisionList.FindIndex(oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
-
-                if (index < 0 && oldIndex > 0)
-                    index = RevisionList.FindIndex(0, oldIndex, r => r.Author.StartsWith(quickSearchString, StringComparison.CurrentCultureIgnoreCase) || r.Message.ToLower().Contains(quickSearchString));
-
-                if (index > -1)
-                {
-                    Revisions.ClearSelection();
-                    Revisions.Rows[index].Selected = true;
-
-                    Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
-                }
+                FindNextMatch(oldIndex, quickSearchString, false);
+                lastQuickSearchString = quickSearchString;
+                //System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+                e.Handled = true;
+                ShowQuickSearchString();
             }
             else
             {
                 quickSearchString = "";
-
+                HideQuickSearchString();
                 return;
+            }
+        }
+
+        private void FindNextMatch(int startIndex, string searchString, bool reverse)
+        {
+            if (RevisionList.Count == 0)
+            {
+                return;
+            }
+            
+            Predicate<GitRevision> match = delegate(GitRevision r)
+            {
+                foreach (GitHead gitHead in r.Heads)
+                {
+                    if (gitHead.Name.StartsWith(searchString))
+                    {
+                        return true;
+                    }
+                }
+
+                //Make sure it only matches the start of a word
+                string modifiedSearchString = " " + searchString;
+
+                if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
+
+                if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
+                return false;
+            };
+            
+            int index;
+            
+            if (reverse)
+            {
+                //Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= RevisionList.Count)
+                    startIndex = RevisionList.Count - 1;
+                
+                index = RevisionList.FindLastIndex(startIndex, match);
+                
+                if (index == -1)
+                {
+                    //We didn't find it so start searching from the bottom
+                    int bottomIndex = RevisionList.Count - 1;
+                    index = RevisionList.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
+                }
+            }
+            else
+            {
+                //Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= RevisionList.Count)
+                    startIndex = 0;
+                
+                index = RevisionList.FindIndex(startIndex, match);
+
+                if (index == -1)
+                {
+                    //We didn't find it so start searching from the top
+                    index = RevisionList.FindIndex(0, startIndex, match);
+                }
+            }
+            
+            if (index > -1)
+            {
+                Revisions.ClearSelection();
+                Revisions.Rows[index].Selected = true;
+
+                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
             }
         }
 

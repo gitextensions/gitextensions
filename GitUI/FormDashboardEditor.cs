@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -13,6 +14,17 @@ namespace GitUI
         public FormDashboardEditor()
         {
             InitializeComponent();
+        }
+
+        private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("dashboard-editor");
+            Settings.SaveSettings();
+        }
+
+        private void FormDashboardEditor_Load(object sender, EventArgs e)
+        {
+            RestorePosition("dashboard-editor");
         }
     }
 }

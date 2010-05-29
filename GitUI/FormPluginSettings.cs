@@ -48,6 +48,7 @@ namespace GitUI
 
         private void LoadSettings()
         {
+            RestorePosition("plugin-settings");
             int xLabelStart = 20;
             int xEditStart = 200;
 
@@ -79,6 +80,7 @@ namespace GitUI
 
         private void FormPluginSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SavePosition("plugin-settings");
             SaveSettings();
         }
     }

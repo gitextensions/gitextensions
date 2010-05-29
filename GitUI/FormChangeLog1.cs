@@ -16,8 +16,14 @@ namespace GitUI
             InitializeComponent();
         }
 
+        private void FormChangeLog1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("change-log");
+        }
+
         private void FormChangeLog1_Load(object sender, EventArgs e)
         {
+            RestorePosition("change-log");
             ChangeLog.Text = Resources.ChangeLog;
         }
     }

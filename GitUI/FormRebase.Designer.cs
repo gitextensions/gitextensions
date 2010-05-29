@@ -321,6 +321,7 @@
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRebase_FormClosing);
             this.Load += new System.EventHandler(this.FormRebase_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
