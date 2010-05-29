@@ -148,7 +148,6 @@
             this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer1);
             this.Font = null;
-            this.Icon = null;
             this.Name = "FormBranch";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBranch_FormClosing);
             this.Load += new System.EventHandler(this.FormBranch_Load);

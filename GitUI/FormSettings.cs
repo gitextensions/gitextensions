@@ -97,6 +97,8 @@ namespace GitUI
                 authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
+                Language.Text = Settings.UiLanguage;
+
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
                 RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
                 RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
@@ -237,6 +239,7 @@ namespace GitUI
                 GitCommands.Settings.AuthorImageSize = (int)authorImageSize.Value;
                 Gravatar.ClearImageCache();
             }
+            GitCommands.Settings.UiLanguage = Language.Text;
 
             GitCommands.Settings.AuthorImageCacheDays = (int)DaysToCacheImages.Value;
 

@@ -963,7 +963,6 @@
             this.CancelButton = this.Cancel;
             this.Controls.Add(this.splitContainer1);
             this.Font = null;
-            this.Icon = null;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormCommit";
             this.CloseCommitDialogTooltip.SetToolTip(this, resources.GetString("$this.ToolTip"));

@@ -187,7 +187,6 @@
             this.Controls.Add(this.label1);
             this.Font = null;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = null;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindAndReplaceForm";
