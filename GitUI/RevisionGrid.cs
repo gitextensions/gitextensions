@@ -506,6 +506,13 @@ namespace GitUI
                 LastSelectedRows.Clear();
             }
 
+            DvcsGraph.Graph graph = new DvcsGraph.Graph();
+            foreach (GitRevision rev in RevisionList)
+            {
+                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev.AuthorDate);
+            }
+            Revisions.SetGraph(graph);
+            
             DrawVisibleGraphPart();
 
             Loading.Visible = false;
@@ -754,6 +761,11 @@ namespace GitUI
 
         void Revisions_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            if (e.ColumnIndex == 0)
+            {
+                return;
+            }
+            int column = e.ColumnIndex - 1;
             if (e.RowIndex >= 0 && (e.State & DataGridViewElementStates.Visible) != 0)
             {
                 if (RevisionList != null && RevisionList.Count > e.RowIndex)
@@ -768,7 +780,7 @@ namespace GitUI
                     else
                         e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
-                    if (e.ColumnIndex == 0)
+                    if (column == 0)
                     {
                         int top = ((e.RowIndex - Revisions.FirstDisplayedScrollingRowIndex) * Revisions.RowTemplate.Height);
                         if (skipFirst)
@@ -777,7 +789,7 @@ namespace GitUI
                         e.Graphics.DrawImage(graphImage, e.CellBounds, new Rectangle(0, top/* e.RowIndex * Revisions.RowTemplate.Height*/, e.CellBounds.Width, Revisions.RowTemplate.Height), GraphicsUnit.Pixel);
                     }
                     else
-                        if (e.ColumnIndex == 1)
+                        if (column == 1)
                         {
                             float offset = 0;
                             foreach (GitHead h in revision.Heads)
@@ -795,13 +807,13 @@ namespace GitUI
                             e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                         }
                         else
-                            if (e.ColumnIndex == 2)
+                            if (column == 2)
                             {
                                 string text = revision.Author;
                                 e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                             }
                             else
-                                if (e.ColumnIndex == 3)
+                                if (column == 3)
                                 {
                                     string text = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                                     e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
@@ -822,20 +834,6 @@ namespace GitUI
             }
             else
                 GitUICommands.Instance.StartCompareRevisionsDialog();
-        }
-
-        private void Revisions_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        protected override void InitLayout()
-        {
-        }
-
-        private void RevisionGrid_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void Revisions_Scroll(object sender, ScrollEventArgs e)
@@ -898,11 +896,6 @@ namespace GitUI
                 RefreshRevisions();
                 OnChangedCurrentBranch();
             }
-
-        }
-
-        private void Revisions_CellContextMenuStripChanged(object sender, DataGridViewCellEventArgs e)
-        {
 
         }
 
@@ -1156,20 +1149,10 @@ namespace GitUI
             this.ForceRefreshRevisions();
         }
 
-        private void deleteBranchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void checkoutBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartCheckoutBranchDialog())
                 this.RefreshRevisions();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void cherryPickCommitToolStripMenuItem_Click(object sender, EventArgs e)
