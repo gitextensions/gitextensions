@@ -1350,7 +1350,7 @@ namespace GitUI
                     if (n.Data == null)
                     {
                         string errMsg = string.Format("Incomplete graph. Node \"{0}\" has no data", n.Id);
-                        throw new ArgumentException(errMsg);
+                         throw new ArgumentException(errMsg);
                     }
                 }
 
