@@ -11,8 +11,15 @@ using GitCommands;
 using System.Drawing.Drawing2D;
 using System.IO;
 
+// DEBUG:
+using System.Diagnostics;
+
 namespace GitUI
 {
+    // TODO: Settings to obey:
+    // Settings.RelativeDate
+    // Settings.OrderRevisionByDate
+
     public partial class RevisionGrid : UserControl
     {
         public event EventHandler ChangedCurrentBranch;
@@ -32,7 +39,9 @@ namespace GitUI
 
             base.InitLayout();
             InitializeComponent();
-            Revisions.Columns[0].Width = 40;
+
+            // TODO: Auto scale width on first load
+            Revisions.Columns[0].Width = 60;
 
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
@@ -282,8 +291,7 @@ namespace GitUI
             return Revisions.GetRowData(aRow) as GitRevision;
         }
 
-        GitCommands.GitCommands gitCountCommitsCommand = null;// = new GitCommands.GitCommands();
-        GitCommands.RevisionGraph revisionGraphCommand = null;//new RevisionGraph();
+        GitCommands.RevisionGraph revisionGraphCommand = null;
         private bool ScrollBarSet;
 
         public void RefreshRevisions()
@@ -334,11 +342,6 @@ namespace GitUI
                 if (revisionGraphCommand != null)
                 {
                     revisionGraphCommand.Kill();
-                }
-
-                if (gitCountCommitsCommand != null)
-                {
-                    gitCountCommitsCommand.Kill();
                 }
 
                 LastRevision = 0;
@@ -483,7 +486,15 @@ namespace GitUI
             };
             foreach (GitRevision rev in revisionList)
             {
-                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
+                if (rev == null || rev.AuthorDate == null)
+                {
+                    //Debugger.Break();
+                    continue;
+                }
+                DvcsGraph.Node n = graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
+
+                n.IsActive = (rev.Guid == currentCheckout);
+                n.IsSpecial = ( rev.Heads.Count > 0 );
             }
             Revisions.SetGraph(graph);
             

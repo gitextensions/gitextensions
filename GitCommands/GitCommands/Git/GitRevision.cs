@@ -9,7 +9,6 @@ namespace GitCommands
     {
         public GitRevision()
         {
-            GraphLines = new List<string>();
             Heads = new List<GitHead>();
         }
 
@@ -28,7 +27,6 @@ namespace GitCommands
         public string CommitDate { get; set; }
 
         public string Message { get; set; }
-        public List<string> GraphLines { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems 
