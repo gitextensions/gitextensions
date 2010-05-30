@@ -12,9 +12,26 @@ namespace GitCommands
 
         public int LimitRevisions { get; set; }
 
+        private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
+        private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
-        private GitRevision revision;
         private GitCommands gitGetGraphCommand;
+
+        private enum ReadStep
+        {
+            Commit,
+            Hash,
+            Parents,
+            Tree,
+            AuthorName,
+            AuthorDate,
+            CommitterName,
+            CommitterDate,
+            CommitMessage,
+            Done,
+        }
+        private ReadStep nextStep = ReadStep.Commit;
+        private GitRevision revision;
 
         public RevisionGraph()
         {
@@ -46,10 +63,22 @@ namespace GitCommands
             else
                 limitRevisionsArgument = " -n " + LimitRevisions;
 
+            string formatString =
+                /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
+                /* Hash           */ "%H%n" +
+                /* Parents        */ "%P%n" +
+                /* Tree           */ "%T%n" +
+                /* Author Name    */ "%aN%n" +
+                /* Author Date    */ "%ai%n" +
+                /* Committer Name */ "%cN%n" +
+                /* Committer Date */ "%ci%n" +
+                /* Commit Message */ "%s";
+
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log{0} --pretty=format:\"Commit %H %nTree: %T %nAuthor: %aN %nAuthorDate: %ai %nCommitter: %cN %nCommitDate: %ci %nParents: %P %n%s\" {1}",
+                "log {0} --pretty=format:\"{2}\" {1}",
                 limitRevisionsArgument,
-                LogParam);
+                LogParam,
+                formatString);
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.CollectOutput = false;
@@ -68,116 +97,76 @@ namespace GitCommands
         void gitGetGraphCommand_DataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
             if (e.Data == null)
+            {
                 return;
-
-            if (TryParseFields(e.Data))
-            {
             }
-            else if (revision != null)
+            switch (nextStep)
             {
-                if (!string.IsNullOrEmpty(revision.Message) && e.Data.LastIndexOfAny(new char[] { '|', '*' }) < 0 && !e.Data.StartsWith("..."))
-                {
-                    revision.Name = e.Data;
-                }
-                else if (e.Data.Length > 0 && !e.Data.StartsWith("..."))
-                {
-                    if (string.IsNullOrEmpty(revision.Message))
-                        revision.Message = e.Data.Trim() + Environment.NewLine;
-
-                }
-            }
-        }
-
-        private bool TryParseFields(string data)
-        {
-            //First line found!
-            int commitIndex = data.IndexOf("Commit ");
-            if (commitIndex > 0 && data.IndexOf("*") >= 0 || (commitIndex == 0))
-            {
-                revision = new GitRevision();
-                Revisions.Add(revision);
-
-                /*revision.Name = */
-                revision.Guid = data.Substring(7).Trim();
-
-                foreach (GitHead h in heads)
-                {
-                    if (h.Guid == revision.Guid)
+                case ReadStep.Commit:
+                    // Sanity check
+                    if (e.Data == COMMIT_BEGIN)
                     {
-                        revision.Heads.Add(h);
+                        revision = new GitRevision();
                     }
-                }
+                    else
+                    {
+                        // Bail out until we see what we expect
+                        return;
+                    }
+                    break;
 
-                return true;
+                case ReadStep.Hash:
+                    revision.Guid = e.Data;
+                    foreach (GitHead h in heads)
+                    {
+                        if (h.Guid == revision.Guid)
+                        {
+                            revision.Heads.Add(h);
+                        }
+                    }
+                    break;
+
+                case ReadStep.Parents:
+                    List<string> parentGuids = new List<string>();
+                    parentGuids.AddRange(e.Data.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));                   
+                    revision.ParentGuids = parentGuids;
+                    break;
+
+                case ReadStep.Tree:
+                    revision.TreeGuid = e.Data;
+                    break;
+
+                case ReadStep.AuthorName:
+                    revision.Author = e.Data;
+                    break;
+
+                case ReadStep.AuthorDate:
+                    revision.AuthorDate = e.Data;
+                    break;
+
+                case ReadStep.CommitterName:
+                    revision.Committer = e.Data;
+                    break;
+
+                case ReadStep.CommitterDate:
+                    revision.CommitDate = e.Data;
+                    break;
+
+                case ReadStep.CommitMessage:
+                    revision.Message += e.Data;
+                    break;
             }
 
-            string treeGuid = GetField(data, "Tree:");
-            if (treeGuid != null)
-            {
-                revision.TreeGuid = treeGuid;
-                return true;
-            }
+            nextStep++;
 
-            if (GetField(data, "Merge:") != null)
+            if (nextStep == ReadStep.Done)
             {
-                //ignore
-                return true;
-            }
-
-            string author = GetField(data, "Author:");
-            if (author != null)
-            {
-                revision.Author = author;
-                return true;
-            }
-
-            string authorDate = GetField(data, "AuthorDate:");
-            if (authorDate != null)
-            {
-                revision.AuthorDate = authorDate;
-                return true;
-            }
-
-            string committer = GetField(data, "Committer:");
-            if (committer != null)
-            {
-                revision.Committer = committer;
-                return true;
-            }
-
-            string commitDate = GetField(data, "CommitDate:");
-            if (commitDate != null)
-            {
-                revision.CommitDate = commitDate;
-                return true;
-            }
-
-            string parents = GetField(data, "Parents:");
-            if (parents != null)
-            {
-                List<string> parentGuids = new List<string>();
-                foreach (string s in parents.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
-                    parentGuids.Add(s.Trim());
+                    Revisions.Add(revision);
                 }
-
-                revision.ParentGuids = parentGuids;
-                return true;
+                nextStep = ReadStep.Commit;
             }
-
-            return false;
-        }
-
-        private string GetField(string data, string header)
-        {
-            int index = data.IndexOf(header, 0);
-
-            if (index >= 0)
-            {
-                return data.Substring(index + header.Length).Trim();
-            }
-
-            return null;
         }
     }
 }
