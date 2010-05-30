@@ -59,7 +59,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
-            this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -127,7 +126,6 @@
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.StandardTab = true;
             this.Revisions.TabIndex = 0;
-            this.Revisions.Scroll += new System.Windows.Forms.ScrollEventHandler(this.Revisions_Scroll);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Revisions_MouseClick);
             this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Revisions_CellMouseDown);
@@ -330,10 +328,6 @@
             this.SelecctionTimer.Interval = 200;
             this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimer_Tick);
             // 
-            // ScrollTimer
-            // 
-            this.ScrollTimer.Tick += new System.EventHandler(this.ScrollTimer_Tick);
-            // 
             // NoCommits
             // 
             resources.ApplyResources(this.NoCommits, "NoCommits");
@@ -465,7 +459,6 @@
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelecctionTimer;
-        private System.Windows.Forms.Timer ScrollTimer;
         public System.Windows.Forms.PictureBox Error;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;

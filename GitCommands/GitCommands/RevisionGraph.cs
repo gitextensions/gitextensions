@@ -56,7 +56,7 @@ namespace GitCommands
             Revisions = new List<GitRevision>();
 
             heads = GitCommands.GetHeads(true);
-            
+
             string limitRevisionsArgument;
             if (LogParam.Contains("--follow"))
                 limitRevisionsArgument = "";
@@ -128,7 +128,7 @@ namespace GitCommands
 
                 case ReadStep.Parents:
                     List<string> parentGuids = new List<string>();
-                    parentGuids.AddRange(e.Data.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));                   
+                    parentGuids.AddRange(e.Data.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
                     revision.ParentGuids = parentGuids;
                     break;
 

@@ -47,7 +47,6 @@ namespace GitUI
             HeadFont = new Font(NormalFont, FontStyle.Bold);
             //RefreshRevisions();
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
-            Revisions.SizeChanged += new EventHandler(Revisions_SizeChanged);
 
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
 
@@ -219,15 +218,6 @@ namespace GitUI
                 return "";
             else
                 return " --regexp-ignore-case --grep=\"" + filter + "\" --committer=\"" + filter + "\" --author=\"" + filter + "\" ";
-        }
-
-        void Revisions_SizeChanged(object sender, EventArgs e)
-        {
-            LoadRevisions();
-            ScrollTimer.Enabled = false;
-            ScrollTimer.Stop();
-            ScrollTimer.Enabled = true;
-            ScrollTimer.Start();
         }
 
         ~RevisionGrid()
@@ -586,32 +576,12 @@ namespace GitUI
                 GitUICommands.Instance.StartCompareRevisionsDialog();
         }
 
-        private void Revisions_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-            {
-                LoadRevisions();
-                ScrollTimer.Enabled = false;
-                ScrollTimer.Stop();
-                ScrollTimer.Enabled = true;
-                ScrollTimer.Start();
-            }
-        }
-
         private void SelecctionTimer_Tick(object sender, EventArgs e)
         {
             SelecctionTimer.Enabled = false;
             SelecctionTimer.Stop();
             if (SelectionChanged != null)
                 SelectionChanged(this, e);
-        }
-
-        private void ScrollTimer_Tick(object sender, EventArgs e)
-        {
-            ScrollTimer.Enabled = false;
-            ScrollTimer.Stop();
-            Revisions.InvalidateColumn(0);
-            InternalRefresh();
         }
 
         private void createTagToolStripMenuItem_Click(object sender, EventArgs e)
