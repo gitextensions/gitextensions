@@ -22,9 +22,9 @@ namespace GitCommands
         public List<String> ParentGuids = new List<string>();
 
         public string Author { get; set; }
-        public string AuthorDate { get; set; }
+        public DateTime AuthorDate { get; set; }
         public string Committer { get; set; }
-        public string CommitDate { get; set; }
+        public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }
 

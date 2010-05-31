@@ -141,7 +141,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.AuthorDate:
-                    revision.AuthorDate = e.Data;
+                    revision.AuthorDate = DateTime.Parse( e.Data );
                     break;
 
                 case ReadStep.CommitterName:
@@ -149,7 +149,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitterDate:
-                    revision.CommitDate = e.Data;
+                    revision.CommitDate = DateTime.Parse( e.Data );
                     break;
 
                 case ReadStep.CommitMessage:
