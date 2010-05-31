@@ -17,7 +17,6 @@ using System.Diagnostics;
 namespace GitUI
 {
     // TODO: Settings to obey:
-    // Settings.RelativeDate
     // Settings.OrderRevisionByDate
 
     public partial class RevisionGrid : UserControl
@@ -614,7 +613,8 @@ namespace GitUI
                     }
                     else if (column == 3)
                     {
-                        string text = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        DateTime time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        string text = TimeToString(time);
                         e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
@@ -939,6 +939,48 @@ namespace GitUI
             Settings.RelativeDate = !showRelativeDateToolStripMenuItem.Checked;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             this.ForceRefreshRevisions();
+        }
+
+        private string TimeToString(DateTime time)
+        {
+            if (Settings.RelativeDate)
+            {
+                TimeSpan span = DateTime.Now - time;
+                if (span.Minutes < 0)
+                {
+                    return string.Format("{0} seconds ago", (int)span.Seconds);
+                }
+                if (span.TotalHours < 1)
+                {
+                    return string.Format("{0} minutes ago", (int)span.Minutes);
+                }
+                if (span.TotalHours < 2)
+                {
+                    return "1 hour ago";
+                }
+                if (span.TotalHours < 24)
+                {
+                    return string.Format("{0} hours ago", (int)span.TotalHours);
+                }
+                if (span.TotalHours < 48)
+                {
+                    return "yesterday";
+                }
+                if (span.TotalDays < 30)
+                {
+                    return string.Format("{0} days ago", (int)span.TotalDays);
+                }
+                if (span.TotalDays < 365)
+                {
+                    return string.Format("{0} months ago", (int)(span.TotalDays / 30));
+                }
+
+                return string.Format("{0:#.#} years ago", span.TotalDays / 365);
+            }
+            else
+            {
+                return time.ToShortDateString() + " " + time.ToLongTimeString();
+            }
         }
 
     }
