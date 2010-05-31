@@ -61,10 +61,37 @@ namespace GitUI
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
         }
 
+        Label quickSearchLabel;
+        private void ShowQuickSearchString()
+        {
+            if (quickSearchLabel == null)
+            {
+                quickSearchLabel = new Label();
+                quickSearchLabel.Location = new Point(10, 10);
+                quickSearchLabel.BorderStyle = BorderStyle.FixedSingle;
+                quickSearchLabel.ForeColor = SystemColors.InfoText;
+                quickSearchLabel.BackColor = SystemColors.Info;
+                //quickSearchLabel.Size = new Size(200, 50);
+                this.Controls.Add(quickSearchLabel);
+            }
+
+            quickSearchLabel.Visible = true;
+            quickSearchLabel.BringToFront();
+            quickSearchLabel.Text = quickSearchString;
+            quickSearchLabel.AutoSize = true;
+        }
+
+        private void HideQuickSearchString()
+        {
+            if (quickSearchLabel != null)
+                quickSearchLabel.Visible = false;
+        }
+
         void quickSearchTimer_Tick(object sender, EventArgs e)
         {
             quickSearchTimer.Stop();
             quickSearchString = "";
+            HideQuickSearchString();
         }
 
         private string quickSearchString;
@@ -72,49 +99,51 @@ namespace GitUI
         
         void Revisions_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.Alt && e.KeyCode == Keys.Up)
-            //{
-            //    int nextIndex = 0;
-            //    if (Revisions.SelectedRows.Count > 0)
-            //        nextIndex = Revisions.SelectedRows[0].Index - 1;
+            if (e.Alt && e.KeyCode == Keys.Up)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index - 1;
 
-            //    FindNextMatch(nextIndex, lastQuickSearchString, true);
-            //    e.Handled = true;
-            //    return;
-            //}
-            //if (e.Alt && e.KeyCode == Keys.Down)
-            //{
-            //    int nextIndex = 0;
-            //    if (Revisions.SelectedRows.Count > 0)
-            //        nextIndex = Revisions.SelectedRows[0].Index + 1;
+                FindNextMatch(nextIndex, lastQuickSearchString, true);
+                e.Handled = true;
+                return;
+            }
+            if (e.Alt && e.KeyCode == Keys.Down)
+            {
+                int nextIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    nextIndex = Revisions.SelectedRows[0].Index + 1;
                 
-            //    FindNextMatch(nextIndex, lastQuickSearchString, false);  
-            //    e.Handled = true;
-            //    return;  
-            //}
-            //char key = (char)e.KeyValue;
-            //if (char.IsLetterOrDigit(key) || char.IsNumber(key))
-            //{
-            //    quickSearchTimer.Stop();
-            //    quickSearchTimer.Interval = 500;
-            //    quickSearchTimer.Start();
+                FindNextMatch(nextIndex, lastQuickSearchString, false);  
+                e.Handled = true;
+                return;  
+            }
+            char key = (char)e.KeyValue;
+            if (char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
+            {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = 700;
+                quickSearchTimer.Start();
 
-            //    quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
+                quickSearchString = string.Concat(quickSearchString, (char)e.KeyValue).ToLower();
 
-            //    int oldIndex = 0;
-            //    if (Revisions.SelectedRows.Count > 0)
-            //        oldIndex = Revisions.SelectedRows[0].Index;
+                int oldIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    oldIndex = Revisions.SelectedRows[0].Index;
 
-            //    FindNextMatch(oldIndex, quickSearchString, false);
-            //    lastQuickSearchString = quickSearchString;
-            //    System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
-            //    e.Handled = true;
-            //}
-            //else
-            //{
-            //    quickSearchString = "";
-            //    return;
-            //}
+                FindNextMatch(oldIndex, quickSearchString, false);
+                lastQuickSearchString = quickSearchString;
+                //System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+                e.Handled = true;
+                ShowQuickSearchString();
+            }
+            else
+            {
+                quickSearchString = "";
+                HideQuickSearchString();
+                return;
+            }
         }
 
         private void FindNextMatch(int startIndex, string searchString, bool reverse)

@@ -100,7 +100,7 @@ namespace GitUI
             if (e.Button == MouseButtons.Right)
             {
                 if (this.ContextMenuStrip != null)
-                    this.ContextMenuStrip.Show(e.Location);
+                    this.ContextMenuStrip.Show((Control)sender, e.Location);
             }
         }
 

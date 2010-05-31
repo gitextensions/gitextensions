@@ -90,11 +90,12 @@ namespace GitUI
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
+            customUnderlines.Lines.Clear();
+            customUnderlines.IllFormedLines.Clear();
+
             if (GitCommands.Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
-            customUnderlines.Lines.Clear();
-            customUnderlines.IllFormedLines.Clear();
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
@@ -131,7 +132,9 @@ namespace GitUI
                     if (curLine == 1)
                         curMaxLength = 0;
                     if (curLength > curMaxLength)
+                    {
                         customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
+                    }
                     //System.Diagnostics.Trace.WriteLine("len: " + curLength + " curMax: " + curMaxLength + " " + (chars + curMaxLength) + "->" + (chars + curLength) + "| " + TextBox.Lines[curLine]);
                     chars += curLength + 1;
                 }

@@ -42,6 +42,7 @@ namespace GitUI
                     base.WndProc(ref m);
                     // now use our code to draw extra stuff over the TextBox   
                     this.CustomPaint();
+
                     break;
                 default:
                     base.WndProc(ref m);
@@ -75,7 +76,8 @@ namespace GitUI
             //Mark first line if it is blank
             int lh = lineHeight();
             int ypos = textBox.GetPositionFromCharIndex(0).Y;
-            if (textBox.Text.Length!=0 && textBox.Lines[0].Length == 0 
+            if (textBox.Text.Length > 1 && //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
+                textBox.Lines.Length > 0 &&textBox.Lines[0].Length == 0 
                 && ypos >=-lh && GitCommands.Settings.MarkIllFormedLinesInCommitMsg)
                 DrawMark(new Point(0, lh+ypos), new Point(textBox.Width-3, lh+ypos));
 
@@ -153,7 +155,7 @@ namespace GitUI
         }
         private void DrawMark(Point start, Point end)
         {
-            Color col = Color.FromArgb(90, 255, 255, 0);
+            Color col = Color.FromArgb(120, 255, 255, 0);
             int linHeight = lineHeight();
             Pen pen = new Pen(col, linHeight);
             start.Offset(0, -linHeight / 2);
