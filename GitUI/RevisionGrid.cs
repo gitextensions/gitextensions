@@ -148,75 +148,104 @@ namespace GitUI
 
         private void FindNextMatch(int startIndex, string searchString, bool reverse)
         {
-            //if (Revisions.RowCount == 0)
-            //{
-            //    return;
-            //}
-            
-            //Predicate<GitRevision> match = delegate(GitRevision r)
-            //{
-            //    foreach (GitHead gitHead in r.Heads)
-            //    {
-            //        if (gitHead.Name.StartsWith(searchString))
-            //        {
-            //            return true;
-            //        }
-            //    }
+            if (Revisions.RowCount == 0)
+            {
+                return;
+            }
 
-            //    //Make sure it only matches the start of a word
-            //    string modifiedSearchString = " " + searchString;
+            Predicate<object> match = delegate(object m)
+            {
+                GitRevision r = (GitRevision) m;
+                foreach (GitHead gitHead in r.Heads)
+                {
+                    if (gitHead.Name.StartsWith(searchString))
+                    {
+                        return true;
+                    }
+                }
 
-            //    if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
-            //    {
-            //        return true;
-            //    }
+                // Make sure it only matches the start of a word
+                string modifiedSearchString = " " + searchString;
 
-            //    if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
-            //    {
-            //        return true;
-            //    }
-            //    return false;
-            //};
-            
-            //int index;
-            
-            //if (reverse)
-            //{
-            //    //Check for out of bounds roll over if required
-            //    if (startIndex < 0 || startIndex >= Revisions.RowCount)
-            //        startIndex = Revisions.RowCount - 1;
-                
-            //    index = RevisionList.FindLastIndex(startIndex, match);
-                
-            //    if (index == -1)
-            //    {
-            //        //We didn't find it so start searching from the bottom
-            //        int bottomIndex = Revisions.RowCount - 1;
-            //        index = RevisionList.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
-            //    }
-            //}
-            //else
-            //{
-            //    //Check for out of bounds roll over if required
-            //    if (startIndex < 0 || startIndex >= Revisions.RowCount)
-            //        startIndex = 0;
-                
-            //    index = RevisionList.FindIndex(startIndex, match);
+                if ((" " + r.Author.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
 
-            //    if (index == -1)
-            //    {
-            //        //We didn't find it so start searching from the top
-            //        index = RevisionList.FindIndex(0, startIndex, match);
-            //    }
-            //}
-            
-            //if (index > -1)
-            //{
-            //    Revisions.ClearSelection();
-            //    Revisions.Rows[index].Selected = true;
+                if ((" " + r.Message.ToLower()).Contains(modifiedSearchString))
+                {
+                    return true;
+                }
+                return false;
+            };
 
-            //    Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
-            //}
+            bool isFound = false;
+            int index;
+            if (reverse)
+            {
+                // Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= Revisions.RowCount)
+                    startIndex = Revisions.RowCount - 1;
+
+                for (index = startIndex; index >= 0; --index)
+                {
+                    if (match(Revisions.GetRowData(index)))
+                    {
+                        isFound = true;
+                        break;
+                    }
+                }
+
+                if (index == -1)
+                {
+                    // We didn't find it so start searching from the bottom
+                    //index = Revisions.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
+                    for (index = Revisions.RowCount - 1; index > startIndex; --index)
+                    {
+                        if (match(Revisions.GetRowData(index)))
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Check for out of bounds roll over if required
+                if (startIndex < 0 || startIndex >= Revisions.RowCount)
+                    startIndex = 0;
+
+                for (index = startIndex; index < Revisions.RowCount; ++index)
+                {
+                    if (match(Revisions.GetRowData(index)))
+                    {
+                        isFound = true;
+                        break;
+                    }
+                }
+
+                if (!isFound)
+                {
+                    // We didn't find it so start searching from the top
+                    for (index = 0; index < startIndex; ++index)
+                    {
+                        if (match(Revisions.GetRowData(index)))
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (isFound)
+            {
+                Revisions.ClearSelection();
+                Revisions.Rows[index].Selected = true;
+
+                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
+            }
         }
 
         public string LogParam = "HEAD --all --boundary";

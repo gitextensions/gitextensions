@@ -49,6 +49,27 @@ namespace GitUI
             return row.Node.Data;
         }
 
+        public void SetGraph(Graph aTree)
+        {
+            GraphTree = aTree;
+            if (GraphTree == null)
+            {
+                return;
+            }
+
+            GraphLanes = new Lanes(GraphTree);
+
+            // Reset state
+            LaneRows.Clear();
+            LaneEnum = GraphLanes.GetEnumerator();
+            RowCount = GraphTree.Nodes.Count;
+
+            // Redraw
+            CacheHead = -1;
+            CacheHeadRow = 0;
+            DrawGraph(-1);
+        }
+
         private Lanes.LaneRow GetRow(int aRow)
         {
             if (LaneEnum == null)
@@ -93,27 +114,6 @@ namespace GitUI
 
         void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            DrawGraph(-1);
-        }
-
-        public void SetGraph(Graph aTree)
-        {
-            GraphTree = aTree;
-            if (GraphTree == null)
-            {
-                return;
-            }
-
-            GraphLanes = new Lanes(GraphTree);
-
-            // Reset state
-            LaneRows.Clear();
-            LaneEnum = GraphLanes.GetEnumerator();
-            RowCount = GraphTree.Nodes.Count;
-
-            // Redraw
-            CacheHead = -1;
-            CacheHeadRow = 0;
             DrawGraph(-1);
         }
 
@@ -473,7 +473,6 @@ namespace GitUI
             RowHeight = RowTemplate.Height;
             CacheCount = Height * 3 / RowHeight;
         }
-
 
         public class Node
         {
