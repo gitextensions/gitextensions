@@ -970,6 +970,10 @@ namespace GitUI
                 {
                     return string.Format("{0} days ago", (int)span.TotalDays);
                 }
+                if (span.TotalDays < 60)
+                {
+                    return "1 month ago";
+                }
                 if (span.TotalDays < 365)
                 {
                     return string.Format("{0} months ago", (int)(span.TotalDays / 30));
