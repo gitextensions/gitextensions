@@ -182,7 +182,7 @@ namespace GitUI
                 MessageBox.Show(resouces.GetString("msg:merge conflicts"), "Merge conflicts");
                 return;
             }
-            if (Message.Text.Length == 0)
+            if (Message.Text.Length < 2)
             {
                 MessageBox.Show(resouces.GetString("msg:please enter commit message"));
                 return;

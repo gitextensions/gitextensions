@@ -36,9 +36,13 @@ namespace GitUI
             {
                 dashboard = new Dashboard();
                 resources.ApplyResources(this.dashboard, "dashboard");
-                dashboard.WorkingDirChanged += new EventHandler(dashboard_WorkingDirChanged);
+                dashboard.WorkingDirChanged += dashboard_WorkingDirChanged;
                 this.splitContainer2.Panel2.Controls.Add(dashboard);
                 dashboard.Dock = DockStyle.Fill;
+            }
+
+            {
+                dashboard.Visible = true;
                 dashboard.BringToFront();
                 dashboard.ShowRecentRepositories();
             }
@@ -48,9 +52,12 @@ namespace GitUI
         {
             if (dashboard != null)
             {
-                dashboard.WorkingDirChanged -= new EventHandler(dashboard_WorkingDirChanged);
-                this.splitContainer2.Panel2.Controls.Remove(dashboard);
-                dashboard = null;
+                //dashboard.WorkingDirChanged -= dashboard_WorkingDirChanged;
+                //this.splitContainer2.Panel2.Controls.Remove(dashboard);
+                //dashboard.Close();
+                //dashboard.Parent = null;
+                //dashboard.Dispose();
+                dashboard.Visible = false;
             }
         }
 

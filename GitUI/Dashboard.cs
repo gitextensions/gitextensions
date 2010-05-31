@@ -19,7 +19,8 @@ namespace GitUI
 
             RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
             RecentRepositories.DisableContextMenu();
-            Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
+            RecentRepositories.DashboardCategoryChanged += new EventHandler(dashboardCategory_DashboardCategoryChanged);
+            //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
 
 
             //Lemmings
@@ -73,8 +74,15 @@ namespace GitUI
             y += dashboardCategory.Height;
 
             //Recalculate hieght when list is changed
-            entry.ListChanged += entry_ListChanged;
+            //entry.ListChanged += entry_ListChanged;
+            dashboardCategory.DashboardCategoryChanged += new EventHandler(dashboardCategory_DashboardCategoryChanged);
+
             return y;
+        }
+
+        void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
+        {
+            Recalculate();
         }
 
         void RepositoryCategories_ListChanged(object sender, ListChangedEventArgs e)
@@ -120,7 +128,8 @@ namespace GitUI
                         if (currentDashboardCategory != null && currentDashboardCategory.RepositoryCategory == entry)
                         {
                             dashboardCategory = currentDashboardCategory;
-
+                            
+                            dashboardCategory.Recalculate();
                             dashboardCategory.Location = new Point(0, y);
                             y += dashboardCategory.Height;
                             break;
@@ -133,6 +142,8 @@ namespace GitUI
                         y = AddDashboardEntry(y, entry);
                     }
                 }
+
+                RecentRepositories.Recalculate();
             }
             finally
             {
@@ -233,6 +244,7 @@ namespace GitUI
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             new FormDashboardEditor().ShowDialog();
+            Recalculate();
         }
     }
 }

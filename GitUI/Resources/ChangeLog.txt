@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Version 1.94
+	Fixed bug: difftool only worked in git > 1.7.0
+	Fixed bug: dashboard caused application to crash
+	Added Japanese translation
+	Added option to mark ill formed commit messages
+	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
+	Quicksearch now also searches in branches
+	All windows positions are now saved	
+
 Version 1.93
 	Fixed bug: wrong icon drawn in commit dialog for deleted files
 	Reset selected files in the commit dialog asks to delete new files.
