@@ -13,9 +13,6 @@ using System.IO;
 
 namespace GitUI
 {
-    // TODO: Settings to obey:
-    // Colors
-
     public partial class RevisionGrid : UserControl
     {
         public event EventHandler ChangedCurrentBranch;

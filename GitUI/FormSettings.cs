@@ -97,12 +97,7 @@ namespace GitUI
                 authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
-                RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
-                RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
-                RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
-                RevisionGraphColorSelected.BackColor = Settings.RevisionGraphColorSelected;
-                RevisionGraphColorSelected.Text = Settings.RevisionGraphColorSelected.Name;
-                RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
+                MulticolorBranches.Checked = Settings.MulticolorBranches;
                 ColorTagLabel.BackColor = Settings.TagColor;
                 ColorTagLabel.Text = Settings.TagColor.Name;
                 ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorTagLabel.BackColor);
@@ -283,8 +278,7 @@ namespace GitUI
                                 else
                                     GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
-            Settings.RevisionGraphColor = RevisionGraphColorLabel.BackColor;
-            Settings.RevisionGraphColorSelected = RevisionGraphColorSelected.BackColor;
+            Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.TagColor = ColorTagLabel.BackColor;
             Settings.BranchColor = ColorBranchLabel.BackColor;
             Settings.RemoteBranchColor = ColorRemoteBranchLabel.BackColor;
@@ -1424,27 +1418,6 @@ namespace GitUI
 
             button1_Click_1(null, null);
         }
-
-        private void label25_Click(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = RevisionGraphColorLabel.BackColor;
-            colorDialog.ShowDialog();
-            RevisionGraphColorLabel.BackColor = colorDialog.Color;
-            RevisionGraphColorLabel.Text = colorDialog.Color.Name;
-            RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorLabel.BackColor);
-        }
-
-        private void label25_Click_1(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = RevisionGraphColorSelected.BackColor;
-            colorDialog.ShowDialog();
-            RevisionGraphColorSelected.BackColor = colorDialog.Color;
-            RevisionGraphColorSelected.Text = colorDialog.Color.Name;
-            RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(RevisionGraphColorSelected.BackColor);
-        }
-
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
         {
