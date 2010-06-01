@@ -41,5 +41,10 @@ namespace GitCommands
                 return subItems;
             }
         }
+
+        public override string ToString()
+        {
+            return Guid;
+        }
     }
 }
