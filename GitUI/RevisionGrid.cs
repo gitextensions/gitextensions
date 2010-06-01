@@ -14,7 +14,6 @@ using System.IO;
 namespace GitUI
 {
     // TODO: Settings to obey:
-    // Settings.OrderRevisionByDate
     // Colors
 
     public partial class RevisionGrid : UserControl
@@ -523,17 +522,42 @@ namespace GitUI
             }
 
             DvcsGraph.Graph graph = new DvcsGraph.Graph();
-            graph.Sorter = delegate(object a, object b)
+
+            #region Set the sort order for the graph
+            if (!Settings.OrderRevisionByDate)
             {
-                GitRevision left = (GitRevision)a;
-                GitRevision right = (GitRevision)b;
-                return left.AuthorDate.CompareTo(right.AuthorDate);
-            };
+                graph.Sorter = delegate(object a, object b)
+                {
+                    GitRevision left = (GitRevision)a;
+                    GitRevision right = (GitRevision)b;
+                    return right.Order.CompareTo(left.Order);
+                };
+            }
+            else if (Settings.ShowAuthorDate)
+            {
+                graph.Sorter = delegate(object a, object b)
+                {
+                    GitRevision left = (GitRevision)a;
+                    GitRevision right = (GitRevision)b;
+                    return left.AuthorDate.CompareTo(right.AuthorDate);
+                };
+            }
+            else
+            {
+                graph.Sorter = delegate(object a, object b)
+                {
+                    GitRevision left = (GitRevision)a;
+                    GitRevision right = (GitRevision)b;
+                    return left.CommitDate.CompareTo(right.CommitDate);
+                };
+            }
+            #endregion
+
             foreach (GitRevision rev in revisionList)
             {
                 if (rev == null || rev.AuthorDate == null)
                 {
-                    //Debugger.Break();
+                    // This should never happen.
                     continue;
                 }
                 DvcsGraph.Node n = graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
