@@ -11,13 +11,11 @@ using GitCommands;
 using System.Drawing.Drawing2D;
 using System.IO;
 
-// DEBUG:
-using System.Diagnostics;
-
 namespace GitUI
 {
     // TODO: Settings to obey:
     // Settings.OrderRevisionByDate
+    // Colors
 
     public partial class RevisionGrid : UserControl
     {
@@ -946,13 +944,14 @@ namespace GitUI
             if (Settings.RelativeDate)
             {
                 TimeSpan span = DateTime.Now - time;
+
                 if (span.Minutes < 0)
                 {
                     return string.Format("{0} seconds ago", (int)span.Seconds);
                 }
                 if (span.TotalHours < 1)
                 {
-                    return string.Format("{0} minutes ago", (int)span.Minutes);
+                    return string.Format("{0} minutes ago", (int)span.Minutes + Math.Round(span.Seconds / 60.0, 0));
                 }
                 if (span.TotalHours < 2)
                 {
@@ -960,17 +959,17 @@ namespace GitUI
                 }
                 if (span.TotalHours < 24)
                 {
-                    return string.Format("{0} hours ago", (int)span.TotalHours);
+                    return string.Format("{0} hours ago", (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
                 }
-                if (span.TotalHours < 48)
-                {
-                    return "yesterday";
-                }
+                //if (span.TotalHours < 36)
+                //{
+                //    return "yesterday";
+                //}
                 if (span.TotalDays < 30)
                 {
-                    return string.Format("{0} days ago", (int)span.TotalDays);
+                    return string.Format("{0} days ago", (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
                 }
-                if (span.TotalDays < 60)
+                if (span.TotalDays < 45)
                 {
                     return "1 month ago";
                 }

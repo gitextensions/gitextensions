@@ -51,12 +51,12 @@ namespace GitUI
 
         public void SetGraph(Graph aTree)
         {
-            GraphTree = aTree;
-            if (GraphTree == null)
+            if (aTree == null)
             {
                 return;
             }
-
+            GraphTree = aTree;
+            GraphTree.Prune();
             GraphLanes = new Lanes(GraphTree);
 
             // Reset state
@@ -476,8 +476,8 @@ namespace GitUI
 
         public class Node
         {
-            static int DebugIdNext = 1;
-            int DebugId;
+            static uint DebugIdNext = 1;
+            uint DebugId;
 
             public IComparable Id;
             public List<Junction> Ancestors = new List<Junction>();
@@ -510,8 +510,8 @@ namespace GitUI
 
         public class Junction
         {
-            static char DebugIdNext = 'A';
-            char DebugId;
+            static uint DebugIdNext = 0;
+            uint DebugId;
 
             public List<Node> Bunch = new List<Node>();
 
@@ -527,6 +527,14 @@ namespace GitUI
                     Bunch.Add(aParent);
                 }
             }
+
+            public Junction(Junction aOther)
+            {
+                // Deep copy
+                DebugId = DebugIdNext++;
+                Bunch.AddRange(aOther.Bunch);
+            }
+
             private Junction(Junction aDescendant, Node aNode)
             {
                 // Private constructor used by split. This junction will be a
@@ -535,6 +543,7 @@ namespace GitUI
                 aNode.Ancestors.Remove(aDescendant);
                 Bunch.Add(aNode);
             }
+
             public void Add(Node aParent)
             {
                 aParent.Descendants.Add(this);
@@ -585,6 +594,10 @@ namespace GitUI
             public List<Junction> Junctions = new List<Junction>();
             public Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
             public Comparison<object> Sorter = null;
+
+            public Graph()
+            {
+            }
 
             public Node Add(IComparable aId, IComparable[] aParentIds, object aData)
             {
@@ -651,6 +664,26 @@ namespace GitUI
                     }
                 }
                 return nodes;
+            }
+
+            internal void Prune()
+            {
+                // Remove all nodes that don't have a value associated with them.
+                start_over:
+                foreach (Node n in Nodes.Values)
+                {
+                    if (n.Data == null)
+                    {
+                        Nodes.Remove(n.Id);
+                        // This guy should have been at the end of some junctions
+                        foreach (Junction j in n.Descendants)
+                        {
+                            j.Bunch.Remove(n);
+                            j.Parent.Ancestors.Remove(j);
+                        }
+                        goto start_over;
+                    }
+                }
             }
 
             private bool GetNode(IComparable aId, out Node aNode)
@@ -1344,15 +1377,6 @@ namespace GitUI
             {
                 Graph = aGraph;
 
-                foreach (Node n in Graph.Nodes.Values)
-                {
-                    if (n.Data == null)
-                    {
-                        string errMsg = string.Format("Incomplete graph. Node \"{0}\" has no data", n.Id);
-                         throw new ArgumentException(errMsg);
-                    }
-                }
-
                 JunctionLanes = new JunctionHierarchy();
                 // Add the heads
                 foreach (Node h in Graph.GetHeads())
@@ -1378,6 +1402,11 @@ namespace GitUI
             private void AddJunction(Junction aChild, Junction aParent)
             {
                 //Console.WriteLine("Lanes: Add Junction {0} -> {1}", aChild == null ? "*" : aChild.ToString().Substring(0, 1), aParent.ToString().Substring(0, 1));
+                if (aChild == aParent)
+                {
+                    Debugger.Break();
+                    return;
+                }
 
                 if (aChild == null)
                 {
