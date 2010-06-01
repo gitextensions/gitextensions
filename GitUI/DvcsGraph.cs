@@ -146,7 +146,7 @@ namespace GitUI
 
 
             // Get adjacent junctions
-            List<Junction> adjacnetJunctions = new List<Junction>(); // TODO: Use a set?
+            List<Junction> adjacnetJunctions = new List<Junction>();
             List<int> adjacentColors = new List<int>();
             adjacnetJunctions.AddRange(aJunction.Child.Ancestors);
             adjacnetJunctions.AddRange(aJunction.Child.Descendants);
@@ -356,9 +356,15 @@ namespace GitUI
                     }
                     else
                     {
-                        brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, nextColor, curColor);
-                        //brushLine = new SolidBrush(curColor);
-                        //brushLine = new SolidBrush(nextColor);
+                        if (GitCommands.Settings.MulticolorBranches)
+                        {
+                            brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, nextColor, curColor);
+                        }
+                        else
+                        {
+                            //brushLine = new SolidBrush(curColor);
+                            brushLine = new SolidBrush(nextColor);
+                        }
                     }
 
                     // TODO: Drawing 3 times is probably too expensive, no matter how pretty
@@ -1304,9 +1310,6 @@ namespace GitUI
                                             break;
                                         }
                                     }
-
-                                    // TODO: This lane is no longer active. Lets merge somebody
-                                    // in to it, even if it wasn't a split merge
                                 }
                             }
 
