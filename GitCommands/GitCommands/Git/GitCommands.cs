@@ -685,12 +685,18 @@ namespace GitCommands
 
         static public string GetSubmoduleRemotePath(string name)
         {
-            return RunCmd(Settings.GitCommand, "config -f .gitmodules --get submodule." + name.Trim() + ".url");
+            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + "\\.gitmodules");
+            return configFile.GetValue("submodule." + name.Trim() + ".url").Trim();
+
+            //return RunCmd(Settings.GitCommand, "config -f .gitmodules --get submodule." + name.Trim() + ".url");
         }
 
         static public string GetSubmoduleLocalPath(string name)
         {
-            return RunCmd(Settings.GitCommand, "config -f .gitmodules --get submodule." + name.Trim() + ".path").Trim();
+            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + "\\.gitmodules");
+            return configFile.GetValue("submodule." + name.Trim() + ".path").Trim();
+
+            //return RunCmd(Settings.GitCommand, "config -f .gitmodules --get submodule." + name.Trim() + ".path").Trim();
         }
 
         static public string SubmoduleInitCmd(string name)
@@ -1415,24 +1421,6 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
-        public string GetGlobalSetting(string setting)
-        {
-            return RunCmd(Settings.GitCommand, "config --global --get \"" + setting + "\"").Trim();
-        }
-
-        public void SetGlobalSetting(string setting, string value)
-        {
-            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
-            {
-                value = FixPathAndEscapeQuotes(value);
-                GitCommands.RunCmd(Settings.GitCommand, "config --global --replace-all \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
-            }
-            else
-            {
-                GitCommands.RunCmd(Settings.GitCommand, "config --global --unset-all \"" + setting + "\"").Trim();
-            }
-        }
-
         private static string FixPathAndEscapeQuotes(string path)
         {
             path = path.Replace("\"", "$QUOTE$");
@@ -1441,36 +1429,48 @@ namespace GitCommands
             return path;
         }
 
+        static public ConfigFile GetGlobalConfig()
+        {
+            return new ConfigFile(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig");
+        }
+
+        public string GetGlobalSetting(string setting)
+        {
+            ConfigFile configFile = GetGlobalConfig();
+            return configFile.GetValue(setting);
+        }
+
+        public void SetGlobalSetting(string setting, string value)
+        {
+            ConfigFile configFile = GetGlobalConfig();
+            configFile.SetValue(setting, FixPathAndEscapeQuotes(value));
+            configFile.Save();
+        }
+
+        static public ConfigFile GetLocalConfig()
+        {
+            return new ConfigFile(Settings.WorkingDirGitDir() + "\\config");
+        }
+
         static public string GetSetting(string setting)
         {
-            string configFileName = Settings.WorkingDirGitDir() + "\\config";
-            if (!File.Exists(configFileName))
-                return "";
-
-            return GitCommands.RunCmd(Settings.GitCommand, "config --get \"" + setting + "\"").Trim();
+            ConfigFile configFile = GetLocalConfig();
+            return configFile.GetValue(setting);
         }
 
         static public void UnSetSetting(string setting)
         {
-            string configFileName = Settings.WorkingDirGitDir() + "\\config";
-            GitCommands.RunCmd(Settings.GitCommand, "config --unset-all \"" + setting + "\"").Trim();
+            ConfigFile configFile = GetLocalConfig();
+            configFile.RemoveSetting(setting);
+            configFile.Save();
+
         }
 
         static public void SetSetting(string setting, string value)
         {
-            string configFileName = Settings.WorkingDirGitDir() + "\\config";
-            if (!File.Exists(configFileName))
-                return;
-
-            if (!string.IsNullOrEmpty(value) && !value.Contains("git.exe' is not") && !value.Contains("git.cmd' is not"))
-            {
-                value = FixPathAndEscapeQuotes(value);
-                GitCommands.RunCmd(Settings.GitCommand, "config --replace-all  \"" + setting + "\" \"" + value.Trim() + "\"").Trim();
-            }
-            else
-            {
-                UnSetSetting(setting);
-            }
+            ConfigFile configFile = GetLocalConfig();
+            configFile.SetValue(setting, FixPathAndEscapeQuotes(value));
+            configFile.Save();
         }
 
         static public List<Patch> GetStashedItems(string stashName)
