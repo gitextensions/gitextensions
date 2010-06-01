@@ -16,6 +16,7 @@ namespace GitCommands
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
         private GitCommands gitGetGraphCommand;
+        private uint revisionOrder = 0;
 
         private enum ReadStep
         {
@@ -163,6 +164,7 @@ namespace GitCommands
             {
                 if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
+                    revision.Order = revisionOrder++;
                     Revisions.Add(revision);
                 }
                 nextStep = ReadStep.Commit;

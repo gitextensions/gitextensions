@@ -17,7 +17,6 @@ namespace GitCommands
         public List<GitHead> Heads { get; set; }
 
         public string TreeGuid { get; set; }
-        //public string parentGuid { get; set; }
 
         public List<String> ParentGuids = new List<string>();
 
@@ -27,6 +26,8 @@ namespace GitCommands
         public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }
+
+        public uint Order { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems 
