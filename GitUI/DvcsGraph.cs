@@ -707,7 +707,6 @@ namespace GitUI
         internal class Lanes : IEnumerable<Lanes.LaneRow>
         {
             private Graph Graph;
-            private JunctionHierarchy JunctionLanes;
 
             public class LaneRow
             {
@@ -861,136 +860,11 @@ namespace GitUI
                 }
             }
 
-            private class JunctionHierarchy
-            {
-                private List<List<Junction>> mData = new List<List<Junction>>();
-
-                public JunctionHierarchy()
-                {
-                }
-
-                public JunctionHierarchy(JunctionHierarchy aOther)
-                {
-                    // Deep copy
-                    mData = new List<List<Junction>>();
-                    foreach (List<Junction> row in aOther.mData)
-                    {
-                        List<Junction> newRow = new List<Junction>();
-                        foreach (Junction item in row)
-                        {
-                            newRow.Add(item);
-                        }
-                        mData.Add(newRow);
-                    }
-                }
-
-                public int Rows()
-                {
-                    return mData.Count;
-                }
-
-                public int Columns(int aRow)
-                {
-                    if (mData.Count <= aRow)
-                    {
-                        return 0;
-                    }
-                    else
-                    {
-                        return mData[aRow].Count;
-                    }
-                }
-
-                public Junction this[int row, int col]
-                {
-                    get
-                    {
-                        if (mData.Count > row)
-                        {
-                            if (mData[row].Count > col)
-                            {
-                                return mData[row][col];
-                            }
-                        }
-                        return null;
-                    }
-                    set
-                    {
-                        while (mData.Count <= row)
-                        {
-                            mData.Add(new List<Junction>());
-                        }
-                        while (mData[row].Count <= col)
-                        {
-                            mData[row].Add(null);
-                        }
-                        mData[row][col] = value;
-                    }
-                }
-                public List<Junction> this[int row]
-                {
-                    get
-                    {
-                        while (mData.Count <= row)
-                        {
-                            mData.Add(new List<Junction>());
-                        }
-                        return mData[row];
-                    }
-                }
-
-                public int Find(Junction aItem)
-                {
-                    int aCol = 0;
-                    for (int aRow = 0; aRow < mData.Count; aRow++)
-                    {
-                        for (aCol = 0; aCol < mData[aRow].Count; aCol++)
-                        {
-                            if (aItem.Equals(mData[aRow][aCol]))
-                            {
-                                return aRow;
-                            }
-                        }
-                    }
-                    return -1;
-                }
-
-                public void InsertRow(int aRow)
-                {
-                    mData.Insert(aRow, new List<Junction>());
-                }
-
-                public override string ToString()
-                {
-                    string s = "";
-                    foreach (List<Junction> row in mData)
-                    {
-                        foreach (Junction item in row)
-                        {
-                            string itemName;
-                            if (item == null)
-                            {
-                                itemName = "<null>";
-                            }
-                            else
-                            {
-                                itemName = item.ToString();
-                            }
-                            s += string.Format("{0, -30}", itemName);
-                        }
-                        s += "\n";
-                    }
-
-                    return s;
-                }
-            } // end of class LaneArray
-
             private class LaneEnumerator : IEnumerator<LaneRow>
             {
                 private Lanes Lanes;
                 private Comparison<object> Sorter;
 
-                private JunctionHierarchy JunctionLanes;
                 private List<List<Node>> LaneNodes = new List<List<Node>>();
                 private Dictionary<Junction, List<Node>> JunctionNodes = new Dictionary<Junction, List<Node>>();
 
@@ -1014,23 +888,18 @@ namespace GitUI
 
                 public void Reset()
                 {
-                    JunctionLanes = new JunctionHierarchy(Lanes.JunctionLanes);
-
-                    // Update current lanes with the first row of cliques
-                    for (int i = 0; i < Lanes.JunctionLanes.Columns(0); i++)
+                    // Add the heads
+                    List<List<Node>> newLaneNodes = new List<List<Node>>();
+                    foreach (Node h in Lanes.Graph.GetHeads())
                     {
-                        Junction j = Lanes.JunctionLanes[0, i];
-                        if (j != null)
+                        foreach (Junction j in h.Ancestors)
                         {
                             List<Node> nodes = new List<Node>(j.Bunch);
-                            LaneNodes.Add(nodes);
+                            newLaneNodes.Add(nodes);
                             JunctionNodes[j] = nodes;
                         }
-                        else
-                        {
-                            LaneNodes.Add(new List<Node>());
-                        }
                     }
+                    LaneNodes = newLaneNodes;
                 }
 
                 void IDisposable.Dispose()
@@ -1379,79 +1248,6 @@ namespace GitUI
             public Lanes(Graph aGraph)
             {
                 Graph = aGraph;
-
-                JunctionLanes = new JunctionHierarchy();
-                // Add the heads
-                foreach (Node h in Graph.GetHeads())
-                {
-                    foreach (Junction j in h.Ancestors)
-                    {
-                        AddJunction(null, j);
-                    }
-                }
-
-                // Also add any single node graphs
-                foreach (Junction j in Graph.Junctions)
-                {
-                    if (j.Child == j.Parent)
-                    {
-                        AddJunction(null, j);
-                    }
-                }
-
-                //Console.WriteLine(this.ToString());
-            }
-
-            private void AddJunction(Junction aChild, Junction aParent)
-            {
-                //Console.WriteLine("Lanes: Add Junction {0} -> {1}", aChild == null ? "*" : aChild.ToString().Substring(0, 1), aParent.ToString().Substring(0, 1));
-                if (aChild == aParent)
-                {
-                    Debugger.Break();
-                    return;
-                }
-
-                if (aChild == null)
-                {
-                    // Heads always go on the top row
-                    JunctionLanes[0].Add(aParent);
-                }
-                else
-                {
-                    // Get the row/col of the child
-                    int childRow = JunctionLanes.Find(aChild);
-                    if (childRow == -1)
-                    {
-                        // Since we're growing from the children to the parents, 
-                        // descendants should always be in the graph before their 
-                        // ancestors.
-                        Console.WriteLine("Lanes.AddJunction: Bad graph?");
-                        if (Debugger.IsAttached) Debugger.Break();
-                    }
-
-                    int parentRow = JunctionLanes.Find(aParent);
-                    if (parentRow != -1)
-                    {
-                        // The child parent exists in the graph. Make sure it is
-                        // on a higher row than the parent.
-                        if (parentRow <= childRow)
-                        {
-                            JunctionLanes[parentRow].Remove(aParent);
-                            JunctionLanes[childRow + 1].Add(aParent);
-                        }
-                    }
-                    else
-                    {
-                        // We haven't seen the parent node yet
-                        JunctionLanes[childRow + 1].Add(aParent);
-                    }
-                }
-
-                // Add our parents to the lane table
-                foreach (Junction j in aParent.Parent.Ancestors)
-                {
-                    AddJunction(aParent, j);
-                }
             }
 
             public IEnumerator<LaneRow> GetEnumerator()
@@ -1461,11 +1257,6 @@ namespace GitUI
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
-            }
-
-            public override string ToString()
-            {
-                return JunctionLanes.ToString();
             }
         } // end of class Lanes
 
