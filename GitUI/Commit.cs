@@ -83,6 +83,7 @@ namespace GitUI
         private void InitializedStaged()
         {
             Cursor.Current = Cursors.WaitCursor;
+            Staged.GitItemStatusses = null;
             SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
             Staged.GitItemStatusses = GitCommands.GitCommands.GetStagedFiles();
         }
