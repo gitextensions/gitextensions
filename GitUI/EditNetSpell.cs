@@ -211,15 +211,19 @@ namespace GitUI
                 //generate suggestions
                 this.spelling.Suggest();
 
-                SpellCheckContextMenu.Items.Add("Add to dictionary");
-                SpellCheckContextMenu.Items.Add("Ignore word");
-                SpellCheckContextMenu.Items.Add("Remove word");
+                ToolStripItem addToDictionary = SpellCheckContextMenu.Items.Add("Add to dictionary");
+                addToDictionary.Click += new EventHandler(addToDictionary_Click);
+                ToolStripItem ignoreWord = SpellCheckContextMenu.Items.Add("Ignore word");
+                ignoreWord.Click += new EventHandler(ignoreWord_Click);
+                ToolStripItem removeWord = SpellCheckContextMenu.Items.Add("Remove word");
+                removeWord.Click += new EventHandler(removeWord_Click);
 
                 SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
                 foreach (string suggestion in (string[])this.spelling.Suggestions.ToArray(typeof(string)))
                 {
-                    SpellCheckContextMenu.Items.Add(suggestion);
+                    ToolStripItem suggestionToolStripItem = SpellCheckContextMenu.Items.Add(suggestion);
+                    suggestionToolStripItem.Click += new EventHandler(suggestionToolStripItem_Click);
                 }
             }
             catch
@@ -229,8 +233,8 @@ namespace GitUI
             try
             {
                 SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-                ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Dictionary");
-                SpellCheckContextMenu.Items.Add(toolStripMenuItem);
+                ToolStripMenuItem dictionaryToolStripMenuItem = new ToolStripMenuItem("Dictionary");
+                SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
 
                 ContextMenuStrip toolStripDropDown = new ContextMenuStrip();
 
@@ -255,16 +259,47 @@ namespace GitUI
                         dicToolStripMenuItem.Checked = true;
 
                     toolStripDropDown.Items.Add(dicToolStripMenuItem);
-                }               
+                }
 
-                toolStripMenuItem.DropDown = toolStripDropDown;
+                dictionaryToolStripMenuItem.DropDown = toolStripDropDown;
             }
             catch
             {
             }
             ToolStripMenuItem mi = new ToolStripMenuItem("Mark ill formed lines");
             mi.Checked = GitCommands.Settings.MarkIllFormedLinesInCommitMsg;
+            mi.Click += new EventHandler(mi_Click);
             SpellCheckContextMenu.Items.Add(mi);
+        }
+
+        void removeWord_Click(object sender, EventArgs e)
+        {
+            this.spelling.DeleteWord();
+            CheckSpelling();
+        }
+
+        void ignoreWord_Click(object sender, EventArgs e)
+        {
+            this.spelling.IgnoreWord();
+            CheckSpelling();
+        }
+
+        void addToDictionary_Click(object sender, EventArgs e)
+        {
+            this.spelling.Dictionary.Add(this.spelling.CurrentWord);
+            CheckSpelling();
+        }
+
+        void mi_Click(object sender, EventArgs e)
+        {
+            GitCommands.Settings.MarkIllFormedLinesInCommitMsg = !GitCommands.Settings.MarkIllFormedLinesInCommitMsg;
+            CheckSpelling();
+        }
+
+        void suggestionToolStripItem_Click(object sender, EventArgs e)
+        {
+            this.spelling.ReplaceWord(((ToolStripItem)sender).Text);
+            CheckSpelling();
         }
 
         void dicToolStripMenuItem_Click(object sender, EventArgs e)
@@ -277,32 +312,11 @@ namespace GitUI
 
         void TextBox_MouseDown(object sender, MouseEventArgs e)
         {
-        
         }
 
         void SpellCheckContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            string selection = e.ClickedItem.Text;
-
-            switch(selection)
-            {
-                case "Add to dictionary":
-                    this.spelling.Dictionary.Add(this.spelling.CurrentWord);
-                    break;
-                case "Ignore word":
-                    this.spelling.IgnoreWord();
-                    break;
-                case "Remove word":
-                    this.spelling.DeleteWord();
-                    break;
-                case "Mark ill formed lines":
-                    GitCommands.Settings.MarkIllFormedLinesInCommitMsg = !GitCommands.Settings.MarkIllFormedLinesInCommitMsg;
-                    break;
-                default:
-                    this.spelling.ReplaceWord(selection);
-                    break;
-            }
-            CheckSpelling();
+            
         }
 
         private void TextBox_Click(object sender, EventArgs e)
