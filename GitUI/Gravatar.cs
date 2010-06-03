@@ -198,7 +198,11 @@ namespace GitUI
         {
             string imageFileName = string.Concat(theEmail, ".png");
             IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-            isolatedStorage.DeleteFile(imageFileName);
+            
+            if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
+            {
+                isolatedStorage.DeleteFile(imageFileName);
+            }
 
             UpdateGravatar();
         }
