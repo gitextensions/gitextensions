@@ -44,6 +44,7 @@
             this.FileStatusListBox.Size = new System.Drawing.Size(585, 420);
             this.FileStatusListBox.TabIndex = 0;
             this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
+            this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
             // 
             // NoFiles
             // 
