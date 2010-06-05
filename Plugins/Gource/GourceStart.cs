@@ -11,19 +11,23 @@ namespace Gource
 {
     public partial class GourceStart : Form
     {
-        public GourceStart(string pathToGource, string gitWorkingDir)
+        public GourceStart(string pathToGource, string gitWorkingDir, string gourceArguments)
         {
             InitializeComponent();
             PathToGource = pathToGource;
             GitWorkingDir = gitWorkingDir;
+            GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
             GourcePath.Text = pathToGource;
+            Arguments.Text = GourceArguments;
         }
 
         public string PathToGource { get; set; }
 
         public string GitWorkingDir { get; set; }
+
+        public string GourceArguments { get; set; }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -66,7 +70,11 @@ namespace Gource
                 return;
             }
 
-            RunRealCmdDetatched(GourcePath.Text, "");
+            GourceArguments = Arguments.Text;
+            PathToGource = GourcePath.Text;
+            GitWorkingDir = WorkingDir.Text;
+
+            RunRealCmdDetatched(GourcePath.Text, GourceArguments);
         }
 
         private void ArgumentsLabel_Click(object sender, EventArgs e)
@@ -80,6 +88,7 @@ namespace Gource
             fileDialog.Filter = "Gource (gource.exe)|gource.exe";
             fileDialog.FileName = GourcePath.Text;
             fileDialog.ShowDialog();
+
             GourcePath.Text = fileDialog.FileName;
         }
 

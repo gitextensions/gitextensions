@@ -35,6 +35,7 @@ namespace Gource
         {
             //Register settings
             Settings.AddSetting("Path to \"gource\"", "");
+            Settings.AddSetting("Arguments", "--hide filenames");
         }
 
         public void Execute(IGitUIEventArgs gitUICommands)
@@ -92,7 +93,11 @@ namespace Gource
                 }
             }
 
-            new GourceStart(pathToGource, gitUICommands.GitWorkingDir).ShowDialog();
+            GourceStart gourceStart = new GourceStart(pathToGource, gitUICommands.GitWorkingDir, Settings.GetSetting("Arguments"));
+            gourceStart.ShowDialog();
+
+            Settings.SetSetting("Arguments", gourceStart.GourceArguments);
+            Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
         }
 
         public static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
