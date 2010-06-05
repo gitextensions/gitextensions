@@ -236,5 +236,14 @@ namespace GitUI
             foreach (string gravatarFileName in isolatedStorage.GetFileNames("*.png"))
                 isolatedStorage.DeleteFile(gravatarFileName);
         }
+
+        private void smallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem toolStripItem = (ToolStripItem)sender;
+
+            GitCommands.Settings.AuthorImageSize = int.Parse(toolStripItem.Text);
+            ClearImageCache();
+            UpdateGravatar();
+        }
     }
 }
