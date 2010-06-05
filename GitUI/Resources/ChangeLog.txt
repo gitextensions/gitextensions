@@ -10,6 +10,7 @@ Version 1.94
 	Added Japanese translation
 	Added option to mark ill formed commit messages
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
+	Added plugin to start gource
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved
