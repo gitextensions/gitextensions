@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitStatistics", "..\Plugins
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "..\Setup\Setup.wixproj", "{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{D3440FD7-AFC5-4351-8741-6CDBF15CE944}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,18 @@ Global
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|x64.ActiveCfg = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|x86.ActiveCfg = Release|x86
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3440FD7-AFC5-4351-8741-6CDBF15CE944}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -429,9 +429,11 @@
     <Compile Include="FormVerify.Designer.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitExtensionsComponentResourceManager.cs" />
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GitExtensionsResourceSet.cs" />
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -906,6 +908,10 @@
     <ProjectReference Include="..\GitCommands\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GitCommands\ResourceManager\ResourceManager.csproj">
+      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
+      <Name>ResourceManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>

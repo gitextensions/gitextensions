@@ -12,22 +12,30 @@ using System.IO;
 using GitUI.Properties;
 using Settings = GitCommands.Settings;
 using GitUIPluginInterfaces;
-using System.Threading;
+using ResourceManager;
 using System.Globalization;
 
 namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
-        System.ComponentModel.ComponentResourceManager resources;
+        IResourceManager resources;
 
         public FormBrowse()
         {
-            resources = new ComponentResourceManager(typeof(FormBrowse));
+            //resources = new GitExtensionsComponentResourceManager(typeof(FormBrowse));
+            resources = ResourceFactory.GetResourceManager(typeof(FormBrowse));
 
             InitializeComponent();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            
+            //resources.
+
+            foreach (Control control in Controls)
+            {
+                resources.ApplyResources(control, control.Name);
+            }
 
         }
 
