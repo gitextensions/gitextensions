@@ -5,17 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</ProjectGuid>
+    <ProjectGuid>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitCommands</RootNamespace>
-    <AssemblyName>GitCommands</AssemblyName>
+    <RootNamespace>Gource</RootNamespace>
+    <AssemblyName>Gource</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>gitcommandkey.snk.pfx</AssemblyOriginatorKeyFile>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,55 +31,43 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangedFile.cs" />
-    <Compile Include="ChangedFileManager.cs" />
-    <Compile Include="Checkout.cs" />
-    <Compile Include="Clone.cs" />
-    <Compile Include="CommandLogger.cs" />
-    <Compile Include="Commit.cs" />
-    <Compile Include="ConfigFile.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="RepositoryCategory.cs" />
-    <Compile Include="Diff.cs" />
-    <Compile Include="Git\GitBlame.cs" />
-    <Compile Include="Git\GitItemStatus.cs" />
-    <Compile Include="Git\GitCommands.cs" />
-    <Compile Include="Git\GitRevision.cs" />
-    <Compile Include="Git\GitHead.cs" />
-    <Compile Include="Git\GitItem.cs" />
-    <Compile Include="Git\GitStash.cs" />
-    <Compile Include="Git\GitSubmodule.cs" />
-    <Compile Include="Git\GitVersion.cs" />
-    <Compile Include="Git\IGitItem.cs" />
-    <Compile Include="Init.cs" />
-    <Compile Include="Patch\Patch.cs" />
-    <Compile Include="Patch\PatchFile.cs" />
-    <Compile Include="Patch\PatchManager.cs" />
+    <Compile Include="Gource.cs" />
+    <Compile Include="GourceStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GourceStart.Designer.cs">
+      <DependentUpon>GourceStart.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pull.cs" />
-    <Compile Include="Push.cs" />
-    <Compile Include="Repositories.cs" />
-    <Compile Include="RepositoryHistory.cs" />
-    <Compile Include="RevisionGraph.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="ShortDiff.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="gitcommandkey.snk.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GourceStart.resx">
+      <DependentUpon>GourceStart.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

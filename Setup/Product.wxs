@@ -134,6 +134,12 @@
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
       </Component>
+      <Component Id="Gource.dll" Guid="*">
+        <File Source="..\Plugins\Gource\Gource\bin\Release\Gource.dll"/>
+      </Component>
+      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
+        <File Source="..\GitCommands\GitExtensions\bin\Release\ICSharpCode.SharpZipLib.dll"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">

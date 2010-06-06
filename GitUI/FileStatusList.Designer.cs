@@ -45,6 +45,7 @@
             this.FileStatusListBox.Name = "FileStatusListBox";
             this.DiffFilesTooltip.SetToolTip(this.FileStatusListBox, resources.GetString("FileStatusListBox.ToolTip"));
             this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
+            this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
             // 
             // NoFiles
             // 

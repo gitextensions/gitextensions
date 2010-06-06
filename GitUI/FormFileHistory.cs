@@ -129,6 +129,8 @@ namespace GitUI
 
         private void FileChanges_SelectionChanged(object sender, EventArgs e)
         {
+            View.SaveCurrentScrollPos();
+            Diff.SaveCurrentScrollPos();
             UpdateSelectedFileViewers();
         }
 
@@ -153,7 +155,10 @@ namespace GitUI
 
                 int scrollpos = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
                 FillBlameTab(revision.Guid, fileName);
-                BlameFile.ActiveTextAreaControl.VScrollBar.Value = scrollpos;
+                if (BlameFile.ActiveTextAreaControl.VScrollBar.Maximum >= scrollpos)
+                    BlameFile.ActiveTextAreaControl.VScrollBar.Value = scrollpos;
+                else
+                    BlameFile.ActiveTextAreaControl.VScrollBar.Value = BlameFile.ActiveTextAreaControl.VScrollBar.Maximum;
             }
             if (tabControl1.SelectedTab == ViewTab)
             {
