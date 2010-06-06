@@ -134,7 +134,10 @@ namespace GitExtensions
             if (args.Length > 1 && args[1] == "init")
             {
                 //Application.Run();
-                GitUICommands.Instance.StartInitializeDialog(args[2]);
+                if (args.Length > 2)
+                    GitUICommands.Instance.StartInitializeDialog(args[2]);
+                else
+                    GitUICommands.Instance.StartInitializeDialog();
 
             }
             else 

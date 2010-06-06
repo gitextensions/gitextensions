@@ -75,6 +75,7 @@ namespace Gource
             GitWorkingDir = WorkingDir.Text;
 
             RunRealCmdDetatched(GourcePath.Text, GourceArguments);
+            Close();
         }
 
         private void ArgumentsLabel_Click(object sender, EventArgs e)
