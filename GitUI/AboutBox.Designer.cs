@@ -32,13 +32,13 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.labelCopyright = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.labelVersion = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.labelVersionInfo = new System.Windows.Forms.Label();
+            this.pictureDonate = new System.Windows.Forms.PictureBox();
             this.labelProductName = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureDonate)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel
@@ -49,8 +49,8 @@
             this.tableLayoutPanel.Controls.Add(this.logoPictureBox, 0, 0);
             this.tableLayoutPanel.Controls.Add(this.labelCopyright, 1, 2);
             this.tableLayoutPanel.Controls.Add(this.textBoxDescription, 1, 4);
-            this.tableLayoutPanel.Controls.Add(this.labelVersion, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.pictureBox1, 1, 0);
+            this.tableLayoutPanel.Controls.Add(this.labelVersionInfo, 1, 1);
+            this.tableLayoutPanel.Controls.Add(this.pictureDonate, 1, 0);
             this.tableLayoutPanel.Controls.Add(this.labelProductName, 1, 3);
             this.tableLayoutPanel.Controls.Add(this.okButton, 1, 5);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -107,32 +107,32 @@
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = resources.GetString("textBoxDescription.Text");
             // 
-            // labelVersion
+            // labelVersionInfo
             // 
-            this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersion.Location = new System.Drawing.Point(143, 41);
-            this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(271, 17);
-            this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "Version 1.93";
-            this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelVersion.Click += new System.EventHandler(this.labelVersion_Click);
+            this.labelVersionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelVersionInfo.Location = new System.Drawing.Point(143, 41);
+            this.labelVersionInfo.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this.labelVersionInfo.MaximumSize = new System.Drawing.Size(0, 17);
+            this.labelVersionInfo.Name = "labelVersionInfo";
+            this.labelVersionInfo.Size = new System.Drawing.Size(271, 17);
+            this.labelVersionInfo.TabIndex = 0;
+            this.labelVersionInfo.Text = "Version 1.93";
+            this.labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
             // 
-            // pictureBox1
+            // pictureDonate
             // 
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Donate;
-            this.pictureBox1.Location = new System.Drawing.Point(316, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(98, 35);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 25;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureDonate.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureDonate.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pictureDonate.Image = global::GitUI.Properties.Resources.Donate;
+            this.pictureDonate.Location = new System.Drawing.Point(316, 3);
+            this.pictureDonate.Name = "pictureDonate";
+            this.pictureDonate.Size = new System.Drawing.Size(98, 35);
+            this.pictureDonate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureDonate.TabIndex = 25;
+            this.pictureDonate.TabStop = false;
+            this.pictureDonate.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // labelProductName
             // 
@@ -176,7 +176,7 @@
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureDonate)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -186,10 +186,10 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label labelProductName;
-        private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.Label labelVersionInfo;
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label labelCopyright;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureDonate;
     }
 }

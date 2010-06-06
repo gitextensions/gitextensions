@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="label30.Text" xml:space="preserve">
+    <value>Keep backup (.orig) after merge</value>
+  </data>
+  <data name="lblLocalAutoCRLF.Text" xml:space="preserve">
+    <value>Convert CRLF at the end of lines in text files to LF, AutoCRLF</value>
+  </data>
+  <data name="label21.Text" xml:space="preserve">
+    <value>You need to set the correct path to 
+git.cmd before you can change
+local settings.
+</value>
+  </data>
+  <data name="NoGitRepo.Text" xml:space="preserve">
+    <value>Not in a git repository</value>
+  </data>
+  <data name="label20.Text" xml:space="preserve">
+    <value>You only need local settings
+if you want to override the 
+global settings for the current
+repository.</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Mergetool</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>User email</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="LocalSettings.Text" xml:space="preserve">
+    <value>Local settings</value>
+  </data>
+  <data name="label23.Text" xml:space="preserve">
+    <value>Smtp server for sending patches by email</value>
+  </data>
+  <data name="Rescan.Text" xml:space="preserve">
+    <value>Save and rescan</value>
+  </data>
+  <data name="CheckAtStartup.Text" xml:space="preserve">
+    <value>Check settings at startup (disables automatically if all settings are correct)</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>The checklist below validates the basic settings needed for GitExtensions to work properly.</value>
+  </data>
+  <data name="tabPage3.Text" xml:space="preserve">
+    <value>Checklist</value>
+  </data>
+  <data name="label49.Text" xml:space="preserve">
+    <value>Language (restart required)</value>
+  </data>
+  <data name="label40.Text" xml:space="preserve">
+    <value>Follow renames in file history (experimental)</value>
+  </data>
+  <data name="label39.Text" xml:space="preserve">
+    <value>Show relative date instead of full date</value>
+  </data>
+  <data name="label38.Text" xml:space="preserve">
+    <value>Use FileSystemWatcher to check if index is changed</value>
+  </data>
+  <data name="label37.Text" xml:space="preserve">
+    <value>Show revision graph in commit log</value>
+  </data>
+  <data name="label35.Text" xml:space="preserve">
+    <value>Show Git commandline dialog when executing process</value>
+  </data>
+  <data name="label34.Text" xml:space="preserve">
+    <value>Close process dialog automaticly when process is succeeded</value>
+  </data>
+  <data name="EncodingLabel.Text" xml:space="preserve">
+    <value>Encoding</value>
+  </data>
+  <data name="label22.Text" xml:space="preserve">
+    <value>Dictionary for spelling checker.</value>
+  </data>
+  <data name="BrowseGitBinPath.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="label14.Text" xml:space="preserve">
+    <value>Path to git.exe (leave empty when git.exe is in the path)</value>
+  </data>
+  <data name="BrowseGitPath.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>Command used to run git (git.cmd or git.exe)</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Limit number of commits that will be loaded at startup.
+Other commits will be loaded when needed. Lower number 
+result is shorter startup time, but slower scrolling.</value>
+  </data>
+  <data name="TabPageGitExtensions.Text" xml:space="preserve">
+    <value>Git extensions</value>
+  </data>
+  <data name="StartPage.Text" xml:space="preserve">
+    <value>Start page</value>
+  </data>
+  <data name="label47.Text" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="label46.Text" xml:space="preserve">
+    <value>Cache images</value>
+  </data>
+  <data name="label44.Text" xml:space="preserve">
+    <value>Image size</value>
+  </data>
+  <data name="ClearImageCache.Text" xml:space="preserve">
+    <value>Clear image cache</value>
+  </data>
+  <data name="ShowAuthorGravatar.Text" xml:space="preserve">
+    <value>Get author image from gravatar.com</value>
+  </data>
+  <data name="groupBox6.Text" xml:space="preserve">
+    <value>Author images</value>
+  </data>
+  <data name="RandomIcon.Text" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="YellowIcon.Text" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="RedIcon.Text" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="GreenIcon.Text" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="PurpleIcon.Text" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="BlueIcon.Text" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="DefaultIcon.Text" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="groupBox5.Text" xml:space="preserve">
+    <value>Application Icon</value>
+  </data>
+  <data name="label33.Text" xml:space="preserve">
+    <value>Color remote branch</value>
+  </data>
+  <data name="label36.Text" xml:space="preserve">
+    <value>Color other label</value>
+  </data>
+  <data name="label25.Text" xml:space="preserve">
+    <value>Color tag</value>
+  </data>
+  <data name="label32.Text" xml:space="preserve">
+    <value>Color branch</value>
+  </data>
+  <data name="label24.Text" xml:space="preserve">
+    <value>Color revision graph</value>
+  </data>
+  <data name="label26.Text" xml:space="preserve">
+    <value>Color revision graph selected</value>
+  </data>
+  <data name="groupBox4.Text" xml:space="preserve">
+    <value>Revision graph</value>
+  </data>
+  <data name="label43.Text" xml:space="preserve">
+    <value>Color removed line highlighting</value>
+  </data>
+  <data name="label45.Text" xml:space="preserve">
+    <value>Color added line highlighting</value>
+  </data>
+  <data name="label27.Text" xml:space="preserve">
+    <value>Color removed line</value>
+  </data>
+  <data name="label31.Text" xml:space="preserve">
+    <value>Color section</value>
+  </data>
+  <data name="label29.Text" xml:space="preserve">
+    <value>Color added line</value>
+  </data>
+  <data name="groupBox3.Text" xml:space="preserve">
+    <value>Difference view</value>
+  </data>
+  <data name="AppearancePage.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="DiffToolCmdSuggest.Text" xml:space="preserve">
+    <value>Suggest command</value>
+  </data>
+  <data name="label48.Text" xml:space="preserve">
+    <value>Difftool command</value>
+  </data>
+  <data name="BrowseDiffTool.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="label42.Text" xml:space="preserve">
+    <value>Path to difftool</value>
+  </data>
+  <data name="label41.Text" xml:space="preserve">
+    <value>Difftool</value>
+  </data>
+  <data name="label28.Text" xml:space="preserve">
+    <value>Keep backup (.orig) after merge</value>
+  </data>
+  <data name="lblGlobalAutoCRLF.Text" xml:space="preserve">
+    <value>Convert CRLF at the end of lines in text files to LF, AutoCRLF</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>You need to set the correct path to 
+git.cmd before you can change
+global settings.
+</value>
+  </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>Suggest command</value>
+  </data>
+  <data name="label19.Text" xml:space="preserve">
+    <value>Mergetool command</value>
+  </data>
+  <data name="BrowseMergeTool.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="PathToKDiff3.Text" xml:space="preserve">
+    <value>Path to mergetool</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Mergetool</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>User email</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="GlobalSettingsPage.Text" xml:space="preserve">
+    <value>Global settings</value>
+  </data>
+  <data name="AutostartPageant.Text" xml:space="preserve">
+    <value>Automatically start authentication client when a private key is configured for a remote</value>
+  </data>
+  <data name="PageantBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="label17.Text" xml:space="preserve">
+    <value>Path to pageant</value>
+  </data>
+  <data name="PuttygenBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="label16.Text" xml:space="preserve">
+    <value>Path to puttygen</value>
+  </data>
+  <data name="label15.Text" xml:space="preserve">
+    <value>Path to plink.exe</value>
+  </data>
+  <data name="PlinkBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Configure PuTTY</value>
+  </data>
+  <data name="OtherSshBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="Other.Text" xml:space="preserve">
+    <value>Other ssh client</value>
+  </data>
+  <data name="label18.Text" xml:space="preserve">
+    <value>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
+but requires the PuTTY authentication client to run  in the background.
+When OpenSSH is used, command line dialogs are shown!
+</value>
+  </data>
+  <data name="OpenSSH.Text" xml:space="preserve">
+    <value>OpenSSH</value>
+  </data>
+  <data name="Putty.Text" xml:space="preserve">
+    <value>PuTTY</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Specify which ssh client to use</value>
+  </data>
+  <data name="Ssh.Text" xml:space="preserve">
+    <value>Ssh</value>
+  </data>
+  <data name="Ok.Text" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>You need to set the correct path to 
+git.cmd before you can change
+any global setting.
+</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+</root>

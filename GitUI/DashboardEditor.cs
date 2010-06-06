@@ -9,14 +9,10 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class DashboardEditor : UserControl
+    public partial class DashboardEditor : GitExtensionsControl
     {
-        System.ComponentModel.ComponentResourceManager resources;
-
         public DashboardEditor()
         {
-            resources = new ComponentResourceManager(typeof(FormBrowse));
-
             InitializeComponent();
             Initialize();
         }

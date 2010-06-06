@@ -13,7 +13,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class RevisionGrid : UserControl
+    public partial class RevisionGrid : GitExtensionsControl
     {
         public event EventHandler ChangedCurrentBranch;
 
@@ -468,7 +468,6 @@ namespace GitUI
 
         private string GetDateHeaderText()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             return Settings.ShowAuthorDate ? resources.GetString("AuthorDate") : resources.GetString("CommitDate");
         }
 

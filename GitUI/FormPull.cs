@@ -13,12 +13,8 @@ namespace GitUI
 {
     public partial class FormPull : GitExtensionsForm
     {
-        System.ComponentModel.ComponentResourceManager resources;
-
         public FormPull()
         {
-            resources = new ComponentResourceManager(typeof(FormPull));
-
             InitializeComponent();
         }
 

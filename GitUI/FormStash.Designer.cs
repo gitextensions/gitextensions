@@ -249,12 +249,16 @@
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.IgnoreWhitespaceChanges = false;
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";
+            this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
+            this.View.ShowEntireFile = false;
             this.View.Size = new System.Drawing.Size(453, 485);
             this.View.TabIndex = 0;
+            this.View.TreatAllFilesAsText = false;
             // 
             // Stash
             // 
@@ -292,13 +296,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormStash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stash";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStash_FormClosing);
             this.Load += new System.EventHandler(this.FormStash_Load);
             this.Shown += new System.EventHandler(this.FormStash_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStash_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);

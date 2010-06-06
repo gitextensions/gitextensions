@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace GitUI
 {
-    public partial class Gravatar : UserControl
+    public partial class Gravatar : GitExtensionsControl
     {
         private readonly SynchronizationContext syncContext;
 

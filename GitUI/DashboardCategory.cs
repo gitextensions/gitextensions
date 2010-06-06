@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class DashboardCategory : UserControl
+    public partial class DashboardCategory : GitExtensionsControl
     {
         public DashboardCategory()
         {

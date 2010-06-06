@@ -28,7 +28,7 @@ namespace ResourceManager
         /// <param name="baseName">the base name for the set of resources.</param>
         /// <param name="cultureInfo">The culture information.</param>
         public XmlResourceReader(string pathName, string baseName, CultureInfo cultureInfo)
-            : base(pathName, baseName, cultureInfo, CommonSettings.XmlExtension)
+            : base(/*pathName*/@"C:\Development\GitUI\Translations\", baseName, cultureInfo, CommonSettings.XmlExtension)
         {
         }
         #endregion

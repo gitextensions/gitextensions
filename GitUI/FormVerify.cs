@@ -11,12 +11,8 @@ namespace GitUI
 {
     public partial class FormVerify : GitExtensionsForm
     {
-        System.ComponentModel.ComponentResourceManager resources;
-
         public FormVerify()
         {
-            resources = new ComponentResourceManager(typeof(FormVerify));
-
             InitializeComponent();
         }
 
