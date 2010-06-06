@@ -10,7 +10,7 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public partial class DashboardItem : UserControl
+    public partial class DashboardItem : GitExtensionsControl
     {
         public DashboardItem(Repository repository)
         {

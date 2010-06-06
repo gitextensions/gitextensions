@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="cleanupToolStripMenuItem.Text" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>Synchronize al submodules recursive</value>
+  </data>
+  <data name="formatPatchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Format patch</value>
+  </data>
+  <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete branch</value>
+  </data>
+  <data name="startAuthenticationAgentToolStripMenuItem.Text" xml:space="preserve">
+    <value>Start authentication agent</value>
+  </data>
+  <data name="applyPatchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Apply patch</value>
+  </data>
+  <data name="pullToolStripMenuItem.Text" xml:space="preserve">
+    <value>Pull</value>
+  </data>
+  <data name="syncronizeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Synchronize all submodules</value>
+  </data>
+  <data name="CurrentBranch.Text" xml:space="preserve">
+    <value>Branch</value>
+  </data>
+  <data name="commitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="toolStripButtonPush.Text" xml:space="preserve">
+    <value>Push</value>
+  </data>
+  <data name="gitGUIToolStripMenuItem.Text" xml:space="preserve">
+    <value>Git GUI</value>
+  </data>
+  <data name="remotesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Remotes</value>
+  </data>
+  <data name="settingsToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Workingdir.Text" xml:space="preserve">
+    <value>WorkingDir</value>
+  </data>
+  <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Merge branches</value>
+  </data>
+  <data name="tagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Create tag</value>
+  </data>
+  <data name="cloneToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clone repository</value>
+  </data>
+  <data name="stashChangesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Stash changes</value>
+  </data>
+  <data name="checkoutToolStripMenuItem.Text" xml:space="preserve">
+    <value>Checkout revision</value>
+  </data>
+  <data name="toolStripButtonPull.Text" xml:space="preserve">
+    <value>Pull</value>
+  </data>
+  <data name="kGitToolStripMenuItem.Text" xml:space="preserve">
+    <value>GitK</value>
+  </data>
+  <data name="submodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Submodules</value>
+  </data>
+  <data name="gitMaintenanceToolStripMenuItem.Text" xml:space="preserve">
+    <value>Git maintenance</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="EditSettings.ToolTipText" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="toolStripMenuItem2.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Checkout branch</value>
+  </data>
+  <data name="viewStashToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>View stash</value>
+  </data>
+  <data name="verifyGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>Recover lost objects</value>
+  </data>
+  <data name="patchToolStripMenuItem.Text" xml:space="preserve">
+    <value>View patch file</value>
+  </data>
+  <data name="stashPopToolStripMenuItem.Text" xml:space="preserve">
+    <value>Stash pop</value>
+  </data>
+  <data name="checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Ctrl+.</value>
+  </data>
+  <data name="toolStripSplitStash.ToolTipText" xml:space="preserve">
+    <value>Stash changes</value>
+  </data>
+  <data name="deleteTagToolStripMenuItem.Text" xml:space="preserve">
+    <value>Delete tag</value>
+  </data>
+  <data name="cherryPickToolStripMenuItem.Text" xml:space="preserve">
+    <value>Cherry pick</value>
+  </data>
+  <data name="initNewRepositoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Init new repository</value>
+  </data>
+  <data name="ToolStrip.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="commandsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="manageRemoteRepositoriesToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Manage remote repositories</value>
+  </data>
+  <data name="PuTTYToolStripMenuItem.Text" xml:space="preserve">
+    <value>PuTTY</value>
+  </data>
+  <data name="initializeAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Initialize all submodules</value>
+  </data>
+  <data name="compressGitDatabaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>Compress git database</value>
+  </data>
+  <data name="Tree.Text" xml:space="preserve">
+    <value>File tree</value>
+  </data>
+  <data name="stashChangesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Stash</value>
+  </data>
+  <data name="changelogToolStripMenuItem.Text" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+  <data name="rebaseToolStripMenuItem.Text" xml:space="preserve">
+    <value>Rebase</value>
+  </data>
+  <data name="openSubmoduleToolStripMenuItem.Text" xml:space="preserve">
+    <value>Browse submodule</value>
+  </data>
+  <data name="toolStripButton1.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="manageSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Manage submodules</value>
+  </data>
+  <data name="CurrentBranch.ToolTipText" xml:space="preserve">
+    <value>Switch branch</value>
+  </data>
+  <data name="gitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="pushToolStripMenuItem.Text" xml:space="preserve">
+    <value>Push</value>
+  </data>
+  <data name="editgitignoreToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Edit .gitignore</value>
+  </data>
+  <data name="toolStripLabel2.Text" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="archiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="updateAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>Update all submodules recursive</value>
+  </data>
+  <data name="Diff.Text" xml:space="preserve">
+    <value>Diff</value>
+  </data>
+  <data name="settingsToolStripMenuItem2.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="recentToolStripMenuItem.Text" xml:space="preserve">
+    <value>Recent Repositories</value>
+  </data>
+  <data name="commitcountPerUserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Commits per user</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="gitBashToolStripMenuItem.Text" xml:space="preserve">
+    <value>Git bash</value>
+  </data>
+  <data name="donateToolStripMenuItem.Text" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="saveToolStripMenuItem.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CommitInfo.Text" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="stashToolStripMenuItem.Text" xml:space="preserve">
+    <value>Stash changes</value>
+  </data>
+  <data name="GitBash.ToolTipText" xml:space="preserve">
+    <value>Git bash</value>
+  </data>
+  <data name="pluginsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="viewDiffToolStripMenuItem.Text" xml:space="preserve">
+    <value>View diff</value>
+  </data>
+  <data name="stashPopToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Apply and drop single stash</value>
+  </data>
+  <data name="viewStashToolStripMenuItem.Text" xml:space="preserve">
+    <value>View stash</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Git Extensions</value>
+  </data>
+  <data name="openWithDifftoolToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open with difftool</value>
+  </data>
+  <data name="refreshToolStripMenuItem.Text" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Workingdir.ToolTipText" xml:space="preserve">
+    <value>Change working directory</value>
+  </data>
+  <data name="gitcommandLogToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gitcommand log</value>
+  </data>
+  <data name="initializeAllSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
+    <value>Initialize all submodules recursive</value>
+  </data>
+  <data name="userManualToolStripMenuItem.Text" xml:space="preserve">
+    <value>User Manual</value>
+  </data>
+  <data name="updateAllSubmodulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Update all submodules</value>
+  </data>
+  <data name="generateOrImportKeyToolStripMenuItem.Text" xml:space="preserve">
+    <value>Generate or import key</value>
+  </data>
+  <data name="toolStripSplitStash.Text" xml:space="preserve">
+    <value>toolStripSplitButton1</value>
+  </data>
+  <data name="closeToolStripMenuItem.Text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="branchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Create branch</value>
+  </data>
+  <data name="editmailmapToolStripMenuItem.Text" xml:space="preserve">
+    <value>Edit .mailmap</value>
+  </data>
+  <data name="openToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="RefreshButton.ToolTipText" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="runMergetoolToolStripMenuItem.Text" xml:space="preserve">
+    <value>Solve mergeconflicts</value>
+  </data>
+  <data name="menu:file history" xml:space="preserve">
+    <value>File History</value>
+  </data>
+  <data name="menu:open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="menu:open with" xml:space="preserve">
+    <value>Opwn With</value>
+  </data>
+  <data name="menu:save as" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+</root>

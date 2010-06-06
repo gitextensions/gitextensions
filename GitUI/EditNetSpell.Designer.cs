@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditNetSpell));
             this.SpellCheckContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
@@ -40,23 +39,17 @@
             // 
             // SpellCheckContextMenu
             // 
-            this.SpellCheckContextMenu.AccessibleDescription = null;
-            this.SpellCheckContextMenu.AccessibleName = null;
-            resources.ApplyResources(this.SpellCheckContextMenu, "SpellCheckContextMenu");
-            this.SpellCheckContextMenu.BackgroundImage = null;
-            this.SpellCheckContextMenu.Font = null;
             this.SpellCheckContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator1});
             this.SpellCheckContextMenu.Name = "SpellCheckContextMenu";
+            this.SpellCheckContextMenu.Size = new System.Drawing.Size(61, 10);
             this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenu_Opening);
             this.SpellCheckContextMenu.Click += new System.EventHandler(this.SpellCheckContextMenu_Click);
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.AccessibleDescription = null;
-            this.toolStripSeparator1.AccessibleName = null;
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(57, 6);
             // 
             // SpellCheckTimer
             // 
@@ -66,39 +59,38 @@
             // TextBox
             // 
             this.TextBox.AcceptsTab = true;
-            this.TextBox.AccessibleDescription = null;
-            this.TextBox.AccessibleName = null;
-            resources.ApplyResources(this.TextBox, "TextBox");
-            this.TextBox.BackgroundImage = null;
             this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
-            this.TextBox.Font = null;
+            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextBox.Location = new System.Drawing.Point(0, 0);
             this.TextBox.Name = "TextBox";
+            this.TextBox.Size = new System.Drawing.Size(331, 291);
+            this.TextBox.TabIndex = 1;
+            this.TextBox.Text = "";
             this.TextBox.SizeChanged += new System.EventHandler(this.TextBox_SizeChanged);
             this.TextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged_3);
             // 
             // EmptyLabel
             // 
-            this.EmptyLabel.AccessibleDescription = null;
-            this.EmptyLabel.AccessibleName = null;
-            resources.ApplyResources(this.EmptyLabel, "EmptyLabel");
             this.EmptyLabel.BackColor = System.Drawing.SystemColors.Window;
             this.EmptyLabel.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.EmptyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic);
             this.EmptyLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.EmptyLabel.Location = new System.Drawing.Point(3, 3);
             this.EmptyLabel.Name = "EmptyLabel";
+            this.EmptyLabel.Size = new System.Drawing.Size(100, 23);
+            this.EmptyLabel.TabIndex = 2;
+            this.EmptyLabel.Text = "Enter message";
             this.EmptyLabel.Click += new System.EventHandler(this.EmptyLabel_Click);
             // 
             // EditNetSpell
             // 
-            this.AccessibleDescription = null;
-            this.AccessibleName = null;
-            resources.ApplyResources(this, "$this");
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = null;
             this.Controls.Add(this.EmptyLabel);
             this.Controls.Add(this.TextBox);
-            this.Font = null;
             this.Name = "EditNetSpell";
+            this.Size = new System.Drawing.Size(331, 291);
             this.Load += new System.EventHandler(this.EditNetSpell_Load);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);

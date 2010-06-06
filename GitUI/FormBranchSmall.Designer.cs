@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBranchSmall));
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
@@ -37,26 +36,25 @@
             // 
             // label1
             // 
-            resources.ApplyResources(this.label1, "label1");
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 5;
+            this.label1.Text = "Branch name";
             // 
             // Ok
             // 
-            resources.ApplyResources(this.Ok, "Ok");
             this.Ok.Location = new System.Drawing.Point(356, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 4;
+            this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // BName
             // 
-            resources.ApplyResources(this.BName, "BName");
             this.BName.Location = new System.Drawing.Point(127, 6);
             this.BName.Name = "BName";
             this.BName.Size = new System.Drawing.Size(223, 20);
@@ -65,7 +63,6 @@
             // 
             // CheckoutAfterCreate
             // 
-            resources.ApplyResources(this.CheckoutAfterCreate, "CheckoutAfterCreate");
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -73,12 +70,12 @@
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
             this.CheckoutAfterCreate.TabIndex = 6;
+            this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // FormBranchSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.CheckoutAfterCreate);
@@ -86,10 +83,10 @@
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.BName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBranchSmall";
+            this.Text = "Create branch";
             this.ResumeLayout(false);
             this.PerformLayout();
 

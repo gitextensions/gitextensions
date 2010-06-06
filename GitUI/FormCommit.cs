@@ -16,23 +16,21 @@ namespace GitUI
     public partial class FormCommit : GitExtensionsForm
     {
         private readonly SynchronizationContext syncContext;
-        private readonly System.ComponentModel.ComponentResourceManager resouces;
 
         public FormCommit()
         {
-            resouces = new ComponentResourceManager(typeof(FormCommit));
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
 
-            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, resouces.GetString("CloseDialogAfterCommitToolTip"));
+            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, resources.GetString("CloseDialogAfterCommitToolTip"));
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
 
-            Unstaged.SetNoFilesText(resouces.GetString("There are no unstaged changes"));
-            Staged.SetNoFilesText(resouces.GetString("There are no staged changes"));
-            Message.SetEmptyMessage(resouces.GetString("Enter commit message"));
+            Unstaged.SetNoFilesText(resources.GetString("There are no unstaged changes"));
+            Staged.SetNoFilesText(resources.GetString("There are no staged changes"));
+            Message.SetEmptyMessage(resources.GetString("Enter commit message"));
 
             Unstaged.SelectedIndexChanged += new EventHandler(Untracked_SelectionChanged);
             Staged.SelectedIndexChanged += new EventHandler(Tracked_SelectionChanged);
@@ -169,7 +167,7 @@ namespace GitUI
         {
             if (Staged.GitItemStatusses.Count == 0)
             {
-                if (MessageBox.Show(resouces.GetString("msg:no files staged"), "No files staged", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(resources.GetString("msg:no files staged"), "No files staged", MessageBoxButtons.YesNo) == DialogResult.No)
                     return;
             }
 
@@ -180,18 +178,18 @@ namespace GitUI
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show(resouces.GetString("msg:merge conflicts"), "Merge conflicts");
+                MessageBox.Show(resources.GetString("msg:merge conflicts"), "Merge conflicts");
                 return;
             }
             if (Message.Text.Length < 2)
             {
-                MessageBox.Show(resouces.GetString("msg:please enter commit message"));
+                MessageBox.Show(resources.GetString("msg:please enter commit message"));
                 return;
             }
 
             if (GitCommands.GitCommands.GetSelectedBranch().CompareTo("(no branch)") == 0)
             {
-                if (MessageBox.Show(resouces.GetString("msg:not on a branch"), "Not on a branch.", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(resources.GetString("msg:not on a branch"), "Not on a branch.", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     return;
                 }
@@ -421,7 +419,7 @@ namespace GitUI
                 return;
             }
 
-            if (MessageBox.Show(resouces.GetString("msg:amend commit"), "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:amend commit"), "Amend commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DoCommit(true);
             }
@@ -429,7 +427,7 @@ namespace GitUI
 
         private void ResetSoft_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem != null && MessageBox.Show(resouces.GetString("msg:reset"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (Unstaged.SelectedItem != null && MessageBox.Show(resources.GetString("msg:reset"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 bool deleteNewFiles = false;
                 bool askToDeleteNewFiles = true;
@@ -440,7 +438,7 @@ namespace GitUI
                     {
                         if (!deleteNewFiles && askToDeleteNewFiles)
                         {
-                            DialogResult result = MessageBox.Show(resouces.GetString("msg:delete new files"), "Delete", MessageBoxButtons.YesNo);
+                            DialogResult result = MessageBox.Show(resources.GetString("msg:delete new files"), "Delete", MessageBoxButtons.YesNo);
                             if (result == DialogResult.Yes)
                                 deleteNewFiles = true;
 
@@ -474,7 +472,7 @@ namespace GitUI
             try
             {
                 SelectedDiff.ViewText("", "");
-                if (Unstaged.SelectedItem != null && MessageBox.Show(resouces.GetString("msg:delete"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (Unstaged.SelectedItem != null && MessageBox.Show(resources.GetString("msg:delete"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     foreach (GitItemStatus item in Unstaged.SelectedItems)
                     {
@@ -486,7 +484,7 @@ namespace GitUI
             }
             catch
             {
-                MessageBox.Show(resouces.GetString("msg:delete:failed"));
+                MessageBox.Show(resources.GetString("msg:delete:failed"));
             }
         }
 
@@ -498,7 +496,7 @@ namespace GitUI
 
         private void deleteSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(resouces.GetString("msg:delete selected"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:delete selected"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
@@ -509,7 +507,7 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(resouces.GetString("msg:delete selected:failed") + Environment.NewLine + ex.ToString());
+                    MessageBox.Show(resources.GetString("msg:delete selected:failed") + Environment.NewLine + ex.ToString());
                 }
                 Initialize();
             }
@@ -517,7 +515,7 @@ namespace GitUI
 
         private void resetSelectedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(resouces.GetString("msg:reset selected"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:reset selected"), "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 foreach (GitItemStatus gitItemStatus in Unstaged.SelectedItems)
                 {
@@ -606,7 +604,7 @@ namespace GitUI
 
         private void deleteAllUntrackedFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(resouces.GetString("msg:delete untracked"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(resources.GetString("msg:delete untracked"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("clean -f");
                 Initialize();
@@ -617,7 +615,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count != 1)
             {
-                MessageBox.Show(resouces.GetString("msg:(un)stage chunk"), "Stage chunk");
+                MessageBox.Show(resources.GetString("msg:(un)stage chunk"), "Stage chunk");
                 return;
             }
 
@@ -755,7 +753,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count != 1)
             {
-                MessageBox.Show(resouces.GetString("msg:(un)stage chunk"), "Reset chunk fo file");
+                MessageBox.Show(resources.GetString("msg:(un)stage chunk"), "Reset chunk fo file");
                 return;
             }
 

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileStatusList));
             this.FileStatusListBox = new System.Windows.Forms.ListBox();
             this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.NoFiles = new System.Windows.Forms.Label();
@@ -37,38 +36,36 @@
             // 
             // FileStatusListBox
             // 
-            this.FileStatusListBox.AccessibleDescription = null;
-            this.FileStatusListBox.AccessibleName = null;
-            resources.ApplyResources(this.FileStatusListBox, "FileStatusListBox");
-            this.FileStatusListBox.BackgroundImage = null;
+            this.FileStatusListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileStatusListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.FileStatusListBox.FormattingEnabled = true;
+            this.FileStatusListBox.Location = new System.Drawing.Point(0, 0);
             this.FileStatusListBox.Name = "FileStatusListBox";
-            this.DiffFilesTooltip.SetToolTip(this.FileStatusListBox, resources.GetString("FileStatusListBox.ToolTip"));
+            this.FileStatusListBox.Size = new System.Drawing.Size(585, 420);
+            this.FileStatusListBox.TabIndex = 0;
             this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
             this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
             // 
             // NoFiles
             // 
-            this.NoFiles.AccessibleDescription = null;
-            this.NoFiles.AccessibleName = null;
-            resources.ApplyResources(this.NoFiles, "NoFiles");
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
+            this.NoFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic);
             this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.NoFiles.Location = new System.Drawing.Point(5, 5);
+            this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.DiffFilesTooltip.SetToolTip(this.NoFiles, resources.GetString("NoFiles.ToolTip"));
+            this.NoFiles.Size = new System.Drawing.Size(172, 49);
+            this.NoFiles.TabIndex = 1;
+            this.NoFiles.Text = "No changes";
             // 
             // FileStatusList
             // 
-            this.AccessibleDescription = null;
-            this.AccessibleName = null;
-            resources.ApplyResources(this, "$this");
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = null;
             this.Controls.Add(this.NoFiles);
             this.Controls.Add(this.FileStatusListBox);
-            this.Font = null;
             this.Name = "FileStatusList";
-            this.DiffFilesTooltip.SetToolTip(this, resources.GetString("$this.ToolTip"));
+            this.Size = new System.Drawing.Size(585, 420);
             this.ResumeLayout(false);
 
         }

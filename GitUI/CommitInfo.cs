@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace GitUI
 {
-    public partial class CommitInfo : UserControl
+    public partial class CommitInfo : GitExtensionsControl
     {
         public CommitInfo()
         {

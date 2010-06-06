@@ -4,6 +4,10 @@ using System.Text;
 using System.Windows.Forms;
 using GitUI.Properties;
 using System.Drawing;
+using ResourceManager;
+using System.ComponentModel;
+using System.Reflection;
+using System.Globalization;
 
 namespace GitUI
 {
@@ -35,6 +39,8 @@ namespace GitUI
 
         public GitExtensionsForm()
         {
+            resources = ResourceFactory.GetResourceManager(GetType());
+
             this.Icon = ApplicationIcon;
 
             if (Application.OpenForms.Count > 0)
@@ -48,6 +54,27 @@ namespace GitUI
             cancelButton.Click += new EventHandler(cancelButton_Click);
 
             this.CancelButton = cancelButton;
+
+            this.Load += new EventHandler(GitExtensionsForm_Load);
+        }
+
+        void GitExtensionsForm_Load(object sender, EventArgs e)
+        {
+            ApplyResources();
+        }
+
+        protected IResourceManager resources;
+
+        protected void ApplyResources()
+        {
+            //resources.ApplyResources(this, Name);
+            foreach (FieldInfo fieldInfo in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                Component component = fieldInfo.GetValue(this) as Component;
+
+                if (component != null)
+                    resources.ApplyResources(component, fieldInfo.Name, new CultureInfo("nl-NL"));
+            }
 
         }
 

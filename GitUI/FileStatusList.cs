@@ -11,7 +11,7 @@ using System.Collections.Specialized;
 
 namespace GitUI
 {
-    public partial class FileStatusList : UserControl
+    public partial class FileStatusList : GitExtensionsControl
     {
         public FileStatusList()
         {

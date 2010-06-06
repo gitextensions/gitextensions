@@ -66,18 +66,21 @@
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="AsyncLoader.cs" />
-    <Compile Include="Browse.cs">
+    <Compile Include="GitExtensionsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FormBrowse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Browse.Designer.cs">
-      <DependentUpon>Browse.cs</DependentUpon>
+    <Compile Include="FormBrowse.Designer.cs">
+      <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
     <Compile Include="ColorHelper.cs" />
-    <Compile Include="Commit.cs">
+    <Compile Include="FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Commit.Designer.cs">
-      <DependentUpon>Commit.cs</DependentUpon>
+    <Compile Include="FormCommit.Designer.cs">
+      <DependentUpon>FormCommit.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo.cs">
       <SubType>UserControl</SubType>
@@ -498,36 +501,16 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ApplyPatch.nl.resx">
-      <DependentUpon>ApplyPatch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="ApplyPatch.resx">
       <DependentUpon>ApplyPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Browse.ja.resx">
-      <DependentUpon>Browse.cs</DependentUpon>
+    <EmbeddedResource Include="FormBrowse.resx">
+      <DependentUpon>FormBrowse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Browse.nl.resx">
-      <DependentUpon>Browse.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Browse.resx">
-      <DependentUpon>Browse.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Commit.ja.resx">
-      <DependentUpon>Commit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Commit.nl.resx">
-      <DependentUpon>Commit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Commit.resx">
-      <DependentUpon>Commit.cs</DependentUpon>
+    <EmbeddedResource Include="FormCommit.resx">
+      <DependentUpon>FormCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommitInfo.resx">
@@ -538,16 +521,8 @@
       <DependentUpon>Dashboard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DashboardCategory.nl.resx">
-      <DependentUpon>DashboardCategory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="DashboardCategory.resx">
       <DependentUpon>DashboardCategory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DashboardEditor.nl.resx">
-      <DependentUpon>DashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DashboardEditor.resx">
@@ -558,48 +533,8 @@
       <DependentUpon>DashboardItem.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditNetSpell.nl.resx">
-      <DependentUpon>EditNetSpell.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FileStatusList.nl.resx">
-      <DependentUpon>FileStatusList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FileStatusList.resx">
       <DependentUpon>FileStatusList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FileViewer.ja.resx">
-      <DependentUpon>FileViewer.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FileViewer.nl.resx">
-      <DependentUpon>FileViewer.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FindAndReplaceForm.nl.resx">
-      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormBranch.ja.resx">
-      <DependentUpon>FormBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormBranch.nl.resx">
-      <DependentUpon>FormBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormBranchSmall.ja.resx">
-      <DependentUpon>FormBranchSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormBranchSmall.nl.resx">
-      <DependentUpon>FormBranchSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormCherryPick.nl.resx">
-      <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
@@ -682,14 +617,6 @@
       <DependentUpon>FormDashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDeleteBranch.ja.resx">
-      <DependentUpon>FormDeleteBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormDeleteBranch.nl.resx">
-      <DependentUpon>FormDeleteBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormDeleteBranch.resx">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -738,14 +665,6 @@
       <DependentUpon>FormMailMap.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMergeBranch.ja.resx">
-      <DependentUpon>FormMergeBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormMergeBranch.nl.resx">
-      <DependentUpon>FormMergeBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -762,24 +681,8 @@
       <DependentUpon>FormProcess.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPull.ja.resx">
-      <DependentUpon>FormPull.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPull.nl.resx">
-      <DependentUpon>FormPull.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPush.ja.resx">
-      <DependentUpon>FormPush.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPush.nl.resx">
-      <DependentUpon>FormPush.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPush.resx">
@@ -798,24 +701,8 @@
       <DependentUpon>FormRemotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormResetCurrentBranch.ja.resx">
-      <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormResetCurrentBranch.nl.resx">
-      <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormResolveConflicts.ja.resx">
-      <DependentUpon>FormResolveConflicts.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormResolveConflicts.nl.resx">
-      <DependentUpon>FormResolveConflicts.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormResolveConflicts.resx">
@@ -854,14 +741,6 @@
       <DependentUpon>FormTagSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormVerify.ja.resx">
-      <DependentUpon>FormVerify.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormVerify.nl.resx">
-      <DependentUpon>FormVerify.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormVerify.resx">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -889,14 +768,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RevisionGrid.ja.resx">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RevisionGrid.nl.resx">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.resx">

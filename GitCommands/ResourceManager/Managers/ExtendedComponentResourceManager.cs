@@ -302,7 +302,8 @@ namespace ResourceManager
 
             // recurse up through the culture hierarchy until you reach the invariant or neutral culture
             // then initialise the resource list
-            if (!culture.Equals(CultureInfo.InvariantCulture) && !culture.Equals(this.NeutralResourcesCulture))
+            if (!culture.Equals(CultureInfo.InvariantCulture) && !culture.Equals(this.NeutralResourcesCulture) &&
+                !culture.Parent.Equals(CultureInfo.InvariantCulture) && !culture.Parent.Equals(this.NeutralResourcesCulture))
             {
                 // recurse up to the parent culture
                 resourceList = this.FillResources(culture.Parent, out parentResourceSet);

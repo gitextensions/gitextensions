@@ -9,7 +9,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class EditNetSpell : UserControl
+    public partial class EditNetSpell : GitExtensionsControl
     {
         private NetSpell.SpellChecker.Spelling spelling;
         private NetSpell.SpellChecker.Dictionary.WordDictionary wordDictionary;

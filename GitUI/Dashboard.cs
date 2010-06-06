@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace GitUI
 {
-    public partial class Dashboard : UserControl
+    public partial class Dashboard : GitExtensionsControl
     {
         public Dashboard()
         {

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;ContextOpenRemoteWith.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -127,14 +130,14 @@
   <data name="&gt;&gt;colorDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColorDialog, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="ContextChooseRemote.Text" xml:space="preserve">
+    <value>Choose remote</value>
+  </data>
   <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
-    <value>splitContainer2</value>
-  </data>
-  <data name="&gt;&gt;Rescan.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;itemTypeDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -191,6 +194,9 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Mergetool.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -199,6 +205,9 @@
   </data>
   <data name="&gt;&gt;ConflictedFiles.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="&gt;&gt;guidDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="guidDataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
     <value>Guid</value>
@@ -212,11 +221,14 @@
   <data name="fileNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>FileName</value>
   </data>
+  <data name="&gt;&gt;Mergetool.Name" xml:space="preserve">
+    <value>Mergetool</value>
+  </data>
   <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
   </data>
-  <data name="ConflictedFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="ContextOpenRemoteWith.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 22</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -257,6 +269,9 @@
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
     <value>125, 23</value>
   </data>
+  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+    <value>splitContainer3.Panel1</value>
+  </data>
   <data name="&gt;&gt;ContextChooseBase.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -266,8 +281,8 @@
   <data name="&gt;&gt;SolveConflictButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewButtonColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Resolve merge conflicts</value>
+  <data name="&gt;&gt;dateDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>dateDataGridViewTextBoxColumn1</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Parent" xml:space="preserve">
     <value>splitContainer1.Panel2</value>
@@ -281,8 +296,8 @@
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>145, 12</value>
   </data>
-  <data name="&gt;&gt;ContextSaveRemoteAs.Name" xml:space="preserve">
-    <value>ContextSaveRemoteAs</value>
+  <data name="&gt;&gt;commitGuidDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>commitGuidDataGridViewTextBoxColumn1</value>
   </data>
   <data name="&gt;&gt;splitContainer3.Name" xml:space="preserve">
     <value>splitContainer3</value>
@@ -301,9 +316,6 @@
   </data>
   <data name="&gt;&gt;ContextChooseRemote.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;dateDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>dateDataGridViewTextBoxColumn1</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
@@ -344,9 +356,6 @@
   <data name="ConflictedFiles.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="ContextOpenRemoteWith.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
-  </data>
   <data name="&gt;&gt;splitContainer3.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -375,9 +384,6 @@
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>GitUI.GitExtensionsForm, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="&gt;&gt;Mergetool.Parent" xml:space="preserve">
-    <value>splitContainer3.Panel1</value>
-  </data>
   <data name="ContextSaveRemoteAs.Text" xml:space="preserve">
     <value>Save remote as</value>
   </data>
@@ -402,8 +408,8 @@
   <data name="&gt;&gt;ConflictedFiles.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;commitGuidDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>commitGuidDataGridViewTextBoxColumn</value>
+  <data name="SolveConflictButton.HeaderText" xml:space="preserve">
+    <value />
   </data>
   <data name="ConflictedFiles.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -438,9 +444,6 @@
   <data name="ContextSaveLocalAs.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
   </data>
-  <data name="&gt;&gt;ContextChooseRemote.Name" xml:space="preserve">
-    <value>ContextChooseRemote</value>
-  </data>
   <data name="guidDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Guid</value>
   </data>
@@ -449,9 +452,6 @@
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
-  </data>
-  <data name="&gt;&gt;nameDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>nameDataGridViewTextBoxColumn1</value>
   </data>
   <data name="Reset.Text" xml:space="preserve">
     <value>Abort</value>
@@ -480,6 +480,9 @@
   <data name="ContextChooseBase.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
   </data>
+  <data name="Rescan.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
   <data name="&gt;&gt;Namex.Name" xml:space="preserve">
     <value>Namex</value>
   </data>
@@ -492,8 +495,8 @@
   <data name="ContextChooseBase.Text" xml:space="preserve">
     <value>Choose base</value>
   </data>
-  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="&gt;&gt;ContextSaveRemoteAs.Name" xml:space="preserve">
+    <value>ContextSaveRemoteAs</value>
   </data>
   <data name="Mergetool.Size" type="System.Drawing.Size, System.Drawing">
     <value>125, 23</value>
@@ -503,9 +506,6 @@
   </data>
   <data name="&gt;&gt;ConflictedFilesContextMenu.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>587, 396</value>
   </data>
   <data name="ContextChooseRemote.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -558,8 +558,8 @@
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
-  <data name="&gt;&gt;authorDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;commitGuidDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>commitGuidDataGridViewTextBoxColumn</value>
   </data>
   <data name="ContextOpenBaseWith.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -591,17 +591,14 @@
   <data name="&gt;&gt;ContextSaveLocalAs.Name" xml:space="preserve">
     <value>ContextSaveLocalAs</value>
   </data>
-  <data name="&gt;&gt;Mergetool.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="splitContainer3.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
   <data name="Rescan.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;Mergetool.Name" xml:space="preserve">
-    <value>Mergetool</value>
+  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>587, 396</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -612,11 +609,8 @@
   <data name="&gt;&gt;Rescan.Parent" xml:space="preserve">
     <value>splitContainer3.Panel2</value>
   </data>
-  <data name="&gt;&gt;itemTypeDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;commitGuidDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>commitGuidDataGridViewTextBoxColumn1</value>
+  <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer2</value>
   </data>
   <data name="&gt;&gt;ContextOpenRemoteWith.Name" xml:space="preserve">
     <value>ContextOpenRemoteWith</value>
@@ -627,6 +621,9 @@
   <data name="&gt;&gt;ContextChooseLocal.Name" xml:space="preserve">
     <value>ContextChooseLocal</value>
   </data>
+  <data name="&gt;&gt;fileNameDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>fileNameDataGridViewTextBoxColumn</value>
+  </data>
   <data name="commitGuidDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>CommitGuid</value>
   </data>
@@ -636,20 +633,20 @@
   <data name="&gt;&gt;ContextOpenBaseWith.Name" xml:space="preserve">
     <value>ContextOpenBaseWith</value>
   </data>
-  <data name="&gt;&gt;ContextOpenRemoteWith.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;nameDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>nameDataGridViewTextBoxColumn1</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
     <value>25</value>
   </data>
-  <data name="SolveConflictButton.HeaderText" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;Mergetool.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="splitContainer3.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="ContextChooseRemote.Text" xml:space="preserve">
-    <value>Choose remote</value>
+  <data name="&gt;&gt;Rescan.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;commitGuidDataGridViewTextBoxColumn1.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -657,17 +654,14 @@
   <data name="&gt;&gt;splitContainer3.Panel1.Parent" xml:space="preserve">
     <value>splitContainer3</value>
   </data>
-  <data name="&gt;&gt;ConflictedFiles.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
+  <data name="&gt;&gt;authorDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;nameDataGridViewTextBoxColumn1.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Mergetool.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>723, 396</value>
+  <data name="ConflictedFiles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="ContextSaveLocalAs.Text" xml:space="preserve">
     <value>Save local as</value>
@@ -696,8 +690,8 @@
   <data name="&gt;&gt;authorDataGridViewTextBoxColumn1.Name" xml:space="preserve">
     <value>authorDataGridViewTextBoxColumn1</value>
   </data>
-  <data name="&gt;&gt;guidDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;ContextChooseRemote.Name" xml:space="preserve">
+    <value>ContextChooseRemote</value>
   </data>
   <data name="&gt;&gt;ContextSaveRemoteAs.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -717,17 +711,17 @@
   <data name="&gt;&gt;guidDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>guidDataGridViewTextBoxColumn</value>
   </data>
-  <data name="Rescan.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>723, 396</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel1.Parent" xml:space="preserve">
     <value>splitContainer2</value>
   </data>
-  <data name="&gt;&gt;fileNameDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>fileNameDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Mergetool.Parent" xml:space="preserve">
     <value>splitContainer3.Panel1</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Resolve merge conflicts</value>
   </data>
   <data name="button1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -750,6 +744,9 @@
   <data name="Rescan.Text" xml:space="preserve">
     <value>Rescan mergeconflicts</value>
   </data>
+  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
   </data>
@@ -767,6 +764,9 @@
   </data>
   <data name="modeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Mode</value>
+  </data>
+  <data name="&gt;&gt;ConflictedFiles.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
     <value>splitContainer1</value>
@@ -801,13 +801,7 @@
   <metadata name="ConflictedFilesContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>307, 17</value>
   </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="gitItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Japanese</value>
   </metadata>
 </root>

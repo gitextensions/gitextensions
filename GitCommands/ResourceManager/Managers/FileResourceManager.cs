@@ -81,11 +81,12 @@ namespace ResourceManager
                     // try the parent culture if not already at the invariant culture
                     if (tryParents)
                     {
-                        if (culture.Equals(CultureInfo.InvariantCulture))
-                            throw new MissingManifestResourceException(this.baseName + Environment.NewLine + this.pathName + Environment.NewLine + culture.Name);
+                        //if (culture.Equals(CultureInfo.InvariantCulture))
+                        //    throw new MissingManifestResourceException(this.baseName + Environment.NewLine + this.pathName + Environment.NewLine + culture.Name);
 
-                        // do a recursive call on this method with the parent culture
-                        resourceSet = this.InternalGetResourceSet(culture.Parent, createIfNotExists, tryParents) as CommonResourceSet;
+                        if (!culture.Equals(CultureInfo.InvariantCulture))
+                            // do a recursive call on this method with the parent culture
+                            resourceSet = this.InternalGetResourceSet(culture.Parent, createIfNotExists, tryParents) as CommonResourceSet;
                     }
                 }
                 else
