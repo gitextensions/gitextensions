@@ -253,6 +253,27 @@ namespace GitUI
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
         }
 
+        private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.A:
+                    {
+                        if (e.Control)
+                        {
+                            FileStatusListBox.ClearSelected();
+                            for (int n = FileStatusListBox.Items.Count-1; n >=0; n--)
+                            {
+                                FileStatusListBox.SetSelected(n, true);
+                            }
+                            e.Handled = true;
+                        }
+                        break;
+                    }
+            }
+
+        }
+
 
     }
 }

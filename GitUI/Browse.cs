@@ -262,7 +262,7 @@ namespace GitUI
                 while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
                     lastSelectedNodes.Push(((TreeNode)lastSelectedNodes.Peek()).Parent);
 
-                int scrollPos = FileText.ScrollPos;
+                FileText.SaveCurrentScrollPos();
 
                 //Refresh tree
                 GitTree.Nodes.Clear();
@@ -284,7 +284,6 @@ namespace GitUI
                             node.Expand();
                             GitTree.SelectedNode = node;
                             currenNodes = node.Nodes;
-                            FileText.ScrollPos = scrollPos;
                         }
                     }
                 }
@@ -297,6 +296,8 @@ namespace GitUI
             {
                 DiffFiles.GitItemStatusses = null;
                 List<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+                DiffText.SaveCurrentScrollPos();
 
                 if (revisions.Count == 0)
                     return;
@@ -570,7 +571,9 @@ namespace GitUI
             indexWatcher.Reset();
 
             if (dashboard != null)
-                dashboard.ShowRecentRepositories();
+            {
+                dashboard.Refresh();
+            }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

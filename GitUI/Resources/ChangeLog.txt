@@ -4,11 +4,19 @@ Changelog
 Version 1.94
 	Fixed bug: difftool only worked in git > 1.7.0
 	Fixed bug: dashboard caused application to crash
+	Fixed bug: refreshing gravatar that was already deleted caused an exception
+	Fixed bug: when clicking "dictionary" submenu in spelling checker context menu the current word was replaced
+	Fixed bug: ctrl-a in FileStatusListBox not working
+	Fixed bug: starting "gitextensions init" from the commandline without path causes an exception
 	Added Japanese translation
 	Added option to mark ill formed commit messages
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
+	Added plugin to start gource
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
+	Settings dialog performance improved
+	The scoll position in file viewer is saved when switching revision.
+	Author image size can be set in context menu of gravatar control
 
 Version 1.93
 	Fixed bug: wrong icon drawn in commit dialog for deleted files
