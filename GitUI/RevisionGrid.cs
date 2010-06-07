@@ -556,10 +556,20 @@ namespace GitUI
                     // This should never happen.
                     continue;
                 }
-                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
-
-                //n.IsActive = (rev.Guid == currentCheckout);
-                //n.IsSpecial = ( rev.Heads.Count > 0 );
+                DvcsGraph.DataType dataType;
+                if (rev.Guid == currentCheckout)
+                {
+                    dataType = DvcsGraph.DataType.Active;
+                }
+                else if (rev.Heads.Count > 0)
+                {
+                    dataType = DvcsGraph.DataType.Special;
+                }
+                else
+                {
+                    dataType = DvcsGraph.DataType.Normal;
+                }
+                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), dataType, rev);
             }
             Revisions.SetData(graph);
             
