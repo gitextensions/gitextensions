@@ -1116,7 +1116,7 @@ namespace GitUI
                     }
                     if (isUsable)
                     {
-                        if (CurrentRow.Node == null || (lane[0].Data != null && Sorter.Invoke(lane[0].Data, CurrentRow.Node.Data) > 0))
+                        if (CurrentRow.Node == null || (lane[0].Data != null && CurrentRow.Node.Data != null && Sorter.Invoke(lane[0].Data, CurrentRow.Node.Data) > 0))
                         {
                             CurrentRow.Node = lane[0];
                             CurrentRow.NodeLane = curLane;

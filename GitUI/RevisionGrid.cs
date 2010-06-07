@@ -441,7 +441,9 @@ namespace GitUI
             indexWatcher.Reset();
             revisionGraphCommand = new RevisionGraph();
 
+            revisionGraphCommand.BackgroundThread = true;
             revisionGraphCommand.LogParam = LogParam + Filter;
+            revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
