@@ -448,73 +448,10 @@ namespace GitUI
 
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
-            syncContext.Post(_ => LoadRevisions(), null);
-        }
-
-        public string currentCheckout { get; set; }
-        private int LastRevision = 0;
-        private bool initialLoad = true;
-
-        private string GetDateHeaderText()
-        {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            return Settings.ShowAuthorDate ? resources.GetString("AuthorDate") : resources.GetString("CommitDate");
-        }
-
-        private void LoadRevisions()
-        {
-            if (revisionGraphCommand == null)
-            {
-                return;
-            }
             List<GitRevision> revisionList = revisionGraphCommand.Revisions;
             if (revisionList == null)
             {
                 return;
-            }
-
-            if (revisionList != null && (Revisions.RowCount == 0 && string.IsNullOrEmpty(Filter)))
-            {
-                Loading.Visible = false;
-                NoCommits.Visible = true;
-                Revisions.Visible = false;
-                return;
-            }
-
-            Revisions.SuspendLayout();
-            Revisions.Columns[3].HeaderText = GetDateHeaderText();
-
-            if (!ScrollBarSet)
-            {
-                ScrollBarSet = true;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = Revisions.RowCount;
-                Revisions.ScrollBars = ScrollBars.Vertical;
-            }
-
-            Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
-
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
-            {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
-            }
-
-            if (LastSelectedRows.Count > 0)
-            {
-                Revisions.ClearSelection();
-
-                if (Revisions.Rows.Count > LastSelectedRows[0])
-                    Revisions.CurrentCell = Revisions.Rows[LastSelectedRows[0]].Cells[0];
-
-                foreach (int row in LastSelectedRows)
-                {
-                    if (Revisions.Rows.Count > row)
-                    {
-                        Revisions.Rows[row].Selected = true;
-                    }
-                }
-                LastSelectedRows.Clear();
             }
 
             DvcsGraph.GraphData graph = new DvcsGraph.GraphData();
@@ -573,6 +510,71 @@ namespace GitUI
             }
             Revisions.SetData(graph);
             
+
+            syncContext.Post(_ => LoadRevisions(), null);
+        }
+
+        public string currentCheckout { get; set; }
+        private int LastRevision = 0;
+        private bool initialLoad = true;
+
+        private string GetDateHeaderText()
+        {
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
+            return Settings.ShowAuthorDate ? resources.GetString("AuthorDate") : resources.GetString("CommitDate");
+        }
+
+        private void LoadRevisions()
+        {
+            if (revisionGraphCommand == null)
+            {
+                return;
+            }
+
+            if (Revisions.RowCount == 0 && string.IsNullOrEmpty(Filter))
+            {
+                Loading.Visible = false;
+                NoCommits.Visible = true;
+                Revisions.Visible = false;
+                return;
+            }
+
+            Revisions.SuspendLayout();
+            Revisions.Columns[3].HeaderText = GetDateHeaderText();
+
+            if (!ScrollBarSet)
+            {
+                ScrollBarSet = true;
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = Revisions.RowCount;
+                Revisions.ScrollBars = ScrollBars.Vertical;
+            }
+
+            Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
+
+            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            {
+                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
+                LastScrollPos = -1;
+            }
+
+            if (LastSelectedRows.Count > 0)
+            {
+                Revisions.ClearSelection();
+
+                if (Revisions.Rows.Count > LastSelectedRows[0])
+                    Revisions.CurrentCell = Revisions.Rows[LastSelectedRows[0]].Cells[0];
+
+                foreach (int row in LastSelectedRows)
+                {
+                    if (Revisions.Rows.Count > row)
+                    {
+                        Revisions.Rows[row].Selected = true;
+                    }
+                }
+                LastSelectedRows.Clear();
+            }
+
             Loading.Visible = false;
             Revisions.Enabled = true;
             Revisions.Focus();
