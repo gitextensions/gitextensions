@@ -12,11 +12,18 @@ namespace GitUI
 {
     public partial class DvcsGraph : DataGridView
     {
+        public enum DataType
+        {
+            Normal,
+            Active,
+            Special,
+        }
+
         public class GraphData
         {
-            public void Add(IComparable aId, IComparable[] aParentIds, object aData)
+            public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
             {
-                GraphTree.Add(aId, aParentIds, aData);
+                GraphTree.Add(aId, aParentIds, aType, aData);
             }
 
             public void Prune()
@@ -502,13 +509,13 @@ namespace GitUI
                 wa.FillEllipse(Brushes.White, nodeRect);
                 wa.DrawEllipse(new Pen(Color.Red, 2), nodeRect);
             }
-            else if (row.Node.IsActive)
+            else if (row.Node.DataType == DataType.Active)
             {
                 wa.FillRectangle(nodeBrush, nodeRect);
                 nodeRect.Inflate(1, 1);
                 wa.DrawRectangle(new Pen(Color.Black, 3), nodeRect);
             }
-            else if (row.Node.IsSpecial)
+            else if (row.Node.DataType == DataType.Special)
             {
                 wa.FillRectangle(nodeBrush, nodeRect);
                 wa.DrawRectangle(new Pen(Color.Black, 1), nodeRect);
@@ -541,8 +548,7 @@ namespace GitUI
 
             public List<Junction> Ancestors = new List<Junction>();
             public List<Junction> Descendants = new List<Junction>();
-            public bool IsActive = false;
-            public bool IsSpecial = false;
+            public DataType DataType;
 
             public Node(IComparable aId)
             {
@@ -657,7 +663,7 @@ namespace GitUI
             {
             }
 
-            public void Add(IComparable aId, IComparable[] aParentIds, object aData)
+            public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
             {
                 // If we haven't seen this node yet, create a new junction.
                 Node node = null;
@@ -666,6 +672,7 @@ namespace GitUI
                     Junctions.Add(new Junction(node, node));
                 }
                 //Console.WriteLine(node);
+                node.DataType = aType;
 
                 foreach (IComparable parentId in aParentIds)
                 {
