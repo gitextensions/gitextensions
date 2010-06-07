@@ -518,7 +518,7 @@ namespace GitUI
                 LastSelectedRows.Clear();
             }
 
-            DvcsGraph.Graph graph = new DvcsGraph.Graph();
+            DvcsGraph.GraphData graph = new DvcsGraph.GraphData();
 
             #region Set the sort order for the graph
             if (!Settings.OrderRevisionByDate)
@@ -557,12 +557,12 @@ namespace GitUI
                     // This should never happen.
                     continue;
                 }
-                DvcsGraph.Node n = graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
+                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), rev);
 
-                n.IsActive = (rev.Guid == currentCheckout);
-                n.IsSpecial = ( rev.Heads.Count > 0 );
+                //n.IsActive = (rev.Guid == currentCheckout);
+                //n.IsSpecial = ( rev.Heads.Count > 0 );
             }
-            Revisions.SetGraph(graph);
+            Revisions.SetData(graph);
             
             Loading.Visible = false;
             Revisions.Enabled = true;
