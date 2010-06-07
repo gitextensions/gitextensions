@@ -33,9 +33,6 @@ namespace GitUI
             base.InitLayout();
             InitializeComponent();
 
-            // TODO: Auto scale width on first load
-            Revisions.Columns[0].Width = 60;
-
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
             //RefreshRevisions();

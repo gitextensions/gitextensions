@@ -127,6 +127,14 @@ namespace GitUI
 
         private void RebuildGraph()
         {
+            // Auto scale width on load
+            int laneCount = 2;
+            if (GraphLanes != null)
+            {
+                laneCount = Math.Max(laneCount, GraphLanes.Width);
+            }
+            dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
+
             // Redraw
             CacheHead = -1;
             CacheHeadRow = 0;
@@ -753,11 +761,11 @@ namespace GitUI
         {
             public Lanes(Graph aGraph)
             {
-                Graph = aGraph;
-                Sorter = Graph.Sorter;
-                if (Sorter == null)
+                sourceGraph = aGraph;
+                sorter = sourceGraph.Sorter;
+                if (sorter == null)
                 {
-                    Sorter = delegate(object a, object b)
+                    sorter = delegate(object a, object b)
                     {
                         IComparable left = (IComparable)a;
                         IComparable right = (IComparable)b;
@@ -766,28 +774,28 @@ namespace GitUI
                 }
 
                 // Add the heads
-                LaneNodes.Clear();
-                foreach (Node h in Graph.GetHeads())
+                laneNodes.Clear();
+                foreach (Node h in sourceGraph.GetHeads())
                 {
                     if (h.Ancestors.Count == 0)
                     {
                         List<Node> headNode = new List<Node>();
                         headNode.Add(h);                        
-                        LaneNodes.Add(headNode);
+                        laneNodes.Add(headNode);
                     }
                     else
                     {
                         foreach (Junction j in h.Ancestors)
                         {
                             List<Node> nodes = new List<Node>(j.Bunch);
-                            LaneNodes.Add(nodes);
-                            JunctionNodes[j] = nodes;
+                            laneNodes.Add(nodes);
+                            junctionNodes[j] = nodes;
                         }
                     }
                 }
 
                 // Rebuild lanes
-                LaneRows = new List<LaneRow>();
+                laneRows = new List<LaneRow>();
 
                 // TODO: If desired, we can pre-load all of the nodes (or at least up to
                 // our current row (by SHA1) in the graph). This would be a great idea if we're on 
@@ -804,7 +812,7 @@ namespace GitUI
                         return null;
                     }
 
-                    while (col >= LaneRows.Count)
+                    while (col >= laneRows.Count)
                     {
                         if (!MoveNext())
                         {
@@ -812,9 +820,9 @@ namespace GitUI
                         }
                     }
 
-                    if (col < LaneRows.Count)
+                    if (col < laneRows.Count)
                     {
-                        return LaneRows[col];
+                        return laneRows[col];
                     }
                     else
                     {
@@ -836,24 +844,36 @@ namespace GitUI
             {
                 get
                 {
-                    return Graph.Count;
+                    return sourceGraph.Count;
                 }
             }
             public int CachedCount
             {
                 get
                 {
-                    return LaneRows.Count;
+                    return laneRows.Count;
+                }
+            }
+            public int Width
+            {
+                get
+                {
+                    int width = 1;
+                    foreach (LaneRow row in laneRows)
+                    {
+                        width = Math.Max(row.Count, width);
+                    }
+                    return width;
                 }
             }
 
-            private Graph Graph;
-            private List<LaneRow> LaneRows;
+            private Graph sourceGraph;
+            private List<LaneRow> laneRows;
 
-            private List<List<Node>> LaneNodes = new List<List<Node>>();
-            private Dictionary<Junction, List<Node>> JunctionNodes = new Dictionary<Junction, List<Node>>();
-            private ActiveLaneRow CurrentRow = new ActiveLaneRow();
-            private Comparison<object> Sorter;
+            private List<List<Node>> laneNodes = new List<List<Node>>();
+            private Dictionary<Junction, List<Node>> junctionNodes = new Dictionary<Junction, List<Node>>();
+            private ActiveLaneRow currentRow = new ActiveLaneRow();
+            private Comparison<object> sorter;
 
             public class LaneRow
             {
@@ -1042,7 +1062,7 @@ namespace GitUI
                 public bool MoveNext()
                 {
                     Index++;
-                    return Index < Lanes.LaneRows.Count;
+                    return Index < Lanes.laneRows.Count;
                 }
 
             }
@@ -1050,7 +1070,7 @@ namespace GitUI
             private bool MoveNext()
             {
                 // If there are no lanes, there is nothing more to draw
-                if (LaneNodes.Count == 0)
+                if (laneNodes.Count == 0)
                 {
                     return false;
                 }
@@ -1058,28 +1078,28 @@ namespace GitUI
                 // Make sure that lanes that have been merged are active and the branched 
                 // lanes are cleared. Also remove any empty lanes from LaneNodes
                 #region Keep merge active & cleanup LaneNodes
-                int curLaneCount = Math.Max(CurrentRow.NodeLane, CurrentRow.Count);
+                int curLaneCount = Math.Max(currentRow.NodeLane, currentRow.Count);
                 for (int curLane = 0; curLane <= curLaneCount; curLane++)
                 {
-                    if (CurrentRow[curLane].Length == 1)
+                    if (currentRow[curLane].Length == 1)
                     {
-                        int rowLane = CurrentRow[curLane][0];
+                        int rowLane = currentRow[curLane][0];
                         if (rowLane != curLane)
                         {
                             // We've pointed to the lane that has a node. That means this is a branch 
                             // from that lane. Keep the branch alive in it's new lane
-                            CurrentRow[rowLane] = new LaneRow.LaneInfo[1] { CurrentRow[curLane][0] };
-                            CurrentRow[curLane] = new LaneRow.LaneInfo[0];
+                            currentRow[rowLane] = new LaneRow.LaneInfo[1] { currentRow[curLane][0] };
+                            currentRow[curLane] = new LaneRow.LaneInfo[0];
                         }
                     }
-                    else if (CurrentRow[curLane].Length == 2)
+                    else if (currentRow[curLane].Length == 2)
                     {
-                        LaneRow.LaneInfo[] mergeLanes = CurrentRow[curLane];
-                        CurrentRow[mergeLanes[0]] = new LaneRow.LaneInfo[1] { mergeLanes[0] };
-                        CurrentRow[mergeLanes[1]] = new LaneRow.LaneInfo[1] { mergeLanes[1] };
+                        LaneRow.LaneInfo[] mergeLanes = currentRow[curLane];
+                        currentRow[mergeLanes[0]] = new LaneRow.LaneInfo[1] { mergeLanes[0] };
+                        currentRow[mergeLanes[1]] = new LaneRow.LaneInfo[1] { mergeLanes[1] };
 
                         // This lane just did a merge. Mark both merge lanes as active
-                        if (CurrentRow[curLane][0] != curLane && CurrentRow[curLane][1] != curLane)
+                        if (currentRow[curLane][0] != curLane && currentRow[curLane][1] != curLane)
                         {
                             // I'm ok with this...with the code that pushes everything as far left
                             // as possible, sometimes you'll get a merge into a new lane on the right.
@@ -1087,7 +1107,7 @@ namespace GitUI
                             //Console.WriteLine("Odd...We had a merge that came from 2 different lanes...");
                             //if (Debugger.IsAttached)
                             //    Debugger.Break();
-                            CurrentRow[curLane] = new LaneRow.LaneInfo[0];
+                            currentRow[curLane] = new LaneRow.LaneInfo[0];
                         }
                     }
                 }
@@ -1095,10 +1115,10 @@ namespace GitUI
 
                 // Find the new current row's node (newest item in the row)
                 #region Find current node & index
-                CurrentRow.Node = null;
-                for (int curLane = 0; curLane < LaneNodes.Count; curLane++)
+                currentRow.Node = null;
+                for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
-                    List<Node> lane = LaneNodes[curLane];
+                    List<Node> lane = laneNodes[curLane];
 
                     // Only check if there is more than 1 item in the lane. If there is just 1
                     // item, the remaining item is the child node of the connecting junction.
@@ -1114,7 +1134,7 @@ namespace GitUI
                         foreach (Junction j in lane[0].Descendants)
                         {
                             List<Node> jNodes = null;
-                            isUsable = JunctionNodes.TryGetValue(j, out jNodes);
+                            isUsable = junctionNodes.TryGetValue(j, out jNodes);
                             if( isUsable )
                             {
                                 isUsable = jNodes.Count <= 1;
@@ -1128,10 +1148,10 @@ namespace GitUI
                     }
                     if (isUsable)
                     {
-                        if (CurrentRow.Node == null || (lane[0].Data != null && CurrentRow.Node.Data != null && Sorter.Invoke(lane[0].Data, CurrentRow.Node.Data) > 0))
+                        if (currentRow.Node == null || (lane[0].Data != null && currentRow.Node.Data != null && sorter.Invoke(lane[0].Data, currentRow.Node.Data) > 0))
                         {
-                            CurrentRow.Node = lane[0];
-                            CurrentRow.NodeLane = curLane;
+                            currentRow.Node = lane[0];
+                            currentRow.NodeLane = curLane;
                         }
                     }
                 }
@@ -1141,23 +1161,23 @@ namespace GitUI
                 // that are better than the current row node lane
                 #region Don't skip lanes
                 // Remove unused lanes from the end of CurrentRow
-                for (int i = CurrentRow.Count - 1; i >= 0; --i)
+                for (int i = currentRow.Count - 1; i >= 0; --i)
                 {
-                    if (CurrentRow[i].Length == 0)
+                    if (currentRow[i].Length == 0)
                     {
-                        CurrentRow.RemoveAt(i);
+                        currentRow.RemoveAt(i);
                     }
                     else
                     {
                         break;
                     }
                 }
-                if (CurrentRow.NodeLane > CurrentRow.Count)
+                if (currentRow.NodeLane > currentRow.Count)
                 {
-                    List<Node> temp = LaneNodes[CurrentRow.NodeLane];
-                    LaneNodes[CurrentRow.NodeLane] = LaneNodes[CurrentRow.Count];
-                    LaneNodes[CurrentRow.Count] = temp;
-                    CurrentRow.NodeLane = CurrentRow.Count;
+                    List<Node> temp = laneNodes[currentRow.NodeLane];
+                    laneNodes[currentRow.NodeLane] = laneNodes[currentRow.Count];
+                    laneNodes[currentRow.Count] = temp;
+                    currentRow.NodeLane = currentRow.Count;
                 }
                 #endregion
 
@@ -1165,10 +1185,10 @@ namespace GitUI
                 // node from that junction as well. This will happen when there is a branch 
                 #region Check for branches
                 List<LaneRow.LaneInfo> CurRowParents = new List<LaneRow.LaneInfo>();
-                for (int curLane = 0; curLane < LaneNodes.Count; curLane++)
+                for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
-                    List<Node> lane = LaneNodes[curLane];
-                    if (lane.Count == 0 || CurrentRow.Node != lane[0])
+                    List<Node> lane = laneNodes[curLane];
+                    if (lane.Count == 0 || currentRow.Node != lane[0])
                     {
                         // We're only interested in columns that have the same node
                         // at the top of the junction as the current row's node
@@ -1193,9 +1213,9 @@ namespace GitUI
                         //       which would also eliminate lookup of index of list further down.
                         //       We probably could drop JunctionNodes all together at that point.
                         Junction junction = null;
-                        foreach (KeyValuePair<Junction, List<Node>> j in JunctionNodes)
+                        foreach (KeyValuePair<Junction, List<Node>> j in junctionNodes)
                         {
-                            if (j.Value == LaneNodes[curLane])
+                            if (j.Value == laneNodes[curLane])
                             {
                                 junction = j.Key;
                                 break;
@@ -1207,38 +1227,38 @@ namespace GitUI
                     }
                 }
                 // Set the current row's new parentage
-                CurrentRow[CurrentRow.NodeLane] = CurRowParents.ToArray();
+                currentRow[currentRow.NodeLane] = CurRowParents.ToArray();
                 #endregion
 
                 // Advance the LaneNodes
                 #region Check to see if we can move up ancestor(s) into LaneNodes
                 // Check to see if any of the lanes are fully processed and a ancestor
                 // can be brought in for processing.
-                for (int curLane = 0; curLane < LaneNodes.Count; curLane++)
+                for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
                     // If 1 item left in the row, see if we can start to draw any of the 
                     // parents. We can only do it if all of the parent's descendants are 
                     // fully drawn.
-                    if (LaneNodes[curLane].Count != 1)
+                    if (laneNodes[curLane].Count != 1)
                     {
                         continue;
                     }
 
-                    Node node = LaneNodes[curLane][0];
+                    Node node = laneNodes[curLane][0];
 
                     if (node.Ancestors.Count == 0)
                     {
                         // If we have multiple lanes with this same ancestor on the top,
                         // we need to consolidate them. This happens when the first node in the
                         // graph has a branch
-                        for (int nextLane = curLane + 1; nextLane < LaneNodes.Count; nextLane++)
+                        for (int nextLane = curLane + 1; nextLane < laneNodes.Count; nextLane++)
                         {
-                            if (LaneNodes[nextLane].Count == 1 && LaneNodes[nextLane][0] == node)
+                            if (laneNodes[nextLane].Count == 1 && laneNodes[nextLane][0] == node)
                             {
-                                LaneNodes[nextLane].Clear();
-                                if (CurrentRow[nextLane].Length > 0)
+                                laneNodes[nextLane].Clear();
+                                if (currentRow[nextLane].Length > 0)
                                 {
-                                    CurrentRow[nextLane][0].ConnectsTo = curLane;
+                                    currentRow[nextLane][0].ConnectsTo = curLane;
                                 }
                             }
                         }
@@ -1252,7 +1272,7 @@ namespace GitUI
                     bool isFirstMerge = true;
                     foreach (Junction parent in node.Ancestors)
                     {
-                        if (JunctionNodes.ContainsKey(parent))
+                        if (junctionNodes.ContainsKey(parent))
                         {
                             // We've already merged this junction in
                             continue;
@@ -1263,7 +1283,7 @@ namespace GitUI
                         bool canMerge = true;
                         foreach (Junction sibling in parent.Child.Descendants)
                         {
-                            if (!JunctionNodes.ContainsKey(sibling) || JunctionNodes[sibling].Count > 1)
+                            if (!junctionNodes.ContainsKey(sibling) || junctionNodes[sibling].Count > 1)
                             {
                                 // Either the sibling is more than one level away, or it still has nodes 
                                 // to be processed before we can merge it into the lane nodes
@@ -1282,26 +1302,26 @@ namespace GitUI
 
                             // Since we're merging this lane, the LaneNodes & JunctionNodes 
                             // counts need to go to 0
-                            LaneNodes[curLane].Clear();
+                            laneNodes[curLane].Clear();
                         }
 
                         // Find available lane to merge into. 
                         int laneIndex;
-                        for (laneIndex = 0; laneIndex < LaneNodes.Count; laneIndex++)
+                        for (laneIndex = 0; laneIndex < laneNodes.Count; laneIndex++)
                         {
-                            if (LaneNodes[laneIndex].Count == 0)
+                            if (laneNodes[laneIndex].Count == 0)
                             {
                                 break;
                             }
                         }
-                        if (laneIndex == LaneNodes.Count)
+                        if (laneIndex == laneNodes.Count)
                         {
-                            LaneNodes.Add(new List<Node>());
+                            laneNodes.Add(new List<Node>());
                         }
                         //Console.WriteLine("\tMerge {0} into lane {1}", parent, laneIndex);
 
                         // Clear first so JunctionNodes count goes to 0
-                        LaneNodes[laneIndex].Clear();
+                        laneNodes[laneIndex].Clear();
 
                         // Check each merged sibling to see if there were any nodes
                         // remaining. If so, we need to point it to the new row. If not
@@ -1311,27 +1331,27 @@ namespace GitUI
                             // If the sibling still has nodes, we need to update
                             // any references to it to point to the newly merged
                             // location instead
-                            if (JunctionNodes[sibling].Count == 0)
+                            if (junctionNodes[sibling].Count == 0)
                             {
                                 continue;
                             }
-                            int siblingLane = LaneNodes.IndexOf(JunctionNodes[sibling]);
-                            CurrentRow.Replace(siblingLane, laneIndex);
+                            int siblingLane = laneNodes.IndexOf(junctionNodes[sibling]);
+                            currentRow.Replace(siblingLane, laneIndex);
 
-                            if (!CurrentRow.Active(siblingLane))
+                            if (!currentRow.Active(siblingLane))
                             {
                                 // First give preference to something already
                                 // referenced by this lane (this will avoid messy
                                 // merges where neither parent is in the same lane
                                 // as the merge
-                                foreach (LaneRow.LaneInfo lane in CurrentRow[siblingLane])
+                                foreach (LaneRow.LaneInfo lane in currentRow[siblingLane])
                                 {
                                     if (lane > siblingLane)
                                     {
-                                        CurrentRow.Replace(lane, siblingLane);
-                                        List<Node> temp = LaneNodes[siblingLane];
-                                        LaneNodes[siblingLane] = LaneNodes[lane];
-                                        LaneNodes[lane] = temp;
+                                        currentRow.Replace(lane, siblingLane);
+                                        List<Node> temp = laneNodes[siblingLane];
+                                        laneNodes[siblingLane] = laneNodes[lane];
+                                        laneNodes[lane] = temp;
                                         break;
                                     }
                                 }
@@ -1339,8 +1359,8 @@ namespace GitUI
                         }
 
                         List<Node> nodes = new List<Node>(parent.Bunch);
-                        LaneNodes[laneIndex] = nodes;
-                        JunctionNodes[parent] = nodes;
+                        laneNodes[laneIndex] = nodes;
+                        junctionNodes[parent] = nodes;
                     }
                 }
                 #endregion
@@ -1350,28 +1370,28 @@ namespace GitUI
                 // (needed so we know if we are leaving empty lanes the next time 
                 // we call MoveNext)
                 #region Trim empty lanes
-                for (int curLane = 0; curLane < LaneNodes.Count; curLane++)
+                for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
-                    if (!CurrentRow.Active(curLane))
+                    if (!currentRow.Active(curLane))
                     {
-                        if (LaneNodes[curLane].Count == 0)
+                        if (laneNodes[curLane].Count == 0)
                         {
                             // Clear the empty lane
-                            CurrentRow.Clear(curLane);
-                            LaneNodes.RemoveAt(curLane);
+                            currentRow.Clear(curLane);
+                            laneNodes.RemoveAt(curLane);
                             curLane--;
                         }
                         else
                         {
                             // Swap the lane with one that is in use
-                            for (int j = curLane + 1; j < LaneNodes.Count; j++)
+                            for (int j = curLane + 1; j < laneNodes.Count; j++)
                             {
-                                if (CurrentRow.Active(j))
+                                if (currentRow.Active(j))
                                 {
-                                    CurrentRow.Replace(j, curLane);
-                                    List<Node> temp = LaneNodes[curLane];
-                                    LaneNodes[curLane] = LaneNodes[j];
-                                    LaneNodes[j] = temp;
+                                    currentRow.Replace(j, curLane);
+                                    List<Node> temp = laneNodes[curLane];
+                                    laneNodes[curLane] = laneNodes[j];
+                                    laneNodes[j] = temp;
                                     break;
                                 }
                             }
@@ -1379,11 +1399,11 @@ namespace GitUI
                     }
                 }
 
-                for (int i = CurrentRow.Count - 1; i >= 0; --i)
+                for (int i = currentRow.Count - 1; i >= 0; --i)
                 {
-                    if (i > CurrentRow.NodeLane && CurrentRow[i].Length == 0)
+                    if (i > currentRow.NodeLane && currentRow[i].Length == 0)
                     {
-                        CurrentRow.RemoveAt(i);
+                        currentRow.RemoveAt(i);
                     }
                     else
                     {
@@ -1395,10 +1415,10 @@ namespace GitUI
                 // DEBUG: Spit out the information about the lane
                 //Console.WriteLine(CurrentRow);
 
-                if (CurrentRow.Node != null)
+                if (currentRow.Node != null)
                 {
-                    Lanes.LaneRow row = new Lanes.LaneRow(CurrentRow);
-                    LaneRows.Add(row);
+                    Lanes.LaneRow row = new Lanes.LaneRow(currentRow);
+                    laneRows.Add(row);
                     return true;
                 }
                 else
