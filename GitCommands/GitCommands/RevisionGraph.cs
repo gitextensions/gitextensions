@@ -2,21 +2,36 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 
 namespace GitCommands
 {
     public class RevisionGraph
     {
         public event EventHandler Exited;
-        public List<GitRevision> Revisions;
+        public event EventHandler Updated;
+        public List<GitRevision> Revisions
+        {
+            get 
+            {
+                lock (revisions)
+                {
+                    return new List<GitRevision>( revisions );
+                }
+            }
+        }
 
         public int LimitRevisions { get; set; }
+        public bool BackgroundThread { get; set; }
 
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
         private GitCommands gitGetGraphCommand;
         private uint revisionOrder = 0;
+
+        private Thread backgroundThread = null;
+        private List<GitRevision> revisions = new List<GitRevision>();
 
         private enum ReadStep
         {
@@ -46,23 +61,43 @@ namespace GitCommands
 
         public void Kill()
         {
+            if (backgroundThread != null)
+            {
+                backgroundThread.Abort();
+            }
             if (gitGetGraphCommand != null)
+            {
                 gitGetGraphCommand.Kill();
+            }
         }
 
         public string LogParam = "HEAD --all";
 
         public void Execute()
         {
-            Revisions = new List<GitRevision>();
+            if (BackgroundThread)
+            {
+                if (backgroundThread != null)
+                {
+                    backgroundThread.Abort();
+                }
+                backgroundThread = new Thread(new ThreadStart(execute));
+                backgroundThread.Start();
+            }
+            else
+            {
+                execute();
+            }
+        }
+
+        private void execute()
+        {
+            lock (revisions)
+            {
+                revisions.Clear();
+            }
 
             heads = GitCommands.GetHeads(true);
-
-            string limitRevisionsArgument;
-            if (LogParam.Contains("--follow"))
-                limitRevisionsArgument = "";
-            else
-                limitRevisionsArgument = " -n " + LimitRevisions;
 
             string formatString =
                 /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -76,8 +111,7 @@ namespace GitCommands
                 /* Commit Message */ "%s";
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log {0} --pretty=format:\"{2}\" {1}",
-                limitRevisionsArgument,
+                "log --pretty=format:\"{1}\" {0}",
                 LogParam,
                 formatString);
 
@@ -92,7 +126,9 @@ namespace GitCommands
         void gitGetGraphCommand_Exited(object sender, EventArgs e)
         {
             if (Exited != null)
+            {
                 Exited(this, e);
+            }
         }
 
         void gitGetGraphCommand_DataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
@@ -162,12 +198,21 @@ namespace GitCommands
 
             if (nextStep == ReadStep.Done)
             {
-                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                lock (revisions)
                 {
-                    revision.Order = revisionOrder++;
-                    Revisions.Add(revision);
+                    if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                    {
+                        revision.Order = revisionOrder++;
+                        revisions.Add(revision);
+                    }
+                    nextStep = ReadStep.Commit;
+
+                    if (revisions.Count % Settings.MaxCommits == 0)
+                    {
+                        // Update early.
+                        Updated(this, new EventArgs());
+                    }
                 }
-                nextStep = ReadStep.Commit;
             }
         }
     }
