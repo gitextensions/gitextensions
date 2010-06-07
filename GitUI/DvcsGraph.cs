@@ -62,6 +62,14 @@ namespace GitUI
             RebuildGraph();
         }
 
+        ~DvcsGraph()
+        {
+            if (GraphBitmap != null)
+            {
+                GraphBitmap.Dispose();
+            }
+        }
+
         public object GetRowData(int aRow)
         {
             Lanes.LaneRow row = GraphLanes[aRow];
@@ -259,7 +267,11 @@ namespace GitUI
             int width = dataGridColumnGraph.Width;
             if (GraphBitmap == null || GraphBitmap.Width != width || GraphBitmap.Height != height)
             {
-                GraphBitmap = new Bitmap(width, height);
+                if (GraphBitmap != null)
+                {
+                    GraphBitmap.Dispose();
+                }
+                GraphBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                 GraphWorkArea = Graphics.FromImage(GraphBitmap);
                 GraphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
                 isForceRedraw = true;
