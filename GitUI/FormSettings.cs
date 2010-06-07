@@ -138,25 +138,28 @@ namespace GitUI
                 GitPath.Text = GitCommands.Settings.GitCommand;
                 GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
-                UserName.Text = GitCommands.GitCommands.GetSetting("user.name");
-                UserEmail.Text = GitCommands.GitCommands.GetSetting("user.email");
-                Editor.Text = GitCommands.GitCommands.GetSetting("core.editor");
-                MergeTool.Text = GitCommands.GitCommands.GetSetting("merge.tool");
+                ConfigFile localConfig = GitCommands.GitCommands.GetLocalConfig();
+                ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
+
+                UserName.Text = localConfig.GetValue("user.name");
+                UserEmail.Text = localConfig.GetValue("user.email");
+                Editor.Text = localConfig.GetValue("core.editor");
+                MergeTool.Text = localConfig.GetValue("merge.tool");
 
                 Dictionary.Text = GitCommands.Settings.Dictionary;
 
-                GlobalUserName.Text = gitCommands.GetGlobalSetting("user.name");
-                GlobalUserEmail.Text = gitCommands.GetGlobalSetting("user.email");
-                GlobalEditor.Text = gitCommands.GetGlobalSetting("core.editor");
-                GlobalMergeTool.Text = gitCommands.GetGlobalSetting("merge.tool");
+                GlobalUserName.Text = globalConfig.GetValue("user.name");
+                GlobalUserEmail.Text = globalConfig.GetValue("user.email");
+                GlobalEditor.Text = globalConfig.GetValue("core.editor");
+                GlobalMergeTool.Text = globalConfig.GetValue("merge.tool");
 
-                SetCheckboxFromString(KeepMergeBackup, GitCommands.GitCommands.GetSetting("mergetool.keepBackup"));
-                SetComboBoxFromString(LocalAutoCRLF, GitCommands.GitCommands.GetSetting("core.autocrlf"));
+                SetCheckboxFromString(KeepMergeBackup, localConfig.GetValue("mergetool.keepBackup"));
+                SetComboBoxFromString(LocalAutoCRLF, localConfig.GetValue("core.autocrlf"));
 
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergetoolPath.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path");
+                    MergetoolPath.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".path");
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergeToolCmd.Text = gitCommands.GetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd");
+                    MergeToolCmd.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".cmd");
 
                 DefaultIcon.Checked = GitCommands.Settings.IconColor.Equals("default" , StringComparison.CurrentCultureIgnoreCase);
                 BlueIcon.Checked = GitCommands.Settings.IconColor.Equals("blue", StringComparison.CurrentCultureIgnoreCase);
@@ -167,17 +170,17 @@ namespace GitUI
                 RandomIcon.Checked = GitCommands.Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
                 if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
-                    GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.guitool");
+                    GlobalDiffTool.Text = globalConfig.GetValue("diff.guitool");
                 else
-                    GlobalDiffTool.Text = gitCommands.GetGlobalSetting("diff.tool");
+                    GlobalDiffTool.Text = globalConfig.GetValue("diff.tool");
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolPath.Text = gitCommands.GetGlobalSetting("difftool." + GlobalDiffTool.Text + ".path");
+                    DifftoolPath.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".path");
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolCmd.Text = gitCommands.GetGlobalSetting("difftool." + GlobalDiffTool.Text + ".cmd");
+                    DifftoolCmd.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".cmd");
 
-                SetCheckboxFromString(GlobalKeepMergeBackup, gitCommands.GetGlobalSetting("mergetool.keepBackup"));
-                SetComboBoxFromString(GlobalAutoCRLF, gitCommands.GetGlobalSetting("core.autocrlf"));
+                SetCheckboxFromString(GlobalKeepMergeBackup, globalConfig.GetValue("mergetool.keepBackup"));
+                SetComboBoxFromString(GlobalAutoCRLF, globalConfig.GetValue("core.autocrlf"));
 
                 PlinkPath.Text = GitCommands.Settings.Plink;
                 PuttygenPath.Text = GitCommands.Settings.Puttygen;
@@ -315,54 +318,59 @@ namespace GitUI
             }
             else
             {
+                ConfigFile localConfig = GitCommands.GitCommands.GetLocalConfig();
+                ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
+
                 GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-                if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(GitCommands.GitCommands.GetSetting("user.name")))
-                    GitCommands.GitCommands.SetSetting("user.name", UserName.Text);
-                if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(GitCommands.GitCommands.GetSetting("user.email")))
-                    GitCommands.GitCommands.SetSetting("user.email", UserEmail.Text);
-                GitCommands.GitCommands.SetSetting("core.editor", Editor.Text);
-                GitCommands.GitCommands.SetSetting("merge.tool", MergeTool.Text);
+                if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
+                    localConfig.SetValue("user.name", UserName.Text);
+                if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
+                    localConfig.SetValue("user.email", UserEmail.Text);
+                localConfig.SetValue("core.editor", Editor.Text);
+                localConfig.SetValue("merge.tool", MergeTool.Text);
 
 
                 if (KeepMergeBackup.CheckState == CheckState.Checked)
-                    GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "true");
+                    localConfig.SetValue("mergetool.keepBackup", "true");
                 else
                     if (KeepMergeBackup.CheckState == CheckState.Unchecked)
-                        GitCommands.GitCommands.SetSetting("mergetool.keepBackup", "false");
+                        localConfig.SetValue("mergetool.keepBackup", "false");
 
-                GitCommands.GitCommands.SetSetting("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
+                localConfig.SetValue("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
 
-                if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(gitCommands.GetGlobalSetting("user.name")))
-                    gitCommands.SetGlobalSetting("user.name", GlobalUserName.Text);
-                if (string.IsNullOrEmpty(GlobalUserEmail.Text) || !GlobalUserEmail.Text.Equals(gitCommands.GetGlobalSetting("user.email")))
-                    gitCommands.SetGlobalSetting("user.email", GlobalUserEmail.Text);
-                gitCommands.SetGlobalSetting("core.editor", GlobalEditor.Text);
+                if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
+                    globalConfig.SetValue("user.name", GlobalUserName.Text);
+                if (string.IsNullOrEmpty(GlobalUserEmail.Text) || !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
+                    globalConfig.SetValue("user.email", GlobalUserEmail.Text);
+                globalConfig.SetValue("core.editor", GlobalEditor.Text);
 
                 if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
-                    gitCommands.SetGlobalSetting("diff.guitool", GlobalDiffTool.Text);
+                    globalConfig.SetValue("diff.guitool", GlobalDiffTool.Text);
                 else
-                    gitCommands.SetGlobalSetting("diff.tool", GlobalDiffTool.Text);
+                    globalConfig.SetValue("diff.tool", GlobalDiffTool.Text);
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    gitCommands.SetGlobalSetting("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
+                    globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    gitCommands.SetGlobalSetting("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
+                    globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
 
-                gitCommands.SetGlobalSetting("merge.tool", GlobalMergeTool.Text);
+                globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
 
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+                    globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    gitCommands.SetGlobalSetting("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
+                    globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
 
                 if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
-                    gitCommands.SetGlobalSetting("mergetool.keepBackup", "true");
+                    globalConfig.SetValue("mergetool.keepBackup", "true");
                 else
                     if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
-                        gitCommands.SetGlobalSetting("mergetool.keepBackup", "false");
+                        globalConfig.SetValue("mergetool.keepBackup", "false");
 
-                gitCommands.SetGlobalSetting("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
+                globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
+                globalConfig.Save();
+                localConfig.Save();
             }
 
             if (OpenSSH.Checked)
@@ -375,7 +383,7 @@ namespace GitUI
                 GitCommands.GitCommands.SetSsh(OtherSsh.Text);
 
             GitCommands.Settings.SaveSettings();
-
+            
             return true;
         }
 

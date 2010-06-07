@@ -86,6 +86,18 @@ namespace GitUI
 
         }
 
+        private int currentScrollPos = -1;
+        public void SaveCurrentScrollPos()
+        {
+            currentScrollPos = TextEditor.ActiveTextAreaControl.VScrollBar.Value;
+        }
+
+        private void RestoreCurrentScrollPos()
+        {
+            if (currentScrollPos >= 0)
+                ScrollPos = currentScrollPos;
+        }
+
         public int ScrollPos
         {
             get
@@ -124,6 +136,7 @@ namespace GitUI
             TextEditor.Text = text;
             AddPatchHighlighting();
             TextEditor.Refresh();
+            RestoreCurrentScrollPos();
         }
 
         public void ViewPatch(Func<string> loadPatchText)
@@ -257,6 +270,7 @@ namespace GitUI
             ResetForText(fileName);
             TextEditor.Text = text;
             TextEditor.Refresh();
+            RestoreCurrentScrollPos();
         }
 
         public void ViewGitItemRevision(string fileName, string guid)
