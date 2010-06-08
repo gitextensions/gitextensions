@@ -18,7 +18,7 @@ namespace GitCommands
         public RepositoryCategory()
         {
             Repositories.AllowNew = true;
-            Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
+            Repositories.RaiseListChangedEvents = false;
         }
 
 
@@ -26,15 +26,7 @@ namespace GitCommands
         {
             this.Description = description;
             Repositories.AllowNew = true;
-            Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
-        }
-
-        public event ListChangedEventHandler ListChanged;
-
-        public void OnListChanged(object sender, ListChangedEventArgs e)
-        {
-            if (ListChanged != null)
-                ListChanged(sender, e);
+            Repositories.RaiseListChangedEvents = false;
         }
 
         public virtual void Repositories_ListChanged(object sender, ListChangedEventArgs e)
@@ -45,7 +37,6 @@ namespace GitCommands
                     Repositories[e.NewIndex].RepositoryType = RepositoryType.RssFeed;
             }
 
-            OnListChanged(this, e);
         }
 
         private BindingList<Repository> repositories;
@@ -73,8 +64,6 @@ namespace GitCommands
         {
             try
             {
-                Repositories.ListChanged -= new ListChangedEventHandler(Repositories_ListChanged);
-
                 // Create a new XmlTextReader from the specified URL (RSS feed)
                 XmlTextReader rssReader = new XmlTextReader(RssFeedUrl);
                 XmlDocument rssDoc = new XmlDocument();
@@ -174,8 +163,6 @@ namespace GitCommands
             }
             finally
             {
-                Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
-                OnListChanged(this, null);
             }
         }
 
