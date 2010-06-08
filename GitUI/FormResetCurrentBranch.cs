@@ -25,6 +25,9 @@ namespace GitUI
 
         private void FormResetCurrentBranch_Load(object sender, EventArgs e)
         {
+            if (Revision == null)
+                throw new Exception("No revision");
+
             BranchInfo.Text = string.Format(resources.GetString("BranchInfo.Text"), GitCommands.GitCommands.GetSelectedBranch());
             Commit.Text = string.Format(resources.GetString("Commit.Text"), Revision.Guid);
             Author.Text = string.Format(resources.GetString("Author.Text"), Revision.Author);

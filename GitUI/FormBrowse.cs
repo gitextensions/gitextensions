@@ -1247,6 +1247,11 @@ namespace GitUI
             }
         }
 
+        private void translateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormTranslate().ShowDialog();
+        }
+
 
     }
 }

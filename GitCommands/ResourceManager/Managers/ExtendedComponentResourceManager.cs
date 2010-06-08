@@ -114,8 +114,8 @@ namespace ResourceManager
             string resource;
             resource = base.GetString(name, culture);
 
-            if (resource == null)
-                throw new ArgumentOutOfRangeException(name);
+            //if (resource == null)
+            //    throw new ArgumentOutOfRangeException(name);
 
             return resource;
         }
@@ -154,8 +154,8 @@ namespace ResourceManager
             object resource;
             resource = base.GetObject(name, culture);
 
-            if (resource == null)
-                throw new ArgumentOutOfRangeException(name);
+            //if (resource == null)
+            //   throw new ArgumentOutOfRangeException(name);
 
             return resource;
         }
@@ -201,8 +201,8 @@ namespace ResourceManager
             UnmanagedMemoryStream resource;
             resource = base.GetStream(name, culture);
 
-            if (resource == null)
-                throw new ArgumentOutOfRangeException(name);
+            //if (resource == null)
+            //    throw new ArgumentOutOfRangeException(name);
             return resource;
         }
 
