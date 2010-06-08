@@ -146,6 +146,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -1144,7 +1145,8 @@
             this.changelogToolStripMenuItem,
             this.toolStripSeparator3,
             this.donateToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.translateToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -1212,6 +1214,13 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
+            // translateToolStripMenuItem
+            // 
+            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.translateToolStripMenuItem.Text = "Translate";
+            this.translateToolStripMenuItem.Click += new System.EventHandler(this.translateToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1253,6 +1262,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -1373,5 +1383,6 @@
         private System.Windows.Forms.ToolStripMenuItem cleanupToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
     }
 }

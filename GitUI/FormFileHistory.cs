@@ -15,13 +15,18 @@ namespace GitUI
     {
         public FormFileHistory(string fileName):base()
         {
+            InitializeComponent();
+
+
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
             if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
                 fileName = fileName.Substring(Settings.WorkingDir.Length);
 
 
             this.FileName = fileName;
 
-            InitializeComponent();
 
             commitInfo.Visible = false;
 

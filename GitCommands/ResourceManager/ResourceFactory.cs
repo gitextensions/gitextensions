@@ -11,5 +11,11 @@ namespace ResourceManager
             return new ResourceManager(resourceType.Name, new XmlResourceManager(resourceType));
         }
 
+        public static IResourceManager GetResourceManager(string resourceName)
+        {
+            string resourceLocation = @"C:\Development\GitUI\Translations"/*typeof(ResourceFactory).Assembly.Location.Substring(0, typeof(ResourceFactory).Assembly.Location.LastIndexOf("\\")) + "\\resources"*/;
+            return new ResourceManager(resourceName, new XmlResourceManager(resourceLocation, resourceName));
+        }
+
     }
 }

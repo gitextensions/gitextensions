@@ -21,6 +21,8 @@ namespace GitUI
             InitializeComponent();
 
             customUnderlines = new CustomPaintTextBox(TextBox);
+            
+            SpellCheckTimer.Enabled = false;
         }
 
         public void SetEmptyMessage(string message)
@@ -107,9 +109,12 @@ namespace GitUI
             customUnderlines.Lines.Clear();
             try
             {
-                this.spelling.Text = this.TextBox.Text;
-                this.spelling.ShowDialog = false;
-                this.spelling.SpellCheck();
+                if (this.spelling != null)
+                {
+                    this.spelling.Text = this.TextBox.Text;
+                    this.spelling.ShowDialog = false;
+                    this.spelling.SpellCheck();
+                }
             }
             catch
             {

@@ -16,6 +16,9 @@ namespace GitUI
         {
             InitializeComponent();
 
+            if (repository == null)
+                return;
+
             Bitmap icon = null;
             if (repository.RepositoryType == RepositoryType.RssFeed)
                 icon = Resources.rss.ToBitmap();
