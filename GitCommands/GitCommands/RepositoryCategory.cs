@@ -29,15 +29,15 @@ namespace GitCommands
             Repositories.RaiseListChangedEvents = false;
         }
 
-        public virtual void Repositories_ListChanged(object sender, ListChangedEventArgs e)
+        public virtual void SetIcon()
         {
-            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            foreach (Repository recentRepository in Repositories)
             {
                 if (CategoryType == RepositoryCategoryType.RssFeed)
-                    Repositories[e.NewIndex].RepositoryType = RepositoryType.RssFeed;
+                    recentRepository.RepositoryType = RepositoryType.RssFeed;
             }
-
         }
+
 
         private BindingList<Repository> repositories;
         public BindingList<Repository> Repositories
