@@ -10,14 +10,13 @@ namespace GitCommands
         public RepositoryHistory()
         {
             Description = "Recent Repositories";
-            //Repositories.ListChanged += new System.ComponentModel.ListChangedEventHandler(Repositories_ListChanged);
         }
 
-        public override void Repositories_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        public override void SetIcon()
         {
-            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            foreach (Repository recentRepository in Repositories)
             {
-                Repositories[e.NewIndex].RepositoryType = RepositoryType.History;
+                recentRepository.RepositoryType = RepositoryType.History;
             }
         }
 
