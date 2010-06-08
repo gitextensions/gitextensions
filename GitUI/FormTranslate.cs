@@ -35,8 +35,6 @@ namespace GitUI
         {
             InitializeComponent();
 
-            ApplyResources();
-
             GetPropertiesToTranslate();
             FillTranslateGrid(allText.Text);
         }

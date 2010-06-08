@@ -33,7 +33,6 @@ namespace GitUI
             if (dashboard == null)
             {
                 dashboard = new Dashboard();
-                resources.ApplyResources(this.dashboard, "dashboard");
                 dashboard.WorkingDirChanged += dashboard_WorkingDirChanged;
                 this.splitContainer2.Panel2.Controls.Add(dashboard);
                 dashboard.Dock = DockStyle.Fill;
