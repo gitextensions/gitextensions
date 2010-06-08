@@ -23,7 +23,7 @@ namespace GitUI
                 return;
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
-            repositoryCategory.OnListChanged(null, null);
+            repositoryCategory.SetIcon();
         }
 
         public void Initialize()
@@ -95,7 +95,8 @@ namespace GitUI
                 RssFeed.Enabled = false;
                 repositoryCategory.CategoryType = RepositoryCategoryType.Repositories;
             }
-            
+
+            repositoryCategory.SetIcon();            
         }
 
         private void RssFeed_TextChanged(object sender, EventArgs e)
@@ -123,7 +124,7 @@ namespace GitUI
                 return;
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
-            repositoryCategory.OnListChanged(null, null);
+            repositoryCategory.SetIcon();
         }
 
         private void RssFeedType_Validating(object sender, CancelEventArgs e)
@@ -132,7 +133,7 @@ namespace GitUI
                 return;
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
-            repositoryCategory.OnListChanged(null, null);
+            repositoryCategory.SetIcon();
         }
 
         private void RepositoriesType_Validating(object sender, CancelEventArgs e)
@@ -141,15 +142,16 @@ namespace GitUI
                 return;
 
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
-            repositoryCategory.OnListChanged(null, null);
+            repositoryCategory.SetIcon();
         }
 
         private void RepositoriesGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (Categories.SelectedItem == null)
                 return;
+
             RepositoryCategory repositoryCategory = (RepositoryCategory)Categories.SelectedItem;
-            repositoryCategory.OnListChanged(null, null);
+            repositoryCategory.SetIcon();
         }
 
     }
