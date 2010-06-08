@@ -65,6 +65,8 @@ namespace GitCommands
             {
                 backgroundThread.Abort();
             }
+            // Don't need to sync this since the other thread that uses it
+            // was aborted above.
             if (gitGetGraphCommand != null)
             {
                 gitGetGraphCommand.Kill();
@@ -74,23 +76,6 @@ namespace GitCommands
         public string LogParam = "HEAD --all";
 
         public void Execute()
-        {
-            if (BackgroundThread)
-            {
-                if (backgroundThread != null)
-                {
-                    backgroundThread.Abort();
-                }
-                backgroundThread = new Thread(new ThreadStart(execute));
-                backgroundThread.Start();
-            }
-            else
-            {
-                execute();
-            }
-        }
-
-        private void execute()
         {
             lock (revisions)
             {
