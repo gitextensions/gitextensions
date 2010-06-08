@@ -35,9 +35,8 @@ namespace GitUI
 
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
-            //RefreshRevisions();
-            Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
 
+            Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
 
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
@@ -124,7 +123,7 @@ namespace GitUI
 
                 FindNextMatch(oldIndex, quickSearchString, false);
                 lastQuickSearchString = quickSearchString;
-                //System.Diagnostics.Debug.WriteLine(lastQuickSearchString);
+
                 e.Handled = true;
                 ShowQuickSearchString();
             }
@@ -613,11 +612,7 @@ namespace GitUI
 
                     e.Handled = true;
 
-                    if ((e.State & DataGridViewElementStates.Selected) != 0)
-                        //e.Graphics.FillRectangle(new SolidBrush(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor), e.CellBounds);
-                        e.Graphics.FillRectangle(new LinearGradientBrush(e.CellBounds, Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, Color.LightBlue, 90, false), e.CellBounds);
-                    else
-                        e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+                    e.PaintBackground(e.CellBounds, true);
 
                     if (column == 1)
                     {
@@ -634,18 +629,18 @@ namespace GitUI
                             }
                         }
                         string text = revision.Message;
-                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                     }
                     else if (column == 2)
                     {
                         string text = revision.Author;
-                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                     else if (column == 3)
                     {
                         DateTime time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                         string text = TimeToString(time);
-                        e.Graphics.DrawString(text, NormalFont, new SolidBrush(Color.Black), new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
             }

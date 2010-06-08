@@ -63,6 +63,7 @@ namespace GitUI
         public DvcsGraph()
         {
             InitializeComponent();
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += new DataGridViewCellPaintingEventHandler(dataGrid_CellPainting);
             ColumnWidthChanged += new DataGridViewColumnEventHandler(dataGrid_ColumnWidthChanged);
             VirtualMode = true;
@@ -146,7 +147,7 @@ namespace GitUI
             CacheHead = -1;
             CacheHeadRow = 0;
             DrawGraph(-1);
-            Invalidate();
+            Invalidate(false);
         }
 
         private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -180,6 +181,7 @@ namespace GitUI
         private void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             DrawGraph(-1);
+            Invalidate(false);
         }
 
         private Color GetJunctionColor(Junction aJunction)
@@ -375,8 +377,6 @@ namespace GitUI
 
                 GraphWorkArea.Clip = oldClip;
             }
-
-            Invalidate(false);
         }
 
         private void DrawItem(Graphics wa, Lanes.LaneRow row)
