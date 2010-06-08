@@ -19,7 +19,6 @@ namespace GitCommands
             {
                 Repositories[e.NewIndex].RepositoryType = RepositoryType.History;
             }
-            OnListChanged(this, e);
         }
 
         public void RemoveRecentRepository(string repo)
