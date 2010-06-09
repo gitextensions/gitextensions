@@ -30,10 +30,15 @@ namespace GitUI
         private List<TranslateItem> translate;
 
         Translation neutralTranslation = new Translation();
+        Translator translator;
 
         public FormTranslate()
         {
             InitializeComponent();
+
+            translations.Items.Clear();
+            translations.Items.Add("Translations_nl");
+            translations.Items.Add("Translations_ja");
 
             GetPropertiesToTranslate();
             LoadTranslation();
@@ -65,10 +70,10 @@ namespace GitUI
                     translateItem.Name = translationItem.Name;
                     translateItem.Property = translationItem.Property;
                     translateItem.NeutralValue = translationItem.Value;
-                    //translateItem.TranslatedValue = ;
 
                     resources = ResourceFactory.GetResourceManager(translationCategory.Name);
-                    translateItem.TranslatedValue = resources.GetString(translateItem.Name + "." + translationItem.Property, new System.Globalization.CultureInfo(translations.Text));
+                    if (translator != null)
+                        translateItem.TranslatedValue = translator.GetString(translationCategory.Name, translateItem.Name, translateItem.Property);
 
                     translate.Add(translateItem);
                 }
@@ -141,13 +146,20 @@ namespace GitUI
                         if (control == null)
                             continue;
 
+                        if (control is Form && !string.IsNullOrEmpty(control.Name))
+                        {
+                            if (!translateCategories.Items.Contains(control.Name))
+                                translateCategories.Items.Add(control.Name);
+
+                            AddTranslationItem(control.Name, "$this", "Text", ((Form)control).Text);
+                        }
+
                         foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
                         {
                             Component component = fieldInfo.GetValue(control) as Component;
 
                             if (component != null)
                             {
-
                                 foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                                 {
                                     if (propertyInfo.PropertyType == typeof(string) && ShouldBeTranslated(propertyInfo))
@@ -158,9 +170,6 @@ namespace GitUI
                                         if (!string.IsNullOrEmpty(value))
                                         {
                                             AddTranslationItem(control.Name, fieldInfo.Name, propertyInfo.Name, value);
-
-                                            if (!translateCategories.Items.Contains(control.Name))
-                                                translateCategories.Items.Add(control.Name);
                                         }
                                     }
 
@@ -229,6 +238,7 @@ namespace GitUI
 
         private void translations_SelectedIndexChanged(object sender, EventArgs e)
         {
+            translator = new Translator((string)translations.SelectedItem);
             LoadTranslation();
             FillTranslateGrid(allText.Text);
         }
