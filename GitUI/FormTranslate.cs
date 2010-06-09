@@ -71,7 +71,6 @@ namespace GitUI
                     translateItem.Property = translationItem.Property;
                     translateItem.NeutralValue = translationItem.Value;
 
-                    resources = ResourceFactory.GetResourceManager(translationCategory.Name);
                     if (translator != null)
                         translateItem.TranslatedValue = translator.GetString(translationCategory.Name, translateItem.Name, translateItem.Property);
 

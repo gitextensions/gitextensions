@@ -16,8 +16,6 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            resources = ResourceFactory.GetResourceManager(GetType());
-
             this.Load += new EventHandler(GitExtensionsControl_Load);
         }
 
@@ -25,8 +23,6 @@ namespace GitUI
         {
             ApplyResources();
         }
-
-        protected IResourceManager resources;
 
         protected void ApplyResources()
         {

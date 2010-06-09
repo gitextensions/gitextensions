@@ -40,8 +40,6 @@ namespace GitUI
 
         public GitExtensionsForm()
         {
-            resources = ResourceFactory.GetResourceManager(GetType());
-
             this.Icon = ApplicationIcon;
 
             if (Application.OpenForms.Count > 0)
@@ -63,8 +61,6 @@ namespace GitUI
         {
             ApplyResources();
         }
-
-        protected IResourceManager resources;
 
         protected void ApplyResources()
         {
