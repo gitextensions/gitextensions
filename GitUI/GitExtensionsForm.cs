@@ -8,6 +8,7 @@ using ResourceManager;
 using System.ComponentModel;
 using System.Reflection;
 using System.Globalization;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -67,6 +68,7 @@ namespace GitUI
 
         protected void ApplyResources()
         {
+            /*
             //resources.ApplyResources(this, Name);
             foreach (FieldInfo fieldInfo in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
             {
@@ -74,8 +76,10 @@ namespace GitUI
 
                 if (component != null)
                     resources.ApplyResources(component, fieldInfo.Name, new CultureInfo("nl-NL"));
-            }
+            }*/
 
+            Translator translator = new Translator("Translations_nl");
+            translator.TranslateControl(this);
         }
 
         public virtual void cancelButton_Click(object sender, EventArgs e)

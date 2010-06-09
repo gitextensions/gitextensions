@@ -42,14 +42,14 @@ namespace ResourceManager.Translation
             translationItems.Add(translationItem);
         }
 
-        public bool HasTranslationItem(string name)
+        public bool HasTranslationItem(string name, string property)
         {
-            return translationItems.Exists(t => t.Name == name); ;
+            return translationItems.Exists(t => t.Name == name && t.Property == property);
         }
 
-        public TranslationItem GetTranslationItem(string name)
+        public TranslationItem GetTranslationItem(string name, string property)
         {
-            return translationItems.Find(t => t.Name == name); ;
+            return translationItems.Find(t => t.Name == name && t.Property == property);
         }
 
         public List<TranslationItem> GetTranslationItems()
