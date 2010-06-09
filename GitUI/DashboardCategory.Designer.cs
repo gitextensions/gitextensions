@@ -46,9 +46,9 @@
             this.Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.Caption.Location = new System.Drawing.Point(3, 2);
             this.Caption.Name = "Caption";
-            this.Caption.Size = new System.Drawing.Size(84, 17);
+            this.Caption.Size = new System.Drawing.Size(58, 17);
             this.Caption.TabIndex = 8;
-            this.Caption.Text = "Favourites";
+            this.Caption.Text = "##Title";
             // 
             // CategoryContextMenuStrip1
             // 

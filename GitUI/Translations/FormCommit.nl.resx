@@ -126,7 +126,7 @@
   <data name="msg:no files staged" xml:space="preserve">
     <value>Er zijn geen bestanden klaargezet voor deze commit. Weet je zeker dat je wilt doorgaan?</value>
   </data>
-  <data name="CloseDialogAfterCommitToolTip" xml:space="preserve">
+  <data name="closeDialogAfterCommitTooltip" xml:space="preserve">
     <value>Wanneer aangezet zal deze dialoog sluiten na iedere commit. Anders zal de dialoog alleen sluiten wanneer er geen gewijzigde files meer zijn.</value>
   </data>
   <data name="resetAlltrackedChangesToolStripMenuItem.Text" xml:space="preserve">
@@ -147,7 +147,7 @@
   <data name="Enter commit message" xml:space="preserve">
     <value>Voer commit melding in</value>
   </data>
-  <data name="There are no unstaged changes" xml:space="preserve">
+  <data name="noUnstagedChanges.Text" xml:space="preserve">
     <value>Er zijn geen wijzigingen die nog niet zijn klaargezet</value>
   </data>
   <data name="deleteAllUntrackedFilesToolStripMenuItem.Text" xml:space="preserve">

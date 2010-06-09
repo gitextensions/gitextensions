@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -320,16 +320,16 @@
   <data name="manageSubmodulesToolStripMenuItem.Text" xml:space="preserve">
     <value>サブモジュールの管理</value>
   </data>
-  <data name="menu:file history" xml:space="preserve">
+  <data name="menuFileHistory.Text" xml:space="preserve">
     <value>ファイルの歴史</value>
   </data>
-  <data name="menu:open" xml:space="preserve">
+  <data name="menuOpen.Text" xml:space="preserve">
     <value>開く</value>
   </data>
-  <data name="menu:open with" xml:space="preserve">
+  <data name="menuOpenWith.Text" xml:space="preserve">
     <value>プログラムから開く</value>
   </data>
-  <data name="menu:save as" xml:space="preserve">
+  <data name="menuSaveAs.Text" xml:space="preserve">
     <value>名前を付けて保存</value>
   </data>
   <data name="mergeBranchToolStripMenuItem.Text" xml:space="preserve">

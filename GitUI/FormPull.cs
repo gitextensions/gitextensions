@@ -8,11 +8,15 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormPull : GitExtensionsForm
     {
+        TranslationString allMergeConflictSolvedQuestion = new TranslationString("Are all merge conflicts solved? Do you want to commit?");
+        TranslationString allMergeConflictSolvedQuestionCaption = new TranslationString("Conflicts solved");
+
         public FormPull()
         {
             InitializeComponent();
@@ -35,7 +39,7 @@ namespace GitUI
         {
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
 
-            if (MessageBox.Show(resources.GetString("msg:conflicts solved"), "Conflicts solved", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(allMergeConflictSolvedQuestion.Text, allMergeConflictSolvedQuestionCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 //Output.Text += "\n";
                 FormCommit form = new FormCommit();

@@ -123,13 +123,13 @@
   <data name="synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text" xml:space="preserve">
     <value>Synchoniseer alle submodulen recursief</value>
   </data>
-  <data name="menu:save as" xml:space="preserve">
+  <data name="menuSaveAs.Text" xml:space="preserve">
     <value>Opslaan als</value>
   </data>
   <data name="formatPatchToolStripMenuItem.Text" xml:space="preserve">
     <value>Patch maken</value>
   </data>
-  <data name="menu:open with" xml:space="preserve">
+  <data name="menuOpenWith.Text" xml:space="preserve">
     <value>Openen met</value>
   </data>
   <data name="deleteBranchToolStripMenuItem.Text" xml:space="preserve">
@@ -300,7 +300,7 @@
   <data name="CurrentBranch.ToolTipText" xml:space="preserve">
     <value>Vertakking uitchecken</value>
   </data>
-  <data name="menu:open" xml:space="preserve">
+  <data name="menuOpen.Text" xml:space="preserve">
     <value>Open</value>
   </data>
   <data name="gitToolStripMenuItem.Text" xml:space="preserve">
@@ -315,7 +315,7 @@
   <data name="donateToolStripMenuItem.Text" xml:space="preserve">
     <value>Doneer</value>
   </data>
-  <data name="menu:file history" xml:space="preserve">
+  <data name="menuFileHistory.Text" xml:space="preserve">
     <value>Bestands historie</value>
   </data>
   <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
