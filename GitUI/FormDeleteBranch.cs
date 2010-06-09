@@ -6,11 +6,16 @@ using System.Drawing;
 
 using System.Text;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
     {
+        TranslationString deleteBranchQuestion = new TranslationString("Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!");
+        TranslationString deleteBranchCaption = new TranslationString("Delete branch");
+        TranslationString branchDeleted = new TranslationString("Command executed");
+
         private System.ComponentModel.ComponentResourceManager resources;
         private readonly string defaultBranch;
 
@@ -37,9 +42,9 @@ namespace GitUI
         {
             try
             {
-                if (MessageBox.Show(resources.GetString("msg:delete branch"), "Delete branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(deleteBranchQuestion.Text, deleteBranchCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    MessageBox.Show(resources.GetString("msg:deleted") + Environment.NewLine + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), "Delete branch");
+                    MessageBox.Show(branchDeleted + Environment.NewLine + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), deleteBranchCaption.Text);
                 }
             }
             catch

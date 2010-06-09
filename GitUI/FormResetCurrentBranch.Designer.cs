@@ -47,45 +47,45 @@
             this.BranchInfo.AutoSize = true;
             this.BranchInfo.Location = new System.Drawing.Point(13, 13);
             this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(67, 13);
+            this.BranchInfo.Size = new System.Drawing.Size(81, 13);
             this.BranchInfo.TabIndex = 0;
-            this.BranchInfo.Text = "Reset {0} to:";
+            this.BranchInfo.Text = "##Reset {0} to:";
             // 
             // Commit
             // 
             this.Commit.AutoSize = true;
             this.Commit.Location = new System.Drawing.Point(31, 34);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(61, 13);
+            this.Commit.Size = new System.Drawing.Size(75, 13);
             this.Commit.TabIndex = 1;
-            this.Commit.Text = "Commit: {0}";
+            this.Commit.Text = "##Commit: {0}";
             // 
             // Author
             // 
             this.Author.AutoSize = true;
             this.Author.Location = new System.Drawing.Point(31, 57);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(58, 13);
+            this.Author.Size = new System.Drawing.Size(72, 13);
             this.Author.TabIndex = 2;
-            this.Author.Text = "Author: {0}";
+            this.Author.Text = "##Author: {0}";
             // 
             // Message
             // 
             this.Message.AutoSize = true;
             this.Message.Location = new System.Drawing.Point(31, 106);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(70, 13);
+            this.Message.Size = new System.Drawing.Size(84, 13);
             this.Message.TabIndex = 3;
-            this.Message.Text = "Message: {0}";
+            this.Message.Text = "##Message: {0}";
             // 
             // Date
             // 
             this.Date.AutoSize = true;
             this.Date.Location = new System.Drawing.Point(31, 82);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(85, 13);
+            this.Date.Size = new System.Drawing.Size(99, 13);
             this.Date.TabIndex = 4;
-            this.Date.Text = "Commit date: {0}";
+            this.Date.Text = "##Commit date: {0}";
             // 
             // groupBox1
             // 

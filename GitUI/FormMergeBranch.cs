@@ -6,11 +6,13 @@ using System.Drawing;
 
 using System.Text;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormMergeBranch : GitExtensionsForm
     {
+        TranslationString currentBranch = new TranslationString("Current branch: ");
         private readonly string defaultBranch;
 
         public FormMergeBranch(string defaultBranch)
@@ -22,7 +24,7 @@ namespace GitUI
         private void FormMergeBranch_Load(object sender, EventArgs e)
         {
             string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            Currentbranch.Text = resources.GetString("Currentbranch.Text") + selectedHead;
+            Currentbranch.Text = currentBranch.Text + selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);

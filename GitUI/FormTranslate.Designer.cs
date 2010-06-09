@@ -34,10 +34,10 @@
             this.translations = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.translateProgress = new System.Windows.Forms.ToolStripLabel();
+            this.hideTranslatedItems = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.translateCategories = new System.Windows.Forms.ListBox();
             this.translateGrid = new System.Windows.Forms.DataGridView();
-            this.hideTranslatedItems = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -105,6 +105,16 @@
             this.translateProgress.Name = "translateProgress";
             this.translateProgress.Size = new System.Drawing.Size(16, 27);
             // 
+            // hideTranslatedItems
+            // 
+            this.hideTranslatedItems.CheckOnClick = true;
+            this.hideTranslatedItems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.hideTranslatedItems.Image = global::GitUI.Properties.Resources._10;
+            this.hideTranslatedItems.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.hideTranslatedItems.Name = "hideTranslatedItems";
+            this.hideTranslatedItems.Size = new System.Drawing.Size(23, 27);
+            this.hideTranslatedItems.CheckedChanged += new System.EventHandler(this.hideTranslatedItems_CheckedChanged);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -140,16 +150,6 @@
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.Size = new System.Drawing.Size(408, 379);
             this.translateGrid.TabIndex = 1;
-            // 
-            // hideTranslatedItems
-            // 
-            this.hideTranslatedItems.CheckOnClick = true;
-            this.hideTranslatedItems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.hideTranslatedItems.Image = global::GitUI.Properties.Resources._10;
-            this.hideTranslatedItems.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.hideTranslatedItems.Name = "hideTranslatedItems";
-            this.hideTranslatedItems.Size = new System.Drawing.Size(23, 27);
-            this.hideTranslatedItems.CheckedChanged += new System.EventHandler(this.hideTranslatedItems_CheckedChanged);
             // 
             // FormTranslate
             // 

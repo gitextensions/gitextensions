@@ -6,16 +6,22 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormResetCurrentBranch : GitExtensionsForm
     {
-        System.ComponentModel.ComponentResourceManager resources;
-
+        TranslationString branchInfo = new TranslationString("Reset {0} to:");
+        TranslationString commitInfo = new TranslationString("Commit: {0}");
+        TranslationString authorInfo = new TranslationString("Author: {0}");
+        TranslationString dateInfo = new TranslationString("Commit date: {0}");
+        TranslationString commitMessage = new TranslationString("Message: {0}");
+        TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
+        TranslationString resetCaption = new TranslationString("Reset branch");
+      
         public FormResetCurrentBranch(GitRevision Revision)
         {
-            resources = new System.ComponentModel.ComponentResourceManager(typeof(FormResetCurrentBranch));
             this.Revision = Revision;
 
             InitializeComponent();
@@ -28,11 +34,11 @@ namespace GitUI
             if (Revision == null)
                 throw new Exception("No revision");
 
-            BranchInfo.Text = string.Format(resources.GetString("BranchInfo.Text"), GitCommands.GitCommands.GetSelectedBranch());
-            Commit.Text = string.Format(resources.GetString("Commit.Text"), Revision.Guid);
-            Author.Text = string.Format(resources.GetString("Author.Text"), Revision.Author);
-            Date.Text = string.Format(resources.GetString("Date.Text"), Revision.CommitDate);
-            Message.Text = string.Format(resources.GetString("Message.Text"), Revision.Message);
+            BranchInfo.Text = string.Format(branchInfo.Text, GitCommands.GitCommands.GetSelectedBranch());
+            Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
+            Author.Text = string.Format(authorInfo.Text, Revision.Author);
+            Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
+            Message.Text = string.Format(commitMessage.Text, Revision.Message);
 
         }
 
@@ -50,7 +56,7 @@ namespace GitUI
                 else
                     if (Hard.Checked)
                     {
-                        if (MessageBox.Show(resources.GetString("msg:reset branch"), "Reset branch", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             new FormProcess(GitCommands.GitCommands.ResetHardCmd(Revision.Guid));
                         }

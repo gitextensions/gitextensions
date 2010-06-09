@@ -36,6 +36,7 @@ namespace GitUI
             InitializeComponent();
 
             GetPropertiesToTranslate();
+            LoadTranslation();
             FillTranslateGrid(allText.Text);
         }
 
@@ -50,16 +51,12 @@ namespace GitUI
             translateProgress.Text = string.Format(translateProgressText.Text, translatedCount, translate.Count);
         }
 
-        private void FillTranslateGrid(string filter)
+        private void LoadTranslation()
         {
             translate = new List<TranslateItem>();
 
             foreach (TranslationCategory translationCategory in neutralTranslation.GetTranslationCategories())
             {
-                if (!string.IsNullOrEmpty(filter) &&
-                    !filter.Equals(allText.Text) &&
-                    !filter.Equals(translationCategory.Name))
-                    continue;
 
                 foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
                 {
@@ -73,15 +70,35 @@ namespace GitUI
                     resources = ResourceFactory.GetResourceManager(translationCategory.Name);
                     translateItem.TranslatedValue = resources.GetString(translateItem.Name + "." + translationItem.Property, new System.Globalization.CultureInfo(translations.Text));
 
-                    //Skip translated items if filter is on
-                    if (hideTranslatedItems.Checked && !string.IsNullOrEmpty(translateItem.TranslatedValue))
-                        continue;
-
                     translate.Add(translateItem);
                 }
             }
+            
+            UpdateProgress();
+        }
 
-            translateGrid.DataSource = translate;
+        private void FillTranslateGrid(string filter)
+        {
+            if (translate == null)
+                return;
+
+            List<TranslateItem> filterTranslate = new List<TranslateItem>();
+
+            foreach(TranslateItem translateItem in translate)
+            {
+                if (!string.IsNullOrEmpty(filter) &&
+                    !filter.Equals(allText.Text) &&
+                    !filter.Equals(translateItem.Category))
+                                    continue;
+
+                //Skip translated items if filter is on
+                if (hideTranslatedItems.Checked && !string.IsNullOrEmpty(translateItem.TranslatedValue))
+                    continue;
+
+                filterTranslate.Add(translateItem);
+            }
+
+            translateGrid.DataSource = filterTranslate;
 
             UpdateProgress();
         }
@@ -212,6 +229,7 @@ namespace GitUI
 
         private void translations_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LoadTranslation();
             FillTranslateGrid(allText.Text);
         }
 

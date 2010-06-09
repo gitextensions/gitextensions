@@ -15,11 +15,18 @@ using GitUIPluginInterfaces;
 using ResourceManager;
 using System.Globalization;
 using System.Reflection;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
+        TranslationString menuSaveAs = new TranslationString("Save as");
+        TranslationString menuOpen = new TranslationString("Open");
+        TranslationString menuOpenWith = new TranslationString("Open with");
+        TranslationString menuFileHistory = new TranslationString("File history");
+
+
         public FormBrowse()
         {
             InitializeComponent();
@@ -344,10 +351,10 @@ namespace GitUI
             if (treeContextMenu == null)
             {
                 treeContextMenu = new ContextMenu();
-                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:save as"), new EventHandler(saveAsOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:open"), new EventHandler(OpenOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:open with"), new EventHandler(OpenWithOnClick)));
-                treeContextMenu.MenuItems.Add(new MenuItem(resources.GetString("menu:file history"), new EventHandler(FileHistoryOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(menuSaveAs.Text, new EventHandler(saveAsOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(menuOpen.Text, new EventHandler(OpenOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(menuOpenWith.Text, new EventHandler(OpenWithOnClick)));
+                treeContextMenu.MenuItems.Add(new MenuItem(menuFileHistory.Text, new EventHandler(FileHistoryOnClick)));
 
             }
             return treeContextMenu;
