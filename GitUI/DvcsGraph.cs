@@ -39,8 +39,11 @@ namespace GitUI
             public object Populate(int aRow)
             {
                 Lanes lanes = new Lanes(GraphTree);
-                object temp = lanes[aRow]; // TODO: Add populate function. Right now everything is
-                                           // pre-populated anyway.
+                // TODO: Add populate function. Right now everything is pre-populated anyway.
+                if (lanes.CachedCount != lanes.Count)
+                {
+                    Debugger.Break();
+                }
                 return lanes;
             }
 
@@ -131,7 +134,7 @@ namespace GitUI
         private Dictionary<Junction, int> JunctionColors = new Dictionary<Junction, int>();
 
         private const int NODE_DIMENSION = 8;
-        private const int LANE_WIDTH = 14;
+        private const int LANE_WIDTH = 12;
         private const int LANE_LINE_WIDTH = 2;
 
         private void RebuildGraph()
@@ -140,7 +143,7 @@ namespace GitUI
             int laneCount = 2;
             if (GraphLanes != null)
             {
-                laneCount = Math.Max(laneCount, GraphLanes.Width);
+                laneCount = Math.Min( Math.Max(laneCount, GraphLanes.Width), 30);
             }
             dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
 
@@ -1111,10 +1114,6 @@ namespace GitUI
                         {
                             // I'm ok with this...with the code that pushes everything as far left
                             // as possible, sometimes you'll get a merge into a new lane on the right.
-
-                            //Console.WriteLine("Odd...We had a merge that came from 2 different lanes...");
-                            //if (Debugger.IsAttached)
-                            //    Debugger.Break();
                             currentRow[curLane] = new LaneRow.LaneInfo[0];
                         }
                     }
@@ -1136,7 +1135,7 @@ namespace GitUI
                     {
                         isUsable = true;
                     }
-                    else if(lane.Count == 1 && lane[0].Ancestors.Count == 0)
+                    else if(lane.Count == 1)
                     {
                         isUsable = true;
                         foreach (Junction j in lane[0].Descendants)
@@ -1156,12 +1155,20 @@ namespace GitUI
                     }
                     if (isUsable)
                     {
-                        if (currentRow.Node == null || (lane[0].Data != null && currentRow.Node.Data != null && sorter.Invoke(lane[0].Data, currentRow.Node.Data) > 0))
+                        if (currentRow.Node == null || 
+                            (lane[0].Data != null && currentRow.Node.Data != null && 
+                             sorter.Invoke(lane[0].Data, currentRow.Node.Data) > 0))
                         {
                             currentRow.Node = lane[0];
                             currentRow.NodeLane = curLane;
                         }
                     }
+                }
+
+                // DEBUG: The check above didn't find anything, but should have
+                if (currentRow.Node == null && laneNodes.Count > 0)
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
                 }
                 #endregion
 

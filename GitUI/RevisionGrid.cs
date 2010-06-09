@@ -439,13 +439,23 @@ namespace GitUI
 
             revisionGraphCommand.BackgroundThread = true;
             revisionGraphCommand.LogParam = LogParam + Filter;
-            revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Exited);
+            revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
             revisionGraphCommand.LimitRevisions = LastRevision;
             revisionGraphCommand.Execute();
         }
 
+        void gitGetCommitsCommand_Updated(object sender, EventArgs e)
+        {
+            update(false);
+        }
+        
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
+        {
+            update(true);
+        }
+
+        void update(bool isLast)
         {
             List<GitRevision> revisionList = revisionGraphCommand.Revisions;
             if (revisionList == null)
@@ -507,9 +517,12 @@ namespace GitUI
                 }
                 graph.Add(rev.Guid, rev.ParentGuids.ToArray(), dataType, rev);
             }
+            if (isLast)
+            {
+                graph.Prune();
+            }
             Revisions.SetData(graph);
             
-
             syncContext.Post(_ => LoadRevisions(), null);
         }
 
