@@ -35,7 +35,14 @@ namespace GitCommands
                 {
                     BindingList<RepositoryCategory> obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
                     if (obj != null)
+                    {
                         RepositoryCategories = obj;
+
+                        foreach (RepositoryCategory repositoryCategory in RepositoryCategories)
+                        {
+                            repositoryCategory.SetIcon();
+                        }
+                    }
                 }
             }
             catch
@@ -68,7 +75,10 @@ namespace GitCommands
                 {
                     RepositoryHistory obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
                     if (obj != null)
+                    {
                         RepositoryHistory = obj;
+                        RepositoryHistory.SetIcon();
+                    }
                 }
             }
             catch

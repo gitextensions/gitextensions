@@ -59,7 +59,7 @@ namespace GitUI
         {
             if (this.bitmap == null || (this.bitmap.Width != textBox.Width && this.bitmap.Height != textBox.Height))
             {
-                this.bitmap = new Bitmap(textBox.Width, textBox.Height);
+                this.bitmap = new Bitmap(textBox.Width, textBox.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                 this.bufferGraphics = Graphics.FromImage(this.bitmap);
                 this.bufferGraphics.Clip = new Region(textBox.ClientRectangle);
                 this.textBoxGraphics = Graphics.FromHwnd(textBox.Handle);

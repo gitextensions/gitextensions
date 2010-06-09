@@ -18,7 +18,7 @@ namespace GitCommands
         public RepositoryCategory()
         {
             Repositories.AllowNew = true;
-            Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
+            Repositories.RaiseListChangedEvents = false;
         }
 
 
@@ -26,27 +26,18 @@ namespace GitCommands
         {
             this.Description = description;
             Repositories.AllowNew = true;
-            Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
+            Repositories.RaiseListChangedEvents = false;
         }
 
-        public event ListChangedEventHandler ListChanged;
-
-        public void OnListChanged(object sender, ListChangedEventArgs e)
+        public virtual void SetIcon()
         {
-            if (ListChanged != null)
-                ListChanged(sender, e);
-        }
-
-        public virtual void Repositories_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            foreach (Repository recentRepository in Repositories)
             {
                 if (CategoryType == RepositoryCategoryType.RssFeed)
-                    Repositories[e.NewIndex].RepositoryType = RepositoryType.RssFeed;
+                    recentRepository.RepositoryType = RepositoryType.RssFeed;
             }
-
-            OnListChanged(this, e);
         }
+
 
         private BindingList<Repository> repositories;
         public BindingList<Repository> Repositories
@@ -73,8 +64,6 @@ namespace GitCommands
         {
             try
             {
-                Repositories.ListChanged -= new ListChangedEventHandler(Repositories_ListChanged);
-
                 // Create a new XmlTextReader from the specified URL (RSS feed)
                 XmlTextReader rssReader = new XmlTextReader(RssFeedUrl);
                 XmlDocument rssDoc = new XmlDocument();
@@ -174,8 +163,6 @@ namespace GitCommands
             }
             finally
             {
-                Repositories.ListChanged += new ListChangedEventHandler(Repositories_ListChanged);
-                OnListChanged(this, null);
             }
         }
 
