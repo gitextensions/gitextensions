@@ -100,23 +100,24 @@ namespace GitUI
 
         public void SetData(GraphData aData)
         {
+            int populate = CurrentRow == null ? 0 : CurrentRow.Index + Height / RowHeight;
+            Lanes newLanes = (Lanes)aData.Populate(populate);
+
+            MethodInvoker method = new MethodInvoker(delegate()
+                {
+                    GraphLanes = newLanes;
+                    RowCount = GraphLanes.Count;
+                    RebuildGraph();
+                });
+
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(delegate()
-                    {
-                        // TODO: This is the same code as below, move into a helper function.
-                        int populate = CurrentRow == null ? 0 : CurrentRow.Index + Height / RowHeight;
-                        GraphLanes = (Lanes)aData.Populate(populate);
-                        RowCount = GraphLanes.Count;
-                        RebuildGraph();
-                    }));
-
-                return;
+                Invoke(method);
             }
-
-            GraphLanes = (Lanes)aData.Populate(0);
-            RowCount = GraphLanes.Count;
-            RebuildGraph();
+            else
+            {
+                method();
+            }
         }
 
         private Lanes GraphLanes;
