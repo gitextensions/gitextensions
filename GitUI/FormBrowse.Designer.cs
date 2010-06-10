@@ -1229,7 +1229,6 @@
             this.ClientSize = new System.Drawing.Size(796, 573);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
             this.Load += new System.EventHandler(this.Browse_Load);
