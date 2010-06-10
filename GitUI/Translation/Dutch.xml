@@ -1808,6 +1808,18 @@ Het verwijderen van deze vertakking kan er voor zongen dat commits verloren gaan
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Repository opschonen</Value>
         </TranslationItem>
+        <TranslationItem Name="RemoveIngnored" Property="Text">
+          <Value>Verwijder alleen genegeerde bestanden buiten git</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveNonIgnored" Property="Text">
+          <Value>Verwijder alleen niet genegeerde bestanden buiten git</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveAll" Property="Text">
+          <Value>Verwijdere alle bestanden buiten git</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveDirectories" Property="Text">
+          <Value>Verwijdere directories biuten git</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="DashboardItem">
@@ -1822,6 +1834,16 @@ Het verwijderen van deze vertakking kan er voor zongen dat commits verloren gaan
     </TranslationCategory>
     <TranslationCategory Name="FormPuttyError">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Authenticatie mislukt</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Het commande eindigde met een fout welke meestal betekend dat de
+PuTTY Authentication Agent niet actief is of dat de juiste geheime
+sleutel niet geladen is.
+
+Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
+        </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Laad SSH sleutel</Value>
         </TranslationItem>
@@ -1904,6 +1926,13 @@ Het verwijderen van deze vertakking kan er voor zongen dat commits verloren gaan
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Doneer</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>Doneer
+
+U kunt dit project helpen door een financiele contributie te doen. Donaties worden gebruikt voor de gemaakte omkosten en voor het verkrijgen van alle middelen die nodig zijn om dit project actief te houden.
+
+Klik op de knop voor meer informatie over het maken van donaties.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2229,6 +2258,21 @@ stash
     </TranslationCategory>
     <TranslationCategory Name="FormStash">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Stash</Value>
+        </TranslationItem>
+        <TranslationItem Name="Clear" Property="Text">
+          <Value>Verwijder geselecteerde stash</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>Stash alle wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Zet geselecteerde stash terug op de werk directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Gevolgde wijzigingen in de werk directorie</Value>
+        </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Stash:</Value>
         </TranslationItem>

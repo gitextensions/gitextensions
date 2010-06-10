@@ -95,10 +95,10 @@
             this.AppearancePage = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.label47 = new System.Windows.Forms.Label();
-            this.DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
+            this._DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
             this.label46 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
-            this.authorImageSize = new System.Windows.Forms.NumericUpDown();
+            this._authorImageSize = new System.Windows.Forms.NumericUpDown();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -199,8 +199,8 @@
             this.StartPage.SuspendLayout();
             this.AppearancePage.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._DaysToCacheImages)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._authorImageSize)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -950,10 +950,10 @@
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.label47);
-            this.groupBox6.Controls.Add(this.DaysToCacheImages);
+            this.groupBox6.Controls.Add(this._DaysToCacheImages);
             this.groupBox6.Controls.Add(this.label46);
             this.groupBox6.Controls.Add(this.label44);
-            this.groupBox6.Controls.Add(this.authorImageSize);
+            this.groupBox6.Controls.Add(this._authorImageSize);
             this.groupBox6.Controls.Add(this.ClearImageCache);
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
             this.groupBox6.Location = new System.Drawing.Point(328, 229);
@@ -972,17 +972,17 @@
             this.label47.TabIndex = 7;
             this.label47.Text = "days";
             // 
-            // DaysToCacheImages
+            // _DaysToCacheImages
             // 
-            this.DaysToCacheImages.Location = new System.Drawing.Point(125, 73);
-            this.DaysToCacheImages.Maximum = new decimal(new int[] {
+            this._DaysToCacheImages.Location = new System.Drawing.Point(125, 73);
+            this._DaysToCacheImages.Maximum = new decimal(new int[] {
             400,
             0,
             0,
             0});
-            this.DaysToCacheImages.Name = "DaysToCacheImages";
-            this.DaysToCacheImages.Size = new System.Drawing.Size(77, 20);
-            this.DaysToCacheImages.TabIndex = 6;
+            this._DaysToCacheImages.Name = "_DaysToCacheImages";
+            this._DaysToCacheImages.Size = new System.Drawing.Size(77, 20);
+            this._DaysToCacheImages.TabIndex = 6;
             // 
             // label46
             // 
@@ -1002,17 +1002,17 @@
             this.label44.TabIndex = 4;
             this.label44.Text = "Image size";
             // 
-            // authorImageSize
+            // _authorImageSize
             // 
-            this.authorImageSize.Location = new System.Drawing.Point(125, 46);
-            this.authorImageSize.Maximum = new decimal(new int[] {
+            this._authorImageSize.Location = new System.Drawing.Point(125, 46);
+            this._authorImageSize.Maximum = new decimal(new int[] {
             400,
             0,
             0,
             0});
-            this.authorImageSize.Name = "authorImageSize";
-            this.authorImageSize.Size = new System.Drawing.Size(77, 20);
-            this.authorImageSize.TabIndex = 3;
+            this._authorImageSize.Name = "_authorImageSize";
+            this._authorImageSize.Size = new System.Drawing.Size(77, 20);
+            this._authorImageSize.TabIndex = 3;
             // 
             // ClearImageCache
             // 
@@ -2045,8 +2045,8 @@
             this.AppearancePage.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DaysToCacheImages)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.authorImageSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._DaysToCacheImages)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._authorImageSize)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -2221,12 +2221,12 @@
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.Label label44;
-        private System.Windows.Forms.NumericUpDown authorImageSize;
+        private System.Windows.Forms.NumericUpDown _authorImageSize;
         private System.Windows.Forms.TabPage StartPage;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private DashboardEditor dashboardEditor1;
         private System.Windows.Forms.Label label47;
-        private System.Windows.Forms.NumericUpDown DaysToCacheImages;
+        private System.Windows.Forms.NumericUpDown _DaysToCacheImages;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Button DiffToolCmdSuggest;
         private System.Windows.Forms.ComboBox DifftoolCmd;

@@ -36,7 +36,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.CategoriesLabel = new System.Windows.Forms.Label();
-            this.Categories = new System.Windows.Forms.ListBox();
+            this._Categories = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Remove = new System.Windows.Forms.Button();
             this.Add = new System.Windows.Forms.Button();
@@ -48,10 +48,10 @@
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.Caption = new System.Windows.Forms.TextBox();
+            this._Caption = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.RssFeed = new System.Windows.Forms.TextBox();
+            this._RssFeed = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.RssFeedType = new System.Windows.Forms.RadioButton();
             this.RepositoriesType = new System.Windows.Forms.RadioButton();
@@ -84,7 +84,7 @@
             // 
             resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
             this.tableLayoutPanel1.Controls.Add(this.CategoriesLabel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Categories, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this._Categories, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
@@ -93,12 +93,12 @@
             resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
             this.CategoriesLabel.Name = "CategoriesLabel";
             // 
-            // Categories
+            // _Categories
             // 
-            resources.ApplyResources(this.Categories, "Categories");
-            this.Categories.FormattingEnabled = true;
-            this.Categories.Name = "Categories";
-            this.Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
+            resources.ApplyResources(this._Categories, "_Categories");
+            this._Categories.FormattingEnabled = true;
+            this._Categories.Name = "_Categories";
+            this._Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
             // 
             // tableLayoutPanel2
             // 
@@ -196,10 +196,10 @@
             // 
             resources.ApplyResources(this.tableLayoutPanel4, "tableLayoutPanel4");
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.Caption, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this._Caption, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.label3, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.RssFeed, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this._RssFeed, 1, 2);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 1, 1);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             // 
@@ -208,12 +208,12 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // Caption
+            // _Caption
             // 
-            resources.ApplyResources(this.Caption, "Caption");
-            this.Caption.Name = "Caption";
-            this.Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
-            this.Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
+            resources.ApplyResources(this._Caption, "_Caption");
+            this._Caption.Name = "_Caption";
+            this._Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
+            this._Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
             // 
             // label2
             // 
@@ -225,12 +225,12 @@
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
-            // RssFeed
+            // _RssFeed
             // 
-            resources.ApplyResources(this.RssFeed, "RssFeed");
-            this.RssFeed.Name = "RssFeed";
-            this.RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
-            this.RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
+            resources.ApplyResources(this._RssFeed, "_RssFeed");
+            this._RssFeed.Name = "_RssFeed";
+            this._RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
+            this._RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
             // 
             // tableLayoutPanel5
             // 
@@ -283,7 +283,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button Add;
-        private System.Windows.Forms.ListBox Categories;
+        private System.Windows.Forms.ListBox _Categories;
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.DataGridView RepositoriesGrid;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -292,10 +292,10 @@
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox Caption;
+        private System.Windows.Forms.TextBox _Caption;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox RssFeed;
+        private System.Windows.Forms.TextBox _RssFeed;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.RadioButton RssFeedType;
         private System.Windows.Forms.RadioButton RepositoriesType;

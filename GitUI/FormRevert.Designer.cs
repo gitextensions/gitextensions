@@ -28,20 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRevert));
-            this.RevertLabel = new System.Windows.Forms.Label();
+            this._RevertLabel = new System.Windows.Forms.Label();
             this.Revert = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // RevertLabel
+            // _RevertLabel
             // 
-            this.RevertLabel.AutoSize = true;
-            this.RevertLabel.Location = new System.Drawing.Point(13, 13);
-            this.RevertLabel.Name = "RevertLabel";
-            this.RevertLabel.Size = new System.Drawing.Size(35, 13);
-            this.RevertLabel.TabIndex = 0;
-            this.RevertLabel.Text = "label1";
+            this._RevertLabel.AutoSize = true;
+            this._RevertLabel.Location = new System.Drawing.Point(13, 13);
+            this._RevertLabel.Name = "_RevertLabel";
+            this._RevertLabel.Size = new System.Drawing.Size(35, 13);
+            this._RevertLabel.TabIndex = 0;
+            this._RevertLabel.Text = "label1";
             // 
             // Revert
             // 
@@ -70,8 +69,7 @@
             this.ClientSize = new System.Drawing.Size(459, 73);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Revert);
-            this.Controls.Add(this.RevertLabel);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
+            this.Controls.Add(this._RevertLabel);
             this.Name = "FormRevert";
             this.Text = "Revert file changes";
             this.Load += new System.EventHandler(this.FormRevert_Load);
@@ -82,7 +80,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label RevertLabel;
+        private System.Windows.Forms.Label _RevertLabel;
         private System.Windows.Forms.Button Revert;
         private System.Windows.Forms.Button button1;
     }

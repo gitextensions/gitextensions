@@ -47,7 +47,7 @@ namespace GitUI
             Author.Enabled = AuthorCheck.Checked;
             Committer.Enabled = CommitterCheck.Checked;
             Message.Enabled = MessageCheck.Checked;
-            Limit.Enabled = LimitCheck.Checked;
+            _Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
         }
 
@@ -65,7 +65,7 @@ namespace GitUI
             if (MessageCheck.Checked)
                 filter += " --grep=\"" + Message.Text + "\"";
             if (LimitCheck.Checked)
-                filter += " --max-count=\"" + Limit.Value.ToString("N") + "\"";
+                filter += " --max-count=\"" + _Limit.Value.ToString("N") + "\"";
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)

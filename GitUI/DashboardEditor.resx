@@ -156,28 +156,28 @@
   <data name="&gt;&gt;CategoriesLabel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="Categories.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="_Categories.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="Categories.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="_Categories.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 25</value>
   </data>
-  <data name="Categories.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="_Categories.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 368</value>
   </data>
-  <data name="Categories.TabIndex" type="System.Int32, mscorlib">
+  <data name="_Categories.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;Categories.Name" xml:space="preserve">
-    <value>Categories</value>
+  <data name="&gt;&gt;_Categories.Name" xml:space="preserve">
+    <value>_Categories</value>
   </data>
-  <data name="&gt;&gt;Categories.Type" xml:space="preserve">
+  <data name="&gt;&gt;_Categories.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Categories.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_Categories.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
   </data>
-  <data name="&gt;&gt;Categories.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_Categories.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="tableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
@@ -301,7 +301,7 @@
     <value>0</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="CategoriesLabel" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="Categories" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel2" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,22,Percent,100,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="CategoriesLabel" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_Categories" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel2" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,22,Percent,100,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel1.Name" xml:space="preserve">
     <value>splitContainer2.Panel1</value>
@@ -396,28 +396,28 @@
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="Caption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="_Caption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="Caption.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="_Caption.Location" type="System.Drawing.Point, System.Drawing">
     <value>123, 3</value>
   </data>
-  <data name="Caption.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="_Caption.Size" type="System.Drawing.Size, System.Drawing">
     <value>359, 20</value>
   </data>
-  <data name="Caption.TabIndex" type="System.Int32, mscorlib">
+  <data name="_Caption.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;Caption.Name" xml:space="preserve">
-    <value>Caption</value>
+  <data name="&gt;&gt;_Caption.Name" xml:space="preserve">
+    <value>_Caption</value>
   </data>
-  <data name="&gt;&gt;Caption.Type" xml:space="preserve">
+  <data name="&gt;&gt;_Caption.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Caption.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_Caption.Parent" xml:space="preserve">
     <value>tableLayoutPanel4</value>
   </data>
-  <data name="&gt;&gt;Caption.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_Caption.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
@@ -474,25 +474,25 @@
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="RssFeed.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="_RssFeed.Location" type="System.Drawing.Point, System.Drawing">
     <value>123, 80</value>
   </data>
-  <data name="RssFeed.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
     <value>359, 20</value>
   </data>
-  <data name="RssFeed.TabIndex" type="System.Int32, mscorlib">
+  <data name="_RssFeed.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;RssFeed.Name" xml:space="preserve">
-    <value>RssFeed</value>
+  <data name="&gt;&gt;_RssFeed.Name" xml:space="preserve">
+    <value>_RssFeed</value>
   </data>
-  <data name="&gt;&gt;RssFeed.Type" xml:space="preserve">
+  <data name="&gt;&gt;_RssFeed.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;RssFeed.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_RssFeed.Parent" xml:space="preserve">
     <value>tableLayoutPanel4</value>
   </data>
-  <data name="&gt;&gt;RssFeed.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_RssFeed.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
   <data name="tableLayoutPanel5.ColumnCount" type="System.Int32, mscorlib">
@@ -613,7 +613,7 @@
     <value>1</value>
   </data>
   <data name="tableLayoutPanel4.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="Caption" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label2" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label3" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="RssFeed" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel5" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,24.94845,Percent,75.05155" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,42.47787,Percent,24.77876" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_Caption" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label2" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label3" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_RssFeed" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel5" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,24.94845,Percent,75.05155" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,42.47787,Percent,24.77876" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="tableLayoutPanel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -718,6 +718,6 @@
     <value>DashboardEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>GitUI.GitExtensionsControl, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>
