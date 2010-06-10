@@ -83,27 +83,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GitUI\GitUI.csproj">
+    <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
+    <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
       <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
       <Name>AutoCheckForUpdates</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
+    <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
       <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\Gource\Gource.csproj">
+    <ProjectReference Include="..\Plugins\Gource\Gource.csproj">
       <Project>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</Project>
       <Name>Gource</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
+    <ProjectReference Include="..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
       <Project>{92B57383-233E-46AE-8A86-6E98BF349A72}</Project>
       <Name>GitStatistics</Name>
     </ProjectReference>

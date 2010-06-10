@@ -219,7 +219,7 @@ Om rondzwevende objeten te herstellen, label de commit and deze zal weer in het 
           <Value>Auteur: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="dateInfo" Property="Text">
-          <Value>Commit datum: {0)</Value>
+          <Value>Commit datum: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessage" Property="Text">
           <Value>Bericht: {0}</Value>
@@ -688,9 +688,6 @@ _ReSharper*/
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Bestandswijzigingen terugzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="RevertLabel" Property="Text">
-          <Value>label1</Value>
         </TranslationItem>
         <TranslationItem Name="Revert" Property="Text">
           <Value>Wijzigingen terugzetten</Value>
