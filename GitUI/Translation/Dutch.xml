@@ -2281,6 +2281,10 @@ stash
         <TranslationItem Name="label3" Property="Text">
           <Value>Aan te maken subdirectory</Value>
         </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>De repositorie zal gekloond worden naar een nieuwe direcorie:
+     [destination]\Development</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBranch">

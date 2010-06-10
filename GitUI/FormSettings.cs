@@ -99,6 +99,7 @@ namespace GitUI
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
                 Language.Items.Clear();
+                Language.Items.Add("English");
                 Language.Items.AddRange(Translator.GetAllTranslations());
                 Language.Text = Settings.Translation;
 
