@@ -60,7 +60,7 @@ namespace GitUI
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
             NumberOfVisibleLines = 3;
-            InitializeComponent();
+            InitializeComponent(); Translate();
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyUp;
             IgnoreWhitespaceChanges = false;
 

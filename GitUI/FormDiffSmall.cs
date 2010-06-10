@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FormDiffSmall()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
             DiffFiles.Focus();
         }

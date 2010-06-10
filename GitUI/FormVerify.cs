@@ -19,7 +19,7 @@ namespace GitUI
         
         public FormVerify()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormVerify_Shown(object sender, EventArgs e)

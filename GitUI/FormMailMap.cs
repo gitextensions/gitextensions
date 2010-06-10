@@ -14,7 +14,7 @@ namespace GitUI
     {
         public FormMailMap()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             MailMapFile = "";
 
             try

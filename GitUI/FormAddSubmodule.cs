@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormAddSubmodule()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void Browse_Click(object sender, EventArgs e)

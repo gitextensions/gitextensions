@@ -13,7 +13,7 @@ namespace GitUI
         public FormRevert(string filename)
         {
             FileName = filename;
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public string FileName { get; set; }

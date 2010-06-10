@@ -10,16 +10,16 @@ namespace GitCommands
 {
     public static class Settings
     {
-        private static string uiLanguage = "en-US";
-        public static string UiLanguage
+        private static string translation = "";
+        public static string Translation
         {
             get
             {
-                return uiLanguage;
+                return translation;
             }
             set
             {
-                uiLanguage = value;
+                translation = value;
             }
         }
 
@@ -696,7 +696,7 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("iconcolor", Settings.IconColor);
                 
-                Application.UserAppDataRegistry.SetValue("uilanguage", Settings.UiLanguage);
+                Application.UserAppDataRegistry.SetValue("translation", Settings.Translation);
                 Application.UserAppDataRegistry.SetValue("authorImageCacheDays", Settings.AuthorImageCacheDays);
                 Application.UserAppDataRegistry.SetValue("authorimagesize", Settings.AuthorImageSize);
 
@@ -806,7 +806,7 @@ namespace GitCommands
                 {
                 }
 
-                if (Application.UserAppDataRegistry.GetValue("uilanguage") != null) Settings.UiLanguage = Application.UserAppDataRegistry.GetValue("uilanguage").ToString();
+                if (Application.UserAppDataRegistry.GetValue("translation") != null) Settings.Translation = Application.UserAppDataRegistry.GetValue("translation").ToString();
                 if (Application.UserAppDataRegistry.GetValue("pullmerge") != null) Settings.PullMerge = Application.UserAppDataRegistry.GetValue("pullmerge").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitssh") != null) GitCommands.SetSsh(Application.UserAppDataRegistry.GetValue("gitssh").ToString());
                 if (Application.UserAppDataRegistry.GetValue("plink") != null) Settings.Plink = Application.UserAppDataRegistry.GetValue("plink").ToString();

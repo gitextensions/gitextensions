@@ -22,7 +22,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             imgGravatar.Visible = false;
         }

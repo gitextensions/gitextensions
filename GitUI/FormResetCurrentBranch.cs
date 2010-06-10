@@ -24,7 +24,7 @@ namespace GitUI
         {
             this.Revision = Revision;
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public GitRevision Revision { get; set; }

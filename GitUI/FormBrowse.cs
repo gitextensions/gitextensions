@@ -29,7 +29,7 @@ namespace GitUI
 
         public FormBrowse()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
         }

@@ -57,25 +57,36 @@ namespace GitUI
             this.Load += new EventHandler(GitExtensionsForm_Load);
         }
 
-        void GitExtensionsForm_Load(object sender, EventArgs e)
+        private bool translated = false;
+
+        private static bool CheckComponent(object value)
         {
-            ApplyResources();
+            bool isComponentInDesignMode = false;
+            IComponent component = value as IComponent;
+            if (component != null)
+            {
+                ISite site = component.Site;
+                if ((site != null) && site.DesignMode)
+                    isComponentInDesignMode = true;
+            }
+
+            return isComponentInDesignMode;
         }
 
-        protected void ApplyResources()
+        void GitExtensionsForm_Load(object sender, EventArgs e)
         {
-            /*
-            //resources.ApplyResources(this, Name);
-            foreach (FieldInfo fieldInfo in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
-            {
-                Component component = fieldInfo.GetValue(this) as Component;
+            // find out if the value is a component and is currently in design mode
+            bool isComponentInDesignMode = CheckComponent(this);
 
-                if (component != null)
-                    resources.ApplyResources(component, fieldInfo.Name, new CultureInfo("nl-NL"));
-            }*/
+            if (!translated && !isComponentInDesignMode)
+                throw new Exception("The control " + GetType().Name + " is not transated in the constructor. You need to call Translate() right after InitializeComponent().");
+        }
 
-            Translator translator = new Translator("Translations_nl");
+        protected void Translate()
+        {
+            Translator translator = new Translator(GitCommands.Settings.Translation);
             translator.TranslateControl(this);
+            translated = true;
         }
 
         public virtual void cancelButton_Click(object sender, EventArgs e)

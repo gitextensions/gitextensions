@@ -16,7 +16,7 @@ namespace GitUI
     {
         public FormFormatPath()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void Browse_Click(object sender, EventArgs e)

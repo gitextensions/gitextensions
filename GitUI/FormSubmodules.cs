@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormSubmodules()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormSubmodules_FormClosing(object sender, FormClosingEventArgs e)

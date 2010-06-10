@@ -19,7 +19,7 @@ namespace GitUI
 
         public FormPull()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void BrowseSource_Click(object sender, EventArgs e)

@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormPluginSettings()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormPluginSettings_Load(object sender, EventArgs e)

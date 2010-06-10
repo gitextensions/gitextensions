@@ -18,7 +18,7 @@ namespace GitUI
 
         public EditNetSpell()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             customUnderlines = new CustomPaintTextBox(TextBox);
             

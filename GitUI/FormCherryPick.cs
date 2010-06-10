@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormCherryPick()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormCherryPick_FormClosing(object sender, FormClosingEventArgs e)

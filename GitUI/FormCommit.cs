@@ -50,7 +50,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
 
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, closeDialogAfterCommitTooltip.Text);

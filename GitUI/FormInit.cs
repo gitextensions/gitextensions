@@ -12,13 +12,13 @@ namespace GitUI
     {
         public FormInit(string dir)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Directory.Text = dir;
         }
 
         public FormInit()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             if (!GitCommands.Settings.ValidWorkingDir())
                 Directory.Text = GitCommands.Settings.WorkingDir;

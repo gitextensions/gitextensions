@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -17,7 +18,7 @@ namespace GitUI
     {
         public FormSettings()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
 
         }
@@ -97,7 +98,9 @@ namespace GitUI
                 authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
-                Language.Text = Settings.UiLanguage;
+                Language.Items.Clear();
+                Language.Items.AddRange(Translator.GetAllTranslations());
+                Language.Text = Settings.Translation;
 
                 RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
                 RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
@@ -242,7 +245,7 @@ namespace GitUI
                 GitCommands.Settings.AuthorImageSize = (int)authorImageSize.Value;
                 Gravatar.ClearImageCache();
             }
-            GitCommands.Settings.UiLanguage = Language.Text;
+            GitCommands.Settings.Translation = Language.Text;
 
             GitCommands.Settings.AuthorImageCacheDays = (int)DaysToCacheImages.Value;
 

@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormRevisionFilter()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormRevisionFilter_Load(object sender, EventArgs e)

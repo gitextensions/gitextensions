@@ -12,11 +12,11 @@ using System.IO;
 
 namespace GitUI
 {
-	public partial class FindAndReplaceForm : Form
+	public partial class FindAndReplaceForm : GitExtensionsForm
 	{
 		public FindAndReplaceForm()
 		{
-			InitializeComponent();
+			InitializeComponent(); Translate();
 			_search = new TextEditorSearcher();
 		}
 
