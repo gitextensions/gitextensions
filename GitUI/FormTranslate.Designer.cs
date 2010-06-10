@@ -35,7 +35,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.translateProgress = new System.Windows.Forms.ToolStripLabel();
             this.hideTranslatedItems = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this._toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.translateCategories = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -87,7 +87,7 @@
             this.toolStripSeparator1,
             this.translateProgress,
             this.hideTranslatedItems,
-            this.toolStripButton1});
+            this._toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(623, 30);
@@ -133,16 +133,18 @@
             this.hideTranslatedItems.Size = new System.Drawing.Size(23, 27);
             this.hideTranslatedItems.CheckedChanged += new System.EventHandler(this.hideTranslatedItems_CheckedChanged);
             // 
-            // toolStripButton1
+            // _toolStripButton1
             // 
-            this.toolStripButton1.CheckOnClick = true;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::GitUI.Properties.Resources._26;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.CheckedChanged += new System.EventHandler(this.toolStripButton1_CheckedChanged);
+            this._toolStripButton1.Checked = true;
+            this._toolStripButton1.CheckOnClick = true;
+            this._toolStripButton1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._toolStripButton1.Image = global::GitUI.Properties.Resources._26;
+            this._toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._toolStripButton1.Name = "_toolStripButton1";
+            this._toolStripButton1.Size = new System.Drawing.Size(23, 27);
+            this._toolStripButton1.Text = "_showDetails";
+            this._toolStripButton1.CheckedChanged += new System.EventHandler(this.toolStripButton1_CheckedChanged);
             // 
             // splitContainer1
             // 
@@ -329,7 +331,7 @@
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.RichTextBox neutralTekst;
         private System.Windows.Forms.RichTextBox translatedText;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton _toolStripButton1;
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button nextButton;
 

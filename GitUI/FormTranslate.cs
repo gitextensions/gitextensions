@@ -306,7 +306,7 @@ namespace GitUI
 
         private void toolStripButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (toolStripButton1.Checked)
+            if (_toolStripButton1.Checked)
                 splitContainer2.Panel2Collapsed = true;
             else
                 splitContainer2.Panel2Collapsed = false;
@@ -329,7 +329,7 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                if (toolStripButton1.Checked)
+                if (_toolStripButton1.Checked)
                 {
                     splitContainer2.Panel2Collapsed = false;
                 }

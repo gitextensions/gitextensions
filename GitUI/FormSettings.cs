@@ -93,9 +93,9 @@ namespace GitUI
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
-                DaysToCacheImages.Value = GitCommands.Settings.AuthorImageCacheDays;
+                _DaysToCacheImages.Value = GitCommands.Settings.AuthorImageCacheDays;
 
-                authorImageSize.Value = Settings.AuthorImageSize;
+                _authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
                 Language.Items.Clear();
@@ -241,14 +241,14 @@ namespace GitUI
         {
             GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
 
-            if ((int)authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
+            if ((int)_authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
             {
-                GitCommands.Settings.AuthorImageSize = (int)authorImageSize.Value;
+                GitCommands.Settings.AuthorImageSize = (int)_authorImageSize.Value;
                 Gravatar.ClearImageCache();
             }
             GitCommands.Settings.Translation = Language.Text;
 
-            GitCommands.Settings.AuthorImageCacheDays = (int)DaysToCacheImages.Value;
+            GitCommands.Settings.AuthorImageCacheDays = (int)_DaysToCacheImages.Value;
 
             GitCommands.Settings.Smtp = SmtpServer.Text;
 

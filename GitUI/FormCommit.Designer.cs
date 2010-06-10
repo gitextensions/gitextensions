@@ -35,7 +35,7 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +63,7 @@
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.AddFiles = new System.Windows.Forms.Button();
-            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
+            this._menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +85,7 @@
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.Message = new GitUI.EditNetSpell();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.menuStrip3 = new System.Windows.Forms.MenuStrip();
+            this._menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseDialogAfterCommit = new System.Windows.Forms.CheckBox();
             this.CloseCommitDialogTooltip = new System.Windows.Forms.ToolTip(this.components);
@@ -101,14 +101,14 @@
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this._menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.UnstagedFileContext.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.menuStrip2.SuspendLayout();
+            this._menuStrip2.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -116,7 +116,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.menuStrip3.SuspendLayout();
+            this._menuStrip3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -186,7 +186,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.menuStrip1, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this._menuStrip1, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -206,17 +206,17 @@
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
-            // menuStrip1
+            // _menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._menuStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this._menuStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.workingToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(198, 25);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
+            this._menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this._menuStrip1.Name = "_menuStrip1";
+            this._menuStrip1.Size = new System.Drawing.Size(198, 25);
+            this._menuStrip1.TabIndex = 2;
+            this._menuStrip1.Text = "menuStrip1";
             // 
             // workingToolStripMenuItem
             // 
@@ -442,7 +442,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
             this.tableLayoutPanel4.Controls.Add(this.AddFiles, 2, 0);
-            this.tableLayoutPanel4.Controls.Add(this.menuStrip2, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this._menuStrip2, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.UnstageFiles, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
@@ -471,18 +471,18 @@
             this.AddFiles.UseVisualStyleBackColor = true;
             this.AddFiles.Click += new System.EventHandler(this.Stage_Click);
             // 
-            // menuStrip2
+            // _menuStrip2
             // 
-            this.menuStrip2.BackColor = System.Drawing.SystemColors.Control;
-            this.menuStrip2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._menuStrip2.BackColor = System.Drawing.SystemColors.Control;
+            this._menuStrip2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.filesListedToCommitToolStripMenuItem});
-            this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip2.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(134, 30);
-            this.menuStrip2.TabIndex = 5;
-            this.menuStrip2.Text = "menuStrip2";
+            this._menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this._menuStrip2.Location = new System.Drawing.Point(0, 0);
+            this._menuStrip2.Name = "_menuStrip2";
+            this._menuStrip2.Size = new System.Drawing.Size(134, 30);
+            this._menuStrip2.TabIndex = 5;
+            this._menuStrip2.Text = "menuStrip2";
             // 
             // filesListedToCommitToolStripMenuItem
             // 
@@ -756,7 +756,7 @@
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.menuStrip3, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this._menuStrip3, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.CloseDialogAfterCommit, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
@@ -769,17 +769,17 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(364, 30);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // menuStrip3
+            // _menuStrip3
             // 
-            this.menuStrip3.BackColor = System.Drawing.SystemColors.Control;
-            this.menuStrip3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._menuStrip3.BackColor = System.Drawing.SystemColors.Control;
+            this._menuStrip3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem});
-            this.menuStrip3.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(182, 30);
-            this.menuStrip3.TabIndex = 0;
-            this.menuStrip3.Text = "menuStrip3";
+            this._menuStrip3.Location = new System.Drawing.Point(0, 0);
+            this._menuStrip3.Name = "_menuStrip3";
+            this._menuStrip3.Size = new System.Drawing.Size(182, 30);
+            this._menuStrip3.TabIndex = 0;
+            this._menuStrip3.Text = "menuStrip3";
             // 
             // commitMessageToolStripMenuItem
             // 
@@ -829,7 +829,7 @@
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(891, 644);
             this.Controls.Add(this.splitContainer1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this._menuStrip1;
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
@@ -847,8 +847,8 @@
             this.splitContainer4.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this._menuStrip1.ResumeLayout(false);
+            this._menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.UnstagedFileContext.ResumeLayout(false);
             this.splitContainer5.Panel1.ResumeLayout(false);
@@ -856,8 +856,8 @@
             this.splitContainer5.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            this.menuStrip2.ResumeLayout(false);
-            this.menuStrip2.PerformLayout();
+            this._menuStrip2.ResumeLayout(false);
+            this._menuStrip2.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -866,8 +866,8 @@
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.menuStrip3.ResumeLayout(false);
-            this.menuStrip3.PerformLayout();
+            this._menuStrip3.ResumeLayout(false);
+            this._menuStrip3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -893,14 +893,14 @@
         private System.Windows.Forms.ToolStripMenuItem ResetChanges;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.Button SolveMergeconflicts;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip _menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem workingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.MenuStrip _menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem filesListedToCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
@@ -913,7 +913,7 @@
         private System.Windows.Forms.CheckBox CloseDialogAfterCommit;
         private System.Windows.Forms.ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.MenuStrip menuStrip3;
+        private System.Windows.Forms.MenuStrip _menuStrip3;
         private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;

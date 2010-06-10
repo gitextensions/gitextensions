@@ -27,7 +27,7 @@ namespace GitUI
                         re.Close();
                     }
                 }
-                GitIgnoreEdit.Text = GitIgnoreFile;
+                _GitIgnoreEdit.Text = GitIgnoreFile;
             }
             catch
             {
@@ -43,7 +43,7 @@ namespace GitUI
             try
             {
                 //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-                GitIgnoreFile = Environment.NewLine + GitIgnoreEdit.Text.Trim();
+                GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
                 using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
                 {
                     tw.Write(GitIgnoreFile);
@@ -74,7 +74,7 @@ namespace GitUI
 
         private void AddDefault_Click(object sender, EventArgs e)
         {
-            GitIgnoreEdit.Text += Environment.NewLine + "#ignore thumbnails created by windows" + Environment.NewLine + "Thumbs.db" + Environment.NewLine + "#Ignore files build by Visual Studio" + Environment.NewLine + "*.obj" + Environment.NewLine + "*.exe" + Environment.NewLine + "*.pdb" + Environment.NewLine + "*.user" + Environment.NewLine + "*.aps" + Environment.NewLine + "*.pch" + Environment.NewLine + "*.vspscc" + Environment.NewLine + "*_i.c" + Environment.NewLine + "*_p.c" + Environment.NewLine + "*.ncb" + Environment.NewLine + "*.suo" + Environment.NewLine + "*.tlb" + Environment.NewLine + "*.tlh" + Environment.NewLine + "*.bak" + Environment.NewLine + "*.cache" + Environment.NewLine + "*.ilk" + Environment.NewLine + "*.log" + Environment.NewLine + "[Bb]in" + Environment.NewLine + "[Dd]ebug*/" + Environment.NewLine + "*.lib" + Environment.NewLine + "*.sbr" + Environment.NewLine + "obj/" + Environment.NewLine + "[Rr]elease*/" + Environment.NewLine + "_ReSharper*/" + Environment.NewLine + "[Tt]est[Rr]esult*" + Environment.NewLine + "";
+            _GitIgnoreEdit.Text += Environment.NewLine + "#ignore thumbnails created by windows" + Environment.NewLine + "Thumbs.db" + Environment.NewLine + "#Ignore files build by Visual Studio" + Environment.NewLine + "*.obj" + Environment.NewLine + "*.exe" + Environment.NewLine + "*.pdb" + Environment.NewLine + "*.user" + Environment.NewLine + "*.aps" + Environment.NewLine + "*.pch" + Environment.NewLine + "*.vspscc" + Environment.NewLine + "*_i.c" + Environment.NewLine + "*_p.c" + Environment.NewLine + "*.ncb" + Environment.NewLine + "*.suo" + Environment.NewLine + "*.tlb" + Environment.NewLine + "*.tlh" + Environment.NewLine + "*.bak" + Environment.NewLine + "*.cache" + Environment.NewLine + "*.ilk" + Environment.NewLine + "*.log" + Environment.NewLine + "[Bb]in" + Environment.NewLine + "[Dd]ebug*/" + Environment.NewLine + "*.lib" + Environment.NewLine + "*.sbr" + Environment.NewLine + "obj/" + Environment.NewLine + "[Rr]elease*/" + Environment.NewLine + "_ReSharper*/" + Environment.NewLine + "[Tt]est[Rr]esult*" + Environment.NewLine + "";
         }
     }
 }
