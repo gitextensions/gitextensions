@@ -30,11 +30,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
-            this.labelCopyright = new System.Windows.Forms.Label();
+            this._labelCopyright = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.labelVersionInfo = new System.Windows.Forms.Label();
+            this._labelVersionInfo = new System.Windows.Forms.Label();
             this.pictureDonate = new System.Windows.Forms.PictureBox();
-            this.labelProductName = new System.Windows.Forms.Label();
+            this._labelProductName = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
@@ -47,11 +47,11 @@
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67F));
             this.tableLayoutPanel.Controls.Add(this.logoPictureBox, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.labelCopyright, 1, 2);
+            this.tableLayoutPanel.Controls.Add(this._labelCopyright, 1, 2);
             this.tableLayoutPanel.Controls.Add(this.textBoxDescription, 1, 4);
-            this.tableLayoutPanel.Controls.Add(this.labelVersionInfo, 1, 1);
+            this.tableLayoutPanel.Controls.Add(this._labelVersionInfo, 1, 1);
             this.tableLayoutPanel.Controls.Add(this.pictureDonate, 1, 0);
-            this.tableLayoutPanel.Controls.Add(this.labelProductName, 1, 3);
+            this.tableLayoutPanel.Controls.Add(this._labelProductName, 1, 3);
             this.tableLayoutPanel.Controls.Add(this.okButton, 1, 5);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
@@ -81,17 +81,17 @@
             this.logoPictureBox.TabIndex = 12;
             this.logoPictureBox.TabStop = false;
             // 
-            // labelCopyright
+            // _labelCopyright
             // 
-            this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCopyright.Location = new System.Drawing.Point(143, 59);
-            this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelCopyright.Name = "labelCopyright";
-            this.labelCopyright.Size = new System.Drawing.Size(271, 17);
-            this.labelCopyright.TabIndex = 21;
-            this.labelCopyright.Text = "Henk Westhuis (henk_westhuis@hotmail.com)";
-            this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._labelCopyright.Location = new System.Drawing.Point(143, 59);
+            this._labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this._labelCopyright.MaximumSize = new System.Drawing.Size(0, 17);
+            this._labelCopyright.Name = "_labelCopyright";
+            this._labelCopyright.Size = new System.Drawing.Size(271, 17);
+            this._labelCopyright.TabIndex = 21;
+            this._labelCopyright.Text = "Henk Westhuis (henk_westhuis@hotmail.com)";
+            this._labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // textBoxDescription
             // 
@@ -107,18 +107,18 @@
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = resources.GetString("textBoxDescription.Text");
             // 
-            // labelVersionInfo
+            // _labelVersionInfo
             // 
-            this.labelVersionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersionInfo.Location = new System.Drawing.Point(143, 41);
-            this.labelVersionInfo.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelVersionInfo.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelVersionInfo.Name = "labelVersionInfo";
-            this.labelVersionInfo.Size = new System.Drawing.Size(271, 17);
-            this.labelVersionInfo.TabIndex = 0;
-            this.labelVersionInfo.Text = "Version 1.93";
-            this.labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
+            this._labelVersionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._labelVersionInfo.Location = new System.Drawing.Point(143, 41);
+            this._labelVersionInfo.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this._labelVersionInfo.MaximumSize = new System.Drawing.Size(0, 17);
+            this._labelVersionInfo.Name = "_labelVersionInfo";
+            this._labelVersionInfo.Size = new System.Drawing.Size(271, 17);
+            this._labelVersionInfo.TabIndex = 0;
+            this._labelVersionInfo.Text = "Version 1.93";
+            this._labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
             // 
             // pictureDonate
             // 
@@ -134,17 +134,17 @@
             this.pictureDonate.TabStop = false;
             this.pictureDonate.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // labelProductName
+            // _labelProductName
             // 
-            this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelProductName.Location = new System.Drawing.Point(143, 78);
-            this.labelProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelProductName.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelProductName.Name = "labelProductName";
-            this.labelProductName.Size = new System.Drawing.Size(271, 17);
-            this.labelProductName.TabIndex = 19;
-            this.labelProductName.Text = "Git extensions";
-            this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._labelProductName.Location = new System.Drawing.Point(143, 78);
+            this._labelProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this._labelProductName.MaximumSize = new System.Drawing.Size(0, 17);
+            this._labelProductName.Name = "_labelProductName";
+            this._labelProductName.Size = new System.Drawing.Size(271, 17);
+            this._labelProductName.TabIndex = 19;
+            this._labelProductName.Text = "Git extensions";
+            this._labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // okButton
             // 
@@ -185,11 +185,11 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.PictureBox logoPictureBox;
-        private System.Windows.Forms.Label labelProductName;
-        private System.Windows.Forms.Label labelVersionInfo;
+        private System.Windows.Forms.Label _labelProductName;
+        private System.Windows.Forms.Label _labelVersionInfo;
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Label labelCopyright;
+        private System.Windows.Forms.Label _labelCopyright;
         private System.Windows.Forms.PictureBox pictureDonate;
     }
 }

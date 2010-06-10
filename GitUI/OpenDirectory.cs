@@ -16,32 +16,32 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
 
-            Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
+            _Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            _Directory.DisplayMember = "Path";
 
             Load.Select();
 
-            Directory.Focus();
-            Directory.Select();
+            _Directory.Focus();
+            _Directory.Select();
 
         }
 
         private void Browse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-            browseDialog.SelectedPath = Directory.Text;
+            browseDialog.SelectedPath = _Directory.Text;
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
-                Directory.Text = browseDialog.SelectedPath;
+                _Directory.Text = browseDialog.SelectedPath;
             }
         }
 
         private void Load_Click(object sender, EventArgs e)
         {
-            if (System.IO.Directory.Exists(Directory.Text))
+            if (System.IO.Directory.Exists(_Directory.Text))
             {
-                Settings.WorkingDir = Directory.Text;
+                Settings.WorkingDir = _Directory.Text;
 
                 Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 

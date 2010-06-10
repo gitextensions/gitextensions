@@ -70,7 +70,7 @@ namespace ResourceManager.Translation
             TranslationCategory translationCategory = translation.GetTranslationCategory(controlToTranslate.Name);
             foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
             {
-                object subControl;
+                object subControl = null;
                 
                 if (translationItem.Name.Equals("$this"))
                 {
@@ -79,7 +79,8 @@ namespace ResourceManager.Translation
                 else
                 {
                     FieldInfo fieldInfo = controlToTranslate.GetType().GetField(translationItem.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    subControl = fieldInfo.GetValue(controlToTranslate);
+                    if (fieldInfo != null)
+                        subControl = fieldInfo.GetValue(controlToTranslate);
                 }
 
                 if (subControl == null)

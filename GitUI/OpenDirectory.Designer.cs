@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Open));
             this.label1 = new System.Windows.Forms.Label();
-            this.Directory = new System.Windows.Forms.ComboBox();
+            this._Directory = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
             this.Load = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -44,17 +43,17 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
-            // Directory
+            // _Directory
             // 
-            this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Directory.FormattingEnabled = true;
-            this.Directory.Location = new System.Drawing.Point(85, 10);
-            this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(266, 21);
-            this.Directory.TabIndex = 1;
-            this.Directory.SelectedIndexChanged += new System.EventHandler(this.Directory_SelectedIndexChanged);
-            this.Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Directory_KeyPress);
+            this._Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this._Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._Directory.FormattingEnabled = true;
+            this._Directory.Location = new System.Drawing.Point(85, 10);
+            this._Directory.Name = "_Directory";
+            this._Directory.Size = new System.Drawing.Size(266, 21);
+            this._Directory.TabIndex = 1;
+            this._Directory.SelectedIndexChanged += new System.EventHandler(this.Directory_SelectedIndexChanged);
+            this._Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Directory_KeyPress);
             // 
             // Browse
             // 
@@ -84,10 +83,9 @@
             this.ClientSize = new System.Drawing.Size(446, 78);
             this.Controls.Add(this.Load);
             this.Controls.Add(this.Browse);
-            this.Controls.Add(this.Directory);
+            this.Controls.Add(this._Directory);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Open";
@@ -101,7 +99,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox Directory;
+        private System.Windows.Forms.ComboBox _Directory;
         private System.Windows.Forms.Button Browse;
         private new System.Windows.Forms.Button Load;
     }
