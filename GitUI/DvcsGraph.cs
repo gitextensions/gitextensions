@@ -69,6 +69,8 @@ namespace GitUI
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += new DataGridViewCellPaintingEventHandler(dataGrid_CellPainting);
             ColumnWidthChanged += new DataGridViewColumnEventHandler(dataGrid_ColumnWidthChanged);
+            Scroll += new ScrollEventHandler(dataGrid_Scroll);
+        
             VirtualMode = true;
             RebuildGraph();
         }
@@ -139,14 +141,6 @@ namespace GitUI
 
         private void RebuildGraph()
         {
-            // Auto scale width on load
-            int laneCount = 2;
-            if (GraphLanes != null)
-            {
-                laneCount = Math.Min( Math.Max(laneCount, GraphLanes.Width), 30);
-            }
-            dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
-
             // Redraw
             CacheHead = -1;
             CacheHeadRow = 0;
@@ -186,6 +180,25 @@ namespace GitUI
         {
             DrawGraph(-1);
             Invalidate(false);
+        }
+
+        private void dataGrid_Scroll(object sender, ScrollEventArgs e)
+        {
+            // Auto scale width on load
+            int laneCount = 2;
+            if (GraphLanes != null)
+            {
+                int width = 1;
+                int start = FirstDisplayedCell.RowIndex;
+                int stop = start + DisplayedRowCount(true);
+                for (int i = start; i < stop; i++)
+                {
+                    width = Math.Max(GraphLanes[i].Count, width);
+                }
+
+                laneCount = Math.Min(Math.Max(laneCount, width), 30);
+            }
+            dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
         }
 
         private Color GetJunctionColor(Junction aJunction)
@@ -954,18 +967,6 @@ namespace GitUI
                 get
                 {
                     return laneRows.Count;
-                }
-            }
-            public int Width
-            {
-                get
-                {
-                    int width = 1;
-                    foreach (LaneRow row in laneRows)
-                    {
-                        width = Math.Max(row.Count, width);
-                    }
-                    return width;
                 }
             }
 
