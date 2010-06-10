@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FileStatusList()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
             FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);

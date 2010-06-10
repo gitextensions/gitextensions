@@ -14,7 +14,7 @@ namespace GitUI
     {
         public Open()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
             Directory.DisplayMember = "Path";

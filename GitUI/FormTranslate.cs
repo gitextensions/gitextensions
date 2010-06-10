@@ -34,7 +34,7 @@ namespace GitUI
 
         public FormTranslate()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             translations.Items.Clear();
             translations.Items.Add("Translations_nl");
@@ -83,8 +83,13 @@ namespace GitUI
 
         private void FillTranslateGrid(string filter)
         {
+            translations.Items.Clear();
+            translations.Items.AddRange(Translator.GetAllTranslations());
+
             if (translate == null)
                 return;
+
+            translations.SelectedText = translator.Name;
 
             List<TranslateItem> filterTranslate = new List<TranslateItem>();
 
@@ -230,9 +235,9 @@ namespace GitUI
 
             SaveFileDialog fileDialog = new SaveFileDialog();
             fileDialog.Title = saveAsText.Text;
-            fileDialog.ShowDialog();
 
-            TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+                TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
         }
 
         private void translations_SelectedIndexChanged(object sender, EventArgs e)

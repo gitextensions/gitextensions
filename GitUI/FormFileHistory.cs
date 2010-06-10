@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FormFileHistory(string fileName):base()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
 
             if (string.IsNullOrEmpty(fileName))

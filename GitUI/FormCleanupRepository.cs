@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormCleanupRepository : Form
+    public partial class FormCleanupRepository : GitExtensionsForm
     {
         public FormCleanupRepository()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             PreviewOutput.ReadOnly = true;
         }
 

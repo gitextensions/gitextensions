@@ -23,7 +23,7 @@ namespace GitUI
         {
             resources = new ComponentResourceManager(typeof(FormDeleteBranch));
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
             this.defaultBranch = defaultBranch;
         }
 

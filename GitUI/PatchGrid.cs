@@ -13,7 +13,7 @@ namespace GitUI
     {
         public PatchGrid()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Patches.CellPainting += new DataGridViewCellPaintingEventHandler(Patches_CellPainting);
         }
 

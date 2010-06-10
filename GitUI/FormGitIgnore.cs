@@ -14,7 +14,7 @@ namespace GitUI
     {
         public FormGitIgnore()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             GitIgnoreFile = "";
 
             try

@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormTag()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormTag_FormClosing(object sender, FormClosingEventArgs e)

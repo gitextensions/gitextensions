@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormLoadPuttySSHKey()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void PrivateKeypath_DropDown(object sender, EventArgs e)

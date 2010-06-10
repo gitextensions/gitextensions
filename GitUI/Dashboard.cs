@@ -15,7 +15,7 @@ namespace GitUI
     {
         public Dashboard()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
             RecentRepositories.DisableContextMenu();

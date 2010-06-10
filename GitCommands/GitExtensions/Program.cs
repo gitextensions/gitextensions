@@ -25,18 +25,6 @@ namespace GitExtensions
 
             GitCommands.Settings.LoadSettings();
 
-            if (!GitCommands.Settings.UiLanguage.Equals("default", StringComparison.CurrentCultureIgnoreCase))
-            {
-                try
-                {
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(GitCommands.Settings.UiLanguage);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
-            }
-
             //Register pugins
             PluginLoader.Load();
 

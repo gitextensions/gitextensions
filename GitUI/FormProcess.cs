@@ -16,7 +16,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
             
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             if (string.IsNullOrEmpty(arguments))
                 return;

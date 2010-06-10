@@ -19,25 +19,47 @@ namespace GitUI
             this.Load += new EventHandler(GitExtensionsControl_Load);
         }
 
-        void GitExtensionsControl_Load(object sender, EventArgs e)
+        private bool translated = false;
+
+        private static bool CheckComponent(object value)
         {
-            ApplyResources();
+            bool isComponentInDesignMode = false;
+            IComponent component = value as IComponent;
+            if (component != null)
+            {
+                ISite site = component.Site;
+                if ((site != null) && site.DesignMode)
+                    isComponentInDesignMode = true;
+            }
+
+            return isComponentInDesignMode;
         }
 
-        protected void ApplyResources()
+        void GitExtensionsControl_Load(object sender, EventArgs e)
         {
-            /*
-            //resources.ApplyResources(this, Name);
-            foreach (FieldInfo fieldInfo in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
-            {
-                Component component = fieldInfo.GetValue(this) as Component;
+            // find out if the value is a component and is currently in design mode
+            bool isComponentInDesignMode = CheckComponent(this);
 
-                if (component != null)
-                    resources.ApplyResources(component, fieldInfo.Name, new CultureInfo("nl-NL"));
-            }
-            */
-            Translator translator = new Translator("Translations_nl");
+            if (!translated)
+                throw new Exception("The control " + GetType().Name + " is not transated in the constructor. You need to call Translate() right after InitializeComponent().");
+        }
+
+        protected void Translate()
+        {
+            Translator translator = new Translator(GitCommands.Settings.Translation);
             translator.TranslateControl(this);
+            translated = true;
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // GitExtensionsControl
+            // 
+            this.Name = "GitExtensionsControl";
+            this.ResumeLayout(false);
+
         }
     }
 }

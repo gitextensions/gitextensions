@@ -14,7 +14,7 @@ namespace GitUI
     {
         public DashboardItem(Repository repository)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             if (repository == null)
                 return;
@@ -32,14 +32,14 @@ namespace GitUI
 
         public DashboardItem(Bitmap icon, string title)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Initialize(icon, title, title, null);
         }
 
         public DashboardItem(Bitmap icon, string title, string text)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Initialize(icon, title, title, text);
         }

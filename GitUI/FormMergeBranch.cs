@@ -17,7 +17,7 @@ namespace GitUI
 
         public FormMergeBranch(string defaultBranch)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             this.defaultBranch = defaultBranch;
         }
 

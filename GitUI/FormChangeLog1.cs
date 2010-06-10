@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormChangeLog1()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormChangeLog1_FormClosing(object sender, FormClosingEventArgs e)

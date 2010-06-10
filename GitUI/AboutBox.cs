@@ -12,7 +12,7 @@ namespace GitUI
     {
         public AboutBox()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
         }
 

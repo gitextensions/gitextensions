@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormCommandlineHelp()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
     }
 }

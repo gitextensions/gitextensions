@@ -13,7 +13,7 @@ namespace GitUI
     {
         public CommitInfo()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;

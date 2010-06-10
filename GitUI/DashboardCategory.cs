@@ -13,12 +13,12 @@ namespace GitUI
     {
         public DashboardCategory()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public DashboardCategory(string title, RepositoryCategory repositoryCategory)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             this.Title = title;
             this.RepositoryCategory = repositoryCategory;

@@ -13,7 +13,7 @@ namespace GitUI
     {
         public DashboardEditor()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Initialize();
         }
 

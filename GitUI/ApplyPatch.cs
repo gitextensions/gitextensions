@@ -16,7 +16,7 @@ namespace PatchApply
     {
         public ViewPatch()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             patchManager = new PatchManager();
         }

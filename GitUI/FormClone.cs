@@ -14,7 +14,7 @@ namespace GitUI
     {
         public FormClone()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             if (Settings.ValidWorkingDir())
                 From.Text = Settings.WorkingDir;

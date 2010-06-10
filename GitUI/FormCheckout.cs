@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormCheckout()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void Ok_Click(object sender, EventArgs e)

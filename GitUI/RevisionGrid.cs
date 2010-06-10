@@ -35,7 +35,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             base.InitLayout();
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Revisions.Columns[0].Width = 40;
 
             NormalFont = Revisions.Font;
