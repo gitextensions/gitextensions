@@ -17,9 +17,9 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             if (Settings.ValidWorkingDir())
-                From.Text = Settings.WorkingDir;
+                _From.Text = Settings.WorkingDir;
             else
-                To.Text = Settings.WorkingDir;
+                _To.Text = Settings.WorkingDir;
 
             From_TextUpdate(null, null);
         }
@@ -28,13 +28,13 @@ namespace GitUI
         {
             try
             {
-                string dirTo = To.Text;
+                string dirTo = _To.Text;
                 if (!dirTo.EndsWith("\\") && !dirTo.EndsWith("/"))
                     dirTo += "\\";
 
-                dirTo += NewDirectory.Text;
+                dirTo += _NewDirectory.Text;
 
-                Repositories.RepositoryHistory.AddMostRecentRepository(From.Text);
+                Repositories.RepositoryHistory.AddMostRecentRepository(_From.Text);
                 Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
                 //CloneDto dto = new CloneDto(From.Text, To.Text, CentralRepository.Checked);
@@ -42,7 +42,7 @@ namespace GitUI
                 //commit.Execute();
 
                 FormProcess fromProcess;
-                fromProcess = new FormProcess(Settings.GitCommand, GitCommands.GitCommands.CloneCmd(From.Text, dirTo, CentralRepository.Checked, null));
+                fromProcess = new FormProcess(Settings.GitCommand, GitCommands.GitCommands.CloneCmd(_From.Text, dirTo, CentralRepository.Checked, null));
 
                 if (!fromProcess.ErrorOccured() && !GitCommands.GitCommands.InTheMiddleOfPatch())
                 {
@@ -99,9 +99,9 @@ namespace GitUI
         private void FromBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = From.Text;
+            dialog.SelectedPath = _From.Text;
             if (dialog.ShowDialog() == DialogResult.OK)
-                From.Text = dialog.SelectedPath;
+                _From.Text = dialog.SelectedPath;
             
             To_TextUpdate(sender, e);
         }
@@ -109,24 +109,24 @@ namespace GitUI
         private void ToBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = To.Text;
+            dialog.SelectedPath = _To.Text;
             if (dialog.ShowDialog() == DialogResult.OK)
-                To.Text = dialog.SelectedPath;
+                _To.Text = dialog.SelectedPath;
 
             To_TextUpdate(sender, e); 
         }
 
         private void From_DropDown(object sender, EventArgs e)
         {
-            From.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
-            From.DisplayMember = "Path";
+            _From.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            _From.DisplayMember = "Path";
 
         }
 
         private void To_DropDown(object sender, EventArgs e)
         {
-            To.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
-            To.DisplayMember = "Path";
+            _To.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            _To.DisplayMember = "Path";
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
@@ -157,14 +157,14 @@ namespace GitUI
 
         private void From_TextUpdate(object sender, EventArgs e)
         {
-            string path = From.Text;
+            string path = _From.Text;
             path = path.TrimEnd(new char[] { '\\', '/' });
             
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
             if (path.Contains("\\") || path.Contains("/"))
-                NewDirectory.Text = path.Substring(path.LastIndexOfAny(new char[] { '\\', '/' }) + 1);
+                _NewDirectory.Text = path.Substring(path.LastIndexOfAny(new char[] { '\\', '/' }) + 1);
 
             To_TextUpdate(sender, e);
         }
@@ -174,16 +174,16 @@ namespace GitUI
             string destinationPath ="";
 
             Info.Text = "The repository will be cloned to a new directory located here:" + Environment.NewLine;
-            if (string.IsNullOrEmpty(To.Text))
+            if (string.IsNullOrEmpty(_To.Text))
                 destinationPath += "[destination]";
             else
-                destinationPath += To.Text.TrimEnd(new char[] { '\\', '/' }); ;
+                destinationPath += _To.Text.TrimEnd(new char[] { '\\', '/' }); ;
             destinationPath += "\\";
 
-            if (string.IsNullOrEmpty(NewDirectory.Text))
+            if (string.IsNullOrEmpty(_NewDirectory.Text))
                 destinationPath += "[directory]";
             else
-                destinationPath += NewDirectory.Text;
+                destinationPath += _NewDirectory.Text;
 
             Info.Text += "     " + destinationPath;
 
