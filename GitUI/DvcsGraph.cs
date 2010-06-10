@@ -675,16 +675,20 @@ namespace GitUI
                 {
                     Junctions.Add(new Junction(node, node));
                 }
-                //Console.WriteLine(node);
+                node.Data = aData;
                 node.DataType = aType;
+                //Console.WriteLine(node);
 
                 foreach (IComparable parentId in aParentIds)
                 {
                     Node parent;
                     GetNode(parentId, out parent);
                     //Console.WriteLine("\t" + parent);
-                    if (node.Descendants.Count == 1 && parent.Ancestors.Count == 0
-                        && node.Descendants[0].Parent == node)
+
+                    if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
+                        && node.Descendants[0].Parent == node
+                        && parent.Ancestors.Count == 0
+                        )
                     {
                         // The node isn't a junction point. Just the parent to the node's
                         // (only) ancestor junction.
@@ -717,8 +721,6 @@ namespace GitUI
                         Junctions.Add(junction);
                     }
                 }
-
-                node.Data = aData;
             }
 
             public int Count { get { return Nodes.Count; } }
@@ -754,6 +756,95 @@ namespace GitUI
                     }
                 }
                 return nodes;
+            }
+
+            public delegate bool Visit(Node n);
+            public Node[] TopoSortedNodes()
+            {
+                //http://en.wikipedia.org/wiki/Topological_ordering
+                //L ← Empty list that will contain the sorted nodes
+                //S ← Set of all nodes with no incoming edges
+
+                //function visit(node n)
+                //    if n has not been visited yet then
+                //        mark n as visited
+                //        for each node m with an edge from n to m do
+                //            visit(m)
+                //        add n to L
+
+                //for each node n in S do
+                //    visit(n)
+
+                Queue<Node> L = new Queue<Node>();
+                Queue<Node> S = new Queue<Node>();
+                Queue<Node> P = new Queue<Node>();
+                foreach (Node h in GetHeads())
+                {
+                    foreach (Junction j in h.Ancestors)
+                    {
+                        if (!S.Contains(j.Parent)) S.Enqueue(j.Parent);
+                        if (!S.Contains(j.Child)) S.Enqueue(j.Child);
+                    }
+                }
+
+                Visit visit = null;
+                visit = delegate(Node n)
+                {
+                    if (!P.Contains(n))
+                    {
+                        P.Enqueue(n);
+                        foreach (Junction e in n.Ancestors)
+                        {
+                            visit(e.Parent);
+                        }
+                        L.Enqueue(n);
+                        return true;
+                    }
+                    return false;
+                };
+                foreach (Node n in S)
+                {
+                    visit(n);
+                }
+
+                // Sanity check
+                Queue<Junction> J = new Queue<Junction>();
+                Queue<Node> X = new Queue<Node>();
+                foreach (Node n in L)
+                {
+                    foreach (Junction e in n.Descendants)
+                    {
+                        if (X.Contains(e.Child))
+                        {
+                            Debugger.Break();
+                        }
+                        if (!J.Contains(e))
+                        {
+                            J.Enqueue(e);
+                        }
+                    }
+                    X.Enqueue(n);
+                }
+
+                if (J.Count != Junctions.Count)
+                {
+                    foreach (Junction j in Junctions)
+                    {
+                        if (!J.Contains(j))
+                        {
+                            // j {13143: 5fc3e67ac0241c491dcf1c0c9dcd4a4d83e7c243--(2)--4a09bc966449ca0a7e9a5bb70f91b47debdd7c4e}
+                            // Child  {5fc3e67ac0241c491dcf1c0c9dcd4a4d83e7c243}
+                            // Parent {4a09bc966449ca0a7e9a5bb70f91b47debdd7c4e}
+                            //Debugger.Break();
+                            if (j.Parent != j.Child)
+                            {
+                                Console.WriteLine("*** {0} *** {1} {2}", j, Nodes.Count, Junctions.Count);
+                            }
+                        }
+                    }
+                }
+
+                return L.ToArray();
             }
 
             private bool GetNode(IComparable aId, out Node aNode)
@@ -1166,10 +1257,11 @@ namespace GitUI
                 }
 
                 // DEBUG: The check above didn't find anything, but should have
-                if (currentRow.Node == null && laneNodes.Count > 0)
-                {
-                    if (Debugger.IsAttached) Debugger.Break();
-                }
+                //if (currentRow.Node == null && laneNodes.Count > 0)
+                //{
+                //    if (Debugger.IsAttached) Debugger.Break();
+                //    Node[] topo = this.sourceGraph.TopoSortedNodes();
+                //}
                 #endregion
 
                 // Check to see if there are available lanes that could be used
