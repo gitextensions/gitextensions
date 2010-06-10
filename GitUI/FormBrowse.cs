@@ -781,6 +781,8 @@ namespace GitUI
         {
             if (GitUICommands.Instance.StartSettingsDialog())
                 Initialize();
+
+            Translate();
         }
 
         private void archiveToolStripMenuItem_Click(object sender, EventArgs e)

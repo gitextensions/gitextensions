@@ -20,6 +20,9 @@ namespace ResourceManager.Translation
 
         public static Translation Deserialize(string path)
         {
+            if (!File.Exists(path))
+                return null;
+
             XmlSerializer serializer = new XmlSerializer(typeof(Translation));
             using (TextReader stringReader = new StreamReader(path))
             using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
