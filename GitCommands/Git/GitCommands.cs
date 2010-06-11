@@ -42,7 +42,19 @@ namespace GitCommands
         public static void SetEnvironmentVariable()
         {
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
-                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
+            {
+                string homePath = "";
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+                {
+                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                }
+                else
+                {
+                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
+                }
+                Environment.SetEnvironmentVariable("HOME", homePath);
+            }
         }
 
         public static void RunRealCmd(string cmd, string arguments)
