@@ -316,18 +316,18 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///Version 1.94
+        ///	Fixed bug: difftool only worked in git &gt; 1.7.0
+        ///	Fixed bug: dashboard caused application to crash
+        ///	Added Japanese translation
+        ///	Added option to mark ill formed commit messages
+        ///	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
+        ///	Quicksearch now also searches in branches
+        ///	All windows positions are now saved	
+        ///
         ///Version 1.93
         ///	Fixed bug: wrong icon drawn in commit dialog for deleted files
-        ///	Reset selected files in the commit dialog asks to delete new files.
-        ///	Added start page
-        ///	Author images are only cached for 5 days now
-        ///	Added &apos;force&apos; option to checkout revision and checkout branch
-        ///	Added &apos;rebase&apos; to context menu in revision grid
-        ///	Added &apos;unstage chunk of file&apos; option to commit dialog
-        ///
-        ///Version 1.92
-        ///	Fixed bug: the application hangs randomly
-        ///	Fixed bug: quotes in local settings were n [rest of string was truncated]&quot;;.
+        ///	Reset selected files in the co [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

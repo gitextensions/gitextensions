@@ -15,7 +15,7 @@ namespace GitUI
 
         public FormRebase(string defaultBranch)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             this.defaultBranch = defaultBranch;
         }
 

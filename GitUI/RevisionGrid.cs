@@ -10,11 +10,15 @@ using System.Windows.Forms;
 using GitCommands;
 using System.Drawing.Drawing2D;
 using System.IO;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class RevisionGrid : UserControl
+    public partial class RevisionGrid : GitExtensionsControl
     {
+        TranslationString authorDate = new TranslationString("AuthorDate");
+        TranslationString commitDate = new TranslationString("CommitDate");
+
         public event EventHandler ChangedCurrentBranch;
 
         public virtual void OnChangedCurrentBranch()
@@ -31,7 +35,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             base.InitLayout();
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             NormalFont = Revisions.Font;
             HeadFont = new Font(NormalFont, FontStyle.Bold);
@@ -532,8 +536,7 @@ namespace GitUI
 
         private string GetDateHeaderText()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            return Settings.ShowAuthorDate ? resources.GetString("AuthorDate") : resources.GetString("CommitDate");
+            return Settings.ShowAuthorDate ? authorDate.Text : commitDate.Text;
         }
 
         private void LoadRevisions()

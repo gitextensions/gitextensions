@@ -11,11 +11,15 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
+
         public FormProcess(string process, string arguments, string remote)
         {
             syncContext = SynchronizationContext.Current;
             
-            InitializeComponent();
+            InitializeComponent(); Translate();
+
+            if (string.IsNullOrEmpty(arguments))
+                return;
 
             ProcessString = process ?? GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;

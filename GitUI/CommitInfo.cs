@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 
 namespace GitUI
 {
-    public partial class CommitInfo : UserControl
+    public partial class CommitInfo : GitExtensionsControl
     {
         public CommitInfo()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;

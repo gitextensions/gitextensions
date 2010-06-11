@@ -376,13 +376,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(581, 263);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormSubmodules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Submodules";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubmodules_FormClosing);
             this.Load += new System.EventHandler(this.FormSubmodules_Load);
             this.Shown += new System.EventHandler(this.FormSubmodules_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubmodules_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);

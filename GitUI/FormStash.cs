@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FormStash()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             View.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(View_ExtraDiffArgumentsChanged);
         }
 

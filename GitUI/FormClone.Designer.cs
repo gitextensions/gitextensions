@@ -28,16 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Info = new System.Windows.Forms.Label();
-            this.NewDirectory = new System.Windows.Forms.TextBox();
+            this._NewDirectory = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CentralRepository = new System.Windows.Forms.RadioButton();
             this.PersonalRepository = new System.Windows.Forms.RadioButton();
-            this.From = new System.Windows.Forms.ComboBox();
-            this.To = new System.Windows.Forms.ComboBox();
+            this._From = new System.Windows.Forms.ComboBox();
+            this._To = new System.Windows.Forms.ComboBox();
             this.ToBrowse = new System.Windows.Forms.Button();
             this.FromBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -62,11 +61,11 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.Info);
-            this.splitContainer1.Panel1.Controls.Add(this.NewDirectory);
+            this.splitContainer1.Panel1.Controls.Add(this._NewDirectory);
             this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.From);
-            this.splitContainer1.Panel1.Controls.Add(this.To);
+            this.splitContainer1.Panel1.Controls.Add(this._From);
+            this.splitContainer1.Panel1.Controls.Add(this._To);
             this.splitContainer1.Panel1.Controls.Add(this.ToBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
@@ -93,13 +92,13 @@
             this.Info.Text = "The repository will be cloned to a new directory located here:\r\n      [destinatio" +
                 "n]\\[directory]\r\n";
             // 
-            // NewDirectory
+            // _NewDirectory
             // 
-            this.NewDirectory.Location = new System.Drawing.Point(158, 72);
-            this.NewDirectory.Name = "NewDirectory";
-            this.NewDirectory.Size = new System.Drawing.Size(152, 20);
-            this.NewDirectory.TabIndex = 3;
-            this.NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
+            this._NewDirectory.Location = new System.Drawing.Point(158, 72);
+            this._NewDirectory.Name = "_NewDirectory";
+            this._NewDirectory.Size = new System.Drawing.Size(152, 20);
+            this._NewDirectory.TabIndex = 3;
+            this._NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
             // 
             // label3
             // 
@@ -143,27 +142,27 @@
             this.PersonalRepository.Text = "Personal repository";
             this.PersonalRepository.UseVisualStyleBackColor = true;
             // 
-            // From
+            // _From
             // 
-            this.From.FormattingEnabled = true;
-            this.From.Location = new System.Drawing.Point(158, 17);
-            this.From.Name = "From";
-            this.From.Size = new System.Drawing.Size(255, 21);
-            this.From.TabIndex = 1;
-            this.From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
-            this.From.TextUpdate += new System.EventHandler(this.From_TextUpdate);
-            this.From.DropDown += new System.EventHandler(this.From_DropDown);
+            this._From.FormattingEnabled = true;
+            this._From.Location = new System.Drawing.Point(158, 17);
+            this._From.Name = "_From";
+            this._From.Size = new System.Drawing.Size(255, 21);
+            this._From.TabIndex = 1;
+            this._From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
+            this._From.TextUpdate += new System.EventHandler(this.From_TextUpdate);
+            this._From.DropDown += new System.EventHandler(this.From_DropDown);
             // 
-            // To
+            // _To
             // 
-            this.To.FormattingEnabled = true;
-            this.To.Location = new System.Drawing.Point(158, 45);
-            this.To.Name = "To";
-            this.To.Size = new System.Drawing.Size(255, 21);
-            this.To.TabIndex = 2;
-            this.To.SelectedIndexChanged += new System.EventHandler(this.To_SelectedIndexChanged);
-            this.To.TextUpdate += new System.EventHandler(this.To_TextUpdate);
-            this.To.DropDown += new System.EventHandler(this.To_DropDown);
+            this._To.FormattingEnabled = true;
+            this._To.Location = new System.Drawing.Point(158, 45);
+            this._To.Name = "_To";
+            this._To.Size = new System.Drawing.Size(255, 21);
+            this._To.TabIndex = 2;
+            this._To.SelectedIndexChanged += new System.EventHandler(this.To_SelectedIndexChanged);
+            this._To.TextUpdate += new System.EventHandler(this.To_TextUpdate);
+            this._To.DropDown += new System.EventHandler(this.To_DropDown);
             // 
             // ToBrowse
             // 
@@ -255,7 +254,6 @@
             this.ClientSize = new System.Drawing.Size(504, 238);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormClone";
@@ -280,15 +278,15 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.Button ToBrowse;
         private System.Windows.Forms.Button FromBrowse;
-        private System.Windows.Forms.ComboBox From;
-        private System.Windows.Forms.ComboBox To;
+        private System.Windows.Forms.ComboBox _From;
+        private System.Windows.Forms.ComboBox _To;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton CentralRepository;
         private System.Windows.Forms.RadioButton PersonalRepository;
         private System.Windows.Forms.RadioButton Central;
         private System.Windows.Forms.RadioButton Personal;
         private System.Windows.Forms.Button LoadSSHKey;
-        private System.Windows.Forms.TextBox NewDirectory;
+        private System.Windows.Forms.TextBox _NewDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label Info;
     }

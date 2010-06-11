@@ -10,7 +10,7 @@ using Git = GitCommands.GitCommands;
 
 namespace GitUI
 {
-    public partial class FileViewer : UserControl
+    public partial class FileViewer : GitExtensionsControl
     {
         public bool IgnoreWhitespaceChanges { get; set; }
         public int NumberOfVisibleLines { get; set; }
@@ -60,7 +60,7 @@ namespace GitUI
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
             NumberOfVisibleLines = 3;
-            InitializeComponent();
+            InitializeComponent(); Translate();
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyUp;
             IgnoreWhitespaceChanges = false;
 

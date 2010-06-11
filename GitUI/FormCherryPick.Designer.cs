@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCherryPick));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
@@ -96,6 +95,7 @@
             // 
             this.RevisionGrid.currentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Filter = "";
             this.RevisionGrid.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
@@ -132,11 +132,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 387);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormCherryPick";
             this.Text = "Cherry pick";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
             this.Load += new System.EventHandler(this.FormCherryPick_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

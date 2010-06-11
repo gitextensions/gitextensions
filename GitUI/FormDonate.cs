@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormDonate()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

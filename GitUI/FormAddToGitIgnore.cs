@@ -14,7 +14,7 @@ namespace GitUI
     {
         public FormAddToGitIgnore(string filePattern)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             FilePattern.Text = filePattern;
             Height = 100;
         }

@@ -14,7 +14,7 @@ namespace GitUI
     {
         public MergePatch()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             EnableButtons();
         }
 

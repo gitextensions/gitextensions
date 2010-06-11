@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormDashboardEditor()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)

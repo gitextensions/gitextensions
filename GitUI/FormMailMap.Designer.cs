@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMailMap));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
-            this.Save = new System.Windows.Forms.Button();
+            this._MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
             this.label1 = new System.Windows.Forms.Label();
+            this.Save = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -46,7 +45,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.MailMapText);
+            this.splitContainer1.Panel1.Controls.Add(this._MailMapText);
             // 
             // splitContainer1.Panel2
             // 
@@ -56,24 +55,14 @@
             this.splitContainer1.SplitterDistance = 381;
             this.splitContainer1.TabIndex = 0;
             // 
-            // MailMapText
+            // _MailMapText
             // 
-            this.MailMapText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MailMapText.IsReadOnly = false;
-            this.MailMapText.Location = new System.Drawing.Point(0, 0);
-            this.MailMapText.Name = "MailMapText";
-            this.MailMapText.Size = new System.Drawing.Size(381, 474);
-            this.MailMapText.TabIndex = 0;
-            // 
-            // Save
-            // 
-            this.Save.Location = new System.Drawing.Point(162, 439);
-            this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
-            this.Save.TabIndex = 0;
-            this.Save.Text = "Save";
-            this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this._MailMapText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._MailMapText.IsReadOnly = false;
+            this._MailMapText.Location = new System.Drawing.Point(0, 0);
+            this._MailMapText.Name = "_MailMapText";
+            this._MailMapText.Size = new System.Drawing.Size(381, 474);
+            this._MailMapText.TabIndex = 0;
             // 
             // label1
             // 
@@ -85,17 +74,26 @@
             this.label1.Text = "Edit the mailmap.\r\nThis file is meant to correct usernames.\r\n\r\nExample:\r\nHenk Wes" +
                 "thuis <Henk@.(none)>\r\nHenk Westhuis <henk_westhuis@hotmail.com>";
             // 
+            // Save
+            // 
+            this.Save.Location = new System.Drawing.Point(162, 439);
+            this.Save.Name = "Save";
+            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.TabIndex = 0;
+            this.Save.Text = "Save";
+            this.Save.UseVisualStyleBackColor = true;
+            this.Save.Click += new System.EventHandler(this.Save_Click);
+            // 
             // FormMailMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormMailMap";
             this.Text = "Edit .mailmap";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMap_FormClosing);
             this.Load += new System.EventHandler(this.FormMailMap_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMap_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -107,7 +105,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl MailMapText;
+        private ICSharpCode.TextEditor.TextEditorControl _MailMapText;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label label1;
     }

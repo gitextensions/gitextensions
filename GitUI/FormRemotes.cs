@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormRemotes()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormRemotes_Load(object sender, EventArgs e)

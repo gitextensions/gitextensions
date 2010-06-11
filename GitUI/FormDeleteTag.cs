@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormDeleteTag()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormDeleteTag_Load(object sender, EventArgs e)

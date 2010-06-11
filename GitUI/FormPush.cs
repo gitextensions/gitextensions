@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FormPush()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void BrowseSource_Click(object sender, EventArgs e)

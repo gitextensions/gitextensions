@@ -4,6 +4,11 @@ using System.Text;
 using System.Windows.Forms;
 using GitUI.Properties;
 using System.Drawing;
+using ResourceManager;
+using System.ComponentModel;
+using System.Reflection;
+using System.Globalization;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -49,6 +54,39 @@ namespace GitUI
 
             this.CancelButton = cancelButton;
 
+            this.Load += new EventHandler(GitExtensionsForm_Load);
+        }
+
+        private bool translated = false;
+
+        private static bool CheckComponent(object value)
+        {
+            bool isComponentInDesignMode = false;
+            IComponent component = value as IComponent;
+            if (component != null)
+            {
+                ISite site = component.Site;
+                if ((site != null) && site.DesignMode)
+                    isComponentInDesignMode = true;
+            }
+
+            return isComponentInDesignMode;
+        }
+
+        void GitExtensionsForm_Load(object sender, EventArgs e)
+        {
+            // find out if the value is a component and is currently in design mode
+            bool isComponentInDesignMode = CheckComponent(this);
+
+            if (!translated && !isComponentInDesignMode)
+                throw new Exception("The control " + GetType().Name + " is not transated in the constructor. You need to call Translate() right after InitializeComponent().");
+        }
+
+        protected void Translate()
+        {
+            Translator translator = new Translator(GitCommands.Settings.Translation);
+            translator.TranslateControl(this);
+            translated = true;
         }
 
         public virtual void cancelButton_Click(object sender, EventArgs e)

@@ -73,22 +73,22 @@
         <File Source="..\bin\GitExtensionsUserManual.pdf"/>
       </Component>
       <Component Id="GitExtensions.exe" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\GitExtensions.exe"/>
+        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe"/>
       </Component>
       <Component Id="GitCommands.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\GitCommands.dll"/>
+        <File Source="..\GitExtensions\bin\Release\GitCommands.dll"/>
       </Component>
       <Component Id="GitUI.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUI.dll"/>
+        <File Source="..\GitExtensions\bin\Release\GitUI.dll"/>
       </Component>
       <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\ICSharpCode.TextEditor.dll"/>
+        <File Source="..\bin\ICSharpCode.TextEditor.dll"/>
       </Component>
       <Component Id="SpellChecker.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\SpellChecker.dll"/>
+        <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
       </Component>
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
+        <File Source="..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
       </Component>
 
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
@@ -135,10 +135,10 @@
         <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
       </Component>
       <Component Id="Gource.dll" Guid="*">
-        <File Source="..\Plugins\Gource\Gource\bin\Release\Gource.dll"/>
+        <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
       </Component>
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\GitCommands\GitExtensions\bin\Release\ICSharpCode.SharpZipLib.dll"/>
+        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
     </DirectoryRef>
 
@@ -319,6 +319,8 @@
       <ComponentRef Id="AutoCheckForUpdates.dll"/>
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
+      <ComponentRef Id="Gource.dll"/>
+      <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
 
       <ComponentRef Id="gitssh_openssh.reg"/>
       <ComponentRef Id="gitssh_putty.reg"/>

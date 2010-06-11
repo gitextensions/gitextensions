@@ -11,11 +11,11 @@ using System.Collections.Specialized;
 
 namespace GitUI
 {
-    public partial class FileStatusList : UserControl
+    public partial class FileStatusList : GitExtensionsControl
     {
         public FileStatusList()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
             FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);

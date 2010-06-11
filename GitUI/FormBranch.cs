@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormBranch()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void Ok_Click(object sender, EventArgs e)

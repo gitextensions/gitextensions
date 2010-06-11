@@ -10,11 +10,14 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public partial class DashboardItem : UserControl
+    public partial class DashboardItem : GitExtensionsControl
     {
         public DashboardItem(Repository repository)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
+
+            if (repository == null)
+                return;
 
             Bitmap icon = null;
             if (repository.RepositoryType == RepositoryType.RssFeed)
@@ -29,14 +32,14 @@ namespace GitUI
 
         public DashboardItem(Bitmap icon, string title)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Initialize(icon, title, title, null);
         }
 
         public DashboardItem(Bitmap icon, string title, string text)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Initialize(icon, title, title, text);
         }

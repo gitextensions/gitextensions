@@ -53,10 +53,10 @@
             this.Title.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Title.Location = new System.Drawing.Point(22, 2);
             this.Title.Name = "Title";
-            this.Title.Size = new System.Drawing.Size(35, 13);
+            this.Title.Size = new System.Drawing.Size(49, 13);
             this.Title.TabIndex = 1;
             this.Title.TabStop = true;
-            this.Title.Text = "label1";
+            this.Title.Text = "##label1";
             this.Title.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             this.Title.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             // 
@@ -66,9 +66,9 @@
             this.Description.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Description.Location = new System.Drawing.Point(25, 22);
             this.Description.Name = "Description";
-            this.Description.Size = new System.Drawing.Size(24, 13);
+            this.Description.Size = new System.Drawing.Size(38, 13);
             this.Description.TabIndex = 3;
-            this.Description.Text = "text";
+            this.Description.Text = "##text";
             this.Description.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             this.Description.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             // 

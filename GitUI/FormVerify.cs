@@ -6,18 +6,20 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormVerify : GitExtensionsForm
     {
-        System.ComponentModel.ComponentResourceManager resources;
-
+        TranslationString removeDanglingObjectsQuestion = new TranslationString("Are you sure you want to delete all dangling objects?");
+        TranslationString removeDanglingObjectsCaption = new TranslationString("Remove");
+        TranslationString xTagsCreated = new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
+       
+        
         public FormVerify()
         {
-            resources = new ComponentResourceManager(typeof(FormVerify));
-
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormVerify_Shown(object sender, EventArgs e)
@@ -110,7 +112,7 @@ namespace GitUI
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(resources.GetString("msg:remove"), "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(removeDanglingObjectsQuestion.Text, removeDanglingObjectsCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 new FormProcess("prune");
                 FormVerify_Shown(null, null);
@@ -164,7 +166,7 @@ namespace GitUI
                 }
             }
 
-            MessageBox.Show(string.Format(resources.GetString("msg:tags created"), currentTag), "Tags created");
+            MessageBox.Show(string.Format(xTagsCreated.Text, currentTag), "Tags created");
         }
 
         private void button3_Click(object sender, EventArgs e)
