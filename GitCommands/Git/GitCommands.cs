@@ -1443,7 +1443,7 @@ namespace GitCommands
 
         static public ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig");
+            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + "\\.gitconfig");
         }
 
         public string GetGlobalSetting(string setting)
