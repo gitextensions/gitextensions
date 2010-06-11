@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace GitUI
 {
-    public partial class Gravatar : UserControl
+    public partial class Gravatar : GitExtensionsControl
     {
         private readonly SynchronizationContext syncContext;
 
@@ -22,7 +22,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             imgGravatar.Visible = false;
         }

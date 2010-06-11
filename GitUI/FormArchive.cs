@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormArchive()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void FormArchive_FormClosing(object sender, FormClosingEventArgs e)

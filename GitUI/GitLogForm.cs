@@ -14,7 +14,7 @@ namespace GitUI
     {
         public GitLogForm()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void GitLogForm_FormClosing(object sender, FormClosingEventArgs e)

@@ -9,7 +9,7 @@ using System.IO;
 
 namespace GitUI
 {
-    public partial class EditNetSpell : UserControl
+    public partial class EditNetSpell : GitExtensionsControl
     {
         private NetSpell.SpellChecker.Spelling spelling;
         private NetSpell.SpellChecker.Dictionary.WordDictionary wordDictionary;
@@ -18,9 +18,11 @@ namespace GitUI
 
         public EditNetSpell()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             customUnderlines = new CustomPaintTextBox(TextBox);
+            
+            SpellCheckTimer.Enabled = false;
         }
 
         public void SetEmptyMessage(string message)
@@ -107,9 +109,12 @@ namespace GitUI
             customUnderlines.Lines.Clear();
             try
             {
-                this.spelling.Text = this.TextBox.Text;
-                this.spelling.ShowDialog = false;
-                this.spelling.SpellCheck();
+                if (this.spelling != null)
+                {
+                    this.spelling.Text = this.TextBox.Text;
+                    this.spelling.ShowDialog = false;
+                    this.spelling.SpellCheck();
+                }
             }
             catch
             {

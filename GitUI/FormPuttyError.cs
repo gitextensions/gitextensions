@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormPuttyError()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

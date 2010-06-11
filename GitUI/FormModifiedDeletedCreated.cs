@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormModifiedDeletedCreated()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Aborted = true;
         }
 

@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormDashboardCategoryTitle()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public string GetTitle()

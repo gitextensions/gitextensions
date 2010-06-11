@@ -16,14 +16,14 @@ namespace GitUI
     {
         public FormDiff()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
         }
 
         public FormDiff(GitRevision revision)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             
 
             RevisionGrid.SetSelectedRevision( revision);

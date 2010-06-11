@@ -15,7 +15,7 @@ namespace GitUI
     {
         public FormResolveConflicts()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
             
             //Solve button is disabled for now

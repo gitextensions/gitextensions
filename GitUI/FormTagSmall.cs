@@ -13,7 +13,7 @@ namespace GitUI
     {
         public FormTagSmall()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public GitRevision Revision { get; set; }

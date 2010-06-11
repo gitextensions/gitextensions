@@ -12,7 +12,7 @@ namespace GitUI
     {
         public FormEdit(string text)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Viewer.ViewText("", text);
         }
 

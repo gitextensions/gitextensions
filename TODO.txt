@@ -5,8 +5,6 @@ TODO:
 
 -Renamed items show as deleted/new in the commit dialog. It should be possible to detect renames there.
 
--Add seach function and line numbers to blame view
-
 -Improve Visual Studio intergration
 	-Command bar is repositionized every time visual studio is started
 

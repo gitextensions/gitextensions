@@ -11,11 +11,11 @@ using System.Text.RegularExpressions;
 
 namespace GitUI
 {
-    public partial class Dashboard : UserControl
+    public partial class Dashboard : GitExtensionsControl
     {
         public Dashboard()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
             RecentRepositories.DisableContextMenu();

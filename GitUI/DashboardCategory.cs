@@ -9,16 +9,16 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class DashboardCategory : UserControl
+    public partial class DashboardCategory : GitExtensionsControl
     {
         public DashboardCategory()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public DashboardCategory(string title, RepositoryCategory repositoryCategory)
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             this.Title = title;
             this.RepositoryCategory = repositoryCategory;

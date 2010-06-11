@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -17,7 +18,7 @@ namespace GitUI
     {
         public FormSettings()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
 
         }
@@ -73,65 +74,71 @@ namespace GitUI
             try
             {
                 if (GitCommands.Settings.Encoding.GetType() == typeof(ASCIIEncoding))
-                    Encoding.Text = "ASCII";
+                    _Encoding.Text = "ASCII";
                 else
                     if (GitCommands.Settings.Encoding.GetType() == typeof(UnicodeEncoding))
-                        Encoding.Text = "Unicode";
+                        _Encoding.Text = "Unicode";
                     else
                         if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                            Encoding.Text = "UTF7";
+                            _Encoding.Text = "UTF7";
                         else
                             if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                                Encoding.Text = "UTF8";
+                                _Encoding.Text = "UTF8";
                             else
                                 if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                                    Encoding.Text = "UTF32";
+                                    _Encoding.Text = "UTF32";
                                 else
                                     if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                                        Encoding.Text = "Default";
+                                        _Encoding.Text = "Default";
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
-                DaysToCacheImages.Value = GitCommands.Settings.AuthorImageCacheDays;
+                _DaysToCacheImages.Value = GitCommands.Settings.AuthorImageCacheDays;
 
-                authorImageSize.Value = Settings.AuthorImageSize;
+                _authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
+                Language.Items.Clear();
+                Language.Items.Add("English");
+                Language.Items.AddRange(Translator.GetAllTranslations());
+                Language.Text = Settings.Translation;
+
                 MulticolorBranches.Checked = Settings.MulticolorBranches;
-                ColorTagLabel.BackColor = Settings.TagColor;
-                ColorTagLabel.Text = Settings.TagColor.Name;
-                ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorTagLabel.BackColor);
-                ColorBranchLabel.BackColor = Settings.BranchColor;
-                ColorBranchLabel.Text = Settings.BranchColor.Name;
-                ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorBranchLabel.BackColor);
-                ColorRemoteBranchLabel.BackColor = Settings.RemoteBranchColor;
-                ColorRemoteBranchLabel.Text = Settings.RemoteBranchColor.Name;
-                ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemoteBranchLabel.BackColor);
-                ColorOtherLabel.BackColor = Settings.OtherTagColor;
-                ColorOtherLabel.Text = Settings.OtherTagColor.Name;
-                ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorOtherLabel.BackColor);
+
+                _ColorTagLabel.BackColor = Settings.TagColor;
+                _ColorTagLabel.Text = Settings.TagColor.Name;
+                _ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorTagLabel.BackColor);
+                _ColorBranchLabel.BackColor = Settings.BranchColor;
+                _ColorBranchLabel.Text = Settings.BranchColor.Name;
+                _ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorBranchLabel.BackColor);
+                _ColorRemoteBranchLabel.BackColor = Settings.RemoteBranchColor;
+                _ColorRemoteBranchLabel.Text = Settings.RemoteBranchColor.Name;
+                _ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemoteBranchLabel.BackColor);
+                _ColorOtherLabel.BackColor = Settings.OtherTagColor;
+                _ColorOtherLabel.Text = Settings.OtherTagColor.Name;
+                _ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorOtherLabel.BackColor);
 
 
-                ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
-                ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
-                ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
-                ColorAddedLineDiffLabel.BackColor = Settings.DiffAddedExtraColor;
-                ColorAddedLineDiffLabel.Text = Settings.DiffAddedExtraColor.Name;
-                ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineDiffLabel.BackColor);
+                _ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
+                _ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
+                _ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineLabel.BackColor);
+                _ColorAddedLineDiffLabel.BackColor = Settings.DiffAddedExtraColor;
+                _ColorAddedLineDiffLabel.Text = Settings.DiffAddedExtraColor.Name;
+                _ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineDiffLabel.BackColor);
 
-                ColorRemovedLine.BackColor = Settings.DiffRemovedColor;
-                ColorRemovedLine.Text = Settings.DiffRemovedColor.Name;
-                ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLine.BackColor);
-                ColorRemovedLineDiffLabel.BackColor = Settings.DiffRemovedExtraColor;
-                ColorRemovedLineDiffLabel.Text = Settings.DiffRemovedExtraColor.Name;
-                ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLineDiffLabel.BackColor);
-                ColorSectionLabel.BackColor = Settings.DiffSectionColor;
-                ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
-                ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
+                _ColorRemovedLine.BackColor = Settings.DiffRemovedColor;
+                _ColorRemovedLine.Text = Settings.DiffRemovedColor.Name;
+                _ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemovedLine.BackColor);
+                _ColorRemovedLineDiffLabel.BackColor = Settings.DiffRemovedExtraColor;
+                _ColorRemovedLineDiffLabel.Text = Settings.DiffRemovedExtraColor.Name;
+                _ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemovedLineDiffLabel.BackColor);
+                _ColorSectionLabel.BackColor = Settings.DiffSectionColor;
+                _ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
+                _ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorSectionLabel.BackColor);
 
                 SmtpServer.Text = GitCommands.Settings.Smtp;
 
-                MaxCommits.Value = GitCommands.Settings.MaxCommits;
+                _MaxCommits.Value = GitCommands.Settings.MaxCommits;
 
                 GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
@@ -230,13 +237,14 @@ namespace GitUI
         {
             GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
 
-            if ((int)authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
+            if ((int)_authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
             {
-                GitCommands.Settings.AuthorImageSize = (int)authorImageSize.Value;
+                GitCommands.Settings.AuthorImageSize = (int)_authorImageSize.Value;
                 Gravatar.ClearImageCache();
             }
+            GitCommands.Settings.Translation = Language.Text;
 
-            GitCommands.Settings.AuthorImageCacheDays = (int)DaysToCacheImages.Value;
+            GitCommands.Settings.AuthorImageCacheDays = (int)_DaysToCacheImages.Value;
 
             GitCommands.Settings.Smtp = SmtpServer.Text;
 
@@ -254,45 +262,46 @@ namespace GitUI
 
             GitCommands.Settings.Dictionary = Dictionary.Text;
 
-            GitCommands.Settings.MaxCommits = (int)MaxCommits.Value;
+            GitCommands.Settings.MaxCommits = (int)_MaxCommits.Value;
 
             GitCommands.Settings.Plink = PlinkPath.Text;
             GitCommands.Settings.Puttygen = PuttygenPath.Text;
             GitCommands.Settings.Pageant = PageantPath.Text;
             GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
 
-            if (string.IsNullOrEmpty(Encoding.Text) || Encoding.Text.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+            if (string.IsNullOrEmpty(_Encoding.Text) || _Encoding.Text.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
             else
-                if (Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                if (_Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
                     GitCommands.Settings.Encoding = new ASCIIEncoding();
                 else
-                    if (Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                    if (_Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
                         GitCommands.Settings.Encoding = new UnicodeEncoding();
                     else
-                        if (Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                        if (_Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
                             GitCommands.Settings.Encoding = new UTF7Encoding();
                         else
-                            if (Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                            if (_Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
                                 GitCommands.Settings.Encoding = new UTF8Encoding(false);
                             else
-                                if (Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                                if (_Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
                                     GitCommands.Settings.Encoding = new UTF32Encoding(true, false);
                                 else
                                     GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
-            Settings.MulticolorBranches = MulticolorBranches.Checked;
-            Settings.TagColor = ColorTagLabel.BackColor;
-            Settings.BranchColor = ColorBranchLabel.BackColor;
-            Settings.RemoteBranchColor = ColorRemoteBranchLabel.BackColor;
-            Settings.OtherTagColor = ColorOtherLabel.BackColor;
 
-            Settings.DiffAddedColor = ColorAddedLineLabel.BackColor;
-            Settings.DiffRemovedColor = ColorRemovedLine.BackColor;
-            Settings.DiffAddedExtraColor = ColorAddedLineDiffLabel.BackColor;
-            Settings.DiffRemovedExtraColor = ColorRemovedLineDiffLabel.BackColor;
+            Settings.MulticolorBranches = MulticolorBranches.Checked;		
+            Settings.TagColor = _ColorTagLabel.BackColor;
+            Settings.BranchColor = _ColorBranchLabel.BackColor;
+            Settings.RemoteBranchColor = _ColorRemoteBranchLabel.BackColor;
+            Settings.OtherTagColor = _ColorOtherLabel.BackColor;
 
-            Settings.DiffSectionColor = ColorSectionLabel.BackColor;
+            Settings.DiffAddedColor = _ColorAddedLineLabel.BackColor;
+            Settings.DiffRemovedColor = _ColorRemovedLine.BackColor;
+            Settings.DiffAddedExtraColor = _ColorAddedLineDiffLabel.BackColor;
+            Settings.DiffRemovedExtraColor = _ColorRemovedLineDiffLabel.BackColor;
+
+            Settings.DiffSectionColor = _ColorSectionLabel.BackColor;
 
             if (DefaultIcon.Checked)
                 GitCommands.Settings.IconColor = "default";
@@ -1430,93 +1439,93 @@ namespace GitUI
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorAddedLineDiffLabel.BackColor;
+            colorDialog.Color = _ColorAddedLineDiffLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
-            ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
-            ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineDiffLabel.BackColor);
+            _ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
+            _ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
+            _ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineDiffLabel.BackColor);
         }
 
 
         private void label28_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorAddedLineLabel.BackColor;
+            colorDialog.Color = _ColorAddedLineLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorAddedLineLabel.BackColor = colorDialog.Color;
-            ColorAddedLineLabel.Text = colorDialog.Color.Name;
-            ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorAddedLineLabel.BackColor);
+            _ColorAddedLineLabel.BackColor = colorDialog.Color;
+            _ColorAddedLineLabel.Text = colorDialog.Color.Name;
+            _ColorAddedLineLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineLabel.BackColor);
         }
 
         private void ColorRemovedLineDiffLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorRemovedLineDiffLabel.BackColor;
+            colorDialog.Color = _ColorRemovedLineDiffLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
-            ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
-            ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLineDiffLabel.BackColor);
+            _ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
+            _ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
+            _ColorRemovedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemovedLineDiffLabel.BackColor);
 
         }
 
         private void ColorRemovedLine_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorRemovedLine.BackColor;
+            colorDialog.Color = _ColorRemovedLine.BackColor;
             colorDialog.ShowDialog();
-            ColorRemovedLine.BackColor = colorDialog.Color;
-            ColorRemovedLine.Text = colorDialog.Color.Name;
-            ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemovedLine.BackColor);
+            _ColorRemovedLine.BackColor = colorDialog.Color;
+            _ColorRemovedLine.Text = colorDialog.Color.Name;
+            _ColorRemovedLine.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemovedLine.BackColor);
         }
 
         private void ColorSectionLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorSectionLabel.BackColor;
+            colorDialog.Color = _ColorSectionLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorSectionLabel.BackColor = colorDialog.Color;
-            ColorSectionLabel.Text = colorDialog.Color.Name;
-            ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorSectionLabel.BackColor);
+            _ColorSectionLabel.BackColor = colorDialog.Color;
+            _ColorSectionLabel.Text = colorDialog.Color.Name;
+            _ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorSectionLabel.BackColor);
         }
 
         private void ColorTagLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorTagLabel.BackColor;
+            colorDialog.Color = _ColorTagLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorTagLabel.BackColor = colorDialog.Color;
-            ColorTagLabel.Text = colorDialog.Color.Name;
-            ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorTagLabel.BackColor);
+            _ColorTagLabel.BackColor = colorDialog.Color;
+            _ColorTagLabel.Text = colorDialog.Color.Name;
+            _ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorTagLabel.BackColor);
         }
 
         private void ColorBranchLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorBranchLabel.BackColor;
+            colorDialog.Color = _ColorBranchLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorBranchLabel.BackColor = colorDialog.Color;
-            ColorBranchLabel.Text = colorDialog.Color.Name;
-            ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorBranchLabel.BackColor);
+            _ColorBranchLabel.BackColor = colorDialog.Color;
+            _ColorBranchLabel.Text = colorDialog.Color.Name;
+            _ColorBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorBranchLabel.BackColor);
         }
 
         private void ColorRemoteBranchLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorRemoteBranchLabel.BackColor;
+            colorDialog.Color = _ColorRemoteBranchLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorRemoteBranchLabel.BackColor = colorDialog.Color;
-            ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
-            ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorRemoteBranchLabel.BackColor);
+            _ColorRemoteBranchLabel.BackColor = colorDialog.Color;
+            _ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
+            _ColorRemoteBranchLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorRemoteBranchLabel.BackColor);
         }
 
         private void ColorOtherLabel_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = ColorOtherLabel.BackColor;
+            colorDialog.Color = _ColorOtherLabel.BackColor;
             colorDialog.ShowDialog();
-            ColorOtherLabel.BackColor = colorDialog.Color;
-            ColorOtherLabel.Text = colorDialog.Color.Name;
-            ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(ColorOtherLabel.BackColor);
+            _ColorOtherLabel.BackColor = colorDialog.Color;
+            _ColorOtherLabel.Text = colorDialog.Color.Name;
+            _ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorOtherLabel.BackColor);
        }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

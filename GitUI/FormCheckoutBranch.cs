@@ -14,7 +14,7 @@ namespace GitUI
     {
         public FormCheckoutBranch()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
 
             Initialize();
         }

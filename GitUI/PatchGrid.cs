@@ -9,11 +9,11 @@ using PatchApply;
 
 namespace GitUI
 {
-    public partial class PatchGrid : UserControl
+    public partial class PatchGrid : GitExtensionsControl
     {
         public PatchGrid()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
             Patches.CellPainting += new DataGridViewCellPaintingEventHandler(Patches_CellPainting);
         }
 

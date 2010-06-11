@@ -17,7 +17,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         ~FormCommitCount()

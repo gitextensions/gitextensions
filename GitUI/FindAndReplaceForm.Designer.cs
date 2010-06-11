@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindAndReplaceForm));
             this.label1 = new System.Windows.Forms.Label();
             this.lblReplaceWith = new System.Windows.Forms.Label();
             this.txtLookFor = new System.Windows.Forms.TextBox();
@@ -187,7 +186,6 @@
             this.Controls.Add(this.lblReplaceWith);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindAndReplaceForm";
