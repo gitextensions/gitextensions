@@ -34,8 +34,8 @@
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.Workingdir = new System.Windows.Forms.ToolStripSplitButton();
-            this.CurrentBranch = new System.Windows.Forms.ToolStripButton();
+            this._Workingdir = new System.Windows.Forms.ToolStripSplitButton();
+            this._CurrentBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
             this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -198,8 +198,8 @@
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
             this.toolStripLabel1,
-            this.Workingdir,
-            this.CurrentBranch,
+            this._Workingdir,
+            this._CurrentBranch,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
             this.toolStripButton1,
@@ -235,24 +235,24 @@
             // 
             // Workingdir
             // 
-            this.Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("Workingdir.Image")));
-            this.Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.Workingdir.Name = "Workingdir";
-            this.Workingdir.Size = new System.Drawing.Size(103, 22);
-            this.Workingdir.Text = "WorkingDir";
-            this.Workingdir.ToolTipText = "Change working directory";
-            this.Workingdir.ButtonClick += new System.EventHandler(this.Workingdir_Click_1);
-            this.Workingdir.DropDownOpening += new System.EventHandler(this.Workingdir_DropDownOpening);
+            this._Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("Workingdir.Image")));
+            this._Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._Workingdir.Name = "Workingdir";
+            this._Workingdir.Size = new System.Drawing.Size(103, 22);
+            this._Workingdir.Text = "WorkingDir";
+            this._Workingdir.ToolTipText = "Change working directory";
+            this._Workingdir.ButtonClick += new System.EventHandler(this.Workingdir_Click_1);
+            this._Workingdir.DropDownOpening += new System.EventHandler(this.Workingdir_DropDownOpening);
             // 
             // CurrentBranch
             // 
-            this.CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("CurrentBranch.Image")));
-            this.CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CurrentBranch.Name = "CurrentBranch";
-            this.CurrentBranch.Size = new System.Drawing.Size(67, 22);
-            this.CurrentBranch.Text = "Branch";
-            this.CurrentBranch.ToolTipText = "Switch branch";
-            this.CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click_1);
+            this._CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("CurrentBranch.Image")));
+            this._CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._CurrentBranch.Name = "CurrentBranch";
+            this._CurrentBranch.Size = new System.Drawing.Size(67, 22);
+            this._CurrentBranch.Text = "Branch";
+            this._CurrentBranch.ToolTipText = "Switch branch";
+            this._CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click_1);
             // 
             // toolStripSeparator1
             // 
@@ -1306,8 +1306,8 @@
         private System.Windows.Forms.ToolStrip ToolStrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripSplitButton Workingdir;
-        private System.Windows.Forms.ToolStripButton CurrentBranch;
+        private System.Windows.Forms.ToolStripSplitButton _Workingdir;
+        private System.Windows.Forms.ToolStripButton _CurrentBranch;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton GitBash;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

@@ -135,9 +135,10 @@ namespace GitUI
                     foreach (Type type in assembly.GetTypes())
                     {
                         if (typeof(GitExtensionsControl).IsAssignableFrom(type) ||
-                            typeof(GitExtensionsForm).IsAssignableFrom(type))
+                            typeof(GitExtensionsForm).IsAssignableFrom(type) ||
+                            typeof(ITranslate).IsAssignableFrom(type))
                         {
-                            Control control = null;
+                            object control = null;
 
 
                             if (type == this.GetType())
@@ -147,7 +148,7 @@ namespace GitUI
                                 foreach (ConstructorInfo constructor in type.GetConstructors())
                                 {
                                     if (constructor.GetParameters().Length == 0)
-                                        control = (Control)Activator.CreateInstance(type);
+                                        control = (object)Activator.CreateInstance(type);
                                 }
 
                             if (control == null && type.GetConstructors().Length > 0)
@@ -156,18 +157,25 @@ namespace GitUI
                                 List<object> parameters = new List<object>(parameterConstructor.GetParameters().Length);
                                 for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
                                     parameters.Add(null);
-                                control = (Control)parameterConstructor.Invoke(parameters.ToArray());
+                                control = (object)parameterConstructor.Invoke(parameters.ToArray());
                             }
 
                             if (control == null)
                                 continue;
 
-                            if (control is Form && !string.IsNullOrEmpty(control.Name))
-                            {
-                                if (!translateCategories.Items.Contains(control.Name))
-                                    translateCategories.Items.Add(control.Name);
+                            string name;
 
-                                AddTranslationItem(control.Name, "$this", "Text", ((Form)control).Text);
+                            if (control is Control)
+                                name = ((Control)control).Name;
+                            else
+                                name = control.GetType().Name;
+                            
+                            if (control is Form && !string.IsNullOrEmpty(name))
+                            {
+                                if (!translateCategories.Items.Contains(name))
+                                    translateCategories.Items.Add(name);
+
+                                AddTranslationItem(name, "$this", "Text", ((Form)control).Text);
                             }
 
                             foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
@@ -178,7 +186,7 @@ namespace GitUI
                                     continue;
 
                                 Component component = fieldInfo.GetValue(control) as Component;
-
+                                
                                 if (component != null)
                                 {
                                     foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -190,7 +198,7 @@ namespace GitUI
                                             //Only translate properties that have a neutral value
                                             if (!string.IsNullOrEmpty(value))
                                             {
-                                                AddTranslationItem(control.Name, fieldInfo.Name, propertyInfo.Name, value);
+                                                AddTranslationItem(name, fieldInfo.Name, propertyInfo.Name, value);
                                             }
                                         }
 

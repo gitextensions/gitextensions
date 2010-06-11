@@ -30,13 +30,6 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormChangeLog1">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Wijzigingen logboek</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FindAndReplaceForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -427,18 +420,6 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="ToolTipText">
           <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="Workingdir" Property="Text">
-          <Value>Werk directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="Workingdir" Property="ToolTipText">
-          <Value>Wijzig werk directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="CurrentBranch" Property="Text">
-          <Value>Vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="CurrentBranch" Property="ToolTipText">
-          <Value>Vertakking uitchecken</Value>
         </TranslationItem>
         <TranslationItem Name="GitBash" Property="ToolTipText">
           <Value>Git bash</Value>
@@ -1181,7 +1162,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>Commit ongedaan maken</Value>
         </TranslationItem>
         <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
-          <Value>Toon rivisie grafiek</Value>
+          <Value>Toon revisie grafiek</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>De huidige werk directorie is geen git opslagplaats</Value>
@@ -1224,6 +1205,15 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="commitDate" Property="Text">
           <Value>Commit datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="graphCaption" Property="Text">
+          <Value>Grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageCaption" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorCaption" Property="Text">
+          <Value>Auteur</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1951,7 +1941,7 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
           <Value>Terugzetten</Value>
         </TranslationItem>
         <TranslationItem Name="ResetChanges" Property="Text">
-          <Value>Verwijder bestands wijzigingen</Value>
+          <Value>Wijzigingen ongedaan maken</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Verwijder bestand</Value>
@@ -1966,10 +1956,10 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
           <Value>Verwijder geselecteerde bestanden</Value>
         </TranslationItem>
         <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
-          <Value>Reset geselecteerde bestanden</Value>
+          <Value>Wijzigingen in geselecteerde bestanden ongedaan maken</Value>
         </TranslationItem>
         <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
-          <Value>Reset alle (gevolgde) wijzigingen.</Value>
+          <Value>Wijzigingen in alle bestanden ongedaan maken.</Value>
         </TranslationItem>
         <TranslationItem Name="eToolStripMenuItem" Property="Text">
           <Value>Wijzig genegeerde bestanden</Value>
@@ -2372,6 +2362,32 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChangeLog1">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Wijzigingen logboek</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Strings">
+      <translationItems>
+        <TranslationItem Name="authorText" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDateText" Property="Text">
+          <Value>Auteur datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerText" Property="Text">
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerDateText" Property="Text">
+          <Value>Commit datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitHashText" Property="Text">
+          <Value>Commit hash</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

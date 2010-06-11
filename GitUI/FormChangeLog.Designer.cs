@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormChangeLog1
+    partial class FormChangeLog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChangeLog1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChangeLog));
             this.ChangeLog = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 

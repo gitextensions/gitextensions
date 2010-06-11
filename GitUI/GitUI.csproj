@@ -186,11 +186,11 @@
     <Compile Include="FormBranchSmall.Designer.cs">
       <DependentUpon>FormBranchSmall.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormChangeLog1.cs">
+    <Compile Include="FormChangeLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormChangeLog1.Designer.cs">
-      <DependentUpon>FormChangeLog1.cs</DependentUpon>
+    <Compile Include="FormChangeLog.Designer.cs">
+      <DependentUpon>FormChangeLog.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCheckout.cs">
       <SubType>Form</SubType>
@@ -583,8 +583,8 @@
       <DependentUpon>FormBranchSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormChangeLog1.resx">
-      <DependentUpon>FormChangeLog1.cs</DependentUpon>
+    <EmbeddedResource Include="FormChangeLog.resx">
+      <DependentUpon>FormChangeLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCheckout.resx">
