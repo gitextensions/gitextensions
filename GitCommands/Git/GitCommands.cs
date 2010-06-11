@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using GitUIPluginInterfaces;
 using System.ComponentModel;
+using ResourceManager.Translation;
 
 namespace GitCommands
 {
@@ -553,7 +554,7 @@ namespace GitCommands
         {
             return RunCmd(Settings.GitCommand, "show " + sha1);
         }
-
+        
         //Cache revision info. This is safe because sha1 keys are hashes
         private static Dictionary<string, string> revisionInfoCache = new Dictionary<string, string>();
         static public string GetCommitInfo(string sha1)
@@ -561,7 +562,7 @@ namespace GitCommands
             if (revisionInfoCache.ContainsKey(sha1))
                 return revisionInfoCache[sha1];
 
-            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"Author:\t\t%aN (%aE)%nAuthor date:\t%ar (%ad)%nCommitter:\t%cN (%cE)%nCommit date:\t%cr (%cd)%nCommit hash:\t%H%n%n%s%n%n%b\" " + sha1);
+            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"" + Strings.GetAutorText() + ":\t\t%aN (%aE)%n" + Strings.GetAuthorDateText() + ":\t%ar (%ad)%n" + Strings.GetCommitterText() + ":\t%cN (%cE)%n" + Strings.GetCommitterDateText() + ":\t%cr (%cd)%n" + Strings.GetCommitHashText() + ":\t%H%n%n%s%n%n%b\" " + sha1);
             if (info.Trim().StartsWith("fatal"))
                 return string.Empty;
 

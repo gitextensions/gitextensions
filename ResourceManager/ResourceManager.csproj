@@ -38,15 +38,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITranslate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Translation\Translation.cs" />
-    <Compile Include="Translation\TranslationCategory.cs" />
-    <Compile Include="Translation\TranslationItem.cs" />
-    <Compile Include="Translation\TranslationSerializer.cs" />
-    <Compile Include="Translation\TranslationString.cs">
+    <Compile Include="Translation.cs" />
+    <Compile Include="TranslationCategory.cs" />
+    <Compile Include="TranslationItem.cs" />
+    <Compile Include="TranslationSerializer.cs" />
+    <Compile Include="TranslationString.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Translation\Translator.cs" />
+    <Compile Include="Translator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

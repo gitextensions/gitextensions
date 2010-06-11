@@ -9,9 +9,9 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public partial class FormChangeLog1 : GitExtensionsForm
+    public partial class FormChangeLog : GitExtensionsForm
     {
-        public FormChangeLog1()
+        public FormChangeLog()
         {
             InitializeComponent(); Translate();
         }
