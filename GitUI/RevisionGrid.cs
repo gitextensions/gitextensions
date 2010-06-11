@@ -38,7 +38,8 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             NormalFont = Revisions.Font;
-            HeadFont = new Font(NormalFont, FontStyle.Bold);
+            HeadFont = NormalFont;
+            RefsFont = NormalFont;
 
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
@@ -286,6 +287,7 @@ namespace GitUI
 
         public Font NormalFont { get; set; }
         public Font HeadFont { get; set; }
+        public Font RefsFont { get; set; }
 
         public event EventHandler SelectionChanged;
 
@@ -344,7 +346,7 @@ namespace GitUI
         }
 
         public int LastScrollPos = 0;
-        public List<int> LastSelectedRows = new List<int>();
+        public List<GitRevision> LastSelectedRows = new List<GitRevision>();
 
         public void ForceRefreshRevisions()
         {
@@ -357,11 +359,17 @@ namespace GitUI
 
                 foreach (DataGridViewRow row in Revisions.SelectedRows)
                 {
-                    LastSelectedRows.Add(row.Index);
+                    LastSelectedRows.Add(GetRevision(row.Index));
                 }
 
                 if (!Settings.ShowRevisionGraph)
-                    Revisions.Columns[0].Width = 0;
+                {
+                    Revisions.Columns[0].Visible = false;
+                }
+                else
+                {
+                    Revisions.Columns[0].Visible = true;
+                }
 
                 Error.Visible = false;
                 NoCommits.Visible = false;
@@ -370,7 +378,6 @@ namespace GitUI
 
                 if (!GitCommands.Settings.ValidWorkingDir())
                 {
-                    Revisions.RowCount = 0;
                     Revisions.ScrollBars = ScrollBars.None;
                     Revisions.Visible = false;
 
@@ -385,13 +392,8 @@ namespace GitUI
                     revisionGraphCommand.Kill();
                 }
 
-                LastRevision = 0;
                 ScrollBarSet = false;
                 Revisions.ClearSelection();
-                Revisions.VirtualMode = true;
-                //Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = 0;
-                Revisions.RowCount = Math.Max(Revisions.DisplayedRowCount(true), GitCommands.Settings.MaxCommits);
 
                 currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
                 ScrollBarSet = false;
@@ -423,19 +425,6 @@ namespace GitUI
                 return;
             }
 
-            int numberOfVisibleRows = Revisions.DisplayedRowCount(true) + 1;
-            int firstVisibleRow = Revisions.FirstDisplayedScrollingRowIndex;
-
-            if (numberOfVisibleRows < 1)
-                numberOfVisibleRows = 20;
-
-            if (LastRevision >= Math.Min(Revisions.RowCount, firstVisibleRow + numberOfVisibleRows))
-            {
-                return;
-            }
-
-            LastRevision = Math.Min(Revisions.RowCount, Math.Max(LastScrollPos + numberOfVisibleRows, Math.Max(firstVisibleRow + numberOfVisibleRows, Math.Max(GitCommands.Settings.MaxCommits, LastRevision * 2))));
-
             Revisions.Enabled = false;
             Loading.Visible = true;
             indexWatcher.Reset();
@@ -445,7 +434,7 @@ namespace GitUI
             revisionGraphCommand.LogParam = LogParam + Filter;
             revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
-            revisionGraphCommand.LimitRevisions = LastRevision;
+            revisionGraphCommand.LimitRevisions = GitCommands.Settings.MaxCommits;
             revisionGraphCommand.Execute();
         }
 
@@ -531,7 +520,6 @@ namespace GitUI
         }
 
         public string currentCheckout { get; set; }
-        private int LastRevision = 0;
         private bool initialLoad = true;
 
         private string GetDateHeaderText()
@@ -577,14 +565,21 @@ namespace GitUI
             {
                 Revisions.ClearSelection();
 
-                if (Revisions.Rows.Count > LastSelectedRows[0])
-                    Revisions.CurrentCell = Revisions.Rows[LastSelectedRows[0]].Cells[0];
+                Revisions.CurrentCell = null;
 
-                foreach (int row in LastSelectedRows)
+                foreach (GitRevision rowItem in LastSelectedRows)
                 {
-                    if (Revisions.Rows.Count > row)
+                    int row = Revisions.FindRow(rowItem.Guid);
+                    if (row >= 0 && Revisions.Rows.Count > row )
                     {
                         Revisions.Rows[row].Selected = true;
+                        if (Revisions.CurrentCell == null)
+                        {
+                            // Set the current cell to the first item. We use cell
+                            // 1 because cell 0 could be hidden if they've chosen to
+                            // not see the graph
+                            Revisions.CurrentCell = Revisions.Rows[row].Cells[1];
+                        }
                     }
                 }
                 LastSelectedRows.Clear();
@@ -630,6 +625,16 @@ namespace GitUI
 
                     e.PaintBackground(e.CellBounds, true);
 
+                    Font rowFont;
+                    if (revision.Guid == currentCheckout)
+                    {
+                        rowFont = HeadFont;
+                    }
+                    else
+                    {
+                        rowFont = NormalFont;
+                    }
+
                     if (column == 1)
                     {
                         float offset = 0;
@@ -639,24 +644,24 @@ namespace GitUI
                             {
                                 SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
 
-                                e.Graphics.DrawString("[" + h.Name + "] ", HeadFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                e.Graphics.DrawString("[" + h.Name + "] ", RefsFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", HeadFont).Width;
+                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", RefsFont).Width;
                             }
                         }
                         string text = revision.Message;
-                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                     }
                     else if (column == 2)
                     {
                         string text = revision.Author;
-                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                     else if (column == 3)
                     {
                         DateTime time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                         string text = TimeToString(time);
-                        e.Graphics.DrawString(text, NormalFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
             }
