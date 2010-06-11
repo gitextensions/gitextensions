@@ -110,6 +110,7 @@ namespace GitUI
 
             MethodInvoker method = new MethodInvoker(delegate()
                 {
+                    JunctionColors.Clear();
                     GraphLanes = newLanes;
                     RowCount = GraphLanes.Count;
                     RebuildGraph();
