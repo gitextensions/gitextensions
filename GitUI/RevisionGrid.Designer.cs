@@ -137,6 +137,7 @@
             this.Message.HeaderText = "Message";
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
+            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Author
             // 
@@ -144,6 +145,7 @@
             this.Author.Name = "Author";
             this.Author.ReadOnly = true;
             this.Author.Width = 150;
+            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Date
             // 
@@ -151,6 +153,7 @@
             this.Date.Name = "Date";
             this.Date.ReadOnly = true;
             this.Date.Width = 180;
+            this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // CreateTag
             // 

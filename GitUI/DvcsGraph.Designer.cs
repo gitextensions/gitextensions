@@ -23,9 +23,10 @@
             // dataGridColumnGraph
             // 
             this.dataGridColumnGraph.Frozen = true;
-            this.dataGridColumnGraph.HeaderText = "Graph";
+            this.dataGridColumnGraph.HeaderText = "";
             this.dataGridColumnGraph.Name = "dataGridColumnGraph";
             this.dataGridColumnGraph.ReadOnly = true;
+            this.dataGridColumnGraph.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridColumnGraph.Width = 70;
             // 
             // DvcsGraph
@@ -54,6 +55,7 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DefaultCellStyle = dataGridViewCellStyle2;
             this.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridColor = System.Drawing.SystemColors.Window;
             this.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
@@ -79,6 +81,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridColumnGraph;
+
 
     }
 }
