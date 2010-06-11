@@ -117,12 +117,18 @@ namespace GitCommands
                             data[lastSection].Add
                             (
                                 m.Groups["Key"].Value, 
-                                m.Groups["Value"].Value
+                                processString(m.Groups["Value"].Value)
                             );
                         }
                     }
                 }
             }
+        }
+
+        private string processString(string value)
+        {
+            // The .gitconfig escapes some character sequences
+            return value.Replace("\\\"", "\"");
         }
 
         private NameValueCollection this[string section]
