@@ -1523,7 +1523,7 @@ namespace GitCommands
             to = FixPath(to);
 
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " --ignore-submodules \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
 
             if (patchManager.patches.Count > 0)
                 return patchManager.patches[0];
