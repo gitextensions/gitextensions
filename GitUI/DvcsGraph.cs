@@ -103,6 +103,20 @@ namespace GitUI
             return row.Node.Id;
         }
 
+        public int FindRow(IComparable aId)
+        {
+            int i;
+            for (i = 0; i < GraphLanes.Count; i++)
+            {
+                if (GraphLanes[i].Node.Id.CompareTo(aId) == 0)
+                {
+                    break;
+                }
+            }
+
+            return (i == GraphLanes.Count ? -1 : i );
+        }
+
         public void SetData(GraphData aData)
         {
             int populate = CurrentRow == null ? 0 : CurrentRow.Index + Height / RowHeight;
@@ -185,21 +199,24 @@ namespace GitUI
 
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
         {
-            // Auto scale width on load
-            int laneCount = 2;
-            if (GraphLanes != null)
+            // Auto scale width on scroll
+            if (dataGridColumnGraph.Visible)
             {
-                int width = 1;
-                int start = FirstDisplayedCell.RowIndex;
-                int stop = start + DisplayedRowCount(true);
-                for (int i = start; i < stop; i++)
+                int laneCount = 2;
+                if (GraphLanes != null)
                 {
-                    width = Math.Max(GraphLanes[i].Count, width);
-                }
+                    int width = 1;
+                    int start = FirstDisplayedCell.RowIndex;
+                    int stop = start + DisplayedRowCount(true);
+                    for (int i = start; i < stop; i++)
+                    {
+                        width = Math.Max(GraphLanes[i].Count, width);
+                    }
 
-                laneCount = Math.Min(Math.Max(laneCount, width), 30);
+                    laneCount = Math.Min(Math.Max(laneCount, width), 30);
+                }
+                dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
             }
-            dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
         }
 
         private Color GetJunctionColor(Junction aJunction)
@@ -449,8 +466,8 @@ namespace GitUI
                         }
                         else
                         {
-                            //brushLine = new SolidBrush(curColor);
-                            brushLine = new SolidBrush(nextColor);
+                            brushLine = new SolidBrush(curColor);
+                            //brushLine = new SolidBrush(nextColor);
                         }
                     }
 
@@ -772,6 +789,7 @@ namespace GitUI
                 return nodes;
             }
 
+            // TopoSorting is an easy way to detect if something has gone wrong with the graph
             public delegate bool Visit(Node n);
             public Node[] TopoSortedNodes()
             {
@@ -846,10 +864,6 @@ namespace GitUI
                     {
                         if (!J.Contains(j))
                         {
-                            // j {13143: 5fc3e67ac0241c491dcf1c0c9dcd4a4d83e7c243--(2)--4a09bc966449ca0a7e9a5bb70f91b47debdd7c4e}
-                            // Child  {5fc3e67ac0241c491dcf1c0c9dcd4a4d83e7c243}
-                            // Parent {4a09bc966449ca0a7e9a5bb70f91b47debdd7c4e}
-                            //Debugger.Break();
                             if (j.Parent != j.Child)
                             {
                                 Console.WriteLine("*** {0} *** {1} {2}", j, Nodes.Count, Junctions.Count);
@@ -916,6 +930,7 @@ namespace GitUI
                 // TODO: If desired, we can pre-load all of the nodes (or at least up to
                 // our current row (by SHA1) in the graph). This would be a great idea if we're on 
                 // a background thread.
+                // Right now, we'll just load everything. Optimize later ;-)
                 while (MoveNext()) ;
             }
 
