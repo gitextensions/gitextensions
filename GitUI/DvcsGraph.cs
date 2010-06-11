@@ -1197,24 +1197,31 @@ namespace GitUI
                 // Make sure that lanes that have been merged are active and the branched 
                 // lanes are cleared. Also remove any empty lanes from LaneNodes
                 #region Keep merge active & cleanup LaneNodes
-                int curLaneCount = Math.Max(currentRow.NodeLane, currentRow.Count);
-                for (int curLane = 0; curLane <= curLaneCount; curLane++)
+                Action<int> shiftLane = delegate(int idx)
                 {
-                    if (currentRow[curLane].Length == 1)
+                    if (currentRow[idx].Length == 1)
                     {
-                        int rowLane = currentRow[curLane][0];
-                        if (rowLane != curLane)
+                        int rowLane = currentRow[idx][0];
+                        if (rowLane != idx)
                         {
                             // We've pointed to the lane that has a node. That means this is a branch 
                             // from that lane. Keep the branch alive in it's new lane
-                            currentRow[rowLane] = new LaneRow.LaneInfo[1] { currentRow[curLane][0] };
-                            currentRow[curLane] = new LaneRow.LaneInfo[0];
+                            currentRow[rowLane] = new LaneRow.LaneInfo[1] { currentRow[idx][0] };
+                            currentRow[idx] = new LaneRow.LaneInfo[0];
                         }
                     }
-                    else if (currentRow[curLane].Length == 2)
+                };
+                int curLaneCount = Math.Max(currentRow.NodeLane, currentRow.Count);
+                for (int curLane = 0; curLane <= curLaneCount; curLane++)
+                {
+                    shiftLane(curLane);
+                    if (currentRow[curLane].Length == 2)
                     {
                         LaneRow.LaneInfo[] mergeLanes = currentRow[curLane];
+
+                        shiftLane(mergeLanes[0]);
                         currentRow[mergeLanes[0]] = new LaneRow.LaneInfo[1] { mergeLanes[0] };
+                        shiftLane(mergeLanes[1]);
                         currentRow[mergeLanes[1]] = new LaneRow.LaneInfo[1] { mergeLanes[1] };
 
                         // This lane just did a merge. Mark both merge lanes as active
