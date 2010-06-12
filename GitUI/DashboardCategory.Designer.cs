@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Caption = new System.Windows.Forms.Label();
+            this._Caption = new System.Windows.Forms.Label();
             this.CategoryContextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,15 +40,15 @@
             // 
             // Caption
             // 
-            this.Caption.AutoSize = true;
-            this.Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
-            this.Caption.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.Caption.Location = new System.Drawing.Point(3, 2);
-            this.Caption.Name = "Caption";
-            this.Caption.Size = new System.Drawing.Size(58, 17);
-            this.Caption.TabIndex = 8;
-            this.Caption.Text = "##Title";
+            this._Caption.AutoSize = true;
+            this._Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
+            this._Caption.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this._Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this._Caption.Location = new System.Drawing.Point(3, 2);
+            this._Caption.Name = "Caption";
+            this._Caption.Size = new System.Drawing.Size(58, 17);
+            this._Caption.TabIndex = 8;
+            this._Caption.Text = "##Title";
             // 
             // CategoryContextMenuStrip1
             // 
@@ -92,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.Caption);
+            this.Controls.Add(this._Caption);
             this.Name = "DashboardCategory";
             this.Size = new System.Drawing.Size(716, 225);
             this.SizeChanged += new System.EventHandler(this.DashboardCategory_SizeChanged);
@@ -104,7 +104,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label Caption;
+        private System.Windows.Forms.Label _Caption;
         private System.Windows.Forms.ContextMenuStrip CategoryContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;

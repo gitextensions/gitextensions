@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.BranchInfo = new System.Windows.Forms.Label();
-            this.Commit = new System.Windows.Forms.Label();
-            this.Author = new System.Windows.Forms.Label();
-            this.Message = new System.Windows.Forms.Label();
-            this.Date = new System.Windows.Forms.Label();
+            this._BranchInfo = new System.Windows.Forms.Label();
+            this._Commit = new System.Windows.Forms.Label();
+            this._Author = new System.Windows.Forms.Label();
+            this._Message = new System.Windows.Forms.Label();
+            this._Date = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Hard = new System.Windows.Forms.RadioButton();
             this.Mixed = new System.Windows.Forms.RadioButton();
@@ -44,48 +44,48 @@
             // 
             // BranchInfo
             // 
-            this.BranchInfo.AutoSize = true;
-            this.BranchInfo.Location = new System.Drawing.Point(13, 13);
-            this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(81, 13);
-            this.BranchInfo.TabIndex = 0;
-            this.BranchInfo.Text = "##Reset {0} to:";
+            this._BranchInfo.AutoSize = true;
+            this._BranchInfo.Location = new System.Drawing.Point(13, 13);
+            this._BranchInfo.Name = "BranchInfo";
+            this._BranchInfo.Size = new System.Drawing.Size(81, 13);
+            this._BranchInfo.TabIndex = 0;
+            this._BranchInfo.Text = "##Reset {0} to:";
             // 
             // Commit
             // 
-            this.Commit.AutoSize = true;
-            this.Commit.Location = new System.Drawing.Point(31, 34);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(75, 13);
-            this.Commit.TabIndex = 1;
-            this.Commit.Text = "##Commit: {0}";
+            this._Commit.AutoSize = true;
+            this._Commit.Location = new System.Drawing.Point(31, 34);
+            this._Commit.Name = "Commit";
+            this._Commit.Size = new System.Drawing.Size(75, 13);
+            this._Commit.TabIndex = 1;
+            this._Commit.Text = "##Commit: {0}";
             // 
             // Author
             // 
-            this.Author.AutoSize = true;
-            this.Author.Location = new System.Drawing.Point(31, 57);
-            this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(72, 13);
-            this.Author.TabIndex = 2;
-            this.Author.Text = "##Author: {0}";
+            this._Author.AutoSize = true;
+            this._Author.Location = new System.Drawing.Point(31, 57);
+            this._Author.Name = "Author";
+            this._Author.Size = new System.Drawing.Size(72, 13);
+            this._Author.TabIndex = 2;
+            this._Author.Text = "##Author: {0}";
             // 
             // Message
             // 
-            this.Message.AutoSize = true;
-            this.Message.Location = new System.Drawing.Point(31, 106);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(84, 13);
-            this.Message.TabIndex = 3;
-            this.Message.Text = "##Message: {0}";
+            this._Message.AutoSize = true;
+            this._Message.Location = new System.Drawing.Point(31, 106);
+            this._Message.Name = "Message";
+            this._Message.Size = new System.Drawing.Size(84, 13);
+            this._Message.TabIndex = 3;
+            this._Message.Text = "##Message: {0}";
             // 
             // Date
             // 
-            this.Date.AutoSize = true;
-            this.Date.Location = new System.Drawing.Point(31, 82);
-            this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(99, 13);
-            this.Date.TabIndex = 4;
-            this.Date.Text = "##Commit date: {0}";
+            this._Date.AutoSize = true;
+            this._Date.Location = new System.Drawing.Point(31, 82);
+            this._Date.Name = "Date";
+            this._Date.Size = new System.Drawing.Size(99, 13);
+            this._Date.TabIndex = 4;
+            this._Date.Text = "##Commit date: {0}";
             // 
             // groupBox1
             // 
@@ -160,11 +160,11 @@
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Date);
-            this.Controls.Add(this.Message);
-            this.Controls.Add(this.Author);
-            this.Controls.Add(this.Commit);
-            this.Controls.Add(this.BranchInfo);
+            this.Controls.Add(this._Date);
+            this.Controls.Add(this._Message);
+            this.Controls.Add(this._Author);
+            this.Controls.Add(this._Commit);
+            this.Controls.Add(this._BranchInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -181,11 +181,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label BranchInfo;
-        private System.Windows.Forms.Label Commit;
-        private System.Windows.Forms.Label Author;
-        private System.Windows.Forms.Label Message;
-        private System.Windows.Forms.Label Date;
+        private System.Windows.Forms.Label _BranchInfo;
+        private System.Windows.Forms.Label _Commit;
+        private System.Windows.Forms.Label _Author;
+        private System.Windows.Forms.Label _Message;
+        private System.Windows.Forms.Label _Date;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Hard;
         private System.Windows.Forms.RadioButton Mixed;
