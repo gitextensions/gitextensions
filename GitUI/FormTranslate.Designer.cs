@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.saveAs = new System.Windows.Forms.ToolStripButton();
             this.toolStripTranslationLabel = new System.Windows.Forms.ToolStripLabel();
             this.translations = new System.Windows.Forms.ToolStripComboBox();
@@ -58,7 +59,6 @@
             this.googleTranslate = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
-            this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -111,6 +111,16 @@
             this.toolStrip1.Size = new System.Drawing.Size(756, 30);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButtonNew
+            // 
+            this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
+            this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNew.Name = "toolStripButtonNew";
+            this.toolStripButtonNew.Size = new System.Drawing.Size(53, 27);
+            this.toolStripButtonNew.Text = "New";
+            this.toolStripButtonNew.ToolTipText = "Create new translation";
+            this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
             // 
             // saveAs
             // 
@@ -395,16 +405,6 @@
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
-            // 
-            // toolStripButtonNew
-            // 
-            this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
-            this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(53, 27);
-            this.toolStripButtonNew.Text = "New";
-            this.toolStripButtonNew.ToolTipText = "Create new translation";
-            this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
             // 
             // FormTranslate
             // 

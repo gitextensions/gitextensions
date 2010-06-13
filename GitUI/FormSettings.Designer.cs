@@ -189,6 +189,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -418,7 +419,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(8, 175);
+            this.label23.Location = new System.Drawing.Point(8, 174);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(200, 13);
             this.label23.TabIndex = 18;
@@ -614,6 +615,7 @@
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.helpTranslate);
             this.TabPageGitExtensions.Controls.Add(this.Language);
             this.TabPageGitExtensions.Controls.Add(this.label49);
             this.TabPageGitExtensions.Controls.Add(this.label40);
@@ -659,13 +661,13 @@
             "nl-NL"});
             this.Language.Location = new System.Drawing.Point(382, 109);
             this.Language.Name = "Language";
-            this.Language.Size = new System.Drawing.Size(242, 21);
+            this.Language.Size = new System.Drawing.Size(214, 21);
             this.Language.TabIndex = 29;
             // 
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(8, 118);
+            this.label49.Location = new System.Drawing.Point(8, 112);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(134, 13);
             this.label49.TabIndex = 28;
@@ -729,7 +731,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(8, 206);
+            this.label34.Location = new System.Drawing.Point(8, 205);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(295, 13);
             this.label34.TabIndex = 21;
@@ -764,7 +766,7 @@
             this.Dictionary.FormattingEnabled = true;
             this.Dictionary.Location = new System.Drawing.Point(382, 140);
             this.Dictionary.Name = "Dictionary";
-            this.Dictionary.Size = new System.Drawing.Size(242, 21);
+            this.Dictionary.Size = new System.Drawing.Size(214, 21);
             this.Dictionary.TabIndex = 15;
             this.Dictionary.SelectedIndexChanged += new System.EventHandler(this.Dictionary_SelectedIndexChanged);
             this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
@@ -772,7 +774,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(8, 148);
+            this.label22.Location = new System.Drawing.Point(8, 143);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(152, 13);
             this.label22.TabIndex = 14;
@@ -2015,6 +2017,17 @@
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
+            // helpTranslate
+            // 
+            this.helpTranslate.AutoSize = true;
+            this.helpTranslate.Location = new System.Drawing.Point(602, 112);
+            this.helpTranslate.Name = "helpTranslate";
+            this.helpTranslate.Size = new System.Drawing.Size(72, 13);
+            this.helpTranslate.TabIndex = 30;
+            this.helpTranslate.TabStop = true;
+            this.helpTranslate.Text = "Help translate";
+            this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2233,6 +2246,7 @@
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.ComboBox Language;
         private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.LinkLabel helpTranslate;
 
     }
 }
