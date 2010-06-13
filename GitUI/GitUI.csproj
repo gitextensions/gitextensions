@@ -511,6 +511,10 @@
       <DependentUpon>ApplyPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard.nl.resx">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormBrowse.resx">
       <DependentUpon>FormBrowse.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -812,6 +816,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Icons\24.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

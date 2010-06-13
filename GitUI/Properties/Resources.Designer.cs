@@ -88,6 +88,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap _24 {
+            get {
+                object obj = ResourceManager.GetObject("_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap _26 {
             get {
                 object obj = ResourceManager.GetObject("26", resourceCulture);
