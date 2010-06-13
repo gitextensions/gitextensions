@@ -56,11 +56,6 @@ namespace GitUI
         {
             if (dashboard != null)
             {
-                //dashboard.WorkingDirChanged -= dashboard_WorkingDirChanged;
-                //this.splitContainer2.Panel2.Controls.Remove(dashboard);
-                //dashboard.Close();
-                //dashboard.Parent = null;
-                //dashboard.Dispose();
                 dashboard.Visible = false;
             }
         }
@@ -98,6 +93,7 @@ namespace GitUI
             RevisionGrid.ChangedCurrentBranch += RevisionGrid_ChangedCurrentBranch;
             indexWatcher.Reset();
 
+            //Load plugins in plugin menu
             foreach (IGitPlugin plugin in GitUIPluginCollection.Plugins)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem();
@@ -108,6 +104,9 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Execute plugin
+        /// </summary>
         void item_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
@@ -126,17 +125,6 @@ namespace GitUI
         {
             Initialize();
         }
-
-        private void SetIndexDirty()
-        {
-            RefreshButton.Image = Resources.arrow_refresh_dirty;
-        }
-
-        private void SetIndexClean()
-        {
-            RefreshButton.Image = Resources.arrow_refresh;
-        }
-
 
         private ToolStripItem warning;
         private ToolStripItem rebase;
@@ -157,13 +145,16 @@ namespace GitUI
 
         private void InternalInitialize(bool hard)
         {
-            SetIndexClean();
-
             Cursor.Current = Cursors.WaitCursor;
-            string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            _CurrentBranch.Text = selectedHead;
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
+
+            
+            if (validWorkingDir)
+                _CurrentBranch.Text = GitCommands.GitCommands.GetSelectedBranch();
+            else
+                _CurrentBranch.Text = "";
+
             if (validWorkingDir)
                 HideDashboard();
             else
@@ -571,7 +562,6 @@ namespace GitUI
         {
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            SetIndexClean();
             indexWatcher.Reset();
 
             if (dashboard != null)
