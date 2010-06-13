@@ -14,6 +14,11 @@ namespace GitCommands
             translator.TranslateControl(this);
         }
 
+        public static string GetDateText()
+        {
+            return new Strings().dateText.Text;
+        }
+
         public static string GetAutorText()
         {
             return new Strings().authorText.Text;
@@ -39,6 +44,7 @@ namespace GitCommands
             return new Strings().commitHashText.Text;
         }
 
+        private TranslationString dateText = new TranslationString("Date");
         private TranslationString authorText = new TranslationString("Author");
         private TranslationString authorDateText = new TranslationString("Author date");
         private TranslationString committerText = new TranslationString("Committer");

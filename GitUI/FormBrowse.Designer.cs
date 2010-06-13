@@ -144,9 +144,10 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -233,22 +234,22 @@
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(0, 22);
             // 
-            // Workingdir
+            // _Workingdir
             // 
-            this._Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("Workingdir.Image")));
+            this._Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("_Workingdir.Image")));
             this._Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._Workingdir.Name = "Workingdir";
+            this._Workingdir.Name = "_Workingdir";
             this._Workingdir.Size = new System.Drawing.Size(103, 22);
             this._Workingdir.Text = "WorkingDir";
             this._Workingdir.ToolTipText = "Change working directory";
             this._Workingdir.ButtonClick += new System.EventHandler(this.Workingdir_Click_1);
             this._Workingdir.DropDownOpening += new System.EventHandler(this.Workingdir_DropDownOpening);
             // 
-            // CurrentBranch
+            // _CurrentBranch
             // 
-            this._CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("CurrentBranch.Image")));
+            this._CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("_CurrentBranch.Image")));
             this._CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._CurrentBranch.Name = "CurrentBranch";
+            this._CurrentBranch.Name = "_CurrentBranch";
             this._CurrentBranch.Size = new System.Drawing.Size(67, 22);
             this._CurrentBranch.Text = "Branch";
             this._CurrentBranch.ToolTipText = "Switch branch";
@@ -1144,9 +1145,10 @@
             this.userManualToolStripMenuItem,
             this.changelogToolStripMenuItem,
             this.toolStripSeparator3,
+            this.translateToolStripMenuItem,
+            this.toolStripSeparator16,
             this.donateToolStripMenuItem,
-            this.aboutToolStripMenuItem,
-            this.translateToolStripMenuItem});
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -1206,6 +1208,13 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // translateToolStripMenuItem
+            // 
+            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.translateToolStripMenuItem.Text = "Translate";
+            this.translateToolStripMenuItem.Click += new System.EventHandler(this.translateToolStripMenuItem_Click);
+            // 
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
@@ -1214,12 +1223,10 @@
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // translateToolStripMenuItem
+            // toolStripSeparator16
             // 
-            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.translateToolStripMenuItem.Text = "Translate";
-            this.translateToolStripMenuItem.Click += new System.EventHandler(this.translateToolStripMenuItem_Click);
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(188, 6);
             // 
             // FormBrowse
             // 
@@ -1383,5 +1390,6 @@
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     }
 }

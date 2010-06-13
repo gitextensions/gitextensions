@@ -146,51 +146,60 @@ namespace GitUI
         {
             if (Visible)
             {
-                //Make sure the dashboard is only initialized once
-                if (!initialized)
+                try
                 {
-                    //Remove favourites
-                    for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
+                    SuspendLayout();
+
+                    //Make sure the dashboard is only initialized once
+                    if (!initialized)
                     {
-                        if (splitContainer5.Panel2.Controls[i - 1] is DashboardCategory)
-                            splitContainer5.Panel2.Controls.RemoveAt(i - 1);
+                        //Remove favourites
+                        for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
+                        {
+                            if (splitContainer5.Panel2.Controls[i - 1] is DashboardCategory)
+                                splitContainer5.Panel2.Controls.RemoveAt(i - 1);
+                        }
+
+                        //Show favourites
+                        int y = 0;
+                        foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
+                        {
+                            y = AddDashboardEntry(y, entry);
+                        }
+
+                        //Clear buttons
+                        CommonActions.Clear();
+                        DonateCategory.Clear();
+                        //Show buttons
+                        CommonActions.DisableContextMenu();
+                        DashboardItem openItem = new DashboardItem(Resources._40, "Open repository");
+                        openItem.Click += new EventHandler(openItem_Click);
+                        CommonActions.AddItem(openItem);
+                        DashboardItem cloneItem = new DashboardItem(Resources._46, "Clone repository");
+                        cloneItem.Click += new EventHandler(cloneItem_Click);
+                        CommonActions.AddItem(cloneItem);
+                        DashboardItem createItem = new DashboardItem(Resources._14, "Create new repository");
+                        createItem.Click += new EventHandler(createItem_Click);
+                        CommonActions.AddItem(createItem);
+                        DonateCategory.DisableContextMenu();
+                        DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), "Develop");
+                        GitHubItem.Click += new EventHandler(GitHubItem_Click);
+                        DonateCategory.AddItem(GitHubItem);
+                        DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), "Donate");
+                        DonateItem.Click += new EventHandler(DonateItem_Click);
+                        DonateCategory.AddItem(DonateItem);
+
+                        initialized = true;
                     }
 
-                    //Show favourites
-                    int y = 0;
-                    foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
-                    {
-                        y = AddDashboardEntry(y, entry);
-                    }
-                    
-                    //Clear buttons
-                    CommonActions.Clear();
-                    DonateCategory.Clear();
-                    //Show buttons
-                    CommonActions.DisableContextMenu();
-                    DashboardItem openItem = new DashboardItem(Resources._40, "Open repository");
-                    openItem.Click += new EventHandler(openItem_Click);
-                    CommonActions.AddItem(openItem);
-                    DashboardItem cloneItem = new DashboardItem(Resources._46, "Clone repository");
-                    cloneItem.Click += new EventHandler(cloneItem_Click);
-                    CommonActions.AddItem(cloneItem);
-                    DashboardItem createItem = new DashboardItem(Resources._14, "Create new repository");
-                    createItem.Click += new EventHandler(createItem_Click);
-                    CommonActions.AddItem(createItem);                    
-                    DonateCategory.DisableContextMenu();
-                    DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), "Develop");
-                    GitHubItem.Click += new EventHandler(GitHubItem_Click);
-                    DonateCategory.AddItem(GitHubItem);
-                    DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), "Donate");
-                    DonateItem.Click += new EventHandler(DonateItem_Click);
-                    DonateCategory.AddItem(DonateItem);
-
-                    initialized = true;
+                    //Show recent repositories
+                    RecentRepositories.Clear();
+                    RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
                 }
-
-                //Show recent repositories
-                RecentRepositories.Clear();
-                RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+                finally
+                {
+                    ResumeLayout(true);
+                }
             }
         }
 

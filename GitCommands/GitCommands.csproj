@@ -49,6 +49,7 @@
     <Compile Include="CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="ConfigFile.cs" />
+    <Compile Include="Git\GitCommandCache.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="RepositoryCategory.cs" />
     <Compile Include="Diff.cs" />

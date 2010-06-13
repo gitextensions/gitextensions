@@ -284,6 +284,20 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCachableCmd(string cmd, string arguments)
+        {
+            string output;
+            if (GitCommandCache.TryGet(arguments, out output))
+                return output;
+
+            output = RunCmd(cmd, arguments);
+
+            GitCommandCache.Add(arguments, output);
+
+            return output;
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
             string output = "";
@@ -552,42 +566,36 @@ namespace GitCommands
 
         static public string ShowSha1(string sha1)
         {
-            return RunCmd(Settings.GitCommand, "show " + sha1);
+            return RunCachableCmd(Settings.GitCommand, "show " + sha1);
         }
         
-        //Cache revision info. This is safe because sha1 keys are hashes
-        private static Dictionary<string, string> revisionInfoCache = new Dictionary<string, string>();
         static public string GetCommitInfo(string sha1)
         {
-            if (revisionInfoCache.ContainsKey(sha1))
-                return revisionInfoCache[sha1];
-
-            string info = RunCmd(Settings.GitCommand, "show -s --pretty=format:\"" + Strings.GetAutorText() + ":\t\t%aN (%aE)%n" + Strings.GetAuthorDateText() + ":\t%ar (%ad)%n" + Strings.GetCommitterText() + ":\t%cN (%cE)%n" + Strings.GetCommitterDateText() + ":\t%cr (%cd)%n" + Strings.GetCommitHashText() + ":\t%H%n%n%s%n%n%b\" " + sha1);
+            string info = RunCachableCmd(Settings.GitCommand, "show -s --pretty=format:\"" + Strings.GetAutorText() + ":\t\t%aN (%aE)%n" + Strings.GetAuthorDateText() + ":\t%ar (%ad)%n" + Strings.GetCommitterText() + ":\t%cN (%cE)%n" + Strings.GetCommitterDateText() + ":\t%cr (%cd)%n" + Strings.GetCommitHashText() + ":\t%H%n%n%s%n%n%b\" " + sha1);
             if (info.Trim().StartsWith("fatal"))
                 return string.Empty;
 
             info = RemoveRedundancies(info);
-            revisionInfoCache.Add(sha1, info);
             
             return info;
         }
 
         static private string RemoveRedundancies(string info)
         {
-            string author = GetField(info, "Author:");
-            string committer = GetField(info, "Committer:");
+            string author = GetField(info, Strings.GetAutorText() + ":");
+            string committer = GetField(info, Strings.GetCommitterText() + ":");
 
             if (String.Equals(author, committer, StringComparison.CurrentCulture))
             {
-                info = RemoveField(info, "Committer:");
+                info = RemoveField(info, Strings.GetCommitterText() + ":");
             }
 
-            string authorDate = GetField(info, "Author date:");
-            string commitDate = GetField(info, "Commit date:");
+            string authorDate = GetField(info, Strings.GetAuthorDateText() + ":");
+            string commitDate = GetField(info, Strings.GetCommitterDateText() + ":");
 
             if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
             {
-                info = RemoveField(info, "Commit date:").Replace("Author date:\t", "Date:\t\t");
+                info = RemoveField(info, Strings.GetCommitterDateText() + ":").Replace(Strings.GetAuthorDateText() + ":\t", Strings.GetDateText() + ":\t\t");
             }
 
             return info;
@@ -1524,7 +1532,7 @@ namespace GitCommands
             to = FixPath(to);
 
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCachableCmd(Settings.GitCommand, "diff" + extraDiffArguments + " \"" + to + "\" \"" + from + "\" -- \"" + filter + "\""), false);
 
             if (patchManager.patches.Count > 0)
                 return patchManager.patches[0];
@@ -1535,7 +1543,7 @@ namespace GitCommands
         static public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
             PatchManager patchManager = new PatchManager();
-            patchManager.LoadPatch(GitCommands.RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " \"" + from + "\" \"" + to + "\""), false);
+            patchManager.LoadPatch(GitCommands.RunCachableCmd(Settings.GitCommand, "diff" + extraDiffArguments + " \"" + from + "\" \"" + to + "\""), false);
 
             return patchManager.patches;
         }
@@ -1558,7 +1566,7 @@ namespace GitCommands
 
         static public List<GitItemStatus> GetDiffFiles(string from, string to)
         {
-            string result = RunCmd(Settings.GitCommand, "diff --name-status \"" + to + "\" \"" + from + "\"");
+            string result = RunCachableCmd(Settings.GitCommand, "diff --name-status \"" + to + "\" \"" + from + "\"");
 
             string[] files = result.Split('\n');
 
@@ -2321,7 +2329,7 @@ namespace GitCommands
 
         static public List<IGitItem> GetTree(string id)
         {
-            string tree = RunCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
+            string tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
 
             string [] itemsStrings = tree.Split('\n');
 
@@ -2409,13 +2417,13 @@ namespace GitCommands
 
         public static string GetFileRevisionText(string file, string revision)
         {
-            return RunCmd(Settings.GitCommand, "show " + revision + ":\"" + file.Replace('\\', '/') + "\"");
+            return RunCachableCmd(Settings.GitCommand, "show " + revision + ":\"" + file.Replace('\\', '/') + "\"");
         }
 
 
         public static string GetFileText(string id)
         {
-            return RunCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
+            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
         }
 
         public static void StreamCopy(Stream input, Stream output)
