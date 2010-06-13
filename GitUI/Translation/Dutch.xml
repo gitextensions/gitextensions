@@ -1607,11 +1607,32 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         <TranslationItem Name="toolStrip1" Property="Text">
           <Value>toolStrip1</Value>
         </TranslationItem>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>Bewaar vertaling</Value>
+        </TranslationItem>
         <TranslationItem Name="previousButton" Property="Text">
           <Value>&amp;Vorige</Value>
         </TranslationItem>
         <TranslationItem Name="nextButton" Property="Text">
           <Value>&amp;Volgende</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Google Translate</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>Vertaling:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>Taalcode:</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>Google ontbrekende</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>Nieuw</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>Maak een nieuwe vertaling</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2367,4 +2388,5 @@ stash
       </translationItems>
     </TranslationCategory>
   </translationCategories>
+  <LanguageCode>nl</LanguageCode>
 </Translation>

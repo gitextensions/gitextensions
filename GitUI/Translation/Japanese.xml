@@ -52,21 +52,6 @@
     </TranslationCategory>
     <TranslationCategory Name="FormResetCurrentBranch">
       <translationItems>
-        <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>{0}の移動</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>コミット： {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Value>作者： {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Value>メッセージ： {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Value>コミット日時： {0}</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>種類</Value>
         </TranslationItem>
@@ -178,18 +163,6 @@
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Value>コミット</Value>
-        </TranslationItem>
-        <TranslationItem Name="Workingdir" Property="Text">
-          <Value>作業ディレクトリ</Value>
-        </TranslationItem>
-        <TranslationItem Name="Workingdir" Property="ToolTipText">
-          <Value>作業ディレクトリの変更</Value>
-        </TranslationItem>
-        <TranslationItem Name="CurrentBranch" Property="Text">
-          <Value>ブランチ</Value>
-        </TranslationItem>
-        <TranslationItem Name="CurrentBranch" Property="ToolTipText">
-          <Value>ブランチの切替</Value>
         </TranslationItem>
         <TranslationItem Name="EditSettings" Property="ToolTipText">
           <Value>設定</Value>
@@ -766,4 +739,5 @@
       </translationItems>
     </TranslationCategory>
   </translationCategories>
+  <LanguageCode>ja</LanguageCode>
 </Translation>

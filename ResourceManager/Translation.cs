@@ -11,6 +11,8 @@ namespace ResourceManager.Translation
             translationCategories = new List<TranslationCategory>();
         }
 
+        public string LanguageCode { get; set; }
+
         public List<TranslationCategory> translationCategories;
 
         public void AddTranslationCategory(TranslationCategory translationCategory)

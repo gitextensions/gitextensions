@@ -26,6 +26,17 @@ namespace ResourceManager.Translation
             Translator.name = translationName;
         }
 
+        public string LanguageCode
+        {
+            get
+            {
+                if (translation == null)
+                    return null;
+
+                return translation.LanguageCode;
+            }
+        }
+
         public string Name
         {
             get
