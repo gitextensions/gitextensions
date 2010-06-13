@@ -1505,6 +1505,9 @@ repository.</Value>
         <TranslationItem Name="label49" Property="Text">
           <Value>Taal (herstart vereist)</Value>
         </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text">
+          <Value>Help met vertalen</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPluginSettings">
