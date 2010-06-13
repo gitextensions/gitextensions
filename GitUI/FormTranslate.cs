@@ -53,7 +53,9 @@ namespace GitUI
             foreach(CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
                 if (!_languageCode.Items.Contains(cultureInfo.TwoLetterISOLanguageName))
-                    _languageCode.Items.Add(cultureInfo.TwoLetterISOLanguageName);
+                {
+                    _languageCode.Items.Add(string.Concat(cultureInfo.TwoLetterISOLanguageName, " (", cultureInfo.DisplayName, ")"));
+                }
             }
 
             FormClosing += new FormClosingEventHandler(FormTranslate_FormClosing);
@@ -267,10 +269,18 @@ namespace GitUI
             SaveAs();
         }
 
+        private string GetSelectedLanguageCode()
+        {
+            if (string.IsNullOrEmpty(_languageCode.Text) || _languageCode.Text.Length < 2)
+                return null;
+
+            return _languageCode.Text.Substring(0, 2);
+        }
+
         private void SaveAs()
         {
             Translation foreignTranslation = new Translation();
-            foreignTranslation.LanguageCode = _languageCode.Text;
+            foreignTranslation.LanguageCode = GetSelectedLanguageCode();
             foreach (TranslateItem translateItem in translate)
             {
                 //Item is not translated (yet), skip it
@@ -303,7 +313,15 @@ namespace GitUI
             LoadTranslation();
             FillTranslateGrid(allText.Text);
 
-            _languageCode.Text = translator.LanguageCode;
+            try
+            {
+                CultureInfo culture = new CultureInfo(translator.LanguageCode);
+                _languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
+            }
+            catch
+            {
+                _languageCode.Text = translator.LanguageCode;
+            }
         }
 
         private void hideTranslatedItems_CheckedChanged(object sender, EventArgs e)
@@ -424,7 +442,7 @@ namespace GitUI
             {
                 TranslateItem translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
 
-                translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, _languageCode.Text);
+                translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
                 
                 translateGrid_Click(null, null);
                 translateGrid.Refresh();
@@ -476,7 +494,7 @@ namespace GitUI
             foreach (TranslateItem translateItem in translate)
             {
                 if (string.IsNullOrEmpty(translateItem.TranslatedValue))
-                    translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, _languageCode.Text);
+                    translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
 
                 UpdateProgress();
                 translateGrid.Refresh();

@@ -124,7 +124,7 @@ andere node.</Value>
 ($GIT_DIR/objects), maar ook de alternatieve object opslagplaatsen.</Value>
         </TranslationItem>
         <TranslationItem Name="NoReflogs" Property="Text">
-          <Value>Behandel commits dat alleen verwezen worden vanuit de reflog 
+          <Value>Behandel commits waarnaar alleen verwezen word vanuit de reflog 
 als niet zichtbaar.</Value>
         </TranslationItem>
         <TranslationItem Name="TagAllCommits" Property="Text">
@@ -146,7 +146,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value>Weet u zeker dat u alle rondzwevende objecten wilt verwijderen?</Value>
         </TranslationItem>
         <TranslationItem Name="removeDanglingObjectsCaption" Property="Text">
-          <Value>Verwijder</Value>
+          <Value>Verwijderen</Value>
         </TranslationItem>
         <TranslationItem Name="xTagsCreated" Property="Text">
           <Value>{0} Labels aangemaakt. 
