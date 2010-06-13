@@ -169,21 +169,6 @@ Om rondzwevende objeten te herstellen, label de commit and deze zal weer in het 
         <TranslationItem Name="$this" Property="Text">
           <Value>Reset huidige vertakking</Value>
         </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Reset {0} naar:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>Commit: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Value>Auteur: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Value>Bericht: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Value>Commit datum: {0}</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Reset type</Value>
         </TranslationItem>
@@ -803,9 +788,6 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="DashboardCategory">
       <translationItems>
-        <TranslationItem Name="Caption" Property="Text">
-          <Value>Favorieten</Value>
-        </TranslationItem>
         <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
           <Value>Omhoog</Value>
         </TranslationItem>
@@ -1809,16 +1791,6 @@ Het verwijderen van deze vertakking kan er voor zongen dat commits verloren gaan
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="DashboardItem">
-      <translationItems>
-        <TranslationItem Name="Title" Property="Text">
-          <Value>label1</Value>
-        </TranslationItem>
-        <TranslationItem Name="Description" Property="Text">
-          <Value>text</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormPuttyError">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2374,6 +2346,9 @@ stash
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
+        <TranslationItem Name="dateText" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
         <TranslationItem Name="authorText" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
