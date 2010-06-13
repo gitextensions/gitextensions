@@ -8,11 +8,19 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
 using System.Text.RegularExpressions;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class Dashboard : GitExtensionsControl
     {
+        TranslationString openRepository = new TranslationString("Open repository");
+        TranslationString cloneRepository = new TranslationString("Clone repository");
+        TranslationString createRepository = new TranslationString("Create new repository");
+        TranslationString develop = new TranslationString("Develop");
+        TranslationString donate = new TranslationString("Donate");
+        TranslationString translate = new TranslationString("Translate");
+
         public Dashboard()
         {
             InitializeComponent(); Translate();
@@ -172,22 +180,27 @@ namespace GitUI
                         DonateCategory.Clear();
                         //Show buttons
                         CommonActions.DisableContextMenu();
-                        DashboardItem openItem = new DashboardItem(Resources._40, "Open repository");
+                        DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
                         openItem.Click += new EventHandler(openItem_Click);
                         CommonActions.AddItem(openItem);
-                        DashboardItem cloneItem = new DashboardItem(Resources._46, "Clone repository");
+                        DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
                         cloneItem.Click += new EventHandler(cloneItem_Click);
                         CommonActions.AddItem(cloneItem);
-                        DashboardItem createItem = new DashboardItem(Resources._14, "Create new repository");
+                        DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
                         createItem.Click += new EventHandler(createItem_Click);
                         CommonActions.AddItem(createItem);
                         DonateCategory.DisableContextMenu();
-                        DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), "Develop");
+                        DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
                         GitHubItem.Click += new EventHandler(GitHubItem_Click);
                         DonateCategory.AddItem(GitHubItem);
-                        DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), "Donate");
+                        DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
                         DonateItem.Click += new EventHandler(DonateItem_Click);
                         DonateCategory.AddItem(DonateItem);
+                        DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
+                        TranslateItem.Click += new EventHandler(TranslateItem_Click);
+                        DonateCategory.AddItem(TranslateItem);
+
+                        splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
 
                         initialized = true;
                     }
@@ -201,6 +214,11 @@ namespace GitUI
                     ResumeLayout(true);
                 }
             }
+        }
+
+        void TranslateItem_Click(object sender, EventArgs e)
+        {
+            new FormTranslate().ShowDialog();
         }
 
         void GitHubItem_Click(object sender, EventArgs e)
