@@ -1464,7 +1464,7 @@ namespace GitCommands
         public void SetGlobalSetting(string setting, string value)
         {
             ConfigFile configFile = GetGlobalConfig();
-            configFile.SetValue(setting, FixPathAndEscapeQuotes(value));
+            configFile.SetValue(setting, value);
             configFile.Save();
         }
 
@@ -1490,7 +1490,7 @@ namespace GitCommands
         static public void SetSetting(string setting, string value)
         {
             ConfigFile configFile = GetLocalConfig();
-            configFile.SetValue(setting, FixPathAndEscapeQuotes(value));
+            configFile.SetValue(setting, value);
             configFile.Save();
         }
 
