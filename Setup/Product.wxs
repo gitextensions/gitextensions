@@ -85,6 +85,9 @@
       <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.TextEditor.dll"/>
       </Component>
+      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
+        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
+      </Component>
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
       </Component>
@@ -140,9 +143,6 @@
       </Component>
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
-      </Component>
-      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
     </DirectoryRef>
 

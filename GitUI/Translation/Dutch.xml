@@ -860,6 +860,13 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormChangeLog1">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Wijzigingen logboek</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBranchSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1417,12 +1424,6 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="AppearancePage" Property="Text">
           <Value>Weergave</Value>
         </TranslationItem>
-        <TranslationItem Name="label24" Property="Text">
-          <Value>Kleur revisie grafiek</Value>
-        </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
-          <Value>Kleur geselecteerde revisie</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Revisie grafiek</Value>
         </TranslationItem>
@@ -1892,7 +1893,7 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
           <Value>&amp;Verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Vertakking om te verzenden</Value>
+          <Value>Vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllBranches" Property="Text">
           <Value>Verzend &amp;alle vertakkingen</Value>
@@ -2400,13 +2401,6 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormChangeLog1">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Wijzigingen logboek</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
