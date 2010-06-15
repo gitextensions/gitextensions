@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.Icon = new System.Windows.Forms.PictureBox();
-            this.Title = new System.Windows.Forms.LinkLabel();
-            this.Description = new System.Windows.Forms.Label();
+            this._Title = new System.Windows.Forms.LinkLabel();
+            this._Description = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Icon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,36 +48,36 @@
             // 
             // Title
             // 
-            this.Title.AutoEllipsis = true;
-            this.Title.AutoSize = true;
-            this.Title.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Title.Location = new System.Drawing.Point(22, 2);
-            this.Title.Name = "Title";
-            this.Title.Size = new System.Drawing.Size(49, 13);
-            this.Title.TabIndex = 1;
-            this.Title.TabStop = true;
-            this.Title.Text = "##label1";
-            this.Title.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
-            this.Title.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this._Title.AutoEllipsis = true;
+            this._Title.AutoSize = true;
+            this._Title.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._Title.Location = new System.Drawing.Point(22, 2);
+            this._Title.Name = "Title";
+            this._Title.Size = new System.Drawing.Size(49, 13);
+            this._Title.TabIndex = 1;
+            this._Title.TabStop = true;
+            this._Title.Text = "##label1";
+            this._Title.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this._Title.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             // 
             // Description
             // 
-            this.Description.AutoSize = true;
-            this.Description.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Description.Location = new System.Drawing.Point(25, 22);
-            this.Description.Name = "Description";
-            this.Description.Size = new System.Drawing.Size(38, 13);
-            this.Description.TabIndex = 3;
-            this.Description.Text = "##text";
-            this.Description.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
-            this.Description.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this._Description.AutoSize = true;
+            this._Description.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._Description.Location = new System.Drawing.Point(25, 22);
+            this._Description.Name = "Description";
+            this._Description.Size = new System.Drawing.Size(38, 13);
+            this._Description.TabIndex = 3;
+            this._Description.Text = "##text";
+            this._Description.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this._Description.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             // 
             // DashboardItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.Description);
-            this.Controls.Add(this.Title);
+            this.Controls.Add(this._Description);
+            this.Controls.Add(this._Title);
             this.Controls.Add(this.Icon);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -98,7 +98,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox Icon;
-        private System.Windows.Forms.LinkLabel Title;
-        private System.Windows.Forms.Label Description;
+        private System.Windows.Forms.LinkLabel _Title;
+        private System.Windows.Forms.Label _Description;
     }
 }

@@ -18,15 +18,8 @@ namespace GitUI
             InitializeComponent(); Translate();
             ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
             
-            //Solve button is disabled for now
-            SolveConflictButton.Visible = false;
         }
 
-        void ConflictedFiles_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex==SolveConflictButton.Index)
-                ConflictedFilesContextMenu.Show(Cursor.Position);
-        }
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
@@ -57,7 +50,6 @@ namespace GitUI
             ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
             InitMergetool();
 
-            ConflictedFiles.CellClick += new DataGridViewCellEventHandler(ConflictedFiles_CellClick);
             ConflictedFilesContextMenu.Text = "Solve";
             OpenMergetool.Text = "Open in " + mergetool;
             button1.Text = "Open in " + mergetool;

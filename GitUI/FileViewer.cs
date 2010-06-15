@@ -95,7 +95,10 @@ namespace GitUI
         private void RestoreCurrentScrollPos()
         {
             if (currentScrollPos >= 0)
+            {
                 ScrollPos = currentScrollPos;
+                currentScrollPos = 0;
+            }
         }
 
         public int ScrollPos

@@ -1581,5 +1581,10 @@ namespace GitUI
         {
 
         }
+
+        private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new FormTranslate().ShowDialog();
+        }
     }
 }

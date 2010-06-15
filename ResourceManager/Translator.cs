@@ -9,23 +9,39 @@ namespace ResourceManager.Translation
 {
     public class Translator
     {
-        private Translation translation;
+        //Try to cache the translation as long as possible
+        private static Translation translation;
+        private static string name;
 
         public Translator(string translationName)
         {
-            name = translationName;
-            if (!string.IsNullOrEmpty(translationName))
+            if (string.IsNullOrEmpty(translationName))
             {
-                translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
+                Translator.translation = null;
+            } else
+            if (!translationName.Equals(Translator.name))
+            {
+                Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
+            }
+            Translator.name = translationName;
+        }
+
+        public string LanguageCode
+        {
+            get
+            {
+                if (translation == null)
+                    return null;
+
+                return translation.LanguageCode;
             }
         }
 
-        private string name;
         public string Name
         {
-            get 
+            get
             {
-                return name;
+                return Translator.name;
             }
         }
 
@@ -47,27 +63,35 @@ namespace ResourceManager.Translation
 
         public string GetString(string category, string control, string property)
         {
-            if (translation == null)
-                return null; 
-            if (!translation.HasTranslationCategory(category))
+            if (Translator.translation == null)
+                return null;
+            if (!Translator.translation.HasTranslationCategory(category))
                 return null;
 
 
-            TranslationCategory translationCategory = translation.GetTranslationCategory(category);
+            TranslationCategory translationCategory = Translator.translation.GetTranslationCategory(category);
             if (!translationCategory.HasTranslationItem(control, property))
                 return null;
 
             return translationCategory.GetTranslationItem(control, property).Value;
         }
 
-        public void TranslateControl(Control controlToTranslate)
+        public void TranslateControl(object controlToTranslate)
         {
-            if (translation == null)
-                return; 
-            if (!translation.HasTranslationCategory(controlToTranslate.Name))
+            if (Translator.translation == null)
                 return;
 
-            TranslationCategory translationCategory = translation.GetTranslationCategory(controlToTranslate.Name);
+            string name;
+
+            if (controlToTranslate is Control)
+                name = ((Control)controlToTranslate).Name;
+            else
+                name = controlToTranslate.GetType().Name;
+
+            if (!Translator.translation.HasTranslationCategory(name))
+                return;
+
+            TranslationCategory translationCategory = Translator.translation.GetTranslationCategory(name);
             foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
             {
                 object subControl = null;

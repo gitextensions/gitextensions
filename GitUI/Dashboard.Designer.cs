@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.CommonActions = new GitUI.DashboardCategory();
@@ -49,120 +50,152 @@
             // 
             // splitContainer5
             // 
+            this.splitContainer5.AccessibleDescription = null;
+            this.splitContainer5.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer5, "splitContainer5");
             this.splitContainer5.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer5.BackgroundImage = null;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Font = null;
             this.splitContainer5.Name = "splitContainer5";
             // 
             // splitContainer5.Panel1
             // 
+            this.splitContainer5.Panel1.AccessibleDescription = null;
+            this.splitContainer5.Panel1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer5.Panel1, "splitContainer5.Panel1");
+            this.splitContainer5.Panel1.BackgroundImage = null;
             this.splitContainer5.Panel1.Controls.Add(this.splitContainer6);
+            this.splitContainer5.Panel1.Font = null;
             // 
             // splitContainer5.Panel2
             // 
-            this.splitContainer5.Panel2.AutoScroll = true;
-            this.splitContainer5.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.splitContainer5.Panel2.AccessibleDescription = null;
+            this.splitContainer5.Panel2.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
+            this.splitContainer5.Panel2.BackgroundImage = null;
             this.splitContainer5.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer5.Size = new System.Drawing.Size(833, 540);
-            this.splitContainer5.SplitterDistance = 314;
-            this.splitContainer5.TabIndex = 9;
+            this.splitContainer5.Panel2.Font = null;
             this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
             // 
             // splitContainer6
             // 
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer6.AccessibleDescription = null;
+            this.splitContainer6.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer6, "splitContainer6");
+            this.splitContainer6.BackgroundImage = null;
             this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer6.Font = null;
             this.splitContainer6.Name = "splitContainer6";
-            this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer6.Panel1
             // 
+            this.splitContainer6.Panel1.AccessibleDescription = null;
+            this.splitContainer6.Panel1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer6.Panel1, "splitContainer6.Panel1");
+            this.splitContainer6.Panel1.BackgroundImage = null;
             this.splitContainer6.Panel1.Controls.Add(this.CommonActions);
+            this.splitContainer6.Panel1.Font = null;
             // 
             // splitContainer6.Panel2
             // 
+            this.splitContainer6.Panel2.AccessibleDescription = null;
+            this.splitContainer6.Panel2.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer6.Panel2, "splitContainer6.Panel2");
+            this.splitContainer6.Panel2.BackgroundImage = null;
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(314, 540);
-            this.splitContainer6.SplitterDistance = 126;
-            this.splitContainer6.TabIndex = 0;
+            this.splitContainer6.Panel2.Font = null;
             // 
             // CommonActions
             // 
+            this.CommonActions.AccessibleDescription = null;
+            this.CommonActions.AccessibleName = null;
+            resources.ApplyResources(this.CommonActions, "CommonActions");
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommonActions.Location = new System.Drawing.Point(0, 0);
+            this.CommonActions.BackgroundImage = null;
+            this.CommonActions.Font = null;
             this.CommonActions.Name = "CommonActions";
             this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(314, 126);
-            this.CommonActions.TabIndex = 8;
             this.CommonActions.Title = "Common Actions";
             // 
             // splitContainer7
             // 
-            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer7.AccessibleDescription = null;
+            this.splitContainer7.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer7, "splitContainer7");
+            this.splitContainer7.BackgroundImage = null;
             this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer7.Font = null;
             this.splitContainer7.Name = "splitContainer7";
-            this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer7.Panel1
             // 
+            this.splitContainer7.Panel1.AccessibleDescription = null;
+            this.splitContainer7.Panel1.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer7.Panel1, "splitContainer7.Panel1");
+            this.splitContainer7.Panel1.BackgroundImage = null;
             this.splitContainer7.Panel1.Controls.Add(this.RecentRepositories);
+            this.splitContainer7.Panel1.Font = null;
             // 
             // splitContainer7.Panel2
             // 
+            this.splitContainer7.Panel2.AccessibleDescription = null;
+            this.splitContainer7.Panel2.AccessibleName = null;
+            resources.ApplyResources(this.splitContainer7.Panel2, "splitContainer7.Panel2");
+            this.splitContainer7.Panel2.BackgroundImage = null;
             this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
-            this.splitContainer7.Size = new System.Drawing.Size(314, 410);
-            this.splitContainer7.SplitterDistance = 331;
-            this.splitContainer7.TabIndex = 0;
+            this.splitContainer7.Panel2.Font = null;
             // 
             // RecentRepositories
             // 
+            this.RecentRepositories.AccessibleDescription = null;
+            this.RecentRepositories.AccessibleName = null;
+            resources.ApplyResources(this.RecentRepositories, "RecentRepositories");
             this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
-            this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
+            this.RecentRepositories.BackgroundImage = null;
+            this.RecentRepositories.Font = null;
             this.RecentRepositories.Name = "RecentRepositories";
             this.RecentRepositories.RepositoryCategory = null;
-            this.RecentRepositories.Size = new System.Drawing.Size(314, 331);
-            this.RecentRepositories.TabIndex = 0;
             this.RecentRepositories.Title = "Recent Repositories";
             // 
             // DonateCategory
             // 
+            this.DonateCategory.AccessibleDescription = null;
+            this.DonateCategory.AccessibleName = null;
+            resources.ApplyResources(this.DonateCategory, "DonateCategory");
             this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
-            this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Location = new System.Drawing.Point(0, 0);
+            this.DonateCategory.BackgroundImage = null;
+            this.DonateCategory.Font = null;
             this.DonateCategory.Name = "DonateCategory";
             this.DonateCategory.RepositoryCategory = null;
-            this.DonateCategory.Size = new System.Drawing.Size(314, 75);
-            this.DonateCategory.TabIndex = 0;
             this.DonateCategory.Title = "Contribute";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.AccessibleDescription = null;
+            this.pictureBox1.AccessibleName = null;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.BackgroundImage = null;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox1.Font = null;
             this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow1;
-            this.pictureBox1.Location = new System.Drawing.Point(256, 284);
+            this.pictureBox1.ImageLocation = null;
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // Dashboard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AccessibleDescription = null;
+            this.AccessibleName = null;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer5);
+            this.Font = null;
             this.Name = "Dashboard";
-            this.Size = new System.Drawing.Size(833, 540);
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.Panel2.PerformLayout();

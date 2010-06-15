@@ -175,8 +175,11 @@ namespace GitUI
                 string imageUrl = string.Format(BaseURL, emailHash);
 
                 WebClient webClient = new WebClient();
-                Stream imageStream = webClient.OpenRead(imageUrl);
+                webClient.Proxy = WebRequest.DefaultWebProxy;
+                webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
+                Stream imageStream = webClient.OpenRead(imageUrl);
+                
                 using (IsolatedStorageFileStream output = new IsolatedStorageFileStream(imageFileName, FileMode.Create, isolatedStorage))
                 {
                     byte[] buffer = new byte[1024];

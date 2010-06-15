@@ -46,16 +46,16 @@ namespace GitUI
 
         private void Initialize(Bitmap icon, string path, string title, string text)
         {
-            Title.Text = title;
-            Title.AutoEllipsis = true;
+            _Title.Text = title;
+            _Title.AutoEllipsis = true;
 
             Path = path;
 
-            if (string.IsNullOrEmpty(Title.Text))
-                Title.Text = Path;
+            if (string.IsNullOrEmpty(_Title.Text))
+                _Title.Text = Path;
 
-            Description.Visible = !string.IsNullOrEmpty(text);
-            Description.Text = text;
+            _Description.Visible = !string.IsNullOrEmpty(text);
+            _Description.Text = text;
 
             //if (Description.Visible)
             //{
@@ -65,11 +65,11 @@ namespace GitUI
             //}
 
 
-            this.Height = Title.Height+6;
-            if (Description.Visible)
+            this.Height = _Title.Height+6;
+            if (_Description.Visible)
             {
-                Description.Top = Title.Height+4;
-                this.Height += Description.Height+2;
+                _Description.Top = _Title.Height+4;
+                this.Height += _Description.Height+2;
             }
             
                 
@@ -85,11 +85,11 @@ namespace GitUI
             toolTip.UseFading = false;
             toolTip.UseAnimation = false;
             toolTip.ReshowDelay = 1;
-            toolTip.SetToolTip(Title, Path);
+            toolTip.SetToolTip(_Title, Path);
             
-            Title.MouseDown += new MouseEventHandler(Title_MouseDown);
-            Title.Click += new EventHandler(Title_Click);
-            Description.Click += new EventHandler(Title_Click);
+            _Title.MouseDown += new MouseEventHandler(Title_MouseDown);
+            _Title.Click += new EventHandler(Title_Click);
+            _Description.Click += new EventHandler(Title_Click);
             Icon.Click += new EventHandler(Title_Click);
         }
 
@@ -109,7 +109,7 @@ namespace GitUI
 
         public string GetTitle()
         {
-            return Title.Text;
+            return _Title.Text;
         }
 
         public string Path { get; set; }
@@ -121,8 +121,8 @@ namespace GitUI
 
         private void DashboardItem_SizeChanged(object sender, EventArgs e)
         {
-            Title.Width = Width - Title.Location.X;
-            Description.Width = Width - Title.Location.X;
+            _Title.Width = Width - _Title.Location.X;
+            _Description.Width = Width - _Title.Location.X;
         }
 
         private void DashboardItem_Enter(object sender, EventArgs e)
