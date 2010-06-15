@@ -464,6 +464,8 @@
     <Compile Include="Gravatar.Designer.cs">
       <DependentUpon>Gravatar.cs</DependentUpon>
     </Compile>
+    <Compile Include="HashSet.cs">
+    </Compile>
     <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="MergePatch.cs">

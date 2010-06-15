@@ -215,6 +215,22 @@ namespace GitUI
             }
         }
 
+        private List<Color> GetJunctionColors(IEnumerable<Junction> aJunction)
+        {
+            List<Color> colors = new List<Color>();
+            foreach (Junction j in aJunction)
+            {
+                colors.Add( GetJunctionColor(j) );
+            }
+
+            if (colors.Count == 0)
+            {
+                colors.Add(Color.Black);
+            }
+
+            return colors;
+        }
+
         private Color GetJunctionColor(Junction aJunction)
         {
             // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
@@ -432,39 +448,22 @@ namespace GitUI
             {
                 int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * LANE_WIDTH);
 
-                foreach (Lanes.LaneInfo parent in row[lane])
+                for( int item = 0; item < row.LaneInfoCount(lane); item++ )
                 {
-                    Color curColor = GetJunctionColor(parent.Junction);
-                    Color nextColor;
-                    if (parent.JunctionParents.Length >= 1)
-                    {
-                        // NOTE: If there was more than 1 parent, the parent was a merge
-                        // node...we can't really show 3 colors well so just use
-                        // the first.
-                        nextColor = GetJunctionColor(parent.JunctionParents[0]);
-                    }
-                    else
-                    {
-                        nextColor = Color.Black;
-                    }
+                    Lanes.LaneInfo laneInfo = row[lane,item];
+
+                    List<Color> curColors;
+                    curColors = GetJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
                     Brush brushLine;
-                    if (nextColor == curColor)
+                    if (curColors.Count == 1 || !GitCommands.Settings.MulticolorBranches)
                     {
-                        brushLine = new SolidBrush(curColor);
+                        brushLine = new SolidBrush(curColors[0]);
                     }
                     else
                     {
-                        if (GitCommands.Settings.MulticolorBranches)
-                        {
-                            brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, nextColor, curColor);
-                        }
-                        else
-                        {
-                            brushLine = new SolidBrush(curColor);
-                            //brushLine = new SolidBrush(nextColor);
-                        }
+                        brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);  
                     }
 
                     // TODO: Drawing 3 times is probably too expensive, no matter how pretty
@@ -485,7 +484,7 @@ namespace GitUI
                             penLine = new Pen(brushLine, LANE_LINE_WIDTH);
                         }
 
-                        if (parent.ConnectsTo == lane)
+                        if (laneInfo.ConnectLane == lane)
                         {
                             wa.DrawLine
                                 (
@@ -501,8 +500,8 @@ namespace GitUI
                                 penLine,
                                 new Point(mid, top - 1),
                                 new Point(mid, top + RowHeight + 2),
-                                new Point(mid + (parent.ConnectsTo - lane) * LANE_WIDTH, top - 1),
-                                new Point(mid + (parent.ConnectsTo - lane) * LANE_WIDTH, top + RowHeight + 2)
+                                new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top - 1),
+                                new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top + RowHeight + 2)
                                 );
                         }
                     }
@@ -520,19 +519,15 @@ namespace GitUI
                 NODE_DIMENSION
                 );
 
-            int length = row.LaneInfoCount(row.NodeLane);
-            Brush nodeBrush = null;
-            if (length == 0)
+            Brush nodeBrush;
+            List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
+            if (nodeColors.Count == 1)
             {
-                nodeBrush = new SolidBrush(Color.Black);
-            }
-            else if (length == 1)
-            {
-                nodeBrush = new SolidBrush(GetJunctionColor(row[row.NodeLane, 0].Junction));
+                nodeBrush = new SolidBrush(nodeColors[0]);
             }
             else
             {
-                nodeBrush = new LinearGradientBrush(nodeRect, GetJunctionColor(row[row.NodeLane, 0].Junction), GetJunctionColor(row[row.NodeLane,1].Junction), LinearGradientMode.Horizontal);
+                nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1], LinearGradientMode.Horizontal);
             }
             
             if (row.Node.Data == null)
@@ -992,25 +987,49 @@ namespace GitUI
 
             public struct LaneInfo
             {
-                public int ConnectsTo;
-                public Junction Junction;
-                public Junction[] JunctionParents;
+                public int ConnectLane;
+                public HashSet<Node> Parent;
+                public HashSet<Node> Child;
 
-                public LaneInfo(int aConnectsTo, Junction aJunction, Junction[] aJunctionParents)
+                public HashSet<Junction> Junctions
                 {
-                    ConnectsTo = aConnectsTo;
-                    Junction = aJunction;
-                    JunctionParents = aJunctionParents;
+                    get 
+                    {
+                        // This is not terribly efficient, but each loop should only be over 1 or 2 items...
+                        HashSet<Junction> laneJunctions = new HashSet<Junction>();
+                        foreach (Node parent in Parent)
+                        {
+                            foreach (Junction j in parent.Descendants)
+                            {
+                                foreach (Node child in Child)
+                                {
+                                    if (child.Ancestors.Contains(j))
+                                    {
+                                        laneJunctions.Add(j);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        return laneJunctions;
+                    }
+                }
+
+                public LaneInfo(int aConnectLane)
+                {
+                    ConnectLane = aConnectLane;
+                    Parent = new HashSet<Node>();
+                    Child = new HashSet<Node>();
                 }
 
                 public static implicit operator int(LaneInfo a)
                 {
-                    return a.ConnectsTo;
+                    return a.ConnectLane;
                 }
 
                 public override string ToString()
                 {
-                    return ConnectsTo.ToString();
+                    return ConnectLane.ToString();
                 }
             }
 
@@ -1023,8 +1042,6 @@ namespace GitUI
                 // Lane information
                 int Count{ get; }
                 int LaneInfoCount(int lane);
-
-                IEnumerable<LaneInfo> this[int lane] { get; }
                 LaneInfo this[int lane, int item] { get; }
             }
 
@@ -1040,208 +1057,267 @@ namespace GitUI
                     get { return node; }
                     set { node = value; }
                 }
-
-                // Parents for the row
-                private List<LaneInfo[]> parentLanes = new List<LaneInfo[]>();
                 // Node information
                 private int nodeLane = -1;
                 private Node node = null;
-                private readonly LaneInfo[] emptyLane = new LaneInfo[0];
-                private readonly LaneInfo emptyItem = new LaneInfo();
+                private Edges<LaneInfo> edges = new Edges<LaneInfo>();
 
-                public ActiveLaneRow()
+                private class Edges<T>
                 {
-                }
-
-                public ActiveLaneRow(ActiveLaneRow aCopyOf)
-                {
-                    // Deep copy
-                    nodeLane = aCopyOf.NodeLane;
-                    node = aCopyOf.Node;
-                    foreach (LaneInfo[] info in aCopyOf.parentLanes)
+                    private struct Edge
                     {
-                        LaneInfo[] newInfo = new LaneInfo[info.Length];
-                        for (int i = 0; i < info.Length; i++)
+                        public T Data;
+                        public int Start;
+                        public int End;
+
+                        public Edge(T data, int start, int end)
                         {
-                            newInfo[i] = info[i];
+                            Data = data;
+                            Start = start;
+                            End = end;
                         }
-                        parentLanes.Add(newInfo);
-                    }
-                }
 
-                public int Count
-                {
-                    get { return parentLanes.Count; }
-                }
-                public int LaneInfoCount(int lane)
-                {
-                    if (parentLanes.Count > lane)
-                    {
-                        return parentLanes[lane].Length;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-                public IEnumerable<LaneInfo> this[int col] 
-                {
-                    get 
-                    {
-                        if (parentLanes.Count > col)
+                        public override string ToString()
                         {
-                            return parentLanes[col];
-                        }
-                        else
-                        {
-                            return emptyLane;
+                            return string.Format("{0}->{1}: {2}", Start, End, Data);
                         }
                     }
-                }
-                public LaneInfo this[int col, int row]
-                {
-                    get
+
+                    private List<List<Edge>> currentRow = new List<List<Edge>>();
+                    private List<List<Edge>> nextRow = new List<List<Edge>>();
+                    private readonly T emptyItem = default(T);
+
+                    public T Current(int lane, int item)
                     {
-                        if (col < parentLanes.Count)
+                    
+                        if (currentRow.Count > lane && currentRow[lane].Count > item)
                         {
-                            return parentLanes[col][row];
+                            return currentRow[lane][item].Data;
                         }
                         else
                         {
                             return emptyItem;
                         }
                     }
-                }
 
-                public bool Active(int col)
-                {
-                    // This may be taking ~50% of the time spent in MoveNext!
-                    // TODO: Instead we'll always advance one extra and check that?
-                    // No...that won't work ;-( The collapsing of lanes will screw
-                    // it up. Maybe we should store it as incoming connections as well
-                    // as (instead of) outbound.
-                    for (int j = 0; j < parentLanes.Count; j++)
+                    public T Next(int lane, int item)
                     {
-                        for (int k = 0; k < parentLanes[j].Length; k++)
+
+                        if (nextRow.Count > lane && nextRow[lane].Count > item)
                         {
-                            if (parentLanes[j][k].ConnectsTo == col)
-                            {
-                                return true;
-                            }
+                            return nextRow[lane][item].Data;
+                        }
+                        else
+                        {
+                            return emptyItem;
                         }
                     }
-                    return false;
+
+                    public T RemoveNext(int lane, int item, out int start, out int end)
+                    {
+                        if (nextRow.Count > lane && nextRow[lane].Count > item)
+                        {
+                            Edge e = nextRow[lane][item];
+                            start = e.Start;
+                            end = e.End;
+                            nextRow[lane].RemoveAt(item);
+                            currentRow[start].Remove(e);
+                            return e.Data;
+                        }
+                        else
+                        {
+                            start = -1; 
+                            end = -1;
+                            return emptyItem;
+                        }
+                    }
+
+                    public void Add(int from, int to, T data)
+                    {
+                        Edge e = new Edge( data, from, to );
+
+                        while (currentRow.Count <= from)
+                        {
+                            currentRow.Add(new List<Edge>());
+                        }
+                        currentRow[from].Add(e);
+
+                        while (nextRow.Count <= to)
+                        {
+                            nextRow.Add(new List<Edge>());
+                        }
+                        nextRow[to].Add(e);
+                    }
+
+                    public void Clear(int lane)
+                    {
+                        if (currentRow.Count > lane)
+                        {
+                            foreach (Edge e in currentRow[lane])
+                            {
+                                nextRow[e.End].Remove(e);
+                            }
+                            currentRow[lane].Clear();
+                        }
+
+                        int lastItem = currentRow.Count - 1;
+                        while (lastItem >= 0 && lastItem <= lane && currentRow[lastItem].Count == 0)
+                        {
+                            currentRow.RemoveAt(lastItem);
+                            --lastItem;
+                        }
+                    }
+
+                    public int CountCurrent()
+                    {
+                        return currentRow.Count;
+                    }
+
+                    public int CountCurrent(int lane)
+                    {
+                        if (lane < currentRow.Count)
+                        {
+                            return currentRow[lane].Count;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+
+                    public int CountNext()
+                    {
+                        return nextRow.Count;
+                    }
+
+                    public int CountNext(int lane)
+                    {
+                        if (lane < nextRow.Count)
+                        {
+                            return nextRow[lane].Count;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+
+                    public bool IsActive(int lane)
+                    {
+                        if (nextRow.Count <= lane)
+                        {
+                            return false;
+                        }
+                        return (nextRow[lane].Count > 0);
+                    }
+
+                }
+
+                public ActiveLaneRow()
+                {
+                }
+
+                public int Count
+                {
+                    get { return edges.CountCurrent(); }
+                }
+
+                public int LaneInfoCount(int lane)
+                {
+                    return edges.CountCurrent(lane);
+                }
+
+                public LaneInfo this[int col, int row]
+                {
+                    get
+                    {
+                        return edges.Current(col,row);
+                    }
+                }
+
+                public ActiveLaneRow Clone()
+                {
+                    ActiveLaneRow newLaneRow = new ActiveLaneRow();
+                    newLaneRow.nodeLane = nodeLane;
+                    newLaneRow.node = node;
+                    newLaneRow.edges = edges;
+                    return newLaneRow;
+                }
+
+                public bool IsActive(int col)
+                {
+                    return edges.IsActive(col);
                 }
 
                 public void Advance()
                 {
-                    int curLaneCount = Count;
-                    for (int curLane = 0; curLane < curLaneCount; curLane++)
+                    Edges<LaneInfo> newEdges = new Edges<LaneInfo>();
+                    for (int i = 0; i < edges.CountNext(); i++)
                     {
-                        bool isCurInactive = true;
-                        foreach (LaneInfo mergeLane in parentLanes[curLane])
+                        int edgeCount = edges.CountNext(i);
+                        if (edgeCount > 0)
                         {
-                            shiftLane(mergeLane);
-                            Set(mergeLane, new LaneInfo[1] { mergeLane });
-                            isCurInactive = isCurInactive && (mergeLane != curLane);
-                        }
-                        if (isCurInactive)
-                        {
-                            Set(curLane, emptyLane);
-                        }
-                    }
-                }
-
-                // TODO: We should be able to handle this internally when the empty gets removed.
-                public void RemoveEmpty()
-                {
-                    for (int i = parentLanes.Count - 1; i >= 0; --i)
-                    {
-                        if (parentLanes[i].Length == 0)
-                        {
-                            parentLanes.RemoveAt(i);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                public void Set(int col, LaneInfo[] data)
-                {
-                    while (parentLanes.Count <= col)
-                    {
-                        parentLanes.Add(emptyLane);
-                    }
-                    parentLanes[col] = data;
-                }
-
-                public bool Clear(int col)
-                {
-                    bool isChanged = false;
-                    for (int j = 0; j < parentLanes.Count; j++)
-                    {
-                        for (int k = 0; k < parentLanes[j].Length; k++)
-                        {
-                            if (parentLanes[j][k].ConnectsTo > col)
+                            LaneInfo info = new LaneInfo(i);
+                            for (int j = 0; j < edgeCount; j++)
                             {
-                                parentLanes[j][k].ConnectsTo--;
-                                isChanged = true;
+                                LaneInfo edgeInfo = edges.Next(i, j);
+                                info.Parent.UnionWith(edgeInfo.Parent);
+                                info.Child.UnionWith(edgeInfo.Child);
                             }
+                            newEdges.Add(i, i, info);
                         }
                     }
-                    return isChanged;
+                    edges = newEdges;
+                }
+
+                public void Add(int lane, LaneInfo data)
+                {
+                    edges.Add(lane, data.ConnectLane, data);
+                }
+
+                public void Clear(int lane)
+                {
+                    edges.Clear(lane);
+                }
+
+                public void Collapse(int col)
+                {
+                    for (int i = col; i < edges.CountNext(); i++)
+                    {
+                        for (int j = 0; j < edges.CountNext(i); j++)
+                        {
+                            int start, end;
+                            LaneInfo info = edges.RemoveNext(i, j, out start, out end);
+                            info.ConnectLane--;
+                            edges.Add(i, info.ConnectLane, info);
+                        }
+                    }
                 }
 
                 public void Replace(int aOld, int aNew)
                 {
-                    for (int j = 0; j < parentLanes.Count; j++)
+                    for (int j = 0; j < edges.CountNext(aOld); j++)
                     {
-                        for (int k = 0; k < parentLanes[j].Length; k++)
-                        {
-                            if (parentLanes[j][k].ConnectsTo == aOld)
-                            {
-                                parentLanes[j][k].ConnectsTo = aNew;
-                            }
-                        }
-                    }
-                }
-
-                public void RemoveAt(int col)
-                {
-                    parentLanes.RemoveAt(col);
-                }
-
-                private void shiftLane(int idx)
-                {
-                    // Check to see if the item in lane idx points to a different lane. If so,
-                    // move the reference there.
-                    if (parentLanes.Count > idx && parentLanes[idx].Length == 1)
-                    {
-                        int rowLane = parentLanes[idx][0];
-                        if (rowLane != idx)
-                        {
-                            // We've pointed to the lane that has a node. That means this is a branch 
-                            // from that lane. Keep the branch alive in it's new lane
-                            Set(rowLane, new LaneInfo[1] { this[idx, 0] });
-                            Set(idx, emptyLane);
-                        }
+                        int start, end;
+                        LaneInfo info = edges.RemoveNext(aOld, j, out start, out end);
+                        info.ConnectLane = aNew;
+                        edges.Add(start, aNew, info);
                     }
                 }
 
                 public override string ToString()
                 {
-                    string s = nodeLane + "/" + parentLanes.Count + ": " + node + " ";
-                    for (int i = 0; i < parentLanes.Count; i++)
+                    string s = nodeLane + "/" + edges.CountCurrent() + ": ";
+                    for (int i = 0; i < edges.CountCurrent(); i++)
                     {
                         if (i == nodeLane)
                             s += "*";
                         s += "{";
-                        for (int j = 0; j < parentLanes[i].Length; j++)
-                            s += " " + parentLanes[i][j];
+                        for (int j = 0; j < edges.CountCurrent(i); j++)
+                            s += " " + edges.Current(i,j);
                         s += " }, ";
                     }
+                    s += node;
                     return s;
                 }
             }
@@ -1343,25 +1419,19 @@ namespace GitUI
                     }
                 }
 
+                // DEBUG: The check above didn't find anything, but should have
                 if (currentRow.Node == null && laneNodes.Count > 0)
                 {
-                    // TODO: We sometimes hit this when we have 1 lane with 0 items in it
-                    // Figure out how that happens and make it 0 lanes so we bail out at the
-                    // beginning.
-
-                    // The check above didn't find anything, but should have
                     if (Debugger.IsAttached) Debugger.Break();
                     //Node[] topo = this.sourceGraph.TopoSortedNodes();
-
-                    return false;
                 }
                 #endregion
 
                 // Check to see if there are available lanes that could be used
                 // that are better than the current row node lane
                 #region Don't skip lanes
-                // Remove unused lanes from the end of CurrentRow
-                currentRow.RemoveEmpty();
+                // If the current lane is larger than the number of lanes (there is a gap)
+                // swap with the last item.
                 if (currentRow.NodeLane > currentRow.Count)
                 {
                     List<Node> temp = laneNodes[currentRow.NodeLane];
@@ -1374,7 +1444,7 @@ namespace GitUI
                 // Check for multiple junctions with this node at the top. Remove the 
                 // node from that junction as well. This will happen when there is a branch 
                 #region Check for branches
-                List<LaneInfo> CurRowParents = new List<LaneInfo>();
+                currentRow.Clear(currentRow.NodeLane);
                 for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
                     List<Node> lane = laneNodes[curLane];
@@ -1392,32 +1462,14 @@ namespace GitUI
                     // left in the lane we don't draw it.
                     if (lane.Count > 0)
                     {
-                        // We also want to know the junctions of the guy we're point to
-                        List<Junction> junctionParents = new List<Junction>();
-                        foreach (Junction ancestor in lane[0].Ancestors)
-                        {
-                            junctionParents.Add(ancestor);
-                        }
-
-                        // TODO: Much more efficient to store junction information along with lane
-                        //       which would also eliminate lookup of index of list further down.
-                        //       We probably could drop JunctionNodes all together at that point.
-                        Junction junction = null;
-                        foreach (KeyValuePair<Junction, List<Node>> j in junctionNodes)
-                        {
-                            if (j.Value == laneNodes[curLane])
-                            {
-                                junction = j.Key;
-                                break;
-                            }
-                        }
-                        if (junction == null && Debugger.IsAttached) Debugger.Break();
-
-                        CurRowParents.Add(new LaneInfo(curLane, junction, junctionParents.ToArray()));
+                        LaneInfo info = new LaneInfo(curLane);
+                        info.Child.Add(currentRow.Node);
+                        info.Parent.Add(laneNodes[curLane][0]);
+                        currentRow.Add(currentRow.NodeLane, info );
                     }
                 }
                 // Set the current row's new parentage
-                currentRow.Set(currentRow.NodeLane, CurRowParents.ToArray());
+                
                 #endregion
 
                 // Advance the LaneNodes
@@ -1449,8 +1501,9 @@ namespace GitUI
                                 if (currentRow.LaneInfoCount(nextLane) > 0)
                                 {
                                     LaneInfo curRow = currentRow[nextLane, 0];
-                                    curRow.ConnectsTo = curLane;
-                                    currentRow.Set(nextLane, new LaneInfo[] { curRow });
+                                    curRow.ConnectLane = curLane;
+                                    currentRow.Clear(nextLane);
+                                    currentRow.Add(nextLane, curRow);
                                 }
                             }
                         }
@@ -1529,25 +1582,6 @@ namespace GitUI
                             }
                             int siblingLane = laneNodes.IndexOf(junctionNodes[sibling]);
                             currentRow.Replace(siblingLane, laneIndex);
-
-                            if (!currentRow.Active(siblingLane))
-                            {
-                                // First give preference to something already
-                                // referenced by this lane (this will avoid messy
-                                // merges where neither parent is in the same lane
-                                // as the merge
-                                foreach (LaneInfo lane in currentRow[siblingLane])
-                                {
-                                    if (lane > siblingLane)
-                                    {
-                                        currentRow.Replace(lane, siblingLane);
-                                        List<Node> temp = laneNodes[siblingLane];
-                                        laneNodes[siblingLane] = laneNodes[lane];
-                                        laneNodes[lane] = temp;
-                                        break;
-                                    }
-                                }
-                            }
                         }
 
                         List<Node> nodes = new List<Node>(parent.Bunch);
@@ -1564,12 +1598,12 @@ namespace GitUI
                 #region Trim empty lanes
                 for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
-                    if (!currentRow.Active(curLane))
+                    if (!currentRow.IsActive(curLane))
                     {
                         if (laneNodes[curLane].Count == 0)
                         {
                             // Clear the empty lane
-                            currentRow.Clear(curLane);
+                            currentRow.Collapse(curLane);
                             laneNodes.RemoveAt(curLane);
                             curLane--;
                         }
@@ -1578,7 +1612,7 @@ namespace GitUI
                             // Swap the lane with one that is in use
                             for (int j = curLane + 1; j < laneNodes.Count; j++)
                             {
-                                if (currentRow.Active(j))
+                                if (currentRow.IsActive(j))
                                 {
                                     currentRow.Replace(j, curLane);
                                     List<Node> temp = laneNodes[curLane];
@@ -1590,8 +1624,6 @@ namespace GitUI
                         }
                     }
                 }
-
-                currentRow.RemoveEmpty();
                 #endregion
 
                 // DEBUG: Spit out the information about the lane
@@ -1599,7 +1631,7 @@ namespace GitUI
 
                 if (currentRow.Node != null)
                 {
-                    Lanes.LaneRow row = new Lanes.ActiveLaneRow(currentRow);
+                    Lanes.LaneRow row = currentRow.Clone();
                     laneRows.Add(row);
                     return true;
                 }
