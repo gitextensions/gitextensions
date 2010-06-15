@@ -49,6 +49,7 @@
     <Compile Include="CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="ConfigFile.cs" />
+    <Compile Include="Git\GitCommandCache.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="RepositoryCategory.cs" />
     <Compile Include="Diff.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShortDiff.cs" />
+    <Compile Include="Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -83,6 +85,10 @@
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
+      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
+      <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

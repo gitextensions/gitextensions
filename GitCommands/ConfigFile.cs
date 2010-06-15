@@ -117,7 +117,7 @@ namespace GitCommands
                             data[lastSection].Add
                             (
                                 m.Groups["Key"].Value, 
-                                processString(m.Groups["Value"].Value)
+                                unescapeString(m.Groups["Value"].Value)
                             );
                         }
                     }
@@ -125,10 +125,24 @@ namespace GitCommands
             }
         }
 
-        private string processString(string value)
+        private string unescapeString(string value)
         {
             // The .gitconfig escapes some character sequences
             return value.Replace("\\\"", "\"");
+        }
+
+
+        private static string escapeString(string path)
+        {
+            // The .gitconfig escapes some character sequences
+            path = path.Replace("\"", "$QUOTE$");
+
+            path = path.Trim();
+
+            if (!path.StartsWith("\\\\"))
+                path = path.Replace('\\', '/');
+
+            return path.Replace("$QUOTE$", "\\\"");
         }
 
         private NameValueCollection this[string section]
@@ -283,7 +297,7 @@ namespace GitCommands
                         {
                             string value = col[key];
                             if (!string.IsNullOrEmpty(value))
-                                sw.WriteLine("\t{0}={1}", key, value);
+                                sw.WriteLine("\t{0}={1}", key, escapeString(value));
                         }
                     }
                 }

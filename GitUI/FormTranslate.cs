@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.Reflection;
 using ResourceManager.Translation;
 using ResourceManager;
+using System.Net;
+using System.Globalization;
 
 namespace GitUI
 {
@@ -20,7 +22,7 @@ namespace GitUI
         TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         TranslationString saveAsText = new TranslationString("Save as");
 
-        protected class TranslateItem
+        public class TranslateItem
         {
             public string Category { get; set; }
             public string Name { get; set; }
@@ -48,6 +50,14 @@ namespace GitUI
             LoadTranslation();
             FillTranslateGrid(allText.Text);
 
+            foreach(CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
+            {
+                if (!_languageCode.Items.Contains(cultureInfo.TwoLetterISOLanguageName))
+                {
+                    _languageCode.Items.Add(string.Concat(cultureInfo.TwoLetterISOLanguageName, " (", cultureInfo.DisplayName, ")"));
+                }
+            }
+
             FormClosing += new FormClosingEventHandler(FormTranslate_FormClosing);
         }
 
@@ -65,6 +75,7 @@ namespace GitUI
                     translatedCount++;
             }
             translateProgress.Text = string.Format(translateProgressText.Text, translatedCount, translate.Count);
+            toolStrip1.Refresh();
         }
 
         private void LoadTranslation()
@@ -135,9 +146,10 @@ namespace GitUI
                     foreach (Type type in assembly.GetTypes())
                     {
                         if (typeof(GitExtensionsControl).IsAssignableFrom(type) ||
-                            typeof(GitExtensionsForm).IsAssignableFrom(type))
+                            typeof(GitExtensionsForm).IsAssignableFrom(type) ||
+                            typeof(ITranslate).IsAssignableFrom(type))
                         {
-                            Control control = null;
+                            object control = null;
 
 
                             if (type == this.GetType())
@@ -147,7 +159,7 @@ namespace GitUI
                                 foreach (ConstructorInfo constructor in type.GetConstructors())
                                 {
                                     if (constructor.GetParameters().Length == 0)
-                                        control = (Control)Activator.CreateInstance(type);
+                                        control = (object)Activator.CreateInstance(type);
                                 }
 
                             if (control == null && type.GetConstructors().Length > 0)
@@ -156,18 +168,25 @@ namespace GitUI
                                 List<object> parameters = new List<object>(parameterConstructor.GetParameters().Length);
                                 for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
                                     parameters.Add(null);
-                                control = (Control)parameterConstructor.Invoke(parameters.ToArray());
+                                control = (object)parameterConstructor.Invoke(parameters.ToArray());
                             }
 
                             if (control == null)
                                 continue;
 
-                            if (control is Form && !string.IsNullOrEmpty(control.Name))
-                            {
-                                if (!translateCategories.Items.Contains(control.Name))
-                                    translateCategories.Items.Add(control.Name);
+                            string name;
 
-                                AddTranslationItem(control.Name, "$this", "Text", ((Form)control).Text);
+                            if (control is Control)
+                                name = ((Control)control).Name;
+                            else
+                                name = control.GetType().Name;
+
+                            if (control is Form && !string.IsNullOrEmpty(name))
+                            {
+                                if (!translateCategories.Items.Contains(name))
+                                    translateCategories.Items.Add(name);
+
+                                AddTranslationItem(name, "$this", "Text", ((Form)control).Text);
                             }
 
                             foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
@@ -190,7 +209,7 @@ namespace GitUI
                                             //Only translate properties that have a neutral value
                                             if (!string.IsNullOrEmpty(value))
                                             {
-                                                AddTranslationItem(control.Name, fieldInfo.Name, propertyInfo.Name, value);
+                                                AddTranslationItem(name, fieldInfo.Name, propertyInfo.Name, value);
                                             }
                                         }
 
@@ -243,12 +262,25 @@ namespace GitUI
 
         private void saveAs_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_languageCode.Text))
+                if (MessageBox.Show("There is no languagecode selected." + Environment.NewLine + "Do you want to select a language code first?", "Language code", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    return;
+
             SaveAs();
+        }
+
+        private string GetSelectedLanguageCode()
+        {
+            if (string.IsNullOrEmpty(_languageCode.Text) || _languageCode.Text.Length < 2)
+                return null;
+
+            return _languageCode.Text.Substring(0, 2);
         }
 
         private void SaveAs()
         {
             Translation foreignTranslation = new Translation();
+            foreignTranslation.LanguageCode = GetSelectedLanguageCode();
             foreach (TranslateItem translateItem in translate)
             {
                 //Item is not translated (yet), skip it
@@ -257,12 +289,13 @@ namespace GitUI
 
                 if (!foreignTranslation.HasTranslationCategory(translateItem.Category))
                     foreignTranslation.AddTranslationCategory(new TranslationCategory(translateItem.Category));
-
+                
                 foreignTranslation.GetTranslationCategory(translateItem.Category).AddTranslationItem(new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue));
             }
 
             SaveFileDialog fileDialog = new SaveFileDialog();
             fileDialog.Title = saveAsText.Text;
+            fileDialog.FileName = translations.Text + ".xml";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -276,9 +309,19 @@ namespace GitUI
             AskForSave();
             changesMade = false;
 
-            translator = new Translator((string)translations.SelectedItem);
+            translator = new Translator((string)translations.Text);
             LoadTranslation();
             FillTranslateGrid(allText.Text);
+
+            try
+            {
+                CultureInfo culture = new CultureInfo(translator.LanguageCode);
+                _languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
+            }
+            catch
+            {
+                _languageCode.Text = translator.LanguageCode;
+            }
         }
 
         private void hideTranslatedItems_CheckedChanged(object sender, EventArgs e)
@@ -322,6 +365,7 @@ namespace GitUI
                 changesMade = true;
 
                 UpdateProgress();
+                translateGrid.Refresh();
             }
         }
 
@@ -354,17 +398,18 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                if (translateGrid.SelectedRows[0].Index < translateGrid.Rows.Count-1)
+                if (translateGrid.SelectedRows[0].Index < translateGrid.Rows.Count - 1)
                 {
                     int newIndex = translateGrid.SelectedRows[0].Index + 1;
                     translateGrid.SelectedRows[0].Selected = false;
                     translateGrid.Rows[newIndex].Selected = true;
                 }
-            } else
-            if (translateGrid.Rows.Count > 0)
-            {
-                translateGrid.Rows[0].Selected = true;
             }
+            else
+                if (translateGrid.Rows.Count > 0)
+                {
+                    translateGrid.Rows[0].Selected = true;
+                }
         }
 
         private void previousButton_Click(object sender, EventArgs e)
@@ -385,6 +430,83 @@ namespace GitUI
                 }
         }
 
+        private void googleTranslate_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_languageCode.Text))
+            {
+                MessageBox.Show("Select a language code first.");
+                return;
+            }
 
+            if (translateGrid.SelectedRows.Count == 1)
+            {
+                TranslateItem translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
+
+                translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
+                
+                translateGrid_Click(null, null);
+                translateGrid.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Translate Text using Google Translate API's
+        /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
+        /// </summary>
+        /// <param name="input">Input string</param>
+        /// <param name="languagePair">2 letter Language Pair, delimited by "|".
+        /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
+        /// <returns>Translated to String</returns>
+        public string TranslateText(
+            string input,
+            string languagePair)
+        {
+            //Remove some unssuported characters
+            input = input.Replace("&&", "and");
+            input = input.Replace("&", "");
+
+            string url = String.Format("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q={0}&langpair=en|{1}&key=ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg", input, languagePair);
+            WebClient webClient = new WebClient();
+            webClient.Encoding = System.Text.Encoding.UTF8;
+            string result = webClient.DownloadString(url);
+
+            string startString = "{\"translatedText\":\"";
+            string endString = "\"}";
+
+            int startOffset = result.IndexOf(startString) + startString.Length;
+            int length = result.IndexOf(endString, startOffset) - startOffset;
+
+            if (length <= 0)
+                return "";
+
+            result = result.Substring(startOffset, length);
+            return result;
+        }
+
+        private void googleAll_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_languageCode.Text))
+            {
+                MessageBox.Show("Select a language code first.");
+                return;
+            }
+
+            foreach (TranslateItem translateItem in translate)
+            {
+                if (string.IsNullOrEmpty(translateItem.TranslatedValue))
+                    translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
+
+                UpdateProgress();
+                translateGrid.Refresh();
+            }
+
+            translateGrid_Click(null, null);
+        }
+
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            translations.Text = "";
+            translations_SelectedIndexChanged(null, null);
+        }
     }
 }

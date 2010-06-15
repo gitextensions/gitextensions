@@ -56,11 +56,6 @@ namespace GitUI
         {
             if (dashboard != null)
             {
-                //dashboard.WorkingDirChanged -= dashboard_WorkingDirChanged;
-                //this.splitContainer2.Panel2.Controls.Remove(dashboard);
-                //dashboard.Close();
-                //dashboard.Parent = null;
-                //dashboard.Dispose();
                 dashboard.Visible = false;
             }
         }
@@ -98,6 +93,7 @@ namespace GitUI
             RevisionGrid.ChangedCurrentBranch += RevisionGrid_ChangedCurrentBranch;
             indexWatcher.Reset();
 
+            //Load plugins in plugin menu
             foreach (IGitPlugin plugin in GitUIPluginCollection.Plugins)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem();
@@ -108,6 +104,9 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Execute plugin
+        /// </summary>
         void item_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
@@ -126,17 +125,6 @@ namespace GitUI
         {
             Initialize();
         }
-
-        private void SetIndexDirty()
-        {
-            RefreshButton.Image = Resources.arrow_refresh_dirty;
-        }
-
-        private void SetIndexClean()
-        {
-            RefreshButton.Image = Resources.arrow_refresh;
-        }
-
 
         private ToolStripItem warning;
         private ToolStripItem rebase;
@@ -157,13 +145,16 @@ namespace GitUI
 
         private void InternalInitialize(bool hard)
         {
-            SetIndexClean();
-
             Cursor.Current = Cursors.WaitCursor;
-            string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            CurrentBranch.Text = selectedHead;
 
             bool validWorkingDir = GitCommands.Settings.ValidWorkingDir();
+
+            
+            if (validWorkingDir)
+                _CurrentBranch.Text = GitCommands.GitCommands.GetSelectedBranch();
+            else
+                _CurrentBranch.Text = "";
+
             if (validWorkingDir)
                 HideDashboard();
             else
@@ -172,7 +163,7 @@ namespace GitUI
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
-            CurrentBranch.Enabled = validWorkingDir;
+            _CurrentBranch.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
@@ -186,7 +177,7 @@ namespace GitUI
             if (hard)
                 ShowRevisions();
 
-            Workingdir.Text = GitCommands.Settings.WorkingDir;
+            _Workingdir.Text = GitCommands.Settings.WorkingDir;
             this.Text = GitCommands.Settings.WorkingDir + " - Git Extensions";
 
             if (validWorkingDir && (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
@@ -571,7 +562,6 @@ namespace GitUI
         {
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            SetIndexClean();
             indexWatcher.Reset();
 
             if (dashboard != null)
@@ -920,7 +910,7 @@ namespace GitUI
 
         private void changelogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormChangeLog1().ShowDialog();
+            new FormChangeLog().ShowDialog();
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -1236,10 +1226,10 @@ namespace GitUI
 
         private void Workingdir_DropDownOpening(object sender, EventArgs e)
         {
-            Workingdir.DropDownItems.Clear();
+            _Workingdir.DropDownItems.Clear();
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
-                ToolStripItem toolStripItem = Workingdir.DropDownItems.Add(repository.Path);
+                ToolStripItem toolStripItem = _Workingdir.DropDownItems.Add(repository.Path);
                 toolStripItem.Click += new EventHandler(toolStripItem_Click);
             }
         }

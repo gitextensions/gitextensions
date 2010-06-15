@@ -88,6 +88,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap _24 {
+            get {
+                object obj = ResourceManager.GetObject("_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap _26 {
             get {
                 object obj = ResourceManager.GetObject("26", resourceCulture);
@@ -182,6 +189,13 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap _49 {
             get {
                 object obj = ResourceManager.GetObject("49", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap _491 {
+            get {
+                object obj = ResourceManager.GetObject("491", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -319,15 +333,12 @@ namespace GitUI.Properties {
         ///Version 1.94
         ///	Fixed bug: difftool only worked in git &gt; 1.7.0
         ///	Fixed bug: dashboard caused application to crash
+        ///	Fixed bug: refreshing gravatar that was already deleted caused an exception
+        ///	Fixed bug: when clicking &quot;dictionary&quot; submenu in spelling checker context menu the current word was replaced
+        ///	Fixed bug: ctrl-a in FileStatusListBox not working
+        ///	Fixed bug: starting &quot;gitextensions init&quot; from the commandline without path causes an exception
         ///	Added Japanese translation
-        ///	Added option to mark ill formed commit messages
-        ///	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
-        ///	Quicksearch now also searches in branches
-        ///	All windows positions are now saved	
-        ///
-        ///Version 1.93
-        ///	Fixed bug: wrong icon drawn in commit dialog for deleted files
-        ///	Reset selected files in the co [rest of string was truncated]&quot;;.
+        ///	Added [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

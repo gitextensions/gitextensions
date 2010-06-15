@@ -40,6 +40,7 @@
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
           <Directory Id="DictionariesDir" Name="Dictionaries"/>
+          <Directory Id="TranslationsDir" Name="Translation"/>          
           <Directory Id="IconsDir" Name="Icons"/>
         </Directory>
       </Directory>
@@ -84,8 +85,14 @@
       <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.TextEditor.dll"/>
       </Component>
+      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
+        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
+      </Component>
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
+      </Component>
+      <Component Id="ResourceManager.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\ResourceManager.dll"/>
       </Component>
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
@@ -137,9 +144,6 @@
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
       </Component>
-      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
-      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
@@ -190,6 +194,15 @@
       </Component>
       <Component Id="nlNL.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\nl-NL.dic"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="TranslationsDir">
+      <Component Id="Dutch.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Dutch.xml"/>
+      </Component>
+      <Component Id="Japanese.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.xml"/>
       </Component>
     </DirectoryRef>
 
@@ -312,6 +325,7 @@
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
       <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
       <ComponentRef Id="checksettings.reg"/>
       <ComponentRef Id="InstallDir.reg"/>
@@ -373,6 +387,15 @@
         </Feature>
         <Feature Id="nlNL" Title="nl-NL" Level="1">
           <ComponentRef Id="nlNL.dic"/>
+        </Feature>
+      </Feature>
+
+      <Feature Id="Translation" Title="Translations" Level="1">
+        <Feature Id="Dutch" Title="Dutch" Level="1">
+          <ComponentRef Id="Dutch.xml"/>
+        </Feature>
+        <Feature Id="Japanese" Title="Japanese" Level="1">
+          <ComponentRef Id="Japanese.xml"/>
         </Feature>
       </Feature>
 

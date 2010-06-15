@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.saveAs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTranslationLabel = new System.Windows.Forms.ToolStripLabel();
             this.translations = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripTranslationLanguageCode = new System.Windows.Forms.ToolStripLabel();
+            this._languageCode = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.translateProgress = new System.Windows.Forms.ToolStripLabel();
             this.hideTranslatedItems = new System.Windows.Forms.ToolStripButton();
@@ -40,10 +45,18 @@
             this.translateCategories = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.translateGrid = new System.Windows.Forms.DataGridView();
+            this.categoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.propertyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.neutralValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.translatedValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.translateItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.neutralTekst = new System.Windows.Forms.RichTextBox();
             this.translatedText = new System.Windows.Forms.RichTextBox();
+            this.googleAll = new System.Windows.Forms.Button();
+            this.googleTranslate = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
@@ -55,6 +68,7 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -75,24 +89,38 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(623, 415);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 463);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // toolStrip1
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonNew,
             this.saveAs,
+            this.toolStripTranslationLabel,
             this.translations,
+            this.toolStripTranslationLanguageCode,
+            this._languageCode,
             this.toolStripSeparator1,
             this.translateProgress,
             this.hideTranslatedItems,
             this._toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(623, 30);
+            this.toolStrip1.Size = new System.Drawing.Size(756, 30);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButtonNew
+            // 
+            this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
+            this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNew.Name = "toolStripButtonNew";
+            this.toolStripButtonNew.Size = new System.Drawing.Size(53, 27);
+            this.toolStripButtonNew.Text = "New";
+            this.toolStripButtonNew.ToolTipText = "Create new translation";
+            this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
             // 
             // saveAs
             // 
@@ -101,7 +129,14 @@
             this.saveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveAs.Name = "saveAs";
             this.saveAs.Size = new System.Drawing.Size(23, 27);
+            this.saveAs.ToolTipText = "Save translation";
             this.saveAs.Click += new System.EventHandler(this.saveAs_Click);
+            // 
+            // toolStripTranslationLabel
+            // 
+            this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(77, 27);
+            this.toolStripTranslationLabel.Text = "Translation:";
             // 
             // translations
             // 
@@ -111,6 +146,17 @@
             this.translations.Name = "translations";
             this.translations.Size = new System.Drawing.Size(121, 30);
             this.translations.SelectedIndexChanged += new System.EventHandler(this.translations_SelectedIndexChanged);
+            // 
+            // toolStripTranslationLanguageCode
+            // 
+            this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(99, 27);
+            this.toolStripTranslationLanguageCode.Text = "Language code:";
+            // 
+            // _languageCode
+            // 
+            this._languageCode.Name = "_languageCode";
+            this._languageCode.Size = new System.Drawing.Size(121, 30);
             // 
             // toolStripSeparator1
             // 
@@ -160,7 +206,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(617, 379);
+            this.splitContainer1.Size = new System.Drawing.Size(750, 427);
             this.splitContainer1.SplitterDistance = 151;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -170,7 +216,7 @@
             this.translateCategories.FormattingEnabled = true;
             this.translateCategories.Location = new System.Drawing.Point(0, 0);
             this.translateCategories.Name = "translateCategories";
-            this.translateCategories.Size = new System.Drawing.Size(151, 368);
+            this.translateCategories.Size = new System.Drawing.Size(151, 420);
             this.translateCategories.TabIndex = 0;
             this.translateCategories.SelectedIndexChanged += new System.EventHandler(this.translateCategories_SelectedIndexChanged);
             // 
@@ -189,24 +235,77 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(462, 379);
-            this.splitContainer2.SplitterDistance = 222;
+            this.splitContainer2.Size = new System.Drawing.Size(595, 427);
+            this.splitContainer2.SplitterDistance = 270;
             this.splitContainer2.TabIndex = 2;
             // 
             // translateGrid
             // 
+            this.translateGrid.AutoGenerateColumns = false;
             this.translateGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.translateGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.categoryDataGridViewTextBoxColumn,
+            this.nameDataGridViewTextBoxColumn,
+            this.propertyDataGridViewTextBoxColumn,
+            this.neutralValueDataGridViewTextBoxColumn,
+            this.translatedValueDataGridViewTextBoxColumn});
+            this.translateGrid.DataSource = this.translateItemBindingSource;
             this.translateGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateGrid.Location = new System.Drawing.Point(0, 0);
             this.translateGrid.MultiSelect = false;
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.RowHeadersVisible = false;
             this.translateGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.translateGrid.Size = new System.Drawing.Size(462, 222);
+            this.translateGrid.Size = new System.Drawing.Size(595, 270);
             this.translateGrid.TabIndex = 1;
             this.translateGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.translateGrid_CellEndEdit);
             this.translateGrid.SelectionChanged += new System.EventHandler(this.translateGrid_SelectionChanged);
             this.translateGrid.Click += new System.EventHandler(this.translateGrid_Click);
+            // 
+            // categoryDataGridViewTextBoxColumn
+            // 
+            this.categoryDataGridViewTextBoxColumn.DataPropertyName = "Category";
+            this.categoryDataGridViewTextBoxColumn.HeaderText = "Category";
+            this.categoryDataGridViewTextBoxColumn.Name = "categoryDataGridViewTextBoxColumn";
+            this.categoryDataGridViewTextBoxColumn.ReadOnly = true;
+            this.categoryDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // propertyDataGridViewTextBoxColumn
+            // 
+            this.propertyDataGridViewTextBoxColumn.DataPropertyName = "Property";
+            this.propertyDataGridViewTextBoxColumn.HeaderText = "Property";
+            this.propertyDataGridViewTextBoxColumn.Name = "propertyDataGridViewTextBoxColumn";
+            this.propertyDataGridViewTextBoxColumn.ReadOnly = true;
+            this.propertyDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // neutralValueDataGridViewTextBoxColumn
+            // 
+            this.neutralValueDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.neutralValueDataGridViewTextBoxColumn.DataPropertyName = "NeutralValue";
+            this.neutralValueDataGridViewTextBoxColumn.HeaderText = "NeutralValue";
+            this.neutralValueDataGridViewTextBoxColumn.Name = "neutralValueDataGridViewTextBoxColumn";
+            this.neutralValueDataGridViewTextBoxColumn.ReadOnly = true;
+            this.neutralValueDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // translatedValueDataGridViewTextBoxColumn
+            // 
+            this.translatedValueDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.translatedValueDataGridViewTextBoxColumn.DataPropertyName = "TranslatedValue";
+            this.translatedValueDataGridViewTextBoxColumn.HeaderText = "TranslatedValue";
+            this.translatedValueDataGridViewTextBoxColumn.Name = "translatedValueDataGridViewTextBoxColumn";
+            this.translatedValueDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // translateItemBindingSource
+            // 
+            this.translateItemBindingSource.DataSource = typeof(GitUI.FormTranslate.TranslateItem);
             // 
             // splitContainer3
             // 
@@ -221,10 +320,12 @@
             // 
             // splitContainer3.Panel2
             // 
+            this.splitContainer3.Panel2.Controls.Add(this.googleAll);
+            this.splitContainer3.Panel2.Controls.Add(this.googleTranslate);
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
-            this.splitContainer3.Size = new System.Drawing.Size(462, 153);
-            this.splitContainer3.SplitterDistance = 354;
+            this.splitContainer3.Size = new System.Drawing.Size(595, 153);
+            this.splitContainer3.SplitterDistance = 466;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -241,7 +342,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(354, 153);
+            this.splitContainer4.Size = new System.Drawing.Size(466, 153);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.TabIndex = 0;
             // 
@@ -251,7 +352,7 @@
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(354, 72);
+            this.neutralTekst.Size = new System.Drawing.Size(466, 72);
             this.neutralTekst.TabIndex = 0;
             this.neutralTekst.Text = "";
             // 
@@ -260,16 +361,36 @@
             this.translatedText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(354, 77);
+            this.translatedText.Size = new System.Drawing.Size(466, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
+            // 
+            // googleAll
+            // 
+            this.googleAll.Location = new System.Drawing.Point(3, 123);
+            this.googleAll.Name = "googleAll";
+            this.googleAll.Size = new System.Drawing.Size(119, 23);
+            this.googleAll.TabIndex = 3;
+            this.googleAll.Text = "Google all empty";
+            this.googleAll.UseVisualStyleBackColor = true;
+            this.googleAll.Click += new System.EventHandler(this.googleAll_Click);
+            // 
+            // googleTranslate
+            // 
+            this.googleTranslate.Location = new System.Drawing.Point(2, 95);
+            this.googleTranslate.Name = "googleTranslate";
+            this.googleTranslate.Size = new System.Drawing.Size(120, 23);
+            this.googleTranslate.TabIndex = 2;
+            this.googleTranslate.Text = "Google translate";
+            this.googleTranslate.UseVisualStyleBackColor = true;
+            this.googleTranslate.Click += new System.EventHandler(this.googleTranslate_Click);
             // 
             // previousButton
             // 
             this.previousButton.Location = new System.Drawing.Point(3, 32);
             this.previousButton.Name = "previousButton";
-            this.previousButton.Size = new System.Drawing.Size(99, 23);
+            this.previousButton.Size = new System.Drawing.Size(119, 23);
             this.previousButton.TabIndex = 1;
             this.previousButton.Text = "&Previous";
             this.previousButton.UseVisualStyleBackColor = true;
@@ -279,7 +400,7 @@
             // 
             this.nextButton.Location = new System.Drawing.Point(2, 3);
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(99, 23);
+            this.nextButton.Size = new System.Drawing.Size(120, 23);
             this.nextButton.TabIndex = 0;
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;
@@ -289,10 +410,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(623, 415);
+            this.ClientSize = new System.Drawing.Size(756, 463);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormTranslate";
-            this.Text = "FormTranslate";
+            this.Text = "Translate";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -304,6 +425,7 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
@@ -334,6 +456,18 @@
         private System.Windows.Forms.ToolStripButton _toolStripButton1;
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button nextButton;
+        private System.Windows.Forms.BindingSource translateItemBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn categoryDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn propertyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn neutralValueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn translatedValueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button googleTranslate;
+        private System.Windows.Forms.ToolStripLabel toolStripTranslationLabel;
+        private System.Windows.Forms.ToolStripLabel toolStripTranslationLanguageCode;
+        private System.Windows.Forms.ToolStripComboBox _languageCode;
+        private System.Windows.Forms.Button googleAll;
+        private System.Windows.Forms.ToolStripButton toolStripButtonNew;
 
     }
 }

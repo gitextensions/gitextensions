@@ -26,7 +26,7 @@ namespace GitUI
 
         public void DisableContextMenu()
         {
-            Caption.ContextMenuStrip = null;
+            _Caption.ContextMenuStrip = null;
         }
 
         private RepositoryCategory repositoryCategory;
@@ -228,11 +228,11 @@ namespace GitUI
         {
             get
             {
-                return Caption.Text;
+                return _Caption.Text;
             }
             set
             {
-                Caption.Text = value;
+                _Caption.Text = value;
             }
         }
 
