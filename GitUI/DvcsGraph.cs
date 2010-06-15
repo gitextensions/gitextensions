@@ -123,6 +123,7 @@ namespace GitUI
                     JunctionColors.Clear();
                     GraphLanes = newLanes;
                     RowCount = GraphLanes.Count;
+                    updateColumnWidth();
                     RebuildGraph();
                 });
 
@@ -194,6 +195,11 @@ namespace GitUI
         }
 
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
+        {
+            updateColumnWidth();
+        }
+
+        private void updateColumnWidth()
         {
             // Auto scale width on scroll
             if (dataGridColumnGraph.Visible)
