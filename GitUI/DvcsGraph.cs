@@ -205,12 +205,12 @@ namespace GitUI
             if (dataGridColumnGraph.Visible)
             {
                 int laneCount = 2;
-                if (GraphLanes != null)
+                if (GraphLanes != null && FirstDisplayedCell != null)
                 {
                     int width = 1;
                     int start = FirstDisplayedCell.RowIndex;
                     int stop = start + DisplayedRowCount(true);
-                    for (int i = start; i < stop; i++)
+                    for (int i = start; i < stop && GraphLanes[i] != null; i++)
                     {
                         width = Math.Max(GraphLanes[i].Count, width);
                     }
@@ -688,6 +688,7 @@ namespace GitUI
         {
             public List<Junction> Junctions = new List<Junction>();
             public Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
+            public int NodeCount = 0;
             
             public Comparison<object> Sorter = null;
 
@@ -703,6 +704,7 @@ namespace GitUI
                 {
                     Junctions.Add(new Junction(node, node));
                 }
+                NodeCount++;
                 node.Data = aData;
                 node.DataType = aType;
                 //Console.WriteLine(node);
@@ -751,7 +753,7 @@ namespace GitUI
                 }
             }
 
-            public int Count { get { return Nodes.Count; } }
+            public int Count { get { return NodeCount; } }
 
             public void Prune()
             {
@@ -1225,7 +1227,10 @@ namespace GitUI
 
                 public int Count
                 {
-                    get { return edges.CountCurrent(); }
+                    get 
+                    { 
+                        return edges.CountCurrent(); 
+                    }
                 }
 
                 public int LaneInfoCount(int lane)
@@ -1288,14 +1293,15 @@ namespace GitUI
 
                 public void Collapse(int col)
                 {
-                    for (int i = col; i < edges.CountNext(); i++)
+                    int edgeCount = Math.Max(edges.CountCurrent(), edges.CountNext());
+                    for (int i = col; i < edgeCount; i++)
                     {
-                        for (int j = 0; j < edges.CountNext(i); j++)
+                        while (edges.CountNext(i) > 0)
                         {
                             int start, end;
-                            LaneInfo info = edges.RemoveNext(i, j, out start, out end);
+                            LaneInfo info = edges.RemoveNext(i, 0, out start, out end);
                             info.ConnectLane--;
-                            edges.Add(i, info.ConnectLane, info);
+                            edges.Add(start, info.ConnectLane, info);
                         }
                     }
                 }
@@ -1415,9 +1421,9 @@ namespace GitUI
                     }
                     if (isUsable)
                     {
-                        if (currentRow.Node == null || 
-                            (lane[0].Data != null && currentRow.Node.Data != null && 
-                             sorter.Invoke(lane[0].Data, currentRow.Node.Data) > 0))
+                        if (currentRow.Node == null ||
+                            currentRow.Node.Data == null ||
+                            (lane[0].Data != null && sorter.Invoke(lane[0].Data, currentRow.Node.Data) > 0))
                         {
                             currentRow.Node = lane[0];
                             currentRow.NodeLane = curLane;
@@ -1425,12 +1431,19 @@ namespace GitUI
                     }
                 }
 
-                // DEBUG: The check above didn't find anything, but should have
-                if (currentRow.Node == null && laneNodes.Count > 0)
+                // If this row doesn't contain data, we're to the end of the valid entries.
+                if (currentRow.Node == null || currentRow.Node.Data == null)
                 {
-                    if (Debugger.IsAttached) Debugger.Break();
-                    //Node[] topo = this.sourceGraph.TopoSortedNodes();
+                    // DEBUG: The check above didn't find anything, but should have
+                    if (currentRow.Node == null && laneNodes.Count > 0)
+                    {
+                        //if (Debugger.IsAttached) Debugger.Break();
+                        //Node[] topo = this.sourceGraph.TopoSortedNodes();
+                    }
+
+                    return false;
                 }
+
                 #endregion
 
                 // Check to see if there are available lanes that could be used
@@ -1484,37 +1497,37 @@ namespace GitUI
                 // can be brought in for processing.
                 for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
-                    // If 1 item left in the row, see if we can start to draw any of the 
-                    // parents. We can only do it if all of the parent's descendants are 
-                    // fully drawn.
-                    if (laneNodes[curLane].Count != 1)
+                    // If there aren't any items in the row, there isn't anything to do
+                    if (laneNodes[curLane].Count == 0)
                     {
                         continue;
                     }
 
                     Node node = laneNodes[curLane][0];
 
-                    if (node.Ancestors.Count == 0)
+                    // If we have multiple lanes with this same ancestor on the top,
+                    // we can to consolidate them.
+                    for (int nextLane = curLane + 1; nextLane < laneNodes.Count; nextLane++)
                     {
-                        // If we have multiple lanes with this same ancestor on the top,
-                        // we need to consolidate them. This happens when the first node in the
-                        // graph has a branch
-                        for (int nextLane = curLane + 1; nextLane < laneNodes.Count; nextLane++)
+                        if (laneNodes[nextLane].Count == 1 && laneNodes[nextLane][0] == node)
                         {
-                            if (laneNodes[nextLane].Count == 1 && laneNodes[nextLane][0] == node)
-                            {
-                                laneNodes[nextLane].Clear();
-                                if (currentRow.LaneInfoCount(nextLane) > 0)
-                                {
-                                    LaneInfo curRow = currentRow[nextLane, 0];
-                                    curRow.ConnectLane = curLane;
-                                    currentRow.Clear(nextLane);
-                                    currentRow.Add(nextLane, curRow);
-                                }
-                            }
+                            laneNodes[nextLane].Clear();
+                            currentRow.Replace(nextLane, curLane);
+                            //if (currentRow.LaneInfoCount(nextLane) > 0)
+                            //{
+                            //    LaneInfo curRow = currentRow[nextLane, 0];
+                            //    curRow.ConnectLane = curLane;
+                            //    currentRow.Clear(nextLane);
+                            //    currentRow.Add(nextLane, curRow);
+                            //}
                         }
-                        // No ancestors. We'll leave this guy in the lanes until
-                        // he gets selected out and drawn.
+                    }
+                    
+                    // If 1 item left in the row, see if we can start to draw any of the 
+                    // parents. We can only do it if all of the parent's descendants are 
+                    // fully drawn.
+                    if (laneNodes[curLane].Count != 1)
+                    {
                         continue;
                     }
 
