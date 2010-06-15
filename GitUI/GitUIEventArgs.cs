@@ -41,6 +41,10 @@ namespace GitUI
             }
         }
 
+        public bool IsValidGitWorkingDir(string workingDir)
+        {
+            return Settings.ValidWorkingDir(workingDir);
+        }
 
         public string GitCommand
         {

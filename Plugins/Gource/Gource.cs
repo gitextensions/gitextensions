@@ -40,6 +40,12 @@ namespace Gource
 
         public void Execute(IGitUIEventArgs gitUICommands)
         {
+            if (!gitUICommands.IsValidGitWorkingDir(gitUICommands.GitWorkingDir))
+            {
+                MessageBox.Show("The current directory is not a valid git repository." + Environment.NewLine + Environment.NewLine + "Gource can be only be started from a valid git repository.");
+                return;
+            }
+
             string pathToGource = Settings.GetSetting("Path to \"gource\"");
 
             if (!string.IsNullOrEmpty(pathToGource))
