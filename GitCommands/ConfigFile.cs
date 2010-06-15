@@ -11,13 +11,13 @@ namespace GitCommands
 {
     public class ConfigFile
     {
-        Dictionary<string, NameValueCollection> data = 
-            new Dictionary<string,NameValueCollection>();
+        Dictionary<string, NameValueCollection> data =
+            new Dictionary<string, NameValueCollection>();
 
         static readonly Regex regRemoveEmptyLines =
             new Regex
             (
-                @"(\s*;[\d\D]*?\r?\n)+|\r?\n(\s*\r?\n)*", 
+                @"(\s*;[\d\D]*?\r?\n)+|\r?\n(\s*\r?\n)*",
                 RegexOptions.Multiline | RegexOptions.Compiled
             );
 
@@ -32,8 +32,8 @@ namespace GitCommands
                 (?<IsKeyValue>
                     ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
                 )",
-                RegexOptions.Compiled | 
-                RegexOptions.IgnoreCase | 
+                RegexOptions.Compiled |
+                RegexOptions.IgnoreCase |
                 RegexOptions.IgnorePatternWhitespace
             );
 
@@ -68,19 +68,19 @@ namespace GitCommands
             if (stream != null && encoding != null)
             {
                 string iniData;
-                using 
+                using
                 (
-                    StreamReader reader = 
+                    StreamReader reader =
                         new StreamReader(stream, encoding)
                 )
                     iniData = reader.ReadToEnd();
 
                 iniData = regRemoveEmptyLines.Replace(iniData, "\n");
-                
-                string[] lines = 
+
+                string[] lines =
                     iniData.Split
                     (
-                        new char[] { '\n' }, 
+                        new char[] { '\n' },
                         StringSplitOptions.RemoveEmptyEntries
                     );
 
@@ -91,9 +91,8 @@ namespace GitCommands
                     {
                         if (m.Groups["IsSection"].Length > 0)
                         {
-                            string sName = 
-                                m.Groups["SectionName"].Value.
-                                ToLowerInvariant();
+                            string sName =
+                                m.Groups["SectionName"].Value;
 
                             //"fix" double spaces in entries like: [difftool "kdiff3"]
                             while (sName.Contains("  "))
@@ -106,7 +105,7 @@ namespace GitCommands
                                 {
                                     data.Add
                                     (
-                                        sName, 
+                                        sName,
                                         new NameValueCollection()
                                     );
                                 }
@@ -116,7 +115,7 @@ namespace GitCommands
                         {
                             data[lastSection].Add
                             (
-                                m.Groups["Key"].Value, 
+                                m.Groups["Key"].Value,
                                 unescapeString(m.Groups["Value"].Value)
                             );
                         }
@@ -149,8 +148,6 @@ namespace GitCommands
         {
             get
             {
-                section = section.ToLowerInvariant();
-
                 if (!data.ContainsKey(section))
                     data.Add(section, new NameValueCollection());
                 return data[section];
@@ -159,7 +156,7 @@ namespace GitCommands
 
         private bool HasSection(string section)
         {
-            return data.ContainsKey(section.ToLowerInvariant());
+            return data.ContainsKey(section);
         }
 
         private bool HasKey(string section, string key)
@@ -180,18 +177,30 @@ namespace GitCommands
             {
                 section = path[0];
                 key = path[1];
+
+                if (HasKey(section, key))
+                    data[section].Remove(key);
             }
             else
                 if (path.Length == 3)
                 {
+                    //sections can be defined as:
+                    //[section "subsection"] (subsection is case senstive)
+                    //or
+                    //[section.subsection]
                     section = path[0] + " \"" + path[1] + "\"";
                     key = path[2];
-                }
-                else
-                    return;
 
-            if (HasKey(section, key))
-                data[section].Remove(key);
+                    if (HasKey(section, key))
+                        data[section].Remove(key);
+
+                    section = path[0] + "." + path[1];
+                    key = path[2];
+
+                    if (HasKey(section, key))
+                        data[section].Remove(key);
+                }
+
         }
 
         public string GetValue(string setting)
@@ -205,20 +214,29 @@ namespace GitCommands
             {
                 section = path[0];
                 key = path[1];
+
+                if (HasKey(section, key))
+                    return data[section][key];
             }
             else
                 if (path.Length == 3)
                 {
                     section = path[0] + " \"" + path[1] + "\"";
                     key = path[2];
+
+                    if (HasKey(section, key))
+                        return data[section][key];
+
+                    section = path[0] + "." + path[1];
+                    key = path[2];
+
+                    if (HasKey(section, key))
+                        return data[section][key];
                 }
                 else
                     return "";
 
-            if (!HasKey(section, key))
-                return "";
-
-            return data[section][key];
+            return "";
         }
 
         public void SetValue(string setting, string value)
@@ -236,7 +254,11 @@ namespace GitCommands
             else
                 if (path.Length == 3)
                 {
-                    section = path[0] + " \"" + path[1] + "\"";
+                    section = path[0] + "." + path[1];
+
+                    if (!data.ContainsKey(section))
+                        section = path[0] + " \"" + path[1] + "\"";
+
                     key = path[2];
                 }
                 else
