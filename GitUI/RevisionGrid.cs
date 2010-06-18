@@ -46,6 +46,14 @@ namespace GitUI
 
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
+            Revisions.Loading += new DvcsGraph.LoadingHandler(Revisions_Loading);
+            
+            Revisions.Sorter = delegate(object a, object b)
+            {
+                GitRevision left = (GitRevision)a;
+                GitRevision right = (GitRevision)b;
+                return right.Order.CompareTo(left.Order);
+            };
 
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
@@ -56,6 +64,20 @@ namespace GitUI
             filter = "";
             quickSearchString = "";
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
+        }
+
+        void Revisions_Loading(bool isLoading)
+        {
+            if (isLoading)
+            {
+                Loading.Visible = true;
+                Revisions.Visible = false;
+            }
+            else
+            {
+                Loading.Visible = false;
+                Revisions.Visible = true;
+            }
         }
 
         Label quickSearchLabel;
@@ -279,6 +301,9 @@ namespace GitUI
         {
             if (revisionGraphCommand != null)
                 revisionGraphCommand.Kill();
+
+            if (gitCountCommitsCommand != null)
+                gitCountCommitsCommand.Kill();
         }
 
         protected override void OnCreateControl()
@@ -337,6 +362,7 @@ namespace GitUI
             return Revisions.GetRowData(aRow) as GitRevision;
         }
 
+        GitCommands.GitCommands gitCountCommitsCommand = null;
         GitCommands.RevisionGraph revisionGraphCommand = null;
         private bool ScrollBarSet;
 
@@ -394,6 +420,10 @@ namespace GitUI
                 {
                     revisionGraphCommand.Kill();
                 }
+                if (gitCountCommitsCommand != null)
+                {
+                    gitCountCommitsCommand.Kill();
+                }
 
                 ScrollBarSet = false;
                 Revisions.ClearSelection();
@@ -428,98 +458,75 @@ namespace GitUI
                 return;
             }
 
+            Revisions.Clear();
             Revisions.Enabled = false;
             Loading.Visible = true;
             indexWatcher.Reset();
             revisionGraphCommand = new RevisionGraph();
 
-            revisionGraphCommand.BackgroundThread = true;
             revisionGraphCommand.LogParam = LogParam + Filter;
             revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
             revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
-            revisionGraphCommand.LimitRevisions = GitCommands.Settings.MaxCommits;
             revisionGraphCommand.Execute();
+
+            LoadRevisions();
         }
 
         void gitGetCommitsCommand_Updated(object sender, EventArgs e)
         {
-            update(false);
+            RevisionGraph.RevisionGraphUpdatedEvent updatedEvent = (RevisionGraph.RevisionGraphUpdatedEvent)e;
+            update(updatedEvent.Revision);
         }
         
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
-            update(true);
+            update(null);
         }
 
-        void update(bool isLast)
+        private void gitCountCommitsCommand_Exited(object sender, EventArgs e)
         {
-            List<GitRevision> revisionList = revisionGraphCommand.Revisions;
-            if (revisionList == null)
+            syncContext.Post(_ => SetRowCount(), null);
+        }
+
+        private void SetRowCount()
+        {
+            int count;
+            if (int.TryParse(gitCountCommitsCommand.Output.ToString(), out count))
             {
+                ScrollBarSet = true;
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.RowCount = count;
+                Revisions.ScrollBars = ScrollBars.Vertical;
+            }
+        }
+
+        void update(GitRevision rev)
+        {
+            if( rev == null )
+            {
+                Revisions.Prune();
                 return;
             }
-
-            DvcsGraph.GraphData graph = new DvcsGraph.GraphData();
-
-            #region Set the sort order for the graph
-            if (!Settings.OrderRevisionByDate)
+        
+            if (rev.AuthorDate == null)
             {
-                graph.Sorter = delegate(object a, object b)
-                {
-                    GitRevision left = (GitRevision)a;
-                    GitRevision right = (GitRevision)b;
-                    return right.Order.CompareTo(left.Order);
-                };
+                // This should never happen.
+                return;
             }
-            else if (Settings.ShowAuthorDate)
+            DvcsGraph.DataType dataType;
+            if (rev.Guid == currentCheckout)
             {
-                graph.Sorter = delegate(object a, object b)
-                {
-                    GitRevision left = (GitRevision)a;
-                    GitRevision right = (GitRevision)b;
-                    return left.AuthorDate.CompareTo(right.AuthorDate);
-                };
+                dataType = DvcsGraph.DataType.Active;
+            }
+            else if (rev.Heads.Count > 0)
+            {
+                dataType = DvcsGraph.DataType.Special;
             }
             else
             {
-                graph.Sorter = delegate(object a, object b)
-                {
-                    GitRevision left = (GitRevision)a;
-                    GitRevision right = (GitRevision)b;
-                    return left.CommitDate.CompareTo(right.CommitDate);
-                };
+                dataType = DvcsGraph.DataType.Normal;
             }
-            #endregion
-
-            foreach (GitRevision rev in revisionList)
-            {
-                if (rev == null || rev.AuthorDate == null)
-                {
-                    // This should never happen.
-                    continue;
-                }
-                DvcsGraph.DataType dataType;
-                if (rev.Guid == currentCheckout)
-                {
-                    dataType = DvcsGraph.DataType.Active;
-                }
-                else if (rev.Heads.Count > 0)
-                {
-                    dataType = DvcsGraph.DataType.Special;
-                }
-                else
-                {
-                    dataType = DvcsGraph.DataType.Normal;
-                }
-                graph.Add(rev.Guid, rev.ParentGuids.ToArray(), dataType, rev);
-            }
-            if (isLast)
-            {
-                graph.Prune();
-            }
-            Revisions.SetData(graph);
-            
-            syncContext.Post(_ => LoadRevisions(), null);
+            Revisions.Add(rev.Guid, rev.ParentGuids.ToArray(), dataType, rev);
         }
 
         public string currentCheckout { get; set; }
@@ -537,15 +544,22 @@ namespace GitUI
                 return;
             }
 
-            if (Revisions.RowCount == 0 && string.IsNullOrEmpty(Filter))
-            {
-                Loading.Visible = false;
-                NoCommits.Visible = true;
-                Revisions.Visible = false;
-                return;
-            }
-
             Revisions.SuspendLayout();
+
+            if (!ScrollBarSet)
+            {
+                ScrollBarSet = true;
+                Revisions.ScrollBars = ScrollBars.None;
+                Revisions.ScrollBars = ScrollBars.Vertical;
+
+                string grep = "";
+                if (!string.IsNullOrEmpty(Filter))
+                    grep = " --grep=\"" + Filter + "\" ";
+
+                gitCountCommitsCommand = new GitCommands.GitCommands();
+                gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc\" -l\"");
+                gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
+            }
 
             Revisions.Columns[0].HeaderText = graphCaption.Text;
             Revisions.Columns[1].HeaderText = messageCaption.Text;
@@ -568,6 +582,8 @@ namespace GitUI
                 LastScrollPos = -1;
             }
 
+            // TODO: This doesn't work well right now. We should move the find
+            // logic into DvcsGraph, so it can keep looking every time more data is loaded in.
             if (LastSelectedRows.Count > 0)
             {
                 Revisions.ClearSelection();
@@ -579,6 +595,11 @@ namespace GitUI
                     int row = Revisions.FindRow(rowItem.Guid);
                     if (row >= 0 && Revisions.Rows.Count > row )
                     {
+                        if (Revisions.Rows[row] == null)
+                        {
+                            continue;
+                        }
+
                         Revisions.Rows[row].Selected = true;
                         if (Revisions.CurrentCell == null)
                         {
