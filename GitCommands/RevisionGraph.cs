@@ -14,15 +14,19 @@ namespace GitCommands
         {
             get 
             {
-                lock (revisions)
-                {
-                    return new List<GitRevision>( revisions );
-                }
+                return new List<GitRevision>( revisions );
             }
         }
 
-        public int LimitRevisions { get; set; }
-        public bool BackgroundThread { get; set; }
+        public class RevisionGraphUpdatedEvent : EventArgs
+        {
+            public RevisionGraphUpdatedEvent(GitRevision revision)
+            {
+                Revision = revision;
+            }
+
+            public GitRevision Revision;
+        }
 
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
@@ -30,7 +34,6 @@ namespace GitCommands
         private GitCommands gitGetGraphCommand;
         private uint revisionOrder = 0;
 
-        private Thread backgroundThread = null;
         private List<GitRevision> revisions = new List<GitRevision>();
 
         private enum ReadStep
@@ -51,7 +54,6 @@ namespace GitCommands
 
         public RevisionGraph()
         {
-            LimitRevisions = 200;
         }
 
         ~RevisionGraph()
@@ -61,10 +63,6 @@ namespace GitCommands
 
         public void Kill()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-            }
             // Don't need to sync this since the other thread that uses it
             // was aborted above.
             if (gitGetGraphCommand != null)
@@ -77,10 +75,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            lock (revisions)
-            {
-                revisions.Clear();
-            }
+            revisions.Clear();
 
             heads = GitCommands.GetHeads(true);
 
@@ -183,22 +178,15 @@ namespace GitCommands
 
             if (nextStep == ReadStep.Done)
             {
-                lock (revisions)
+                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
-                    if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
-                    {
-                        revision.Order = revisionOrder++;
-                        revisions.Add(revision);
-                    }
-                    nextStep = ReadStep.Commit;
-
-                    if (revisions.Count % Settings.MaxCommits == 0)
-                    {
-                        // Update early.
-                        Updated(this, new EventArgs());
-                    }
+                    revision.Order = revisionOrder++;
+                    revisions.Add(revision);
+                    Updated(this, new RevisionGraphUpdatedEvent(revision));
                 }
+                nextStep = ReadStep.Commit;
             }
+
         }
     }
 }
