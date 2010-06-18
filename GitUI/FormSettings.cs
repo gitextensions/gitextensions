@@ -69,6 +69,22 @@ namespace GitUI
             }
         }
 
+        private static string GetGlobalDiffToolFromConfig()
+        {
+            if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
+                return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.guitool");
+            else
+                return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.tool");
+        }
+
+        private static void SetGlobalDiffToolToConfig(string diffTool)
+        {
+            if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
+                GitCommands.GitCommands.GetGlobalConfig().SetValue("diff.guitool", diffTool);
+            else
+                GitCommands.GitCommands.GetGlobalConfig().SetValue("diff.tool", diffTool);
+        }
+
         private void LoadSettings()
         {
             try
@@ -176,10 +192,7 @@ namespace GitUI
                 YellowIcon.Checked = GitCommands.Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
                 RandomIcon.Checked = GitCommands.Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
-                if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
-                    GlobalDiffTool.Text = globalConfig.GetValue("diff.guitool");
-                else
-                    GlobalDiffTool.Text = globalConfig.GetValue("diff.tool");
+                GlobalDiffTool.Text = FormSettings.GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     DifftoolPath.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".path");
@@ -354,10 +367,7 @@ namespace GitUI
                     globalConfig.SetValue("user.email", GlobalUserEmail.Text);
                 globalConfig.SetValue("core.editor", GlobalEditor.Text);
 
-                if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
-                    globalConfig.SetValue("diff.guitool", GlobalDiffTool.Text);
-                else
-                    globalConfig.SetValue("diff.tool", GlobalDiffTool.Text);
+                FormSettings.SetGlobalDiffToolToConfig(GlobalDiffTool.Text);
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
@@ -547,7 +557,7 @@ namespace GitUI
                     }
                 }
 
-                if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("diff.tool")))
+                if (string.IsNullOrEmpty(FormSettings.GetGlobalDiffToolFromConfig()))
                 {
                     DiffTool2.BackColor = Color.LightSalmon;
                     DiffTool2.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
@@ -555,7 +565,7 @@ namespace GitUI
                 }
                 else
                 {
-                    if (gitCommands.GetGlobalSetting("diff.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                    if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                     {
                         string p = gitCommands.GetGlobalSetting("difftool.kdiff3.path");
                         if (string.IsNullOrEmpty(p) || !File.Exists(p))
@@ -572,7 +582,7 @@ namespace GitUI
                     }
                     else
                     {
-                        string difftool = gitCommands.GetGlobalSetting("diff.tool");
+                        string difftool = FormSettings.GetGlobalDiffToolFromConfig();
                         DiffTool2.BackColor = Color.LightGreen;
                         DiffTool2.Text = "There is a difftool configured: " + difftool;
                     }
@@ -701,7 +711,7 @@ namespace GitUI
         {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
-            if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("diff.tool")))
+            if (string.IsNullOrEmpty(FormSettings.GetGlobalDiffToolFromConfig()))
             {
                 if (MessageBox.Show("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" + Environment.NewLine + "Select no if you want to configure a different difftool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -715,12 +725,12 @@ namespace GitUI
                 }
             }
 
-            if (gitCommands.GetGlobalSetting("diff.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 SolveKDiffTool2Path(gitCommands);
             }
 
-            if (gitCommands.GetGlobalSetting("diff.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrEmpty(gitCommands.GetGlobalSetting("difftool.kdiff3.path")))
+            if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrEmpty(gitCommands.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show("Path to kdiff3 could not be found automatically." + Environment.NewLine + "Please make sure KDiff3 is installed or set path manually.");
                 tabControl1.SelectTab("GlobalSettingsPage");
@@ -790,11 +800,11 @@ namespace GitUI
         public static bool SolveKDiffTool2()
         {
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-            string diffTool = gitCommands.GetGlobalSetting("diff.tool");
+            string diffTool = GetGlobalDiffToolFromConfig();
             if (string.IsNullOrEmpty(diffTool))
             {
                 diffTool = "kdiff3";
-                gitCommands.SetGlobalSetting("diff.tool", diffTool);
+                SetGlobalDiffToolToConfig(diffTool);
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -1249,7 +1259,8 @@ namespace GitUI
                 {
                     MergetoolPath.Text = FindFileInFolders("Compare.exe",
                                                            @"C:\Program Files (x86)\Araxis\Araxis Merge\",
-                                                           @"C:\Program Files\Araxis\Araxis Merge\");
+                                                           @"C:\Program Files\Araxis\Araxis Merge\",
+                                                           @"C:\Program Files\Araxis 6.5\Araxis Merge\");
 
                     if (!File.Exists(MergetoolPath.Text))
                     {
@@ -1265,7 +1276,7 @@ namespace GitUI
 
             if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
             {
-                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("p4merge"))
+                if (MergetoolPath.Text.ToLower().Contains("kdiff3") || MergetoolPath.Text.ToLower().Contains("p4merge"))
                     MergetoolPath.Text = "";
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
@@ -1289,7 +1300,7 @@ namespace GitUI
 
             if (GlobalMergeTool.Text.Equals("DiffMerge", StringComparison.CurrentCultureIgnoreCase))
             {
-                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("p4merge"))
+                if (MergetoolPath.Text.ToLower().Contains("kdiff3") || MergetoolPath.Text.ToLower().Contains("p4merge"))
                     MergetoolPath.Text = "";
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
@@ -1379,7 +1390,7 @@ namespace GitUI
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 string kdiff3path = gitCommands.GetGlobalSetting("difftool.kdiff3.path");
-                if (!kdiff3path.Contains("kdiff3.exe"))
+                if (!kdiff3path.ToLower().Contains("kdiff3.exe"))
                     kdiff3path = "";
                 if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                 {
@@ -1393,7 +1404,7 @@ namespace GitUI
                             if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                             {
                                 kdiff3path = MergetoolPath.Text;
-                                if (!kdiff3path.Contains("kdiff3.exe"))
+                                if (!kdiff3path.ToLower().Contains("kdiff3.exe"))
                                     kdiff3path = "";
                             }
                         }
