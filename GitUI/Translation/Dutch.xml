@@ -2046,7 +2046,7 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
           <Value>Reset wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="Amend" Property="Text">
-          <Value>&amp;Voeg to aan laatste commit</Value>
+          <Value>&amp;Wijzig laatste commit</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Open</Value>
