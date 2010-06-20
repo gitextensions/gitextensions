@@ -8,6 +8,7 @@ Version 1.94
 	Fixed bug: when clicking "dictionary" submenu in spelling checker context menu the current word was replaced
 	Fixed bug: ctrl-a in FileStatusListBox not working
 	Fixed bug: starting "gitextensions init" from the commandline without path causes an exception
+	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file.
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
@@ -20,6 +21,7 @@ Version 1.94
 	The scoll position in file viewer is saved when switching revision.
 	Author image size can be set in context menu of gravatar control
 	The diff viewer now shows the old sha1 and new sha1 when viewing a submodule diff
+	The default web proxy is used to connect to internet
 
 Version 1.93
 	Fixed bug: wrong icon drawn in commit dialog for deleted files
