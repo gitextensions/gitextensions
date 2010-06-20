@@ -42,14 +42,18 @@ namespace GitUI
         {
             try
             {
-                //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-                GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
-                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".gitignore"))
                 {
-                    tw.Write(GitIgnoreFile);
-                    tw.Close();
+
+                    //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
+                    GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
+                    using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
+                    {
+                        tw.Write(GitIgnoreFile);
+                        tw.Close();
+                    }
+                    Close();
                 }
-                Close();
             }
             catch (Exception ex)
             {

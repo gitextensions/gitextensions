@@ -37,13 +37,17 @@ namespace GitUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-            MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
-            using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false, Settings.Encoding))
+            using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".mailmap"))
             {
-                tw.Write(MailMapFile);
+
+                //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
+                MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
+                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false, Settings.Encoding))
+                {
+                    tw.Write(MailMapFile);
+                }
+                Close();
             }
-            Close();
         }
 
         private void FormMailMap_FormClosing(object sender, FormClosingEventArgs e)
