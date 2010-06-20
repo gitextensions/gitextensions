@@ -262,7 +262,7 @@ namespace GitUI
                 //Refresh tree
                 GitTree.Nodes.Clear();
                 if (RevisionGrid.GetRevisions().Count > 0)
-                    LoadInTreeSingle(RevisionGrid.GetRevisions()[0], GitTree.Nodes);
+                    LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
                 GitTree.Sort();
 
 
@@ -325,15 +325,6 @@ namespace GitUI
 
                 RevisionInfo.SetRevision(revision.Guid);
             }
-        }
-
-        protected void LoadInTreeSingle(IGitItem item, TreeNodeCollection node)
-        {
-            List<IGitItem> list = new List<IGitItem>();
-            list.Add(item);
-            LoadInTree(list, node);
-            if (node.Count > 0)
-                node[0].Expand();
         }
 
         private ContextMenu treeContextMenu;

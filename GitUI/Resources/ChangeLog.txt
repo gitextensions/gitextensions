@@ -8,7 +8,8 @@ Version 1.94
 	Fixed bug: when clicking "dictionary" submenu in spelling checker context menu the current word was replaced
 	Fixed bug: ctrl-a in FileStatusListBox not working
 	Fixed bug: starting "gitextensions init" from the commandline without path causes an exception
-	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file.
+	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file
+	Fixed bug: Removed empty root node from tree in file tree
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
