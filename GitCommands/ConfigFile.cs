@@ -75,7 +75,15 @@ namespace GitCommands
                 }
             }
 
+
+            //Remove all attributes that could cause the file to be read-only
+            FileInfo configFile = new FileInfo(fileName);
+            FileAttributes oldAttributes = configFile.Attributes;
+            configFile.Attributes = FileAttributes.Normal;
+
             File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+
+            configFile.Attributes = oldAttributes;
         }
 
         public void SetValue(string setting, string value)
