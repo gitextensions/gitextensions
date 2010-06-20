@@ -817,6 +817,7 @@
   <ItemGroup>
     <Content Include="cow-head.ico" />
     <None Include="Icons\24.png" />
+    <None Include="Icons\bash.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
