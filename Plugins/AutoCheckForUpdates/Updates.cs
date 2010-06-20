@@ -47,15 +47,12 @@ namespace AutoCheckForUpdates
         {
             try
             {
-                WebRequest myWebRequest = WebRequest.Create(@"http://code.google.com/p/gitextensions/");
-                WebResponse myWebResponse = myWebRequest.GetResponse();
-                Stream ReceiveStream = myWebResponse.GetResponseStream();
-                Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
+                WebClient webClient = new WebClient();
+                webClient.Proxy = WebRequest.DefaultWebProxy;
+                webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+                webClient.Encoding = System.Text.Encoding.UTF8;
 
-                StreamReader readStream = new StreamReader(ReceiveStream, encode);
-                string response = readStream.ReadToEnd();
-                readStream.Close();
-                myWebResponse.Close();
+                string response = webClient.DownloadString(@"http://code.google.com/p/gitextensions/");
 
                 //find for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
                 Regex regEx = new Regex(@"http://gitextensions.googlecode.com/files/GitExtensions[0-9][0-9][0-9]SetupComplete.msi");
