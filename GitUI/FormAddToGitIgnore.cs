@@ -23,16 +23,18 @@ namespace GitUI
         {
             try
             {
-                StringBuilder gitIgnoreFile = new StringBuilder();
-                gitIgnoreFile.Append(Environment.NewLine);
-                gitIgnoreFile.Append(FilePattern.Text);
-
-                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", true, Settings.Encoding))
+                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".gitignore"))
                 {
-                    tw.Write(gitIgnoreFile);
-                    tw.Close();
-                }
+                    StringBuilder gitIgnoreFile = new StringBuilder();
+                    gitIgnoreFile.Append(Environment.NewLine);
+                    gitIgnoreFile.Append(FilePattern.Text);
 
+                    using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", true, Settings.Encoding))
+                    {
+                        tw.Write(gitIgnoreFile);
+                        tw.Close();
+                    }
+                }
             }
             catch(Exception ex)
             {
