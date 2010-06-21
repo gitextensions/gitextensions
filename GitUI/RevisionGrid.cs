@@ -360,7 +360,6 @@ namespace GitUI
         }
 
         GitCommands.RevisionGraph revisionGraphCommand = null;
-        private bool ScrollBarSet;
 
         public void RefreshRevisions()
         {
@@ -397,7 +396,6 @@ namespace GitUI
 
                 if (!GitCommands.Settings.ValidWorkingDir())
                 {
-                    Revisions.ScrollBars = ScrollBars.None;
                     Revisions.Visible = false;
 
                     NoCommits.Visible = true;
@@ -422,7 +420,6 @@ namespace GitUI
                 Revisions.ClearSelection();
 
                 currentCheckout = newCurrentCheckout;
-                ScrollBarSet = false;
                 Error.Visible = false;
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
@@ -432,7 +429,6 @@ namespace GitUI
 
                 if (!GitCommands.Settings.ValidWorkingDir())
                 {
-                    Revisions.ScrollBars = ScrollBars.None;
                     Revisions.Visible = false;
 
                     NoCommits.Visible = true;
