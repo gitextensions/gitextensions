@@ -404,6 +404,10 @@ namespace GitUI
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
                 visibleBottom = visibleTop + DisplayedRowCount(true);
+                if (visibleBottom > graphData.Count)
+                {
+                    visibleBottom = graphData.Count;
+                }
 
                 int targetBottom = visibleBottom + GitCommands.Settings.MaxCommits;
                 targetBottom = Math.Min(targetBottom, graphData.Count);
