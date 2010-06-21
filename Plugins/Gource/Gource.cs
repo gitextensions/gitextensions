@@ -170,49 +170,40 @@ namespace Gource
 
             // Assign values to these objects here so that they can
             // be referenced in the finally block
-            Stream remoteStream = null;
             Stream localStream = null;
-            WebResponse response = null;
 
             // Use a try/catch/finally block as both the WebRequest and Stream
             // classes throw exceptions upon error
             try
             {
-                // Create a request for the specified remote file name
-                WebRequest request = WebRequest.Create(remoteFilename);
-                if (request != null)
+                WebClient webClient = new WebClient();
+                webClient.Proxy = WebRequest.DefaultWebProxy;
+                webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+                // Once the WebResponse object has been retrieved,
+                // get the stream object associated with the response's data
+                Stream remoteStream = webClient.OpenRead(remoteFilename);
+
+                // Create the local file
+                localStream = File.Create(localFilename);
+
+                // Allocate a 1k buffer
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+
+                // Simple do/while loop to read from stream until
+                // no bytes are returned
+                do
                 {
-                    // Send the request to the server and retrieve the
-                    // WebResponse object 
-                    response = request.GetResponse();
-                    if (response != null)
-                    {
-                        // Once the WebResponse object has been retrieved,
-                        // get the stream object associated with the response's data
-                        remoteStream = response.GetResponseStream();
+                    // Read data (up to 1k) from the stream
+                    bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
-                        // Create the local file
-                        localStream = File.Create(localFilename);
+                    // Write the data to the local file
+                    localStream.Write(buffer, 0, bytesRead);
 
-                        // Allocate a 1k buffer
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-
-                        // Simple do/while loop to read from stream until
-                        // no bytes are returned
-                        do
-                        {
-                            // Read data (up to 1k) from the stream
-                            bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-                            // Write the data to the local file
-                            localStream.Write(buffer, 0, bytesRead);
-
-                            // Increment total bytes processed
-                            bytesProcessed += bytesRead;
-                        } while (bytesRead > 0);
-                    }
-                }
+                    // Increment total bytes processed
+                    bytesProcessed += bytesRead;
+                } while (bytesRead > 0);
             }
             catch (Exception e)
             {
@@ -223,8 +214,6 @@ namespace Gource
                 // Close the response and streams objects here 
                 // to make sure they're closed even if an exception
                 // is thrown at some point
-                if (response != null) response.Close();
-                if (remoteStream != null) remoteStream.Close();
                 if (localStream != null) localStream.Close();
             }
 
@@ -237,15 +226,12 @@ namespace Gource
         {
             try
             {
-                WebRequest myWebRequest = WebRequest.Create(@"http://code.google.com/p/gource/");
-                WebResponse myWebResponse = myWebRequest.GetResponse();
-                Stream ReceiveStream = myWebResponse.GetResponseStream();
-                Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
+                WebClient webClient = new WebClient();
+                webClient.Proxy = WebRequest.DefaultWebProxy;
+                webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+                webClient.Encoding = System.Text.Encoding.UTF8;
 
-                StreamReader readStream = new StreamReader(ReceiveStream, encode);
-                string response = readStream.ReadToEnd();
-                readStream.Close();
-                myWebResponse.Close();
+                string response = webClient.DownloadString(@"http://code.google.com/p/gource/");
 
                 //find http://gource.googlecode.com/files/gource-0.26b.win32.zip
                 Regex regEx = new Regex(@"gource-.*\.win32\.zip");

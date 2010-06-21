@@ -326,6 +326,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap bash {
+            get {
+                object obj = ResourceManager.GetObject("bash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
@@ -337,8 +344,7 @@ namespace GitUI.Properties {
         ///	Fixed bug: when clicking &quot;dictionary&quot; submenu in spelling checker context menu the current word was replaced
         ///	Fixed bug: ctrl-a in FileStatusListBox not working
         ///	Fixed bug: starting &quot;gitextensions init&quot; from the commandline without path causes an exception
-        ///	Added Japanese translation
-        ///	Added [rest of string was truncated]&quot;;.
+        ///	Fixed bug: AccessDeniedException t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
