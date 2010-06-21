@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileViewer));
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.ContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -42,8 +43,17 @@
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileviewerToolbar = new System.Windows.Forms.ToolStrip();
+            this.nextChangeButton = new System.Windows.Forms.ToolStripButton();
+            this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.increaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
+            this.DecreaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
+            this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.ContextMenu.SuspendLayout();
+            this.fileviewerToolbar.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox
@@ -156,17 +166,100 @@
             this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
             this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.treatAllFilesAsTextToolStripMenuItem_Click);
             // 
+            // fileviewerToolbar
+            // 
+            this.fileviewerToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileviewerToolbar.Dock = System.Windows.Forms.DockStyle.None;
+            this.fileviewerToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nextChangeButton,
+            this.previousChangeButton,
+            this.toolStripSeparator3,
+            this.increaseNumberOfLines,
+            this.DecreaseNumberOfLines,
+            this.toolStripSeparator4,
+            this.showEntireFileButton});
+            this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.fileviewerToolbar.Location = new System.Drawing.Point(466, 0);
+            this.fileviewerToolbar.Name = "fileviewerToolbar";
+            this.fileviewerToolbar.Size = new System.Drawing.Size(159, 23);
+            this.fileviewerToolbar.TabIndex = 4;
+            this.fileviewerToolbar.Visible = false;
+            // 
+            // nextChangeButton
+            // 
+            this.nextChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.nextChangeButton.Image = global::GitUI.Properties.Resources._4;
+            this.nextChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.nextChangeButton.Name = "nextChangeButton";
+            this.nextChangeButton.Size = new System.Drawing.Size(23, 20);
+            this.nextChangeButton.ToolTipText = "Next change";
+            this.nextChangeButton.Click += new System.EventHandler(this.nextChangeButton_Click);
+            // 
+            // previousChangeButton
+            // 
+            this.previousChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.previousChangeButton.Image = global::GitUI.Properties.Resources._3;
+            this.previousChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.previousChangeButton.Name = "previousChangeButton";
+            this.previousChangeButton.Size = new System.Drawing.Size(23, 20);
+            this.previousChangeButton.ToolTipText = "Previous change";
+            this.previousChangeButton.Click += new System.EventHandler(this.previousChangeButton_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 23);
+            // 
+            // increaseNumberOfLines
+            // 
+            this.increaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.increaseNumberOfLines.Image = ((System.Drawing.Image)(resources.GetObject("increaseNumberOfLines.Image")));
+            this.increaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.increaseNumberOfLines.Name = "increaseNumberOfLines";
+            this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
+            this.increaseNumberOfLines.ToolTipText = "Increase number of visible lines";
+            this.increaseNumberOfLines.Click += new System.EventHandler(this.increaseNumberOfLines_Click);
+            // 
+            // DecreaseNumberOfLines
+            // 
+            this.DecreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.DecreaseNumberOfLines.Image = ((System.Drawing.Image)(resources.GetObject("DecreaseNumberOfLines.Image")));
+            this.DecreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
+            this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
+            this.DecreaseNumberOfLines.ToolTipText = "Decrease number of visible lines";
+            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLines_Click);
+            // 
+            // showEntireFileButton
+            // 
+            this.showEntireFileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showEntireFileButton.Image = global::GitUI.Properties.Resources.entirefile;
+            this.showEntireFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showEntireFileButton.Name = "showEntireFileButton";
+            this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);
+            this.showEntireFileButton.ToolTipText = "Show entire file";
+            this.showEntireFileButton.Click += new System.EventHandler(this.showEntireFileButton_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 23);
+            // 
             // FileViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.fileviewerToolbar);
             this.Controls.Add(this.TextEditor);
             this.Controls.Add(this.PictureBox);
             this.Name = "FileViewer";
             this.Size = new System.Drawing.Size(649, 449);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
             this.ContextMenu.ResumeLayout(false);
+            this.fileviewerToolbar.ResumeLayout(false);
+            this.fileviewerToolbar.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -185,5 +278,13 @@
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyPatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip fileviewerToolbar;
+        private System.Windows.Forms.ToolStripButton nextChangeButton;
+        private System.Windows.Forms.ToolStripButton previousChangeButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton increaseNumberOfLines;
+        private System.Windows.Forms.ToolStripButton DecreaseNumberOfLines;
+        private System.Windows.Forms.ToolStripButton showEntireFileButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }

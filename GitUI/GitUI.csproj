@@ -818,6 +818,11 @@
     <Content Include="cow-head.ico" />
     <None Include="Icons\24.png" />
     <None Include="Icons\bash.png" />
+    <None Include="Resources\minus.png" />
+    <None Include="Resources\minus.ico" />
+    <None Include="Resources\plus.png" />
+    <None Include="Icons\file.jpg" />
+    <None Include="Icons\67.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
