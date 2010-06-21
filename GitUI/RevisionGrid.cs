@@ -375,7 +375,7 @@ namespace GitUI
         }
 
         public int LastScrollPos = 0;
-        public List<GitRevision> LastSelectedRows = new List<GitRevision>();
+        public IComparable[] LastSelectedRows = null;
 
         public void ForceRefreshRevisions()
         {
@@ -384,12 +384,8 @@ namespace GitUI
                 initialLoad = true;
                 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
-                LastSelectedRows.Clear();
 
-                foreach (DataGridViewRow row in Revisions.SelectedRows)
-                {
-                    LastSelectedRows.Add(GetRevision(row.Index));
-                }
+                LastSelectedRows = Revisions.SelectedIds;
 
                 if (!Settings.ShowRevisionGraph)
                 {
@@ -496,6 +492,17 @@ namespace GitUI
                 ScrollBarSet = true;
                 Revisions.ScrollBars = ScrollBars.None;
                 Revisions.RowCount = count;
+
+                if (LastSelectedRows != null)
+                {
+                    Revisions.SelectedIds = LastSelectedRows;
+                    LastSelectedRows = null;
+                }
+                else
+                {
+                    Revisions.SelectedIds = new IComparable[] { currentCheckout };
+                }
+
                 Revisions.ScrollBars = ScrollBars.Vertical;
             }
         }
@@ -570,7 +577,6 @@ namespace GitUI
             {
                 ScrollBarSet = true;
                 Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = Revisions.RowCount;
                 Revisions.ScrollBars = ScrollBars.Vertical;
             }
 
@@ -580,37 +586,6 @@ namespace GitUI
             {
                 Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
                 LastScrollPos = -1;
-            }
-
-            // TODO: This doesn't work well right now. We should move the find
-            // logic into DvcsGraph, so it can keep looking every time more data is loaded in.
-            if (LastSelectedRows.Count > 0)
-            {
-                Revisions.ClearSelection();
-
-                Revisions.CurrentCell = null;
-
-                foreach (GitRevision rowItem in LastSelectedRows)
-                {
-                    int row = Revisions.FindRow(rowItem.Guid);
-                    if (row >= 0 && Revisions.Rows.Count > row )
-                    {
-                        if (Revisions.Rows[row] == null)
-                        {
-                            continue;
-                        }
-
-                        Revisions.Rows[row].Selected = true;
-                        if (Revisions.CurrentCell == null)
-                        {
-                            // Set the current cell to the first item. We use cell
-                            // 1 because cell 0 could be hidden if they've chosen to
-                            // not see the graph
-                            Revisions.CurrentCell = Revisions.Rows[row].Cells[1];
-                        }
-                    }
-                }
-                LastSelectedRows.Clear();
             }
 
             Loading.Visible = false;

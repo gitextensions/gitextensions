@@ -76,6 +76,7 @@ namespace GitUI
                 lock (graphData)
                 {
                     RowCount = 0;
+                    CurrentCell = null;
                     junctionColors.Clear();
                     graphData.Clear();
                     RebuildGraph();
@@ -84,7 +85,6 @@ namespace GitUI
                 {
                     backgroundScrollTo = 0;
                 }
-                Console.WriteLine("************************************ Clear ************************************");
             });
 
             syncContext.Send(method, this);
@@ -100,6 +100,71 @@ namespace GitUI
                     return null;
                 }
                 return row.Node.Data;
+            }
+        }
+
+        public object[] SelectedData
+        {
+            get
+            {
+                if (SelectedRows.Count == 0)
+                {
+                    return null;
+                }
+                object[] data = new object[SelectedRows.Count];
+                for (int i = 0; i < SelectedRows.Count; i++)
+                {
+                    data[i] = this.graphData[i].Node.Data;
+                }
+                return data;
+            }
+        }
+
+        public IComparable[] SelectedIds
+        {
+            get
+            {
+                if (SelectedRows.Count == 0)
+                {
+                    return null;
+                }
+                IComparable[] data = new IComparable[SelectedRows.Count];
+                for (int i = 0; i < SelectedRows.Count; i++)
+                {
+                    data[i] = this.graphData[this.SelectedRows[i].Index].Node.Id;
+                }
+                return data;
+            }
+            set
+            {
+                ClearSelection();
+                toBeSelected.Clear();
+                foreach (IComparable rowItem in value)
+                {
+                    int row = FindRow(rowItem);
+                    if (row >= 0 && Rows.Count > row)
+                    {
+                        if (Rows[row] == null)
+                        {
+                            toBeSelected.Add(rowItem);
+                            continue;
+                        }
+
+                        Rows[row].Selected = true;
+                        if (CurrentCell == null)
+                        {
+                            // Set the current cell to the first item. We use cell
+                            // 1 because cell 0 could be hidden if they've chosen to
+                            // not see the graph
+                            CurrentCell = Rows[row].Cells[1];
+                        }
+                    }
+                    else
+                    {
+                        // Remember this node, and if we see it again, select it.
+                        toBeSelected.Add(rowItem);
+                    }
+                }
             }
         }
 
@@ -121,7 +186,7 @@ namespace GitUI
             lock (graphData)
             {
                 int i;
-                for (i = 0; i < graphData.Count; i++)
+                for (i = 0; i < graphData.CachedCount; i++)
                 {
                     if (graphData[i] != null && graphData[i].Node.Id.CompareTo(aId) == 0)
                     {
@@ -192,6 +257,9 @@ namespace GitUI
         private Bitmap graphBitmap = null;
         private Graphics graphWorkArea = null;
         private Dictionary<Junction, int> junctionColors = new Dictionary<Junction, int>();
+
+        // Items that we want to be selected, but aren't yet loaded
+        private List<IComparable> toBeSelected = new List<IComparable>();
 
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 12;
@@ -300,7 +368,7 @@ namespace GitUI
                             break;
                         }
 
-                        if (curCount < visibleBottom)
+                        if (curCount < visibleBottom || toBeSelected.Count > 0)
                         {
                             SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
                                 {
@@ -369,6 +437,14 @@ namespace GitUI
                 {
                     //Console.WriteLine("Redraw item {0}", count);
                     InvalidateRow(row);
+                }
+
+                // Check to see if the newly added item should be selected
+                IComparable id = graphData[row].Node.Id;
+                if (toBeSelected.Contains(id))
+                {
+                    toBeSelected.Remove(id);
+                    Rows[row].Selected = true;
                 }
 
                 if (visibleBottom > graphDataCount)
