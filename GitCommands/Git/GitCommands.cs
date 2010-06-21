@@ -170,6 +170,7 @@ namespace GitCommands
         public System.Diagnostics.Process Process { get; set; }
 
         public bool CollectOutput = true;
+        public bool StreamOutput = false;
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
@@ -217,17 +218,22 @@ namespace GitCommands
             Process.StartInfo.LoadUserProfile = true;
             Process.EnableRaisingEvents = true;
 
-            Process.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_OutputDataReceived);
-            Process.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_ErrorDataReceived);
+            if (!StreamOutput)
+            {
+                Process.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_OutputDataReceived);
+                Process.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_ErrorDataReceived);
+            }
             Output = new StringBuilder();
             ErrorOutput = new StringBuilder();
 
             Process.Exited += new EventHandler(process_Exited);
             Process.Start();
-            
 
-            Process.BeginErrorReadLine();
-            Process.BeginOutputReadLine();
+            if (!StreamOutput)
+            {
+                Process.BeginErrorReadLine();
+                Process.BeginOutputReadLine();
+            }
 
             return Process;
         }
