@@ -27,6 +27,7 @@ namespace GitUI
 
             backgroundThread = new Thread(new ThreadStart(backgroundThreadEntry));
             backgroundThread.IsBackground = true;
+            backgroundThread.Priority = ThreadPriority.BelowNormal;
             backgroundThread.Name = "DvcsGraph.backgroundThread";
             backgroundThread.Start();
 
@@ -341,12 +342,14 @@ namespace GitUI
                             if (!isLoading)
                             {
                                 isLoading = true;
+                                backgroundThread.Priority = ThreadPriority.Normal;
                                 Loading(true);
                             }
                         }
                         else if (isLoading)
                         {
                             isLoading = false;
+                            backgroundThread.Priority = ThreadPriority.BelowNormal;
                             Loading(false);
                         }
                     }), null);
@@ -373,12 +376,14 @@ namespace GitUI
                     if (!isLoading)
                     {
                         isLoading = true;
+                        backgroundThread.Priority = ThreadPriority.Normal;
                         Loading(true);
                     }
                 }
                 else if (isLoading)
                 {
                     isLoading = false;
+                    backgroundThread.Priority = ThreadPriority.BelowNormal;
                     Loading(false);
                 }
             }
