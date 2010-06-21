@@ -71,7 +71,24 @@ namespace GitUI
                 TextEditor.Text = "Unsupported file";
                 TextEditor.Refresh();
             };
+
+
+            TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
         }
+
+        void TextArea_MouseLeave(object sender, EventArgs e)
+        {
+            if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar)
+                fileviewerToolbar.Visible = false;
+        }
+
+        void TextArea_MouseEnter(object sender, EventArgs e)
+        {
+            if (currentViewIsPatch)
+                fileviewerToolbar.Visible = true;
+        }
+
 
         void TextArea_KeyUp(object sender, KeyEventArgs e)
         {
@@ -154,12 +171,12 @@ namespace GitUI
 
             Color color;
 
-            for (int line = 0; line+3 < document.TotalNumberOfLines; line++)
+            for (int line = 0; line + 3 < document.TotalNumberOfLines; line++)
             {
                 LineSegment lineSegment1 = document.GetLineSegment(line);
-                LineSegment lineSegment2 = document.GetLineSegment(line+1);
-                LineSegment lineSegment3 = document.GetLineSegment(line+2);
-                LineSegment lineSegment4 = document.GetLineSegment(line+3);
+                LineSegment lineSegment2 = document.GetLineSegment(line + 1);
+                LineSegment lineSegment3 = document.GetLineSegment(line + 2);
+                LineSegment lineSegment4 = document.GetLineSegment(line + 3);
 
                 if (document.GetCharAt(lineSegment1.Offset) == ' ' &&
                     document.GetCharAt(lineSegment2.Offset) == '-' &&
@@ -464,6 +481,7 @@ namespace GitUI
         private void showEntireFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             showEntireFileToolStripMenuItem.Checked = !showEntireFileToolStripMenuItem.Checked;
+            showEntireFileButton.Checked = showEntireFileToolStripMenuItem.Checked;
 
             ShowEntireFile = showEntireFileToolStripMenuItem.Checked;
             OnExtraDiffArgumentsChanged();
@@ -484,7 +502,7 @@ namespace GitUI
                 if (currentViewIsPatch)
                 {
                     code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
-                    
+
                     if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
                         code = code.Substring(1);
 
@@ -494,7 +512,7 @@ namespace GitUI
                     code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
 
                 Clipboard.SetText(code);
-            } 
+            }
         }
 
         private void copyCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -513,6 +531,75 @@ namespace GitUI
             {
                 Clipboard.SetText(TextEditor.Text);
             }
+        }
+
+        private void nextChangeButton_Click(object sender, EventArgs e)
+        {
+            int firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
+            int totalNumberOfLines = TextEditor.Document.TotalNumberOfLines;
+            bool emptyLineCheck = false;
+
+            for (int line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
+            {
+                string lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+                if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
+                {
+                    if (emptyLineCheck)
+                    {
+                        TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = Math.Max(line - 1, 0);
+                        return;
+                    }
+                }
+                else
+                {
+                    emptyLineCheck = true;
+                }
+            }
+
+            //Do not go to the end of the file if no change is found
+            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+        }
+
+        private void previousChangeButton_Click(object sender, EventArgs e)
+        {
+            int firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
+            int totalNumberOfLines = TextEditor.Document.TotalNumberOfLines;
+            bool emptyLineCheck = false;
+
+            for (int line = firstVisibleLine - 1; line > 0; line--)
+            {
+                string lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+                if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
+                {
+                    emptyLineCheck = true;
+                }
+                else
+                {
+                    if (emptyLineCheck)
+                    {
+                        TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = line;
+                        return;
+                    }
+                }
+            }
+
+            //Do not go to the start of the file if no change is found
+            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
+        }
+
+        private void increaseNumberOfLines_Click(object sender, EventArgs e)
+        {
+            increaseNumberOfLinesToolStripMenuItem_Click(null, null);
+        }
+
+        private void DecreaseNumberOfLines_Click(object sender, EventArgs e)
+        {
+            descreaseNumberOfLinesToolStripMenuItem_Click(null, null);
+        }
+
+        private void showEntireFileButton_Click(object sender, EventArgs e)
+        {
+            showEntireFileToolStripMenuItem_Click(null, null);
         }
     }
 }
