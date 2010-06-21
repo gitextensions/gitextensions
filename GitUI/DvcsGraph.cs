@@ -140,6 +140,7 @@ namespace GitUI
                 lock (graphData)
                 {
                     ClearSelection();
+                    CurrentCell = null;
                     toBeSelected.Clear();
                     foreach (IComparable rowItem in value)
                     {
@@ -205,7 +206,9 @@ namespace GitUI
         {
             lock (graphData)
             {
-                return graphData.Prune();
+                bool status = graphData.Prune();
+                RowCount = graphData.Count;
+                return status;
             }
         }
 
@@ -383,6 +386,15 @@ namespace GitUI
                         graphDataCount = curCount;
                     }
                 }
+
+                syncContext.Post(new SendOrPostCallback(delegate(object obj)
+                    {
+                        int addedRow = (int) obj;
+                        if (RowCount < addedRow)
+                        {
+                            RowCount = addedRow;
+                        }
+                    }), curCount);
             }
         }
 
@@ -443,6 +455,13 @@ namespace GitUI
                 {
                     toBeSelected.Remove(id);
                     Rows[row].Selected = true;
+                    if (CurrentCell == null)
+                    {
+                        // Set the current cell to the first item. We use cell
+                        // 1 because cell 0 could be hidden if they've chosen to
+                        // not see the graph
+                        CurrentCell = Rows[row].Cells[1];
+                    }
                 }
 
                 if (visibleBottom > graphDataCount)

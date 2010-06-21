@@ -61,6 +61,7 @@ namespace GitCommands
 
         public RevisionGraph()
         {
+            BackgroundThread = true;
         }
 
         ~RevisionGraph()
@@ -91,6 +92,7 @@ namespace GitCommands
                     backgroundThread.Abort();
                 }
                 backgroundThread = new Thread(new ThreadStart(execute));
+                backgroundThread.IsBackground = true;
                 backgroundThread.Start();
             }
             else
