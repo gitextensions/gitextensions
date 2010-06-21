@@ -443,6 +443,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap entirefile {
+            get {
+                object obj = ResourceManager.GetObject("entirefile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap error {
             get {
                 object obj = ResourceManager.GetObject("error", resourceCulture);
