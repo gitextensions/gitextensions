@@ -87,6 +87,22 @@ namespace GitCommandsTests
             }
         }
 
+        [TestMethod]
+        public void TestNonExistingFile()
+        {
+
+            { //PERFORM TEST
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                configFile.Save();
+            }
+
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetValue("directory.first"));
+            }
+        }
+
         /// <summary>
         /// Always delete the test config file after each test
         /// </summary>

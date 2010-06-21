@@ -14,8 +14,11 @@ namespace GitCommands
         {
             //Remove all attributes that could cause the file to be read-only
             file = new FileInfo(fileName);
-            oldAttributes = file.Attributes;
-            file.Attributes = FileAttributes.Normal;
+            if (file.Exists)
+            {
+                oldAttributes = file.Attributes;
+                file.Attributes = FileAttributes.Normal;
+            }
         }
         
         ~TempRemoveFileAttributes()
@@ -40,6 +43,7 @@ namespace GitCommands
 
             }
 
+            if (file != null && file.Exists)
             file.Attributes = oldAttributes;
         }
     }
