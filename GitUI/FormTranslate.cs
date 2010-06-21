@@ -467,6 +467,8 @@ namespace GitUI
 
             string url = String.Format("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q={0}&langpair=en|{1}&key=ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg", input, languagePair);
             WebClient webClient = new WebClient();
+            webClient.Proxy = WebRequest.DefaultWebProxy;
+            webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
             webClient.Encoding = System.Text.Encoding.UTF8;
             string result = webClient.DownloadString(url);
 

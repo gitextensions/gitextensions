@@ -75,7 +75,11 @@ namespace GitCommands
                 }
             }
 
-            File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+
+            using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(fileName))
+            {
+                File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+            }
         }
 
         public void SetValue(string setting, string value)
