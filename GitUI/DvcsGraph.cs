@@ -195,6 +195,7 @@ namespace GitUI
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 12;
         private const int LANE_LINE_WIDTH = 2;
+        private const int MAX_LANES = 30;
 
         private Thread backgroundThread = null;
         private AutoResetEvent backgroundEvent = new AutoResetEvent(false);
@@ -402,7 +403,7 @@ namespace GitUI
                             width = Math.Max(graphData[i].Count, width);
                         }
 
-                        laneCount = Math.Min(Math.Max(laneCount, width), 30);
+                        laneCount = Math.Min(Math.Max(laneCount, width), MAX_LANES);
                     }
                     dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
                 }
@@ -641,9 +642,9 @@ namespace GitUI
 
                     graphWorkArea.Clip = oldClip;
 
-                    Rectangle rect = laneRect;
+                    //Rectangle rect = laneRect;
                     //graphWorkArea.FillRectangle(Brushes.LightCoral, rect);
-                    rect.X += 30;
+                    //rect.X += 30;
                     //graphWorkArea.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
                     //graphWorkArea.DrawString(rowIndex.ToString(), new Font("System", 8), Brushes.Red, rect);
                 }
@@ -789,7 +790,8 @@ namespace GitUI
         private void dataGrid_Resize(object sender, EventArgs e)
         {
             rowHeight = RowTemplate.Height;
-            cacheCountMax = Height * 3 / rowHeight;
+            // Keep an extra page in the cache
+            cacheCountMax = Height * 2 / rowHeight + 1;
             clearDrawCache();
         }
 
