@@ -90,6 +90,15 @@ namespace GitCommands
                 /* Committer Date */ "%ci%n" +
                 /* Commit Message */ "%s";
 
+            if (Settings.OrderRevisionByDate)
+            {
+                LogParam = " --date-order " + LogParam;
+            }
+            else
+            {
+                LogParam = " --topo-order " + LogParam;
+            }
+
             string arguments = String.Format(CultureInfo.InvariantCulture,
                 "log --pretty=format:\"{1}\" {0}",
                 LogParam,
