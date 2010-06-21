@@ -137,32 +137,35 @@ namespace GitUI
             }
             set
             {
-                ClearSelection();
-                toBeSelected.Clear();
-                foreach (IComparable rowItem in value)
+                lock (graphData)
                 {
-                    int row = FindRow(rowItem);
-                    if (row >= 0 && Rows.Count > row)
+                    ClearSelection();
+                    toBeSelected.Clear();
+                    foreach (IComparable rowItem in value)
                     {
-                        if (Rows[row] == null)
+                        int row = FindRow(rowItem);
+                        if (row >= 0 && Rows.Count > row)
                         {
-                            toBeSelected.Add(rowItem);
-                            continue;
-                        }
+                            if (Rows[row] == null)
+                            {
+                                toBeSelected.Add(rowItem);
+                                continue;
+                            }
 
-                        Rows[row].Selected = true;
-                        if (CurrentCell == null)
-                        {
-                            // Set the current cell to the first item. We use cell
-                            // 1 because cell 0 could be hidden if they've chosen to
-                            // not see the graph
-                            CurrentCell = Rows[row].Cells[1];
+                            Rows[row].Selected = true;
+                            if (CurrentCell == null)
+                            {
+                                // Set the current cell to the first item. We use cell
+                                // 1 because cell 0 could be hidden if they've chosen to
+                                // not see the graph
+                                CurrentCell = Rows[row].Cells[1];
+                            }
                         }
-                    }
-                    else
-                    {
-                        // Remember this node, and if we see it again, select it.
-                        toBeSelected.Add(rowItem);
+                        else
+                        {
+                            // Remember this node, and if we see it again, select it.
+                            toBeSelected.Add(rowItem);
+                        }
                     }
                 }
             }
@@ -343,8 +346,6 @@ namespace GitUI
                     scrollTo = backgroundScrollTo;
                 }
 
-                Console.WriteLine("Background thread kicked {0}", scrollTo);
-
                 int curCount;
                 lock (graphData)
                 {
@@ -354,10 +355,9 @@ namespace GitUI
 
                 while (curCount < scrollTo)
                 {
-                    // DEBUG: Make it slow so it is obvious to test
-                    //Thread.Sleep(100);
                     lock (graphData)
                     {
+                        // Cache the next item
                         if (!graphData.CacheTo(curCount))
                         {
                             Console.WriteLine("Cached item FAILED {0}", curCount);
@@ -368,6 +368,7 @@ namespace GitUI
                             break;
                         }
 
+                        // Update the row (if needed)
                         if (curCount < visibleBottom || toBeSelected.Count > 0)
                         {
                             SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
@@ -376,11 +377,8 @@ namespace GitUI
                                 });
                             syncContext.Post(method, curCount);
                         }
-                        else
-                        {
-                        }
 
-                        //Console.WriteLine("Cached item {0}", curCount);
+                        //Console.WriteLine("Cached item {0}/{1}", curCount, graphData.NodeCount);
                         curCount = graphData.CachedCount;
                         graphDataCount = curCount;
                     }
@@ -1144,6 +1142,7 @@ namespace GitUI
 
                         Console.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
                         isRebuild = true;
+                        break;
                     }
                 }
 

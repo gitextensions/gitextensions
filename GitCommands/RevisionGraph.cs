@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Diagnostics;
 using System.Threading;
 
 namespace GitCommands
@@ -12,9 +13,12 @@ namespace GitCommands
         public event EventHandler Updated;
         public List<GitRevision> Revisions
         {
-            get 
+            get
             {
-                return new List<GitRevision>( revisions );
+                lock (revisions)
+                {
+                    return new List<GitRevision>(revisions);
+                }
             }
         }
 
@@ -28,12 +32,15 @@ namespace GitCommands
             public GitRevision Revision;
         }
 
+        public bool BackgroundThread { get; set; }
+
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
         private GitCommands gitGetGraphCommand;
         private uint revisionOrder = 0;
 
+        private Thread backgroundThread = null;
         private List<GitRevision> revisions = new List<GitRevision>();
 
         private enum ReadStep
@@ -63,8 +70,10 @@ namespace GitCommands
 
         public void Kill()
         {
-            // Don't need to sync this since the other thread that uses it
-            // was aborted above.
+            if (backgroundThread != null)
+            {
+                backgroundThread.Abort();
+            }
             if (gitGetGraphCommand != null)
             {
                 gitGetGraphCommand.Kill();
@@ -75,7 +84,27 @@ namespace GitCommands
 
         public void Execute()
         {
-            revisions.Clear();
+            if (BackgroundThread)
+            {
+                if (backgroundThread != null)
+                {
+                    backgroundThread.Abort();
+                }
+                backgroundThread = new Thread(new ThreadStart(execute));
+                backgroundThread.Start();
+            }
+            else
+            {
+                execute();
+            }
+        }
+
+        private void execute()
+        {
+            lock (revisions)
+            {
+                revisions.Clear();
+            }
 
             heads = GitCommands.GetHeads(true);
 
@@ -105,24 +134,23 @@ namespace GitCommands
                 formatString);
 
             gitGetGraphCommand = new GitCommands();
+            gitGetGraphCommand.StreamOutput = true;
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+            Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
-            gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
-            gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);
-        }
-
-        void gitGetGraphCommand_Exited(object sender, EventArgs e)
-        {
-            if (Exited != null)
+            string line;
+            do
             {
-                Exited(this, e);
-            }
+                line = p.StandardOutput.ReadLine();
+                dataReceived(line);
+            } while (line != null);
+
+            Exited(this, new EventArgs());
         }
 
-        void gitGetGraphCommand_DataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        void dataReceived(string line)
         {
-            if (e.Data == null)
+            if (line == null)
             {
                 return;
             }
@@ -130,7 +158,7 @@ namespace GitCommands
             {
                 case ReadStep.Commit:
                     // Sanity check
-                    if (e.Data == COMMIT_BEGIN)
+                    if (line == COMMIT_BEGIN)
                     {
                         revision = new GitRevision();
                     }
@@ -142,7 +170,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.Hash:
-                    revision.Guid = e.Data;
+                    revision.Guid = line;
                     foreach (GitHead h in heads)
                     {
                         if (h.Guid == revision.Guid)
@@ -154,32 +182,32 @@ namespace GitCommands
 
                 case ReadStep.Parents:
                     List<string> parentGuids = new List<string>();
-                    parentGuids.AddRange(e.Data.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+                    parentGuids.AddRange(line.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
                     revision.ParentGuids = parentGuids;
                     break;
 
                 case ReadStep.Tree:
-                    revision.TreeGuid = e.Data;
+                    revision.TreeGuid = line;
                     break;
 
                 case ReadStep.AuthorName:
-                    revision.Author = e.Data;
+                    revision.Author = line;
                     break;
 
                 case ReadStep.AuthorDate:
-                    revision.AuthorDate = DateTime.Parse( e.Data );
+                    revision.AuthorDate = DateTime.Parse(line);
                     break;
 
                 case ReadStep.CommitterName:
-                    revision.Committer = e.Data;
+                    revision.Committer = line;
                     break;
 
                 case ReadStep.CommitterDate:
-                    revision.CommitDate = DateTime.Parse( e.Data );
+                    revision.CommitDate = DateTime.Parse(line);
                     break;
 
                 case ReadStep.CommitMessage:
-                    revision.Message += e.Data;
+                    revision.Message += line;
                     break;
             }
 
@@ -187,15 +215,17 @@ namespace GitCommands
 
             if (nextStep == ReadStep.Done)
             {
-                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                lock (revisions)
                 {
-                    revision.Order = revisionOrder++;
-                    revisions.Add(revision);
-                    Updated(this, new RevisionGraphUpdatedEvent(revision));
+                    if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                    {
+                        revision.Order = revisionOrder++;
+                        revisions.Add(revision);
+                        Updated(this, new RevisionGraphUpdatedEvent(revision));
+                    }
+                    nextStep = ReadStep.Commit;
                 }
-                nextStep = ReadStep.Commit;
             }
-
         }
     }
 }
