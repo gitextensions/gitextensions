@@ -301,9 +301,6 @@ namespace GitUI
         {
             if (revisionGraphCommand != null)
                 revisionGraphCommand.Kill();
-
-            if (gitCountCommitsCommand != null)
-                gitCountCommitsCommand.Kill();
         }
 
         protected override void OnCreateControl()
@@ -362,7 +359,6 @@ namespace GitUI
             return Revisions.GetRowData(aRow) as GitRevision;
         }
 
-        GitCommands.GitCommands gitCountCommitsCommand = null;
         GitCommands.RevisionGraph revisionGraphCommand = null;
         private bool ScrollBarSet;
 
@@ -382,10 +378,8 @@ namespace GitUI
             try
             {
                 initialLoad = true;
-                
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
-                LastSelectedRows = Revisions.SelectedIds;
+                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
                 if (!Settings.ShowRevisionGraph)
                 {
@@ -416,56 +410,53 @@ namespace GitUI
                 {
                     revisionGraphCommand.Kill();
                 }
-                if (gitCountCommitsCommand != null)
-                {
-                    gitCountCommitsCommand.Kill();
-                }
 
-                ScrollBarSet = false;
+                string newCurrentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
+
+                // If the current checkout changed, don't get the currently selected rows, select the
+                // new current checkout instead.
+                if (newCurrentCheckout == currentCheckout)
+                {
+                    LastSelectedRows = Revisions.SelectedIds;
+                }
                 Revisions.ClearSelection();
 
-                currentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
+                currentCheckout = newCurrentCheckout;
                 ScrollBarSet = false;
-                InternalRefresh();
+                Error.Visible = false;
+                NoCommits.Visible = false;
+                NoGit.Visible = false;
+                Revisions.Visible = true;
+
+                Revisions.Clear();
+
+                if (!GitCommands.Settings.ValidWorkingDir())
+                {
+                    Revisions.ScrollBars = ScrollBars.None;
+                    Revisions.Visible = false;
+
+                    NoCommits.Visible = true;
+                    NoGit.Visible = true;
+                    Loading.Visible = false;
+                    return;
+                }
+
+                Revisions.Enabled = false;
+                Loading.Visible = true;
+                indexWatcher.Reset();
+                revisionGraphCommand = new RevisionGraph();
+                revisionGraphCommand.LogParam = LogParam + Filter;
+                revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
+                revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
+                revisionGraphCommand.Execute();
+
+                LoadRevisions();
             }
             catch (Exception exception)
             {
                 Error.Visible = true;
                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void InternalRefresh()
-        {
-            Error.Visible = false;
-            NoCommits.Visible = false;
-            NoGit.Visible = false;
-            Revisions.Visible = true;
-
-            if (!GitCommands.Settings.ValidWorkingDir())
-            {
-                Revisions.RowCount = 0;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.Visible = false;
-
-                NoCommits.Visible = true;
-                NoGit.Visible = true;
-                Loading.Visible = false;
-                return;
-            }
-
-            Revisions.Clear();
-            Revisions.Enabled = false;
-            Loading.Visible = true;
-            indexWatcher.Reset();
-            revisionGraphCommand = new RevisionGraph();
-
-            revisionGraphCommand.LogParam = LogParam + Filter;
-            revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
-            revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
-            revisionGraphCommand.Execute();
-
-            LoadRevisions();
         }
 
         void gitGetCommitsCommand_Updated(object sender, EventArgs e)
@@ -476,35 +467,8 @@ namespace GitUI
         
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
+            Revisions.SetExpectedRowCount(revisionGraphCommand.Revisions.Count);
             update(null);
-        }
-
-        private void gitCountCommitsCommand_Exited(object sender, EventArgs e)
-        {
-            syncContext.Post(_ => SetRowCount(), null);
-        }
-
-        private void SetRowCount()
-        {
-            int count;
-            if (int.TryParse(gitCountCommitsCommand.Output.ToString(), out count))
-            {
-                ScrollBarSet = true;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.RowCount = count;
-
-                if (LastSelectedRows != null)
-                {
-                    Revisions.SelectedIds = LastSelectedRows;
-                    LastSelectedRows = null;
-                }
-                else
-                {
-                    Revisions.SelectedIds = new IComparable[] { currentCheckout };
-                }
-
-                Revisions.ScrollBars = ScrollBars.Vertical;
-            }
         }
 
         void update(GitRevision rev)
@@ -553,34 +517,22 @@ namespace GitUI
 
             Revisions.SuspendLayout();
 
-            if (!ScrollBarSet)
-            {
-                ScrollBarSet = true;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.ScrollBars = ScrollBars.Vertical;
-
-                string grep = "";
-                if (!string.IsNullOrEmpty(Filter))
-                    grep = " --grep=\"" + Filter + "\" ";
-
-                gitCountCommitsCommand = new GitCommands.GitCommands();
-                gitCountCommitsCommand.CmdStartProcess("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" rev-list " + grep + LogParam + " | \"" + Settings.GitBinDir + "wc\" -l\"");
-                gitCountCommitsCommand.Exited += new EventHandler(gitCountCommitsCommand_Exited);
-            }
-
             Revisions.Columns[0].HeaderText = graphCaption.Text;
             Revisions.Columns[1].HeaderText = messageCaption.Text;
             Revisions.Columns[2].HeaderText = authorCaption.Text;
             Revisions.Columns[3].HeaderText = GetDateHeaderText();
 
-            if (!ScrollBarSet)
-            {
-                ScrollBarSet = true;
-                Revisions.ScrollBars = ScrollBars.None;
-                Revisions.ScrollBars = ScrollBars.Vertical;
-            }
-
             Revisions.SelectionChanged -= new EventHandler(Revisions_SelectionChanged);
+
+            if (LastSelectedRows != null)
+            {
+                Revisions.SelectedIds = LastSelectedRows;
+                LastSelectedRows = null;
+            }
+            else
+            {
+                Revisions.SelectedIds = new IComparable[] { currentCheckout };
+            }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
             {
