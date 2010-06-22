@@ -136,6 +136,39 @@ namespace GitCommandsTests
             }
         }
 
+        [TestMethod]
+        public void TestWithSectionWithDot2()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[submodule.test.test]");
+                content.AppendLine("path = test.test");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("test.test", configFile.GetValue("submodule.test.test.path"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("submodule.test.test.path", "newvalue");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("newvalue", configFile.GetValue("submodule.test.test.path"));
+            }
+        }
+
         /// <summary>
         /// Always delete the test config file after each test
         /// </summary>
