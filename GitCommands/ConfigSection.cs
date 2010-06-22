@@ -19,29 +19,26 @@ namespace GitCommands
         {
             Keys = new Dictionary<string, string>();
 
-            string[] path = name.Split('.');
-
-            if (path.Length > 2)
-                throw new Exception("Invalid section name: " + name);
-
-            if (path.Length == 1) 
+            if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
-                if (name.Contains("\"")) //[section "subsection"] case sensitive
-                {
-                    path = name.Replace("\"", " ").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (path.Length != 2)
-                        throw new Exception("Invalid section name: " + name);
+                string[] path = name.Replace("\"", " ").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (path.Length != 2)
+                    throw new Exception("Invalid section name: " + name);
 
-                    SectionName = path[0].Trim();
-                    SubSection = path[1].Trim();
-                }
-                else
-                {
-                    SectionName = name.Trim(); // [section] case sensitive
-                }
+                SectionName = path[0].Trim();
+                SubSection = path[1].Trim();
             }
-            else //[section.subsection] case insensitive
+            else if (!name.Contains("."))
             {
+                SectionName = name.Trim(); // [section] case sensitive
+            }
+            else
+            {
+                string[] path = name.Split('.');
+
+                if (path.Length > 2)
+                    throw new Exception("Invalid section name: " + name);
+
                 SectionName = path[0].Trim();
                 SubSection = path[1].Trim();
             }
