@@ -34,6 +34,7 @@ namespace GitCommands
 
         public bool BackgroundThread { get; set; }
 
+        private readonly char[] splitChars = " \t\n".ToCharArray();
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
@@ -173,19 +174,20 @@ namespace GitCommands
 
                 case ReadStep.Hash:
                     revision.Guid = line;
-                    foreach (GitHead h in heads)
+                    for (int i = heads.Count-1; i >=0; i--)
                     {
-                        if (h.Guid == revision.Guid)
+                        if (heads[i].Guid == revision.Guid)
                         {
-                            revision.Heads.Add(h);
+                            revision.Heads.Add(heads[i]);
+
+                            //Only search for a head once, remove it from list
+                            heads.Remove(heads[i]);
                         }
                     }
                     break;
 
                 case ReadStep.Parents:
-                    List<string> parentGuids = new List<string>();
-                    parentGuids.AddRange(line.Split(" \t\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
-                    revision.ParentGuids = parentGuids;
+                    revision.ParentGuids = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     break;
 
                 case ReadStep.Tree:
@@ -209,7 +211,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitMessage:
-                    revision.Message += line;
+                    revision.Message = line;
                     break;
             }
 
