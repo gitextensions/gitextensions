@@ -494,7 +494,7 @@ namespace GitUI
             {
                 dataType = DvcsGraph.DataType.Normal;
             }
-            Revisions.Add(rev.Guid, rev.ParentGuids.ToArray(), dataType, rev);
+            Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
         public string currentCheckout { get; set; }

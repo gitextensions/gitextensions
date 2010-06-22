@@ -1838,55 +1838,6 @@ namespace GitCommands
                 return RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " -- \"" + name + "\"");
         }
 
-        static public List<GitRevision> GitRevisions()
-        {
-            return GitRevisions("");
-        }
-
-        static public List<GitRevision> GitRevisions(string filter)
-        {
-            filter = FixPath(filter);
-            string tree;
-            if (string.IsNullOrEmpty(filter))
-                tree = RunCmd(Settings.GitCommand, "rev-list --all --header --date-order");
-            else
-                tree = RunCmd(Settings.GitCommand, "rev-list --header --topo-order \"" + filter + "\"");
-            
-            string[] itemsStrings = tree.Split('\n');
-
-            List<GitRevision> revisions = new List<GitRevision>();
-
-            for (int n = 0; n < itemsStrings.Length-6;)
-            {
-                GitRevision revision = new GitRevision();
-                revision.Guid = itemsStrings[n++].Trim('\0');
-                revision.Name = revision.TreeGuid = itemsStrings[n++].Substring(4).Trim();
-                while (itemsStrings[n].Contains("parent"))
-                {
-                    //Add parent
-                    revision.ParentGuids.Add( itemsStrings[n++].Substring(6).Trim());
-                }
-                if (revision.ParentGuids.Count == 0)
-                {
-                    revision.ParentGuids.Add("0000000000000000000000000000000000000000");
-                }
-                revision.Author = itemsStrings[n++].Substring(6).Trim();
-                revision.Committer = itemsStrings[n++].Substring(9).Trim();
-                n++;
-
-                while (itemsStrings.Length > n + 1 &&
-                    itemsStrings[n].Length > 0 &&
-                    itemsStrings[n][0] == ' ')
-                {
-                    revision.Message += itemsStrings[n++].Trim() + Environment.NewLine;
-                }
-
-                revisions.Add(revision);
-            }
-
-            return revisions;
-        }
-
         static public string StageFiles(IList<GitItemStatus> files)
         {
             GitCommands gitCommand = new GitCommands();

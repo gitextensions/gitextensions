@@ -18,7 +18,7 @@ namespace GitCommands
 
         public string TreeGuid { get; set; }
 
-        public List<String> ParentGuids = new List<string>();
+        public String[] ParentGuids;
 
         public string Author { get; set; }
         public DateTime AuthorDate { get; set; }
