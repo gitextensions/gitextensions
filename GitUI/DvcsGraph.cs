@@ -142,6 +142,11 @@ namespace GitUI
                     ClearSelection();
                     CurrentCell = null;
                     toBeSelected.Clear();
+                    if (value == null)
+                    {
+                        return;
+                    }
+
                     foreach (IComparable rowItem in value)
                     {
                         int row = FindRow(rowItem);
@@ -557,13 +562,13 @@ namespace GitUI
 
 
             // Get adjacent junctions
-            List<Junction> adjacnetJunctions = new List<Junction>();
+            List<Junction> adjacentJunctions = new List<Junction>();
             List<int> adjacentColors = new List<int>();
-            adjacnetJunctions.AddRange(aJunction.Child.Ancestors);
-            adjacnetJunctions.AddRange(aJunction.Child.Descendants);
-            adjacnetJunctions.AddRange(aJunction.Parent.Ancestors);
-            adjacnetJunctions.AddRange(aJunction.Parent.Descendants);
-            foreach (Junction peer in adjacnetJunctions)
+            adjacentJunctions.AddRange(aJunction.Child.Ancestors);
+            adjacentJunctions.AddRange(aJunction.Child.Descendants);
+            adjacentJunctions.AddRange(aJunction.Parent.Ancestors);
+            adjacentJunctions.AddRange(aJunction.Parent.Descendants);
+            foreach (Junction peer in adjacentJunctions)
             {
                 if (junctionColors.TryGetValue(peer, out colorIndex))
                 {
@@ -1631,132 +1636,165 @@ namespace GitUI
                         }
                     }
 
-                    private List<List<Edge>> currentRow = new List<List<Edge>>();
-                    private List<List<Edge>> nextRow = new List<List<Edge>>();
+                    private List<Edge> edges = new List<Edge>();
+                    private List<int> countStart = new List<int>();
+                    private List<int> countEnd = new List<int>();
+
                     private readonly T emptyItem = default(T);
 
                     public T Current(int lane, int item)
                     {
-                    
-                        if (currentRow.Count > lane && currentRow[lane].Count > item)
+                        int found = 0;
+                        foreach (Edge e in edges)
                         {
-                            return currentRow[lane][item].Data;
+                            if (e.Start == lane)
+                            {
+                                if (item == found)
+                                {
+                                    return e.Data;
+                                }
+                                found++;
+                            }
                         }
-                        else
-                        {
-                            return emptyItem;
-                        }
+                        return emptyItem;
                     }
 
                     public T Next(int lane, int item)
                     {
-
-                        if (nextRow.Count > lane && nextRow[lane].Count > item)
+                        int found = 0;
+                        foreach (Edge e in edges)
                         {
-                            return nextRow[lane][item].Data;
+                            if (e.End == lane)
+                            {
+                                if (item == found)
+                                {
+                                    return e.Data;
+                                }
+                                found++;
+                            }
                         }
-                        else
-                        {
-                            return emptyItem;
-                        }
+                        return emptyItem;
                     }
 
                     public T RemoveNext(int lane, int item, out int start, out int end)
                     {
-                        if (nextRow.Count > lane && nextRow[lane].Count > item)
+                        int found = 0;
+                        for (int i = 0; i < edges.Count; i++)
                         {
-                            Edge e = nextRow[lane][item];
-                            start = e.Start;
-                            end = e.End;
-                            nextRow[lane].RemoveAt(item);
-                            currentRow[start].Remove(e);
-                            return e.Data;
+                            if (edges[i].End == lane)
+                            {
+                                if (item == found)
+                                {
+                                    T data = edges[i].Data;
+                                    start = edges[i].Start;
+                                    end = edges[i].End;
+                                    countStart[start]--;
+                                    countEnd[end]--;
+                                    edges.RemoveAt(i);
+                                    return data;
+                                }
+                                found++;
+                            }
                         }
-                        else
-                        {
-                            start = -1; 
-                            end = -1;
-                            return emptyItem;
-                        }
+
+                        start = -1;
+                        end = -1;
+                        return emptyItem;
                     }
 
                     public void Add(int from, int to, T data)
                     {
                         Edge e = new Edge( data, from, to );
+                        edges.Add(e);
 
-                        while (currentRow.Count <= from)
+                        while (countStart.Count <= from)
                         {
-                            currentRow.Add(new List<Edge>());
+                            countStart.Add(0);
                         }
-                        currentRow[from].Add(e);
-
-                        while (nextRow.Count <= to)
+                        countStart[from]++;
+                        while (countEnd.Count <= to)
                         {
-                            nextRow.Add(new List<Edge>());
+                            countEnd.Add(0);
                         }
-                        nextRow[to].Add(e);
+                        countEnd[to]++;
                     }
 
                     public void Clear(int lane)
                     {
-                        if (currentRow.Count > lane)
+                        for (int i = edges.Count - 1; i >= 0; --i)
                         {
-                            foreach (Edge e in currentRow[lane])
+                            int start = edges[i].Start;
+                            if (start == lane)
                             {
-                                nextRow[e.End].Remove(e);
+                                int end = edges[i].End;
+                                countStart[start]--;
+                                countEnd[end]--;
+                                edges.RemoveAt(i);
                             }
-                            currentRow[lane].Clear();
-                        }
-
-                        int lastItem = currentRow.Count - 1;
-                        while (lastItem >= 0 && lastItem <= lane && currentRow[lastItem].Count == 0)
-                        {
-                            currentRow.RemoveAt(lastItem);
-                            --lastItem;
                         }
                     }
 
                     public int CountCurrent()
                     {
-                        return currentRow.Count;
+                        int count = countStart.Count;
+                        while (count > 0 && countStart[count-1] == 0)
+                        {
+                            count--;
+                            countStart.RemoveAt(count);
+                        }
+                        
+                        return count;
                     }
 
                     public int CountCurrent(int lane)
                     {
-                        if (lane < currentRow.Count)
+                        int found = 0;
+                        foreach (Edge e in edges)
                         {
-                            return currentRow[lane].Count;
+                            if (e.Start == lane)
+                            {
+                                found++;
+                            }
                         }
-                        else
-                        {
-                            return 0;
-                        }
+                        return found;
                     }
 
                     public int CountNext()
                     {
-                        return nextRow.Count;
+                        int count = countEnd.Count;
+                        while (count > 0 && countEnd[count-1] == 0)
+                        {
+                            count--;
+                            countEnd.RemoveAt(count);
+                        }
+
+                        return count;
                     }
 
                     public int CountNext(int lane)
                     {
-                        if (lane < nextRow.Count)
+                        int found = 0;
+                        foreach (Edge e in edges)
                         {
-                            return nextRow[lane].Count;
+                            if (e.End == lane)
+                            {
+                                found++;
+                            }
                         }
-                        else
-                        {
-                            return 0;
-                        }
+                        return found;
                     }
 
                     public bool IsActive(int lane)
                     {
-                        if (nextRow.Count <= lane)
+                        if (lane >= CountNext())
                         {
                             return false;
                         }
-                        return (nextRow[lane].Count > 0);
+                        return ( countEnd[lane] > 0 );
+                    }
+
+                    private void Remove(int start, int end)
+                    {
                     }
 
                 }
