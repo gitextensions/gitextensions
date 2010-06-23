@@ -37,7 +37,7 @@ namespace GitUI
             ColumnWidthChanged += new DataGridViewColumnEventHandler(dataGrid_ColumnWidthChanged);
             Scroll += new ScrollEventHandler(dataGrid_Scroll);
             graphData.Updated += new Graph.GraphUpdatedHandler(graphData_Updated);
-        
+
             VirtualMode = true;
             Clear();
 
@@ -75,8 +75,7 @@ namespace GitUI
             {
                 lock (graphData)
                 {
-                    RowCount = 0;
-                    CurrentCell = null;
+                    setRowCount(0);
                     junctionColors.Clear();
                     graphData.Clear();
                     RebuildGraph();
@@ -206,13 +205,13 @@ namespace GitUI
                 return (i == graphData.Count ? -1 : i);
             }
         }
-        
+
         public bool Prune()
         {
             lock (graphData)
             {
                 bool status = graphData.Prune();
-                RowCount = graphData.Count;
+                setRowCount(graphData.Count);
                 return status;
             }
         }
@@ -226,11 +225,11 @@ namespace GitUI
                 {
                     if (rowCount > 0)
                     {
-                        RowCount = rowCount;
+                        setRowCount(rowCount);
                     }
                     else
                     {
-                        RowCount = graphData.Count;
+                        setRowCount(graphData.Count);
                     }
                 }
             });
@@ -292,6 +291,19 @@ namespace GitUI
             cacheHeadRow = 0;
             clearDrawCache();
             Invalidate(true);
+        }
+
+        private void setRowCount(int count)
+        {
+            if (RowCount == 0)
+            {
+                RowCount = count;
+                CurrentCell = null;
+            }
+            else
+            {
+                RowCount = count;
+            }
         }
 
         private void graphData_Updated(object graph)
@@ -394,10 +406,10 @@ namespace GitUI
 
                 syncContext.Post(new SendOrPostCallback(delegate(object obj)
                     {
-                        int addedRow = (int) obj;
+                        int addedRow = (int)obj;
                         if (RowCount < addedRow)
                         {
-                            RowCount = addedRow;
+                            setRowCount(addedRow);
                         }
                     }), curCount);
             }
@@ -450,7 +462,7 @@ namespace GitUI
                 //Console.WriteLine("updateRow({0}) ", row);
                 if (RowCount < graphData.Count)
                 {
-                    RowCount = graphData.Count;
+                    setRowCount(graphData.Count);
                 }
                 if (row < RowCount)
                 {
@@ -522,7 +534,7 @@ namespace GitUI
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
-                colors.Add( getJunctionColor(j) );
+                colors.Add(getJunctionColor(j));
             }
 
             if (colors.Count == 0)
@@ -661,7 +673,7 @@ namespace GitUI
                 int newRows = 0;
                 if (cacheCount < cacheCountMax)
                 {
-                    newRows = ( aNeededRow - cacheCount ) + 1;
+                    newRows = (aNeededRow - cacheCount) + 1;
                 }
 
                 // Adjust the head of the cache
@@ -677,18 +689,18 @@ namespace GitUI
                 if (newRows > 0)
                 {
                     start = cacheHead + cacheCount;
-                    cacheCount = Math.Min(cacheCount+newRows, cacheCountMax);
+                    cacheCount = Math.Min(cacheCount + newRows, cacheCountMax);
                     end = cacheHead + cacheCount;
                 }
                 else if (neededHeadAdjustment > 0)
                 {
                     end = cacheHead + cacheCount;
-                    start = Math.Max( cacheHead, end - neededHeadAdjustment );
+                    start = Math.Max(cacheHead, end - neededHeadAdjustment);
                 }
                 else if (neededHeadAdjustment < 0)
                 {
                     start = cacheHead;
-                    end = start + Math.Min( cacheCountMax, -neededHeadAdjustment );
+                    end = start + Math.Min(cacheCountMax, -neededHeadAdjustment);
                 }
                 else
                 {
@@ -788,9 +800,9 @@ namespace GitUI
             {
                 int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * LANE_WIDTH);
 
-                for( int item = 0; item < row.LaneInfoCount(lane); item++ )
+                for (int item = 0; item < row.LaneInfoCount(lane); item++)
                 {
-                    Graph.LaneInfo laneInfo = row[lane,item];
+                    Graph.LaneInfo laneInfo = row[lane, item];
 
                     List<Color> curColors;
                     curColors = getJunctionColors(laneInfo.Junctions);
@@ -803,7 +815,7 @@ namespace GitUI
                     }
                     else
                     {
-                        brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);  
+                        brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);
                     }
 
                     // TODO: Drawing 3 times is probably too expensive, no matter how pretty
@@ -870,7 +882,7 @@ namespace GitUI
             {
                 nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1], LinearGradientMode.Horizontal);
             }
-            
+
             if (row.Node.Data == null)
             {
                 wa.FillEllipse(Brushes.White, nodeRect);
@@ -1160,7 +1172,7 @@ namespace GitUI
                 {
                     // Uh, oh, we've already processed this lane. We'll have to update some rows.
                     int idx = d.Bunch.IndexOf(node);
-                    if (idx < d.Bunch.Count && d.Bunch[idx+1].InLane != int.MaxValue)
+                    if (idx < d.Bunch.Count && d.Bunch[idx + 1].InLane != int.MaxValue)
                     {
                         int resetTo = d.Parent.InLane;
                         foreach (Junction dd in d.Parent.Descendants)
@@ -1204,8 +1216,8 @@ namespace GitUI
             public bool Prune()
             {
                 bool isPruned = false;
-                // Remove all nodes that don't have a value associated with them.
-                start_over:
+            // Remove all nodes that don't have a value associated with them.
+            start_over:
                 foreach (Node n in Nodes.Values)
                 {
                     if (n.Data == null)
@@ -1370,7 +1382,7 @@ namespace GitUI
                 laneRows.Clear();
                 laneNodes.Clear();
                 junctionNodes.Clear();
-                while( currentRow.Count > 0 )
+                while (currentRow.Count > 0)
                 {
                     currentRow.Clear(currentRow.Count - 1);
                 }
@@ -1513,7 +1525,7 @@ namespace GitUI
 
                 public int Count
                 {
-                    get 
+                    get
                     {
                         if (node != null)
                         {
@@ -1537,7 +1549,7 @@ namespace GitUI
 
                 public Node Current
                 {
-                    get 
+                    get
                     {
                         if (node != null)
                         {
@@ -1597,10 +1609,10 @@ namespace GitUI
             private List<LaneJunctionDetail> laneNodes = new List<LaneJunctionDetail>();
             private Dictionary<Junction, LaneJunctionDetail> junctionNodes = new Dictionary<Junction, LaneJunctionDetail>();
             private ActiveLaneRow currentRow = new ActiveLaneRow();
-            
+
             private class ActiveLaneRow : Graph.LaneRow
             {
-                public int NodeLane 
+                public int NodeLane
                 {
                     get { return nodeLane; }
                     set { nodeLane = value; }
@@ -1704,7 +1716,7 @@ namespace GitUI
 
                     public void Add(int from, int to, T data)
                     {
-                        Edge e = new Edge( data, from, to );
+                        Edge e = new Edge(data, from, to);
                         edges.Add(e);
 
                         while (countStart.Count <= from)
@@ -1737,12 +1749,12 @@ namespace GitUI
                     public int CountCurrent()
                     {
                         int count = countStart.Count;
-                        while (count > 0 && countStart[count-1] == 0)
+                        while (count > 0 && countStart[count - 1] == 0)
                         {
                             count--;
                             countStart.RemoveAt(count);
                         }
-                        
+
                         return count;
                     }
 
@@ -1762,7 +1774,7 @@ namespace GitUI
                     public int CountNext()
                     {
                         int count = countEnd.Count;
-                        while (count > 0 && countEnd[count-1] == 0)
+                        while (count > 0 && countEnd[count - 1] == 0)
                         {
                             count--;
                             countEnd.RemoveAt(count);
@@ -1790,7 +1802,7 @@ namespace GitUI
                         {
                             return false;
                         }
-                        return ( countEnd[lane] > 0 );
+                        return (countEnd[lane] > 0);
                     }
 
                     private void Remove(int start, int end)
@@ -1805,9 +1817,9 @@ namespace GitUI
 
                 public int Count
                 {
-                    get 
-                    { 
-                        return edges.CountCurrent(); 
+                    get
+                    {
+                        return edges.CountCurrent();
                     }
                 }
 
@@ -1820,7 +1832,7 @@ namespace GitUI
                 {
                     get
                     {
-                        return edges.Current(col,row);
+                        return edges.Current(col, row);
                     }
                 }
 
@@ -1904,7 +1916,7 @@ namespace GitUI
                             s += "*";
                         s += "{";
                         for (int j = 0; j < edges.CountCurrent(i); j++)
-                            s += " " + edges.Current(i,j);
+                            s += " " + edges.Current(i, j);
                         s += " }, ";
                     }
                     s += node;
@@ -1966,11 +1978,11 @@ namespace GitUI
                 for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
                     LaneJunctionDetail lane = laneNodes[curLane];
-                    if (lane.Count == 0 )
+                    if (lane.Count == 0)
                     {
                         continue;
                     }
-                
+
                     if (currentRow.Node == null ||
                         currentRow.Node.Data == null ||
                         (lane.Current.Data != null && sourceGraph.Sorter.Invoke(lane.Current.Data, currentRow.Node.Data) > 0))
@@ -1988,7 +2000,7 @@ namespace GitUI
                 }
 
                 // If this row doesn't contain data, we're to the end of the valid entries.
-                if ( currentRow.Node.Data == null)
+                if (currentRow.Node.Data == null)
                 {
                     return false;
                 }
@@ -2037,7 +2049,7 @@ namespace GitUI
                         Graph.LaneInfo info = new Graph.LaneInfo(curLane);
                         info.Child.Add(currentRow.Node);
                         info.Parent.Add(laneNodes[curLane].Current);
-                        currentRow.Add(currentRow.NodeLane, info );
+                        currentRow.Add(currentRow.NodeLane, info);
                     }
                 }
                 #endregion
