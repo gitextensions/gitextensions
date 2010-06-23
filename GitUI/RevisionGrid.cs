@@ -18,7 +18,6 @@ namespace GitUI
     {
         TranslationString authorDate = new TranslationString("AuthorDate");
         TranslationString commitDate = new TranslationString("CommitDate");
-        TranslationString graphCaption = new TranslationString("Graph");
         TranslationString messageCaption = new TranslationString("Message");
         TranslationString authorCaption = new TranslationString("Author");
 
@@ -515,7 +514,6 @@ namespace GitUI
 
             Revisions.SuspendLayout();
 
-            Revisions.Columns[0].HeaderText = graphCaption.Text;
             Revisions.Columns[1].HeaderText = messageCaption.Text;
             Revisions.Columns[2].HeaderText = authorCaption.Text;
             Revisions.Columns[3].HeaderText = GetDateHeaderText();
