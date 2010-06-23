@@ -471,7 +471,9 @@ namespace GitUI
         {
             if( rev == null )
             {
+                // Prune the graph and make sure the row count matches reality
                 Revisions.Prune();
+                Revisions.SetExpectedRowCount(-1);
                 return;
             }
         
