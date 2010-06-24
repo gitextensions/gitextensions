@@ -1055,7 +1055,7 @@ namespace GitCommands
         {
             path = FixPath(path);
 
-            if (string.IsNullOrEmpty(fromBranch))
+            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
 
             toBranch = toBranch.Replace(" ", "");
@@ -1066,10 +1066,10 @@ namespace GitCommands
 
             if (all)
                 return "push " + sforce + "--all \"" + path.Trim() + "\"";
-            else if (!string.IsNullOrEmpty(toBranch))
+            else if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
                 return "push " + sforce + "\"" + path.Trim() + "\" " + fromBranch + ":" + toBranch;
 
-            return "push " + sforce + "\"" + path.Trim() + "\"";
+            return "push " + sforce + "\"" + path.Trim() + "\" " + fromBranch;
         }
 
         public static string PushTagCmd(string path, string tag, bool all)
