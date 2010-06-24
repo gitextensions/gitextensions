@@ -1042,14 +1042,17 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, branch, all, false);
+            return PushCmd(path, null, branch, all, false);
         }
 
-        public static string PushCmd(string path, string branch, bool all, bool force)
+        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force)
         {
             path = FixPath(path);
 
-            branch = branch.Replace(" ", "");
+            if (string.IsNullOrEmpty(fromBranch))
+                fromBranch = "HEAD";
+
+            toBranch = toBranch.Replace(" ", "");
 
             string sforce = "";
             if (force)
@@ -1057,10 +1060,8 @@ namespace GitCommands
 
             if (all)
                 return "push " + sforce + "--all \"" + path.Trim() + "\"";
-            else
-                if (!string.IsNullOrEmpty(branch))
-                    return "push " + sforce + "\"" + path.Trim() + "\" " + branch;
-
+            else if (!string.IsNullOrEmpty(toBranch))
+                return "push " + sforce + "\"" + path.Trim() + "\" " + fromBranch + ":" + toBranch;
 
             return "push " + sforce + "\"" + path.Trim() + "\"";
         }
@@ -2006,11 +2007,6 @@ namespace GitCommands
             return revisions;
         }
 
-        static public List<GitHead> GetHeads()
-        {
-            return GetHeads(true);
-        }
-
         static public string StageFiles(IList<GitItemStatus> files)
         {
             GitCommands gitCommand = new GitCommands();
@@ -2144,11 +2140,6 @@ namespace GitCommands
             return "";
         }
 
-        static public List<GitHead> GetHeads(bool tags)
-        {
-            return GetHeads(tags, true);
-        }
-
         static public List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
         {
             remote = FixPath(remote);
@@ -2210,17 +2201,24 @@ namespace GitCommands
             return heads;
         }
 
+        static public List<GitHead> GetHeads()
+        {
+            return GetHeads(true);
+        }
+
+        static public List<GitHead> GetHeads(bool tags)
+        {
+            return GetHeads(tags, true);
+        }
 
         static public List<GitHead> GetHeads(bool tags, bool branches)
         {
             string tree = "" ;
             if (tags && branches)
                 tree = RunCmd(Settings.GitCommand, "show-ref --dereference");
-            else
-            if (tags)
+            else if (tags)
                 tree = RunCmd(Settings.GitCommand, "show-ref --dereference --tags");
-            else
-            if (branches)
+            else if (branches)
                 tree = RunCmd(Settings.GitCommand, "show-ref --dereference --heads");
 
             string[] itemsStrings = tree.Split('\n');
@@ -2265,6 +2263,74 @@ namespace GitCommands
 
                     heads.Add(head);
                 }
+            }
+
+            return heads;
+        }
+
+        static public List<string> GetBranches(bool remotes, string filterRemote)
+        {
+            string tree = "";
+            if (remotes)
+                tree = RunCmd(Settings.GitCommand, "branch --verbose --no-abbrev -a");
+            else
+                tree = RunCmd(Settings.GitCommand, "branch --verbose --no-abbrev");
+
+            List<string> heads = new List<string>();
+            string[] itemsStrings = tree.Split('\n');
+            foreach (string itemsString in itemsStrings)
+            {
+                if (itemsString.Length == 0)
+                {
+                    continue;
+                }
+                try
+                {
+                    string head = "";
+
+                    int column = 0;
+                    string[] itemColumns = itemsString.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (itemColumns[column] == "*")
+                    {
+                        column++;
+                    }
+
+                    head = itemColumns[column];
+                    column++;
+                    if (head.Length == 0)
+                    {
+                        continue;
+                    }
+                    string guid = itemColumns[column];
+                    column++;
+
+                    // If not a valid GUID, skip.
+                    if (guid.Trim("1234567890ABCDEFabcdef".ToCharArray()).Length != 0)
+                    {
+                        continue;
+                    }
+
+                    string remote = "";
+                    if (head.LastIndexOf("/") > 1)
+                    {
+                        bool isRemote = head.Contains("remotes/"); ;
+                        if (isRemote)
+                        {
+                            head = head.Substring(head.LastIndexOf("remotes/") + 8);       
+                        }
+                        int index = head.LastIndexOf("/");
+                        remote = head.Substring(0, index);
+                        head = head.Substring(index + 1);  
+                    }
+
+                    if (!string.IsNullOrEmpty(filterRemote) && remote != filterRemote)
+                    {
+                        continue;
+                    }
+
+                    heads.Add(head);
+                }
+                catch { }
             }
 
             return heads;
