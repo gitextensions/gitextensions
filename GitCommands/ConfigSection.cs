@@ -34,13 +34,13 @@ namespace GitCommands
             }
             else
             {
-                string[] path = name.Split('.');
+                int subSectionIndex = name.IndexOf('.');
 
-                if (path.Length > 2)
+                if (subSectionIndex < 1)
                     throw new Exception("Invalid section name: " + name);
 
-                SectionName = path[0].Trim();
-                SubSection = path[1].Trim();
+                SectionName = name.Substring(0, subSectionIndex).Trim();
+                SubSection = name.Substring(subSectionIndex+1).Trim();
             }
         }
 

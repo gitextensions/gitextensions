@@ -1241,6 +1241,10 @@ namespace GitUI
             new FormTranslate().ShowDialog();
         }
 
+        private void fileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(_Workingdir.Text);
+        }
 
     }
 }
