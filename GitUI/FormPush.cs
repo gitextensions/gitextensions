@@ -84,8 +84,16 @@ namespace GitUI
 
         private void Branch_DropDown(object sender, EventArgs e)
         {
+            string curBranch = Branch.Text;
+
             Branch.DisplayMember = "Name";
             Branch.DataSource = GitCommands.GitCommands.GetHeads(false, true);
+
+            if (string.IsNullOrEmpty(curBranch))
+            {
+                curBranch = GitCommands.GitCommands.GetSelectedBranch();
+            }
+            Branch.Text = curBranch;
         }
 
         private void Pull_Click(object sender, EventArgs e)
