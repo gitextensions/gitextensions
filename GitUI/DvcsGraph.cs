@@ -295,7 +295,7 @@ namespace GitUI
 
         private void setRowCount(int count)
         {
-            if (RowCount == 0)
+            if (CurrentCell == null)
             {
                 RowCount = count;
                 CurrentCell = null;
