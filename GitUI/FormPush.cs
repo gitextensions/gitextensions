@@ -52,7 +52,7 @@ namespace GitUI
             if (PullFromUrl.Checked)
             {
                 if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, PushAllBranches.Checked, ForcePushBranches.Checked));
+                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked));
                 else
                     form = new FormProcess(GitCommands.GitCommands.PushTagCmd(PushDestination.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked));
             }
@@ -67,7 +67,7 @@ namespace GitUI
                 }
 
                 if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, PushAllBranches.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
+                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
                 else
                     form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushTagCmd(Remotes.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
             }
@@ -93,12 +93,42 @@ namespace GitUI
             GitUICommands.Instance.StartPullDialog();
         }
 
+        private void RemoteBranch_DropDown(object sender, EventArgs e)
+        {
+            RemoteBranch.DisplayMember = "Name";
+            RemoteBranch.Items.Clear();
+
+            if (!string.IsNullOrEmpty(Branch.Text))
+            {
+                RemoteBranch.Items.Add(Branch.Text);
+            }
+
+            List<string> heads = GitCommands.GitCommands.GetBranches(true, Remotes.Text);
+            foreach (string h in heads)
+            {
+                if (!RemoteBranch.Items.Contains(h))
+                {
+                    RemoteBranch.Items.Add(h);
+                }
+            }
+
+        }
+
+        private void Branch_SelectedValueChanged(object sender, EventArgs e)
+        {
+            RemoteBranch.Text = Branch.Text;
+        }
+
         private void FormPush_Load(object sender, EventArgs e)
         {
             string branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
 
-            Branch.Text = branch;
+            // Doing this makes it pretty easy to accidentally create a branch on the remote.
+            // leaving it blank will do the 'default' thing, and can be configured by setting 
+            // the push option of the remote.
+            //Branch.Text = branch;
+            //RemoteBranch.Text = Branch.Text;
 
             EnableLoadSSHButton();
 
@@ -167,11 +197,6 @@ namespace GitUI
             EnableLoadSSHButton();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Tag_DropDown(object sender, EventArgs e)
         {
             Tag.DisplayMember = "Name";
@@ -185,5 +210,12 @@ namespace GitUI
         void ForcePushTags_CheckedChanged(object sender, System.EventArgs e) {
             this.ForcePushBranches.Checked = this.ForcePushTags.Checked;
         }
+
+        private void PushAllBranches_CheckedChanged(object sender, EventArgs e)
+        {
+            Branch.Enabled = !PushAllBranches.Checked;
+            RemoteBranch.Enabled = !PushAllBranches.Checked;
+        }
+
     }
 }

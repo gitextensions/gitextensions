@@ -44,6 +44,8 @@
             this.AddRemote = new System.Windows.Forms.Button();
             this.Remotes = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelTo = new System.Windows.Forms.Label();
+            this.RemoteBranch = new System.Windows.Forms.ComboBox();
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.Tag = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -108,8 +110,9 @@
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(297, 21);
-            this.Branch.TabIndex = 18;
+            this.Branch.Size = new System.Drawing.Size(174, 21);
+            this.Branch.TabIndex = 0;
+            this.Branch.SelectedValueChanged += new System.EventHandler(this.Branch_SelectedValueChanged);
             this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
             // 
             // PushAllBranches
@@ -118,9 +121,10 @@
             this.PushAllBranches.Location = new System.Drawing.Point(127, 51);
             this.PushAllBranches.Name = "PushAllBranches";
             this.PushAllBranches.Size = new System.Drawing.Size(110, 17);
-            this.PushAllBranches.TabIndex = 19;
+            this.PushAllBranches.TabIndex = 2;
             this.PushAllBranches.Text = "Push &all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
+            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranches_CheckedChanged);
             // 
             // ForcePushBranches
             // 
@@ -128,7 +132,7 @@
             this.ForcePushBranches.Location = new System.Drawing.Point(127, 74);
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(80, 17);
-            this.ForcePushBranches.TabIndex = 19;
+            this.ForcePushBranches.TabIndex = 3;
             this.ForcePushBranches.Text = "&Force Push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
             this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranches_CheckedChanged);
@@ -218,6 +222,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.labelTo);
+            this.groupBox1.Controls.Add(this.RemoteBranch);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.Branch);
             this.groupBox1.Controls.Add(this.PushAllBranches);
@@ -226,9 +232,28 @@
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(527, 111);
-            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Branch";
+            // 
+            // labelTo
+            // 
+            this.labelTo.Location = new System.Drawing.Point(307, 21);
+            this.labelTo.Name = "labelTo";
+            this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labelTo.Size = new System.Drawing.Size(23, 19);
+            this.labelTo.TabIndex = 21;
+            this.labelTo.Text = "to";
+            this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // RemoteBranch
+            // 
+            this.RemoteBranch.FormattingEnabled = true;
+            this.RemoteBranch.Location = new System.Drawing.Point(336, 19);
+            this.RemoteBranch.Name = "RemoteBranch";
+            this.RemoteBranch.Size = new System.Drawing.Size(174, 21);
+            this.RemoteBranch.TabIndex = 1;
+            this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranch_DropDown);
             // 
             // LoadSSHKey
             // 
@@ -283,7 +308,6 @@
             this.label1.Size = new System.Drawing.Size(64, 13);
             this.label1.TabIndex = 17;
             this.label1.Text = "Tag to push";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // TabControlTagBranch
             // 
@@ -381,5 +405,7 @@
         private System.Windows.Forms.TabPage TagTab;
         private System.Windows.Forms.CheckBox PushAllTags;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label labelTo;
+        private System.Windows.Forms.ComboBox RemoteBranch;
     }
 }
