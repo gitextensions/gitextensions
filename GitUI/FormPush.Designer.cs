@@ -111,7 +111,7 @@
             this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
             this.Branch.Size = new System.Drawing.Size(174, 21);
-            this.Branch.TabIndex = 18;
+            this.Branch.TabIndex = 0;
             this.Branch.SelectedValueChanged += new System.EventHandler(this.Branch_SelectedValueChanged);
             this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
             // 
@@ -121,7 +121,7 @@
             this.PushAllBranches.Location = new System.Drawing.Point(127, 51);
             this.PushAllBranches.Name = "PushAllBranches";
             this.PushAllBranches.Size = new System.Drawing.Size(110, 17);
-            this.PushAllBranches.TabIndex = 19;
+            this.PushAllBranches.TabIndex = 2;
             this.PushAllBranches.Text = "Push &all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
             this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranches_CheckedChanged);
@@ -132,7 +132,7 @@
             this.ForcePushBranches.Location = new System.Drawing.Point(127, 74);
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(80, 17);
-            this.ForcePushBranches.TabIndex = 19;
+            this.ForcePushBranches.TabIndex = 3;
             this.ForcePushBranches.Text = "&Force Push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
             this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranches_CheckedChanged);
@@ -232,7 +232,7 @@
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(527, 111);
-            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Branch";
             // 
@@ -252,7 +252,7 @@
             this.RemoteBranch.Location = new System.Drawing.Point(336, 19);
             this.RemoteBranch.Name = "RemoteBranch";
             this.RemoteBranch.Size = new System.Drawing.Size(174, 21);
-            this.RemoteBranch.TabIndex = 20;
+            this.RemoteBranch.TabIndex = 1;
             this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranch_DropDown);
             // 
             // LoadSSHKey
