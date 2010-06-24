@@ -52,8 +52,14 @@ namespace ResourceManager.Translation
 
         public static string[] GetAllTranslations()
         {
+            string translationDir = Translator.GetTranslationDir();
+            if( !Directory.Exists( translationDir) )
+            {
+                return new string[0];
+            }
+
             List<string> translations = new List<string>();
-            foreach (string fileName in Directory.GetFiles(Translator.GetTranslationDir(), "*.xml"))
+            foreach (string fileName in Directory.GetFiles(translationDir, "*.xml"))
             {
                 FileInfo fileInfo = new FileInfo(fileName);
                 translations.Add(fileInfo.Name.Substring(0, fileInfo.Name.Length-fileInfo.Extension.Length));

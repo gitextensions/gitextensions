@@ -91,21 +91,16 @@ namespace GitUI
             {
                 if (GitCommands.Settings.Encoding.GetType() == typeof(ASCIIEncoding))
                     _Encoding.Text = "ASCII";
-                else
-                    if (GitCommands.Settings.Encoding.GetType() == typeof(UnicodeEncoding))
-                        _Encoding.Text = "Unicode";
-                    else
-                        if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                            _Encoding.Text = "UTF7";
-                        else
-                            if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                                _Encoding.Text = "UTF8";
-                            else
-                                if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                                    _Encoding.Text = "UTF32";
-                                else
-                                    if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                                        _Encoding.Text = "Default";
+                else if (GitCommands.Settings.Encoding.GetType() == typeof(UnicodeEncoding))
+                    _Encoding.Text = "Unicode";
+                else if (GitCommands.Settings.Encoding.GetType() == typeof(UTF7Encoding))
+                    _Encoding.Text = "UTF7";
+                else if (GitCommands.Settings.Encoding.GetType() == typeof(UTF8Encoding))
+                    _Encoding.Text = "UTF8";
+                else if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
+                    _Encoding.Text = "UTF32";
+                else if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
+                     _Encoding.Text = "Default";
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
@@ -229,7 +224,11 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not load settigns.\n\n" + ex.Message);
+                MessageBox.Show("Could not load settings.\n\n" + ex.Message);
+
+                // Bail out before the user saves the incompletely loaded settings
+                // and has their day ruined.
+                DialogResult = DialogResult.Abort;
             }
         }
 
@@ -1344,7 +1343,7 @@ namespace GitUI
         private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (!Save())
+            if (DialogResult != DialogResult.Abort && !Save())
                 e.Cancel = true;
         }
 
