@@ -24,7 +24,7 @@ namespace GitUI
             dialog.SelectedPath = PushDestination.Text;
             if (dialog.ShowDialog() == DialogResult.OK)
                 PushDestination.Text = dialog.SelectedPath;
-            
+
         }
 
         private void Push_Click(object sender, EventArgs e)
@@ -87,11 +87,21 @@ namespace GitUI
             string curBranch = Branch.Text;
 
             Branch.DisplayMember = "Name";
-            Branch.DataSource = GitCommands.GitCommands.GetHeads(false, true);
+            Branch.Items.Clear();
+            Branch.Items.Add("HEAD");
 
             if (string.IsNullOrEmpty(curBranch))
             {
                 curBranch = GitCommands.GitCommands.GetSelectedBranch();
+                if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
+                {
+                    curBranch = "HEAD";
+                }
+            }
+
+            foreach (GitCommands.GitHead h in GitCommands.GitCommands.GetHeads(false, true))
+            {
+                Branch.Items.Add(h.Name);
             }
             Branch.Text = curBranch;
         }
@@ -124,7 +134,10 @@ namespace GitUI
 
         private void Branch_SelectedValueChanged(object sender, EventArgs e)
         {
-            RemoteBranch.Text = Branch.Text;
+            if (Branch.Text != "HEAD")
+            {
+                RemoteBranch.Text = Branch.Text;
+            }
         }
 
         private void FormPush_Load(object sender, EventArgs e)
@@ -211,11 +224,13 @@ namespace GitUI
             Tag.DataSource = GitCommands.GitCommands.GetHeads(true, false);
         }
 
-        void ForcePushBranches_CheckedChanged(object sender, System.EventArgs e) {
+        void ForcePushBranches_CheckedChanged(object sender, System.EventArgs e)
+        {
             this.ForcePushTags.Checked = this.ForcePushBranches.Checked;
         }
 
-        void ForcePushTags_CheckedChanged(object sender, System.EventArgs e) {
+        void ForcePushTags_CheckedChanged(object sender, System.EventArgs e)
+        {
             this.ForcePushBranches.Checked = this.ForcePushTags.Checked;
         }
 
