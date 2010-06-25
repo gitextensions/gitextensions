@@ -10,6 +10,7 @@ Version 1.94
 	Fixed bug: starting "gitextensions init" from the commandline without path causes an exception
 	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file
 	Fixed bug: Removed empty root node from tree in file tree
+	Fixed bug: If HOMEDRIVE is defined, launching Git Bash would result in a different home directory than GitExtensions
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
@@ -17,6 +18,8 @@ Version 1.94
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
 	Added plugin to start gource repository visualizer
 	Added toolbar to diff viewer to jump to next change
+	Added file explorer option to the file menu
+	Added from and to branch name to push dialog 
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved
