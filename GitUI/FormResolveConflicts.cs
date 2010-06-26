@@ -8,11 +8,24 @@ using System.Windows.Forms;
 using System.IO;
 using GitCommands;
 using GitUIPluginInterfaces;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormResolveConflicts : GitExtensionsForm
     {
+        TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
+        TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
+        TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
+        TranslationString mergeConflictIsSubmoduleCaption = new TranslationString("Submodule");
+        TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
+        TranslationString askMergeConflictSolved = new TranslationString("Is the mergeconflict solved?");
+        TranslationString askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
+        TranslationString useModifiedOrDeletedFile = new TranslationString("Use modified or deleted file?");
+        TranslationString modifiedButton = new TranslationString("Modified");
+        TranslationString useCreatedOrDeletedFile = new TranslationString("Use created or deleted file?");
+        TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
+
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
@@ -69,7 +82,7 @@ namespace GitUI
 
             if (!GitCommands.GitCommands.InTheMiddleOfPatch() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
-                if (MessageBox.Show("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?", "Commit", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     GitUICommands.Instance.StartCommitDialog();
                 }
@@ -116,7 +129,7 @@ namespace GitUI
                 {
                     if (submodule.LocalPath.Equals(filename))
                     {
-                        if (MessageBox.Show("The selected mergeconflict is a submodule. Mark conflict as resolved?", "Merge", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
                             Initialize();
@@ -136,7 +149,7 @@ namespace GitUI
             {
                 if (FileHelper.IsBinaryFile(filename))
                 {
-                    if (MessageBox.Show("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in " + mergetool + "?") == DialogResult.No)
+                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool)) == DialogResult.No)
                         return;
                 }
 
@@ -147,7 +160,7 @@ namespace GitUI
 
                 GitCommands.GitCommands.RunCmd(mergetoolPath, "" + arguments + "");
 
-                if (MessageBox.Show("Is the mergeconflict solved?", "Merge", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
                     Initialize();
@@ -159,13 +172,13 @@ namespace GitUI
                 FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated();
                 if ((file1 && file2 && !file3) || (file1 && !file2 && file3))
                 {
-                    frm.Label.Text = "Use modified or deleted file?";
-                    frm.Created.Text = "Modified";
+                    frm.Label.Text = useModifiedOrDeletedFile.Text;
+                    frm.Created.Text = modifiedButton.Text;
                 }
                 else
                     if (!file1)
                     {
-                        frm.Label.Text = "Use created or delete file?";
+                        frm.Label.Text = useCreatedOrDeletedFile.Text;
                     }
                     else
                     {
@@ -214,7 +227,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(mergetool))
             {
-                MessageBox.Show("There is no mergetool configured. Please go to settings and set a mergetool!");
+                MessageBox.Show(noMergeTool.Text);
                 return;
             }
 

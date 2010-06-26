@@ -64,7 +64,7 @@ namespace GitUI
                     string s = GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid, annotate.Checked);
 
                     if (!string.IsNullOrEmpty(s))
-                        MessageBox.Show(s, "Tag");
+                        MessageBox.Show(s, messageCaption.Text);
                     Close();
                 }
             }
