@@ -943,9 +943,14 @@ namespace GitCommands
         }
 
 
-        static public string Tag(string tagName, string revision)
+        static public string Tag(string tagName, string revision, bool annotation)
         {
-            string result = GitCommands.RunCmd(Settings.GitCommand, "tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
+            string result;
+
+            if (annotation)
+                result = GitCommands.RunCmd(Settings.GitCommand, "tag \"" + tagName.Trim() + "\" -a -F \"" + Settings.WorkingDirGitDir() + "\\TAGMESSAGE\" -- \"" + revision + "\"");
+            else
+                result = GitCommands.RunCmd(Settings.GitCommand, "tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
 
             return result;
         }
