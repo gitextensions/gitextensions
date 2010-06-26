@@ -18,9 +18,10 @@ Version 1.94
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
 	Added plugin to start gource repository visualizer
 	Added toolbar to diff viewer to jump to next change
+	Added option to show nonprinting characters in file viewer
 	Added file explorer option to the file menu
 	Added from and to branch to push dialog 
-	Added option to create annotated tag
+	Added option to create annotated tag	
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved

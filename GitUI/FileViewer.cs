@@ -75,6 +75,8 @@ namespace GitUI
 
             TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
             TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
+
+            TextEditor.ShowVRuler = false;
         }
 
         void TextArea_MouseLeave(object sender, EventArgs e)
@@ -600,6 +602,21 @@ namespace GitUI
         private void showEntireFileButton_Click(object sender, EventArgs e)
         {
             showEntireFileToolStripMenuItem_Click(null, null);
+        }
+
+        private void showNonPrintChars_Click(object sender, EventArgs e)
+        {
+            showNonprintableCharactersToolStripMenuItem_Click(null, null);
+        }
+
+        private void showNonprintableCharactersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showNonprintableCharactersToolStripMenuItem.Checked = !showNonprintableCharactersToolStripMenuItem.Checked;
+            showNonPrintChars.Checked = showNonprintableCharactersToolStripMenuItem.Checked;
+
+            TextEditor.ShowEOLMarkers = showNonprintableCharactersToolStripMenuItem.Checked;
+            TextEditor.ShowSpaces = showNonprintableCharactersToolStripMenuItem.Checked;
+            TextEditor.ShowTabs = showNonprintableCharactersToolStripMenuItem.Checked;
         }
     }
 }
