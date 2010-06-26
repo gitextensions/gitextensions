@@ -156,7 +156,7 @@ namespace GitUI
             {
                 foreach (GitHead gitHead in r.Heads)
                 {
-                    if (gitHead.Name.StartsWith(searchString))
+                    if (gitHead.Name.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return true;
                     }
