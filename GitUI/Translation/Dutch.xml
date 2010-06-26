@@ -28,6 +28,21 @@
         <TranslationItem Name="Ok" Property="Text">
           <Value>Maak label</Value>
         </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Maak geannoteerde tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="noTagMassage" Property="Text">
+          <Value>Voer een label bericht in</Value>
+        </TranslationItem>
+        <TranslationItem Name="noRevisionSelected" Property="Text">
+          <Value>Selecteer eerst een revisie</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageCaption" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FindAndReplaceForm">
@@ -962,6 +977,21 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="CreateTag" Property="Text">
           <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Maak geannoteerde tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="noTagMassage" Property="Text">
+          <Value>Voer een label bericht in</Value>
+        </TranslationItem>
+        <TranslationItem Name="noRevisionSelected" Property="Text">
+          <Value>Selecteer een revisie waar het label op moet komen</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageCaption" Property="Text">
+          <Value>Label</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

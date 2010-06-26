@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTagSmall));
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.TName = new System.Windows.Forms.TextBox();
+            this.annotate = new System.Windows.Forms.CheckBox();
+            this.tagMessage = new GitUI.EditNetSpell();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -45,6 +47,7 @@
             // 
             // Ok
             // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.Location = new System.Drawing.Point(341, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
@@ -55,6 +58,8 @@
             // 
             // TName
             // 
+            this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 20);
@@ -62,16 +67,50 @@
             this.TName.TextChanged += new System.EventHandler(this.TName_TextChanged);
             this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TName_KeyUp);
             // 
+            // annotate
+            // 
+            this.annotate.AutoSize = true;
+            this.annotate.Location = new System.Drawing.Point(108, 33);
+            this.annotate.Name = "annotate";
+            this.annotate.Size = new System.Drawing.Size(126, 17);
+            this.annotate.TabIndex = 9;
+            this.annotate.Text = "Create annotated tag";
+            this.annotate.UseVisualStyleBackColor = true;
+            this.annotate.CheckedChanged += new System.EventHandler(this.annotate_CheckedChanged);
+            // 
+            // tagMessage
+            // 
+            this.tagMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tagMessage.Enabled = false;
+            this.tagMessage.Location = new System.Drawing.Point(108, 56);
+            this.tagMessage.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
+            this.tagMessage.Name = "tagMessage";
+            this.tagMessage.Size = new System.Drawing.Size(339, 99);
+            this.tagMessage.TabIndex = 10;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 56);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(50, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Message";
+            // 
             // FormTagSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(459, 35);
+            this.ClientSize = new System.Drawing.Size(459, 167);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.tagMessage);
+            this.Controls.Add(this.annotate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.TName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormTagSmall";
@@ -87,5 +126,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.TextBox TName;
+        private System.Windows.Forms.CheckBox annotate;
+        private EditNetSpell tagMessage;
+        private System.Windows.Forms.Label label2;
     }
 }
