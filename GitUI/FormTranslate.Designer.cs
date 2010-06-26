@@ -59,6 +59,7 @@
             this.googleTranslate = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -98,6 +99,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonNew,
             this.saveAs,
+            this.toolStripSeparator2,
             this.toolStripTranslationLabel,
             this.translations,
             this.toolStripTranslationLanguageCode,
@@ -135,8 +137,8 @@
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(77, 27);
-            this.toolStripTranslationLabel.Text = "Translation:";
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(120, 27);
+            this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
             // 
@@ -406,6 +408,11 @@
             this.nextButton.UseVisualStyleBackColor = true;
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 30);
+            // 
             // FormTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -468,6 +475,7 @@
         private System.Windows.Forms.ToolStripComboBox _languageCode;
         private System.Windows.Forms.Button googleAll;
         private System.Windows.Forms.ToolStripButton toolStripButtonNew;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 
     }
 }
