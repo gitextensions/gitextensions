@@ -8,11 +8,18 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormPush : GitExtensionsForm
     {
+        TranslationString selectDestinationDirectory = new TranslationString("Please select a destination directory");
+        TranslationString selectRemote = new TranslationString("Please select a remote repository");
+        TranslationString selectTag = new TranslationString("You need to select a tag to push or select \"Push all tags\".");
+        TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
+        TranslationString pushCaption = new TranslationString("Push");
+
         public FormPush()
         {
             InitializeComponent(); Translate();
@@ -31,17 +38,17 @@ namespace GitUI
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
-                MessageBox.Show("Please select a destination directory");
+                MessageBox.Show(selectDestinationDirectory.Text);
                 return;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
             {
-                MessageBox.Show("Please select a remote repository");
+                MessageBox.Show(selectRemote.Text);
                 return;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(Tag.Text) && !PushAllTags.Checked)
             {
-                MessageBox.Show("You need to select a tag to push or select \"Push all tags\".");
+                MessageBox.Show(selectTag.Text);
                 return;
             }
 
@@ -61,7 +68,7 @@ namespace GitUI
                 if (GitCommands.GitCommands.Plink())
                 {
                     if (!File.Exists(GitCommands.Settings.Pageant))
-                        MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                        MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
                     else
                         GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 }
@@ -153,7 +160,7 @@ namespace GitUI
 
             EnableLoadSSHButton();
 
-            this.Text = "Push (" + GitCommands.Settings.WorkingDir + ")";
+            this.Text = string.Concat(pushCaption.Text, " (", GitCommands.Settings.WorkingDir, ")");
         }
 
         private void AddRemote_Click(object sender, EventArgs e)
@@ -208,7 +215,7 @@ namespace GitUI
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
             if (!File.Exists(GitCommands.Settings.Pageant))
-                MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
             else
                 GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
         }
