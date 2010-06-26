@@ -611,6 +611,9 @@ _ReSharper*/
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Value>Vertalen</Value>
         </TranslationItem>
+        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
+          <Value>Open in verkenner</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="MergePatch">
@@ -812,6 +815,21 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
           <Value>Kopieer patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>Volgende wijziging</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>Vorige wijziging</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>Verhoog aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>Verlaag aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>Toon volledige bestand</Value>
         </TranslationItem>
         <TranslationItem Name="findAndReplaceForm" Property="Text">
           <Value>Zoeken en vervangen</Value>
@@ -1115,8 +1133,11 @@ Wilt u nu committen?</Value>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Samenvoegen</Value>
         </TranslationItem>
-        <TranslationItem Name="NoFastForward" Property="Text">
-          <Value>Geen lineaire samenvoeging (no-fast-forward)</Value>
+        <TranslationItem Name="noFastForward" Property="Text">
+          <Value>Maak altijd een nieuwe samenvoeg commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="fastForward" Property="Text">
+          <Value>Behoud lineaire geschiedenis indien mogelijk (fast forward)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1423,6 +1444,12 @@ te kunnen wijzigen.</Value>
         </TranslationItem>
         <TranslationItem Name="AppearancePage" Property="Text">
           <Value>Weergave</Value>
+        </TranslationItem>
+        <TranslationItem Name="label24" Property="Text">
+          <Value>Kleur grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="label26" Property="Text">
+          <Value>Kleur grafiek geselecteerd</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Revisie grafiek</Value>
@@ -1945,6 +1972,9 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
           <Value>Verzend &amp;alle labels</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>naar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
