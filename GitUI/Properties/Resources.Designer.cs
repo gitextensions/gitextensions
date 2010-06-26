@@ -333,6 +333,13 @@ namespace GitUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap brokendocument {
+            get {
+                object obj = ResourceManager.GetObject("brokendocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
@@ -495,6 +502,13 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap Modified {
             get {
                 object obj = ResourceManager.GetObject("Modified", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap nonprintchar {
+            get {
+                object obj = ResourceManager.GetObject("nonprintchar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -846,6 +846,12 @@ _ReSharper*/
         <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
           <Value>Toon volledige bestand</Value>
         </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>Toon niet zichtbare tekens</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>Toon niet zichtbare tekens</Value>
+        </TranslationItem>
         <TranslationItem Name="findAndReplaceForm" Property="Text">
           <Value>Zoeken en vervangen</Value>
         </TranslationItem>
