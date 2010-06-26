@@ -77,12 +77,12 @@ namespace GitUI
                 return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.tool");
         }
 
-        private static void SetGlobalDiffToolToConfig(string diffTool)
+        private static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
         {
             if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
-                GitCommands.GitCommands.GetGlobalConfig().SetValue("diff.guitool", diffTool);
+                configFile.SetValue("diff.guitool", diffTool);
             else
-                GitCommands.GitCommands.GetGlobalConfig().SetValue("diff.tool", diffTool);
+                configFile.SetValue("diff.tool", diffTool);
         }
 
         private void LoadSettings()
@@ -370,7 +370,7 @@ namespace GitUI
                     globalConfig.SetValue("user.email", GlobalUserEmail.Text);
                 globalConfig.SetValue("core.editor", GlobalEditor.Text);
 
-                FormSettings.SetGlobalDiffToolToConfig(GlobalDiffTool.Text);
+                FormSettings.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
@@ -807,7 +807,9 @@ namespace GitUI
             if (string.IsNullOrEmpty(diffTool))
             {
                 diffTool = "kdiff3";
-                SetGlobalDiffToolToConfig(diffTool);
+                ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
+                SetGlobalDiffToolToConfig(globalConfig, diffTool);
+                globalConfig.Save();
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
