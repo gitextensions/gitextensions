@@ -438,11 +438,9 @@
     <Compile Include="FormVerify.Designer.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
     </Compile>
-    <Compile Include="GitExtensionsComponentResourceManager.cs" />
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitExtensionsResourceSet.cs" />
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
