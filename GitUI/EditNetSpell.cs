@@ -23,6 +23,22 @@ namespace GitUI
             customUnderlines = new CustomPaintTextBox(TextBox);
             
             SpellCheckTimer.Enabled = false;
+
+            this.EnabledChanged += new EventHandler(EditNetSpell_EnabledChanged);
+        }
+
+        void EditNetSpell_EnabledChanged(object sender, EventArgs e)
+        {
+            if (this.Enabled)
+            {
+                TextBox.ReadOnly = false;
+                UpdateEmptyLabel();
+            }
+            else
+            {
+                TextBox.ReadOnly = true;
+                EmptyLabel.Visible = false;
+            }
         }
 
         public void SetEmptyMessage(string message)

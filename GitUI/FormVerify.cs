@@ -162,7 +162,7 @@ namespace GitUI
                 {
                     string sha1 = FindSha1(warningString);
                     currentTag++;
-                    GitCommands.GitCommands.Tag("LOST_FOUND_" + currentTag, sha1);
+                    GitCommands.GitCommands.Tag("LOST_FOUND_" + currentTag, sha1, false);
                 }
             }
 

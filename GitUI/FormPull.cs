@@ -16,6 +16,12 @@ namespace GitUI
     {
         TranslationString allMergeConflictSolvedQuestion = new TranslationString("Are all merge conflicts solved? Do you want to commit?");
         TranslationString allMergeConflictSolvedQuestionCaption = new TranslationString("Conflicts solved");
+        TranslationString selectSourceDirectory = new TranslationString("Please select a source directory");
+        TranslationString selectRemoteRepository = new TranslationString("Please select a remote repository");
+        TranslationString fetchAllBranchesCanOnlyWithFetch = new TranslationString("You can only fetch all remote branches (*) whithout merge or rebase." + Environment.NewLine + "If you want to fetch all remote branches, choose fetch." + Environment.NewLine + "If you want to fetch and merge a branch, choose a specific branch.");
+        TranslationString applyShashedItemsAgain = new TranslationString("Apply stashed items to working dir again?");
+        TranslationString applyShashedItemsAgainCaption = new TranslationString("Auto stash");
+        TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
         public FormPull()
         {
@@ -122,17 +128,17 @@ namespace GitUI
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
             {
-                MessageBox.Show("Please select a source directory");
+                MessageBox.Show(selectSourceDirectory.Text);
                 return;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
             {
-                MessageBox.Show("Please select a remote repository");
+                MessageBox.Show(selectRemoteRepository.Text);
                 return;
             }
             if (!Fetch.Checked && Branches.Text == "*")
             {
-                MessageBox.Show("You can only fetch all remote branches (*) whithout merge or rebase." + Environment.NewLine + "If you want to fetch all remote branches, choose fetch." + Environment.NewLine + "If you want to fetch and merge a branch, choose a specific branch.");
+                MessageBox.Show(fetchAllBranchesCanOnlyWithFetch.Text);
                 return;                
             }
 
@@ -194,7 +200,7 @@ namespace GitUI
 
             if (AutoStash.Checked && stashed && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                if (MessageBox.Show("Apply stashed items to working dir again?", "Auto stash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(applyShashedItemsAgain.Text, applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormProcess("stash pop");
 
@@ -210,7 +216,7 @@ namespace GitUI
             if (GitCommands.GitCommands.Plink())
             {
                 if (!File.Exists(GitCommands.Settings.Pageant))
-                    MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                    MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
                 else
                     GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
             }
@@ -305,7 +311,7 @@ namespace GitUI
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
             if (!File.Exists(GitCommands.Settings.Pageant))
-                MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
             else
                 GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
         }

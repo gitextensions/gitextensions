@@ -61,7 +61,9 @@
             // 
             // _GitIgnoreEdit
             // 
-            this._GitIgnoreEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._GitIgnoreEdit.IsReadOnly = false;
             this._GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
             this._GitIgnoreEdit.Name = "_GitIgnoreEdit";
@@ -70,6 +72,7 @@
             // 
             // AddDefault
             // 
+            this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddDefault.Location = new System.Drawing.Point(6, 438);
             this.AddDefault.Name = "AddDefault";
             this.AddDefault.Size = new System.Drawing.Size(108, 23);
@@ -80,6 +83,7 @@
             // 
             // Save
             // 
+            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Save.Location = new System.Drawing.Point(143, 438);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 23);

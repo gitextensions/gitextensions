@@ -444,11 +444,9 @@
     <Compile Include="FormVerify.Designer.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
     </Compile>
-    <Compile Include="GitExtensionsComponentResourceManager.cs" />
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitExtensionsResourceSet.cs" />
     <Compile Include="GitLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -835,6 +833,12 @@
     <None Include="Resources\plus.png" />
     <None Include="Icons\file.jpg" />
     <None Include="Icons\67.png" />
+    <None Include="Icons\nonprintchar.png" />
+    <None Include="Icons\brokendocument.png" />
+    <None Include="Icons\22.png" />
+    <None Include="Icons\221.png" />
+    <None Include="Icons\brokendocument1.png" />
+    <None Include="Icons\bug.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

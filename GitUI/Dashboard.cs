@@ -20,6 +20,7 @@ namespace GitUI
         TranslationString develop = new TranslationString("Develop");
         TranslationString donate = new TranslationString("Donate");
         TranslationString translate = new TranslationString("Translate");
+        TranslationString issues = new TranslationString("Issues");
 
         public Dashboard()
         {
@@ -178,6 +179,7 @@ namespace GitUI
                         //Clear buttons
                         CommonActions.Clear();
                         DonateCategory.Clear();
+                        DonateCategory.Dock = DockStyle.Top;
                         //Show buttons
                         CommonActions.DisableContextMenu();
                         DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
@@ -199,6 +201,11 @@ namespace GitUI
                         DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
                         TranslateItem.Click += new EventHandler(TranslateItem_Click);
                         DonateCategory.AddItem(TranslateItem);
+                        DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
+                        IssuesItem.Click += new EventHandler(IssuesItem_Click);
+                        DonateCategory.AddItem(IssuesItem);
+                        
+
 
                         splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
 
@@ -224,6 +231,11 @@ namespace GitUI
         void GitHubItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
+        }
+
+        void IssuesItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions/issues");
         }
 
         void dashboardItem_Click(object sender, EventArgs e)

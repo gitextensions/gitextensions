@@ -110,7 +110,7 @@
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(174, 21);
+            this.Branch.Size = new System.Drawing.Size(173, 21);
             this.Branch.TabIndex = 0;
             this.Branch.SelectedValueChanged += new System.EventHandler(this.Branch_SelectedValueChanged);
             this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
@@ -238,10 +238,11 @@
             // 
             // labelTo
             // 
-            this.labelTo.Location = new System.Drawing.Point(307, 21);
+            this.labelTo.AutoSize = true;
+            this.labelTo.Location = new System.Drawing.Point(306, 21);
             this.labelTo.Name = "labelTo";
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelTo.Size = new System.Drawing.Size(23, 19);
+            this.labelTo.Size = new System.Drawing.Size(16, 13);
             this.labelTo.TabIndex = 21;
             this.labelTo.Text = "to";
             this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -249,9 +250,9 @@
             // RemoteBranch
             // 
             this.RemoteBranch.FormattingEnabled = true;
-            this.RemoteBranch.Location = new System.Drawing.Point(336, 19);
+            this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
             this.RemoteBranch.Name = "RemoteBranch";
-            this.RemoteBranch.Size = new System.Drawing.Size(174, 21);
+            this.RemoteBranch.Size = new System.Drawing.Size(162, 21);
             this.RemoteBranch.TabIndex = 1;
             this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranch_DropDown);
             // 

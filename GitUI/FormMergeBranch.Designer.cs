@@ -31,7 +31,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.NoFastForward = new System.Windows.Forms.CheckBox();
+            this.noFastForward = new System.Windows.Forms.RadioButton();
+            this.fastForward = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
@@ -77,7 +78,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.NoFastForward);
+            this.groupBox1.Controls.Add(this.noFastForward);
+            this.groupBox1.Controls.Add(this.fastForward);
             this.groupBox1.Controls.Add(this.Ok);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.Branches);
@@ -91,16 +93,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
             // 
-            // NoFastForward
+            // noFastForward
             // 
-            this.NoFastForward.AutoSize = true;
-            this.NoFastForward.Location = new System.Drawing.Point(95, 102);
-            this.NoFastForward.Name = "NoFastForward";
-            this.NoFastForward.Size = new System.Drawing.Size(98, 17);
-            this.NoFastForward.TabIndex = 5;
-            this.NoFastForward.Text = "No fast-forward";
-            this.NoFastForward.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.NoFastForward.UseVisualStyleBackColor = true;
+            this.noFastForward.AutoSize = true;
+            this.noFastForward.Location = new System.Drawing.Point(126, 115);
+            this.noFastForward.Name = "noFastForward";
+            this.noFastForward.Size = new System.Drawing.Size(191, 17);
+            this.noFastForward.TabIndex = 7;
+            this.noFastForward.Text = "Always create a new merge commit";
+            this.noFastForward.UseVisualStyleBackColor = true;
+            // 
+            // fastForward
+            // 
+            this.fastForward.AutoSize = true;
+            this.fastForward.Checked = true;
+            this.fastForward.Location = new System.Drawing.Point(126, 92);
+            this.fastForward.Name = "fastForward";
+            this.fastForward.Size = new System.Drawing.Size(257, 17);
+            this.fastForward.TabIndex = 6;
+            this.fastForward.TabStop = true;
+            this.fastForward.Text = "Keep a single branch line if possible (fast forward)";
+            this.fastForward.UseVisualStyleBackColor = true;
             // 
             // Ok
             // 
@@ -124,9 +137,9 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(95, 65);
+            this.Branches.Location = new System.Drawing.Point(126, 65);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(327, 21);
+            this.Branches.Size = new System.Drawing.Size(296, 21);
             this.Branches.TabIndex = 3;
             // 
             // Currentbranch
@@ -181,6 +194,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox NoFastForward;
+        private System.Windows.Forms.RadioButton noFastForward;
+        private System.Windows.Forms.RadioButton fastForward;
     }
 }
