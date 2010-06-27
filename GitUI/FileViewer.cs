@@ -73,8 +73,16 @@ namespace GitUI
             };
 
 
-            TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += new MouseEventHandler(TextArea_MouseMove);
             TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
+
+            TextEditor.ShowVRuler = false;
+        }
+
+        void TextArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (currentViewIsPatch && !fileviewerToolbar.Visible)
+                fileviewerToolbar.Visible = true;
         }
 
         void TextArea_MouseLeave(object sender, EventArgs e)
@@ -82,14 +90,7 @@ namespace GitUI
             if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar)
                 fileviewerToolbar.Visible = false;
         }
-
-        void TextArea_MouseEnter(object sender, EventArgs e)
-        {
-            if (currentViewIsPatch)
-                fileviewerToolbar.Visible = true;
-        }
-
-
+        
         void TextArea_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
@@ -600,6 +601,21 @@ namespace GitUI
         private void showEntireFileButton_Click(object sender, EventArgs e)
         {
             showEntireFileToolStripMenuItem_Click(null, null);
+        }
+
+        private void showNonPrintChars_Click(object sender, EventArgs e)
+        {
+            showNonprintableCharactersToolStripMenuItem_Click(null, null);
+        }
+
+        private void showNonprintableCharactersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showNonprintableCharactersToolStripMenuItem.Checked = !showNonprintableCharactersToolStripMenuItem.Checked;
+            showNonPrintChars.Checked = showNonprintableCharactersToolStripMenuItem.Checked;
+
+            TextEditor.ShowEOLMarkers = showNonprintableCharactersToolStripMenuItem.Checked;
+            TextEditor.ShowSpaces = showNonprintableCharactersToolStripMenuItem.Checked;
+            TextEditor.ShowTabs = showNonprintableCharactersToolStripMenuItem.Checked;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace GitUI
 
             this.Title = title;
             this.RepositoryCategory = repositoryCategory;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public void DisableContextMenu()
@@ -254,7 +255,8 @@ namespace GitUI
                 if (Controls[i - 1] is DashboardItem)
                     Controls.RemoveAt(i - 1);
             }
-            this.Height = top = 26;
+            top = 26;
+            this.Height = top;
         }
 
         private void DashboardCategory_SizeChanged(object sender, EventArgs e)

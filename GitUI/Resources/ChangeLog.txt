@@ -10,13 +10,19 @@ Version 1.94
 	Fixed bug: starting "gitextensions init" from the commandline without path causes an exception
 	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file
 	Fixed bug: Removed empty root node from tree in file tree
+	Fixed bug: If HOMEDRIVE is defined, launching Git Bash would result in a different home directory than GitExtensions
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
+	Added link to report issues to dashboard
 	Added option to mark ill formed commit messages
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
 	Added plugin to start gource repository visualizer
 	Added toolbar to diff viewer to jump to next change
+	Added option to show nonprinting characters in file viewer
+	Added file explorer option to the file menu
+	Added from and to branch to push dialog 
+	Added option to create annotated tag	
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved
@@ -24,6 +30,7 @@ Version 1.94
 	Author image size can be set in context menu of gravatar control
 	The diff viewer now shows the old sha1 and new sha1 when viewing a submodule diff
 	The default web proxy is used to connect to internet
+	Replaced checkbox on merge branch dialog for more user friendly radio buttons
 
 Version 1.93
 	Fixed bug: wrong icon drawn in commit dialog for deleted files

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -76,9 +77,16 @@ namespace GitCommands
             }
 
 
-            using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(fileName))
+            try
             {
-                File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(fileName))
+                {
+                    File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
