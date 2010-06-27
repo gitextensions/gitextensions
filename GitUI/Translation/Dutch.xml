@@ -29,7 +29,7 @@
           <Value>Maak label</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
-          <Value>Maak geannoteerde tag</Value>
+          <Value>Maak geannoteerd label</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Bericht</Value>
@@ -101,6 +101,9 @@
         </TranslationItem>
         <TranslationItem Name="translate" Property="Text">
           <Value>Vertalen</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>Problemen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -405,7 +408,7 @@ _ReSharper*/
           <Value>Over</Value>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Value>Bekijke patch bestand</Value>
+          <Value>Bekijk patch bestand</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Value>Patch toepassen</Value>
@@ -988,7 +991,7 @@ _ReSharper*/
           <Value>Bericht</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
-          <Value>Maak geannoteerde tag</Value>
+          <Value>Maak geannoteerd label</Value>
         </TranslationItem>
         <TranslationItem Name="noTagMassage" Property="Text">
           <Value>Voer een label bericht in</Value>
