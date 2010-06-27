@@ -28,6 +28,7 @@ namespace GitUI
                 icon = Resources.history.ToBitmap();
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public DashboardItem(Bitmap icon, string title)

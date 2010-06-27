@@ -826,6 +826,7 @@
     <None Include="Icons\22.png" />
     <None Include="Icons\221.png" />
     <None Include="Icons\brokendocument1.png" />
+    <None Include="Icons\bug.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

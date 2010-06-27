@@ -14,6 +14,7 @@ Version 1.94
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
+	Added link to report issues to dashboard
 	Added option to mark ill formed commit messages
 	Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
 	Added plugin to start gource repository visualizer
