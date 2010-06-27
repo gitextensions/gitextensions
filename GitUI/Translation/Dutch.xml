@@ -105,6 +105,15 @@
         <TranslationItem Name="issues" Property="Text">
           <Value>Problemen</Value>
         </TranslationItem>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>Recente opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>Start</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>Bijdragen</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormVerify">
@@ -785,8 +794,7 @@ _ReSharper*/
     <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Maak nieuwe opslagplaats
-</Value>
+          <Value>Maak nieuwe opslagplaats</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Directorie</Value>
