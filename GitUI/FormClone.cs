@@ -43,6 +43,7 @@ namespace GitUI
 
                 FormProcess fromProcess;
                 fromProcess = new FormProcess(Settings.GitCommand, GitCommands.GitCommands.CloneCmd(_From.Text, dirTo, CentralRepository.Checked, null));
+                fromProcess.ShowDialog();
 
                 if (!fromProcess.ErrorOccured() && !GitCommands.GitCommands.InTheMiddleOfPatch())
                 {
@@ -57,6 +58,7 @@ namespace GitUI
                                 if (MessageBox.Show("The cloned has submodules configured." + Environment.NewLine + "Do you want to initialize the submodules?" + Environment.NewLine + Environment.NewLine + "This will initialize and update all submodules recursive.", "Submodules", MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
                                     FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+                                    process.ShowDialog();
                                     InitializeSubmodulesRecursive();
                                 }
 
@@ -85,6 +87,7 @@ namespace GitUI
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
                     {
                         FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+                        process.ShowDialog();
 
                         InitializeSubmodulesRecursive();
                     }

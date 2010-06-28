@@ -30,7 +30,7 @@ namespace GitUI
                 if(Force.Checked)
                     command += " --force";
 
-                new FormProcess(command);
+                new FormProcess(command).ShowDialog();
 
                 //CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
                 //GitCommands.Checkout commit = new GitCommands.Checkout(dto);

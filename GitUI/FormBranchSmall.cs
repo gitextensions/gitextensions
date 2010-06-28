@@ -30,7 +30,7 @@ namespace GitUI
                 }
                 else
                 {
-                    new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, Revision.Guid, CheckoutAfterCreate.Checked));
+                    new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, Revision.Guid, CheckoutAfterCreate.Checked)).ShowDialog();
 
                     Close();
                 }

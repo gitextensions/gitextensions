@@ -240,6 +240,7 @@ namespace GitUI
                 }
 
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
+                form.ShowDialog();
 
                 NeedRefresh = true;
 
@@ -639,7 +640,7 @@ namespace GitUI
         {
             if (MessageBox.Show(deleteUntrackedFiles.Text, deleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                new FormProcess("clean -f");
+                new FormProcess("clean -f").ShowDialog();
                 Initialize();
             }
         }

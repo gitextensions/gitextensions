@@ -19,6 +19,7 @@ namespace GitUI
         TranslationString selectTag = new TranslationString("You need to select a tag to push or select \"Push all tags\".");
         TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
         TranslationString pushCaption = new TranslationString("Push");
+        TranslationString pushToCaption = new TranslationString("Push to {0}");
 
         public FormPush()
         {
@@ -56,12 +57,11 @@ namespace GitUI
 
             FormProcess form;
 
+            string remote = "";
+            string destination;
             if (PullFromUrl.Checked)
             {
-                if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked));
-                else
-                    form = new FormProcess(GitCommands.GitCommands.PushTagCmd(PushDestination.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked));
+                destination = PushDestination.Text;
             }
             else
             {
@@ -73,11 +73,19 @@ namespace GitUI
                         GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 }
 
-                if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
-                else
-                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushTagCmd(Remotes.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
+                destination = Remotes.Text;
+                remote = Remotes.Text.Trim();
             }
+
+            string pushCmd;
+            if (TabControlTagBranch.SelectedTab == BranchTab)
+                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked);
+            else
+                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked);
+            form = new FormProcess(pushCmd);
+            form.Remote = remote;
+            form.Text = string.Format(pushToCaption.Text, destination);
+            form.ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !form.ErrorOccured())
                 Close();

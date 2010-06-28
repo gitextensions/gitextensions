@@ -11,8 +11,7 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-
-        public FormProcess(string process, string arguments, string remote)
+        public FormProcess(string process, string arguments)
         {
             syncContext = SynchronizationContext.Current;
             
@@ -23,19 +22,12 @@ namespace GitUI
 
             ProcessString = process ?? GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;
-            Remote = remote;
+            Remote = "";
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
-
-            ShowDialog();
-        }
-
-        public FormProcess(string process, string arguments)
-            : this(process, arguments, null)
-        {
         }
 
         public FormProcess(string arguments)
-            : this(null, arguments, null)
+            : this(null, arguments)
         {
         }
 
@@ -124,12 +116,16 @@ namespace GitUI
             Abort.Enabled = false;
             try
             {
-                //An error occured!
+                // An error occurred!
                 if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
                 {
                     ErrorImage.Visible = true;
                     errorOccured = true;
                     SuccessImage.Visible = false;
+
+                    // TODO: This Plink stuff here seems misplaced. Is there a better
+                    // home for all of this stuff? For example, if I had a label called pull, 
+                    // we could end up in this code incorrectly.
                     if (Plink)
                     {
                         if (ProcessArguments.ToLower().Contains("pull") ||
@@ -153,7 +149,7 @@ namespace GitUI
                                 puttyError.ShowDialog();
                                 if (puttyError.RetryProcess)
                                 {
-                                    FormProcess_Load(null, null);
+                                    Start();
                                 }
                             }
                         }
@@ -213,7 +209,7 @@ namespace GitUI
             {
                 if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
                 {
-                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automaticly stopped." + Environment.NewLine + Environment.NewLine + "When te connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
 
