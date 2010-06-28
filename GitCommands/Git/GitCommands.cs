@@ -42,6 +42,29 @@ namespace GitCommands
 
         public static void SetEnvironmentVariable()
         {
+            SetEnvironmentVariable(false);
+        }
+
+        public static void SetEnvironmentVariable(bool reload)
+        {
+            if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+            {
+                Environment.SetEnvironmentVariable("HOME", Settings.CustomHomeDir);
+                return;
+            } 
+            
+            if (Settings.UserProfileHomeDir)
+            {
+                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
+                return;
+            }
+
+            if (reload)
+            {
+                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User));
+            }
+
+            //Default!
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
                 string homePath = "";

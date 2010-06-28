@@ -1410,7 +1410,7 @@ nummer resulteert in een kortere start tijd, maar langzamer scrollen.</Value>
           <Value>Bladeren</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
-          <Value>Pad naar git.exe (leeglaten wanneer git.exe in het pad staat)</Value>
+          <Value>Pad naar sh.exe (leeglaten wanneer sh.exe in het pad staat)</Value>
         </TranslationItem>
         <TranslationItem Name="Ssh" Property="Text">
           <Value>Ssh</Value>
@@ -1640,6 +1640,34 @@ te kunnen wijzigen.</Value>
         </TranslationItem>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>Help met vertalen</Value>
+        </TranslationItem>
+        <TranslationItem Name="TabPageGit" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox7" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="label50" Property="Text">
+          <Value>Git Extensions kan msysgit of cygwin gebruiken om git opslagplaatsen te openen. Set de juiste paden hieronder.</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Omgeving</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Anders</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Zet HOME naar USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Gebruik standaard voor HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
+wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2548,6 +2576,35 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Zet HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Omgeving</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Anders</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Zet HOME naar USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Gebruik standaard voor HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
+wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>Ok</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
