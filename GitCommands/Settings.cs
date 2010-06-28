@@ -23,6 +23,33 @@ namespace GitCommands
             }
         }
 
+        private static bool userProfileHomeDir = false;
+        public static bool UserProfileHomeDir
+        {
+            get
+            {
+                return userProfileHomeDir;
+            }
+            set
+            {
+                userProfileHomeDir = value;
+            }
+        }
+
+
+        private static string customHomeDir = "";
+        public static string CustomHomeDir
+        {
+            get
+            {
+                return customHomeDir;
+            }
+            set
+            {
+                customHomeDir = value;
+            }
+        }
+
         private static string iconColor = "default";
         public static string IconColor
         {
@@ -679,6 +706,9 @@ namespace GitCommands
 
                 Application.UserAppDataRegistry.SetValue("showauthorgravatar", Settings.showAuthorGravatar);
 
+                Application.UserAppDataRegistry.SetValue("userprofilehomedir", Settings.UserProfileHomeDir);
+                Application.UserAppDataRegistry.SetValue("customhomedir", Settings.CustomHomeDir);
+
                 Application.UserAppDataRegistry.SetValue("closeCommitDialogAfterCommit", Settings.CloseCommitDialogAfterCommit);
                 Application.UserAppDataRegistry.SetValue("markIllFormedLinesInCommitMsg", Settings.MarkIllFormedLinesInCommitMsg);
 
@@ -818,6 +848,9 @@ namespace GitCommands
 
                 if (Application.UserAppDataRegistry.GetValue("showauthorgravatar") != null) Settings.showAuthorGravatar = Application.UserAppDataRegistry.GetValue("showauthorgravatar").ToString() == "True";
 
+                if (Application.UserAppDataRegistry.GetValue("userprofilehomedir") != null) Settings.UserProfileHomeDir = Application.UserAppDataRegistry.GetValue("userprofilehomedir").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("customhomedir") != null) Settings.CustomHomeDir = Application.UserAppDataRegistry.GetValue("customhomedir").ToString();
+                
                 if (Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit") != null) Settings.CloseCommitDialogAfterCommit = Application.UserAppDataRegistry.GetValue("closeCommitDialogAfterCommit").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("markIllFormedLinesInCommitMsg") != null) Settings.MarkIllFormedLinesInCommitMsg = Application.UserAppDataRegistry.GetValue("markIllFormedLinesInCommitMsg").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory") != null) Settings.FollowRenamesInFileHistory = Application.UserAppDataRegistry.GetValue("followrenamesinfilehistory").ToString() == "True";

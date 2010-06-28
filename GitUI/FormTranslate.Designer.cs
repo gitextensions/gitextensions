@@ -33,6 +33,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.saveAs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripTranslationLabel = new System.Windows.Forms.ToolStripLabel();
             this.translations = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripTranslationLanguageCode = new System.Windows.Forms.ToolStripLabel();
@@ -59,7 +60,6 @@
             this.googleTranslate = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -133,6 +133,11 @@
             this.saveAs.Size = new System.Drawing.Size(23, 27);
             this.saveAs.ToolTipText = "Save translation";
             this.saveAs.Click += new System.EventHandler(this.saveAs_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 30);
             // 
             // toolStripTranslationLabel
             // 
@@ -407,11 +412,6 @@
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 30);
             // 
             // FormTranslate
             // 

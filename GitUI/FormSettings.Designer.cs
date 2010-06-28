@@ -63,7 +63,24 @@
             this.UserNameSet = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
+            this.TabPageGit = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.otherHomeBrowse = new System.Windows.Forms.Button();
+            this.otherHomeDir = new System.Windows.Forms.TextBox();
+            this.otherHome = new System.Windows.Forms.RadioButton();
+            this.userprofileHome = new System.Windows.Forms.RadioButton();
+            this.defaultHome = new System.Windows.Forms.RadioButton();
+            this.label51 = new System.Windows.Forms.Label();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.BrowseGitBinPath = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.GitPath = new System.Windows.Forms.TextBox();
+            this.BrowseGitPath = new System.Windows.Forms.Button();
+            this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.Language = new System.Windows.Forms.ComboBox();
             this.label49 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
@@ -82,12 +99,6 @@
             this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
             this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
-            this.BrowseGitBinPath = new System.Windows.Forms.Button();
-            this.GitBinPath = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.BrowseGitPath = new System.Windows.Forms.Button();
-            this.GitPath = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this._MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.StartPage = new System.Windows.Forms.TabPage();
@@ -189,12 +200,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.TabPageGit.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._MaxCommits)).BeginInit();
             this.StartPage.SuspendLayout();
@@ -411,7 +424,7 @@
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(382, 171);
+            this.SmtpServer.Location = new System.Drawing.Point(382, 123);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 20);
             this.SmtpServer.TabIndex = 17;
@@ -419,7 +432,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(8, 174);
+            this.label23.Location = new System.Drawing.Point(8, 126);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(200, 13);
             this.label23.TabIndex = 18;
@@ -428,6 +441,7 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.TabPageGit);
             this.tabControl1.Controls.Add(this.TabPageGitExtensions);
             this.tabControl1.Controls.Add(this.StartPage);
             this.tabControl1.Controls.Add(this.AppearancePage);
@@ -613,6 +627,173 @@
             this.GitExtensionsInstall.UseVisualStyleBackColor = false;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
+            // TabPageGit
+            // 
+            this.TabPageGit.Controls.Add(this.groupBox8);
+            this.TabPageGit.Controls.Add(this.groupBox7);
+            this.TabPageGit.Location = new System.Drawing.Point(4, 22);
+            this.TabPageGit.Name = "TabPageGit";
+            this.TabPageGit.Size = new System.Drawing.Size(710, 383);
+            this.TabPageGit.TabIndex = 7;
+            this.TabPageGit.Text = "Git";
+            this.TabPageGit.UseVisualStyleBackColor = true;
+            this.TabPageGit.Click += new System.EventHandler(this.TabPageGit_Click);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.otherHomeBrowse);
+            this.groupBox8.Controls.Add(this.otherHomeDir);
+            this.groupBox8.Controls.Add(this.otherHome);
+            this.groupBox8.Controls.Add(this.userprofileHome);
+            this.groupBox8.Controls.Add(this.defaultHome);
+            this.groupBox8.Controls.Add(this.label51);
+            this.groupBox8.Location = new System.Drawing.Point(5, 108);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(699, 145);
+            this.groupBox8.TabIndex = 10;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Environment";
+            // 
+            // otherHomeBrowse
+            // 
+            this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
+            this.otherHomeBrowse.Name = "otherHomeBrowse";
+            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 23);
+            this.otherHomeBrowse.TabIndex = 10;
+            this.otherHomeBrowse.Text = "Browse";
+            this.otherHomeBrowse.UseVisualStyleBackColor = true;
+            this.otherHomeBrowse.Click += new System.EventHandler(this.otherHomeBrowse_Click);
+            // 
+            // otherHomeDir
+            // 
+            this.otherHomeDir.Location = new System.Drawing.Point(88, 102);
+            this.otherHomeDir.Name = "otherHomeDir";
+            this.otherHomeDir.Size = new System.Drawing.Size(527, 20);
+            this.otherHomeDir.TabIndex = 4;
+            // 
+            // otherHome
+            // 
+            this.otherHome.AutoSize = true;
+            this.otherHome.Location = new System.Drawing.Point(11, 103);
+            this.otherHome.Name = "otherHome";
+            this.otherHome.Size = new System.Drawing.Size(51, 17);
+            this.otherHome.TabIndex = 3;
+            this.otherHome.TabStop = true;
+            this.otherHome.Text = "Other";
+            this.otherHome.UseVisualStyleBackColor = true;
+            this.otherHome.CheckedChanged += new System.EventHandler(this.otherHome_CheckedChanged);
+            // 
+            // userprofileHome
+            // 
+            this.userprofileHome.AutoSize = true;
+            this.userprofileHome.Location = new System.Drawing.Point(11, 80);
+            this.userprofileHome.Name = "userprofileHome";
+            this.userprofileHome.Size = new System.Drawing.Size(166, 17);
+            this.userprofileHome.TabIndex = 2;
+            this.userprofileHome.TabStop = true;
+            this.userprofileHome.Text = "Set HOME to USERPROFILE";
+            this.userprofileHome.UseVisualStyleBackColor = true;
+            // 
+            // defaultHome
+            // 
+            this.defaultHome.AutoSize = true;
+            this.defaultHome.Location = new System.Drawing.Point(11, 57);
+            this.defaultHome.Name = "defaultHome";
+            this.defaultHome.Size = new System.Drawing.Size(129, 17);
+            this.defaultHome.TabIndex = 1;
+            this.defaultHome.TabStop = true;
+            this.defaultHome.Text = "Use default for HOME";
+            this.defaultHome.UseVisualStyleBackColor = true;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(8, 19);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(552, 26);
+            this.label51.TabIndex = 0;
+            this.label51.Text = resources.GetString("label51.Text");
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.label50);
+            this.groupBox7.Controls.Add(this.BrowseGitBinPath);
+            this.groupBox7.Controls.Add(this.label13);
+            this.groupBox7.Controls.Add(this.label14);
+            this.groupBox7.Controls.Add(this.GitPath);
+            this.groupBox7.Controls.Add(this.BrowseGitPath);
+            this.groupBox7.Controls.Add(this.GitBinPath);
+            this.groupBox7.Location = new System.Drawing.Point(5, 4);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(699, 98);
+            this.groupBox7.TabIndex = 9;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Git";
+            this.groupBox7.Enter += new System.EventHandler(this.groupBox7_Enter);
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(8, 18);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(458, 13);
+            this.label50.TabIndex = 9;
+            this.label50.Text = "Git Extensions can use msysgit or cygwin to access git repositories. Set the corr" +
+                "ect paths below.";
+            // 
+            // BrowseGitBinPath
+            // 
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(618, 64);
+            this.BrowseGitBinPath.Name = "BrowseGitBinPath";
+            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitBinPath.TabIndex = 8;
+            this.BrowseGitBinPath.Text = "Browse";
+            this.BrowseGitBinPath.UseVisualStyleBackColor = true;
+            this.BrowseGitBinPath.Click += new System.EventHandler(this.BrowseGitBinPath_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 44);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(213, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Command used to run git (git.cmd or git.exe)";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 70);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(267, 13);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "Path to sh.exe (leave empty when sh.exe is in the path)";
+            // 
+            // GitPath
+            // 
+            this.GitPath.Location = new System.Drawing.Point(373, 39);
+            this.GitPath.Name = "GitPath";
+            this.GitPath.Size = new System.Drawing.Size(242, 20);
+            this.GitPath.TabIndex = 4;
+            this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
+            // 
+            // BrowseGitPath
+            // 
+            this.BrowseGitPath.Location = new System.Drawing.Point(618, 38);
+            this.BrowseGitPath.Name = "BrowseGitPath";
+            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitPath.TabIndex = 5;
+            this.BrowseGitPath.Text = "Browse";
+            this.BrowseGitPath.UseVisualStyleBackColor = true;
+            this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
+            // 
+            // GitBinPath
+            // 
+            this.GitBinPath.Location = new System.Drawing.Point(373, 65);
+            this.GitBinPath.Name = "GitBinPath";
+            this.GitBinPath.Size = new System.Drawing.Size(242, 20);
+            this.GitBinPath.TabIndex = 7;
+            // 
             // TabPageGitExtensions
             // 
             this.TabPageGitExtensions.Controls.Add(this.helpTranslate);
@@ -636,12 +817,6 @@
             this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
             this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
             this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
-            this.TabPageGitExtensions.Controls.Add(this.BrowseGitBinPath);
-            this.TabPageGitExtensions.Controls.Add(this.GitBinPath);
-            this.TabPageGitExtensions.Controls.Add(this.label14);
-            this.TabPageGitExtensions.Controls.Add(this.BrowseGitPath);
-            this.TabPageGitExtensions.Controls.Add(this.GitPath);
-            this.TabPageGitExtensions.Controls.Add(this.label13);
             this.TabPageGitExtensions.Controls.Add(this._MaxCommits);
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
@@ -652,6 +827,17 @@
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // helpTranslate
+            // 
+            this.helpTranslate.AutoSize = true;
+            this.helpTranslate.Location = new System.Drawing.Point(602, 64);
+            this.helpTranslate.Name = "helpTranslate";
+            this.helpTranslate.Size = new System.Drawing.Size(72, 13);
+            this.helpTranslate.TabIndex = 30;
+            this.helpTranslate.TabStop = true;
+            this.helpTranslate.Text = "Help translate";
+            this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
+            // 
             // Language
             // 
             this.Language.FormattingEnabled = true;
@@ -659,7 +845,7 @@
             "en-US",
             "ja-JP",
             "nl-NL"});
-            this.Language.Location = new System.Drawing.Point(382, 109);
+            this.Language.Location = new System.Drawing.Point(382, 61);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(214, 21);
             this.Language.TabIndex = 29;
@@ -667,7 +853,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(8, 112);
+            this.label49.Location = new System.Drawing.Point(8, 64);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(134, 13);
             this.label49.TabIndex = 28;
@@ -676,7 +862,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(8, 316);
+            this.label40.Location = new System.Drawing.Point(8, 268);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(208, 13);
             this.label40.TabIndex = 27;
@@ -685,7 +871,7 @@
             // FollowRenamesInFileHistory
             // 
             this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 315);
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 267);
             this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
             this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
@@ -695,7 +881,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(8, 294);
+            this.label39.Location = new System.Drawing.Point(8, 246);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(184, 13);
             this.label39.TabIndex = 25;
@@ -704,7 +890,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(8, 271);
+            this.label38.Location = new System.Drawing.Point(8, 223);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(256, 13);
             this.label38.TabIndex = 24;
@@ -713,7 +899,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(8, 249);
+            this.label37.Location = new System.Drawing.Point(8, 201);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(167, 13);
             this.label37.TabIndex = 23;
@@ -722,7 +908,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(8, 228);
+            this.label35.Location = new System.Drawing.Point(8, 180);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(264, 13);
             this.label35.TabIndex = 22;
@@ -731,7 +917,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(8, 205);
+            this.label34.Location = new System.Drawing.Point(8, 157);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(295, 13);
             this.label34.TabIndex = 21;
@@ -740,7 +926,7 @@
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(324, 349);
+            this.EncodingLabel.Location = new System.Drawing.Point(324, 301);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(52, 13);
             this.EncodingLabel.TabIndex = 20;
@@ -756,7 +942,7 @@
             "UTF7",
             "UTF8",
             "UTF32"});
-            this._Encoding.Location = new System.Drawing.Point(382, 346);
+            this._Encoding.Location = new System.Drawing.Point(382, 298);
             this._Encoding.Name = "_Encoding";
             this._Encoding.Size = new System.Drawing.Size(242, 21);
             this._Encoding.TabIndex = 19;
@@ -764,7 +950,7 @@
             // Dictionary
             // 
             this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(382, 140);
+            this.Dictionary.Location = new System.Drawing.Point(382, 92);
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(214, 21);
             this.Dictionary.TabIndex = 15;
@@ -774,7 +960,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(8, 143);
+            this.label22.Location = new System.Drawing.Point(8, 95);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(152, 13);
             this.label22.TabIndex = 14;
@@ -783,7 +969,7 @@
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(382, 293);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(382, 245);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(15, 14);
@@ -793,7 +979,7 @@
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(382, 271);
+            this.UseFastChecks.Location = new System.Drawing.Point(382, 223);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(15, 14);
@@ -803,7 +989,7 @@
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(382, 227);
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(382, 179);
             this.ShowGitCommandLine.Name = "ShowGitCommandLine";
             this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitCommandLine.Size = new System.Drawing.Size(15, 14);
@@ -813,7 +999,7 @@
             // ShowRevisionGraph
             // 
             this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(382, 249);
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(382, 201);
             this.ShowRevisionGraph.Name = "ShowRevisionGraph";
             this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRevisionGraph.Size = new System.Drawing.Size(15, 14);
@@ -824,65 +1010,12 @@
             // CloseProcessDialog
             // 
             this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(382, 205);
+            this.CloseProcessDialog.Location = new System.Drawing.Point(382, 157);
             this.CloseProcessDialog.Name = "CloseProcessDialog";
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(15, 14);
             this.CloseProcessDialog.TabIndex = 9;
             this.CloseProcessDialog.UseVisualStyleBackColor = true;
-            // 
-            // BrowseGitBinPath
-            // 
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(627, 34);
-            this.BrowseGitBinPath.Name = "BrowseGitBinPath";
-            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 23);
-            this.BrowseGitBinPath.TabIndex = 8;
-            this.BrowseGitBinPath.Text = "Browse";
-            this.BrowseGitBinPath.UseVisualStyleBackColor = true;
-            this.BrowseGitBinPath.Click += new System.EventHandler(this.BrowseGitBinPath_Click);
-            // 
-            // GitBinPath
-            // 
-            this.GitBinPath.Location = new System.Drawing.Point(382, 35);
-            this.GitBinPath.Name = "GitBinPath";
-            this.GitBinPath.Size = new System.Drawing.Size(242, 20);
-            this.GitBinPath.TabIndex = 7;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 40);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(267, 13);
-            this.label14.TabIndex = 6;
-            this.label14.Text = "Path to git.exe (leave empty when git.exe is in the path)";
-            // 
-            // BrowseGitPath
-            // 
-            this.BrowseGitPath.Location = new System.Drawing.Point(627, 8);
-            this.BrowseGitPath.Name = "BrowseGitPath";
-            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
-            this.BrowseGitPath.TabIndex = 5;
-            this.BrowseGitPath.Text = "Browse";
-            this.BrowseGitPath.UseVisualStyleBackColor = true;
-            this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
-            // 
-            // GitPath
-            // 
-            this.GitPath.Location = new System.Drawing.Point(382, 9);
-            this.GitPath.Name = "GitPath";
-            this.GitPath.Size = new System.Drawing.Size(242, 20);
-            this.GitPath.TabIndex = 4;
-            this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 14);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(213, 13);
-            this.label13.TabIndex = 3;
-            this.label13.Text = "Command used to run git (git.cmd or git.exe)";
             // 
             // _MaxCommits
             // 
@@ -891,7 +1024,7 @@
             0,
             0,
             0});
-            this._MaxCommits.Location = new System.Drawing.Point(382, 63);
+            this._MaxCommits.Location = new System.Drawing.Point(382, 15);
             this._MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -909,7 +1042,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 64);
+            this.label12.Location = new System.Drawing.Point(8, 16);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 39);
             this.label12.TabIndex = 0;
@@ -2017,17 +2150,6 @@
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
-            // helpTranslate
-            // 
-            this.helpTranslate.AutoSize = true;
-            this.helpTranslate.Location = new System.Drawing.Point(602, 112);
-            this.helpTranslate.Name = "helpTranslate";
-            this.helpTranslate.Size = new System.Drawing.Size(72, 13);
-            this.helpTranslate.TabIndex = 30;
-            this.helpTranslate.TabStop = true;
-            this.helpTranslate.Text = "Help translate";
-            this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2051,6 +2173,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.TabPageGit.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.TabPageGitExtensions.ResumeLayout(false);
             this.TabPageGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._MaxCommits)).EndInit();
@@ -2247,6 +2374,16 @@
         private System.Windows.Forms.ComboBox Language;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.LinkLabel helpTranslate;
+        private System.Windows.Forms.TabPage TabPageGit;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button otherHomeBrowse;
+        private System.Windows.Forms.TextBox otherHomeDir;
+        private System.Windows.Forms.RadioButton otherHome;
+        private System.Windows.Forms.RadioButton userprofileHome;
+        private System.Windows.Forms.RadioButton defaultHome;
+        private System.Windows.Forms.Label label51;
 
     }
 }

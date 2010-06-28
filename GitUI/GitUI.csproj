@@ -66,6 +66,18 @@
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="AsyncLoader.cs" />
+    <Compile Include="FormFixHome.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFixHome.Designer.cs">
+      <DependentUpon>FormFixHome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSplash.Designer.cs">
+      <DependentUpon>FormSplash.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -653,6 +665,10 @@
       <DependentUpon>FormFileHistory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormFixHome.resx">
+      <DependentUpon>FormFixHome.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormFormatPath.resx">
       <DependentUpon>FormFormatPath.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -731,6 +747,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSplash.resx">
+      <DependentUpon>FormSplash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormStash.resx">
