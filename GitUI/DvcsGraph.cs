@@ -1033,39 +1033,47 @@ namespace GitUI
         {
             public struct LaneInfo
             {
-                public int ConnectLane;
-                public HashSet<Node> Parent;
-                public HashSet<Node> Child;
-
-                public HashSet<Junction> Junctions
+                public int ConnectLane
+                {
+                    get { return connectLane; }
+                    set { connectLane = value; }
+                }
+                public IEnumerable<Junction> Junctions
                 {
                     get
                     {
-                        // This is not terribly efficient, but each loop should only be over 1 or 2 items...
-                        HashSet<Junction> laneJunctions = new HashSet<Junction>();
-                        foreach (Node parent in Parent)
-                        {
-                            foreach (Junction j in parent.Descendants)
-                            {
-                                foreach (Node child in Child)
-                                {
-                                    if (child.Ancestors.Contains(j))
-                                    {
-                                        laneJunctions.Add(j);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        return laneJunctions;
+                        return junctions;
                     }
                 }
 
-                public LaneInfo(int aConnectLane)
+                private List<Junction> junctions;
+                private int connectLane;
+
+                public LaneInfo Clone()
                 {
-                    ConnectLane = aConnectLane;
-                    Parent = new HashSet<Node>();
-                    Child = new HashSet<Node>();
+                    LaneInfo other = new LaneInfo();
+                    other.connectLane = connectLane;
+                    other.junctions = new List<Junction>(junctions);
+                    return other;
+                }
+
+                public LaneInfo(int aConnectLane, Junction aJunction)
+                {
+                    connectLane = aConnectLane;
+                    junctions = new List<Junction>(1);
+                    junctions.Add(aJunction);
+                }
+
+                public void UnionWith(LaneInfo aOther)
+                {
+                    foreach (Junction other in aOther.junctions)
+                    {
+                        if (!junctions.Contains(other))
+                        {
+                            junctions.Add(other);
+                        }
+                    }
+                    junctions.TrimExcess();
                 }
 
                 public static implicit operator int(LaneInfo a)
@@ -1382,11 +1390,8 @@ namespace GitUI
                 laneRows.Clear();
                 laneNodes.Clear();
                 junctionNodes.Clear();
-                while (currentRow.Count > 0)
-                {
-                    currentRow.Clear(currentRow.Count - 1);
-                }
-
+                currentRow.Clear();
+                
                 foreach (Node aNode in sourceGraph.GetHeads())
                 {
                     if (aNode.Descendants.Count == 0)
@@ -1625,36 +1630,19 @@ namespace GitUI
                 // Node information
                 private int nodeLane = -1;
                 private Node node = null;
-                private Edges<Graph.LaneInfo> edges = new Edges<Graph.LaneInfo>();
+                private Edges edges;
 
-                private class Edges<T>
+                private class Edges
                 {
-                    private struct Edge
-                    {
-                        public T Data;
-                        public int Start;
-                        public int End;
-
-                        public Edge(T data, int start, int end)
-                        {
-                            Data = data;
-                            Start = start;
-                            End = end;
-                        }
-
-                        public override string ToString()
-                        {
-                            return string.Format("{0}->{1}: {2}", Start, End, Data);
-                        }
-                    }
-
                     private List<Edge> edges = new List<Edge>();
                     private List<int> countStart = new List<int>();
                     private List<int> countEnd = new List<int>();
 
-                    private readonly T emptyItem = default(T);
+                    private readonly Graph.LaneInfo emptyItem = new Graph.LaneInfo();
 
-                    public T Current(int lane, int item)
+                    public List<Edge> EdgeList { get { return edges; } }
+
+                    public Graph.LaneInfo Current(int lane, int item)
                     {
                         int found = 0;
                         foreach (Edge e in edges)
@@ -1671,7 +1659,7 @@ namespace GitUI
                         return emptyItem;
                     }
 
-                    public T Next(int lane, int item)
+                    public Graph.LaneInfo Next(int lane, int item)
                     {
                         int found = 0;
                         foreach (Edge e in edges)
@@ -1688,7 +1676,7 @@ namespace GitUI
                         return emptyItem;
                     }
 
-                    public T RemoveNext(int lane, int item, out int start, out int end)
+                    public Graph.LaneInfo RemoveNext(int lane, int item, out int start, out int end)
                     {
                         int found = 0;
                         for (int i = 0; i < edges.Count; i++)
@@ -1697,7 +1685,7 @@ namespace GitUI
                             {
                                 if (item == found)
                                 {
-                                    T data = edges[i].Data;
+                                    Graph.LaneInfo data = edges[i].Data;
                                     start = edges[i].Start;
                                     end = edges[i].End;
                                     countStart[start]--;
@@ -1714,21 +1702,21 @@ namespace GitUI
                         return emptyItem;
                     }
 
-                    public void Add(int from, int to, T data)
+                    public void Add(int from, Graph.LaneInfo data)
                     {
-                        Edge e = new Edge(data, from, to);
+                        Edge e = new Edge(data, from);
                         edges.Add(e);
 
-                        while (countStart.Count <= from)
+                        while (countStart.Count <= e.Start)
                         {
                             countStart.Add(0);
                         }
-                        countStart[from]++;
-                        while (countEnd.Count <= to)
+                        countStart[e.Start]++;
+                        while (countEnd.Count <= e.End)
                         {
                             countEnd.Add(0);
                         }
-                        countEnd[to]++;
+                        countEnd[e.End]++;
                     }
 
                     public void Clear(int lane)
@@ -1836,44 +1824,19 @@ namespace GitUI
                     }
                 }
 
-                public ActiveLaneRow Clone()
-                {
-                    ActiveLaneRow newLaneRow = new ActiveLaneRow();
-                    newLaneRow.nodeLane = nodeLane;
-                    newLaneRow.node = node;
-                    newLaneRow.edges = edges;
-                    return newLaneRow;
-                }
-
                 public bool IsActive(int col)
                 {
                     return edges.IsActive(col);
                 }
 
-                public void Advance()
-                {
-                    Edges<Graph.LaneInfo> newEdges = new Edges<Graph.LaneInfo>();
-                    for (int i = 0; i < edges.CountNext(); i++)
-                    {
-                        int edgeCount = edges.CountNext(i);
-                        if (edgeCount > 0)
-                        {
-                            Graph.LaneInfo info = new Graph.LaneInfo(i);
-                            for (int j = 0; j < edgeCount; j++)
-                            {
-                                Graph.LaneInfo edgeInfo = edges.Next(i, j);
-                                info.Parent.UnionWith(edgeInfo.Parent);
-                                info.Child.UnionWith(edgeInfo.Child);
-                            }
-                            newEdges.Add(i, i, info);
-                        }
-                    }
-                    edges = newEdges;
-                }
-
                 public void Add(int lane, Graph.LaneInfo data)
                 {
-                    edges.Add(lane, data.ConnectLane, data);
+                    edges.Add(lane, data);
+                }
+
+                public void Clear()
+                {
+                    edges = new Edges();
                 }
 
                 public void Clear(int lane)
@@ -1891,7 +1854,7 @@ namespace GitUI
                             int start, end;
                             Graph.LaneInfo info = edges.RemoveNext(i, 0, out start, out end);
                             info.ConnectLane--;
-                            edges.Add(start, info.ConnectLane, info);
+                            edges.Add(start, info);
                         }
                     }
                 }
@@ -1903,20 +1866,153 @@ namespace GitUI
                         int start, end;
                         Graph.LaneInfo info = edges.RemoveNext(aOld, j, out start, out end);
                         info.ConnectLane = aNew;
-                        edges.Add(start, aNew, info);
+                        edges.Add(start, info);
                     }
+                }
+
+                public Graph.LaneRow Advance()
+                {
+                    SavedLaneRow newLaneRow = new SavedLaneRow( this );
+
+                    Edges newEdges = new Edges();
+                    for (int i = 0; i < edges.CountNext(); i++)
+                    {
+                        int edgeCount = edges.CountNext(i);
+                        if (edgeCount > 0)
+                        {
+                            Graph.LaneInfo info = edges.Next(i, 0).Clone();
+                            for (int j = 1; j < edgeCount; j++)
+                            {
+                                Graph.LaneInfo edgeInfo = edges.Next(i, j);
+                                info.UnionWith(edgeInfo);
+                            }
+                            newEdges.Add(i, info);
+                        }
+                    }
+                    edges = newEdges;
+
+                    return newLaneRow;
+                }
+
+                private struct Edge
+                {
+                    public Graph.LaneInfo Data;
+                    public int Start;
+
+                    public int End { get { return Data.ConnectLane; } }
+
+                    public Edge(Graph.LaneInfo data, int start)
+                    {
+                        Data = data;
+                        Start = start;
+                    }
+
+                    public override string ToString()
+                    {
+                        return string.Format("{0}->{1}: {2}", Start, End, Data);
+                    }
+                }
+
+                private class SavedLaneRow : Graph.LaneRow
+                {
+                    public SavedLaneRow(ActiveLaneRow activeRow)
+                    {
+                        nodeLane = activeRow.nodeLane;
+                        node = activeRow.node;
+                        edges = activeRow.edges.EdgeList.ToArray();
+                    }
+
+                    public int NodeLane
+                    {
+                        get { return nodeLane; }
+                        set { nodeLane = value; }
+                    }
+                    public Node Node
+                    {
+                        get { return node; }
+                        set { node = value; }
+                    }
+
+                    public Graph.LaneInfo this[int col, int row]
+                    {
+                        get 
+                        {
+                            int count = 0;
+                            foreach (Edge edge in edges)
+                            {
+                                if (edge.Start == col)
+                                {
+                                    if (count == row)
+                                    {
+                                        return edge.Data;
+                                    }
+                                    count++;
+                                }
+                            }
+                            throw new Exception("Bad lane");
+                        }
+                    }
+                    public int Count
+                    {
+                        get
+                        {
+                            int count = -1;
+                            foreach (Edge edge in edges)
+                            {
+                                if (edge.Start > count)
+                                {
+                                    count = edge.Start;
+                                }
+                            }
+                            return count + 1;
+                        }
+                    }
+
+                    public int LaneInfoCount(int lane)
+                    {
+                        int count = 0;
+                        foreach (Edge edge in edges)
+                        {
+                            if (edge.Start == lane)
+                            {
+                                count++;
+                            }
+                        }
+                        return count;
+                    }
+
+                    public override string ToString()
+                    {
+                        string s = nodeLane + "/" + Count + ": ";
+                        for (int i = 0; i < Count; i++)
+                        {
+                            if (i == nodeLane)
+                                s += "*";
+                            s += "{";
+                            for (int j = 0; j < LaneInfoCount(i); j++)
+                                s += " " + this[i, j];
+                            s += " }, ";
+                        }
+                        s += node;
+                        return s;
+                    }
+
+                    // Node information
+                    private int nodeLane = -1;
+                    private Node node = null;
+                    private Edge[] edges = null;
                 }
 
                 public override string ToString()
                 {
-                    string s = nodeLane + "/" + edges.CountCurrent() + ": ";
-                    for (int i = 0; i < edges.CountCurrent(); i++)
+                    string s = nodeLane + "/" + Count + ": ";
+                    for (int i = 0; i < Count; i++)
                     {
                         if (i == nodeLane)
                             s += "*";
                         s += "{";
-                        for (int j = 0; j < edges.CountCurrent(i); j++)
-                            s += " " + edges.Current(i, j);
+                        for (int j = 0; j < LaneInfoCount(i); j++)
+                            s += " " + this[i, j];
                         s += " }, ";
                     }
                     s += node;
@@ -2007,10 +2103,6 @@ namespace GitUI
 
                 #endregion
 
-                // Make sure that lanes that have been merged are active and the branched 
-                // lanes are cleared. Also remove any empty lanes from LaneNodes
-                currentRow.Advance();
-
                 // Check to see if there are available lanes that could be used
                 // that are better than the current row node lane
                 #region Don't skip lanes
@@ -2046,9 +2138,7 @@ namespace GitUI
                     // left in the lane we don't draw it.
                     if (lane.Count > 0)
                     {
-                        Graph.LaneInfo info = new Graph.LaneInfo(curLane);
-                        info.Child.Add(currentRow.Node);
-                        info.Parent.Add(laneNodes[curLane].Current);
+                        Graph.LaneInfo info = new Graph.LaneInfo(curLane, laneNodes[curLane].Junction);
                         currentRow.Add(currentRow.NodeLane, info);
                     }
                 }
@@ -2152,9 +2242,7 @@ namespace GitUI
                         if (currentRow.Node == nodes.Current)
                         {
                             nodes.Next();
-                            Graph.LaneInfo info = new Graph.LaneInfo(laneIndex);
-                            info.Child.Add(currentRow.Node);
-                            info.Parent.Add(nodes.Current);
+                            Graph.LaneInfo info = new Graph.LaneInfo(laneIndex, nodes.Junction);
                             currentRow.Add(currentRow.NodeLane, info);
                         }
                     }
@@ -2238,7 +2326,7 @@ namespace GitUI
 
                 if (currentRow.Node != null)
                 {
-                    Graph.LaneRow row = currentRow.Clone();
+                    Graph.LaneRow row = currentRow.Advance();
                     row.Node.InLane = laneRows.Count;
                     laneRows.Add(row);
                     return true;
