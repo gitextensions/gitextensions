@@ -42,7 +42,7 @@ namespace GitUI
         TranslationString onlyStageChunkOfSingleFileError = new TranslationString("You can only use this option when selecting a single file");
         TranslationString stageChunkOfFileCaption = new TranslationString("Stage chunk of file");
         TranslationString resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
-
+        TranslationString stageDetails = new TranslationString("Stage Details");
 
         private readonly SynchronizationContext syncContext;
 
@@ -307,7 +307,11 @@ namespace GitUI
                 }
 
                 /*OutPut.Text = */
-                GitCommands.GitCommands.StageFiles(files);
+                string output = GitCommands.GitCommands.StageFiles(files);
+                if( !string.IsNullOrEmpty( output ) )
+                {
+                    MessageBox.Show(output, stageDetails.Text);
+                }
 
                 InitializedStaged();
                 List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;

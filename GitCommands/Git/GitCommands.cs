@@ -1864,10 +1864,10 @@ namespace GitCommands
             {
                 process1.StandardInput.Close();
                 process1.WaitForExit();
-            }
 
-            if (gitCommand.Output != null)
-                output = gitCommand.Output.ToString();
+                if (gitCommand.Output != null)
+                    output = gitCommand.Output.ToString().Trim();
+            }
 
             Process process2 = null;
             foreach (GitItemStatus file in files)
@@ -1883,10 +1883,16 @@ namespace GitCommands
             {
                 process2.StandardInput.Close();
                 process2.WaitForExit();
-            }
 
-            if (gitCommand.Output != null)
-                output += gitCommand.Output.ToString();
+                if (gitCommand.Output != null)
+                {
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        output += Environment.NewLine;
+                    }
+                    output += gitCommand.Output.ToString().Trim();
+                }
+            }
 
             return output; 
         }
