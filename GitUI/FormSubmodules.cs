@@ -76,6 +76,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(SubModuleName.Text));
+            process.ShowDialog();
             Initialize();
         }
 
@@ -83,6 +84,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(SubModuleName.Text));
+            process.ShowDialog();
             Initialize();
         }
 

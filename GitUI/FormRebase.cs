@@ -119,7 +119,7 @@ namespace GitUI
         private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.ContinueRebaseCmd());
+            new FormProcess(GitCommands.GitCommands.ContinueRebaseCmd()).ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfRebase())
                 Close();
@@ -131,8 +131,8 @@ namespace GitUI
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor; 
-            new FormProcess(GitCommands.GitCommands.SkipRebaseCmd());
+            Cursor.Current = Cursors.WaitCursor;
+            new FormProcess(GitCommands.GitCommands.SkipRebaseCmd()).ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfRebase())
                 Close();
@@ -144,7 +144,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.AbortRebaseCmd());
+            new FormProcess(GitCommands.GitCommands.AbortRebaseCmd()).ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfRebase())
                 Close();
@@ -163,6 +163,7 @@ namespace GitUI
             }
 
             FormProcess form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
+            form.ShowDialog();
             if (form.outputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
 

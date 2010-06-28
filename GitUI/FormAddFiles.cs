@@ -20,9 +20,9 @@ namespace GitUI
         private void button1_Click(object sender, EventArgs e)
         {
             if (force.Checked)
-                new FormProcess("add -f \"" + Filter.Text + "\"");
+                new FormProcess("add -f \"" + Filter.Text + "\"").ShowDialog();
             else
-                new FormProcess("add \"" + Filter.Text + "\"");
+                new FormProcess("add \"" + Filter.Text + "\"").ShowDialog();
             Close();
         }
 
@@ -33,7 +33,7 @@ namespace GitUI
 
         private void ShowFiles_Click(object sender, EventArgs e)
         {
-            new FormProcess("add --dry-run \"" + Filter.Text + "\"");
+            new FormProcess("add --dry-run \"" + Filter.Text + "\"").ShowDialog();
         }
     }
 }
