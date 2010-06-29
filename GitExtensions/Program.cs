@@ -54,7 +54,7 @@ namespace GitExtensions
                 {
                 }
 
-                formSplash.Hide();
+                formSplash.Close();
             }
 
             if (args.Length >= 3)

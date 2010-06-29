@@ -19,6 +19,7 @@ namespace GitUI
         TranslationString selectTag = new TranslationString("You need to select a tag to push or select \"Push all tags\".");
         TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
         TranslationString pushCaption = new TranslationString("Push");
+        TranslationString branchNewForRemote = new TranslationString("The branch you are about to push seems to be a new branch for the remote." + Environment.NewLine + "Are you sure you want to push this branch?");
 
         public FormPush()
         {
@@ -50,6 +51,18 @@ namespace GitUI
             {
                 MessageBox.Show(selectTag.Text);
                 return;
+            }
+
+            //Extra check if the branch is already known to the remote, give a warning when not.
+            //This is not possible when the remote is an URL, but this is ok since most users push to
+            //known remotes anyway.
+            if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
+            {
+                //The current branch is not known by the remote (as far as we now since we are disconnected....)
+                if (!GitCommands.GitCommands.GetHeads(false, true).Exists(h => h.Remote.Equals(Remotes.Text) && h.Name.Equals(RemoteBranch.Text)))
+                    //Ask if this is what the user wants
+                    if (MessageBox.Show(branchNewForRemote.Text, pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                        return;
             }
 
             GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
@@ -153,10 +166,10 @@ namespace GitUI
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
 
             // Doing this makes it pretty easy to accidentally create a branch on the remote.
-            // leaving it blank will do the 'default' thing, and can be configured by setting 
-            // the push option of the remote.
-            //Branch.Text = branch;
-            //RemoteBranch.Text = Branch.Text;
+            // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
+            // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
+            Branch.Text = branch;
+            RemoteBranch.Text = Branch.Text;
 
             EnableLoadSSHButton();
 
