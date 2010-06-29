@@ -14,10 +14,30 @@ namespace GitUI
     {
         public static void CheckHomePath()
         {
+            bool fixHome = false;
             GitCommands.GitCommands.SetEnvironmentVariable();
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) ||
-                string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")) ||
-                !File.Exists(Environment.GetEnvironmentVariable("HOME") + "\\.gitconfig"))
+                string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
+            {
+                fixHome = true;
+            }
+            else
+            {
+                //This is bad... or... it is the first time any git action has taken place.
+                if (!File.Exists(Environment.GetEnvironmentVariable("HOME") + "\\.gitconfig"))
+                {
+                    //If there is a .gitconfig file in any of the obvious places, we can make
+                    //a suggestion for HOME that is probably better then the current HOME
+                    if (File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig") ||
+                        File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig") ||
+                        File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
+                    {
+                        fixHome = true;
+                    }
+                }
+            }
+
+            if (fixHome)
             {
                 if (MessageBox.Show("The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine +
                                 "\"" + Environment.GetEnvironmentVariable("HOME") + "\"" + Environment.NewLine + Environment.NewLine +
