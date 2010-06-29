@@ -575,6 +575,15 @@ namespace GitUI
                     e.Handled = true;
 
                     e.PaintBackground(e.CellBounds, true);
+                    Brush foreBrush;
+                    if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                    {
+                        foreBrush = new SolidBrush(e.CellStyle.SelectionForeColor);
+                    }
+                    else
+                    {
+                        foreBrush = new SolidBrush(e.CellStyle.ForeColor);
+                    }
 
                     Font rowFont;
                     if (revision.Guid == currentCheckout)
@@ -601,18 +610,18 @@ namespace GitUI
                             }
                         }
                         string text = revision.Message;
-                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, foreBrush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                     }
                     else if (column == 2)
                     {
                         string text = revision.Author;
-                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, foreBrush, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                     else if (column == 3)
                     {
                         DateTime time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                         string text = TimeToString(time);
-                        e.Graphics.DrawString(text, rowFont, Brushes.Black, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        e.Graphics.DrawString(text, rowFont, foreBrush, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
             }
