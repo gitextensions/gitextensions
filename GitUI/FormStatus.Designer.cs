@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormProcess
+    partial class FormStatus
     {
         /// <summary>
         /// Required designer variable.
@@ -228,17 +228,17 @@
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
-            // FormProcess
+            // FormStatus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "FormProcess";
+            this.Name = "FormStatus";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
-            this.Load += new System.EventHandler(this.FormProcess_Load);
+            this.Load += new System.EventHandler(this.FormStatus_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);

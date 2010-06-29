@@ -309,9 +309,9 @@ namespace GitUI
                 }
 
                 /*OutPut.Text = */
-                FormProcess.ProcessStart processStart = new FormProcess.ProcessStart
+                FormStatus.ProcessStart processStart = new FormStatus.ProcessStart
                     (
-                        delegate(FormProcess form)
+                        delegate(FormStatus form)
                         {
                             form.AddOutput(string.Format(stageFiles.Text, files.Count));
                             string output = GitCommands.GitCommands.StageFiles(files);
@@ -319,7 +319,7 @@ namespace GitUI
                             form.Done(string.IsNullOrEmpty(output));
                         }
                     );
-                FormProcess process = new FormProcess(processStart, null);
+                FormStatus process = new FormStatus(processStart, null);
                 process.Text = stageDetails.Text;
                 process.ShowDialogOnError();
 
