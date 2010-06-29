@@ -272,7 +272,7 @@ namespace GitUI
         private List<IComparable> toBeSelected = new List<IComparable>();
 
         private const int NODE_DIMENSION = 8;
-        private const int LANE_WIDTH = 12;
+        private const int LANE_WIDTH = 13;
         private const int LANE_LINE_WIDTH = 2;
         private const int MAX_LANES = 30;
 
