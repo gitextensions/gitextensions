@@ -268,19 +268,22 @@ Vergeet niet deze labels weer te verwijderen.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormProcess">
+    <TranslationCategory Name="FormStatus">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Process</Value>
+          <Value>Proces</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Ok</Value>
         </TranslationItem>
         <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialog openlaten</Value>
+          <Value>Dialoog openlaten</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
-          <Value>Afbreken</Value>
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Proces</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1088,6 +1091,35 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Zet HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Omgeving</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Anders</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Zet HOME naar USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Gebruik standaard voor HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
+wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1886,6 +1918,16 @@ Door het het verwijderen van deze vertakking kunnen commits verloren gaan!</Valu
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormSplash">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value> </Value>
+        </TranslationItem>
+        <TranslationItem Name="version" Property="Text">
+          <Value>Versie {0}</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormRebase">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2085,6 +2127,13 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         </TranslationItem>
         <TranslationItem Name="pushCaption" Property="Text">
           <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNewForRemote" Property="Text">
+          <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is bij de externe opslagplaats.
+Weet u zeker dat u door wilt gaan met het verzenden van deze vertakking?</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushToCaption" Property="Text">
+          <Value>Verzenden naar {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2291,6 +2340,12 @@ Kies 'Nee' om de nieuwe bestanden te bewaren.</Value>
         </TranslationItem>
         <TranslationItem Name="resetStageChunkOfFileCaption" Property="Text">
           <Value>Zet een deel van het bestand terug</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageDetails" Property="Text">
+          <Value>Details bestanden klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageFiles" Property="Text">
+          <Value>Zet {0} bestanden klaar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2576,35 +2631,6 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFixHome">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Zet HOME</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox8" Property="Text">
-          <Value>Omgeving</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHomeBrowse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHome" Property="Text">
-          <Value>Anders</Value>
-        </TranslationItem>
-        <TranslationItem Name="userprofileHome" Property="Text">
-          <Value>Zet HOME naar USERPROFILE</Value>
-        </TranslationItem>
-        <TranslationItem Name="defaultHome" Property="Text">
-          <Value>Gebruik standaard voor HOME</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
-          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
-wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
-        </TranslationItem>
-        <TranslationItem Name="ok" Property="Text">
-          <Value>Ok</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

@@ -10,18 +10,18 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormSplash : Form
+    public partial class FormSplash : GitExtensionsForm
     {
         TranslationString version = new TranslationString("Version {0}");
 
         public FormSplash()
         {
-            InitializeComponent();
+            InitializeComponent(); Translate();
         }
 
         public void SetAction(string action)
         {
-            actionLabel.Text = action;
+            _actionLabel.Text = action;
             Refresh();
         }
 

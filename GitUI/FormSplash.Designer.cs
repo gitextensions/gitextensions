@@ -30,9 +30,9 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.actionLabel = new System.Windows.Forms.Label();
             this._version = new System.Windows.Forms.Label();
+            this._programTitle = new System.Windows.Forms.Label();
+            this._actionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -51,33 +51,14 @@
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this._version);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.actionLabel);
+            this.panel1.Controls.Add(this._programTitle);
+            this.panel1.Controls.Add(this._actionLabel);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(256, 128);
             this.panel1.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(134, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Git Extensions";
-            // 
-            // actionLabel
-            // 
-            this.actionLabel.AutoSize = true;
-            this.actionLabel.Location = new System.Drawing.Point(134, 104);
-            this.actionLabel.Name = "actionLabel";
-            this.actionLabel.Size = new System.Drawing.Size(54, 13);
-            this.actionLabel.TabIndex = 1;
-            this.actionLabel.Text = "Loading...";
             // 
             // _version
             // 
@@ -87,6 +68,25 @@
             this._version.Size = new System.Drawing.Size(59, 13);
             this._version.TabIndex = 3;
             this._version.Text = "Version {0}";
+            // 
+            // _programTitle
+            // 
+            this._programTitle.AutoSize = true;
+            this._programTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._programTitle.Location = new System.Drawing.Point(134, 8);
+            this._programTitle.Name = "_programTitle";
+            this._programTitle.Size = new System.Drawing.Size(99, 15);
+            this._programTitle.TabIndex = 2;
+            this._programTitle.Text = "Git Extensions";
+            // 
+            // _actionLabel
+            // 
+            this._actionLabel.AutoSize = true;
+            this._actionLabel.Location = new System.Drawing.Point(134, 104);
+            this._actionLabel.Name = "_actionLabel";
+            this._actionLabel.Size = new System.Drawing.Size(54, 13);
+            this._actionLabel.TabIndex = 1;
+            this._actionLabel.Text = "Loading...";
             // 
             // FormSplash
             // 
@@ -110,8 +110,8 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label actionLabel;
+        private System.Windows.Forms.Label _programTitle;
+        private System.Windows.Forms.Label _actionLabel;
         private System.Windows.Forms.Label _version;
     }
 }
