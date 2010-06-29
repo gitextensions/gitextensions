@@ -37,7 +37,7 @@ namespace GitUI
             Revision = revision;
             DiffFiles.GitItemStatusses = null;
 
-            if (revision.ParentGuids.Count > 0)
+            if (revision.ParentGuids.Length > 0)
                 DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
 
             commitInfo.SetRevision(revision.Guid);
@@ -48,7 +48,7 @@ namespace GitUI
         {
             Revision = new GitRevision();
             Revision.Guid = revision;
-            Revision.ParentGuids.Add(revision + "^");
+            Revision.ParentGuids = new string[]{revision + "^"};
             SetRevision(Revision);
         }
 
