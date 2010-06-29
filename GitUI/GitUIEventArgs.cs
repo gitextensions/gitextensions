@@ -58,7 +58,7 @@ namespace GitUI
         {
             get
             {
-                return "195";
+                return Settings.GitExtensionsVersionInt.ToString();
             }
         }
 

@@ -10,6 +10,9 @@ namespace GitCommands
 {
     public static class Settings
     {
+        public static string GitExtensionsVersionString = "1.95";
+        public static int GitExtensionsVersionInt = 195;
+
         private static string translation = "";
         public static string Translation
         {
