@@ -47,7 +47,7 @@ namespace GitUI
 
             List<string> warningList = new List<string>();
 
-            foreach (string warning in process.outputString.ToString().Split('\n'))
+            foreach (string warning in process.OutputString.ToString().Split('\n'))
             {
                 if (!ShowOnlyCommits.Checked || warning.Contains("commit"))
                     warningList.Add(ExtendWarning(warning));

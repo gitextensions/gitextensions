@@ -67,7 +67,7 @@
             this.Ok.TabIndex = 0;
             this.Ok.Text = "Ok";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.button1_Click);
+            this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // splitContainer1
             // 
@@ -216,7 +216,6 @@
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
-            this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
             this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
             // 
             // Abort
@@ -227,7 +226,7 @@
             this.Abort.TabIndex = 3;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click_1);
+            this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
             // FormProcess
             // 

@@ -9,21 +9,32 @@ namespace GitUI
     delegate void DataCallback(string text);
     public partial class FormProcess : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext;
+        public delegate void ProcessStart(FormProcess form);
+        public delegate void ProcessAbort(FormProcess form);
+
+        public FormProcess(ProcessStart process, ProcessAbort abort)
+        {
+            InitializeComponent(); Translate();
+            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            
+            ProcessCallback = process;
+            AbortCallback = abort;
+            if (abort == null)
+            {
+                Abort.Visible = false;
+            }
+        }
 
         public FormProcess(string process, string arguments)
         {
-            syncContext = SynchronizationContext.Current;
-            
             InitializeComponent(); Translate();
-
-            if (string.IsNullOrEmpty(arguments))
-                return;
-
+            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            
+            ProcessCallback = new ProcessStart(processStart);
+            AbortCallback = new ProcessAbort(processAbort);
             ProcessString = process ?? GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
         }
 
         public FormProcess(string arguments)
@@ -31,55 +42,18 @@ namespace GitUI
         {
         }
 
-        private bool restart = false;
-        public string Remote { get; set; }
-        public string ProcessString { get; set; }
-        public string ProcessArguments { get; set; }
-        public Process Process { get; set; }
-        private GitCommands.GitCommands gitCommand;
+        public StringBuilder OutputString = new StringBuilder();
+        public ProcessStart ProcessCallback;
+        public ProcessAbort AbortCallback;
         private bool errorOccured = false;
+        private bool showOnError = false;
 
         public bool ErrorOccured()
         {
             return errorOccured;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void FormProcess_Load(object sender, EventArgs e)
-        {
-            RestorePosition("process");
-            Start();
-        }
-
-        private void Start()
-        {
-            restart = false;
-            Output.Text = "";
-            AddOutput(ProcessString + " " + ProcessArguments);
-
-            Plink = GitCommands.GitCommands.Plink();
-
-            ProgressBar.Visible = true;
-
-            outputString = new StringBuilder();
-
-            gitCommand = new GitCommands.GitCommands();
-            gitCommand.CollectOutput = false;
-            Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
-
-            gitCommand.Exited += new EventHandler(gitCommand_Exited);
-            gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
-
-            Ok.Enabled = false;
-        }
-
-        public bool Plink { get; set; }
-
-        void SetProgress(string text)
+        public void SetProgress(string text)
         {
             int index = text.IndexOf('%');
             int progressValue;
@@ -92,36 +66,149 @@ namespace GitUI
             this.Text = text;
         }
 
-        void AddOutput(string text)
+        public void AddOutput(string text)
         {
             Output.Text += text + Environment.NewLine;
         }
 
-        public StringBuilder outputString;
-
-        void Done()
+        public void Done(bool isSuccess)
         {
-            if (restart)
-            {
-                Start();
-                return;
-            }
-
-            AddOutput(outputString.ToString());
+            AddOutput(OutputString.ToString());
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
             Ok.Focus();
             AcceptButton = Ok;
             Abort.Enabled = false;
+
+            SuccessImage.Visible = isSuccess;
+            ErrorImage.Visible = !isSuccess;
+            errorOccured = !isSuccess;
+
+            if (showOnError)
+            {
+                if (isSuccess)
+                {
+                    Close();
+                }
+                else
+                {
+                    // For some reason setting the state to normal interferes with
+                    // proper parent centering...
+                    WindowState = FormWindowState.Normal;
+                    CenterToParent();
+                    Visible = true;
+                }
+            }
+        }
+
+        public void ShowDialogOnError()
+        {
+            showOnError = true;
+            Visible = false;
+            // Just hiding it still seems to draw one frame of the control
+            WindowState = FormWindowState.Minimized;
+            ShowDialog();
+        }
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void FormProcess_Load(object sender, EventArgs e)
+        {
+            RestorePosition("process");
+            Start();
+        }
+
+        private void Start()
+        {
+            Output.Text = "";
+            ProgressBar.Visible = true;
+            Ok.Enabled = false;
+
+            ProcessCallback(this);
+        }
+
+        private void Abort_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AbortCallback(this);
+                OutputString.Append(Environment.NewLine + "Aborted");
+                Done(false);
+            }
+            catch { }
+        }
+
+        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+        }
+
+        private void FormProcess_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("process");
+        }
+
+        // TODO: Move this into its own class (likely called FormProcess, with the current
+        // FormProcess getting renamed to FormStatusDisplay or something.
+        #region Built in process handling
+
+        public string Remote { get; set; }
+        public bool Plink { get; set; }
+        public string ProcessString { get; set; }
+        public string ProcessArguments { get; set; }
+        public Process Process { get; set; }
+
+        private bool restart = false;
+        private GitCommands.GitCommands gitCommand;
+
+        private void processStart(FormProcess form)
+        {
+            restart = false;
+            AddOutput(ProcessString + " " + ProcessArguments);
+
+            Plink = GitCommands.GitCommands.Plink();
+
+            gitCommand = new GitCommands.GitCommands();
+            gitCommand.CollectOutput = false;
+            Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+
+            gitCommand.Exited += new EventHandler(gitCommand_Exited);
+            gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+        }
+
+        private void processAbort(FormProcess form)
+        {
+            if (Process != null)
+            {
+                Process.Kill();
+            }
+        }
+
+        void gitCommand_Exited(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate() { gitCommand_Exited(sender, e); }));
+                return;
+            }
+
+            if (restart)
+            {
+                Start();
+                return;
+            }
+
+            bool isError;
             try
             {
                 // An error occurred!
                 if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
                 {
-                    ErrorImage.Visible = true;
-                    errorOccured = true;
-                    SuccessImage.Visible = false;
+                    isError = true;
 
                     // TODO: This Plink stuff here seems misplaced. Is there a better
                     // home for all of this stuff? For example, if I had a label called pull, 
@@ -138,9 +225,7 @@ namespace GitUI
                         {
                             if (Output.Text.Contains("successfully authenticated"))
                             {
-                                SuccessImage.Visible = true;
-                                ErrorImage.Visible = false;
-                                errorOccured = false;
+                                isError = false;
                             }
 
                             if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
@@ -150,6 +235,7 @@ namespace GitUI
                                 if (puttyError.RetryProcess)
                                 {
                                     Start();
+                                    return;
                                 }
                             }
                         }
@@ -157,9 +243,7 @@ namespace GitUI
                 }
                 else
                 {
-                    ErrorImage.Visible = false;
-                    SuccessImage.Visible = true;
-                    errorOccured = false;
+                    isError = false;
 
                     if (GitCommands.Settings.CloseProcessDialog)
                         Close();
@@ -167,10 +251,10 @@ namespace GitUI
             }
             catch
             {
-                errorOccured = true;
-                ErrorImage.Visible = true;
-                SuccessImage.Visible = false;
+                isError = true;
             }
+
+            Done(!isError);
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
@@ -185,23 +269,25 @@ namespace GitUI
                     // It's on a different thread, so use Invoke.
                     DataCallback d = new DataCallback(SetProgress);
                     this.Invoke(d, new object[] { e.Data });
-                } else
+                }
+                else
                 {
                     SetProgress(e.Data);
                 }
-            } else
+            }
+            else
             {
-                /*if (Output.InvokeRequired)
-                {
-                    // It's on a different thread, so use Invoke.
-                    DataCallback d = new DataCallback(AddOutput);
-                    this.Invoke(d, new object[] { e.Data });
-                } else
-                {
-                    AddOutput(e.Data);
-                }*/
-                outputString.Append(e.Data);
-                outputString.Append(Environment.NewLine);
+                //if (Output.InvokeRequired)
+                //{
+                //    // It's on a different thread, so use Invoke.
+                //    DataCallback d = new DataCallback(AddOutput);
+                //    this.Invoke(d, new object[] { e.Data });
+                //} else
+                //{
+                //    AddOutput(e.Data);
+                //}
+                OutputString.Append(e.Data);
+                OutputString.Append(Environment.NewLine);
             }
 
 
@@ -231,55 +317,7 @@ namespace GitUI
                 }
             }
         }
+        #endregion
 
-
-
-        void gitCommand_Exited(object sender, EventArgs e)
-        {
-            syncContext.Post(_ => Done(), null);
-        }
-
-        private void Abort_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Process != null)
-                {
-                    Process.Kill();
-                    outputString.Append(Environment.NewLine + "Aborted");
-                    Done();
-                }
-            }
-            catch
-            {
-            }            
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
-        {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
-        }
-
-        private void KeepDialogOpen_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void Abort_Click_1(object sender, EventArgs e)
-        {
-            if (Process != null)
-            {
-                Process.Kill();
-                outputString.Append(Environment.NewLine + "Aborted");
-            }
-        }
-
-        private void FormProcess_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("process");
-        }
     }
 }

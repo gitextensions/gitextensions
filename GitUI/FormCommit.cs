@@ -43,6 +43,7 @@ namespace GitUI
         TranslationString stageChunkOfFileCaption = new TranslationString("Stage chunk of file");
         TranslationString resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
         TranslationString stageDetails = new TranslationString("Stage Details");
+        TranslationString stageFiles = new TranslationString("Stage {0} files");
 
         private readonly SynchronizationContext syncContext;
 
@@ -308,11 +309,19 @@ namespace GitUI
                 }
 
                 /*OutPut.Text = */
-                string output = GitCommands.GitCommands.StageFiles(files);
-                if( !string.IsNullOrEmpty( output ) )
-                {
-                    MessageBox.Show(output, stageDetails.Text);
-                }
+                FormProcess.ProcessStart processStart = new FormProcess.ProcessStart
+                    (
+                        delegate(FormProcess form)
+                        {
+                            form.AddOutput(string.Format(stageFiles.Text, files.Count));
+                            string output = GitCommands.GitCommands.StageFiles(files);
+                            form.AddOutput(output);
+                            form.Done(string.IsNullOrEmpty(output));
+                        }
+                    );
+                FormProcess process = new FormProcess(processStart, null);
+                process.Text = stageDetails.Text;
+                process.ShowDialogOnError();
 
                 InitializedStaged();
                 List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
