@@ -164,7 +164,7 @@ namespace GitUI
 
             FormProcess form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
             form.ShowDialog();
-            if (form.outputString.ToString().Trim() == "Current branch a is up to date.")
+            if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
 
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())

@@ -20,7 +20,7 @@ namespace GitUI
         {
             FormProcess form = new FormProcess(GitCommands.GitCommands.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
             form.ShowDialog();
-            PreviewOutput.Text = form.outputString.ToString();
+            PreviewOutput.Text = form.OutputString.ToString();
         }
 
         private void Cleanup_Click(object sender, EventArgs e)
@@ -29,7 +29,7 @@ namespace GitUI
             {
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
                 form.ShowDialog();
-                PreviewOutput.Text = form.outputString.ToString();
+                PreviewOutput.Text = form.OutputString.ToString();
             }
         }
 
