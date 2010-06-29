@@ -130,7 +130,8 @@ namespace GitUI
                 IComparable[] data = new IComparable[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
-                    data[i] = this.graphData[this.SelectedRows[i].Index].Node.Id;
+                    if (this.graphData[this.SelectedRows[i].Index] != null)
+                        data[i] = this.graphData[this.SelectedRows[i].Index].Node.Id;
                 }
                 return data;
             }
