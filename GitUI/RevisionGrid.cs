@@ -40,8 +40,8 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             NormalFont = Revisions.Font;
-            HeadFont = NormalFont;
-            RefsFont = NormalFont;
+            HeadFont = new Font(NormalFont, FontStyle.Underline);
+            RefsFont = new Font(NormalFont, FontStyle.Bold);
 
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
@@ -310,8 +310,8 @@ namespace GitUI
         }
 
         public Font NormalFont { get; set; }
-        public Font HeadFont { get; set; }
-        public Font RefsFont { get; set; }
+        public Font HeadFont;
+        public Font RefsFont;
 
         public event EventHandler SelectionChanged;
 
