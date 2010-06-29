@@ -314,7 +314,6 @@ namespace GitUI
             syncContext.Post(new SendOrPostCallback(delegate(object o)
             {
                 clearDrawCache();
-                Invalidate(true);
             }), this);
         }
 
@@ -348,7 +347,6 @@ namespace GitUI
         private void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             clearDrawCache();
-            Invalidate(false);
         }
 
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
@@ -399,6 +397,17 @@ namespace GitUI
                             syncContext.Post(method, curCount);
                         }
 
+                        if (curCount == (FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex + DisplayedRowCount(true)))
+                        {
+                            SendOrPostCallback refreshMethod = new SendOrPostCallback(delegate(object state)
+                            {
+                                Refresh();
+                            });
+                            syncContext.Post(refreshMethod, null);
+
+                            
+                        }
+
                         //Console.WriteLine("Cached item {0}/{1}", curCount, graphData.NodeCount);
                         curCount = graphData.CachedCount;
                         graphDataCount = curCount;
@@ -422,6 +431,7 @@ namespace GitUI
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
                 visibleBottom = visibleTop + DisplayedRowCount(true);
+
                 if (visibleBottom > graphData.Count)
                 {
                     visibleBottom = graphData.Count;
@@ -465,12 +475,8 @@ namespace GitUI
                 {
                     setRowCount(graphData.Count);
                 }
-                if (row < RowCount)
-                {
-                    //Console.WriteLine("Redraw item {0}", count);
-                    InvalidateRow(row);
-                }
 
+                                
                 // Check to see if the newly added item should be selected
                 IComparable id = graphData[row].Node.Id;
                 if (toBeSelected.Contains(id))
