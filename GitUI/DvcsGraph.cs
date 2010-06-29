@@ -401,6 +401,7 @@ namespace GitUI
                         {
                             SendOrPostCallback refreshMethod = new SendOrPostCallback(delegate(object state)
                             {
+                                updateColumnWidth();
                                 Refresh();
                             });
                             syncContext.Post(refreshMethod, null);
@@ -508,7 +509,7 @@ namespace GitUI
                     Loading(false);
                 }
             }
-            updateColumnWidth();
+            
         }
 
         private void updateColumnWidth()
