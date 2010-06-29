@@ -116,7 +116,7 @@
             this._labelVersionInfo.Name = "_labelVersionInfo";
             this._labelVersionInfo.Size = new System.Drawing.Size(271, 17);
             this._labelVersionInfo.TabIndex = 0;
-            this._labelVersionInfo.Text = "Version 1.94";
+            this._labelVersionInfo.Text = "Version ";
             this._labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
             // 

@@ -40,7 +40,7 @@ namespace GitUI
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                new FormProcess("archive --format=zip " + revision + " > \"" + saveFileDialog.FileName + "\"");
+                new FormProcess("archive --format=zip " + revision + " > \"" + saveFileDialog.FileName + "\"").ShowDialog();
                 Close();
             }
         }

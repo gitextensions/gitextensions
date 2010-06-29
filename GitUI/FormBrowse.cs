@@ -781,7 +781,7 @@ namespace GitUI
 
         private void compressGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess("gc");
+            new FormProcess("gc").ShowDialog();
         }
 
         private void verifyGitDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -792,7 +792,7 @@ namespace GitUI
 
         private void removeDanglingObjecsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess("prune");
+            new FormProcess("prune").ShowDialog();
         }
 
         private void manageRemoteRepositoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -962,6 +962,7 @@ namespace GitUI
         private void initializeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            process.ShowDialog();
             Initialize();
         }
 
@@ -969,6 +970,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            process.ShowDialog();
             InitSubmodulesRecursive();
             Initialize();
         }
@@ -986,6 +988,7 @@ namespace GitUI
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
                     {
                         FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+                        process.ShowDialog();
 
                         InitSubmodulesRecursive();
                     }
@@ -1000,6 +1003,7 @@ namespace GitUI
         private void syncronizeAllSubmodulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            process.ShowDialog();
             Initialize();
         }
 
@@ -1007,6 +1011,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            process.ShowDialog();
             SyncSubmodulesRecursive();
             Initialize();
         }
@@ -1024,6 +1029,7 @@ namespace GitUI
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
                     {
                         FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+                        process.ShowDialog();
 
                         SyncSubmodulesRecursive();
                     }
@@ -1048,13 +1054,13 @@ namespace GitUI
 
         private void stashChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess("stash save");
+            new FormProcess("stash save").ShowDialog();
             Initialize();
         }
 
         private void stashPopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess("stash pop");
+            new FormProcess("stash pop").ShowDialog();
             Initialize();
         }
 

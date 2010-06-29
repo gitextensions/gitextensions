@@ -112,9 +112,9 @@ namespace GitUI
             }
 
             if (PatchFileMode.Checked)
-                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text));
+                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text)).ShowDialog();
             else
-                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchDir.Text + "\\*.patch"));
+                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchDir.Text + "\\*.patch")).ShowDialog();
 
             EnableButtons();
 
@@ -131,21 +131,21 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.SkipCmd());
+            new FormProcess(GitCommands.GitCommands.SkipCmd()).ShowDialog();
             EnableButtons();
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.ResolvedCmd());
+            new FormProcess(GitCommands.GitCommands.ResolvedCmd()).ShowDialog();
             EnableButtons();
         }
 
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.AbortCmd());
+            new FormProcess(GitCommands.GitCommands.AbortCmd()).ShowDialog();
             EnableButtons();
         }
 

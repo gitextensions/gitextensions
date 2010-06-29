@@ -134,12 +134,14 @@ namespace GitUI
         public bool StartCommandLineProcessDialog(string command, string arguments)
         {
             FormProcess process = new FormProcess(command, arguments);
+            process.ShowDialog();
             return true;
         }
 
         public bool StartGitCommandProcessDialog(string arguments)
         {
             FormProcess process = new FormProcess(arguments);
+            process.ShowDialog();
             return true;
         }
 
@@ -556,6 +558,7 @@ namespace GitUI
                 return true;
 
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            process.ShowDialog();
 
             InvokeEvent(PostUpdateSubmodules);
 
@@ -568,6 +571,7 @@ namespace GitUI
                 return true;
 
             FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            process.ShowDialog();
             UpdateSubmodulesRecursive();
 
             InvokeEvent(PostUpdateSubmodulesRecursive);
@@ -595,6 +599,7 @@ namespace GitUI
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
                     {
                         FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+                        process.ShowDialog();
 
                         UpdateSubmodulesRecursive();
                     }

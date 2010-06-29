@@ -73,6 +73,7 @@ namespace GitUI
                     command += " --force";
                 command +=  " \"" + Branches.Text + "\"";
                 form = new FormProcess( command );
+                form.ShowDialog();
                 if (!form.ErrorOccured())
                     Close();
             }

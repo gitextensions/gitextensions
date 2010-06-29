@@ -100,7 +100,7 @@ namespace GitUI
                 else if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
                     _Encoding.Text = "UTF32";
                 else if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                     _Encoding.Text = "Default";
+                    _Encoding.Text = "Default";
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
@@ -147,6 +147,23 @@ namespace GitUI
                 _ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
                 _ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorSectionLabel.BackColor);
 
+                if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+                {
+                    defaultHome.Checked = userprofileHome.Checked = false;
+                    otherHome.Checked = true;
+                    otherHomeDir.Text = Settings.CustomHomeDir;
+                }
+                else if (Settings.UserProfileHomeDir)
+                {
+                    defaultHome.Checked = otherHome.Checked = false;
+                    userprofileHome.Checked = true;
+                }
+                else
+                {
+                    userprofileHome.Checked = otherHome.Checked = false;
+                    defaultHome.Checked = true;
+                }
+
                 SmtpServer.Text = GitCommands.Settings.Smtp;
 
                 _MaxCommits.Value = GitCommands.Settings.MaxCommits;
@@ -179,7 +196,7 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                     MergeToolCmd.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".cmd");
 
-                DefaultIcon.Checked = GitCommands.Settings.IconColor.Equals("default" , StringComparison.CurrentCultureIgnoreCase);
+                DefaultIcon.Checked = GitCommands.Settings.IconColor.Equals("default", StringComparison.CurrentCultureIgnoreCase);
                 BlueIcon.Checked = GitCommands.Settings.IconColor.Equals("blue", StringComparison.CurrentCultureIgnoreCase);
                 GreenIcon.Checked = GitCommands.Settings.IconColor.Equals("green", StringComparison.CurrentCultureIgnoreCase);
                 PurpleIcon.Checked = GitCommands.Settings.IconColor.Equals("purple", StringComparison.CurrentCultureIgnoreCase);
@@ -247,6 +264,28 @@ namespace GitUI
 
         private bool Save()
         {
+            if (otherHome.Checked)
+            {
+                Settings.UserProfileHomeDir = false;
+                if (string.IsNullOrEmpty(otherHomeDir.Text))
+                {
+                    MessageBox.Show("Please enter a valid HOME directory.");
+                    new FormFixHome().ShowDialog();
+                }
+                else
+                  Settings.CustomHomeDir = otherHomeDir.Text;
+            }
+            else
+            {
+                Settings.CustomHomeDir = "";
+                Settings.UserProfileHomeDir = userprofileHome.Checked;
+            }
+
+            FormFixHome.CheckHomePath();
+
+            GitCommands.GitCommands.SetEnvironmentVariable(true);
+
+
             GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
 
             if ((int)_authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
@@ -401,7 +440,7 @@ namespace GitUI
                 GitCommands.GitCommands.SetSsh(OtherSsh.Text);
 
             GitCommands.Settings.SaveSettings();
-            
+
             return true;
         }
 
@@ -956,6 +995,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Save();
+            LoadSettings();
             CheckSettings();
         }
 
@@ -1538,7 +1578,7 @@ namespace GitUI
             _ColorOtherLabel.BackColor = colorDialog.Color;
             _ColorOtherLabel.Text = colorDialog.Color.Name;
             _ColorOtherLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorOtherLabel.BackColor);
-       }
+        }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1597,6 +1637,33 @@ namespace GitUI
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new FormTranslate().ShowDialog();
+        }
+
+        private void TabPageGit_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox7_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void otherHomeBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
+
+            if (browseDialog.ShowDialog() == DialogResult.OK)
+            {
+                otherHomeDir.Text = browseDialog.SelectedPath;
+            }
+
+        }
+
+        private void otherHome_CheckedChanged(object sender, EventArgs e)
+        {
+            otherHomeDir.ReadOnly = !otherHome.Checked;
         }
     }
 }

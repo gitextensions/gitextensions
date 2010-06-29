@@ -36,5 +36,11 @@ namespace GitUI
 
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            _labelVersionInfo.Text += _labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
+        }
     }
 }
