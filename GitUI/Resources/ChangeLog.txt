@@ -24,6 +24,7 @@ Version 1.95
 	Added from and to branch to push dialog 
 	Added option to create annotated tag	
 	Added splash screen
+	Added warning when about to push a branch that doesn't exist on a remote yet
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved
