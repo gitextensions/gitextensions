@@ -66,6 +66,12 @@
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="AsyncLoader.cs" />
+    <Compile Include="FormStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormStatus.designer.cs">
+      <DependentUpon>FormStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -338,9 +344,6 @@
     </Compile>
     <Compile Include="FormProcess.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormProcess.Designer.cs">
-      <DependentUpon>FormProcess.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPull.cs">
       <SubType>Form</SubType>
@@ -685,10 +688,6 @@
       <DependentUpon>FormPluginSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormProcess.resx">
-      <DependentUpon>FormProcess.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -736,6 +735,9 @@
     <EmbeddedResource Include="FormStash.resx">
       <DependentUpon>FormStash.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormStatus.resx">
+      <DependentUpon>FormStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSubmodules.resx">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
