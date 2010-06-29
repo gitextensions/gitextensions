@@ -242,6 +242,8 @@ namespace GitUI
                 return true;
             if (propertyInfo.Name.Equals("ToolTipText", StringComparison.CurrentCultureIgnoreCase))
                 return true;
+            if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCultureIgnoreCase))
+                return true;
 
             return false;
         }

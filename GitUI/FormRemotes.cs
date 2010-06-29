@@ -98,7 +98,7 @@ namespace GitUI
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        new FormProcess("remote update");
+                        new FormProcess("remote update").ShowDialog();
 
                         foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
                         {
@@ -169,7 +169,7 @@ namespace GitUI
 
         private void UpdateBranch_Click(object sender, EventArgs e)
         {
-            new FormProcess("remote update");
+            new FormProcess("remote update").ShowDialog();
         }
 
         private void SshBrowse_Click(object sender, EventArgs e)
@@ -209,7 +209,7 @@ namespace GitUI
 
         private void Prune_Click(object sender, EventArgs e)
         {
-            new FormProcess("remote prune " + remote);
+            new FormProcess("remote prune " + remote).ShowDialog();
         }
 
         private void RemoteBranches_RowValidated(object sender, DataGridViewCellEventArgs e)

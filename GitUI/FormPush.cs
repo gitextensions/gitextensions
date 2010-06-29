@@ -19,6 +19,8 @@ namespace GitUI
         TranslationString selectTag = new TranslationString("You need to select a tag to push or select \"Push all tags\".");
         TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
         TranslationString pushCaption = new TranslationString("Push");
+        TranslationString branchNewForRemote = new TranslationString("The branch you are about to push seems to be a new branch for the remote." + Environment.NewLine + "Are you sure you want to push this branch?");
+        TranslationString pushToCaption = new TranslationString("Push to {0}");
 
         public FormPush()
         {
@@ -52,16 +54,27 @@ namespace GitUI
                 return;
             }
 
+            //Extra check if the branch is already known to the remote, give a warning when not.
+            //This is not possible when the remote is an URL, but this is ok since most users push to
+            //known remotes anyway.
+            if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
+            {
+                //The current branch is not known by the remote (as far as we now since we are disconnected....)
+                if (!GitCommands.GitCommands.GetHeads(false, true).Exists(h => h.Remote.Equals(Remotes.Text) && h.Name.Equals(RemoteBranch.Text)))
+                    //Ask if this is what the user wants
+                    if (MessageBox.Show(branchNewForRemote.Text, pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                        return;
+            }
+
             GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
             FormProcess form;
 
+            string remote = "";
+            string destination;
             if (PullFromUrl.Checked)
             {
-                if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.GitCommands.PushCmd(PushDestination.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked));
-                else
-                    form = new FormProcess(GitCommands.GitCommands.PushTagCmd(PushDestination.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked));
+                destination = PushDestination.Text;
             }
             else
             {
@@ -73,11 +86,19 @@ namespace GitUI
                         GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 }
 
-                if (TabControlTagBranch.SelectedTab == BranchTab)
-                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushCmd(Remotes.Text, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
-                else
-                    form = new FormProcess(GitCommands.Settings.GitCommand, GitCommands.GitCommands.PushTagCmd(Remotes.Text, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked), Remotes.Text.Trim());
+                destination = Remotes.Text;
+                remote = Remotes.Text.Trim();
             }
+
+            string pushCmd;
+            if (TabControlTagBranch.SelectedTab == BranchTab)
+                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked);
+            else
+                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked);
+            form = new FormProcess(pushCmd);
+            form.Remote = remote;
+            form.Text = string.Format(pushToCaption.Text, destination);
+            form.ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !form.ErrorOccured())
                 Close();
@@ -153,10 +174,10 @@ namespace GitUI
             Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
 
             // Doing this makes it pretty easy to accidentally create a branch on the remote.
-            // leaving it blank will do the 'default' thing, and can be configured by setting 
-            // the push option of the remote.
-            //Branch.Text = branch;
-            //RemoteBranch.Text = Branch.Text;
+            // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
+            // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
+            Branch.Text = branch;
+            RemoteBranch.Text = Branch.Text;
 
             EnableLoadSSHButton();
 

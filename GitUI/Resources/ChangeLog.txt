@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 1.94
+Version 1.95
 	Fixed bug: difftool only worked in git > 1.7.0
 	Fixed bug: dashboard caused application to crash
 	Fixed bug: refreshing gravatar that was already deleted caused an exception
@@ -23,6 +23,8 @@ Version 1.94
 	Added file explorer option to the file menu
 	Added from and to branch to push dialog 
 	Added option to create annotated tag	
+	Added splash screen
+	Added warning when about to push a branch that doesn't exist on a remote yet
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved

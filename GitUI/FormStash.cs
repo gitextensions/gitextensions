@@ -91,7 +91,7 @@ namespace GitUI
         private void Stash_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess("stash save");
+            new FormProcess("stash save").ShowDialog();
             NeedRefresh = true;
             Initialize();
             InitializeTracked();
@@ -101,14 +101,14 @@ namespace GitUI
         private void Clear_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess("stash drop " + Stashes.Text);
+            new FormProcess("stash drop " + Stashes.Text).ShowDialog();
             NeedRefresh = true;
             Initialize();
         }
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            new FormProcess("stash apply " + Stashes.Text);
+            new FormProcess("stash apply " + Stashes.Text).ShowDialog();
             //MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
 
             MergeConflictHandler.HandleMergeConflicts();

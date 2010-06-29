@@ -43,10 +43,11 @@ namespace GitUI
                 options += " --no-reflogs";
                 
             FormProcess process = new FormProcess("fsck-objects" + options);
+            process.ShowDialog();
 
             List<string> warningList = new List<string>();
 
-            foreach (string warning in process.outputString.ToString().Split('\n'))
+            foreach (string warning in process.OutputString.ToString().Split('\n'))
             {
                 if (!ShowOnlyCommits.Checked || warning.Contains("commit"))
                     warningList.Add(ExtendWarning(warning));
@@ -84,6 +85,7 @@ namespace GitUI
                 options += " --no-reflogs";
 
             FormProcess process = new FormProcess("fsck-objects --lost-found" + options);
+            process.ShowDialog();
             FormVerify_Shown(null, null);
         }
 
@@ -114,7 +116,7 @@ namespace GitUI
         {
             if (MessageBox.Show(removeDanglingObjectsQuestion.Text, removeDanglingObjectsCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                new FormProcess("prune");
+                new FormProcess("prune").ShowDialog();
                 FormVerify_Shown(null, null);
             }
         }

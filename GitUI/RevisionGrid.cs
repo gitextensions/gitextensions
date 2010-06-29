@@ -834,7 +834,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommands.GitCommands.DeleteTagCmd(toolStripItem.Text));
+            new FormProcess(GitCommands.GitCommands.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
             ForceRefreshRevisions();
         }
 
@@ -857,7 +857,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess("checkout \"" + toolStripItem.Text + "\"");
+            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog();
 
             ForceRefreshRevisions();
             OnChangedCurrentBranch();
@@ -893,7 +893,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormProcess("checkout \"" + GetRevision(LastRow).Guid + "\"");
+                    new FormProcess("checkout \"" + GetRevision(LastRow).Guid + "\"").ShowDialog();
                     ForceRefreshRevisions();
                     OnChangedCurrentBranch();
                 }
