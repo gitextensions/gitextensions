@@ -7,73 +7,37 @@ using System.Diagnostics;
 namespace GitUI
 {
     delegate void DataCallback(string text);
-    public partial class FormProcess : GitExtensionsForm
+    public class FormProcess : FormStatus
     {
-        private readonly SynchronizationContext syncContext;
-
-
-        public FormProcess(string process, string arguments, string remote)
-        {
-            syncContext = SynchronizationContext.Current;
-            
-            InitializeComponent(); Translate();
-
-            if (string.IsNullOrEmpty(arguments))
-                return;
-
-            ProcessString = process ?? GitCommands.Settings.GitCommand;
-            ProcessArguments = arguments;
-            Remote = remote;
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
-
-            ShowDialog();
-        }
-
-        public FormProcess(string process, string arguments)
-            : this(process, arguments, null)
-        {
-        }
-
-        public FormProcess(string arguments)
-            : this(null, arguments, null)
-        {
-        }
-
-        private bool restart = false;
         public string Remote { get; set; }
+        public bool Plink { get; set; }
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
         public Process Process { get; set; }
+
+        private bool restart = false;
         private GitCommands.GitCommands gitCommand;
-        private bool errorOccured = false;
 
-        public bool ErrorOccured()
-        {
-            return errorOccured;
+        public FormProcess(string process, string arguments)
+        {            
+            ProcessCallback = new ProcessStart(processStart);
+            AbortCallback = new ProcessAbort(processAbort);
+            ProcessString = process ?? GitCommands.Settings.GitCommand;
+            ProcessArguments = arguments;
+            Remote = "";
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public FormProcess(string arguments)
+            : this(null, arguments)
         {
-            Close();
         }
 
-        private void FormProcess_Load(object sender, EventArgs e)
-        {
-            RestorePosition("process");
-            Start();
-        }
-
-        private void Start()
+        private void processStart(FormStatus form)
         {
             restart = false;
-            Output.Text = "";
             AddOutput(ProcessString + " " + ProcessArguments);
 
             Plink = GitCommands.GitCommands.Plink();
-
-            ProgressBar.Visible = true;
-
-            outputString = new StringBuilder();
 
             gitCommand = new GitCommands.GitCommands();
             gitCommand.CollectOutput = false;
@@ -81,55 +45,42 @@ namespace GitUI
 
             gitCommand.Exited += new EventHandler(gitCommand_Exited);
             gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
-
-            Ok.Enabled = false;
         }
 
-        public bool Plink { get; set; }
-
-        void SetProgress(string text)
+        private void processAbort(FormStatus form)
         {
-            int index = text.IndexOf('%');
-            int progressValue;
-            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
+            if (Process != null)
             {
-                if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                    ProgressBar.Style = ProgressBarStyle.Blocks;
-                ProgressBar.Value = Math.Min(100, progressValue);
+                Process.Kill();
             }
-            this.Text = text;
         }
 
-        void AddOutput(string text)
+        void gitCommand_Exited(object sender, EventArgs e)
         {
-            Output.Text += text + Environment.NewLine;
-        }
-
-        public StringBuilder outputString;
-
-        void Done()
-        {
-            if (restart)
+            if (InvokeRequired)
             {
-                Start();
+                Invoke(new MethodInvoker(delegate() { gitCommand_Exited(sender, e); }));
                 return;
             }
 
-            AddOutput(outputString.ToString());
-            AddOutput("Done");
-            ProgressBar.Visible = false;
-            Ok.Enabled = true;
-            Ok.Focus();
-            AcceptButton = Ok;
-            Abort.Enabled = false;
+            if (restart)
+            {
+                Reset();
+                ProcessCallback(this);
+                return;
+            }
+
+            bool isError;
             try
             {
-                //An error occured!
+                // An error occurred!
                 if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
                 {
-                    ErrorImage.Visible = true;
-                    errorOccured = true;
-                    SuccessImage.Visible = false;
+                    isError = true;
+
+                    // TODO: This Plink stuff here seems misplaced. Is there a better
+                    // home for all of this stuff? For example, if I had a label called pull, 
+                    // we could end up in this code incorrectly.
                     if (Plink)
                     {
                         if (ProcessArguments.ToLower().Contains("pull") ||
@@ -140,20 +91,20 @@ namespace GitUI
                             ProcessString.ToLower().Contains("clone") ||
                             ProcessArguments.ToLower().Contains("clone"))
                         {
-                            if (Output.Text.Contains("successfully authenticated"))
+                            if (OutputString.ToString().Contains("successfully authenticated"))
                             {
-                                SuccessImage.Visible = true;
-                                ErrorImage.Visible = false;
-                                errorOccured = false;
+                                isError = false;
                             }
 
-                            if (Output.Text.Contains("FATAL ERROR") && Output.Text.Contains("authentication"))
+                            if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
                             {
                                 FormPuttyError puttyError = new FormPuttyError();
                                 puttyError.ShowDialog();
                                 if (puttyError.RetryProcess)
                                 {
-                                    FormProcess_Load(null, null);
+                                    Reset();
+                                    ProcessCallback(this);
+                                    return;
                                 }
                             }
                         }
@@ -161,20 +112,15 @@ namespace GitUI
                 }
                 else
                 {
-                    ErrorImage.Visible = false;
-                    SuccessImage.Visible = true;
-                    errorOccured = false;
-
-                    if (GitCommands.Settings.CloseProcessDialog)
-                        Close();
+                    isError = false;
                 }
             }
             catch
             {
-                errorOccured = true;
-                ErrorImage.Visible = true;
-                SuccessImage.Visible = false;
+                isError = true;
             }
+
+            Done(!isError);
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
@@ -184,28 +130,21 @@ namespace GitUI
 
             if (e.Data.Contains("%") || e.Data.StartsWith("remote: Counting objects"))
             {
-                if (ProgressBar.InvokeRequired)
-                {
-                    // It's on a different thread, so use Invoke.
-                    DataCallback d = new DataCallback(SetProgress);
-                    this.Invoke(d, new object[] { e.Data });
-                } else
-                {
-                    SetProgress(e.Data);
-                }
-            } else
+                SetProgress(e.Data);
+            }
+            else
             {
-                /*if (Output.InvokeRequired)
-                {
-                    // It's on a different thread, so use Invoke.
-                    DataCallback d = new DataCallback(AddOutput);
-                    this.Invoke(d, new object[] { e.Data });
-                } else
-                {
-                    AddOutput(e.Data);
-                }*/
-                outputString.Append(e.Data);
-                outputString.Append(Environment.NewLine);
+                //if (Output.InvokeRequired)
+                //{
+                //    // It's on a different thread, so use Invoke.
+                //    DataCallback d = new DataCallback(AddOutput);
+                //    this.Invoke(d, new object[] { e.Data });
+                //} else
+                //{
+                //    AddOutput(e.Data);
+                //}
+                OutputString.Append(e.Data);
+                OutputString.Append(Environment.NewLine);
             }
 
 
@@ -213,7 +152,7 @@ namespace GitUI
             {
                 if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
                 {
-                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automaticly stopped." + Environment.NewLine + Environment.NewLine + "When te connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
 
@@ -234,56 +173,6 @@ namespace GitUI
                     }
                 }
             }
-        }
-
-
-
-        void gitCommand_Exited(object sender, EventArgs e)
-        {
-            syncContext.Post(_ => Done(), null);
-        }
-
-        private void Abort_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Process != null)
-                {
-                    Process.Kill();
-                    outputString.Append(Environment.NewLine + "Aborted");
-                    Done();
-                }
-            }
-            catch
-            {
-            }            
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
-        {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
-        }
-
-        private void KeepDialogOpen_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void Abort_Click_1(object sender, EventArgs e)
-        {
-            if (Process != null)
-            {
-                Process.Kill();
-                outputString.Append(Environment.NewLine + "Aborted");
-            }
-        }
-
-        private void FormProcess_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("process");
         }
     }
 }

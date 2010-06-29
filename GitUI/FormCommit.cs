@@ -42,7 +42,8 @@ namespace GitUI
         TranslationString onlyStageChunkOfSingleFileError = new TranslationString("You can only use this option when selecting a single file");
         TranslationString stageChunkOfFileCaption = new TranslationString("Stage chunk of file");
         TranslationString resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
-
+        TranslationString stageDetails = new TranslationString("Stage Details");
+        TranslationString stageFiles = new TranslationString("Stage {0} files");
 
         private readonly SynchronizationContext syncContext;
 
@@ -240,6 +241,7 @@ namespace GitUI
                 }
 
                 FormProcess form = new FormProcess(GitCommands.GitCommands.CommitCmd(amend));
+                form.ShowDialog();
 
                 NeedRefresh = true;
 
@@ -307,7 +309,19 @@ namespace GitUI
                 }
 
                 /*OutPut.Text = */
-                GitCommands.GitCommands.StageFiles(files);
+                FormStatus.ProcessStart processStart = new FormStatus.ProcessStart
+                    (
+                        delegate(FormStatus form)
+                        {
+                            form.AddOutput(string.Format(stageFiles.Text, files.Count));
+                            string output = GitCommands.GitCommands.StageFiles(files);
+                            form.AddOutput(output);
+                            form.Done(string.IsNullOrEmpty(output));
+                        }
+                    );
+                FormStatus process = new FormStatus(processStart, null);
+                process.Text = stageDetails.Text;
+                process.ShowDialogOnError();
 
                 InitializedStaged();
                 List<GitItemStatus> stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
@@ -635,7 +649,7 @@ namespace GitUI
         {
             if (MessageBox.Show(deleteUntrackedFiles.Text, deleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                new FormProcess("clean -f");
+                new FormProcess("clean -f").ShowDialog();
                 Initialize();
             }
         }

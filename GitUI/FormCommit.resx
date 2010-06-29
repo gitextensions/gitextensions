@@ -118,20 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="_menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>17, 17</value>
   </metadata>
   <metadata name="UnstagedFileContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>220, 17</value>
+    <value>362, 17</value>
   </metadata>
   <metadata name="_menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>247, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="SolveMergeconflicts.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALDQAA
-        Cw0B7QfALAAAAgJJREFUOE+dk8FLFHEcxWc9DEjCQpdwMapLB5OwU3YI8RAEQpc6rOhhFdoyarXyEKSg
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALDAAA
+        CwwBP0AiyAAAAgJJREFUOE+dk8FLFHEcxWc9DEjCQpdwMapLB5OwU3YI8RAEQpc6rOhhFdoyarXyEKSg
         K5QnZUlaEZdoFKUQg2hZhGoPKlsRBHWoVqKD/0CUe3AXfL03M7+ZrW794LFf3vfzffubmd8vAsAq9x+2
         6pbNOkldos74fom/q9Q8VTXs8Uc7lqWAr4kWo2R54Cj2nRvAVg54m/fEWp56ZJOG12wQ8Lkvdm3nZjtQ
         WgJePQZWb+Hn6ClXql2PPTFiFVIfYCsd7zj8Yhp4Mga8cdj3l2p56pHxd2IHAR97m4equavA+gNgeQRY
@@ -144,15 +144,18 @@
 </value>
   </data>
   <metadata name="_menuStrip3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>132, 17</value>
   </metadata>
   <metadata name="CloseCommitDialogTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>729, 17</value>
+    <value>516, 17</value>
   </metadata>
   <metadata name="fileTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
+    <value>697, 17</value>
   </metadata>
   <metadata name="gitItemStatusBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>17, 54</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>75</value>
   </metadata>
 </root>

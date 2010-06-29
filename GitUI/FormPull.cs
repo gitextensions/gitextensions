@@ -166,7 +166,7 @@ namespace GitUI
             bool stashed = false;
             if (AutoStash.Checked && GitCommands.GitCommands.GitStatus(false).Count > 0)
             {
-                new FormProcess("stash save");
+                new FormProcess("stash save").ShowDialog();
                 stashed = true;
             }
 
@@ -180,7 +180,10 @@ namespace GitUI
             else if (Rebase.Checked)
                 /*Output.Text = */
                 process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, true));
-
+            
+            if (process != null)
+                process.ShowDialog();
+            
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && (process != null && !process.ErrorOccured()))
                 Close();
 
@@ -202,7 +205,7 @@ namespace GitUI
             {
                 if (MessageBox.Show(applyShashedItemsAgain.Text, applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormProcess("stash pop");
+                    new FormProcess("stash pop").ShowDialog();
 
                     MergeConflictHandler.HandleMergeConflicts();
                 }
