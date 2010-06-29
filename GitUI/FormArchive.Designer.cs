@@ -103,7 +103,6 @@
             // 
             this.revisionGrid1.currentCheckout = null;
             this.revisionGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.revisionGrid1.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.revisionGrid1.LastRow = 0;
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";
