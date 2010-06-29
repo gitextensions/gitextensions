@@ -37,6 +37,7 @@ namespace GitUI
 
             Cursor.Current = Cursors.WaitCursor;
             FormProcess formProcess = new FormProcess(GitCommands.GitCommands.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text));
+            formProcess.ShowDialog();
 
             Close();
         }

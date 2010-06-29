@@ -30,7 +30,7 @@ namespace GitUI
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommands.GitCommands.CherryPickCmd(Revision.Guid, AutoCommit.Checked));
+            new FormProcess(GitCommands.GitCommands.CherryPickCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
 

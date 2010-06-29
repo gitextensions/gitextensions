@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormProcess
+    partial class FormStatus
     {
         /// <summary>
         /// Required designer variable.
@@ -67,7 +67,7 @@
             this.Ok.TabIndex = 0;
             this.Ok.Text = "Ok";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.button1_Click);
+            this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // splitContainer1
             // 
@@ -121,7 +121,9 @@
             // 
             // SuccessImage
             // 
+            this.SuccessImage.ErrorImage = global::GitUI.Properties.Resources.error;
             this.SuccessImage.Image = global::GitUI.Properties.Resources.success1;
+            this.SuccessImage.InitialImage = global::GitUI.Properties.Resources.success1;
             this.SuccessImage.Location = new System.Drawing.Point(3, 3);
             this.SuccessImage.Name = "SuccessImage";
             this.SuccessImage.Size = new System.Drawing.Size(47, 46);
@@ -214,7 +216,6 @@
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
-            this.KeepDialogOpen.Click += new System.EventHandler(this.KeepDialogOpen_Click);
             this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
             // 
             // Abort
@@ -225,19 +226,19 @@
             this.Abort.TabIndex = 3;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click_1);
+            this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
-            // FormProcess
+            // FormStatus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "FormProcess";
+            this.Name = "FormStatus";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
-            this.Load += new System.EventHandler(this.FormProcess_Load);
+            this.Load += new System.EventHandler(this.FormStatus_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
