@@ -27,8 +27,6 @@ namespace GitCommands
 
         public string Message { get; set; }
 
-        public uint Order { get; set; }
-
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems 
         {

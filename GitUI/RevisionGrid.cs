@@ -45,15 +45,7 @@ namespace GitUI
 
             Revisions.CellPainting += new DataGridViewCellPaintingEventHandler(Revisions_CellPainting);
             Revisions.KeyDown += new KeyEventHandler(Revisions_KeyDown);
-            Revisions.Loading += new DvcsGraph.LoadingHandler(Revisions_Loading);
             
-            Revisions.Sorter = delegate(object a, object b)
-            {
-                GitRevision left = (GitRevision)a;
-                GitRevision right = (GitRevision)b;
-                return right.Order.CompareTo(left.Order);
-            };
-
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
@@ -63,20 +55,6 @@ namespace GitUI
             filter = "";
             quickSearchString = "";
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
-        }
-
-        void Revisions_Loading(bool isLoading)
-        {
-            if (isLoading)
-            {
-                Loading.Visible = true;
-                Revisions.Visible = false;
-            }
-            else
-            {
-                Loading.Visible = false;
-                Revisions.Visible = true;
-            }
         }
 
         Label quickSearchLabel;
