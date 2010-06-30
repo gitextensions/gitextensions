@@ -331,7 +331,11 @@ namespace GitUI
                 {
                     if (e.ColumnIndex == 0)
                     {
-                        e.PaintBackground(e.CellBounds, true);
+                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                            e.Graphics.FillRectangle(new LinearGradientBrush(e.CellBounds, RowTemplate.DefaultCellStyle.SelectionBackColor, Color.LightBlue, 90, false), e.CellBounds);
+                        else
+                            e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+
                         Rectangle srcRect = drawGraph(e.RowIndex);
                         e.Graphics.DrawImage
                             (
