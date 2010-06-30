@@ -33,8 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            this.Revisions = new System.Windows.Forms.DataGridView();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Revisions = new DvcsGraph();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,7 +60,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
-            this.ScrollTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -95,7 +93,6 @@
             this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Graph,
             this.Message,
             this.Author,
             this.Date});
@@ -121,27 +118,18 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.Revisions.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.Revisions.RowHeadersVisible = false;
-            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(585, 204);
             this.Revisions.StandardTab = true;
             this.Revisions.TabIndex = 0;
-            this.Revisions.Scroll += new System.Windows.Forms.ScrollEventHandler(this.Revisions_Scroll);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Revisions_MouseClick);
             this.Revisions.DoubleClick += new System.EventHandler(this.Revisions_DoubleClick);
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Revisions_CellMouseDown);
             this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Revisions_KeyUp);
-            this.Revisions.CellContextMenuStripChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContextMenuStripChanged);
-            this.Revisions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Revisions_CellContentClick);
-            // 
-            // Graph
-            // 
-            this.Graph.HeaderText = "Graph";
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            this.Graph.Width = 200;
+
             // 
             // Message
             // 
@@ -149,6 +137,7 @@
             this.Message.HeaderText = "Message";
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
+            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Author
             // 
@@ -156,6 +145,7 @@
             this.Author.Name = "Author";
             this.Author.ReadOnly = true;
             this.Author.Width = 150;
+            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Date
             // 
@@ -163,6 +153,7 @@
             this.Date.Name = "Date";
             this.Date.ReadOnly = true;
             this.Date.Width = 180;
+            this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // CreateTag
             // 
@@ -206,7 +197,6 @@
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
-            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
             // 
             // createNewBranchToolStripMenuItem
             // 
@@ -222,7 +212,6 @@
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
-            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -344,10 +333,6 @@
             this.SelecctionTimer.Interval = 200;
             this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimer_Tick);
             // 
-            // ScrollTimer
-            // 
-            this.ScrollTimer.Tick += new System.EventHandler(this.ScrollTimer_Tick);
-            // 
             // NoCommits
             // 
             this.NoCommits.Controls.Add(this.NoGit);
@@ -405,7 +390,6 @@
             this.label1.Size = new System.Drawing.Size(315, 104);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Error
             // 
@@ -449,7 +433,6 @@
             this.Controls.Add(this.Revisions);
             this.Name = "RevisionGrid";
             this.Size = new System.Drawing.Size(585, 204);
-            this.Load += new System.EventHandler(this.RevisionGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
             this.CreateTag.ResumeLayout(false);
             this.NoCommits.ResumeLayout(false);
@@ -465,13 +448,11 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView Revisions;
+        private DvcsGraph Revisions;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelecctionTimer;
-        private System.Windows.Forms.Timer ScrollTimer;
         public System.Windows.Forms.PictureBox Error;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;

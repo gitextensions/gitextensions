@@ -199,7 +199,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-                process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
+                process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
 
 
                 process.StartInfo.CreateNoWindow = true;
@@ -221,6 +221,7 @@ namespace GitCommands
         public System.Diagnostics.Process Process { get; set; }
 
         public bool CollectOutput = true;
+        public bool StreamOutput = false;
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
@@ -258,7 +259,7 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.RedirectStandardError = true;
             Process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-            Process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
+            Process.StartInfo.StandardOutputEncoding = Process.StartInfo.StandardErrorEncoding;
 
             Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             Process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -268,17 +269,22 @@ namespace GitCommands
             Process.StartInfo.LoadUserProfile = true;
             Process.EnableRaisingEvents = true;
 
-            Process.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_OutputDataReceived);
-            Process.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_ErrorDataReceived);
+            if (!StreamOutput)
+            {
+                Process.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_OutputDataReceived);
+                Process.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(process_ErrorDataReceived);
+            }
             Output = new StringBuilder();
             ErrorOutput = new StringBuilder();
 
             Process.Exited += new EventHandler(process_Exited);
             Process.Start();
 
-
-            Process.BeginErrorReadLine();
-            Process.BeginOutputReadLine();
+            if (!StreamOutput)
+            {
+                Process.BeginErrorReadLine();
+                Process.BeginOutputReadLine();
+            }
 
             return Process;
         }
@@ -368,7 +374,7 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-                process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
+                process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
 
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -1891,180 +1897,7 @@ namespace GitCommands
                 return RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " -- \"" + name + "\"");
         }
 
-        static public List<GitRevision> GitRevisionGraph()
-        {
-            return GetRevisionGraph(RunCmd(Settings.GitCommand, "log -" + Settings.MaxCommits.ToString() + " --graph --all --pretty=format:\"Commit %H %nTree:   %T%nAuthor: %aN %nDate:   %cd%nParents:%P %n%s\""));
-        }
 
-        static public List<GitRevision> GetRevisionGraph(string tree)
-        {
-            List<GitHead> heads = GetHeads(true);
-
-            string[] itemsStrings = tree.Split('\n');
-
-            List<GitRevision> revisions = new List<GitRevision>();
-
-            char[] graphChars = new char[] { '*', '|', '*', '\\', '/' };
-
-            for (int n = 0; n < itemsStrings.Length; )
-            {
-                GitRevision revision = new GitRevision();
-
-                string line;
-
-                line = itemsStrings[n];
-                int graphIndex = 0;
-                if (line.IndexOf("Commit ") > 0)
-                {
-                    graphIndex = line.IndexOf("Commit ");
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    revision.Name = revision.Guid = line.Substring(line.LastIndexOf("Commit ") + 7).Trim();
-                    n++;
-                    if (itemsStrings.Length == n) break;
-                }
-                line = itemsStrings[n];
-
-                if (line.IndexOf("Tree:   ") > 0)
-                {
-                    revision.TreeGuid = line.Substring(line.LastIndexOf("Tree:   ") + 8).Trim();
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                }
-                line = itemsStrings[n];
-
-                if (line.IndexOf("Merge: ") > 0)
-                {
-                    //ignore
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                }
-                line = itemsStrings[n];
-
-                if (line.IndexOf("Author: ") > 0)
-                {
-                    revision.Author = line.Substring(line.LastIndexOf("Author: ") + 8).Trim();
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                    if (itemsStrings.Length == n) break;
-                }
-                line = itemsStrings[n];
-
-                if (line.IndexOf("Date:   ") > 0)
-                {
-                    revision.CommitDate = line.Substring(line.LastIndexOf("Date:   ") + 8).Trim();
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                    if (itemsStrings.Length == n) break;
-                }
-                line = itemsStrings[n];
-
-                if (line.IndexOf("Parents:") > 0)
-                {
-                    List<string> parentGuids = new List<string>();
-                    foreach (string s in line.Substring(line.LastIndexOf("Parents:") + 8).Split(' '))
-                    {
-                        parentGuids.Add(s.Trim());
-                    }
-
-                    revision.ParentGuids = parentGuids;
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                    if (itemsStrings.Length == n) break;
-                }
-                line = itemsStrings[n];
-
-                List<GitHead> foundHeads = new List<GitHead>();
-
-                foreach (GitHead h in heads)
-                {
-                    if (h.Guid == revision.Guid)
-                    {
-                        foundHeads.Add(h);
-                    }
-                }
-
-                foreach (var head in foundHeads)
-                {
-                    revision.Heads.Add(head);
-                }
-
-                while (!(line.Length == line.LastIndexOf("Commit ") + 7 + 40) || (line.LastIndexOf("Commit ") < 0))
-                {
-                    if (line.Length > graphIndex)
-                        revision.Message += line.Substring(graphIndex).Trim() + Environment.NewLine;
-                    if (line.LastIndexOfAny(graphChars) >= 0)
-                        revision.GraphLines.Add(line.Substring(0, graphIndex));
-                    n++;
-                    if (itemsStrings.Length == n)
-                    {
-                        break;
-                    }
-                    line = itemsStrings[n];
-                }
-                if (itemsStrings.Length == n) break;
-                //n--;
-
-                revisions.Add(revision);
-            }
-
-            return revisions;
-        }
-
-
-        static public List<GitRevision> GitRevisions()
-        {
-            return GitRevisions("");
-        }
-
-        static public List<GitRevision> GitRevisions(string filter)
-        {
-            filter = FixPath(filter);
-            string tree;
-            if (string.IsNullOrEmpty(filter))
-                tree = RunCmd(Settings.GitCommand, "rev-list --all --header --date-order");
-            else
-                tree = RunCmd(Settings.GitCommand, "rev-list --header --topo-order \"" + filter + "\"");
-
-            string[] itemsStrings = tree.Split('\n');
-
-            List<GitRevision> revisions = new List<GitRevision>();
-
-            for (int n = 0; n < itemsStrings.Length - 6; )
-            {
-                GitRevision revision = new GitRevision();
-                revision.Guid = itemsStrings[n++].Trim('\0');
-                revision.Name = revision.TreeGuid = itemsStrings[n++].Substring(4).Trim();
-                while (itemsStrings[n].Contains("parent"))
-                {
-                    //Add parent
-                    revision.ParentGuids.Add(itemsStrings[n++].Substring(6).Trim());
-                }
-                if (revision.ParentGuids.Count == 0)
-                {
-                    revision.ParentGuids.Add("0000000000000000000000000000000000000000");
-                }
-                revision.Author = itemsStrings[n++].Substring(6).Trim();
-                revision.Committer = itemsStrings[n++].Substring(9).Trim();
-                n++;
-
-                while (itemsStrings.Length > n + 1 &&
-                    itemsStrings[n].Length > 0 &&
-                    itemsStrings[n][0] == ' ')
-                {
-                    revision.Message += itemsStrings[n++].Trim() + Environment.NewLine;
-                }
-
-                revisions.Add(revision);
-            }
-
-            return revisions;
-        }
 
         static public string StageFiles(IList<GitItemStatus> files)
         {
