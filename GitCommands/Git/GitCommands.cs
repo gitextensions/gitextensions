@@ -10,6 +10,9 @@ using System.Drawing;
 using GitUIPluginInterfaces;
 using System.ComponentModel;
 using ResourceManager.Translation;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace GitCommands
 {
@@ -34,7 +37,32 @@ namespace GitCommands
             }
             return startDir;
         }
-
+        public static Encoding EndcodingRouter(string arg)
+        {
+            Regex r = default(Regex);
+            StringCollection regcol = new StringCollection();
+            regcol.Add("ls-files");
+            regcol.Add("diff");
+            regcol.Add("ls-tree");
+            r = new Regex(ConvertRegCollectionToString(regcol));
+            if (r.IsMatch(arg))
+            {
+                return Encoding.GetEncoding(Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage);
+            }
+            else
+            {
+                return Encoding.UTF8;
+            }
+        }
+        public static string ConvertRegCollectionToString(StringCollection regcol)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string s in regcol)
+            {
+                sb.Append("|(" + s + ")");
+            }
+            return sb.ToString().Substring(1);
+        }
         public static string RunCmd(string cmd)
         {
             return RunCmd(cmd, "");
@@ -51,8 +79,8 @@ namespace GitCommands
             {
                 Environment.SetEnvironmentVariable("HOME", Settings.CustomHomeDir);
                 return;
-            } 
-            
+            }
+
             if (Settings.UserProfileHomeDir)
             {
                 Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
@@ -147,7 +175,7 @@ namespace GitCommands
 
                 process.Start();
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }
@@ -170,8 +198,8 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
-				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
+                process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
 
 
                 process.StartInfo.CreateNoWindow = true;
@@ -198,7 +226,7 @@ namespace GitCommands
         public Process CmdStartProcess(string cmd, string arguments)
         {
             SetEnvironmentVariable();
-            
+
             bool ssh = false;
             if (
                     (!Plink() &&
@@ -229,8 +257,8 @@ namespace GitCommands
             Process.StartInfo.RedirectStandardOutput = true;
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.RedirectStandardError = true;
-			Process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-			Process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            Process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
+            Process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
 
             Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             Process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -247,7 +275,7 @@ namespace GitCommands
 
             Process.Exited += new EventHandler(process_Exited);
             Process.Start();
-            
+
 
             Process.BeginErrorReadLine();
             Process.BeginOutputReadLine();
@@ -327,7 +355,7 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                
+
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 Settings.GitLog.Log(cmd + " " + arguments);
@@ -339,8 +367,8 @@ namespace GitCommands
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
-				process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-				process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
+                process.StartInfo.StandardOutputEncoding = EndcodingRouter(arguments);
 
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = "\"" + cmd + "\"";
@@ -351,7 +379,7 @@ namespace GitCommands
 
                 process.Start();
 
-                
+
                 string error;
 
                 output = process.StandardOutput.ReadToEnd();
@@ -376,7 +404,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static Process RunCmdAsync(string cmd, string arguments)
         {
-            Process process = new System.Diagnostics.Process(); 
+            Process process = new System.Diagnostics.Process();
             try
             {
                 SetEnvironmentVariable();
@@ -412,7 +440,7 @@ namespace GitCommands
         static public bool InTheMiddleOfConflictedMerge()
         {
             //if (Settings.UseFastChecks)
-                return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files --unmerged"));
+            return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files --unmerged"));
             //else
             //    return RunCmd(Settings.GitCommand, "merge \"{95E16C63-E0D3-431f-9E87-F4B41F7EC30F}\"").Contains("fatal: You are in the middle of a conflicted merge.");
         }
@@ -423,11 +451,11 @@ namespace GitCommands
 
             List<GitItem> unmergedFiles = new List<GitItem>();
 
-            
+
             string fileName = "";
             foreach (string file in unmerged)
             {
-                if (file.LastIndexOfAny(new char[] { ' ', '\t' })> 0)
+                if (file.LastIndexOfAny(new char[] { ' ', '\t' }) > 0)
                 {
                     if (file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1) != fileName)
                     {
@@ -473,7 +501,7 @@ namespace GitCommands
             }
             return false;
         }
-        
+
         public static bool HandeConflicts_SaveSide(string fileName, string saveAs, string side)
         {
             if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
@@ -494,7 +522,7 @@ namespace GitCommands
                 if (fileline[2].Trim() == side)
                 {
                     RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + saveAs + "\"");
-                    
+
                     return true;
                 }
             }
@@ -544,7 +572,7 @@ namespace GitCommands
 
         static public void RunGitK()
         {
-            Run("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd","gitk.cmd") + "\" --all\"");
+            Run("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd") + "\" --all\"");
             //Run(Settings.GitDir + "gitk", "");
         }
 
@@ -563,11 +591,11 @@ namespace GitCommands
         {
             if (bare && shared)
                 return RunCmd(Settings.GitCommand, "init --bare --shared=all");
-            else 
-            if (bare)
-                return RunCmd(Settings.GitCommand, "init --bare");
             else
-                return RunCmd(Settings.GitCommand, "init");
+                if (bare)
+                    return RunCmd(Settings.GitCommand, "init --bare");
+                else
+                    return RunCmd(Settings.GitCommand, "init");
         }
 
         static public string CherryPickCmd(string cherry, bool commit)
@@ -591,7 +619,7 @@ namespace GitCommands
         {
             return RunCachableCmd(Settings.GitCommand, "show " + sha1);
         }
-        
+
         static public string GetCommitInfo(string sha1)
         {
             string info = RunCachableCmd(Settings.GitCommand, "show -s --pretty=format:\"" + Strings.GetAutorText() + ":\t\t%aN (%aE)%n" + Strings.GetAuthorDateText() + ":\t%ar (%ad)%n" + Strings.GetCommitterText() + ":\t%cN (%cE)%n" + Strings.GetCommitterDateText() + ":\t%cr (%cd)%n" + Strings.GetCommitHashText() + ":\t%H%n%n%s%n%n%b\" " + sha1);
@@ -599,7 +627,7 @@ namespace GitCommands
                 return string.Empty;
 
             info = RemoveRedundancies(info);
-            
+
             return info;
         }
 
@@ -658,7 +686,7 @@ namespace GitCommands
                 return 0;
 
             int endIndex = data.IndexOf('\n', valueIndex);
-            
+
             if (endIndex == -1)
                 endIndex = data.Length - 1;
 
@@ -882,9 +910,9 @@ namespace GitCommands
         static public string ResetHard(string commit, string file)
         {
             string args = "reset --hard";
-            
+
             if (!string.IsNullOrEmpty(commit))
-                args +=  " \"" + commit + "\"";
+                args += " \"" + commit + "\"";
 
             if (!string.IsNullOrEmpty(file))
                 args += " -- \"" + file + "\"";
@@ -1016,10 +1044,10 @@ namespace GitCommands
         static public string GetSsh()
         {
             string ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
-            
+
             if (ssh == null)
                 return "";
-            
+
             return ssh;
         }
 
@@ -1058,8 +1086,8 @@ namespace GitCommands
 
         public static string GetPuttyKeyFileForRemote(string remote)
         {
-            if (!string.IsNullOrEmpty(remote) && 
-                !string.IsNullOrEmpty(Settings.Pageant) && 
+            if (!string.IsNullOrEmpty(remote) &&
+                !string.IsNullOrEmpty(Settings.Pageant) &&
                 Settings.AutoStartPageant &&
                 Plink())
             {
@@ -1182,7 +1210,7 @@ namespace GitCommands
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
                 remotebranch = ":refs/heads/" + branch + "";
             else
-                if (string.IsNullOrEmpty(branch)  || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
+                if (string.IsNullOrEmpty(branch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                     remotebranch = "";
                 else
                     remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
@@ -1292,7 +1320,7 @@ namespace GitCommands
                                 else
                                     patchFile.Author = line.Substring(6).Trim();
 
-                            if (line.StartsWith("Date: ")) 
+                            if (line.StartsWith("Date: "))
                                 if (line.IndexOf('+') > 0 && line.IndexOf('<') < line.Length)
                                     patchFile.Date = line.Substring(6, line.IndexOf('+') - 6).Trim();
                                 else
@@ -1466,8 +1494,8 @@ namespace GitCommands
             if (dryrun)
                 stringBuilder.Append(" --dry-run");
             if (!dryrun)
-                stringBuilder.Append(" -f");  
-          
+                stringBuilder.Append(" -f");
+
             return stringBuilder.ToString();
         }
 
@@ -1533,7 +1561,7 @@ namespace GitCommands
 
         static public List<GitStash> GetStashes()
         {
-            string [] list = GitCommands.RunCmd(Settings.GitCommand, "stash list").Split('\n');
+            string[] list = GitCommands.RunCmd(Settings.GitCommand, "stash list").Split('\n');
 
 
             List<GitStash> stashes = new List<GitStash>();
@@ -1692,7 +1720,7 @@ namespace GitCommands
             string[] statusStrings = status.Split('\n');
 
             List<GitItemStatus> gitItemStatusList = new List<GitItemStatus>();
-            
+
             GitItemStatus itemStatus = null;
             foreach (string statusString in statusStrings)
             {
@@ -1726,7 +1754,7 @@ namespace GitCommands
             foreach (string statusString in statusStrings)
             {
                 if (string.IsNullOrEmpty(statusString.Trim()))
-                    continue; 
+                    continue;
                 GitItemStatus itemStatus = new GitItemStatus();
                 itemStatus.IsNew = false;
                 itemStatus.IsChanged = false;
@@ -1744,7 +1772,7 @@ namespace GitCommands
             string status = RunCmd(Settings.GitCommand, "diff --cached --numstat -- \"" + filename + "\"");
             if (string.IsNullOrEmpty(status))
                 return false;
-            return 
+            return
                 true;
         }
 
@@ -1757,7 +1785,7 @@ namespace GitCommands
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 status = RunCmd(Settings.GitCommand, "status --untracked-files=no");
-                    
+
                 string[] statusStrings = status.Split('\n');
 
                 foreach (string statusString in statusStrings)
@@ -1822,30 +1850,33 @@ namespace GitCommands
                     itemStatus.IsTracked = true;
                     itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
                     gitItemStatusList.Add(itemStatus);
-                } else
-                if (statusString.StartsWith("#\tdeleted:"))
-                {
-                    GitItemStatus itemStatus = new GitItemStatus();
-                    itemStatus.IsDeleted = true;
-                    itemStatus.IsTracked = true;
-                    itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':')+1).Trim();
-                    gitItemStatusList.Add(itemStatus);
-                } else
-                    if (statusString.StartsWith("#\tmodified:"))
-                {
-                    GitItemStatus itemStatus = new GitItemStatus();
-                    itemStatus.IsChanged = true;
-                    itemStatus.IsTracked = true;
-                    itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
-                    gitItemStatusList.Add(itemStatus);
-                } else
-                if (statusString.StartsWith("#\t"))
-                {
-                    GitItemStatus itemStatus = new GitItemStatus();
-                    itemStatus.IsNew = true;
-                    itemStatus.Name = statusString.Substring(2).Trim();
-                    gitItemStatusList.Add(itemStatus);
                 }
+                else
+                    if (statusString.StartsWith("#\tdeleted:"))
+                    {
+                        GitItemStatus itemStatus = new GitItemStatus();
+                        itemStatus.IsDeleted = true;
+                        itemStatus.IsTracked = true;
+                        itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
+                        gitItemStatusList.Add(itemStatus);
+                    }
+                    else
+                        if (statusString.StartsWith("#\tmodified:"))
+                        {
+                            GitItemStatus itemStatus = new GitItemStatus();
+                            itemStatus.IsChanged = true;
+                            itemStatus.IsTracked = true;
+                            itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
+                            gitItemStatusList.Add(itemStatus);
+                        }
+                        else
+                            if (statusString.StartsWith("#\t"))
+                            {
+                                GitItemStatus itemStatus = new GitItemStatus();
+                                itemStatus.IsNew = true;
+                                itemStatus.Name = statusString.Substring(2).Trim();
+                                gitItemStatusList.Add(itemStatus);
+                            }
             }
 
             return gitItemStatusList;
@@ -1999,12 +2030,12 @@ namespace GitCommands
                 tree = RunCmd(Settings.GitCommand, "rev-list --all --header --date-order");
             else
                 tree = RunCmd(Settings.GitCommand, "rev-list --header --topo-order \"" + filter + "\"");
-            
+
             string[] itemsStrings = tree.Split('\n');
 
             List<GitRevision> revisions = new List<GitRevision>();
 
-            for (int n = 0; n < itemsStrings.Length-6;)
+            for (int n = 0; n < itemsStrings.Length - 6; )
             {
                 GitRevision revision = new GitRevision();
                 revision.Guid = itemsStrings[n++].Trim('\0');
@@ -2012,7 +2043,7 @@ namespace GitCommands
                 while (itemsStrings[n].Contains("parent"))
                 {
                     //Add parent
-                    revision.ParentGuids.Add( itemsStrings[n++].Substring(6).Trim());
+                    revision.ParentGuids.Add(itemsStrings[n++].Substring(6).Trim());
                 }
                 if (revision.ParentGuids.Count == 0)
                 {
@@ -2086,7 +2117,7 @@ namespace GitCommands
                 }
             }
 
-            return output; 
+            return output;
         }
 
         static public string UnstageFiles(List<GitItemStatus> files)
@@ -2134,7 +2165,7 @@ namespace GitCommands
             if (gitCommand.Output != null)
                 output += gitCommand.Output.ToString();
 
-            return output; 
+            return output;
         }
 
         static public string StageFile(string file)
@@ -2247,7 +2278,7 @@ namespace GitCommands
 
         static public List<GitHead> GetHeads(bool tags, bool branches)
         {
-            string tree = "" ;
+            string tree = "";
             if (tags && branches)
                 tree = RunCmd(Settings.GitCommand, "show-ref --dereference");
             else if (tags)
@@ -2288,10 +2319,10 @@ namespace GitCommands
                             if (head.IsHead)
                                 head.Name = head.Name.Substring(head.Name.LastIndexOf("heads/") + 6);
                             else
-                            if (head.IsRemote)
-                                head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
-                            else
-                                head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                                if (head.IsRemote)
+                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
+                                else
+                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
                         }
                     }
 
@@ -2350,11 +2381,11 @@ namespace GitCommands
                         bool isRemote = head.Contains("remotes/"); ;
                         if (isRemote)
                         {
-                            head = head.Substring(head.LastIndexOf("remotes/") + 8);       
+                            head = head.Substring(head.LastIndexOf("remotes/") + 8);
                         }
                         int index = head.LastIndexOf("/");
                         remote = head.Substring(0, index);
-                        head = head.Substring(index + 1);  
+                        head = head.Substring(index + 1);
                     }
 
                     if (!string.IsNullOrEmpty(filterRemote) && remote != filterRemote)
@@ -2397,30 +2428,30 @@ namespace GitCommands
                     items.Add(item);
                 }
                 else
-                if (item == null)
-                {
-                    continue;
-                }
-                else
-                if (itemsString.StartsWith("Author: "))
-                {
-                    item.Author = itemsString.Substring(7).Trim();
-                }
-                else
-                if (itemsString.StartsWith("Date:   "))
-                {
-                    item.Date = itemsString.Substring(7).Trim();
-                }
-                else
-                if (!itemsString.StartsWith(":") && !string.IsNullOrEmpty(itemsString))
-                {
-                    item.Name += itemsString.Trim() + Environment.NewLine;
-                }
-                else
-                {
-                    if (item != null && itemsString.Length > 32)
-                        item.Guid = itemsString.Substring(26, 7);
-                }
+                    if (item == null)
+                    {
+                        continue;
+                    }
+                    else
+                        if (itemsString.StartsWith("Author: "))
+                        {
+                            item.Author = itemsString.Substring(7).Trim();
+                        }
+                        else
+                            if (itemsString.StartsWith("Date:   "))
+                            {
+                                item.Date = itemsString.Substring(7).Trim();
+                            }
+                            else
+                                if (!itemsString.StartsWith(":") && !string.IsNullOrEmpty(itemsString))
+                                {
+                                    item.Name += itemsString.Trim() + Environment.NewLine;
+                                }
+                                else
+                                {
+                                    if (item != null && itemsString.Length > 32)
+                                        item.Guid = itemsString.Substring(26, 7);
+                                }
             }
 
             return items;
@@ -2431,7 +2462,7 @@ namespace GitCommands
         {
             string tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
 
-            string [] itemsStrings = tree.Split('\n');
+            string[] itemsStrings = tree.Split('\n');
 
             List<IGitItem> items = new List<IGitItem>();
 
@@ -2445,8 +2476,8 @@ namespace GitCommands
                     item.Mode = itemsString.Substring(0, 6);
                     int guidStart = itemsString.IndexOf(' ', 7);
                     item.ItemType = itemsString.Substring(7, guidStart - 7);
-                    item.Guid = itemsString.Substring(guidStart+1, 40);
-                    item.Name = itemsString.Substring(guidStart+42).Trim();
+                    item.Guid = itemsString.Substring(guidStart + 1, 40);
+                    item.Name = itemsString.Substring(guidStart + 42).Trim();
                     item.FileName = item.Name;
 
                     //if (item.ItemType == "tree")
@@ -2495,7 +2526,7 @@ namespace GitCommands
                         items.Add(item);
                     }
 
-                    int codeIndex = itemsString.IndexOf(')', 41)+1;
+                    int codeIndex = itemsString.IndexOf(')', 41) + 1;
                     if (codeIndex > 41)
                     {
                         if (lastCommitGuid != commitGuid)
@@ -2503,9 +2534,9 @@ namespace GitCommands
 
                         if (!string.IsNullOrEmpty(item.Text))
                             item.Text += Environment.NewLine;
-                        item.Text += itemsString.Substring(codeIndex).Trim(new char[]{'\r'});
+                        item.Text += itemsString.Substring(codeIndex).Trim(new char[] { '\r' });
                     }
-                    
+
                     lastCommitGuid = commitGuid;
                 }
             }
