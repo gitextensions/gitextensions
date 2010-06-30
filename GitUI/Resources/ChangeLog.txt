@@ -11,6 +11,8 @@ Version 1.95
 	Fixed bug: AccessDeniedException thrown when saving hidden .gitignore or .mailmap file
 	Fixed bug: Removed empty root node from tree in file tree
 	Fixed bug: If HOMEDRIVE is defined, launching Git Bash would result in a different home directory than GitExtensions
+	Fixed bug: Squares where shown instead of Russian chars
+	Fixed bug: Revision graph is drawn incorrect in some cases
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
@@ -25,6 +27,7 @@ Version 1.95
 	Added option to create annotated tag	
 	Added splash screen
 	Added warning when about to push a branch that doesn't exist on a remote yet
+	There is a new revision graph
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved

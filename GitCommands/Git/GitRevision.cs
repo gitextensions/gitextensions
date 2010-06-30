@@ -9,7 +9,6 @@ namespace GitCommands
     {
         public GitRevision()
         {
-            GraphLines = new List<string>();
             Heads = new List<GitHead>();
         }
 
@@ -18,17 +17,17 @@ namespace GitCommands
         public List<GitHead> Heads { get; set; }
 
         public string TreeGuid { get; set; }
-        //public string parentGuid { get; set; }
 
-        public List<String> ParentGuids = new List<string>();
+        public String[] ParentGuids;
 
         public string Author { get; set; }
-        public string AuthorDate { get; set; }
+        public DateTime AuthorDate { get; set; }
         public string Committer { get; set; }
-        public string CommitDate { get; set; }
+        public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }
-        public List<string> GraphLines { get; set; }
+
+        public uint Order { get; set; }
 
         protected List<IGitItem> subItems;
         public List<IGitItem> SubItems 
@@ -42,6 +41,11 @@ namespace GitCommands
 
                 return subItems;
             }
+        }
+
+        public override string ToString()
+        {
+            return Guid;
         }
     }
 }

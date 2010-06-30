@@ -121,6 +121,7 @@
             this.BlueIcon = new System.Windows.Forms.RadioButton();
             this.DefaultIcon = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.MulticolorBranches = new System.Windows.Forms.CheckBox();
             this.label33 = new System.Windows.Forms.Label();
             this._ColorRemoteBranchLabel = new System.Windows.Forms.Label();
             this._ColorOtherLabel = new System.Windows.Forms.Label();
@@ -129,10 +130,6 @@
             this._ColorTagLabel = new System.Windows.Forms.Label();
             this._ColorBranchLabel = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this._RevisionGraphColorLabel = new System.Windows.Forms.Label();
-            this._RevisionGraphColorSelected = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
             this._ColorRemovedLineDiffLabel = new System.Windows.Forms.Label();
@@ -281,7 +278,7 @@
             "true",
             "false",
             "input"});
-            this.LocalAutoCRLF.Location = new System.Drawing.Point(405, 149);
+            this.LocalAutoCRLF.Location = new System.Drawing.Point(472, 149);
             this.LocalAutoCRLF.Name = "LocalAutoCRLF";
             this.LocalAutoCRLF.Size = new System.Drawing.Size(121, 21);
             this.LocalAutoCRLF.TabIndex = 21;
@@ -356,7 +353,7 @@
             this.KeepMergeBackup.AutoSize = true;
             this.KeepMergeBackup.Checked = true;
             this.KeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.KeepMergeBackup.Location = new System.Drawing.Point(405, 127);
+            this.KeepMergeBackup.Location = new System.Drawing.Point(472, 127);
             this.KeepMergeBackup.Name = "KeepMergeBackup";
             this.KeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.KeepMergeBackup.Size = new System.Drawing.Size(15, 14);
@@ -862,7 +859,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(8, 268);
+            this.label40.Location = new System.Drawing.Point(32, 268);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(208, 13);
             this.label40.TabIndex = 27;
@@ -871,7 +868,7 @@
             // FollowRenamesInFileHistory
             // 
             this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(382, 267);
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(11, 267);
             this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
             this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
@@ -881,7 +878,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(8, 246);
+            this.label39.Location = new System.Drawing.Point(32, 246);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(184, 13);
             this.label39.TabIndex = 25;
@@ -890,7 +887,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(8, 223);
+            this.label38.Location = new System.Drawing.Point(32, 223);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(256, 13);
             this.label38.TabIndex = 24;
@@ -899,7 +896,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(8, 201);
+            this.label37.Location = new System.Drawing.Point(32, 201);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(167, 13);
             this.label37.TabIndex = 23;
@@ -908,7 +905,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(8, 180);
+            this.label35.Location = new System.Drawing.Point(32, 180);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(264, 13);
             this.label35.TabIndex = 22;
@@ -917,7 +914,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(8, 157);
+            this.label34.Location = new System.Drawing.Point(32, 157);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(295, 13);
             this.label34.TabIndex = 21;
@@ -969,7 +966,7 @@
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(382, 245);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(11, 245);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(15, 14);
@@ -979,7 +976,7 @@
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(382, 223);
+            this.UseFastChecks.Location = new System.Drawing.Point(11, 223);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(15, 14);
@@ -989,7 +986,7 @@
             // ShowGitCommandLine
             // 
             this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(382, 179);
+            this.ShowGitCommandLine.Location = new System.Drawing.Point(11, 179);
             this.ShowGitCommandLine.Name = "ShowGitCommandLine";
             this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitCommandLine.Size = new System.Drawing.Size(15, 14);
@@ -999,7 +996,7 @@
             // ShowRevisionGraph
             // 
             this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(382, 201);
+            this.ShowRevisionGraph.Location = new System.Drawing.Point(11, 201);
             this.ShowRevisionGraph.Name = "ShowRevisionGraph";
             this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRevisionGraph.Size = new System.Drawing.Size(15, 14);
@@ -1010,7 +1007,7 @@
             // CloseProcessDialog
             // 
             this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(382, 157);
+            this.CloseProcessDialog.Location = new System.Drawing.Point(11, 157);
             this.CloseProcessDialog.Name = "CloseProcessDialog";
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(15, 14);
@@ -1266,6 +1263,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.MulticolorBranches);
             this.groupBox4.Controls.Add(this.label33);
             this.groupBox4.Controls.Add(this._ColorRemoteBranchLabel);
             this.groupBox4.Controls.Add(this._ColorOtherLabel);
@@ -1274,21 +1272,27 @@
             this.groupBox4.Controls.Add(this._ColorTagLabel);
             this.groupBox4.Controls.Add(this._ColorBranchLabel);
             this.groupBox4.Controls.Add(this.label32);
-            this.groupBox4.Controls.Add(this.label24);
-            this.groupBox4.Controls.Add(this._RevisionGraphColorLabel);
-            this.groupBox4.Controls.Add(this._RevisionGraphColorSelected);
-            this.groupBox4.Controls.Add(this.label26);
             this.groupBox4.Location = new System.Drawing.Point(8, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(313, 190);
+            this.groupBox4.Size = new System.Drawing.Size(313, 157);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Revision graph";
             // 
+            // MulticolorBranches
+            // 
+            this.MulticolorBranches.AutoSize = true;
+            this.MulticolorBranches.Location = new System.Drawing.Point(9, 20);
+            this.MulticolorBranches.Name = "MulticolorBranches";
+            this.MulticolorBranches.Size = new System.Drawing.Size(119, 17);
+            this.MulticolorBranches.TabIndex = 12;
+            this.MulticolorBranches.Text = "Multicolor Branches";
+            this.MulticolorBranches.UseVisualStyleBackColor = true;
+            // 
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(6, 133);
+            this.label33.Location = new System.Drawing.Point(6, 101);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(102, 13);
             this.label33.TabIndex = 8;
@@ -1300,7 +1304,7 @@
             this._ColorRemoteBranchLabel.BackColor = System.Drawing.Color.Red;
             this._ColorRemoteBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._ColorRemoteBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._ColorRemoteBranchLabel.Location = new System.Drawing.Point(211, 133);
+            this._ColorRemoteBranchLabel.Location = new System.Drawing.Point(211, 101);
             this._ColorRemoteBranchLabel.Name = "_ColorRemoteBranchLabel";
             this._ColorRemoteBranchLabel.Size = new System.Drawing.Size(29, 15);
             this._ColorRemoteBranchLabel.TabIndex = 9;
@@ -1313,7 +1317,7 @@
             this._ColorOtherLabel.BackColor = System.Drawing.Color.Red;
             this._ColorOtherLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._ColorOtherLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._ColorOtherLabel.Location = new System.Drawing.Point(211, 161);
+            this._ColorOtherLabel.Location = new System.Drawing.Point(211, 129);
             this._ColorOtherLabel.Name = "_ColorOtherLabel";
             this._ColorOtherLabel.Size = new System.Drawing.Size(29, 15);
             this._ColorOtherLabel.TabIndex = 11;
@@ -1323,7 +1327,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(6, 161);
+            this.label36.Location = new System.Drawing.Point(6, 129);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(83, 13);
             this.label36.TabIndex = 10;
@@ -1332,7 +1336,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 76);
+            this.label25.Location = new System.Drawing.Point(6, 44);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(49, 13);
             this.label25.TabIndex = 4;
@@ -1344,7 +1348,7 @@
             this._ColorTagLabel.BackColor = System.Drawing.Color.Red;
             this._ColorTagLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._ColorTagLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._ColorTagLabel.Location = new System.Drawing.Point(211, 76);
+            this._ColorTagLabel.Location = new System.Drawing.Point(211, 44);
             this._ColorTagLabel.Name = "_ColorTagLabel";
             this._ColorTagLabel.Size = new System.Drawing.Size(29, 15);
             this._ColorTagLabel.TabIndex = 5;
@@ -1357,7 +1361,7 @@
             this._ColorBranchLabel.BackColor = System.Drawing.Color.Red;
             this._ColorBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._ColorBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._ColorBranchLabel.Location = new System.Drawing.Point(211, 104);
+            this._ColorBranchLabel.Location = new System.Drawing.Point(211, 72);
             this._ColorBranchLabel.Name = "_ColorBranchLabel";
             this._ColorBranchLabel.Size = new System.Drawing.Size(29, 15);
             this._ColorBranchLabel.TabIndex = 7;
@@ -1367,55 +1371,11 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(6, 104);
+            this.label32.Location = new System.Drawing.Point(6, 72);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(67, 13);
             this.label32.TabIndex = 6;
             this.label32.Text = "Color branch";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 19);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(100, 13);
-            this.label24.TabIndex = 0;
-            this.label24.Text = "Color revision graph";
-            // 
-            // _RevisionGraphColorLabel
-            // 
-            this._RevisionGraphColorLabel.AutoSize = true;
-            this._RevisionGraphColorLabel.BackColor = System.Drawing.Color.Red;
-            this._RevisionGraphColorLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._RevisionGraphColorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._RevisionGraphColorLabel.Location = new System.Drawing.Point(211, 19);
-            this._RevisionGraphColorLabel.Name = "_RevisionGraphColorLabel";
-            this._RevisionGraphColorLabel.Size = new System.Drawing.Size(29, 15);
-            this._RevisionGraphColorLabel.TabIndex = 1;
-            this._RevisionGraphColorLabel.Text = "Red";
-            this._RevisionGraphColorLabel.Click += new System.EventHandler(this.label25_Click);
-            // 
-            // _RevisionGraphColorSelected
-            // 
-            this._RevisionGraphColorSelected.AutoSize = true;
-            this._RevisionGraphColorSelected.BackColor = System.Drawing.Color.Red;
-            this._RevisionGraphColorSelected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._RevisionGraphColorSelected.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._RevisionGraphColorSelected.Location = new System.Drawing.Point(211, 47);
-            this._RevisionGraphColorSelected.Name = "_RevisionGraphColorSelected";
-            this._RevisionGraphColorSelected.Size = new System.Drawing.Size(29, 15);
-            this._RevisionGraphColorSelected.TabIndex = 3;
-            this._RevisionGraphColorSelected.Text = "Red";
-            this._RevisionGraphColorSelected.Click += new System.EventHandler(this.label25_Click_1);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(6, 47);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(143, 13);
-            this.label26.TabIndex = 2;
-            this.label26.Text = "Color revision graph selected";
             // 
             // groupBox3
             // 
@@ -1429,9 +1389,9 @@
             this.groupBox3.Controls.Add(this.label31);
             this.groupBox3.Controls.Add(this.label29);
             this.groupBox3.Controls.Add(this._ColorAddedLineLabel);
-            this.groupBox3.Location = new System.Drawing.Point(8, 198);
+            this.groupBox3.Location = new System.Drawing.Point(9, 166);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(313, 160);
+            this.groupBox3.Size = new System.Drawing.Size(313, 184);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Difference view";
@@ -1702,7 +1662,7 @@
             "true",
             "false",
             "input"});
-            this.GlobalAutoCRLF.Location = new System.Drawing.Point(411, 201);
+            this.GlobalAutoCRLF.Location = new System.Drawing.Point(506, 201);
             this.GlobalAutoCRLF.Name = "GlobalAutoCRLF";
             this.GlobalAutoCRLF.Size = new System.Drawing.Size(121, 21);
             this.GlobalAutoCRLF.TabIndex = 20;
@@ -1820,7 +1780,7 @@
             this.GlobalKeepMergeBackup.AutoSize = true;
             this.GlobalKeepMergeBackup.Checked = true;
             this.GlobalKeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(411, 179);
+            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(506, 179);
             this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
             this.GlobalKeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
@@ -2310,10 +2270,6 @@
         private System.Windows.Forms.Label EncodingLabel;
         private System.Windows.Forms.ComboBox _Encoding;
         private System.Windows.Forms.TabPage AppearancePage;
-        private System.Windows.Forms.Label _RevisionGraphColorLabel;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label _RevisionGraphColorSelected;
-        private System.Windows.Forms.Label label26;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label27;
@@ -2375,6 +2331,7 @@
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.LinkLabel helpTranslate;
         private System.Windows.Forms.TabPage TabPageGit;
+        private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.GroupBox groupBox8;

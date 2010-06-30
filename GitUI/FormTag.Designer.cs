@@ -70,7 +70,6 @@
             this.GitRevisions.currentCheckout = null;
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitRevisions.Filter = "";
-            this.GitRevisions.HeadFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.GitRevisions.LastRow = 0;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";

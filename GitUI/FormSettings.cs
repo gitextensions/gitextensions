@@ -114,12 +114,8 @@ namespace GitUI
                 Language.Items.AddRange(Translator.GetAllTranslations());
                 Language.Text = Settings.Translation;
 
-                _RevisionGraphColorLabel.BackColor = Settings.RevisionGraphColor;
-                _RevisionGraphColorLabel.Text = Settings.RevisionGraphColor.Name;
-                _RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_RevisionGraphColorLabel.BackColor);
-                _RevisionGraphColorSelected.BackColor = Settings.RevisionGraphColorSelected;
-                _RevisionGraphColorSelected.Text = Settings.RevisionGraphColorSelected.Name;
-                _RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(_RevisionGraphColorSelected.BackColor);
+                MulticolorBranches.Checked = Settings.MulticolorBranches;
+
                 _ColorTagLabel.BackColor = Settings.TagColor;
                 _ColorTagLabel.Text = Settings.TagColor.Name;
                 _ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorTagLabel.BackColor);
@@ -344,8 +340,8 @@ namespace GitUI
                                 else
                                     GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
-            Settings.RevisionGraphColor = _RevisionGraphColorLabel.BackColor;
-            Settings.RevisionGraphColorSelected = _RevisionGraphColorSelected.BackColor;
+
+            Settings.MulticolorBranches = MulticolorBranches.Checked;		
             Settings.TagColor = _ColorTagLabel.BackColor;
             Settings.BranchColor = _ColorBranchLabel.BackColor;
             Settings.RemoteBranchColor = _ColorRemoteBranchLabel.BackColor;
@@ -1491,27 +1487,6 @@ namespace GitUI
 
             button1_Click_1(null, null);
         }
-
-        private void label25_Click(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = _RevisionGraphColorLabel.BackColor;
-            colorDialog.ShowDialog();
-            _RevisionGraphColorLabel.BackColor = colorDialog.Color;
-            _RevisionGraphColorLabel.Text = colorDialog.Color.Name;
-            _RevisionGraphColorLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_RevisionGraphColorLabel.BackColor);
-        }
-
-        private void label25_Click_1(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = _RevisionGraphColorSelected.BackColor;
-            colorDialog.ShowDialog();
-            _RevisionGraphColorSelected.BackColor = colorDialog.Color;
-            _RevisionGraphColorSelected.Text = colorDialog.Color.Name;
-            _RevisionGraphColorSelected.ForeColor = ColorHelper.GetForeColorForBackColor(_RevisionGraphColorSelected.BackColor);
-        }
-
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
         {
