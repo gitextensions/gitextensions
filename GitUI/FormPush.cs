@@ -60,8 +60,8 @@ namespace GitUI
             if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
             {
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
-                //if (!GitCommands.GitCommands.GetHeads(false, true).Exists(h => h.Remote.Equals(Remotes.Text) && h.Name.Equals(RemoteBranch.Text)))
-                if (GitCommands.GitCommands.GetBranches(true, Remotes.Text).Exists(h => h.StartsWith(Remotes.Text) && h.EndsWith(RemoteBranch.Text)))
+                //if (!GitCommands.GitCommands.GetHeads(true, true).Exists(h => h.Remote.Equals(Remotes.Text) && h.Name.Equals(RemoteBranch.Text)))
+                if (!GitCommands.GitCommands.GetBranches(true, Remotes.Text).Contains(RemoteBranch.Text) )
                     //Ask if this is what the user wants
                     if (MessageBox.Show(branchNewForRemote.Text, pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
                         return;
