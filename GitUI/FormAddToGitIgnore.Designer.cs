@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddToGitIgnore));
             this.label1 = new System.Windows.Forms.Label();
             this.FilePattern = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -51,9 +50,9 @@
             // 
             // FilePattern
             // 
-            this.FilePattern.Location = new System.Drawing.Point(151, 10);
+            this.FilePattern.Location = new System.Drawing.Point(12, 39);
             this.FilePattern.Name = "FilePattern";
-            this.FilePattern.Size = new System.Drawing.Size(233, 20);
+            this.FilePattern.Size = new System.Drawing.Size(460, 20);
             this.FilePattern.TabIndex = 1;
             // 
             // splitContainer1

@@ -305,7 +305,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
 
-                    if (revision.ParentGuids.Count > 0)
+                    if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length > 0)
                         DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                     else
                         DiffFiles.GitItemStatusses = null;
@@ -323,7 +323,8 @@ namespace GitUI
 
                 GitRevision revision = RevisionGrid.GetRevisions()[0];
 
-                RevisionInfo.SetRevision(revision.Guid);
+                if(revision != null)
+                    RevisionInfo.SetRevision(revision.Guid);
             }
         }
 

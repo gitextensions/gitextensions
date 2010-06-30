@@ -2,14 +2,67 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Diagnostics;
+using System.Threading;
 
 namespace GitCommands
 {
     public class RevisionGraph
     {
+        public event EventHandler Exited;
+        public event EventHandler Updated;
+        public List<GitRevision> Revisions
+        {
+            get
+            {
+                lock (revisions)
+                {
+                    return new List<GitRevision>(revisions);
+                }
+            }
+        }
+
+        public class RevisionGraphUpdatedEvent : EventArgs
+        {
+            public RevisionGraphUpdatedEvent(GitRevision revision)
+            {
+                Revision = revision;
+            }
+
+            public GitRevision Revision;
+        }
+
+        public bool BackgroundThread { get; set; }
+
+        private readonly char[] splitChars = " \t\n".ToCharArray();
+        private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
+        private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+        private List<GitHead> heads;
+        private GitCommands gitGetGraphCommand;
+        private uint revisionOrder = 0;
+
+        private Thread backgroundThread = null;
+        private List<GitRevision> revisions = new List<GitRevision>();
+
+        private enum ReadStep
+        {
+            Commit,
+            Hash,
+            Parents,
+            Tree,
+            AuthorName,
+            AuthorDate,
+            CommitterName,
+            CommitterDate,
+            CommitMessage,
+            Done,
+        }
+        private ReadStep nextStep = ReadStep.Commit;
+        private GitRevision revision;
+
         public RevisionGraph()
         {
-            LimitRevisions = 200;
+            BackgroundThread = true;
         }
 
         ~RevisionGraph()
@@ -19,198 +72,164 @@ namespace GitCommands
 
         public void Kill()
         {
+            if (backgroundThread != null)
+            {
+                backgroundThread.Abort();
+            }
             if (gitGetGraphCommand != null)
+            {
                 gitGetGraphCommand.Kill();
+            }
         }
-
-        private GitCommands gitGetGraphCommand;
-
-        public List<GitRevision> Revisions;
-        private char[] graphChars = new char[] { '*', '|', '*', '\\', '/' };
-        public int LimitRevisions { get; set; }
 
         public string LogParam = "HEAD --all";
 
         public void Execute()
         {
-            Revisions = new List<GitRevision>();
+            if (BackgroundThread)
+            {
+                if (backgroundThread != null)
+                {
+                    backgroundThread.Abort();
+                }
+                backgroundThread = new Thread(new ThreadStart(execute));
+                backgroundThread.IsBackground = true;
+                backgroundThread.Start();
+            }
+            else
+            {
+                execute();
+            }
+        }
+
+        private void execute()
+        {
+            lock (revisions)
+            {
+                revisions.Clear();
+            }
 
             heads = GitCommands.GetHeads(true);
 
-            if (!LogParam.Contains("=") && Settings.ShowRevisionGraph)
-                LogParam = " --graph " + LogParam;
+            string formatString =
+                /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
+                /* Hash           */ "%H%n" +
+                /* Parents        */ "%P%n" +
+                /* Tree           */ "%T%n" +
+                /* Author Name    */ "%aN%n" +
+                /* Author Date    */ "%ai%n" +
+                /* Committer Name */ "%cN%n" +
+                /* Committer Date */ "%ci%n" +
+                /* Commit Message */ "%s";
 
             if (Settings.OrderRevisionByDate)
+            {
                 LogParam = " --date-order " + LogParam;
-
-
-            string dateFormat;
-            if (Settings.RelativeDate)
-                dateFormat = "r";
+            }
             else
-                dateFormat = "d";
-
-            string limitRevisionsArgument;
-            if (LogParam.Contains("--follow"))
-                limitRevisionsArgument = "";
-            else
-                limitRevisionsArgument = " -n " + LimitRevisions;
+            {
+                LogParam = " --topo-order " + LogParam;
+            }
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log{0} --pretty=format:\"Commit %H %nTree: %T %nAuthor: %aN %nAuthorDate: %a{1} %nCommitter: %cN %nCommitDate: %c{1} %nParents: %P %n%s\" {2}",
-                limitRevisionsArgument,
-                dateFormat,
-                LogParam);
+                "log --pretty=format:\"{1}\" {0}",
+                LogParam,
+                formatString);
 
             gitGetGraphCommand = new GitCommands();
+            gitGetGraphCommand.StreamOutput = true;
             gitGetGraphCommand.CollectOutput = false;
-            gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+            Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
-            gitGetGraphCommand.DataReceived += new System.Diagnostics.DataReceivedEventHandler(gitGetGraphCommand_DataReceived);
-            gitGetGraphCommand.Exited += new EventHandler(gitGetGraphCommand_Exited);
+            string line;
+            do
+            {
+                line = p.StandardOutput.ReadLine();
+                dataReceived(line);
+            } while (line != null);
+
+            Exited(this, new EventArgs());
         }
 
-        public event EventHandler Exited;
-
-        void gitGetGraphCommand_Exited(object sender, EventArgs e)
+        void dataReceived(string line)
         {
-            if (Exited != null)
-                Exited(this, e);
-        }
-
-        private List<GitHead> heads;
-        private GitRevision revision;
-        private int graphIndex;
-        void gitGetGraphCommand_DataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            if (e.Data == null)
+            if (line == null)
+            {
                 return;
-            if (e.Data.Length <= graphIndex)
-                return;
-
-            if (TryParseFields(e.Data))
-            {
-                AddGraphLine(e.Data);
             }
-            else if (revision != null)
+            switch (nextStep)
             {
-                if (!string.IsNullOrEmpty(revision.Message) && e.Data.LastIndexOfAny(new char[] { '|', '*' }) < 0 && !e.Data.StartsWith("..."))
-                {
-                    revision.Name = e.Data;
-                }
-                else if (e.Data.Length > graphIndex && !e.Data.StartsWith("..."))
-                {
-                    if (string.IsNullOrEmpty(revision.Message))
-                        revision.Message = e.Data.Substring(graphIndex).Trim() + Environment.NewLine;
-
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-
-                }
-                else if (e.Data.Length == graphIndex && !e.Data.StartsWith("..."))
-                {
-                    revision.GraphLines.Add(e.Data.Substring(0, graphIndex));
-                }
-            }
-        }
-
-        private void AddGraphLine(string data)
-        {
-            if (data.Length > graphIndex)
-                revision.GraphLines.Add(data.Substring(0, graphIndex));
-        }
-
-        private bool TryParseFields(string data)
-        {
-            //First line found!
-            int commitIndex = data.IndexOf("Commit ");
-            if (commitIndex > 0 && data.IndexOf("*") >= 0 || (commitIndex == 0))
-            {
-                revision = new GitRevision();
-                Revisions.Add(revision);
-
-                graphIndex = commitIndex;
-
-                /*revision.Name = */
-                revision.Guid = data.Substring(graphIndex + 7).Trim();
-
-                foreach (GitHead h in heads)
-                {
-                    if (h.Guid == revision.Guid)
+                case ReadStep.Commit:
+                    // Sanity check
+                    if (line == COMMIT_BEGIN)
                     {
-                        revision.Heads.Add(h);
+                        revision = new GitRevision();
                     }
-                }
+                    else
+                    {
+                        // Bail out until we see what we expect
+                        return;
+                    }
+                    break;
 
-                return true;
+                case ReadStep.Hash:
+                    revision.Guid = line;
+                    for (int i = heads.Count-1; i >=0; i--)
+                    {
+                        if (heads[i].Guid == revision.Guid)
+                        {
+                            revision.Heads.Add(heads[i]);
+
+                            //Only search for a head once, remove it from list
+                            heads.Remove(heads[i]);
+                        }
+                    }
+                    break;
+
+                case ReadStep.Parents:
+                    revision.ParentGuids = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    break;
+
+                case ReadStep.Tree:
+                    revision.TreeGuid = line;
+                    break;
+
+                case ReadStep.AuthorName:
+                    revision.Author = line;
+                    break;
+
+                case ReadStep.AuthorDate:
+                    revision.AuthorDate = DateTime.Parse(line);
+                    break;
+
+                case ReadStep.CommitterName:
+                    revision.Committer = line;
+                    break;
+
+                case ReadStep.CommitterDate:
+                    revision.CommitDate = DateTime.Parse(line);
+                    break;
+
+                case ReadStep.CommitMessage:
+                    revision.Message = line;
+                    break;
             }
 
-            string treeGuid = GetField(data, "Tree:");
-            if (treeGuid != null)
-            {
-                revision.TreeGuid = treeGuid;
-                return true;
-            }
+            nextStep++;
 
-            if (GetField(data, "Merge:") != null)
+            if (nextStep == ReadStep.Done)
             {
-                //ignore
-                return true;
-            }
-
-            string author = GetField(data, "Author:");
-            if (author != null)
-            {
-                revision.Author = author;
-                return true;
-            }
-
-            string authorDate = GetField(data, "AuthorDate:");
-            if (authorDate != null)
-            {
-                revision.AuthorDate = authorDate;
-                return true;
-            }
-
-            string committer = GetField(data, "Committer:");
-            if (committer != null)
-            {
-                revision.Committer = committer;
-                return true;
-            }
-
-            string commitDate = GetField(data, "CommitDate:");
-            if (commitDate != null)
-            {
-                revision.CommitDate = commitDate;
-                return true;
-            }
-
-            string parents = GetField(data, "Parents:");
-            if (parents != null)
-            {
-                List<string> parentGuids = new List<string>();
-                foreach (string s in parents.Split(' '))
+                lock (revisions)
                 {
-                    parentGuids.Add(s.Trim());
+                    if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                    {
+                        revision.Order = revisionOrder++;
+                        revisions.Add(revision);
+                        Updated(this, new RevisionGraphUpdatedEvent(revision));
+                    }
+                    nextStep = ReadStep.Commit;
                 }
-
-                revision.ParentGuids = parentGuids;
-                return true;
             }
-
-            return false;
-        }
-
-        private string GetField(string data, string header)
-        {
-            int index = data.IndexOf(header, graphIndex);
-
-            if (index >= 0)
-            {
-                return data.Substring(index + header.Length).Trim();
-            }
-
-            return null;
         }
     }
 }
