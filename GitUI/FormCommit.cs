@@ -127,6 +127,7 @@ namespace GitUI
 
                 syncContext.Post(delegate
                 {
+                    Staged.GitItemStatusses = null;
                     SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
                     Staged.GitItemStatusses = stagedFiles;
                 }, null);

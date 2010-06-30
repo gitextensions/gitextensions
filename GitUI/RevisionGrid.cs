@@ -262,7 +262,7 @@ namespace GitUI
                 Revisions.ClearSelection();
                 Revisions.Rows[index].Selected = true;
 
-                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
+                Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
             }
         }
 
