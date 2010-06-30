@@ -1347,9 +1347,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="commitDate" Property="Text">
           <Value>Commit datum</Value>
         </TranslationItem>
-        <TranslationItem Name="graphCaption" Property="Text">
-          <Value>Grafiek</Value>
-        </TranslationItem>
         <TranslationItem Name="messageCaption" Property="Text">
           <Value>Bericht</Value>
         </TranslationItem>
@@ -1544,12 +1541,6 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="AppearancePage" Property="Text">
           <Value>Weergave</Value>
         </TranslationItem>
-        <TranslationItem Name="label24" Property="Text">
-          <Value>Kleur grafiek</Value>
-        </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
-          <Value>Kleur grafiek geselecteerd</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Revisie grafiek</Value>
         </TranslationItem>
@@ -1676,6 +1667,9 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="TabPageGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
+        <TranslationItem Name="MulticolorBranches" Property="Text">
+          <Value>Gekleurde vertakkingen</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox7" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
@@ -1700,6 +1694,12 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="label51" Property="Text">
           <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
 wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchBorders" Property="Text">
+          <Value>Teken randen om grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="StripedBanchChange" Property="Text">
+          <Value>Teken wisseling van vertakking</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
