@@ -96,7 +96,7 @@
             // noFastForward
             // 
             this.noFastForward.AutoSize = true;
-            this.noFastForward.Location = new System.Drawing.Point(126, 115);
+            this.noFastForward.Location = new System.Drawing.Point(13, 131);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(191, 17);
             this.noFastForward.TabIndex = 7;
@@ -107,7 +107,7 @@
             // 
             this.fastForward.AutoSize = true;
             this.fastForward.Checked = true;
-            this.fastForward.Location = new System.Drawing.Point(126, 92);
+            this.fastForward.Location = new System.Drawing.Point(13, 108);
             this.fastForward.Name = "fastForward";
             this.fastForward.Size = new System.Drawing.Size(257, 17);
             this.fastForward.TabIndex = 6;
