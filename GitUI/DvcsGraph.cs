@@ -56,6 +56,11 @@ namespace GitUI
         public delegate void LoadingHandler(bool isLoading);
         public event LoadingHandler Loading;
 
+        public void ShowHideRevisionGraph(bool show)
+        {
+            Columns[0].Visible = show;
+        }
+
         public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
         {
             int lastItem = -1;
