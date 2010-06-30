@@ -238,24 +238,6 @@ namespace GitUI
             syncContext.Send(method, this);
         }
 
-        public Comparison<object> Sorter
-        {
-            get
-            {
-                lock (graphData)
-                {
-                    return graphData.Sorter;
-                }
-            }
-            set
-            {
-                lock (graphData)
-                {
-                    graphData.Sorter = value;
-                }
-            }
-        }
-
         private readonly SynchronizationContext syncContext;
 
         private Graph graphData;
@@ -314,6 +296,7 @@ namespace GitUI
             syncContext.Post(new SendOrPostCallback(delegate(object o)
             {
                 clearDrawCache();
+                Invalidate();
             }), this);
         }
 
@@ -337,7 +320,6 @@ namespace GitUI
                             );
                         //e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
                         //e.Graphics.DrawString(e.RowIndex.ToString(), new Font("System", 8), Brushes.Blue, e.CellBounds);
-                        //Console.WriteLine("Paint lane {0} {1}", e.RowIndex, srcRect.Y);
                         e.Handled = true;
                     }
                 }
@@ -409,7 +391,6 @@ namespace GitUI
                             
                         }
 
-                        //Console.WriteLine("Cached item {0}/{1}", curCount, graphData.NodeCount);
                         curCount = graphData.CachedCount;
                         graphDataCount = curCount;
                     }
@@ -454,14 +435,20 @@ namespace GitUI
                             {
                                 isLoading = true;
                                 backgroundThread.Priority = ThreadPriority.Normal;
-                                Loading(true);
+                                if (Loading != null)
+                                {
+                                    Loading(true);
+                                }
                             }
                         }
                         else if (isLoading)
                         {
                             isLoading = false;
                             backgroundThread.Priority = ThreadPriority.BelowNormal;
-                            Loading(false);
+                            if (Loading != null)
+                            {
+                                Loading(false);
+                            }
                         }
                     }), null);
             }
@@ -471,12 +458,10 @@ namespace GitUI
         {
             lock (graphData)
             {
-                //Console.WriteLine("updateRow({0}) ", row);
                 if (RowCount < graphData.Count)
                 {
                     setRowCount(graphData.Count);
                 }
-
                                 
                 // Check to see if the newly added item should be selected
                 IComparable id = graphData[row].Node.Id;
@@ -499,15 +484,23 @@ namespace GitUI
                     {
                         isLoading = true;
                         backgroundThread.Priority = ThreadPriority.Normal;
-                        Loading(true);
+                        if (Loading != null)
+                        {
+                            Loading(true);
+                        }
                     }
                 }
                 else if (isLoading)
                 {
                     isLoading = false;
                     backgroundThread.Priority = ThreadPriority.BelowNormal;
-                    Loading(false);
+                    if (Loading != null)
+                    {
+                        Loading(false);
+                    }
                 }
+
+                InvalidateRow(row);
             }
             
         }
@@ -598,7 +591,6 @@ namespace GitUI
                 {
                     colorIndex = -1;
                 }
-                //Console.WriteLine("{2}: {0} <--> {1}", aJunction, peer, colorIndex);
             }
 
             if (adjacentColors.Count == 0)
@@ -722,7 +714,6 @@ namespace GitUI
                         );
                 }
 
-                //Console.WriteLine("*** Draw lanes from {0} to {1} ***", start, end);
                 for (int rowIndex = start; rowIndex < end; rowIndex++)
                 {
                     Graph.LaneRow row = graphData[rowIndex];
@@ -763,17 +754,15 @@ namespace GitUI
                     }
 
                     graphWorkArea.RenderingOrigin = new Point(x, y);
-                    drawItem(graphWorkArea, row);
-
-                    //Console.WriteLine("Draw lane {0} {1}", rowIndex, y);
+                    bool success = drawItem(graphWorkArea, row);
 
                     graphWorkArea.Clip = oldClip;
 
-                    //Rectangle rect = laneRect;
-                    //graphWorkArea.FillRectangle(Brushes.LightCoral, rect);
-                    //rect.X += 30;
-                    //graphWorkArea.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    //graphWorkArea.DrawString(rowIndex.ToString(), new Font("System", 8), Brushes.Red, rect);
+                    if (!success)
+                    {
+                        clearDrawCache();
+                        return Rectangle.Empty;
+                    }
                 }
 
                 return new Rectangle
@@ -786,11 +775,11 @@ namespace GitUI
             } // end lock
         } // end drawGraph
 
-        private void drawItem(Graphics wa, Graph.LaneRow row)
+        private bool drawItem(Graphics wa, Graph.LaneRow row)
         {
-            if (row == null)
+            if (row == null || row.NodeLane == -1)
             {
-                return;
+                return false;
             }
 
             // Clip to the area we're drawing in, but draw 1 pixel past so
@@ -912,6 +901,8 @@ namespace GitUI
                 wa.FillEllipse(nodeBrush, nodeRect);
                 wa.DrawEllipse(new Pen(Color.Black, 1), nodeRect);
             }
+
+            return true;
         }
 
         private void dataGrid_Resize(object sender, EventArgs e)
@@ -924,12 +915,10 @@ namespace GitUI
 
         private class Node
         {
-            static uint DebugIdNext = 1;
-            uint DebugId;
-
             public IComparable Id;
             public object Data;
             public int InLane = int.MaxValue;
+            public int Index = int.MaxValue;
 
             public List<Junction> Ancestors = new List<Junction>();
             public List<Junction> Descendants = new List<Junction>();
@@ -937,7 +926,6 @@ namespace GitUI
 
             public Node(IComparable aId)
             {
-                DebugId = DebugIdNext++;
                 Id = aId;
             }
 
@@ -947,7 +935,7 @@ namespace GitUI
                 {
                     string name = Id.ToString();
                     name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);
-                    return string.Format("{1}: {0}", name, DebugId);
+                    return string.Format("{1}: {0}", name, Index);
                 }
                 else
                 {
@@ -1109,21 +1097,16 @@ namespace GitUI
 
             public List<Junction> Junctions = new List<Junction>();
             public Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
+
+            public List<Node> AddedNodes = new List<Node>();
+            
             public int NodeCount = 0;
-            public Comparison<object> Sorter;
 
             public delegate void GraphUpdatedHandler(object sender);
             public event GraphUpdatedHandler Updated;
 
             public Graph()
             {
-                //syncContext.Post(_ => LoadRevisions(), null);
-                Sorter = delegate(object a, object b)
-                {
-                    IComparable left = (IComparable)a;
-                    IComparable right = (IComparable)b;
-                    return left.CompareTo(right);
-                };
                 lanes = new Lanes(this);
             }
 
@@ -1138,13 +1121,19 @@ namespace GitUI
                 NodeCount++;
                 node.Data = aData;
                 node.DataType = aType;
-                //Console.WriteLine(node);
+                node.Index = AddedNodes.Count;
+                AddedNodes.Add(node);
 
                 foreach (IComparable parentId in aParentIds)
                 {
                     Node parent;
                     GetNode(parentId, out parent);
-                    //Console.WriteLine("\t" + parent);
+                    if (parent.Index < node.Index)
+                    {
+                        // TODO: We might be able to recover from this with some work, but
+                        // since we build the graph async it might be tough to figure out.
+                        throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                    }
 
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Parent == node
@@ -1211,7 +1200,10 @@ namespace GitUI
                     lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
-                    Updated(this);
+                    if (Updated != null)
+                    {
+                        Updated(this);
+                    }
                 }
                 else
                 {
@@ -1221,6 +1213,7 @@ namespace GitUI
 
             public void Clear()
             {
+                AddedNodes.Clear();
                 Junctions.Clear();
                 Nodes.Clear();
                 lanes.Clear();
@@ -1228,6 +1221,37 @@ namespace GitUI
             }
 
             public int Count { get { return NodeCount; } }
+
+            public void ProcessNode(Node aNode)
+            {
+                for (int i = processedNodes; i < AddedNodes.Count; i++)
+                {
+                    if (AddedNodes[i] == aNode)
+                    {
+                        bool isChanged = false;
+                        while (i > processedNodes)
+                        {
+                            // This only happens if we weren't in topo order
+                            if (Debugger.IsAttached) Debugger.Break();
+
+                            Node temp = AddedNodes[i];
+                            AddedNodes[i] = AddedNodes[i - 1];
+                            AddedNodes[i - 1] = temp;
+                            i--;
+                            isChanged = true;
+                        }
+
+                        // Signal that these rows have changed
+                        if (isChanged && Updated != null)
+                        {
+                            Updated(this);
+                        }
+
+                        processedNodes++;
+                        break;
+                    }
+                }
+            }
 
             public bool Prune()
             {
@@ -1371,6 +1395,7 @@ namespace GitUI
             }
 
             private Lanes lanes;
+            private int processedNodes = 0;
 
             private bool GetNode(IComparable aId, out Node aNode)
             {
@@ -1425,16 +1450,16 @@ namespace GitUI
                 }
             }
 
-            public Graph.LaneRow this[int col]
+            public Graph.LaneRow this[int row]
             {
                 get
                 {
-                    if (col < 0)
+                    if (row < 0)
                     {
                         return null;
                     }
 
-                    //while (col >= laneRows.Count)
+                    //while (row >= laneRows.Count)
                     //{
                     //    if (!MoveNext())
                     //    {
@@ -1442,9 +1467,16 @@ namespace GitUI
                     //    }
                     //}
 
-                    if (col < laneRows.Count)
+                    if (row < laneRows.Count)
                     {
-                        return laneRows[col];
+                        // DEBUG:
+                        if (sourceGraph.AddedNodes[row] != laneRows[row].Node) Debugger.Break();
+
+                        return laneRows[row];
+                    }
+                    else if (row < sourceGraph.AddedNodes.Count)
+                    {
+                        return new SavedLaneRow(sourceGraph.AddedNodes[row]);
                     }
                     else
                     {
@@ -1606,15 +1638,15 @@ namespace GitUI
                 {
                     if (junction != null)
                     {
-                        return index + "~" + junction.ToString();
+                        return index + "/" + junction.Bunch.Count + "~" + junction.ToString();
                     }
                     else if (node != null)
                     {
-                        return index + "~" + node.ToString();
+                        return index + "/n~" + node.ToString();
                     }
                     else
                     {
-                        return "-1~null";
+                        return "X/X~null";
                     }
                 }
             }
@@ -1622,6 +1654,128 @@ namespace GitUI
             private List<LaneJunctionDetail> laneNodes = new List<LaneJunctionDetail>();
             private Dictionary<Junction, LaneJunctionDetail> junctionNodes = new Dictionary<Junction, LaneJunctionDetail>();
             private ActiveLaneRow currentRow = new ActiveLaneRow();
+
+
+            private struct Edge
+            {
+                public Graph.LaneInfo Data;
+                public int Start;
+
+                public int End { get { return Data.ConnectLane; } }
+
+                public Edge(Graph.LaneInfo data, int start)
+                {
+                    Data = data;
+                    Start = start;
+                }
+
+                public override string ToString()
+                {
+                    return string.Format("{0}->{1}: {2}", Start, End, Data);
+                }
+            }
+
+            private class SavedLaneRow : Graph.LaneRow
+            {
+                public SavedLaneRow(Node aNode)
+                {
+                    node = aNode;
+                    nodeLane = -1;
+                    edges = null;
+                }
+
+                public SavedLaneRow(ActiveLaneRow activeRow)
+                {
+                    nodeLane = activeRow.NodeLane;
+                    node = activeRow.Node;
+                    edges = activeRow.EdgeList;
+                }
+
+                public int NodeLane
+                {
+                    get { return nodeLane; }
+                    set { nodeLane = value; }
+                }
+                public Node Node
+                {
+                    get { return node; }
+                    set { node = value; }
+                }
+
+                public Graph.LaneInfo this[int col, int row]
+                {
+                    get
+                    {
+                        int count = 0;
+                        foreach (Edge edge in edges)
+                        {
+                            if (edge.Start == col)
+                            {
+                                if (count == row)
+                                {
+                                    return edge.Data;
+                                }
+                                count++;
+                            }
+                        }
+                        throw new Exception("Bad lane");
+                    }
+                }
+                public int Count
+                {
+                    get
+                    {
+                        if (edges == null)
+                        {
+                            return 0;
+                        }
+
+                        int count = -1;
+                        foreach (Edge edge in edges)
+                        {
+                            if (edge.Start > count)
+                            {
+                                count = edge.Start;
+                            }
+                        }
+                        return count + 1;
+                    }
+                }
+
+                public int LaneInfoCount(int lane)
+                {
+                    int count = 0;
+                    foreach (Edge edge in edges)
+                    {
+                        if (edge.Start == lane)
+                        {
+                            count++;
+                        }
+                    }
+                    return count;
+                }
+
+                public override string ToString()
+                {
+                    string s = nodeLane + "/" + Count + ": ";
+                    for (int i = 0; i < Count; i++)
+                    {
+                        if (i == nodeLane)
+                            s += "*";
+                        s += "{";
+                        for (int j = 0; j < LaneInfoCount(i); j++)
+                            s += " " + this[i, j];
+                        s += " }, ";
+                    }
+                    s += node;
+                    return s;
+                }
+
+                // Node information
+                private int nodeLane = -1;
+                private Node node = null;
+                private Edge[] edges = null;
+            }
 
             private class ActiveLaneRow : Graph.LaneRow
             {
@@ -1635,6 +1789,11 @@ namespace GitUI
                     get { return node; }
                     set { node = value; }
                 }
+                public Edge[] EdgeList
+                {
+                    get { return edges.EdgeList.ToArray(); }
+                }
+
                 // Node information
                 private int nodeLane = -1;
                 private Node node = null;
@@ -1902,115 +2061,6 @@ namespace GitUI
                     return newLaneRow;
                 }
 
-                private struct Edge
-                {
-                    public Graph.LaneInfo Data;
-                    public int Start;
-
-                    public int End { get { return Data.ConnectLane; } }
-
-                    public Edge(Graph.LaneInfo data, int start)
-                    {
-                        Data = data;
-                        Start = start;
-                    }
-
-                    public override string ToString()
-                    {
-                        return string.Format("{0}->{1}: {2}", Start, End, Data);
-                    }
-                }
-
-                private class SavedLaneRow : Graph.LaneRow
-                {
-                    public SavedLaneRow(ActiveLaneRow activeRow)
-                    {
-                        nodeLane = activeRow.nodeLane;
-                        node = activeRow.node;
-                        edges = activeRow.edges.EdgeList.ToArray();
-                    }
-
-                    public int NodeLane
-                    {
-                        get { return nodeLane; }
-                        set { nodeLane = value; }
-                    }
-                    public Node Node
-                    {
-                        get { return node; }
-                        set { node = value; }
-                    }
-
-                    public Graph.LaneInfo this[int col, int row]
-                    {
-                        get 
-                        {
-                            int count = 0;
-                            foreach (Edge edge in edges)
-                            {
-                                if (edge.Start == col)
-                                {
-                                    if (count == row)
-                                    {
-                                        return edge.Data;
-                                    }
-                                    count++;
-                                }
-                            }
-                            throw new Exception("Bad lane");
-                        }
-                    }
-                    public int Count
-                    {
-                        get
-                        {
-                            int count = -1;
-                            foreach (Edge edge in edges)
-                            {
-                                if (edge.Start > count)
-                                {
-                                    count = edge.Start;
-                                }
-                            }
-                            return count + 1;
-                        }
-                    }
-
-                    public int LaneInfoCount(int lane)
-                    {
-                        int count = 0;
-                        foreach (Edge edge in edges)
-                        {
-                            if (edge.Start == lane)
-                            {
-                                count++;
-                            }
-                        }
-                        return count;
-                    }
-
-                    public override string ToString()
-                    {
-                        string s = nodeLane + "/" + Count + ": ";
-                        for (int i = 0; i < Count; i++)
-                        {
-                            if (i == nodeLane)
-                                s += "*";
-                            s += "{";
-                            for (int j = 0; j < LaneInfoCount(i); j++)
-                                s += " " + this[i, j];
-                            s += " }, ";
-                        }
-                        s += node;
-                        return s;
-                    }
-
-                    // Node information
-                    private int nodeLane = -1;
-                    private Node node = null;
-                    private Edge[] edges = null;
-                }
-
                 public override string ToString()
                 {
                     string s = nodeLane + "/" + Count + ": ";
@@ -2087,9 +2137,11 @@ namespace GitUI
                         continue;
                     }
 
+                    // NOTE: We could also compare with sourceGraph sourceGraph.AddedNodes[sourceGraph.processedNodes],
+                    // since it should always be the same value
                     if (currentRow.Node == null ||
                         currentRow.Node.Data == null ||
-                        (lane.Current.Data != null && sourceGraph.Sorter.Invoke(lane.Current.Data, currentRow.Node.Data) > 0))
+                        (lane.Current.Data != null && lane.Current.Index < currentRow.Node.Index))
                     {
                         currentRow.Node = lane.Current;
                         currentRow.NodeLane = curLane;
@@ -2109,6 +2161,7 @@ namespace GitUI
                     return false;
                 }
 
+                sourceGraph.ProcessNode(currentRow.Node);
                 #endregion
 
                 // Check to see if there are available lanes that could be used
@@ -2201,10 +2254,9 @@ namespace GitUI
 
                         if (isFirstMerge)
                         {
-                            isFirstMerge = false;
-
                             // Since we're merging this lane, the LaneNodes & JunctionNodes 
-                            // counts need to go to 0
+                            // counts need to go to 0 from 1
+                            isFirstMerge = false;
                             laneNodes[curLane].Clear();
                         }
 
@@ -2219,12 +2271,15 @@ namespace GitUI
                         }
                         if (laneIndex == laneNodes.Count)
                         {
-                            laneNodes.Add(new LaneJunctionDetail());
+                            // Allocate a spot for it that we can assign to
+                            // below
+                            laneNodes.Add(null);
                         }
-                        //Console.WriteLine("\tMerge {0} into lane {1}", parent, laneIndex);
-
-                        // Clear first so JunctionNodes count goes to 0
-                        laneNodes[laneIndex].Clear();
+                        else
+                        {
+                            // Clear first so JunctionNodes count goes to 0
+                            laneNodes[laneIndex].Clear();
+                        }
 
                         // Check each merged sibling to see if there were any nodes
                         // remaining. If so, we need to point it to the new row. If not
@@ -2286,7 +2341,8 @@ namespace GitUI
                             }
                             else
                             {
-                                // This happens if we have a head that is a merge
+                                // This happens if we have a head that is a merge.
+                                // No action necessary.
                             }
                         }
                     }
@@ -2328,13 +2384,16 @@ namespace GitUI
                 }
                 #endregion
 
-                // DEBUG: Spit out the information about the lane
-                //Console.WriteLine(laneRows.Count + " ~~ " + currentRow);
-                //Console.WriteLine("MoveNext {0} {1}", laneRows.Count, currentRow);
-
                 if (currentRow.Node != null)
                 {
                     Graph.LaneRow row = currentRow.Advance();
+
+                    // This means there is a node that got put in the graph twice...
+                    if (row.Node.InLane != int.MaxValue)
+                    {
+                        if (Debugger.IsAttached) Debugger.Break();
+                    }
+
                     row.Node.InLane = laneRows.Count;
                     laneRows.Add(row);
                     return true;
