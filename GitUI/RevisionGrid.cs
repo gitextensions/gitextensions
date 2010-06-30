@@ -379,7 +379,8 @@ namespace GitUI
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
-                if (!Settings.ShowRevisionGraph)
+                //Hide graph column when there it is disabled OR when a filter is active
+                if (!Settings.ShowRevisionGraph || !string.IsNullOrEmpty(Filter))
                 {
                     Revisions.Columns[0].Visible = false;
                 }
