@@ -39,7 +39,6 @@ namespace GitCommands
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
         private List<GitHead> heads;
         private GitCommands gitGetGraphCommand;
-        private uint revisionOrder = 0;
 
         private Thread backgroundThread = null;
         private List<GitRevision> revisions = new List<GitRevision>();
@@ -223,7 +222,6 @@ namespace GitCommands
                 {
                     if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                     {
-                        revision.Order = revisionOrder++;
                         revisions.Add(revision);
                         Updated(this, new RevisionGraphUpdatedEvent(revision));
                     }
