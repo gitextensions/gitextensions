@@ -25,6 +25,7 @@ namespace GitUI
         TranslationString modifiedButton = new TranslationString("Modified");
         TranslationString useCreatedOrDeletedFile = new TranslationString("Use created or deleted file?");
         TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
+        TranslationString stageFilename = new TranslationString("Stage {0}");
 
         public FormResolveConflicts()
         {
@@ -131,7 +132,7 @@ namespace GitUI
                     {
                         if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                            stageFile(filename);
                             Initialize();
                         }
                         return;
@@ -162,7 +163,7 @@ namespace GitUI
 
                 if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                    stageFile(filename);
                     Initialize();
 
                 }
@@ -206,7 +207,7 @@ namespace GitUI
                         GitCommands.GitCommands.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
                     else
                         if (!frm.Delete)
-                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                            stageFile(filename);
 
                 Initialize();
             }
@@ -388,7 +389,7 @@ namespace GitUI
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + GetFileName() + "\"");
+            stageFile(GetFileName());
             Initialize();
         }
 
@@ -398,6 +399,38 @@ namespace GitUI
                 ConflictedFilesContextMenu.Enabled = false;
             else
                 ConflictedFilesContextMenu.Enabled = true;
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            System.Diagnostics.Process.Start(Settings.WorkingDir + fileName);
+        }
+
+        private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            OpenWith.OpenAs(Settings.WorkingDir + fileName);
+        }
+
+        private void stageFile(string filename)
+        {
+            FormStatus.ProcessStart processStart = new FormStatus.ProcessStart
+                (
+                    delegate(FormStatus form)
+                    {
+                        form.AddOutput(string.Format(stageFilename.Text, filename));
+                        string output = GitCommands.GitCommands.RunCmd
+                            (
+                            Settings.GitCommand, "add -- \"" + filename + "\""
+                            );
+                        form.AddOutput(output);
+                        form.Done(string.IsNullOrEmpty(output));
+                    }
+                );
+            FormStatus process = new FormStatus(processStart, null);
+            process.Text = string.Format(stageFilename.Text, filename);
+            process.ShowDialogOnError();
         }
     }
 }
