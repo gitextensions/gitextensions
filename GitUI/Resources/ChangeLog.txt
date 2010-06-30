@@ -27,7 +27,7 @@ Version 1.95
 	Added option to create annotated tag	
 	Added splash screen
 	Added warning when about to push a branch that doesn't exist on a remote yet
-	There is a new revision graph
+	There is a new revision graph (thanks to Nick Mayer)
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
 	Settings dialog performance improved
