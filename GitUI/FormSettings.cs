@@ -115,7 +115,12 @@ namespace GitUI
                 Language.Text = Settings.Translation;
 
                 MulticolorBranches.Checked = Settings.MulticolorBranches;
+                MulticolorBranches_CheckedChanged(null, null);
 
+                BranchBorders.Checked = Settings.BranchBorders;
+                StripedBanchChange.Checked = Settings.StripedBanchChange;
+
+                _ColorGraphLabel.BackColor = Settings.GraphColor;
                 _ColorTagLabel.BackColor = Settings.TagColor;
                 _ColorTagLabel.Text = Settings.TagColor.Name;
                 _ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorTagLabel.BackColor);
@@ -341,7 +346,10 @@ namespace GitUI
                                     GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
 
-            Settings.MulticolorBranches = MulticolorBranches.Checked;		
+            Settings.MulticolorBranches = MulticolorBranches.Checked;
+            Settings.BranchBorders = BranchBorders.Checked;
+            Settings.StripedBanchChange = StripedBanchChange.Checked;
+            Settings.GraphColor = _ColorGraphLabel.BackColor;
             Settings.TagColor = _ColorTagLabel.BackColor;
             Settings.BranchColor = _ColorBranchLabel.BackColor;
             Settings.RemoteBranchColor = _ColorRemoteBranchLabel.BackColor;
@@ -1498,6 +1506,15 @@ namespace GitUI
             _ColorAddedLineDiffLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineDiffLabel.BackColor);
         }
 
+        private void _ColorGraphLabel_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = _ColorGraphLabel.BackColor;
+            colorDialog.ShowDialog();
+            _ColorGraphLabel.BackColor = colorDialog.Color;
+            _ColorGraphLabel.Text = colorDialog.Color.Name;
+            _ColorGraphLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorAddedLineDiffLabel.BackColor);
+        }
 
         private void label28_Click(object sender, EventArgs e)
         {
@@ -1665,5 +1682,20 @@ namespace GitUI
         {
             otherHomeDir.ReadOnly = !otherHome.Checked;
         }
+
+        private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MulticolorBranches.Checked)
+            {
+                _ColorGraphLabel.Visible = false;
+            }
+            else
+            {
+                _ColorGraphLabel.Visible = true;
+            }
+        }
+
+
+
     }
 }
