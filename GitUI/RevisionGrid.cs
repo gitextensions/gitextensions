@@ -575,16 +575,12 @@ namespace GitUI
 
                     e.Handled = true;
 
-                    e.PaintBackground(e.CellBounds, true);
-                    Brush foreBrush;
                     if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                    {
-                        foreBrush = new SolidBrush(e.CellStyle.SelectionForeColor);
-                    }
+                        e.Graphics.FillRectangle(new LinearGradientBrush(e.CellBounds, Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, Color.LightBlue, 90, false), e.CellBounds);
                     else
-                    {
-                        foreBrush = new SolidBrush(e.CellStyle.ForeColor);
-                    }
+                        e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+
+                    Brush foreBrush = new SolidBrush(e.CellStyle.ForeColor);
 
                     Font rowFont;
                     if (revision.Guid == currentCheckout)
