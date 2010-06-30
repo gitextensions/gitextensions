@@ -186,6 +186,20 @@ namespace GitCommands
             }
         }
 
+        private static Color graphColor = Color.Red;
+        public static Color GraphColor
+        {
+            get
+            {
+                return graphColor;
+            }
+            set
+            {
+                graphColor = value;
+            }
+        }
+
+
         private static Color branchColor = Color.DarkRed;
         public static Color BranchColor
         {
@@ -289,6 +303,33 @@ namespace GitCommands
                 multicolorBranches = value;
             }
         }
+
+        private static bool stripedBanchChange = true;
+        public static bool StripedBanchChange
+        {
+            get
+            {
+                return stripedBanchChange;
+            }
+            set
+            {
+                stripedBanchChange = value;
+            }
+        }
+
+        private static bool branchBorders = true;
+        public static bool BranchBorders
+        {
+            get
+            {
+                return branchBorders;
+            }
+            set
+            {
+                branchBorders = value;
+            }
+        }
+
 
         #endregion
         private static Encoding encoding = Encoding.UTF8;
@@ -708,7 +749,10 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("diffremovedextracolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffRemovedExtraColor));
                 Application.UserAppDataRegistry.SetValue("diffsectioncolor", System.Drawing.ColorTranslator.ToHtml(Settings.DiffSectionColor));
                 Application.UserAppDataRegistry.SetValue("multicolorbranches", Settings.MulticolorBranches);
+                Application.UserAppDataRegistry.SetValue("branchborders", Settings.BranchBorders);
+                Application.UserAppDataRegistry.SetValue("stripedbanchchange", Settings.StripedBanchChange);
                 Application.UserAppDataRegistry.SetValue("tagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.TagColor));
+                Application.UserAppDataRegistry.SetValue("graphcolor", System.Drawing.ColorTranslator.ToHtml(Settings.GraphColor));
                 Application.UserAppDataRegistry.SetValue("branchcolor", System.Drawing.ColorTranslator.ToHtml(Settings.BranchColor));
                 Application.UserAppDataRegistry.SetValue("remotebranchcolor", System.Drawing.ColorTranslator.ToHtml(Settings.RemoteBranchColor));
                 Application.UserAppDataRegistry.SetValue("othertagcolor", System.Drawing.ColorTranslator.ToHtml(Settings.OtherTagColor));
@@ -815,10 +859,14 @@ namespace GitCommands
                     if (Application.UserAppDataRegistry.GetValue("diffremovedextracolor") != null) Settings.DiffRemovedExtraColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffremovedextracolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("diffsectioncolor") != null) Settings.DiffSectionColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("diffsectioncolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("tagcolor") != null) Settings.TagColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("tagcolor").ToString());
+                    if (Application.UserAppDataRegistry.GetValue("graphcolor") != null) Settings.GraphColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("graphcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("branchcolor") != null) Settings.BranchColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("branchcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("remotebranchcolor") != null) Settings.RemoteBranchColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("remotebranchcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("othertagcolor") != null) Settings.OtherTagColor = System.Drawing.ColorTranslator.FromHtml(Application.UserAppDataRegistry.GetValue("othertagcolor").ToString());
                     if (Application.UserAppDataRegistry.GetValue("multicolorbranches") != null) Settings.MulticolorBranches = Application.UserAppDataRegistry.GetValue("multicolorbranches").ToString() == "True";
+                    if (Application.UserAppDataRegistry.GetValue("branchborders") != null) Settings.BranchBorders = Application.UserAppDataRegistry.GetValue("branchborders").ToString() == "True";
+                    if (Application.UserAppDataRegistry.GetValue("stripedbanchchange") != null) Settings.StripedBanchChange = Application.UserAppDataRegistry.GetValue("stripedbanchchange").ToString() == "True";
+                    
                 }
                 catch
                 {
