@@ -121,6 +121,8 @@ namespace GitUI
                 StripedBanchChange.Checked = Settings.StripedBanchChange;
 
                 _ColorGraphLabel.BackColor = Settings.GraphColor;
+                _ColorGraphLabel.Text = Settings.GraphColor.Name;
+                _ColorGraphLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorGraphLabel.BackColor);
                 _ColorTagLabel.BackColor = Settings.TagColor;
                 _ColorTagLabel.Text = Settings.TagColor.Name;
                 _ColorTagLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_ColorTagLabel.BackColor);
