@@ -240,7 +240,7 @@ namespace GitUI
                 Revisions.ClearSelection();
                 Revisions.Rows[index].Selected = true;
 
-                Revisions.CurrentCell = Revisions.Rows[index].Cells[0];
+                Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
             }
         }
 
@@ -360,11 +360,11 @@ namespace GitUI
                 //Hide graph column when there it is disabled OR when a filter is active
                 if (!Settings.ShowRevisionGraph || !string.IsNullOrEmpty(Filter))
                 {
-                    Revisions.Columns[0].Visible = false;
+                    Revisions.ShowHideRevisionGraph(false);
                 }
                 else
                 {
-                    Revisions.Columns[0].Visible = true;
+                    Revisions.ShowHideRevisionGraph(true);
                 }
 
                 Error.Visible = false;
@@ -553,16 +553,12 @@ namespace GitUI
 
                     e.Handled = true;
 
-                    e.PaintBackground(e.CellBounds, true);
-                    Brush foreBrush;
                     if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                    {
-                        foreBrush = new SolidBrush(e.CellStyle.SelectionForeColor);
-                    }
+                        e.Graphics.FillRectangle(new LinearGradientBrush(e.CellBounds, Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, Color.LightBlue, 90, false), e.CellBounds);
                     else
-                    {
-                        foreBrush = new SolidBrush(e.CellStyle.ForeColor);
-                    }
+                        e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+
+                    Brush foreBrush = new SolidBrush(e.CellStyle.ForeColor);
 
                     Font rowFont;
                     if (revision.Guid == currentCheckout)
@@ -732,7 +728,10 @@ namespace GitUI
         {
             Settings.ShowRevisionGraph = !showRevisionGraphToolStripMenuItem.Checked;
             showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
-            this.ForceRefreshRevisions();
+
+            Revisions.ShowHideRevisionGraph(Settings.ShowRevisionGraph);
+            //Not needed
+            //this.ForceRefreshRevisions();
         }
 
         private FormRevisionFilter RevisionFilter = null;

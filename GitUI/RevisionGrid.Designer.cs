@@ -118,7 +118,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.Revisions.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.Revisions.RowHeadersVisible = false;
-            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(157, 185, 235);
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;

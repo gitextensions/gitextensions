@@ -25,6 +25,7 @@ namespace GitUI
         TranslationString modifiedButton = new TranslationString("Modified");
         TranslationString useCreatedOrDeletedFile = new TranslationString("Use created or deleted file?");
         TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
+        TranslationString stageFilename = new TranslationString("Stage {0}");
 
         public FormResolveConflicts()
         {
@@ -119,8 +120,8 @@ namespace GitUI
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
-            string filename = GitCommands.GitCommands.GetConflictedFiles(GetFileName());
-
+            string filename = GetFileName();
+            string[] filenames = GitCommands.GitCommands.GetConflictedFiles(filename);
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
@@ -131,7 +132,7 @@ namespace GitUI
                     {
                         if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                            stageFile(filename);
                             Initialize();
                         }
                         return;
@@ -139,9 +140,9 @@ namespace GitUI
                 }
             }
 
-            bool file1 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".BASE");
-            bool file2 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".LOCAL");
-            bool file3 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".REMOTE");
+            bool file1 = File.Exists(filenames[0]);
+            bool file2 = File.Exists(filenames[1]);
+            bool file3 = File.Exists(filenames[2]);
 
             string arguments = mergetoolCmd;
 
@@ -153,18 +154,17 @@ namespace GitUI
                         return;
                 }
 
-                arguments = arguments.Replace("$BASE", filename + ".BASE");
-                arguments = arguments.Replace("$LOCAL", filename + ".LOCAL");
-                arguments = arguments.Replace("$REMOTE", filename + ".REMOTE");
+                arguments = arguments.Replace("$BASE", filenames[0]);
+                arguments = arguments.Replace("$LOCAL", filenames[1]);
+                arguments = arguments.Replace("$REMOTE", filenames[2]);
                 arguments = arguments.Replace("$MERGED", filename + "");
 
                 GitCommands.GitCommands.RunCmd(mergetoolPath, "" + arguments + "");
 
                 if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                    stageFile(filename);
                     Initialize();
-
                 }
             }
             else
@@ -182,9 +182,9 @@ namespace GitUI
                     }
                     else
                     {
-                        File.Delete(Settings.WorkingDir + filename + ".BASE");
-                        File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-                        File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+                        File.Delete(filenames[0]);
+                        File.Delete(filenames[1]);
+                        File.Delete(filenames[2]);
 
                         Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
                         GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
@@ -196,9 +196,9 @@ namespace GitUI
 
                 if (frm.Aborted)
                 {
-                    File.Delete(Settings.WorkingDir + filename + ".BASE");
-                    File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-                    File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+                    File.Delete(filenames[0]);
+                    File.Delete(filenames[1]);
+                    File.Delete(filenames[2]);
                     return;
                 }
                 else
@@ -206,14 +206,14 @@ namespace GitUI
                         GitCommands.GitCommands.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
                     else
                         if (!frm.Delete)
-                            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + filename + "\"");
+                            stageFile(filename);
 
                 Initialize();
             }
 
-            File.Delete(Settings.WorkingDir + filename + ".BASE");
-            File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-            File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+            File.Delete(filenames[0]);
+            File.Delete(filenames[1]);
+            File.Delete(filenames[2]);
         }
 
         private void InitMergetool()
@@ -388,7 +388,7 @@ namespace GitUI
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + GetFileName() + "\"");
+            stageFile(GetFileName());
             Initialize();
         }
 
@@ -398,6 +398,38 @@ namespace GitUI
                 ConflictedFilesContextMenu.Enabled = false;
             else
                 ConflictedFilesContextMenu.Enabled = true;
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            System.Diagnostics.Process.Start(Settings.WorkingDir + fileName);
+        }
+
+        private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            OpenWith.OpenAs(Settings.WorkingDir + fileName);
+        }
+
+        private void stageFile(string filename)
+        {
+            FormStatus.ProcessStart processStart = new FormStatus.ProcessStart
+                (
+                    delegate(FormStatus form)
+                    {
+                        form.AddOutput(string.Format(stageFilename.Text, filename));
+                        string output = GitCommands.GitCommands.RunCmd
+                            (
+                            Settings.GitCommand, "add -- \"" + filename + "\""
+                            );
+                        form.AddOutput(output);
+                        form.Done(string.IsNullOrEmpty(output));
+                    }
+                );
+            FormStatus process = new FormStatus(processStart, null);
+            process.Text = string.Format(stageFilename.Text, filename);
+            process.ShowDialogOnError();
         }
     }
 }

@@ -56,6 +56,11 @@ namespace GitUI
         public delegate void LoadingHandler(bool isLoading);
         public event LoadingHandler Loading;
 
+        public void ShowHideRevisionGraph(bool show)
+        {
+            Columns[0].Visible = show;
+        }
+
         public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
         {
             int lastItem = -1;
@@ -309,7 +314,11 @@ namespace GitUI
                 {
                     if (e.ColumnIndex == 0)
                     {
-                        e.PaintBackground(e.CellBounds, true);
+                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                            e.Graphics.FillRectangle(new LinearGradientBrush(e.CellBounds, RowTemplate.DefaultCellStyle.SelectionBackColor, Color.LightBlue, 90, false), e.CellBounds);
+                        else
+                            e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+
                         Rectangle srcRect = drawGraph(e.RowIndex);
                         e.Graphics.DrawImage
                             (
@@ -535,7 +544,10 @@ namespace GitUI
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
-                colors.Add(getJunctionColor(j));
+                if (GitCommands.Settings.MulticolorBranches)
+                    colors.Add(getJunctionColor(j));
+                else
+                    colors.Add(GitCommands.Settings.GraphColor);
             }
 
             if (colors.Count == 0)
@@ -806,7 +818,7 @@ namespace GitUI
 
                     // Create the brush for drawing the line
                     Brush brushLine;
-                    if (curColors.Count == 1 || !GitCommands.Settings.MulticolorBranches)
+                    if (curColors.Count == 1 || !GitCommands.Settings.StripedBanchChange)
                     {
                         brushLine = new SolidBrush(curColors[0]);
                     }
@@ -815,9 +827,7 @@ namespace GitUI
                         brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);
                     }
 
-                    // TODO: Drawing 3 times is probably too expensive, no matter how pretty
-                    // it looks. Make it optional?
-                    for (int i = 0; i < 3; i++)
+                    for (int i = GitCommands.Settings.BranchBorders ? 0 : 2; i < 3; i++)
                     {
                         Pen penLine;
                         if (i == 0)
