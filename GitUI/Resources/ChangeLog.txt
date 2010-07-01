@@ -13,6 +13,7 @@ Version 1.95
 	Fixed bug: If HOMEDRIVE is defined, launching Git Bash would result in a different home directory than GitExtensions
 	Fixed bug: Squares where shown instead of Russian chars
 	Fixed bug: Revision graph is drawn incorrect in some cases
+	Fixed bug: When merging files the autocrlf settings are obeyed
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations
@@ -27,6 +28,7 @@ Version 1.95
 	Added option to create annotated tag	
 	Added splash screen
 	Added warning when about to push a branch that doesn't exist on a remote yet
+	Added difftool option to FileHistory
 	There is a new revision graph (thanks to Nick Mayer)
 	Quicksearch now also searches in branches
 	All windows positions are now saved	
