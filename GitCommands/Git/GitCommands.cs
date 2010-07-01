@@ -418,7 +418,6 @@ namespace GitCommands
                 Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
-
                 process.StartInfo.UseShellExecute = true;
                 process.StartInfo.ErrorDialog = true;
                 process.StartInfo.RedirectStandardOutput = false;
@@ -431,7 +430,7 @@ namespace GitCommands
                 process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 process.StartInfo.LoadUserProfile = true;
 
                 process.Start();
@@ -2470,20 +2469,23 @@ namespace GitCommands
 
         public static string OpenWithDifftool(string filename)
         {
+            string output = "";
             if (GitCommands.VersionInUse.GuiDiffToolExist)
-                return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
+                RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
             else
-                return RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+                RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+            return output;
         }
 
         public static string OpenWithDifftool(string filename, string revision1, string revision2)
         {
+            string output = "";
             if (GitCommands.VersionInUse.GuiDiffToolExist)
-                return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
             else
-                return RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+            return output;
         }
-
 
         public static string MergeBranchCmd(string branch, bool allowFastForward)
         {
