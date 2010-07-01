@@ -536,9 +536,17 @@ namespace GitCommands
             return false;
         }
 
-        static public string GetConflictedFiles(string filename)
+        static public string[] GetConflictedFiles(string filename)
         {
             filename = FixPath(filename);
+
+            string[] fileNames = 
+            {
+                filename + ".BASE",
+                filename + ".LOCAL",
+                filename + ".REMOTE"
+            };
+
             string[] unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged \"" + filename + "\"").Split('\n');
 
             foreach (string file in unmerged)
@@ -546,24 +554,30 @@ namespace GitCommands
                 string[] fileline = file.Split(new char[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
-                if (fileline[2].Trim() == "1")
+
+                int stage;
+                Int32.TryParse(fileline[2].Trim(), out stage);
+
+                string tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + filename);
+                tempFile = tempFile.Split('\t')[0];
+                tempFile = Path.Combine(Settings.WorkingDir, tempFile);
+
+                string newFileName = Path.Combine(Settings.WorkingDir, fileNames[stage - 1]);
+                try
                 {
-                    string newFileName = filename + ".BASE";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
+                    fileNames[stage - 1] = newFileName;
+                    int index = 1;
+                    while (File.Exists(fileNames[stage - 1]) && index < 50)
+                    {
+                        fileNames[stage - 1] = newFileName + index.ToString();
+                        index++;
+                    }
+                    File.Move(tempFile, fileNames[stage - 1]);
                 }
-                if (fileline[2].Trim() == "2")
-                {
-                    string newFileName = filename + ".LOCAL";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
-                }
-                if (fileline[2].Trim() == "3")
-                {
-                    string newFileName = filename + ".REMOTE";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
-                }
+                catch { }
             }
 
-            return filename;
+            return fileNames;
         }
 
         static public string GetMergeMessage()
