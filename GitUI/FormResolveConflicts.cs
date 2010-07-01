@@ -120,8 +120,8 @@ namespace GitUI
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
-            string filename = GitCommands.GitCommands.GetConflictedFiles(GetFileName());
-
+            string filename = GetFileName();
+            string[] filenames = GitCommands.GitCommands.GetConflictedFiles(filename);
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
@@ -140,9 +140,9 @@ namespace GitUI
                 }
             }
 
-            bool file1 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".BASE");
-            bool file2 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".LOCAL");
-            bool file3 = File.Exists(GitCommands.Settings.WorkingDir + filename + ".REMOTE");
+            bool file1 = File.Exists(filenames[0]);
+            bool file2 = File.Exists(filenames[1]);
+            bool file3 = File.Exists(filenames[2]);
 
             string arguments = mergetoolCmd;
 
@@ -154,9 +154,9 @@ namespace GitUI
                         return;
                 }
 
-                arguments = arguments.Replace("$BASE", filename + ".BASE");
-                arguments = arguments.Replace("$LOCAL", filename + ".LOCAL");
-                arguments = arguments.Replace("$REMOTE", filename + ".REMOTE");
+                arguments = arguments.Replace("$BASE", filenames[0]);
+                arguments = arguments.Replace("$LOCAL", filenames[1]);
+                arguments = arguments.Replace("$REMOTE", filenames[2]);
                 arguments = arguments.Replace("$MERGED", filename + "");
 
                 GitCommands.GitCommands.RunCmd(mergetoolPath, "" + arguments + "");
@@ -165,7 +165,6 @@ namespace GitUI
                 {
                     stageFile(filename);
                     Initialize();
-
                 }
             }
             else
@@ -183,9 +182,9 @@ namespace GitUI
                     }
                     else
                     {
-                        File.Delete(Settings.WorkingDir + filename + ".BASE");
-                        File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-                        File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+                        File.Delete(filenames[0]);
+                        File.Delete(filenames[1]);
+                        File.Delete(filenames[2]);
 
                         Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
                         GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
@@ -197,9 +196,9 @@ namespace GitUI
 
                 if (frm.Aborted)
                 {
-                    File.Delete(Settings.WorkingDir + filename + ".BASE");
-                    File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-                    File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+                    File.Delete(filenames[0]);
+                    File.Delete(filenames[1]);
+                    File.Delete(filenames[2]);
                     return;
                 }
                 else
@@ -212,9 +211,9 @@ namespace GitUI
                 Initialize();
             }
 
-            File.Delete(Settings.WorkingDir + filename + ".BASE");
-            File.Delete(Settings.WorkingDir + filename + ".LOCAL");
-            File.Delete(Settings.WorkingDir + filename + ".REMOTE");
+            File.Delete(filenames[0]);
+            File.Delete(filenames[1]);
+            File.Delete(filenames[2]);
         }
 
         private void InitMergetool()
