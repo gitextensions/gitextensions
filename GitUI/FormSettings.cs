@@ -1690,10 +1690,12 @@ namespace GitUI
             if (MulticolorBranches.Checked)
             {
                 _ColorGraphLabel.Visible = false;
+                StripedBanchChange.Enabled = true;
             }
             else
             {
                 _ColorGraphLabel.Visible = true;
+                StripedBanchChange.Enabled = false;
             }
         }
 
