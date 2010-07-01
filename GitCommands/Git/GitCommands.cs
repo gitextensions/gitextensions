@@ -418,7 +418,6 @@ namespace GitCommands
                 Settings.GitLog.Log(cmd + " " + arguments);
                 //process used to execute external commands
 
-
                 process.StartInfo.UseShellExecute = true;
                 process.StartInfo.ErrorDialog = true;
                 process.StartInfo.RedirectStandardOutput = false;
@@ -431,7 +430,7 @@ namespace GitCommands
                 process.StartInfo.FileName = "\"" + cmd + "\"";
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 process.StartInfo.LoadUserProfile = true;
 
                 process.Start();
@@ -536,9 +535,17 @@ namespace GitCommands
             return false;
         }
 
-        static public string GetConflictedFiles(string filename)
+        static public string[] GetConflictedFiles(string filename)
         {
             filename = FixPath(filename);
+
+            string[] fileNames = 
+            {
+                filename + ".BASE",
+                filename + ".LOCAL",
+                filename + ".REMOTE"
+            };
+
             string[] unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged \"" + filename + "\"").Split('\n');
 
             foreach (string file in unmerged)
@@ -546,24 +553,30 @@ namespace GitCommands
                 string[] fileline = file.Split(new char[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
-                if (fileline[2].Trim() == "1")
+
+                int stage;
+                Int32.TryParse(fileline[2].Trim(), out stage);
+
+                string tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + filename);
+                tempFile = tempFile.Split('\t')[0];
+                tempFile = Path.Combine(Settings.WorkingDir, tempFile);
+
+                string newFileName = Path.Combine(Settings.WorkingDir, fileNames[stage - 1]);
+                try
                 {
-                    string newFileName = filename + ".BASE";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
+                    fileNames[stage - 1] = newFileName;
+                    int index = 1;
+                    while (File.Exists(fileNames[stage - 1]) && index < 50)
+                    {
+                        fileNames[stage - 1] = newFileName + index.ToString();
+                        index++;
+                    }
+                    File.Move(tempFile, fileNames[stage - 1]);
                 }
-                if (fileline[2].Trim() == "2")
-                {
-                    string newFileName = filename + ".LOCAL";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
-                }
-                if (fileline[2].Trim() == "3")
-                {
-                    string newFileName = filename + ".REMOTE";
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + newFileName + "\"");
-                }
+                catch { }
             }
 
-            return filename;
+            return fileNames;
         }
 
         static public string GetMergeMessage()
@@ -2456,20 +2469,23 @@ namespace GitCommands
 
         public static string OpenWithDifftool(string filename)
         {
+            string output = "";
             if (GitCommands.VersionInUse.GuiDiffToolExist)
-                return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
+                RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
             else
-                return RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+                RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+            return output;
         }
 
         public static string OpenWithDifftool(string filename, string revision1, string revision2)
         {
+            string output = "";
             if (GitCommands.VersionInUse.GuiDiffToolExist)
-                return RunCmd(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
             else
-                return RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+            return output;
         }
-
 
         public static string MergeBranchCmd(string branch, bool allowFastForward)
         {
