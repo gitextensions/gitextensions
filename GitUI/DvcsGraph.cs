@@ -78,16 +78,17 @@ namespace GitUI
             // This has to happen on the UI thread
             SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
             {
+                lock (backgroundThread)
+                {
+                    backgroundScrollTo = 0;
+                }
                 lock (graphData)
                 {
                     setRowCount(0);
                     junctionColors.Clear();
                     graphData.Clear();
+                    graphDataCount = 0;
                     RebuildGraph();
-                }
-                lock (backgroundThread)
-                {
-                    backgroundScrollTo = 0;
                 }
             });
 
