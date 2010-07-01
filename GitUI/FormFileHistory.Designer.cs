@@ -41,11 +41,9 @@
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
             this.commitInfo = new GitUI.CommitInfo();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
-            this.gitItemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.gitBlameBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventLog1 = new System.Diagnostics.EventLog();
+            this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -56,11 +54,8 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
+            this.DiffContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -83,6 +78,7 @@
             // 
             // FileChanges
             // 
+            this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
             this.FileChanges.currentCheckout = null;
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
@@ -136,7 +132,7 @@
             this.DiffTab.Location = new System.Drawing.Point(4, 22);
             this.DiffTab.Name = "DiffTab";
             this.DiffTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DiffTab.Size = new System.Drawing.Size(742, 304);
+            this.DiffTab.Size = new System.Drawing.Size(740, 303);
             this.DiffTab.TabIndex = 1;
             this.DiffTab.Text = "Diff";
             this.DiffTab.UseVisualStyleBackColor = true;
@@ -150,7 +146,7 @@
             this.Diff.NumberOfVisibleLines = 3;
             this.Diff.ScrollPos = 0;
             this.Diff.ShowEntireFile = false;
-            this.Diff.Size = new System.Drawing.Size(736, 298);
+            this.Diff.Size = new System.Drawing.Size(734, 297);
             this.Diff.TabIndex = 0;
             this.Diff.TreatAllFilesAsText = false;
             // 
@@ -159,7 +155,7 @@
             this.Blame.Controls.Add(this.splitContainer2);
             this.Blame.Location = new System.Drawing.Point(4, 22);
             this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(742, 304);
+            this.Blame.Size = new System.Drawing.Size(740, 303);
             this.Blame.TabIndex = 2;
             this.Blame.Text = "Blame";
             this.Blame.UseVisualStyleBackColor = true;
@@ -179,8 +175,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.commitInfo);
             this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
-            this.splitContainer2.Size = new System.Drawing.Size(742, 304);
-            this.splitContainer2.SplitterDistance = 247;
+            this.splitContainer2.Size = new System.Drawing.Size(740, 303);
+            this.splitContainer2.SplitterDistance = 246;
             this.splitContainer2.TabIndex = 0;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             // 
@@ -190,7 +186,7 @@
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(245, 302);
+            this.BlameCommitter.Size = new System.Drawing.Size(244, 301);
             this.BlameCommitter.TabIndex = 5;
             // 
             // commitInfo
@@ -208,30 +204,27 @@
             this.BlameFile.IsReadOnly = false;
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(489, 302);
+            this.BlameFile.Size = new System.Drawing.Size(488, 301);
             this.BlameFile.TabIndex = 4;
             this.BlameFile.Resize += new System.EventHandler(this.BlameFile_Resize);
-            // 
-            // gitItemBindingSource1
-            // 
-            this.gitItemBindingSource1.DataSource = typeof(GitCommands.GitItem);
-            // 
-            // gitBlameBindingSource
-            // 
-            this.gitBlameBindingSource.DataSource = typeof(GitCommands.GitBlame);
-            // 
-            // subItemsBindingSource
-            // 
-            this.subItemsBindingSource.DataMember = "SubItems";
-            this.subItemsBindingSource.DataSource = this.gitItemBindingSource1;
-            // 
-            // gitItemBindingSource
-            // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // eventLog1
             // 
             this.eventLog1.SynchronizingObject = this;
+            // 
+            // DiffContextMenu
+            // 
+            this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openWithDifftoolToolStripMenuItem});
+            this.DiffContextMenu.Name = "DiffContextMenu";
+            this.DiffContextMenu.Size = new System.Drawing.Size(172, 48);
+            // 
+            // openWithDifftoolToolStripMenuItem
+            // 
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -242,9 +235,9 @@
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistory_FormClosing);
             this.Load += new System.EventHandler(this.FormFileHistory_Load);
             this.Shown += new System.EventHandler(this.FormFileHistory_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistory_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -255,11 +248,8 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitBlameBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+            this.DiffContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -267,14 +257,10 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.BindingSource gitItemBindingSource;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
         private System.Windows.Forms.TabPage Blame;
-        private System.Windows.Forms.BindingSource gitItemBindingSource1;
-        private System.Windows.Forms.BindingSource subItemsBindingSource;
-        private System.Windows.Forms.BindingSource gitBlameBindingSource;
         private System.Diagnostics.EventLog eventLog1;
         private FileViewer View;
         private FileViewer Diff;
@@ -283,5 +269,7 @@
         private ICSharpCode.TextEditor.TextEditorControl BlameCommitter;
         private RevisionGrid FileChanges;
         private CommitInfo commitInfo;
+        private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
     }
 }

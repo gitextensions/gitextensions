@@ -2473,7 +2473,7 @@ namespace GitCommands
             if (GitCommands.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
             else
-                RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
+                output = RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
             return output;
         }
 
@@ -2483,7 +2483,7 @@ namespace GitCommands
             if (GitCommands.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
             else
-                RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                output = RunCmd(Settings.GitCommand, "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
             return output;
         }
 
