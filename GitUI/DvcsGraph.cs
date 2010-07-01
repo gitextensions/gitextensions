@@ -2039,13 +2039,22 @@ namespace GitUI
 
                 public void Replace(int aOld, int aNew)
                 {
-                    for (int j = 0; j < edges.CountNext(aOld); j++)
+                    for (int j = edges.CountNext(aOld) - 1; j >= 0; --j)
                     {
                         int start, end;
                         Graph.LaneInfo info = edges.RemoveNext(aOld, j, out start, out end);
                         info.ConnectLane = aNew;
                         edges.Add(start, info);
                     }
+                }
+
+                public void Swap(int aOld, int aNew)
+                {
+                    // TODO: There is a more efficient way to do this
+                    int temp = edges.CountNext();
+                    Replace(aOld, temp);
+                    Replace(aNew, aOld);
+                    Replace(temp, aNew);
                 }
 
                 public Graph.LaneRow Advance()
@@ -2364,30 +2373,64 @@ namespace GitUI
                 // check is easy) and remove unused lanes from the end of CurrentRow
                 // (needed so we know if we are leaving empty lanes the next time 
                 // we call MoveNext)
-                #region Trim empty lanes
+                #region Cull empty lanes
                 for (int curLane = 0; curLane < laneNodes.Count; curLane++)
                 {
                     if (!currentRow.IsActive(curLane))
                     {
                         if (laneNodes[curLane].Count == 0)
                         {
-                            // Clear the empty lane
+                            // Clear the empty lane, causing elements
+                            // to the right to be shifted left.
                             currentRow.Collapse(curLane);
                             laneNodes.RemoveAt(curLane);
                             curLane--;
                         }
                         else
                         {
-                            // Swap the lane with one that is in use
+                            // Remove the empty lane, and shift until we hit a 
+                            // non-empty lane
                             for (int j = curLane + 1; j < laneNodes.Count; j++)
                             {
                                 if (currentRow.IsActive(j))
                                 {
-                                    currentRow.Replace(j, curLane);
+                                    currentRow.Collapse(curLane);
+
                                     LaneJunctionDetail temp = laneNodes[curLane];
-                                    laneNodes[curLane] = laneNodes[j];
-                                    laneNodes[j] = temp;
+                                    laneNodes.RemoveAt(curLane);
+                                    laneNodes.Insert(j, temp);
+                                    curLane--;
                                     break;
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                // Look for lanes that cross and reorder to straighten them out if possible
+                #region Straighten out lanes
+                for (int lane = 0; lane < currentRow.Count; lane++)
+                {
+                    for (int item = 0; item < currentRow.LaneInfoCount(lane); item++)
+                    {
+                        Graph.LaneInfo laneInfo = currentRow[lane, item];
+                        if (laneInfo.ConnectLane > lane)
+                        {
+                            // Lane is moving to the right, check to see if it intersects
+                            // with any lanes moving to the left.
+                            for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
+                            {
+                                if (currentRow.LaneInfoCount(otherLane) == 1)
+                                {
+                                    Graph.LaneInfo otherLaneInfo = currentRow[otherLane, 0];
+                                    if (otherLaneInfo.ConnectLane < otherLane)
+                                    {
+                                        currentRow.Swap(otherLaneInfo.ConnectLane, otherLane);
+                                        LaneJunctionDetail temp = laneNodes[otherLane];
+                                        laneNodes[otherLane] = laneNodes[otherLaneInfo.ConnectLane];
+                                        laneNodes[otherLaneInfo.ConnectLane] = temp;
+                                    }
                                 }
                             }
                         }
