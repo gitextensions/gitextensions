@@ -293,5 +293,37 @@ namespace GitUI
         {
             commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
         }
+
+        private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<GitRevision> selectedRows = FileChanges.GetRevisions();
+            string rev1;
+            string rev2;
+            if (selectedRows.Count >= 2)
+            {
+                rev1 = selectedRows[0].Guid;
+                rev2 = selectedRows[1].Guid;
+            }
+            else if (selectedRows.Count == 1)
+            {
+                rev1 = selectedRows[0].Guid;
+                if (selectedRows[0].ParentGuids != null & selectedRows[0].ParentGuids.Length > 0)
+                {
+                    rev2 = selectedRows[0].ParentGuids[0];
+                }
+                else
+                {
+                    rev2 = rev1;
+                }
+            }
+            else
+            {
+                return;
+            }
+
+            string output = GitCommands.GitCommands.OpenWithDifftool(FileName, rev1, rev2);
+            if (!string.IsNullOrEmpty(output))
+                MessageBox.Show(output);
+        }
     }
 }
