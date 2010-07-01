@@ -1254,6 +1254,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een specifieke vertakking
         <TranslationItem Name="Blame" Property="Text">
           <Value>Beschuldig</Value>
         </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Openen met difftool</Value>
+        </TranslationItem>
         <TranslationItem Name="findAndReplaceForm" Property="Text">
           <Value>Zoeken en vervangen</Value>
         </TranslationItem>
@@ -2389,6 +2392,9 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Value>Er is geen mergetool geconfigureerd. Ga eerst naar settings en stel een mergetool in.</Value>
         </TranslationItem>
+        <TranslationItem Name="stageFilename" Property="Text">
+          <Value>Klaarzetten {0}</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Niet opgeloste samenvoeg conflicten</Value>
         </TranslationItem>
@@ -2436,6 +2442,12 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         </TranslationItem>
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Value>Markeer conflict als opgelost</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Openen met</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Openen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
