@@ -2037,6 +2037,21 @@ namespace GitUI
                     }
                 }
 
+                public void Expand(int col)
+                {
+                    int edgeCount = Math.Max(edges.CountCurrent(), edges.CountNext());
+                    for (int i = edgeCount - 1; i >= col; --i)
+                    {
+                        while (edges.CountNext(i) > 0)
+                        {
+                            int start, end;
+                            Graph.LaneInfo info = edges.RemoveNext(i, 0, out start, out end);
+                            info.ConnectLane++;
+                            edges.Add(start, info);
+                        }
+                    }
+                }
+
                 public void Replace(int aOld, int aNew)
                 {
                     for (int j = edges.CountNext(aOld) - 1; j >= 0; --j)
@@ -2408,34 +2423,68 @@ namespace GitUI
                 }
                 #endregion
 
-                // Look for lanes that cross and reorder to straighten them out if possible
+                // Look for lanes that cross and reorder to straighten them out if possible,
+                // and keep the lanes that merge next to each other.
                 #region Straighten out lanes
+                // Look for crossing lanes
                 for (int lane = 0; lane < currentRow.Count; lane++)
                 {
                     for (int item = 0; item < currentRow.LaneInfoCount(lane); item++)
                     {
                         Graph.LaneInfo laneInfo = currentRow[lane, item];
-                        if (laneInfo.ConnectLane > lane)
+                        if (laneInfo.ConnectLane <= lane)
                         {
-                            // Lane is moving to the right, check to see if it intersects
-                            // with any lanes moving to the left.
-                            for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
+                            continue;
+                        }
+                        // Lane is moving to the right, check to see if it intersects
+                        // with any lanes moving to the left.
+                        for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
+                        {
+                            if (currentRow.LaneInfoCount(otherLane) != 1)
                             {
-                                if (currentRow.LaneInfoCount(otherLane) == 1)
-                                {
-                                    Graph.LaneInfo otherLaneInfo = currentRow[otherLane, 0];
-                                    if (otherLaneInfo.ConnectLane < otherLane)
-                                    {
-                                        currentRow.Swap(otherLaneInfo.ConnectLane, otherLane);
-                                        LaneJunctionDetail temp = laneNodes[otherLane];
-                                        laneNodes[otherLane] = laneNodes[otherLaneInfo.ConnectLane];
-                                        laneNodes[otherLaneInfo.ConnectLane] = temp;
-                                    }
-                                }
+                                continue;
+                            }
+                            Graph.LaneInfo otherLaneInfo = currentRow[otherLane, 0];
+                            if (otherLaneInfo.ConnectLane < otherLane)
+                            {
+                                currentRow.Swap(otherLaneInfo.ConnectLane, otherLane);
+                                LaneJunctionDetail temp = laneNodes[otherLane];
+                                laneNodes[otherLane] = laneNodes[otherLaneInfo.ConnectLane];
+                                laneNodes[otherLaneInfo.ConnectLane] = temp;
                             }
                         }
                     }
                 }
+
+                // Keep the merge lanes next to each other
+                int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
+                if (mergeFromCount > 1)
+                {
+                    for (int i = 0; i < mergeFromCount; i++)
+                    {
+                        Graph.LaneInfo laneInfo = currentRow[currentRow.NodeLane, i];
+                        // Check to see if the lane is currently next to us
+                        if (laneInfo.ConnectLane - currentRow.NodeLane > mergeFromCount)
+                        {
+                            // Only move the lane if it isn't already being drawn.
+                            if (currentRow.LaneInfoCount(laneInfo.ConnectLane) == 0)
+                            {
+                                // Remove the row laneInfo.ConnectLane and insert
+                                // it at currentRow.NodeLane+1. 
+                                // Then start over searching for others if i != mergeFromCount-1?
+                                int adjacentLane = currentRow.NodeLane + 1;
+                                if (adjacentLane >= laneNodes.Count) Debugger.Break();
+                                currentRow.Expand(adjacentLane);
+                                currentRow.Replace(laneInfo.ConnectLane + 1, adjacentLane);
+
+                                LaneJunctionDetail temp = laneNodes[laneInfo.ConnectLane];
+                                laneNodes.RemoveAt(laneInfo.ConnectLane);
+                                laneNodes.Insert(adjacentLane, temp);
+                            }
+                        }
+                    }
+                }
+
                 #endregion
 
                 if (currentRow.Node != null)
