@@ -927,6 +927,11 @@ namespace GitUI
 
         private string TimeToString(DateTime time)
         {
+            if (time == DateTime.MinValue || time == DateTime.MaxValue)
+            {
+                return "";
+            }
+
             if (Settings.RelativeDate)
             {
                 TimeSpan span = DateTime.Now - time;
@@ -961,10 +966,10 @@ namespace GitUI
                 }
                 if (span.TotalDays < 365)
                 {
-                    return string.Format("{0} months ago", (int)(span.TotalDays / 30));
+                    return string.Format("{0} months ago", (int)Math.Round(span.TotalDays / 30, 0));
                 }
 
-                return string.Format("{0:#.#} years ago", span.TotalDays / 365);
+                return string.Format("{0:#.#} years ago", Math.Round(span.TotalDays / 365), 1);
             }
             else
             {

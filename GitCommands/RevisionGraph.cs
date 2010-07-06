@@ -33,6 +33,7 @@ namespace GitCommands
         }
 
         public bool BackgroundThread { get; set; }
+        public bool ShaOnly { get; set; }
 
         private readonly char[] splitChars = " \t\n".ToCharArray();
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
@@ -113,13 +114,17 @@ namespace GitCommands
             string formatString =
                 /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
                 /* Hash           */ "%H%n" +
-                /* Parents        */ "%P%n" +
-                /* Tree           */ "%T%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author Date    */ "%ai%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer Date */ "%ci%n" +
-                /* Commit Message */ "%s";
+                /* Parents        */ "%P%n";
+            if (!ShaOnly)
+            {
+                formatString +=
+                    /* Tree           */ "%T%n" +
+                    /* Author Name    */ "%aN%n" +
+                    /* Author Date    */ "%ai%n" +
+                    /* Committer Name */ "%cN%n" +
+                    /* Committer Date */ "%ci%n" +
+                    /* Commit Message */ "%s";
+            }
 
             if (Settings.OrderRevisionByDate)
             {
@@ -198,7 +203,11 @@ namespace GitCommands
                     break;
 
                 case ReadStep.AuthorDate:
-                    revision.AuthorDate = DateTime.Parse(line);
+                    {
+                        DateTime dateTime;
+                        DateTime.TryParse(line, out dateTime);
+                        revision.AuthorDate = dateTime;
+                    }
                     break;
 
                 case ReadStep.CommitterName:
@@ -206,7 +215,11 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitterDate:
-                    revision.CommitDate = DateTime.Parse(line);
+                    {
+                        DateTime dateTime;
+                        DateTime.TryParse(line, out dateTime);
+                        revision.CommitDate = dateTime;
+                    }
                     break;
 
                 case ReadStep.CommitMessage:
@@ -215,6 +228,10 @@ namespace GitCommands
             }
 
             nextStep++;
+            if (ShaOnly && nextStep == ReadStep.Tree)
+            {
+                nextStep = ReadStep.Done;
+            }
 
             if (nextStep == ReadStep.Done)
             {
