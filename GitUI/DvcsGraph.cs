@@ -651,7 +651,12 @@ namespace GitUI
                 #region Make sure the graph cache bitmap is setup
                 int height = cacheCountMax * rowHeight;
                 int width = dataGridColumnGraph.Width;
-                if (graphBitmap == null || graphBitmap.Width != width || graphBitmap.Height != height)
+                if (graphBitmap == null ||
+                    //Resize the bitmap when the with or height is changed. The height won't change very often.
+                    //The with changes more often, when branches become visible/invisible.
+                    //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
+                    //but only shrink the bitmap when multiple branches disappear (50px diference).
+                    graphBitmap.Width < width || graphBitmap.Width > width - 50 || graphBitmap.Height != height)
                 {
                     if (graphBitmap != null)
                     {
