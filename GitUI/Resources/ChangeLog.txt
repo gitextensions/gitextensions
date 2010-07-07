@@ -14,6 +14,7 @@ Version 1.95
 	Fixed bug: Squares where shown instead of Russian chars
 	Fixed bug: Revision graph is drawn incorrect in some cases
 	Fixed bug: When merging files the autocrlf settings are obeyed
+	Fixed bug: Run the GUI difftool locked the application until closing the tool
 	Added Japanese translation
 	Added Dutch translation
 	Added functionality for creating and editing translations

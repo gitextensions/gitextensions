@@ -767,7 +767,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(267, 13);
             this.label14.TabIndex = 6;
-            this.label14.Text = "Path to sh.exe (leave empty when sh.exe is in the path)";
+            this.label14.Text = "Path to git.exe (leave empty when git.exe is in the path)";
             // 
             // GitPath
             // 
