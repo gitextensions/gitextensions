@@ -56,8 +56,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this._Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -361,7 +361,18 @@
             this.CurrentBranchOnlyCheck.TabIndex = 33;
             this.CurrentBranchOnlyCheck.Text = "Show current branch only";
             this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
-            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
+            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.OnShowCurrentBranchOnlyCheckedChanged);
+            // 
+            // BranchFilterCheck
+            // 
+            this.BranchFilterCheck.AutoSize = true;
+            this.BranchFilterCheck.Location = new System.Drawing.Point(187, 203);
+            this.BranchFilterCheck.Name = "BranchFilterCheck";
+            this.BranchFilterCheck.Size = new System.Drawing.Size(15, 17);
+            this.BranchFilterCheck.TabIndex = 34;
+            this.BranchFilterCheck.Text = "checkBox1";
+            this.BranchFilterCheck.UseVisualStyleBackColor = true;
+            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
             // 
             // splitContainer1
             // 
@@ -381,17 +392,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(454, 281);
             this.splitContainer1.SplitterDistance = 248;
             this.splitContainer1.TabIndex = 21;
-            // 
-            // BranchFilterCheck
-            // 
-            this.BranchFilterCheck.AutoSize = true;
-            this.BranchFilterCheck.Location = new System.Drawing.Point(187, 203);
-            this.BranchFilterCheck.Name = "BranchFilterCheck";
-            this.BranchFilterCheck.Size = new System.Drawing.Size(15, 17);
-            this.BranchFilterCheck.TabIndex = 34;
-            this.BranchFilterCheck.Text = "checkBox1";
-            this.BranchFilterCheck.UseVisualStyleBackColor = true;
-            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
             // 
             // FormRevisionFilter
             // 
