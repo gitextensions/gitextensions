@@ -49,6 +49,9 @@ namespace GitUI
             Message.Enabled = MessageCheck.Checked;
             _Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
+            CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
+            BranchFilter.Enabled = BranchFilterCheck.Checked &&
+                                   !CurrentBranchOnlyCheck.Checked;
         }
 
         public string GetFilter()
