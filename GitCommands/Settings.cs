@@ -511,16 +511,16 @@ namespace GitCommands
         }
 
 
-        private static bool showAllBranches = true;
-        public static bool ShowAllBranches
+        private static bool showCurrentBranchOnly = false;
+        public static bool ShowCurrentBranchOnly
         {
             get
             {
-                return showAllBranches;
+                return showCurrentBranchOnly;
             }
             set
             {
-                showAllBranches = value;
+                showCurrentBranchOnly = value;
             }
         }
 
@@ -766,7 +766,7 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("maxcommits", Settings.MaxCommits);
                 Application.UserAppDataRegistry.SetValue("gitdir", Settings.GitCommand);
                 Application.UserAppDataRegistry.SetValue("gitbindir", Settings.GitBinDir);
-                Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowAllBranches);
+                Application.UserAppDataRegistry.SetValue("showallbranches", Settings.ShowCurrentBranchOnly);
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", Settings.CloseProcessDialog);
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", Settings.ShowRevisionGraph);
                 Application.UserAppDataRegistry.SetValue("showauthordate", Settings.ShowAuthorDate);
@@ -899,7 +899,7 @@ namespace GitCommands
                 if (Application.UserAppDataRegistry.GetValue("showrevisiongraph") != null) Settings.ShowRevisionGraph = Application.UserAppDataRegistry.GetValue("showrevisiongraph").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("showauthordate") != null) Settings.ShowAuthorDate = Application.UserAppDataRegistry.GetValue("showauthordate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("closeprocessdialog") != null) Settings.CloseProcessDialog = Application.UserAppDataRegistry.GetValue("closeprocessdialog").ToString() == "True";
-                if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowAllBranches = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "True";
+                if (Application.UserAppDataRegistry.GetValue("showallbranches") != null) Settings.ShowCurrentBranchOnly = Application.UserAppDataRegistry.GetValue("showallbranches").ToString() == "False";
                 if (Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate") != null) Settings.OrderRevisionByDate = Application.UserAppDataRegistry.GetValue("orderrevisiongraphbydate").ToString() == "True";
                 if (Application.UserAppDataRegistry.GetValue("gitdir") != null) Settings.GitCommand = Application.UserAppDataRegistry.GetValue("gitdir").ToString();
                 if (Application.UserAppDataRegistry.GetValue("gitbindir") != null) Settings.GitBinDir = Application.UserAppDataRegistry.GetValue("gitbindir").ToString();
