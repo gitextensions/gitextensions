@@ -77,6 +77,17 @@ namespace GitUI
             return filter;
         }
 
+        public string GetBranchFilter()
+        {
+            if (!BranchFilterCheck.Checked)
+                return String.Empty;
+
+            if (CurrentBranchOnlyCheck.Checked)
+                return GitCommands.GitCommands.GetSelectedBranch();
+
+            return BranchFilter.Text;
+        }
+
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
