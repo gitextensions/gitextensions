@@ -51,6 +51,7 @@ namespace GitUI
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
 
+            BranchFilter = String.Empty;
             SetShowBranches();
             filter = "";
             quickSearchString = "";
@@ -266,6 +267,12 @@ namespace GitUI
             }
         }
 
+        public string BranchFilter
+        {
+            get;
+            set;
+        }
+
         public string FormatQuickFilter(string filter)
         {
             if (string.IsNullOrEmpty(filter))
@@ -419,6 +426,7 @@ namespace GitUI
                 Loading.Visible = true;
                 indexWatcher.Reset();
                 revisionGraphCommand = new RevisionGraph();
+                revisionGraphCommand.BranchFilter = BranchFilter;
                 revisionGraphCommand.LogParam = LogParam + Filter;
                 revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
                 revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
@@ -700,6 +708,10 @@ namespace GitUI
         {
             Settings.ShowCurrentBranchOnly = !showCurrentBranchOnlyToolStripMenuItem.Checked;
 
+            BranchFilter = Settings.ShowCurrentBranchOnly
+                               ? String.Empty
+                               : RevisionFilter.GetBranchFilter();
+
             SetShowBranches();
             ForceRefreshRevisions();
         }
@@ -707,11 +719,11 @@ namespace GitUI
         private void SetShowBranches()
         {
             showCurrentBranchOnlyToolStripMenuItem.Checked = Settings.ShowCurrentBranchOnly;
-            if (Settings.ShowCurrentBranchOnly)
+            
+            if (Settings.ShowCurrentBranchOnly || BranchFilter.Length != 0)
                 LogParam = "HEAD";
             else
                 LogParam = "HEAD --all --boundary";
-
         }
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -742,6 +754,7 @@ namespace GitUI
 
             RevisionFilter.ShowDialog();
             filter = RevisionFilter.GetFilter();
+            BranchFilter = RevisionFilter.GetBranchFilter();
             SetShowBranches();
             ForceRefreshRevisions();
         }
