@@ -52,7 +52,7 @@
             this.cherryPickCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAllBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCurrentBranchOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -172,7 +172,7 @@
             this.cherryPickCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.ShowRemoteBranches,
-            this.showAllBranchesToolStripMenuItem,
+            this.showCurrentBranchOnlyToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
@@ -279,14 +279,14 @@
             this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranches_Click);
             // 
-            // showAllBranchesToolStripMenuItem
+            // showCurrentBranchOnlyToolStripMenuItem
             // 
-            this.showAllBranchesToolStripMenuItem.Checked = true;
-            this.showAllBranchesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
-            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
-            this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
+            this.showCurrentBranchOnlyToolStripMenuItem.Checked = false;
+            this.showCurrentBranchOnlyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.showCurrentBranchOnlyToolStripMenuItem.Name = "showCurrentBranchOnlyToolStripMenuItem";
+            this.showCurrentBranchOnlyToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.showCurrentBranchOnlyToolStripMenuItem.Text = "Show current branch only";
+            this.showCurrentBranchOnlyToolStripMenuItem.Click += new System.EventHandler(this.showCurrentBranchOnlyToolStripMenuItem_Click);
             // 
             // showRevisionGraphToolStripMenuItem
             // 
@@ -465,7 +465,7 @@
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
         private System.Windows.Forms.ToolStripMenuItem ShowRemoteBranches;
-        private System.Windows.Forms.ToolStripMenuItem showAllBranchesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showCurrentBranchOnlyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;

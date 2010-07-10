@@ -696,9 +696,9 @@ namespace GitUI
             Revisions.Invalidate();
         }
 
-        private void showAllBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showCurrentBranchOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.ShowAllBranches = !showAllBranchesToolStripMenuItem.Checked;
+            Settings.ShowCurrentBranchOnly = !showCurrentBranchOnlyToolStripMenuItem.Checked;
 
             SetShowBranches();
             ForceRefreshRevisions();
@@ -706,11 +706,11 @@ namespace GitUI
 
         private void SetShowBranches()
         {
-            showAllBranchesToolStripMenuItem.Checked = Settings.ShowAllBranches;
-            if (Settings.ShowAllBranches)
-                LogParam = "HEAD --all --boundary";
-            else
+            showCurrentBranchOnlyToolStripMenuItem.Checked = Settings.ShowCurrentBranchOnly;
+            if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
+            else
+                LogParam = "HEAD --all --boundary";
 
         }
 
