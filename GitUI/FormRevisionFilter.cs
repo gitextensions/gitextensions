@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -40,6 +41,12 @@ namespace GitUI
             EnableFilters();
         }
 
+        private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
+        {
+            Settings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
+            EnableFilters();
+        }
+
         private void EnableFilters()
         {
             Since.Enabled = SinceCheck.Checked;
@@ -49,6 +56,13 @@ namespace GitUI
             Message.Enabled = MessageCheck.Checked;
             _Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
+
+            if (Settings.ShowCurrentBranchOnly)
+            {
+                BranchFilterCheck.Checked = true; 
+            }
+
+            CurrentBranchOnlyCheck.Checked = Settings.ShowCurrentBranchOnly;
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
             BranchFilter.Enabled = BranchFilterCheck.Checked &&
                                    !CurrentBranchOnlyCheck.Checked;
@@ -79,11 +93,8 @@ namespace GitUI
 
         public string GetBranchFilter()
         {
-            if (!BranchFilterCheck.Checked)
+            if (!BranchFilterCheck.Checked || CurrentBranchOnlyCheck.Checked)
                 return String.Empty;
-
-            if (CurrentBranchOnlyCheck.Checked)
-                return GitCommands.GitCommands.GetSelectedBranch();
 
             return BranchFilter.Text;
         }

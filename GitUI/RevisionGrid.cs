@@ -742,6 +742,7 @@ namespace GitUI
 
             RevisionFilter.ShowDialog();
             filter = RevisionFilter.GetFilter();
+            SetShowBranches();
             ForceRefreshRevisions();
         }
 
