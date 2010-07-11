@@ -369,7 +369,7 @@
             this.BranchFilterCheck.TabIndex = 34;
             this.BranchFilterCheck.Text = "checkBox1";
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
-            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheck_CheckedChanged);
+            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
             // 
             // splitContainer1
             // 
