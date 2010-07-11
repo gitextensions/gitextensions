@@ -706,24 +706,65 @@ namespace GitUI
 
         private void showCurrentBranchOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.ShowCurrentBranchOnly = !showBranchesToolStripMenuItem.Checked;
+            if (showCurrentBranchOnlyToolStripMenuItem.Checked)
+            {
+                return;
+            }
 
-            BranchFilter = Settings.ShowCurrentBranchOnly
-                               ? String.Empty
-                               : RevisionFilter.GetBranchFilter();
+            Settings.BranchFilterEnabled = true;
+            Settings.ShowCurrentBranchOnly = true;
 
+            BranchFilter = String.Empty;
+            SetShowBranches();
+            ForceRefreshRevisions();
+        }
+
+        private void showAllBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showAllBranchesToolStripMenuItem.Checked)
+            {
+                return;
+            }
+            
+            Settings.BranchFilterEnabled = false;
+
+            BranchFilter = String.Empty;
+            SetShowBranches();
+            ForceRefreshRevisions();
+        }
+
+        private void showFilteredBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showFilteredBranchesToolStripMenuItem.Checked)
+            {
+                return;
+            }
+
+            Settings.BranchFilterEnabled = true;
+            Settings.ShowCurrentBranchOnly = false;
+
+            BranchFilter = RevisionFilter.GetBranchFilter();
             SetShowBranches();
             ForceRefreshRevisions();
         }
 
         private void SetShowBranches()
         {
-            showBranchesToolStripMenuItem.Checked = Settings.ShowCurrentBranchOnly;
-            
-            if (Settings.ShowCurrentBranchOnly || BranchFilter.Length != 0)
+
+            showAllBranchesToolStripMenuItem.Checked = !Settings.BranchFilterEnabled;
+            showCurrentBranchOnlyToolStripMenuItem.Checked = Settings.BranchFilterEnabled
+                                                             && Settings.ShowCurrentBranchOnly;
+            showFilteredBranchesToolStripMenuItem.Checked = Settings.BranchFilterEnabled
+                                                            && !Settings.ShowCurrentBranchOnly;
+
+            if (!Settings.BranchFilterEnabled)
+                LogParam = "HEAD --all --boundary";
+            else if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
             else
-                LogParam = "HEAD --all --boundary";
+                LogParam = BranchFilter.Length > 0 
+                    ? String.Empty 
+                    : "HEAD --all --boundary";
         }
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -987,6 +1028,5 @@ namespace GitUI
                 return time.ToShortDateString() + " " + time.ToLongTimeString();
             }
         }
-
     }
 }
