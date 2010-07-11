@@ -26,6 +26,12 @@ namespace GitUI
             EnableFilters();
         }
 
+        private void OnBranchFilterCheckedChanged(object sender, EventArgs e)
+        {
+            Settings.BranchFilterEnabled = BranchFilterCheck.Checked;
+            EnableFilters();
+        }
+
         private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
         {
             Settings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
@@ -42,12 +48,9 @@ namespace GitUI
             _Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
 
-            if (Settings.ShowCurrentBranchOnly)
-            {
-                BranchFilterCheck.Checked = true; 
-            }
-
+            BranchFilterCheck.Checked = Settings.BranchFilterEnabled;
             CurrentBranchOnlyCheck.Checked = Settings.ShowCurrentBranchOnly;
+
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
             BranchFilter.Enabled = BranchFilterCheck.Checked &&
                                    !CurrentBranchOnlyCheck.Checked;
