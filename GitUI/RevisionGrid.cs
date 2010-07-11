@@ -714,7 +714,6 @@ namespace GitUI
             Settings.BranchFilterEnabled = true;
             Settings.ShowCurrentBranchOnly = true;
 
-            BranchFilter = String.Empty;
             SetShowBranches();
             ForceRefreshRevisions();
         }
@@ -728,7 +727,6 @@ namespace GitUI
             
             Settings.BranchFilterEnabled = false;
 
-            BranchFilter = String.Empty;
             SetShowBranches();
             ForceRefreshRevisions();
         }
@@ -743,7 +741,6 @@ namespace GitUI
             Settings.BranchFilterEnabled = true;
             Settings.ShowCurrentBranchOnly = false;
 
-            BranchFilter = RevisionFilter.GetBranchFilter();
             SetShowBranches();
             ForceRefreshRevisions();
         }
@@ -756,6 +753,8 @@ namespace GitUI
                                                              && Settings.ShowCurrentBranchOnly;
             showFilteredBranchesToolStripMenuItem.Checked = Settings.BranchFilterEnabled
                                                             && !Settings.ShowCurrentBranchOnly;
+
+            BranchFilter = RevisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
                 LogParam = "HEAD --all --boundary";
