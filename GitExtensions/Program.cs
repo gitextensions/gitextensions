@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-
 using System.Windows.Forms;
 using GitUI;
 using System.IO;
 using GitCommands;
-using System.Globalization;
-using System.Threading;
 
 namespace GitExtensions
 {
@@ -79,199 +75,192 @@ namespace GitExtensions
             {
                 ////Application.Run();
                 GitUICommands.Instance.StartBrowseDialog();
-
+                return;
             }
-            else
-                if (args.Length > 1 && args[1] == "mergeconflicts")
-                {
-                    //Application.Run();
-                    GitUICommands.Instance.StartResolveConflictsDialog();
-                }
-                else
-                    if (args.Length > 1 && args[1] == "gitbash")
-                    {
-                        GitCommands.GitCommands.RunBash();
-                    }
-                    else
-                        if (args.Length > 1 && args[1] == "gitignore")
-                        {
-                            //Application.Run();
-                            GitUICommands.Instance.StartEditGitIgnoreDialog();
-                        }
-                        else
-                            if (args.Length > 1 && args[1] == "remotes")
-                            {
-                                //Application.Run();
-                                GitUICommands.Instance.StartRemotesDialog();
-                            }
-                            else
-                                if (args.Length > 1 && args[1] == "browse")
-                                {
+            // if we are here args.Length > 1
+            runCommand(args);
+
+            GitCommands.Settings.SaveSettings();
+        }
+
+        private static void runCommand(string[] args)
+        {
+            if (args[1] == "mergeconflicts")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartResolveConflictsDialog();
+                return;
+            }
+            if (args[1] == "gitbash")
+            {
+                GitCommands.GitCommands.RunBash();
+                return;
+            }
+            if (args[1] == "gitignore")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartEditGitIgnoreDialog();
+                return;
+            }
+            if (args[1] == "remotes")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartRemotesDialog();
+                return;
+            }
+            if (args[1] == "browse")
+            {
                                     string filter = "";
                                     if (args.Length > 2 && args[2].StartsWith("-filter="))
                                     {
                                         filter = args[2].Replace("-filter=", "");
                                     }
                                     GitUICommands.Instance.StartBrowseDialog(filter);
-                                }
-                                else
-                                    if (args.Length > 1 && (args[1] == "addfiles" || args[1] == "add"))
-                                    {
-                                        //Application.Run();
-                                        GitUICommands.Instance.StartAddFilesDialog();
+            }
+            if (args[1] == "addfiles" || args[1] == "add")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartAddFilesDialog();
+                return;
 
-                                    }
-                                    else
+            }
+            if (args[1] == "applypatch" || args[1] == "apply")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartApplyPatchDialog();
+                return;
+            }
+            if (args[1] == "branch")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCreateBranchDialog();
+                return;
+            }
+            if (args[1] == "checkoutbranch" || args[1] == "checkout")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCheckoutBranchDialog();
+                return;
+            }
+            if (args[1] == "checkoutrevision")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCheckoutRevisionDialog();
+                return;
+            }
+            if (args[1] == "init")
+            {
+                //Application.Run();
+                if (args.Length > 2)
+                    GitUICommands.Instance.StartInitializeDialog(args[2]);
+                else
+                    GitUICommands.Instance.StartInitializeDialog();
+                return;
+            }
+            if (args[1] == "clone")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCloneDialog();
+                return;
+            }
+            if (args[1] == "commit")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCommitDialog();
+                return;
+            }
+            if (args[1] == "filehistory")
+            {
+                if (args.Length > 2)
+                {
+                    //Remove working dir from filename. This is to prevent filenames that are too
+                    //long while there is room left when the workingdir was not in the path.
+                    string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
 
-                                        if (args.Length > 1 && (args[1] == "applypatch" || args[1] == "apply"))
-                                        {
-                                            //Application.Run();
-                                            GitUICommands.Instance.StartApplyPatchDialog();
+                    //Application.Run();
+                    GitUICommands.Instance.StartFileHistoryDialog(fileName);
 
-                                        }
-                                        else
+                }
+                else
+                    MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
+                return;
+            }
+            if (args[1] == "formatpatch")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartFormatPatchDialog();
+                return;
+            }
+            if (args[1] == "pull")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartPullDialog();
+                return;
+            }
+            if (args[1] == "push")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartPushDialog();
+                return;
+            }
+            if (args[1] == "settings")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartSettingsDialog();
+                return;
+            }
+            if (args[1] == "viewdiff")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCompareRevisionsDialog();
+                return;
+            }
+            if (args[1] == "rebase")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartRebaseDialog(null);
+                return;
+            }
 
-                                            if (args.Length > 1 && args[1] == "branch")
-                                            {
-                                                //Application.Run();
-                                                GitUICommands.Instance.StartCreateBranchDialog();
+            if (args[1] == "merge")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartMergeBranchDialog(null);
+                return;
+            }
 
-                                            }
-                                            else
+            if (args[1] == "cherry")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCherryPickDialog();
+                return;
+            }
 
-                                                if (args.Length > 1 && (args[1] == "checkoutbranch" || args[1] == "checkout"))
-                                                {
-                                                    //Application.Run();
-                                                    GitUICommands.Instance.StartCheckoutBranchDialog();
+            if (args[1] == "revert")
+            {
+                Application.Run(new FormRevert(args[2]));
+                return;
+            }
 
-                                                }
-                                                else
-                                                    if (args.Length > 1 && args[1] == "checkoutrevision")
-                                                    {
-                                                        //Application.Run();
-                                                        GitUICommands.Instance.StartCheckoutRevisionDialog();
+            if (args[1] == "tag")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartCreateTagDialog();
+                return;
+            }
+            if (args[1] == "about")
+            {
+                Application.Run(new AboutBox());
+                return;
+            }
+            if (args[1] == "stash")
+            {
+                //Application.Run();
+                GitUICommands.Instance.StartStashDialog();
+                return;
+            }
 
-                                                    }
-                                                    else
-                                                        if (args.Length > 1 && args[1] == "init")
-                                                        {
-                                                            //Application.Run();
-                                                            if (args.Length > 2)
-                                                                GitUICommands.Instance.StartInitializeDialog(args[2]);
-                                                            else
-                                                                GitUICommands.Instance.StartInitializeDialog();
-
-                                                        }
-                                                        else
-                                                            if (args.Length > 1 && args[1] == "clone")
-                                                            {
-                                                                //Application.Run();
-                                                                GitUICommands.Instance.StartCloneDialog();
-
-                                                            }
-                                                            else
-                                                                if (args.Length > 1 && args[1] == "commit")
-                                                                {
-                                                                    //Application.Run();
-                                                                    GitUICommands.Instance.StartCommitDialog();
-
-                                                                }
-                                                                else
-                                                                    if (args.Length > 1 && args[1] == "filehistory")
-                                                                    {
-                                                                        if (args.Length > 2)
-                                                                        {
-                                                                            //Remove working dir from filename. This is to prevent filenames that are too
-                                                                            //long while there is room left when the workingdir was not in the path.
-                                                                            string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
-
-                                                                            //Application.Run();
-                                                                            GitUICommands.Instance.StartFileHistoryDialog(fileName);
-
-                                                                        }
-                                                                        else
-                                                                            MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
-
-                                                                    }
-                                                                    else
-                                                                        if (args.Length > 1 && args[1] == "formatpatch")
-                                                                        {
-                                                                            //Application.Run();
-                                                                            GitUICommands.Instance.StartFormatPatchDialog();
-
-                                                                        }
-                                                                        else
-                                                                            if (args.Length > 1 && args[1] == "pull")
-                                                                            {
-                                                                                //Application.Run();
-                                                                                GitUICommands.Instance.StartPullDialog();
-                                                                            }
-                                                                            else
-                                                                                if (args.Length > 1 && args[1] == "push")
-                                                                                {
-                                                                                    //Application.Run();
-                                                                                    GitUICommands.Instance.StartPushDialog();
-                                                                                }
-                                                                                else
-                                                                                    if (args.Length > 1 && args[1] == "settings")
-                                                                                    {
-                                                                                        //Application.Run();
-                                                                                        GitUICommands.Instance.StartSettingsDialog();
-                                                                                    }
-                                                                                    else
-                                                                                        if (args.Length > 1 && args[1] == "viewdiff")
-                                                                                        {
-                                                                                            //Application.Run();
-                                                                                            GitUICommands.Instance.StartCompareRevisionsDialog();
-                                                                                        }
-                                                                                        else
-                                                                                            if (args.Length > 1 && args[1] == "rebase")
-                                                                                            {
-                                                                                                //Application.Run();
-                                                                                                GitUICommands.Instance.StartRebaseDialog(null);
-                                                                                            }
-                                                                                            else
-                                                                                                if (args.Length > 1 && args[1] == "merge")
-                                                                                                {
-                                                                                                    //Application.Run();
-                                                                                                    GitUICommands.Instance.StartMergeBranchDialog(null);
-                                                                                                }
-                                                                                                else
-                                                                                                    if (args.Length > 1 && args[1] == "cherry")
-                                                                                                    {
-                                                                                                        //Application.Run();
-                                                                                                        GitUICommands.Instance.StartCherryPickDialog();
-                                                                                                    }
-                                                                                                    else
-                                                                                                        if (args.Length > 1 && args[1] == "revert")
-                                                                                                        {
-                                                                                                            Application.Run(new FormRevert(args[2]));
-                                                                                                        }
-                                                                                                        else
-                                                                                                            if (args.Length > 1 && args[1] == "tag")
-                                                                                                            {
-                                                                                                                //Application.Run();
-                                                                                                                GitUICommands.Instance.StartCreateTagDialog();
-                                                                                                            }
-                                                                                                            else
-                                                                                                                if (args.Length > 1 && args[1] == "about")
-                                                                                                                {
-                                                                                                                    Application.Run(new AboutBox());
-                                                                                                                }
-                                                                                                                else
-                                                                                                                    if (args.Length > 1 && args[1] == "stash")
-                                                                                                                    {
-                                                                                                                        //Application.Run();
-                                                                                                                        GitUICommands.Instance.StartStashDialog();
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                        if (args.Length > 1)
-                                                                                                                        {
-                                                                                                                            Application.Run(new FormCommandlineHelp());
-                                                                                                                        }
-
-            GitCommands.Settings.SaveSettings();
+            Application.Run(new FormCommandlineHelp());
         }
-
     }
 }
