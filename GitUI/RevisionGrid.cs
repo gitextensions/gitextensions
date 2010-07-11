@@ -746,12 +746,9 @@ namespace GitUI
             //this.ForceRefreshRevisions();
         }
 
-        private FormRevisionFilter RevisionFilter = null;
+        private readonly FormRevisionFilter RevisionFilter = new FormRevisionFilter();
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionFilter == null)
-                RevisionFilter = new FormRevisionFilter();
-
             RevisionFilter.ShowDialog();
             filter = RevisionFilter.GetFilter();
             BranchFilter = RevisionFilter.GetBranchFilter();
