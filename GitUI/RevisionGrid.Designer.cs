@@ -290,18 +290,21 @@
             this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
             this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
+            this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.showAllBranchesToolStripMenuItem_Click);
             // 
             // showCurrentBranchOnlyToolStripMenuItem
             // 
             this.showCurrentBranchOnlyToolStripMenuItem.Name = "showCurrentBranchOnlyToolStripMenuItem";
             this.showCurrentBranchOnlyToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.showCurrentBranchOnlyToolStripMenuItem.Text = "Show current branch only";
+            this.showCurrentBranchOnlyToolStripMenuItem.Click += new System.EventHandler(this.showCurrentBranchOnlyToolStripMenuItem_Click);
             // 
             // showFilteredBranchesToolStripMenuItem
             // 
             this.showFilteredBranchesToolStripMenuItem.Name = "showFilteredBranchesToolStripMenuItem";
             this.showFilteredBranchesToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.showFilteredBranchesToolStripMenuItem.Text = "Show filtered branches";
+            this.showFilteredBranchesToolStripMenuItem.Click += new System.EventHandler(this.showFilteredBranchesToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
