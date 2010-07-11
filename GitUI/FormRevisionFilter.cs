@@ -81,7 +81,7 @@ namespace GitUI
 
         public string GetBranchFilter()
         {
-            if (!BranchFilterCheck.Checked || CurrentBranchOnlyCheck.Checked)
+            if (!Settings.BranchFilterEnabled || Settings.ShowCurrentBranchOnly)
                 return String.Empty;
 
             return BranchFilter.Text;
