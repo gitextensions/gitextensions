@@ -706,7 +706,7 @@ namespace GitUI
 
         private void showCurrentBranchOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.ShowCurrentBranchOnly = !showCurrentBranchOnlyToolStripMenuItem.Checked;
+            Settings.ShowCurrentBranchOnly = !showBranchesToolStripMenuItem.Checked;
 
             BranchFilter = Settings.ShowCurrentBranchOnly
                                ? String.Empty
@@ -718,7 +718,7 @@ namespace GitUI
 
         private void SetShowBranches()
         {
-            showCurrentBranchOnlyToolStripMenuItem.Checked = Settings.ShowCurrentBranchOnly;
+            showBranchesToolStripMenuItem.Checked = Settings.ShowCurrentBranchOnly;
             
             if (Settings.ShowCurrentBranchOnly || BranchFilter.Length != 0)
                 LogParam = "HEAD";
