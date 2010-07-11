@@ -15,12 +15,12 @@ namespace GitCommandsTests
     {
         private string GetTempFolder()
         {
-            return System.IO.Path.GetTempPath();
+            return Path.GetTempPath();
         }
 
         private string GetConfigFileName()
         {
-            return string.Concat(GetTempFolder() + @"\testconfigfile");
+            return Path.Combine(GetTempFolder(), "testconfigfile");
         }
 
         private string GetDefaultConfigFileContent()
