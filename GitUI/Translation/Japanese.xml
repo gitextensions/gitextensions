@@ -455,7 +455,7 @@
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Value>リモートブランチの表示</Value>
         </TranslationItem>
-        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Value>全てのブランチの表示</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
