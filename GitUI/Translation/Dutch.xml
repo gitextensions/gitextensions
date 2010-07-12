@@ -1299,7 +1299,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Value>Toon externe vertakkingen</Value>
         </TranslationItem>
-        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Value>Alle vertakkingen weergeven</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
