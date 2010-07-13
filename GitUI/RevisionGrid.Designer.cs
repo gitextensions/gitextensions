@@ -398,7 +398,7 @@
             // 
             this.GitIgnore.Location = new System.Drawing.Point(401, 9);
             this.GitIgnore.Name = "GitIgnore";
-            this.GitIgnore.Size = new System.Drawing.Size(86, 23);
+            this.GitIgnore.Size = new System.Drawing.Size(156, 23);
             this.GitIgnore.TabIndex = 3;
             this.GitIgnore.Text = "Edit .gitignore";
             this.GitIgnore.UseVisualStyleBackColor = true;
@@ -408,7 +408,7 @@
             // 
             this.Commit.Location = new System.Drawing.Point(401, 36);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(87, 23);
+            this.Commit.Size = new System.Drawing.Size(156, 23);
             this.Commit.TabIndex = 2;
             this.Commit.Text = "Commit";
             this.Commit.UseVisualStyleBackColor = true;
