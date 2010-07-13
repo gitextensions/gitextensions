@@ -416,7 +416,6 @@ namespace GitUI
                 {
                     Revisions.Visible = false;
 
-                    NoCommits.Visible = true;
                     NoGit.Visible = true;
                     Loading.Visible = false;
                     return;
@@ -451,6 +450,20 @@ namespace GitUI
         {
             Revisions.SetExpectedRowCount(revisionGraphCommand.Revisions.Count);
             update(null);
+
+            if (revisionGraphCommand.Revisions.Count == 0)
+            {
+                // This has to happen on the UI thread
+                SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+                {
+                    NoGit.Visible = false;
+                    NoCommits.Visible = true;
+                    Revisions.Visible = false;
+                });
+
+                syncContext.Send(method, this);
+            }
+
         }
 
         void update(GitRevision rev)
