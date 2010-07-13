@@ -169,8 +169,10 @@ namespace GitCommands
 
         private string unescapeString(string value)
         {
-            // The .gitconfig escapes some character sequences
-            return value.Replace("\\\"", "\"");
+            // The .gitconfig escapes some character sequences -> 
+            // \" = "
+            // \\ = \
+            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
         }
 
         private static string escapeString(string path)
@@ -180,7 +182,9 @@ namespace GitCommands
 
             path = path.Trim();
 
-            if (!path.StartsWith("\\\\"))
+            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
+                path = path.Replace("\\", "\\\\");
+            else //for directories -> git only supports forward slashes
                 path = path.Replace('\\', '/');
 
             return path.Replace("$QUOTE$", "\\\"");

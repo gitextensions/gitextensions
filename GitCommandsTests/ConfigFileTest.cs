@@ -270,6 +270,73 @@ namespace GitCommandsTests
             }
         }
 
+        [TestMethod]
+        public void UncPathTest1()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = //test/");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"//test/", configFile.GetValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("path.unc", @"//test/test2/");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"//test/test2/", configFile.GetValue("path.unc"));
+            }
+        }
+
+        [TestMethod]
+        public void UncPathTest2()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"\\test\", configFile.GetValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("path.unc", @"\\test\test2\");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"\\test\test2\", configFile.GetValue("path.unc"));
+            }
+        }
+
+
         /// <summary>
         /// Always delete the test config file after each test
         /// </summary>
