@@ -56,6 +56,13 @@ namespace GitUI
             filter = "";
             quickSearchString = "";
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
+
+            Revisions.Loading += new DvcsGraph.LoadingHandler(Revisions_Loading);
+        }
+
+        void Revisions_Loading(bool isLoading)
+        {
+            Loading.Visible = isLoading;
         }
 
         Label quickSearchLabel;
@@ -374,21 +381,7 @@ namespace GitUI
                     Revisions.ShowHideRevisionGraph(true);
                 }
 
-                Error.Visible = false;
-                NoCommits.Visible = false;
-                NoGit.Visible = false;
-                Revisions.Visible = true;
-
-                if (!GitCommands.Settings.ValidWorkingDir())
-                {
-                    Revisions.Visible = false;
-
-                    NoCommits.Visible = true;
-                    NoGit.Visible = true;
-                    Loading.Visible = false;
-                    return;
-                }
-
+                
                 if (revisionGraphCommand != null)
                 {
                     revisionGraphCommand.Kill();
@@ -409,6 +402,7 @@ namespace GitUI
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
                 Revisions.Visible = true;
+                Loading.Visible = true;
 
                 Revisions.Clear();
 
@@ -416,6 +410,7 @@ namespace GitUI
                 {
                     Revisions.Visible = false;
 
+                    NoCommits.Visible = false;
                     NoGit.Visible = true;
                     Loading.Visible = false;
                     return;
@@ -459,6 +454,17 @@ namespace GitUI
                     NoGit.Visible = false;
                     NoCommits.Visible = true;
                     Revisions.Visible = false;
+                    Loading.Visible = false;
+                });
+
+                syncContext.Send(method, this);
+            }
+            else
+            {
+                // This has to happen on the UI thread
+                SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+                {
+                    Loading.Visible = false;
                 });
 
                 syncContext.Send(method, this);
@@ -536,7 +542,6 @@ namespace GitUI
                 LastScrollPos = -1;
             }
 
-            Loading.Visible = false;
             Revisions.Enabled = true;
             Revisions.Focus();
             Revisions.SelectionChanged += new EventHandler(Revisions_SelectionChanged);
