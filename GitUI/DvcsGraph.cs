@@ -422,7 +422,7 @@ namespace GitUI
             lock (backgroundThread)
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-                visibleBottom = visibleTop + DisplayedRowCount(true);
+                visibleBottom = visibleTop + (Height / rowHeight);// DisplayedRowCount(true);
 
                 if (visibleBottom > graphData.Count)
                 {
@@ -439,29 +439,40 @@ namespace GitUI
 
                 syncContext.Post(new SendOrPostCallback(delegate(object o)
                     {
-                        if (visibleBottom > graphDataCount)
+                        if (visibleBottom >= graphData.Count)
                         {
-                            if (!isLoading)
+                            //Currently we are doing some important work; we are recieving
+                            //rows that the user is viewing
+                            SetBackgroundThreadToNormalPriority();
+                            if (Loading != null)
                             {
-                                isLoading = true;
-                                backgroundThread.Priority = ThreadPriority.Normal;
-                                if (Loading != null)
-                                {
-                                    Loading(true);
-                                }
+                                Loading(true);
                             }
                         }
-                        else if (isLoading)
+                        else
                         {
-                            isLoading = false;
-                            backgroundThread.Priority = ThreadPriority.BelowNormal;
+                            //All rows that the user is viewing are loaded. We now can hide the loading
+                            //animation that is shown. (the event Loading(bool) triggers this!)
+                            //Since the graph is not drawn for the visible graph yet, keep the
+                            //priority on Normal. Lower it when the graph is visible.                            
                             if (Loading != null)
                             {
                                 Loading(false);
                             }
                         }
+                            
                     }), null);
             }
+        }
+
+        private void SetBackgroundThreadToNormalPriority()
+        {
+            backgroundThread.Priority = ThreadPriority.Normal;
+        }
+
+        private void SetBackgroundThreadToLowPriority()
+        {
+            backgroundThread.Priority = ThreadPriority.BelowNormal;
         }
 
         private void updateRow(int row)
@@ -488,26 +499,16 @@ namespace GitUI
                     }
                 }
 
-                if (visibleBottom > graphDataCount)
+
+                if (visibleBottom < graphDataCount)
                 {
-                    if (!isLoading)
-                    {
-                        isLoading = true;
-                        backgroundThread.Priority = ThreadPriority.Normal;
-                        if (Loading != null)
-                        {
-                            Loading(true);
-                        }
-                    }
+                    //All data for the current view is loaded! Lower the thread priority.
+                    SetBackgroundThreadToLowPriority();
                 }
-                else if (isLoading)
+                else
                 {
-                    isLoading = false;
-                    backgroundThread.Priority = ThreadPriority.BelowNormal;
-                    if (Loading != null)
-                    {
-                        Loading(false);
-                    }
+                    //We need to draw the graph for the visible part of the grid. Higher the priority.
+                    SetBackgroundThreadToNormalPriority();
                 }
 
                 InvalidateRow(row);
