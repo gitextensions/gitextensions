@@ -336,6 +336,38 @@ namespace GitCommandsTests
             }
         }
 
+        [TestMethod]
+        public void SpacesInSubSectionTest()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[section \"sub section\"]");
+                content.AppendLine("	test = test");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"test", configFile.GetValue("section.sub section.test"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("section.sub section.test", @"test2");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"test2", configFile.GetValue("section.sub section.test"));
+            }
+        }
 
         /// <summary>
         /// Always delete the test config file after each test
