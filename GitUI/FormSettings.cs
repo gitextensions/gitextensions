@@ -437,7 +437,10 @@ namespace GitUI
 
                 globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
                 globalConfig.Save();
-                localConfig.Save();
+                
+                //Only save local settings when we are inside a valid working dir
+                if (Settings.ValidWorkingDir())
+                    localConfig.Save();
             }
 
             if (OpenSSH.Checked)
