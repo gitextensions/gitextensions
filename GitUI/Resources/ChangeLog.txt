@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Version 1.96
+	Fixed issue 95: The colored application icons are broken.
+	Fixed issue 96: System.Exception: Invalid section name: submodule
+	Fixed issue 100: Adding a remote and providing a private key file will cause the .git/config file to be corrupted.
+	Fixed issue 101: Searching for an Author name in Filter field makes Git Extensions crash
+	Fixed issue 103: Added check when initializing repository on a file
+	Fixed bug: Progress dialog could cause application to crash
+	Added branch filter to advanced filter dialog
+	Tweaked the graph to try to keep lanes that get merged together close to each other so there aren't as many lane crossings
+	
 Version 1.95
 	Fixed bug: difftool only worked in git > 1.7.0
 	Fixed bug: dashboard caused application to crash
