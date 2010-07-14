@@ -439,7 +439,7 @@ namespace GitUI
 
                 syncContext.Post(new SendOrPostCallback(delegate(object o)
                     {
-                        if (visibleBottom >= graphData.Count)
+                        if (visibleBottom > graphData.Count)
                         {
                             //Currently we are doing some important work; we are recieving
                             //rows that the user is viewing
@@ -1149,7 +1149,8 @@ namespace GitUI
                     {
                         // TODO: We might be able to recover from this with some work, but
                         // since we build the graph async it might be tough to figure out.
-                        throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        //throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        continue;
                     }
 
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
