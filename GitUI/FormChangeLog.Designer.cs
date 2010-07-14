@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChangeLog));
             this.ChangeLog = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
@@ -37,22 +36,21 @@
             this.ChangeLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChangeLog.Location = new System.Drawing.Point(0, 0);
             this.ChangeLog.Name = "ChangeLog";
-            this.ChangeLog.Size = new System.Drawing.Size(609, 411);
+            this.ChangeLog.Size = new System.Drawing.Size(849, 411);
             this.ChangeLog.TabIndex = 0;
             this.ChangeLog.Text = "";
             // 
-            // FormChangeLog1
+            // FormChangeLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 411);
+            this.ClientSize = new System.Drawing.Size(849, 411);
             this.Controls.Add(this.ChangeLog);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
-            this.Name = "FormChangeLog1";
+            this.Name = "FormChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change log";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChangeLog1_FormClosing);
             this.Load += new System.EventHandler(this.FormChangeLog1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChangeLog1_FormClosing);
             this.ResumeLayout(false);
 
         }
