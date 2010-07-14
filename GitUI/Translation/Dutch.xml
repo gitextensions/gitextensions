@@ -817,6 +817,13 @@ _ReSharper*/
         <TranslationItem Name="Init" Property="Text">
           <Value>Initialiseren</Value>
         </TranslationItem>
+        <TranslationItem Name="chooseDirectory" Property="Text">
+          <Value>Kies een directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseDirectoryNotFile" Property="Text">
+          <Value>Het is niet mogelijk een repository aan te maken op een bestand.
+Kies een directorie</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FileViewer">
@@ -1299,8 +1306,8 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Value>Toon externe vertakkingen</Value>
         </TranslationItem>
-        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
-          <Value>Alle vertakkingen weergeven</Value>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>Toon vertakkingen</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
           <Value>Commit ongedaan maken</Value>
@@ -1344,6 +1351,15 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
           <Value>Rebase op</Value>
         </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>Alle vertakkingen weergeven</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>Toon alleen de huidige vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>Toon alleen gefilterde vertakkingen</Value>
+        </TranslationItem>
         <TranslationItem Name="authorDate" Property="Text">
           <Value>Auteur datum</Value>
         </TranslationItem>
@@ -1355,6 +1371,9 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="authorCaption" Property="Text">
           <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="RevisionFilter" Property="Text">
+          <Value>Filter</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1867,6 +1886,15 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         <TranslationItem Name="label8" Property="Text">
           <Value>Bestands filter</Value>
         </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>Vertakkingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
+          <Value>Toon alleen de huidige vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchFilterCheck" Property="Text">
+          <Value>checkbox1</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormMailMap">
@@ -1918,16 +1946,6 @@ Door het het verwijderen van deze vertakking kunnen commits verloren gaan!</Valu
         </TranslationItem>
         <TranslationItem Name="branchDeleted" Property="Text">
           <Value>Commando uitgevoerd</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormSplash">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value> </Value>
-        </TranslationItem>
-        <TranslationItem Name="version" Property="Text">
-          <Value>Versie {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
