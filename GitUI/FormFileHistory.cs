@@ -17,25 +17,13 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
 
-
             if (string.IsNullOrEmpty(fileName))
                 return;
 
-            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                fileName = fileName.Substring(Settings.WorkingDir.Length);
-
-
-            this.FileName = fileName;
-
-
-            commitInfo.Visible = false;
+            LoadFileHistory(fileName);
 
             Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
-            
-            if (GitCommands.Settings.FollowRenamesInFileHistory)
-                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
-            else
-                FileChanges.Filter = " -- \"" + fileName + "\"";
+
             FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
@@ -60,7 +48,28 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(BlameFile_MouseLeave);
             BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
 
+        }
+
+        private void LoadFileHistory(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Settings.WorkingDir.Length);
+
+            this.FileName = fileName;
+
+
+            commitInfo.Visible = false;
+
+            if (GitCommands.Settings.FollowRenamesInFileHistory)
+                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
+            else
+                FileChanges.Filter = " -- \"" + fileName + "\"";
+
             commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
+
         }
 
         void TextArea_MouseEnter(object sender, EventArgs e)
