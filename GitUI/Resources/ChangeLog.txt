@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 1.97
+	Fixed bug: Empty local config file is saved to c:\ when not in a repository
+
 Version 1.96
 	Fixed issue 95: The colored application icons are broken.
 	Fixed issue 96: System.Exception: Invalid section name: submodule
