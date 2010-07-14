@@ -11,15 +11,19 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
+        protected readonly SynchronizationContext syncContext;
+
         public FormStatus()
         {
+            syncContext = SynchronizationContext.Current;
+
             InitializeComponent(); Translate();
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
         }
 
         public FormStatus(ProcessStart process, ProcessAbort abort)
             : this()
-        {            
+        {
             ProcessCallback = process;
             AbortCallback = abort;
         }
@@ -37,21 +41,20 @@ namespace GitUI
 
         public void SetProgress(string text)
         {
-            if (InvokeRequired)
+            // This has to happen on the UI thread
+            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
             {
-                Invoke(new MethodInvoker(delegate() { SetProgress(text); }));
-                return;
-            }
-
-            int index = text.IndexOf('%');
-            int progressValue;
-            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
-            {
-                if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                    ProgressBar.Style = ProgressBarStyle.Blocks;
-                ProgressBar.Value = Math.Min(100, progressValue);
-            }
-            this.Text = text;
+                int index = text.IndexOf('%');
+                int progressValue;
+                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
+                {
+                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                        ProgressBar.Style = ProgressBarStyle.Blocks;
+                    ProgressBar.Value = Math.Min(100, progressValue);
+                }
+                this.Text = text;
+            });
+            syncContext.Send(method, this);
         }
 
         public void AddOutput(string text)
