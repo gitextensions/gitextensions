@@ -322,6 +322,20 @@ namespace GitUI
             Revisions.Select();
         }
 
+        /// <summary>
+        /// Select the top revision.
+        /// </summary>
+        public void SelectTopRevision()
+        {
+            if(Revisions.Rows.Count == 0)
+                return;
+
+            Revisions.ClearSelection();
+            Revisions.Rows[0].Selected = true;
+
+            Revisions.Select();
+        }
+
         void Revisions_SelectionChanged(object sender, EventArgs e)
         {
             if (Revisions.SelectedRows.Count > 0)
@@ -449,27 +463,24 @@ namespace GitUI
             if (revisionGraphCommand.Revisions.Count == 0)
             {
                 // This has to happen on the UI thread
-                SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
-                {
-                    NoGit.Visible = false;
-                    NoCommits.Visible = true;
-                    Revisions.Visible = false;
-                    Loading.Visible = false;
-                });
-
-                syncContext.Send(method, this);
+                syncContext.Send(o =>
+                                     {
+                                         NoGit.Visible = false;
+                                         NoCommits.Visible = true;
+                                         Revisions.Visible = false;
+                                         Loading.Visible = false;
+                                     }, this);
             }
             else
             {
                 // This has to happen on the UI thread
-                SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
-                {
-                    Loading.Visible = false;
-                });
-
-                syncContext.Send(method, this);
+                syncContext.Send(o =>
+                                     {
+                                         Loading.Visible = false;
+                                         if (Revisions.SelectedRows.Count == 0)
+                                             SelectTopRevision();
+                                     }, this);
             }
-
         }
 
         void update(GitRevision rev)
