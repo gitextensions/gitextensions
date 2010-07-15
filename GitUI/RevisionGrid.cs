@@ -621,15 +621,25 @@ namespace GitUI
                     if (column == 1)
                     {
                         float offset = 0;
-                        foreach (GitHead h in revision.Heads)
+                        List<GitHead> heads = revision.Heads;
+                        if (heads.Count > 0)
                         {
-                            if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
+                            heads.Sort(new Comparison<GitHead>(delegate(GitHead aLeft, GitHead aRight)
+                                {
+                                    if (aLeft.IsTag && !aRight.IsTag) return -1;
+                                    if (aLeft.IsRemote && !aRight.IsRemote) return 1;
+                                    return aLeft.Name.CompareTo(aRight.Name);
+                                }));
+                            foreach (GitHead h in heads)
                             {
-                                SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
+                                if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
+                                {
+                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
 
-                                e.Graphics.DrawString("[" + h.Name + "] ", RefsFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                    e.Graphics.DrawString("[" + h.Name + "] ", RefsFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", RefsFont).Width;
+                                    offset += e.Graphics.MeasureString("[" + h.Name + "] ", RefsFont).Width;
+                                }
                             }
                         }
                         string text = revision.Message;
