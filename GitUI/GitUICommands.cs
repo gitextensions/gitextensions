@@ -145,19 +145,24 @@ namespace GitUI
             return true;
         }
 
-        public bool StartBrowseDialog()
+        public bool StartBrowseDialog(string filter)
         {
             if (!InvokeEvent(PreBrowse))
                 return false;
 
-            FormBrowse form = new FormBrowse();
+            FormBrowse form = new FormBrowse(filter);
             form.ShowDialog();
 
             InvokeEvent(PostBrowse);
 
             return true;
         }
-        
+
+        public bool StartBrowseDialog()
+        {
+            return StartBrowseDialog("");
+        }
+
         public bool StartDeleteBranchDialog(string branch)
         {
             if (!InvokeEvent(PreDeleteBranch))
