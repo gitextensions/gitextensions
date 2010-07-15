@@ -27,11 +27,12 @@ namespace GitUI
         TranslationString menuFileHistory = new TranslationString("File history");
 
 
-        public FormBrowse()
-        {
+        public FormBrowse(string filter)
+        {            
             InitializeComponent(); Translate();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            SetFilter(filter);
         }
 
         Dashboard dashboard = null;
@@ -838,11 +839,21 @@ namespace GitUI
 
         private void toolStripLabel2_Click(object sender, EventArgs e)
         {
-            if (RevisionGrid.Filter != RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text))
-            {
-                RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
-                RevisionGrid.ForceRefreshRevisions();
-            }
+            ApplyFilter();
+        }
+
+        private void SetFilter(string filter)
+        {
+            if (string.IsNullOrEmpty(filter)) return;
+            toolStripTextBoxFilter.Text = filter;
+            ApplyFilter();
+        }
+
+        private void ApplyFilter()
+        {
+            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text)) return;
+            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
+            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void toolStripTextBoxFilter_Leave(object sender, EventArgs e)
