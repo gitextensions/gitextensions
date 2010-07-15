@@ -486,7 +486,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            if (Revisions.SelectedRows.Count != 0) return;
+            if (Revisions.SelectedRows.Count != 0 || _initialSelectedRevision == null) return;
             for (int i = 0; i < revisionGraphCommand.Revisions.Count; i++)
             {
                 if(revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
