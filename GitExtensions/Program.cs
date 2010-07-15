@@ -36,12 +36,12 @@ namespace GitExtensions
 
                 try
                 {
-                    if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                         Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
+                    if (Application.UserAppDataRegistry == null ||
+                        Application.UserAppDataRegistry.GetValue("checksettings") == null ||
+                        Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true")
                     {
-
                         formSplash.SetAction("Check settings");
-                        FormSettings settings = new FormSettings();
+                        var settings = new FormSettings();
                         if (!settings.CheckSettings())
                         {
                             FormSettings.AutoSolveAllSettings();
