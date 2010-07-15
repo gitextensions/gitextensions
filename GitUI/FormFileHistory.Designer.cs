@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.FileChanges = new GitUI.RevisionGrid();
+            this.FileChanges = new GitUI.RevisionGrid(_revision);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new GitUI.FileViewer();
