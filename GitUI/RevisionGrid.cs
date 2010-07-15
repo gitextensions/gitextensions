@@ -16,6 +16,7 @@ namespace GitUI
 {
     public partial class RevisionGrid : GitExtensionsControl
     {
+        private readonly GitRevision _initialSelectedRevision;
         TranslationString authorDate = new TranslationString("AuthorDate");
         TranslationString commitDate = new TranslationString("CommitDate");
         TranslationString messageCaption = new TranslationString("Message");
@@ -32,8 +33,14 @@ namespace GitUI
         private readonly SynchronizationContext syncContext;
         IndexWatcher indexWatcher = new IndexWatcher();
 
-        public RevisionGrid()
+
+        public RevisionGrid():this(null)
+        {            
+        }
+
+        public RevisionGrid(GitRevision initialSelectedRevision)
         {
+            _initialSelectedRevision = initialSelectedRevision;
             syncContext = SynchronizationContext.Current;
 
             base.InitLayout();
@@ -307,6 +314,15 @@ namespace GitUI
 
         public event EventHandler SelectionChanged;
 
+        public void SetSelectedIndex(int index)
+        {
+            Revisions.ClearSelection();
+
+            Revisions.Rows[index].Selected = true;
+
+            Revisions.Select();
+        }
+
         public void SetSelectedRevision(GitRevision revision)
         {
             Revisions.ClearSelection();
@@ -319,20 +335,6 @@ namespace GitUI
                         row.Selected = true;
                 }
             }
-            Revisions.Select();
-        }
-
-        /// <summary>
-        /// Select the top revision.
-        /// </summary>
-        public void SelectTopRevision()
-        {
-            if(Revisions.Rows.Count == 0)
-                return;
-
-            Revisions.ClearSelection();
-            Revisions.Rows[0].Selected = true;
-
             Revisions.Select();
         }
 
@@ -477,9 +479,18 @@ namespace GitUI
                 syncContext.Send(o =>
                                      {
                                          Loading.Visible = false;
-                                         if (Revisions.SelectedRows.Count == 0)
-                                             SelectTopRevision();
+                                         SelectInitialRevision();
                                      }, this);
+            }
+        }
+
+        private void SelectInitialRevision()
+        {
+            if (Revisions.SelectedRows.Count != 0) return;
+            for (int i = 0; i < revisionGraphCommand.Revisions.Count; i++)
+            {
+                if(revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
+                    SetSelectedIndex(i);
             }
         }
 

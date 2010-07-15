@@ -13,8 +13,11 @@ namespace GitUI
 {
     public partial class FormFileHistory : GitExtensionsForm
     {
-        public FormFileHistory(string fileName):base()
+        private readonly GitRevision _revision;
+
+        public FormFileHistory(string fileName, GitRevision revision)
         {
+            _revision = revision;
             InitializeComponent(); Translate();
 
             if (string.IsNullOrEmpty(fileName))
@@ -24,7 +27,7 @@ namespace GitUI
 
             Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
 
-            FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
+            FileChanges.SelectionChanged += new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
             BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
@@ -47,7 +50,10 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.MouseDown += new MouseEventHandler(TextArea_MouseDown);
             BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(BlameFile_MouseLeave);
             BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
+        }
 
+        public FormFileHistory(string fileName):this(fileName,null)
+        {
         }
 
         private void LoadFileHistory(string fileName)

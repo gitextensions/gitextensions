@@ -197,17 +197,22 @@ namespace GitUI
             return true;
         }
 
-        public bool StartFileHistoryDialog(string fileName)
+        public bool StartFileHistoryDialog(string fileName, GitRevision revision)
         {
             if (!InvokeEvent(PreFileHistory))
                 return false;
 
-            FormFileHistory form = new FormFileHistory(fileName);
+            FormFileHistory form = new FormFileHistory(fileName, revision);
             form.ShowDialog();
 
             InvokeEvent(PostFileHistory);
 
             return false;
+        }
+
+        public bool StartFileHistoryDialog(string fileName)
+        {
+            return StartFileHistoryDialog(fileName, null);
         }
 
         public bool StartCompareRevisionsDialog()
