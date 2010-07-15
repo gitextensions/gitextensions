@@ -107,9 +107,12 @@ namespace GitExtensions
                             else
                                 if (args.Length > 1 && args[1] == "browse")
                                 {
-                                    //Application.Run();
-                                    GitUICommands.Instance.StartBrowseDialog();
-
+                                    string filter = "";
+                                    if (args.Length > 2 && args[2].StartsWith("-filter="))
+                                    {
+                                        filter = args[2].Replace("-filter=", "");
+                                    }
+                                    GitUICommands.Instance.StartBrowseDialog(filter);
                                 }
                                 else
                                     if (args.Length > 1 && (args[1] == "addfiles" || args[1] == "add"))
