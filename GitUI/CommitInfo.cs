@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -44,7 +45,7 @@ namespace GitUI
                 return;
             }
 
-            RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision);
+            RevisionInfo.Text = CommitInformation.GetCommitInfo(revision);
 
             MatchCollection matches = Regex.Matches(RevisionInfo.Text,
                                                     @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
