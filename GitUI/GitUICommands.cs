@@ -145,19 +145,24 @@ namespace GitUI
             return true;
         }
 
-        public bool StartBrowseDialog()
+        public bool StartBrowseDialog(string filter)
         {
             if (!InvokeEvent(PreBrowse))
                 return false;
 
-            FormBrowse form = new FormBrowse();
+            FormBrowse form = new FormBrowse(filter);
             form.ShowDialog();
 
             InvokeEvent(PostBrowse);
 
             return true;
         }
-        
+
+        public bool StartBrowseDialog()
+        {
+            return StartBrowseDialog("");
+        }
+
         public bool StartDeleteBranchDialog(string branch)
         {
             if (!InvokeEvent(PreDeleteBranch))
@@ -197,17 +202,22 @@ namespace GitUI
             return true;
         }
 
-        public bool StartFileHistoryDialog(string fileName)
+        public bool StartFileHistoryDialog(string fileName, GitRevision revision)
         {
             if (!InvokeEvent(PreFileHistory))
                 return false;
 
-            FormFileHistory form = new FormFileHistory(fileName);
+            FormFileHistory form = new FormFileHistory(fileName, revision);
             form.ShowDialog();
 
             InvokeEvent(PostFileHistory);
 
             return false;
+        }
+
+        public bool StartFileHistoryDialog(string fileName)
+        {
+            return StartFileHistoryDialog(fileName, null);
         }
 
         public bool StartCompareRevisionsDialog()

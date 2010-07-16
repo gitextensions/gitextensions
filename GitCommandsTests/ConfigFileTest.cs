@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using GitCommands;
@@ -18,12 +15,12 @@ namespace GitCommandsTests
     {
         private string GetTempFolder()
         {
-            return System.IO.Path.GetTempPath();
+            return Path.GetTempPath();
         }
 
         private string GetConfigFileName()
         {
-            return string.Concat(GetTempFolder() + @"\testconfigfile");
+            return Path.Combine(GetTempFolder(), "testconfigfile");
         }
 
         private string GetDefaultConfigFileContent()
@@ -166,6 +163,206 @@ namespace GitCommandsTests
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
                 Assert.AreEqual("newvalue", configFile.GetValue("submodule.test.test.path"));
+            }
+        }
+
+        [TestMethod]
+        public void RandomTestCase1()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[merge]");
+                content.AppendLine("	tool = kdiff3");
+                content.AppendLine("[mergetool \"kdiff3\"]");
+                content.AppendLine("	path = c:/Program Files (x86)/KDiff3/kdiff3.exe");
+                content.AppendLine("[user]");
+                content.AppendLine("	name = Sergey Pustovit");
+                content.AppendLine("	email = sergiy.pustovit@sintez.co.za");
+                content.AppendLine("[core]");
+                content.AppendLine("	safecrlf = false");
+                content.AppendLine("	editor = C:/Program Files (x86)/Notepad++/notepad++.exe");
+                content.AppendLine("[diff]");
+                content.AppendLine("	tool = kdiff3");
+                content.AppendLine("[difftool \"kdiff3\"]");
+                content.AppendLine("	path = c:/Program Files (x86)/KDiff3/kdiff3.exe");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("Sergey Pustovit", configFile.GetValue("user.name"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("user.name", "newvalue");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("newvalue", configFile.GetValue("user.name"));
+            }
+        }
+
+        [TestMethod]
+        public void RandomTestCase2()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[core]");
+                content.AppendLine("	repositoryformatversion = 0");
+                content.AppendLine("	filemode = false");
+                content.AppendLine("	bare = false");
+                content.AppendLine("	logallrefupdates = true");
+                content.AppendLine("	symlinks = false");
+                content.AppendLine("	ignorecase = true");
+                content.AppendLine("	editor = C:/Program Files (x86)/Notepad++/notepad++.exe");
+                content.AppendLine("[remote \"origin\"]");
+                content.AppendLine("	fetch = +refs/heads/*:refs/remotes/origin/*");
+                content.AppendLine("	url = git-sp_sable@free1.projectlocker.com:SDWH_Project_01.git");
+                content.AppendLine("	puttykeyfile = C:\\Users\\sergiy.pustovit\\spustovit_sintez_key_1.ppk");
+                content.AppendLine("[branch \"master\"]");
+                content.AppendLine("	remote = origin");
+                content.AppendLine("	merge = refs/heads/master");
+                content.AppendLine("[gui]");
+                content.AppendLine("	geometry = 917x503+25+25 201 191");
+                content.AppendLine("[merge]");
+                content.AppendLine("	tool = kdiff3");
+                content.AppendLine("[remote \"test\"]");
+                content.AppendLine("	url = git-sp_sable@free1.projectlocker.com:project1.git");
+                content.AppendLine("	fetch = +refs/heads/*:refs/remotes/test/*");
+                content.AppendLine("	puttykeyfile = C:/Users/sergiy.pustovit/spustovit_sintez_key_1.ppk");
+
+
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("0", configFile.GetValue("core.repositoryformatversion"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("core.repositoryformatversion", "1");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("1", configFile.GetValue("core.repositoryformatversion"));
+            }
+        }
+
+        [TestMethod]
+        public void UncPathTest1()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = //test/");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"//test/", configFile.GetValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("path.unc", @"//test/test2/");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"//test/test2/", configFile.GetValue("path.unc"));
+            }
+        }
+
+        [TestMethod]
+        public void UncPathTest2()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"\\test\", configFile.GetValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("path.unc", @"\\test\test2\");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"\\test\test2\", configFile.GetValue("path.unc"));
+            }
+        }
+
+        [TestMethod]
+        public void SpacesInSubSectionTest()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[section \"sub section\"]");
+                content.AppendLine("	test = test");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"test", configFile.GetValue("section.sub section.test"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("section.sub section.test", @"test2");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual(@"test2", configFile.GetValue("section.sub section.test"));
             }
         }
 

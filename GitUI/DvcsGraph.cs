@@ -508,7 +508,7 @@ namespace GitUI
             lock (backgroundThread)
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-                visibleBottom = visibleTop + DisplayedRowCount(true);
+                visibleBottom = visibleTop + (Height / rowHeight);// DisplayedRowCount(true);
 
                 if (visibleBottom > graphData.Count)
                 {
@@ -525,29 +525,40 @@ namespace GitUI
 
                 syncContext.Post(new SendOrPostCallback(delegate(object o)
                     {
-                        if (visibleBottom > graphDataCount)
+                        if (visibleBottom > graphData.Count)
                         {
-                            if (!isLoading)
+                            //Currently we are doing some important work; we are recieving
+                            //rows that the user is viewing
+                            SetBackgroundThreadToNormalPriority();
+                            if (Loading != null)
                             {
-                                isLoading = true;
-                                backgroundThread.Priority = ThreadPriority.Normal;
-                                if (Loading != null)
-                                {
-                                    Loading(true);
-                                }
+                                Loading(true);
                             }
                         }
-                        else if (isLoading)
+                        else
                         {
-                            isLoading = false;
-                            backgroundThread.Priority = ThreadPriority.BelowNormal;
+                            //All rows that the user is viewing are loaded. We now can hide the loading
+                            //animation that is shown. (the event Loading(bool) triggers this!)
+                            //Since the graph is not drawn for the visible graph yet, keep the
+                            //priority on Normal. Lower it when the graph is visible.                            
                             if (Loading != null)
                             {
                                 Loading(false);
                             }
                         }
+                            
                     }), null);
             }
+        }
+
+        private void SetBackgroundThreadToNormalPriority()
+        {
+            backgroundThread.Priority = ThreadPriority.Normal;
+        }
+
+        private void SetBackgroundThreadToLowPriority()
+        {
+            backgroundThread.Priority = ThreadPriority.BelowNormal;
         }
 
         private void updateRow(int row)
@@ -574,26 +585,16 @@ namespace GitUI
                     }
                 }
 
-                if (visibleBottom > graphDataCount)
+
+                if (visibleBottom < graphDataCount)
                 {
-                    if (!isLoading)
-                    {
-                        isLoading = true;
-                        backgroundThread.Priority = ThreadPriority.Normal;
-                        if (Loading != null)
-                        {
-                            Loading(true);
-                        }
-                    }
+                    //All data for the current view is loaded! Lower the thread priority.
+                    SetBackgroundThreadToLowPriority();
                 }
-                else if (isLoading)
+                else
                 {
-                    isLoading = false;
-                    backgroundThread.Priority = ThreadPriority.BelowNormal;
-                    if (Loading != null)
-                    {
-                        Loading(false);
-                    }
+                    //We need to draw the graph for the visible part of the grid. Higher the priority.
+                    SetBackgroundThreadToNormalPriority();
                 }
 
                 try
@@ -745,7 +746,12 @@ namespace GitUI
                 #region Make sure the graph cache bitmap is setup
                 int height = cacheCountMax * rowHeight;
                 int width = dataGridColumnGraph.Width;
-                if (graphBitmap == null || graphBitmap.Width != width || graphBitmap.Height != height)
+                if (graphBitmap == null ||
+                    //Resize the bitmap when the with or height is changed. The height won't change very often.
+                    //The with changes more often, when branches become visible/invisible.
+                    //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
+                    //but only shrink the bitmap when multiple branches disappear (50px diference).
+                    graphBitmap.Width < width || graphBitmap.Width > width - 50 || graphBitmap.Height != height)
                 {
                     if (graphBitmap != null)
                     {
@@ -1324,7 +1330,8 @@ namespace GitUI
                     {
                         // TODO: We might be able to recover from this with some work, but
                         // since we build the graph async it might be tough to figure out.
-                        throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        //throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        continue;
                     }
 
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1

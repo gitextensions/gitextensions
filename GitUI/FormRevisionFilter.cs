@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -20,23 +21,20 @@ namespace GitUI
             EnableFilters();
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void SinceCheck_CheckedChanged(object sender, EventArgs e)
         {
+            EnableFilters();
+        }
+
+        private void OnBranchFilterCheckedChanged(object sender, EventArgs e)
+        {
+            Settings.BranchFilterEnabled = BranchFilterCheck.Checked;
+            EnableFilters();
+        }
+
+        private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
+        {
+            Settings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
             EnableFilters();
         }
 
@@ -49,6 +47,13 @@ namespace GitUI
             Message.Enabled = MessageCheck.Checked;
             _Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
+
+            BranchFilterCheck.Checked = Settings.BranchFilterEnabled;
+            CurrentBranchOnlyCheck.Checked = Settings.ShowCurrentBranchOnly;
+
+            CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
+            BranchFilter.Enabled = BranchFilterCheck.Checked &&
+                                   !CurrentBranchOnlyCheck.Checked;
         }
 
         public string GetFilter()
@@ -72,6 +77,14 @@ namespace GitUI
                 filter += " -- \"" + FileFilter.Text.Replace('\\', '/') + "\"";
 
             return filter;
+        }
+
+        public string GetBranchFilter()
+        {
+            if (!Settings.BranchFilterEnabled || Settings.ShowCurrentBranchOnly)
+                return String.Empty;
+
+            return BranchFilter.Text;
         }
 
         private void Ok_Click(object sender, EventArgs e)
