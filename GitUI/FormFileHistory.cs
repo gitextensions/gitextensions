@@ -13,30 +13,21 @@ namespace GitUI
 {
     public partial class FormFileHistory : GitExtensionsForm
     {
-        public FormFileHistory(string fileName):base()
-        {
-            InitializeComponent(); Translate();
+        private readonly GitRevision _revision;
 
+        public FormFileHistory(string fileName, GitRevision revision)
+        {
+            _revision = revision;
+            InitializeComponent(); Translate();
 
             if (string.IsNullOrEmpty(fileName))
                 return;
 
-            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                fileName = fileName.Substring(Settings.WorkingDir.Length);
-
-
-            this.FileName = fileName;
-
-
-            commitInfo.Visible = false;
+            LoadFileHistory(fileName);
 
             Diff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(Diff_ExtraDiffArgumentsChanged);
-            
-            if (GitCommands.Settings.FollowRenamesInFileHistory)
-                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
-            else
-                FileChanges.Filter = " -- \"" + fileName + "\"";
-            FileChanges.SelectionChanged +=new EventHandler(FileChanges_SelectionChanged);
+
+            FileChanges.SelectionChanged += new EventHandler(FileChanges_SelectionChanged);
             FileChanges.DisableContextMenu();
 
             BlameFile.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
@@ -59,8 +50,32 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.TextArea.MouseDown += new MouseEventHandler(TextArea_MouseDown);
             BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(BlameFile_MouseLeave);
             BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += new EventHandler(TextArea_MouseEnter);
+        }
+
+        public FormFileHistory(string fileName):this(fileName,null)
+        {
+        }
+
+        private void LoadFileHistory(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Settings.WorkingDir.Length);
+
+            this.FileName = fileName;
+
+
+            commitInfo.Visible = false;
+
+            if (GitCommands.Settings.FollowRenamesInFileHistory)
+                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
+            else
+                FileChanges.Filter = " -- \"" + fileName + "\"";
 
             commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
+
         }
 
         void TextArea_MouseEnter(object sender, EventArgs e)

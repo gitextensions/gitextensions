@@ -21,12 +21,8 @@ namespace GitCommands
 
             if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
-                string[] path = name.Replace("\"", " ").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (path.Length != 2)
-                    throw new Exception("Invalid section name: " + name);
-
-                SectionName = path[0].Trim();
-                SubSection = path[1].Trim();
+                SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
+                SubSection = name.Substring(name.IndexOf('\"')+1, name.LastIndexOf('\"') - name.IndexOf('\"')-1);
             }
             else if (!name.Contains("."))
             {

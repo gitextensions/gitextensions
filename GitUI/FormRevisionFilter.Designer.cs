@@ -53,6 +53,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.FileFilterCheck = new System.Windows.Forms.CheckBox();
             this.FileFilter = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.BranchFilter = new System.Windows.Forms.TextBox();
+            this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
+            this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this._Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -97,7 +101,6 @@
             this.Author.Name = "Author";
             this.Author.Size = new System.Drawing.Size(241, 20);
             this.Author.TabIndex = 9;
-            this.Author.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Since
             // 
@@ -155,7 +158,6 @@
             this.Committer.Name = "Committer";
             this.Committer.Size = new System.Drawing.Size(241, 20);
             this.Committer.TabIndex = 12;
-            this.Committer.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label5
             // 
@@ -213,10 +215,14 @@
             this.tableLayoutPanel1.Controls.Add(this.label8, 0, 7);
             this.tableLayoutPanel1.Controls.Add(this.FileFilterCheck, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.FileFilter, 2, 7);
+            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
+            this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 2, 9);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 8;
+            this.tableLayoutPanel1.RowCount = 10;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -224,10 +230,11 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(454, 204);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 14F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(454, 248);
             this.tableLayoutPanel1.TabIndex = 4;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // LimitCheck
             // 
@@ -326,6 +333,44 @@
             this.FileFilter.Size = new System.Drawing.Size(241, 20);
             this.FileFilter.TabIndex = 30;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 200);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(52, 13);
+            this.label9.TabIndex = 31;
+            this.label9.Text = "Branches";
+            // 
+            // BranchFilter
+            // 
+            this.BranchFilter.Location = new System.Drawing.Point(208, 203);
+            this.BranchFilter.Name = "BranchFilter";
+            this.BranchFilter.Size = new System.Drawing.Size(241, 20);
+            this.BranchFilter.TabIndex = 32;
+            // 
+            // CurrentBranchOnlyCheck
+            // 
+            this.CurrentBranchOnlyCheck.AutoSize = true;
+            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(208, 228);
+            this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
+            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(147, 17);
+            this.CurrentBranchOnlyCheck.TabIndex = 33;
+            this.CurrentBranchOnlyCheck.Text = "Show current branch only";
+            this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
+            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.OnShowCurrentBranchOnlyCheckedChanged);
+            // 
+            // BranchFilterCheck
+            // 
+            this.BranchFilterCheck.AutoSize = true;
+            this.BranchFilterCheck.Location = new System.Drawing.Point(187, 203);
+            this.BranchFilterCheck.Name = "BranchFilterCheck";
+            this.BranchFilterCheck.Size = new System.Drawing.Size(15, 17);
+            this.BranchFilterCheck.TabIndex = 34;
+            this.BranchFilterCheck.Text = "checkBox1";
+            this.BranchFilterCheck.UseVisualStyleBackColor = true;
+            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -341,15 +386,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(454, 237);
-            this.splitContainer1.SplitterDistance = 204;
+            this.splitContainer1.Size = new System.Drawing.Size(454, 281);
+            this.splitContainer1.SplitterDistance = 248;
             this.splitContainer1.TabIndex = 21;
             // 
             // FormRevisionFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(454, 237);
+            this.ClientSize = new System.Drawing.Size(454, 281);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -396,6 +441,10 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox FileFilterCheck;
         private System.Windows.Forms.TextBox FileFilter;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox BranchFilter;
+        private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
+        private System.Windows.Forms.CheckBox BranchFilterCheck;
 
 
     }

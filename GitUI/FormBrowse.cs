@@ -27,11 +27,12 @@ namespace GitUI
         TranslationString menuFileHistory = new TranslationString("File history");
 
 
-        public FormBrowse()
-        {
+        public FormBrowse(string filter)
+        {            
             InitializeComponent(); Translate();
             RevisionGrid.SelectionChanged += new EventHandler(RevisionGrid_SelectionChanged);
             DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            SetFilter(filter);
         }
 
         Dashboard dashboard = null;
@@ -306,7 +307,10 @@ namespace GitUI
                     GitRevision revision = revisions[0];
 
                     if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length > 0)
+                    {
                         DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        DiffFiles.Revision = revision;
+                    }
                     else
                         DiffFiles.GitItemStatusses = null;
                 }
@@ -835,11 +839,21 @@ namespace GitUI
 
         private void toolStripLabel2_Click(object sender, EventArgs e)
         {
-            if (RevisionGrid.Filter != RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text))
-            {
-                RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
-                RevisionGrid.ForceRefreshRevisions();
-            }
+            ApplyFilter();
+        }
+
+        private void SetFilter(string filter)
+        {
+            if (string.IsNullOrEmpty(filter)) return;
+            toolStripTextBoxFilter.Text = filter;
+            ApplyFilter();
+        }
+
+        private void ApplyFilter()
+        {
+            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text)) return;
+            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
+            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void toolStripTextBoxFilter_Leave(object sender, EventArgs e)

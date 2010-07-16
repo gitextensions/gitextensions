@@ -16,6 +16,7 @@ namespace GitUI
 {
     public partial class RevisionGrid : GitExtensionsControl
     {
+        private readonly GitRevision _initialSelectedRevision;
         TranslationString authorDate = new TranslationString("AuthorDate");
         TranslationString commitDate = new TranslationString("CommitDate");
         TranslationString messageCaption = new TranslationString("Message");
@@ -32,8 +33,14 @@ namespace GitUI
         private readonly SynchronizationContext syncContext;
         IndexWatcher indexWatcher = new IndexWatcher();
 
-        public RevisionGrid()
+
+        public RevisionGrid():this(null)
+        {            
+        }
+
+        public RevisionGrid(GitRevision initialSelectedRevision)
         {
+            _initialSelectedRevision = initialSelectedRevision;
             syncContext = SynchronizationContext.Current;
 
             base.InitLayout();
@@ -51,10 +58,18 @@ namespace GitUI
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
 
+            BranchFilter = String.Empty;
             SetShowBranches();
             filter = "";
             quickSearchString = "";
             quickSearchTimer.Tick += new EventHandler(quickSearchTimer_Tick);
+
+            Revisions.Loading += new DvcsGraph.LoadingHandler(Revisions_Loading);
+        }
+
+        void Revisions_Loading(bool isLoading)
+        {
+            Loading.Visible = isLoading;
         }
 
         Label quickSearchLabel;
@@ -266,6 +281,12 @@ namespace GitUI
             }
         }
 
+        public string BranchFilter
+        {
+            get;
+            set;
+        }
+
         public string FormatQuickFilter(string filter)
         {
             if (string.IsNullOrEmpty(filter))
@@ -292,6 +313,15 @@ namespace GitUI
         public Font RefsFont;
 
         public event EventHandler SelectionChanged;
+
+        public void SetSelectedIndex(int index)
+        {
+            Revisions.ClearSelection();
+
+            Revisions.Rows[index].Selected = true;
+
+            Revisions.Select();
+        }
 
         public void SetSelectedRevision(GitRevision revision)
         {
@@ -367,21 +397,7 @@ namespace GitUI
                     Revisions.ShowHideRevisionGraph(true);
                 }
 
-                Error.Visible = false;
-                NoCommits.Visible = false;
-                NoGit.Visible = false;
-                Revisions.Visible = true;
-
-                if (!GitCommands.Settings.ValidWorkingDir())
-                {
-                    Revisions.Visible = false;
-
-                    NoCommits.Visible = true;
-                    NoGit.Visible = true;
-                    Loading.Visible = false;
-                    return;
-                }
-
+                
                 if (revisionGraphCommand != null)
                 {
                     revisionGraphCommand.Kill();
@@ -402,6 +418,7 @@ namespace GitUI
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
                 Revisions.Visible = true;
+                Loading.Visible = true;
 
                 Revisions.Clear();
 
@@ -409,7 +426,7 @@ namespace GitUI
                 {
                     Revisions.Visible = false;
 
-                    NoCommits.Visible = true;
+                    NoCommits.Visible = false;
                     NoGit.Visible = true;
                     Loading.Visible = false;
                     return;
@@ -419,6 +436,7 @@ namespace GitUI
                 Loading.Visible = true;
                 indexWatcher.Reset();
                 revisionGraphCommand = new RevisionGraph();
+                revisionGraphCommand.BranchFilter = BranchFilter;
                 revisionGraphCommand.LogParam = LogParam + Filter;
                 revisionGraphCommand.Updated += new EventHandler(gitGetCommitsCommand_Updated);
                 revisionGraphCommand.Exited += new EventHandler(gitGetCommitsCommand_Exited);
@@ -443,6 +461,37 @@ namespace GitUI
         {
             Revisions.SetExpectedRowCount(revisionGraphCommand.Revisions.Count);
             update(null);
+
+            if (revisionGraphCommand.Revisions.Count == 0)
+            {
+                // This has to happen on the UI thread
+                syncContext.Send(o =>
+                                     {
+                                         NoGit.Visible = false;
+                                         NoCommits.Visible = true;
+                                         Revisions.Visible = false;
+                                         Loading.Visible = false;
+                                     }, this);
+            }
+            else
+            {
+                // This has to happen on the UI thread
+                syncContext.Send(o =>
+                                     {
+                                         Loading.Visible = false;
+                                         SelectInitialRevision();
+                                     }, this);
+            }
+        }
+
+        private void SelectInitialRevision()
+        {
+            if (Revisions.SelectedRows.Count != 0 || _initialSelectedRevision == null) return;
+            for (int i = 0; i < revisionGraphCommand.Revisions.Count; i++)
+            {
+                if(revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
+                    SetSelectedIndex(i);
+            }
         }
 
         void update(GitRevision rev)
@@ -515,7 +564,6 @@ namespace GitUI
                 LastScrollPos = -1;
             }
 
-            Loading.Visible = false;
             Revisions.Enabled = true;
             Revisions.Focus();
             Revisions.SelectionChanged += new EventHandler(Revisions_SelectionChanged);
@@ -573,15 +621,25 @@ namespace GitUI
                     if (column == 1)
                     {
                         float offset = 0;
-                        foreach (GitHead h in revision.Heads)
+                        List<GitHead> heads = revision.Heads;
+                        if (heads.Count > 0)
                         {
-                            if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
+                            heads.Sort(new Comparison<GitHead>(delegate(GitHead aLeft, GitHead aRight)
+                                {
+                                    if (aLeft.IsTag && !aRight.IsTag) return -1;
+                                    if (aLeft.IsRemote && !aRight.IsRemote) return 1;
+                                    return aLeft.Name.CompareTo(aRight.Name);
+                                }));
+                            foreach (GitHead h in heads)
                             {
-                                SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
+                                if ((h.IsRemote && !ShowRemoteBranches.Checked) == false)
+                                {
+                                    SolidBrush brush = new SolidBrush(h.IsTag == true ? Settings.TagColor : h.IsHead ? Settings.BranchColor : h.IsRemote ? Settings.RemoteBranchColor : Settings.OtherTagColor);
 
-                                e.Graphics.DrawString("[" + h.Name + "] ", RefsFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                    e.Graphics.DrawString("[" + h.Name + "] ", RefsFont, brush, new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                                offset += e.Graphics.MeasureString("[" + h.Name + "] ", RefsFont).Width;
+                                    offset += e.Graphics.MeasureString("[" + h.Name + "] ", RefsFont).Width;
+                                }
                             }
                         }
                         string text = revision.Message;
@@ -696,9 +754,42 @@ namespace GitUI
             Revisions.Invalidate();
         }
 
+        private void showCurrentBranchOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showCurrentBranchOnlyToolStripMenuItem.Checked)
+            {
+                return;
+            }
+
+            Settings.BranchFilterEnabled = true;
+            Settings.ShowCurrentBranchOnly = true;
+
+            SetShowBranches();
+            ForceRefreshRevisions();
+        }
+
         private void showAllBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.ShowAllBranches = !showAllBranchesToolStripMenuItem.Checked;
+            if (showAllBranchesToolStripMenuItem.Checked)
+            {
+                return;
+            }
+            
+            Settings.BranchFilterEnabled = false;
+
+            SetShowBranches();
+            ForceRefreshRevisions();
+        }
+
+        private void showFilteredBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showFilteredBranchesToolStripMenuItem.Checked)
+            {
+                return;
+            }
+
+            Settings.BranchFilterEnabled = true;
+            Settings.ShowCurrentBranchOnly = false;
 
             SetShowBranches();
             ForceRefreshRevisions();
@@ -706,12 +797,23 @@ namespace GitUI
 
         private void SetShowBranches()
         {
-            showAllBranchesToolStripMenuItem.Checked = Settings.ShowAllBranches;
-            if (Settings.ShowAllBranches)
-                LogParam = "HEAD --all --boundary";
-            else
-                LogParam = "HEAD";
 
+            showAllBranchesToolStripMenuItem.Checked = !Settings.BranchFilterEnabled;
+            showCurrentBranchOnlyToolStripMenuItem.Checked = Settings.BranchFilterEnabled
+                                                             && Settings.ShowCurrentBranchOnly;
+            showFilteredBranchesToolStripMenuItem.Checked = Settings.BranchFilterEnabled
+                                                            && !Settings.ShowCurrentBranchOnly;
+
+            BranchFilter = RevisionFilter.GetBranchFilter();
+
+            if (!Settings.BranchFilterEnabled)
+                LogParam = "HEAD --all --boundary";
+            else if (Settings.ShowCurrentBranchOnly)
+                LogParam = "HEAD";
+            else
+                LogParam = BranchFilter.Length > 0 
+                    ? String.Empty 
+                    : "HEAD --all --boundary";
         }
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -734,14 +836,13 @@ namespace GitUI
             //this.ForceRefreshRevisions();
         }
 
-        private FormRevisionFilter RevisionFilter = null;
+        private readonly FormRevisionFilter RevisionFilter = new FormRevisionFilter();
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (RevisionFilter == null)
-                RevisionFilter = new FormRevisionFilter();
-
             RevisionFilter.ShowDialog();
             filter = RevisionFilter.GetFilter();
+            BranchFilter = RevisionFilter.GetBranchFilter();
+            SetShowBranches();
             ForceRefreshRevisions();
         }
 
@@ -976,6 +1077,5 @@ namespace GitUI
                 return time.ToShortDateString() + " " + time.ToLongTimeString();
             }
         }
-
     }
 }
