@@ -1,28 +1,28 @@
 ﻿using System;
-using System.Windows.Forms;
-using GitUI;
 using System.IO;
+using System.Windows.Forms;
 using GitCommands;
+using GitUI;
 
 namespace GitExtensions
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             string[] args = Environment.GetCommandLineArgs();
             {
-                FormSplash formSplash = new FormSplash();
+                var formSplash = new FormSplash();
                 formSplash.Show();
                 formSplash.SetAction("Load settings");
-                GitCommands.Settings.LoadSettings();
+                Settings.LoadSettings();
                 //Quick HOME check:
                 formSplash.SetAction("Check home path");
                 FormFixHome.CheckHomePath();
@@ -55,20 +55,20 @@ namespace GitExtensions
             if (args.Length >= 3)
             {
                 if (Directory.Exists(args[2]))
-                    GitCommands.Settings.WorkingDir = args[2];
+                    Settings.WorkingDir = args[2];
 
-                if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
+                if (string.IsNullOrEmpty(Settings.WorkingDir))
                 {
                     if (args[2].Contains("\\"))
-                        GitCommands.Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
+                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
                 }
 
-                if (GitCommands.Settings.ValidWorkingDir())
-                    Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
+                if (Settings.ValidWorkingDir())
+                    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
-            if (string.IsNullOrEmpty(GitCommands.Settings.WorkingDir))
-                GitCommands.Settings.WorkingDir = Directory.GetCurrentDirectory();
+            if (string.IsNullOrEmpty(Settings.WorkingDir))
+                Settings.WorkingDir = Directory.GetCurrentDirectory();
 
             if (args.Length <= 1)
             {
@@ -78,7 +78,7 @@ namespace GitExtensions
             // if we are here args.Length > 1
             runCommand(args);
 
-            GitCommands.Settings.SaveSettings();
+            Settings.SaveSettings();
         }
 
         private static void runCommand(string[] args)
@@ -105,18 +105,17 @@ namespace GitExtensions
             }
             if (args[1] == "browse")
             {
-                                    string filter = "";
-                                    if (args.Length > 2 && args[2].StartsWith("-filter="))
-                                    {
-                                        filter = args[2].Replace("-filter=", "");
-                                    }
-                                    GitUICommands.Instance.StartBrowseDialog(filter);
+                string filter = "";
+                if (args.Length > 2 && args[2].StartsWith("-filter="))
+                {
+                    filter = args[2].Replace("-filter=", "");
+                }
+                GitUICommands.Instance.StartBrowseDialog(filter);
             }
             if (args[1] == "addfiles" || args[1] == "add")
             {
                 GitUICommands.Instance.StartAddFilesDialog();
                 return;
-
             }
             if (args[1] == "applypatch" || args[1] == "apply")
             {
@@ -165,7 +164,6 @@ namespace GitExtensions
                     string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
 
                     GitUICommands.Instance.StartFileHistoryDialog(fileName);
-
                 }
                 else
                     MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
