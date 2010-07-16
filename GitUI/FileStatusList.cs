@@ -198,7 +198,7 @@ namespace GitUI
 
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name);
+            GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name, Revision);
         }
 
         void FileStatusListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -246,6 +246,12 @@ namespace GitUI
                 FileStatusListBox.DataSource = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the revision.
+        /// </summary>
+        /// <value>The revision.</value>
+        public GitRevision Revision { get; set; }
 
         private void NoFiles_SizeChanged(object sender, EventArgs e)
         {

@@ -57,11 +57,9 @@ namespace GitUI
 
         void gitCommand_Exited(object sender, EventArgs e)
         {
-            if (InvokeRequired)
+            // This has to happen on the UI thread
+            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
             {
-                Invoke(new MethodInvoker(delegate() { gitCommand_Exited(sender, e); }));
-                return;
-            }
 
             if (restart)
             {
@@ -121,6 +119,10 @@ namespace GitUI
             }
 
             Done(!isError);
+
+            });
+
+            syncContext.Send(method, this);
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)

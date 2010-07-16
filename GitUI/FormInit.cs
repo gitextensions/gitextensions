@@ -5,11 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormInit : GitExtensionsForm
     {
+        TranslationString chooseDirectory = new TranslationString("Please choose a directory.");
+        TranslationString chooseDirectoryNotFile = new TranslationString("Cannot initialize a new repository on a file.\nPlease choose a directory.");
+
         public FormInit(string dir)
         {
             InitializeComponent(); Translate();
@@ -34,7 +39,13 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Directory.Text))
             {
-                MessageBox.Show("Please choose a directory");
+                MessageBox.Show(chooseDirectory.Text);
+                return;
+            }
+
+            if (File.Exists(Directory.Text))
+            {
+                MessageBox.Show(chooseDirectoryNotFile.Text);
                 return;
             }
 

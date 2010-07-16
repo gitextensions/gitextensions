@@ -36,12 +36,17 @@ namespace GitCommands
         public bool ShaOnly { get; set; }
 
         private readonly char[] splitChars = " \t\n".ToCharArray();
+
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
+
         private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+
         private List<GitHead> heads;
+
         private GitCommands gitGetGraphCommand;
 
         private Thread backgroundThread = null;
+
         private List<GitRevision> revisions = new List<GitRevision>();
 
         private enum ReadStep
@@ -57,7 +62,9 @@ namespace GitCommands
             CommitMessage,
             Done,
         }
+
         private ReadStep nextStep = ReadStep.Commit;
+
         private GitRevision revision;
 
         public RevisionGraph()
@@ -83,6 +90,7 @@ namespace GitCommands
         }
 
         public string LogParam = "HEAD --all";
+        public string BranchFilter = String.Empty;
 
         public void Execute()
         {
@@ -136,9 +144,10 @@ namespace GitCommands
             }
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log --pretty=format:\"{1}\" {0}",
+                "log {2} --pretty=format:\"{1}\" {0}",
                 LogParam,
-                formatString);
+                formatString,
+                BranchFilter);
 
             gitGetGraphCommand = new GitCommands();
             gitGetGraphCommand.StreamOutput = true;
