@@ -22,6 +22,8 @@
       Installed OR NETFRAMEWORK20
     </Condition>
 
+    <Condition Message="An administrator must install Git Extensions.">Privileged</Condition>
+    
     <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
 
     <?include AddRemove.wxi?>
