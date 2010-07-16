@@ -508,7 +508,7 @@ namespace GitUI
             lock (backgroundThread)
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-                visibleBottom = visibleTop + (Height / rowHeight);// DisplayedRowCount(true);
+                visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
                 if (visibleBottom > graphData.Count)
                 {
@@ -1678,9 +1678,6 @@ namespace GitUI
 
                     if (row < laneRows.Count)
                     {
-                        // DEBUG: This only works if not filtering
-                        if (sourceGraph.AddedNodes[row] != laneRows[row].Node) Debugger.Break();
-
                         return laneRows[row];
                     }
                     else if (row < sourceGraph.AddedNodes.Count)
@@ -2378,7 +2375,7 @@ namespace GitUI
                 {
                     return false;
                 }
-               
+                
                 // Find the new current row's node (newest item in the row)
                 #region Find current node & index
                 currentRow.Node = null;
