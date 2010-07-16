@@ -98,15 +98,8 @@ namespace GitExtensions
                     GitUICommands.Instance.StartRemotesDialog();
                     return;
                 case "browse":
-                    {
-                        string filter = "";
-                        if (args.Length > 2 && args[2].StartsWith("-filter="))
-                        {
-                            filter = args[2].Replace("-filter=", "");
-                        }
-                        GitUICommands.Instance.StartBrowseDialog(filter);
-                    }
-                    break;
+                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                    return;
                 case "add":
                 case "addfiles":
                     GitUICommands.Instance.StartAddFilesDialog();
@@ -189,6 +182,15 @@ namespace GitExtensions
                     Application.Run(new FormCommandlineHelp());
                     return;
             }
+        }
+
+        private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
+        {
+            foreach (string arg in args)
+                if (arg.StartsWith(paramName + "="))
+                    return args[2].Replace(paramName + "=", "");
+
+            return string.Empty;
         }
     }
 }
