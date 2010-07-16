@@ -1,9 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GitCommands
 {
     public class CommitInformation
     {
+        /// <summary>
+        /// Gets all branches which contain the given commit.
+        /// </summary>
+        /// <param name="sha1">The sha1.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1)
+        {
+            string info = GitCommands.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
+
+
+            if (info.Trim().StartsWith("fatal"))
+                return new List<string>();
+            return info.Split(new[] {'\r', '\n', '*', ' '}, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         /// <summary>
         /// Gets the commit info.
         /// </summary>
