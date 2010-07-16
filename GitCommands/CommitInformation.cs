@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace GitCommands
 {
@@ -10,9 +9,18 @@ namespace GitCommands
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
-        static public string GetCommitInfo(string sha1)
+        public static string GetCommitInfo(string sha1)
         {
-            string info = GitCommands.RunCachableCmd(Settings.GitCommand, "show -s --pretty=format:\"" + Strings.GetAutorText() + ":\t\t%aN (%aE)%n" + Strings.GetAuthorDateText() + ":\t%ar (%ad)%n" + Strings.GetCommitterText() + ":\t%cN (%cE)%n" + Strings.GetCommitterDateText() + ":\t%cr (%cd)%n" + Strings.GetCommitHashText() + ":\t%H%n%n%s%n%n%b\" " + sha1);
+            string info = GitCommands.RunCachableCmd(
+                Settings.GitCommand,
+                string.Format(
+                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
+                    Strings.GetAutorText(),
+                    Strings.GetAuthorDateText(),
+                    Strings.GetCommitterText(),
+                    Strings.GetCommitterDateText(),
+                    Strings.GetCommitHashText(), sha1));
+
             if (info.Trim().StartsWith("fatal"))
                 return String.Empty;
 
@@ -21,7 +29,7 @@ namespace GitCommands
             return info;
         }
 
-        static private string RemoveRedundancies(string info)
+        private static string RemoveRedundancies(string info)
         {
             string author = GetField(info, Strings.GetAutorText() + ":");
             string committer = GetField(info, Strings.GetCommitterText() + ":");
@@ -36,7 +44,9 @@ namespace GitCommands
 
             if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
             {
-                info = RemoveField(info, Strings.GetCommitterDateText() + ":").Replace(Strings.GetAuthorDateText() + ":\t", Strings.GetDateText() + ":\t\t");
+                info =
+                    RemoveField(info, Strings.GetCommitterDateText() + ":").Replace(
+                        Strings.GetAuthorDateText() + ":\t", Strings.GetDateText() + ":\t\t");
             }
 
             return info;
@@ -59,7 +69,7 @@ namespace GitCommands
             return data.Remove(headerIndex, length);
         }
 
-        static private string GetField(string data, string header)
+        private static string GetField(string data, string header)
         {
             int valueIndex = IndexOfValue(data, header);
 
@@ -70,7 +80,7 @@ namespace GitCommands
             return data.Substring(valueIndex, length);
         }
 
-                static private int LengthOfValue(string data, int valueIndex)
+        private static int LengthOfValue(string data, int valueIndex)
         {
             if (valueIndex == -1)
                 return 0;
@@ -83,7 +93,7 @@ namespace GitCommands
             return endIndex - valueIndex;
         }
 
-        static private int IndexOfValue(string data, string header)
+        private static int IndexOfValue(string data, string header)
         {
             int headerIndex = data.IndexOf(header);
 
