@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -13,24 +10,25 @@ namespace GitUI
     {
         public CommitInfo()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayout.AutoSize = true;
 
-            RevisionInfo.LinkClicked += new LinkClickedEventHandler(RevisionInfo_LinkClicked);
+            RevisionInfo.LinkClicked += RevisionInfoLinkClicked;
         }
 
-        void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e)
+        private static void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
             try
             {
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.EnableRaisingEvents = false;
-                proc.StartInfo.FileName = e.LinkText;
-
-                proc.Start();
+                new Process
+                    {
+                        EnableRaisingEvents = false,
+                        StartInfo = {FileName = e.LinkText}
+                    }.Start();
             }
             catch (Exception ex)
             {
@@ -47,12 +45,27 @@ namespace GitUI
                 return;
             }
 
-            RevisionInfo.Text = GitCommands.GitCommands.GetCommitInfo(revision);
+            RevisionInfo.Text = CommitInformation.GetCommitInfo(revision) + GetBranchesWhichContainsThisCommit(revision);
 
-            Match emailMatch = Regex.Match(RevisionInfo.Text, @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
-
-            if (emailMatch != null)
+            MatchCollection matches = Regex.Matches(RevisionInfo.Text,
+                                                    @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
+            foreach (Match emailMatch in matches)
                 gravatar1.email = emailMatch.Value;
+        }
+
+        private static string GetBranchesWhichContainsThisCommit(string revision)
+        {
+            string branchString = "";
+            foreach (string branch in CommitInformation.GetAllBranchesWhichContainGivenCommit(revision))
+            {
+                if (branchString != string.Empty)
+                    branchString += ", ";
+                branchString += branch;
+            }
+
+            if (branchString != string.Empty)
+                return "\r\nContained in branches: " + branchString;
+            return "Contained in no branch";
         }
     }
 }
