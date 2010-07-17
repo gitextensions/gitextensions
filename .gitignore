@@ -21,6 +21,8 @@
 *.log
 *.htm
 *.zip
+*.sdf
+*.opensdf
 [Dd]ebug/
 *.lib
 *.sbr
