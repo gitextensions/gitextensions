@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 1.98
+	Fixed issue 105: Allow to open "gitex browse" with a given filter.
+	Fixed issue 106: Show all branches which "contain" a given commit in their history.
+	Fixed bug: Git Extensions crashes when opening certain repositories (e.g. linux kernel)
+	After opening the FileHistory window the selected revision will be displayed.
+	Only administrators can install Git Extensions.
+
 Version 1.97
 	Fixed bug: Empty local config file is saved to c:\ when not in a repository
 
