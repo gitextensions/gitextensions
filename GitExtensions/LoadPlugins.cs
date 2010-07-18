@@ -14,7 +14,14 @@ namespace GitExtensions
         public static void Load()
         {
             FileInfo file = new FileInfo(Application.ExecutablePath);
+
+            //Only search for plugins in the plugins folder. This increases performance a little bit.
+            //In DEBUG search for plugins in the root folder to make debugging plugins easier.
+            #if DEBUG 
+            FileInfo [] plugins = file.Directory.GetFiles("Plugins\\*.dll", SearchOption.AllDirectories);
+            #else
             FileInfo [] plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
+            #endif
 
             foreach (FileInfo pluginFile in plugins)
             {
