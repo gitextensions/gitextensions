@@ -1373,6 +1373,14 @@ namespace GitCommands
             return "am --3way --signoff \"" + patchFile + "\"";
         }
 
+        public static string PatchDirCmd(string patchDir)
+        {
+            patchDir = FixPath(patchDir);
+
+            return "am --3way --signoff --directory=\"" + patchDir + "\"";
+        }
+
+
         public static string UpdateRemotes()
         {
             return RunCmd(Settings.GitCommand, "remote update");

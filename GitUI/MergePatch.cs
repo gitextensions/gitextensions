@@ -114,7 +114,7 @@ namespace GitUI
             if (PatchFileMode.Checked)
                 new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text)).ShowDialog();
             else
-                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchDir.Text + "\\*.patch")).ShowDialog();
+                new FormProcess(GitCommands.GitCommands.PatchDirCmd(PatchDir.Text)).ShowDialog();
 
             EnableButtons();
 
