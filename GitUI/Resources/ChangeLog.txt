@@ -4,6 +4,8 @@ Changelog
 Version 1.98
 	Fixed issue 105: Allow to open "gitex browse" with a given filter.
 	Fixed issue 106: Show all branches which "contain" a given commit in their history.
+	Fixed issue 107: Alt+f4 and other function keys not working when rvision graph has focus.
+	Fixed issue 108: Apply patch files from directory not working.
 	Fixed bug: Git Extensions crashes when opening certain repositories (e.g. linux kernel)
 	After opening the FileHistory window the selected revision will be displayed.
 	Only administrators can install Git Extensions.
