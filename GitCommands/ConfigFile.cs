@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -9,60 +9,79 @@ namespace GitCommands
 {
     public class ConfigFile
     {
-        IList<ConfigSection> sections;
-        private string fileName;
+        private static readonly Regex RegParseIsSection =
+            new Regex(
+                @"(?<IsSection>
+                        ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
+                  )",
+                RegexOptions.Compiled |
+                RegexOptions.IgnoreCase |
+                RegexOptions.IgnorePatternWhitespace
+                );
+
+        private static readonly Regex RegParseIsKey =
+            new Regex(
+                @"(?<IsKeyValue>
+                        ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
+                   )",
+                RegexOptions.Compiled |
+                RegexOptions.IgnoreCase |
+                RegexOptions.IgnorePatternWhitespace
+                );
+
+        private readonly string _fileName;
+        private readonly IList<ConfigSection> _sections;
 
         public ConfigFile(string fileName)
         {
-            sections = new List<ConfigSection>();
+            _sections = new List<ConfigSection>();
 
-            this.fileName = fileName;
+            _fileName = fileName;
 
             Load();
         }
 
         private void Load()
         {
-            if (!File.Exists(fileName))
+            if (!File.Exists(_fileName))
                 return;
 
-            string[] fileLines = File.ReadAllLines(fileName, Settings.Encoding);
+            var fileLines = File.ReadAllLines(_fileName, Settings.Encoding);
 
             ConfigSection configSection = null;
 
-            foreach (string line in fileLines)
+            foreach (var line in fileLines)
             {
-                Match m = regParseIsSection.Match(line);
+                var m = RegParseIsSection.Match(line);
                 if (m.Success) //this line is a section
                 {
-                    string name = m.Groups["SectionName"].Value;
+                    var name = m.Groups["SectionName"].Value;
 
                     configSection = new ConfigSection(name);
-                    this.sections.Add(configSection);
+                    _sections.Add(configSection);
                 }
                 else
                 {
-                    m = regParseIsKey.Match(line);
+                    m = RegParseIsKey.Match(line);
                     if (m.Success) //this line is a key
                     {
-                        string key = m.Groups["Key"].Value;
-                        string value = unescapeString(m.Groups["Value"].Value);
+                        var key = m.Groups["Key"].Value;
+                        var value = UnescapeString(m.Groups["Value"].Value);
 
                         if (configSection == null)
-                            throw new Exception("Key " + key + " in configfile " + fileName + " is not in a section.");
+                            throw new Exception("Key " + key + " in configfile " + _fileName + " is not in a section.");
 
                         configSection.SetValue(key, value);
                     }
                 }
-
             }
         }
 
         public void Save()
         {
-            StringBuilder configFileContent = new StringBuilder();
+            var configFileContent = new StringBuilder();
 
-            foreach (ConfigSection section in sections)
+            foreach (var section in _sections)
             {
                 //Skip empty sections
                 if (section.Keys.Count == 0)
@@ -70,18 +89,18 @@ namespace GitCommands
 
                 configFileContent.AppendLine(section.ToString());
 
-                foreach (KeyValuePair<string, string> key in section.Keys)
+                foreach (var key in section.Keys)
                 {
-                    configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", escapeString(key.Value)));
+                    configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeString(key.Value)));
                 }
             }
 
 
             try
             {
-                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(fileName))
+                using (new TempRemoveFileAttributes(_fileName))
                 {
-                    File.WriteAllText(fileName, configFileContent.ToString(), Settings.Encoding);
+                    File.WriteAllText(_fileName, configFileContent.ToString(), Settings.Encoding);
                 }
             }
             catch (Exception ex)
@@ -92,29 +111,29 @@ namespace GitCommands
 
         public void SetValue(string setting, string value)
         {
-            int keyIndex = setting.LastIndexOf('.');
+            var keyIndex = setting.LastIndexOf('.');
 
             if (keyIndex < 0 && keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
 
 
-            string configSectionName = setting.Substring(0, keyIndex);
-            string keyName = setting.Substring(keyIndex+1);
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
 
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
 
         public string GetValue(string setting)
         {
-            int keyIndex = setting.LastIndexOf('.');
+            var keyIndex = setting.LastIndexOf('.');
 
             if (keyIndex < 0 && keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
 
-            string configSectionName = setting.Substring(0, keyIndex);
-            string keyName = setting.Substring(keyIndex+1);
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
 
-            ConfigSection configSection = FindConfigSection(configSectionName);
+            var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
                 return string.Empty;
@@ -124,15 +143,15 @@ namespace GitCommands
 
         public void RemoveSetting(string setting)
         {
-            int keyIndex = setting.LastIndexOf('.');
+            var keyIndex = setting.LastIndexOf('.');
 
             if (keyIndex < 0 && keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
 
-            string configSectionName = setting.Substring(0, keyIndex);
-            string keyName = setting.Substring(keyIndex + 1);
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
 
-            ConfigSection configSection = FindConfigSection(configSectionName);
+            var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
                 return;
@@ -142,23 +161,23 @@ namespace GitCommands
 
         private ConfigSection FindOrCreateConfigSection(string name)
         {
-            ConfigSection configSectionToFind = new ConfigSection(name);
+            var configSectionToFind = new ConfigSection(name);
 
-            foreach (ConfigSection configSection in sections)
+            foreach (var configSection in _sections)
             {
                 if (configSection.SectionName == configSectionToFind.SectionName &&
                     configSection.SubSection == configSectionToFind.SubSection)
                     return configSection;
             }
-            sections.Add(configSectionToFind);
+            _sections.Add(configSectionToFind);
             return configSectionToFind;
         }
 
         private ConfigSection FindConfigSection(string name)
         {
-            ConfigSection configSectionToFind = new ConfigSection(name);
+            var configSectionToFind = new ConfigSection(name);
 
-            foreach (ConfigSection configSection in sections)
+            foreach (var configSection in _sections)
             {
                 if (configSection.SectionName == configSectionToFind.SectionName &&
                     configSection.SubSection == configSectionToFind.SubSection)
@@ -167,7 +186,7 @@ namespace GitCommands
             return null;
         }
 
-        private string unescapeString(string value)
+        private static string UnescapeString(string value)
         {
             // The .gitconfig escapes some character sequences -> 
             // \" = "
@@ -175,7 +194,7 @@ namespace GitCommands
             return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
         }
 
-        private static string escapeString(string path)
+        private static string EscapeString(string path)
         {
             // The .gitconfig escapes some character sequences
             path = path.Replace("\"", "$QUOTE$");
@@ -189,27 +208,5 @@ namespace GitCommands
 
             return path.Replace("$QUOTE$", "\\\"");
         }
-
-        static readonly Regex regParseIsSection =
-                                        new Regex
-                                        (
-                                            @"(?<IsSection>
-                                                        ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
-                                                    )
-                                                    ",
-                                            RegexOptions.Compiled |
-                                            RegexOptions.IgnoreCase |
-                                            RegexOptions.IgnorePatternWhitespace
-                                        );
-        static readonly Regex regParseIsKey =
-                                        new Regex
-                                        (
-                                            @"(?<IsKeyValue>
-                                                       ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
-                                                    )",
-                                            RegexOptions.Compiled |
-                                            RegexOptions.IgnoreCase |
-                                            RegexOptions.IgnorePatternWhitespace
-                                        );
     }
 }
