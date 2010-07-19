@@ -918,7 +918,7 @@ namespace GitUI
 
                     // Create the brush for drawing the line
                     Brush brushLine;
-                    if (curColors.Count == 1 || !GitCommands.Settings.StripedBanchChange)
+                    if (curColors.Count == 1 || !GitCommands.Settings.StripedBranchChange)
                     {
                         brushLine = new SolidBrush(curColors[0]);
                     }
