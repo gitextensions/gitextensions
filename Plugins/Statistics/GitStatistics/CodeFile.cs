@@ -10,21 +10,12 @@ namespace GitStatistics
         private readonly bool _isDesignerFile;
         protected FileInfo File;
         protected int NumberCodeFiles;
-        protected string RelativeFileName = "";
         private bool _inCodeGeneratedRegion;
         private bool _inCommentBlock;
 
         internal CodeFile(string fullName)
         {
             File = new FileInfo(fullName);
-            _isDesignerFile = IsDesignerFile();
-            IsTestFile = false;
-        }
-
-        internal CodeFile(string fullName, string relativeName)
-        {
-            File = new FileInfo(fullName);
-            RelativeFileName = relativeName;
             _isDesignerFile = IsDesignerFile();
             IsTestFile = false;
         }
