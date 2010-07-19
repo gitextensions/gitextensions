@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using System.IO;
 
 namespace GitUI
 {
     public partial class FormGitIgnore : GitExtensionsForm
     {
+        public string GitIgnoreFile;
+
         public FormGitIgnore()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             GitIgnoreFile = "";
 
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
                 {
-                    using (StreamReader re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding))
+                    using (var re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding))
                     {
                         GitIgnoreFile = re.ReadToEnd();
                         re.Close();
@@ -29,31 +28,31 @@ namespace GitUI
                 }
                 _GitIgnoreEdit.Text = GitIgnoreFile;
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
 
-
-
-        public string GitIgnoreFile;
-
-        private void Save_Click(object sender, EventArgs e)
+        private void SaveClick(object sender, EventArgs e)
         {
             try
             {
-                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".gitignore"))
-                {
-
-                    //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-                    GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
-                    using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", false, Settings.Encoding))
-                    {
-                        tw.Write(GitIgnoreFile);
-                        tw.Close();
-                    }
-                    Close();
-                }
+                FileInfoExtensions
+                    .TemporayMakeFileWriteable(
+                        Settings.WorkingDir + ".gitignore",
+                        x =>
+                            {
+                                // Enter a newline to work around a wierd bug 
+                                // that causes the first line to include 3 extra bytes. (encoding marker??)
+                                GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
+                                using (var tw = new StreamWriter(x, false, Settings.Encoding))
+                                {
+                                    tw.Write(GitIgnoreFile);
+                                    tw.Close();
+                                }
+                                Close();
+                            });
             }
             catch (Exception ex)
             {
@@ -61,24 +60,51 @@ namespace GitUI
             }
         }
 
-        private void FormGitIgnore_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormGitIgnoreFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("edit-git-ignore");
         }
 
-        private void FormGitIgnore_Load(object sender, EventArgs e)
+        private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-git-ignore");
-            if (Settings.IsBareRepository())
-            {
-                MessageBox.Show(".gitignore is only supported when there is a working dir.");
-                Close();
-            }
+            if (!Settings.IsBareRepository()) return;
+            MessageBox.Show(".gitignore is only supported when there is a working dir.");
+            Close();
         }
 
-        private void AddDefault_Click(object sender, EventArgs e)
+        private void AddDefaultClick(object sender, EventArgs e)
         {
-            _GitIgnoreEdit.Text += Environment.NewLine + "#ignore thumbnails created by windows" + Environment.NewLine + "Thumbs.db" + Environment.NewLine + "#Ignore files build by Visual Studio" + Environment.NewLine + "*.obj" + Environment.NewLine + "*.exe" + Environment.NewLine + "*.pdb" + Environment.NewLine + "*.user" + Environment.NewLine + "*.aps" + Environment.NewLine + "*.pch" + Environment.NewLine + "*.vspscc" + Environment.NewLine + "*_i.c" + Environment.NewLine + "*_p.c" + Environment.NewLine + "*.ncb" + Environment.NewLine + "*.suo" + Environment.NewLine + "*.tlb" + Environment.NewLine + "*.tlh" + Environment.NewLine + "*.bak" + Environment.NewLine + "*.cache" + Environment.NewLine + "*.ilk" + Environment.NewLine + "*.log" + Environment.NewLine + "[Bb]in" + Environment.NewLine + "[Dd]ebug*/" + Environment.NewLine + "*.lib" + Environment.NewLine + "*.sbr" + Environment.NewLine + "obj/" + Environment.NewLine + "[Rr]elease*/" + Environment.NewLine + "_ReSharper*/" + Environment.NewLine + "[Tt]est[Rr]esult*" + Environment.NewLine + "";
+            _GitIgnoreEdit.Text +=
+                Environment.NewLine + "#ignore thumbnails created by windows" +
+                Environment.NewLine + "Thumbs.db" +
+                Environment.NewLine + "#Ignore files build by Visual Studio" +
+                Environment.NewLine + "*.obj" +
+                Environment.NewLine + "*.exe" +
+                Environment.NewLine + "*.pdb" +
+                Environment.NewLine + "*.user" +
+                Environment.NewLine + "*.aps" +
+                Environment.NewLine + "*.pch" +
+                Environment.NewLine + "*.vspscc" +
+                Environment.NewLine + "*_i.c" +
+                Environment.NewLine + "*_p.c" +
+                Environment.NewLine + "*.ncb" +
+                Environment.NewLine + "*.suo" +
+                Environment.NewLine + "*.tlb" +
+                Environment.NewLine + "*.tlh" +
+                Environment.NewLine + "*.bak" +
+                Environment.NewLine + "*.cache" +
+                Environment.NewLine + "*.ilk" +
+                Environment.NewLine + "*.log" +
+                Environment.NewLine + "[Bb]in" +
+                Environment.NewLine + "[Dd]ebug*/" +
+                Environment.NewLine + "*.lib" +
+                Environment.NewLine + "*.sbr" +
+                Environment.NewLine + "obj/" +
+                Environment.NewLine + "[Rr]elease*/" +
+                Environment.NewLine + "_ReSharper*/" +
+                Environment.NewLine + "[Tt]est[Rr]esult*" +
+                Environment.NewLine + "";
         }
     }
 }

@@ -1,68 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using System.IO;
 
 namespace GitUI
 {
     public partial class FormMailMap : GitExtensionsForm
     {
+        public string MailMapFile;
+
         public FormMailMap()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             MailMapFile = "";
 
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".mailmap"))
                 {
-                    using (StreamReader re = new StreamReader(Settings.WorkingDir + ".mailmap", Settings.Encoding))
+                    using (var re = new StreamReader(Settings.WorkingDir + ".mailmap", Settings.Encoding))
                     {
                         MailMapFile = re.ReadToEnd();
                     }
                 }
                 _MailMapText.Text = MailMapFile;
             }
-            catch
+            catch(Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
 
-        public string MailMapFile;
-
-        private void Save_Click(object sender, EventArgs e)
+        private void SaveClick(object sender, EventArgs e)
         {
-            using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".mailmap"))
-            {
-
-                //Enter a newline to work around a wierd bug that causes the first line to include 3 extra bytes. (encoding marker??)
-                MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
-                using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".mailmap", false, Settings.Encoding))
-                {
-                    tw.Write(MailMapFile);
-                }
-                Close();
-            }
+            FileInfoExtensions
+                .TemporayMakeFileWriteable(
+                    Settings.WorkingDir + ".mailmap",
+                    x =>
+                        {
+                            // Enter a newline to work around a wierd bug 
+                            // that causes the first line to include 3 extra bytes. (encoding marker??)
+                            MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
+                            using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
+                            {
+                                tw.Write(MailMapFile);
+                            }
+                            Close();
+                        });
         }
 
-        private void FormMailMap_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("edit-mail-map");
         }
 
-        private void FormMailMap_Load(object sender, EventArgs e)
+        private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-mail-map");
-            if (Settings.IsBareRepository())
-            {
-                MessageBox.Show(".mailmap is only supported when there is a working dir.");
-                Close();
-            }
+            if (!Settings.IsBareRepository()) return;
+            MessageBox.Show(".mailmap is only supported when there is a working dir.");
+            Close();
         }
     }
 }

@@ -98,10 +98,10 @@ namespace GitCommands
 
             try
             {
-                using (new TempRemoveFileAttributes(_fileName))
-                {
-                    File.WriteAllText(_fileName, configFileContent.ToString(), Settings.Encoding);
-                }
+                FileInfoExtensions
+                    .TemporayMakeFileWriteable(_fileName,
+                                       x =>
+                                       File.WriteAllText(_fileName, configFileContent.ToString(), Settings.Encoding));
             }
             catch (Exception ex)
             {

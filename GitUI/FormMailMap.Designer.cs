@@ -85,7 +85,7 @@
             this.Save.TabIndex = 0;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this.Save.Click += new System.EventHandler(this.SaveClick);
             // 
             // FormMailMap
             // 
@@ -95,8 +95,8 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormMailMap";
             this.Text = "Edit .mailmap";
-            this.Load += new System.EventHandler(this.FormMailMap_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMap_FormClosing);
+            this.Load += new System.EventHandler(this.FormMailMapLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMapFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
