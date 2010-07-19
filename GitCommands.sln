@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gource", "Plugins\Gource\Go
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandsTests", "GitCommandsTests\GitCommandsTests.csproj", "{4A720727-E26E-4091-AA12-1B2CDA481095}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gravatar", "Gravatar\Gravatar.csproj", "{4041B976-50D0-4C6E-ABAF-7E67458A1264}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,18 @@ Global
 		{4A720727-E26E-4091-AA12-1B2CDA481095}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4A720727-E26E-4091-AA12-1B2CDA481095}.Release|x64.ActiveCfg = Release|Any CPU
 		{4A720727-E26E-4091-AA12-1B2CDA481095}.Release|x86.ActiveCfg = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|x64.ActiveCfg = Release|Any CPU
+		{4041B976-50D0-4C6E-ABAF-7E67458A1264}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

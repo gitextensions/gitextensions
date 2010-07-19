@@ -41,7 +41,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(revision))
             {
                 RevisionInfo.Text = "";
-                gravatar1.email = "";
+                gravatar1.LoadImageForEmail("");
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace GitUI
             MatchCollection matches = Regex.Matches(RevisionInfo.Text,
                                                     @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
             foreach (Match emailMatch in matches)
-                gravatar1.email = emailMatch.Value;
+                gravatar1.LoadImageForEmail(emailMatch.Value);
         }
 
         private static string GetBranchesWhichContainsThisCommit(string revision)
