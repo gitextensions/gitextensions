@@ -51,7 +51,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Start";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1Click);
             // 
             // ArgumentsLabel
             // 
@@ -61,7 +61,6 @@
             this.ArgumentsLabel.Size = new System.Drawing.Size(57, 13);
             this.ArgumentsLabel.TabIndex = 1;
             this.ArgumentsLabel.Text = "Arguments";
-            this.ArgumentsLabel.Click += new System.EventHandler(this.ArgumentsLabel_Click);
             // 
             // Arguments
             // 
@@ -122,7 +121,7 @@
             this.GourceBrowse.TabIndex = 8;
             this.GourceBrowse.Text = "Browse";
             this.GourceBrowse.UseVisualStyleBackColor = true;
-            this.GourceBrowse.Click += new System.EventHandler(this.GourceBrowse_Click);
+            this.GourceBrowse.Click += new System.EventHandler(this.GourceBrowseClick);
             // 
             // WorkingDirBrowse
             // 
@@ -132,7 +131,7 @@
             this.WorkingDirBrowse.TabIndex = 9;
             this.WorkingDirBrowse.Text = "Browse";
             this.WorkingDirBrowse.UseVisualStyleBackColor = true;
-            this.WorkingDirBrowse.Click += new System.EventHandler(this.WorkingDirBrowse_Click);
+            this.WorkingDirBrowse.Click += new System.EventHandler(this.WorkingDirBrowseClick);
             // 
             // linkLabel1
             // 
@@ -143,7 +142,7 @@
             this.linkLabel1.TabIndex = 10;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "gource project";
-            this.linkLabel1.Click += new System.EventHandler(this.linkLabel1_Click);
+            this.linkLabel1.Click += new System.EventHandler(LinkLabel1Click);
             // 
             // GourceStart
             // 
