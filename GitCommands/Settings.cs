@@ -317,44 +317,12 @@ namespace GitCommands
         {
             try
             {
-                var appData = Application.UserAppDataRegistry;
-
-                if (appData != null)
-                {
-                    if (appData.GetValue("maxcommits") != null)
-                    {
-                        int result;
-                        if (int.TryParse(appData.GetValue("maxcommits").ToString(), out result))
-                        {
-                            MaxCommits = result;
-                        }
-                    }
-
-                    if (appData.GetValue("authorImageCacheDays") != null)
-                    {
-                        int result;
-                        if (int.TryParse(appData.GetValue("authorImageCacheDays").ToString(),
-                                         out result))
-                        {
-                            AuthorImageCacheDays = result;
-                        }
-                    }
-
-
-                    if (appData.GetValue("authorimagesize") != null)
-                    {
-                        int result;
-                        if (int.TryParse(appData.GetValue("authorimagesize").ToString(), out result))
-                        {
-                            AuthorImageSize = result;
-                        }
-                    }
-                }
+                SafeSetInt("maxcommits", x => MaxCommits = x);
+                SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
+                SafeSetInt("authorimagesize", x => AuthorImageSize = x);
 
                 string encoding = null;
-                if (appData != null &&
-                    appData.GetValue("encoding") != null)
-                    encoding = appData.GetValue("encoding").ToString();
+                SafeSetString("encoding", x => encoding = x);
 
                 if (string.IsNullOrEmpty(encoding))
                     Encoding = new UTF8Encoding(false);
@@ -373,144 +341,90 @@ namespace GitCommands
 
                 try
                 {
-                    if (appData != null)
-                    {
-                        if (appData.GetValue("diffaddedcolor") != null)
-                            DiffAddedColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("diffaddedcolor").ToString());
-                        if (appData.GetValue("diffremovedcolor") != null)
-                            DiffRemovedColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("diffremovedcolor").ToString());
-                        if (appData.GetValue("diffaddedextracolor") != null)
-                            DiffAddedExtraColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("diffaddedextracolor").ToString());
-                        if (appData.GetValue("diffremovedextracolor") != null)
-                            DiffRemovedExtraColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("diffremovedextracolor").ToString());
-                        if (appData.GetValue("diffsectioncolor") != null)
-                            DiffSectionColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("diffsectioncolor").ToString());
-                        if (appData.GetValue("tagcolor") != null)
-                            TagColor =
-                                ColorTranslator.FromHtml(appData.GetValue("tagcolor").ToString());
-                        if (appData.GetValue("graphcolor") != null)
-                            GraphColor =
-                                ColorTranslator.FromHtml(appData.GetValue("graphcolor").ToString());
-                        if (appData.GetValue("branchcolor") != null)
-                            BranchColor =
-                                ColorTranslator.FromHtml(appData.GetValue("branchcolor").ToString());
-                        if (appData.GetValue("remotebranchcolor") != null)
-                            RemoteBranchColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("remotebranchcolor").ToString());
-                        if (appData.GetValue("othertagcolor") != null)
-                            OtherTagColor =
-                                ColorTranslator.FromHtml(
-                                    appData.GetValue("othertagcolor").ToString());
-                        if (appData.GetValue("multicolorbranches") != null)
-                            MulticolorBranches =
-                                appData.GetValue("multicolorbranches").ToString() == "True";
-                        if (appData.GetValue("branchborders") != null)
-                            BranchBorders = appData.GetValue("branchborders").ToString() == "True";
-                        if (appData.GetValue("stripedbanchchange") != null)
-                            StripedBranchChange =
-                                appData.GetValue("stripedbanchchange").ToString() == "True";
-                    }
+                    SafeSetHtmlColor("diffaddedcolor", x => DiffAddedColor = x);
+                    SafeSetHtmlColor("diffremovedcolor", x => DiffRemovedColor = x);
+                    SafeSetHtmlColor("diffaddedextracolor", x => DiffAddedExtraColor = x);
+                    SafeSetHtmlColor("diffremovedextracolor", x => DiffRemovedExtraColor = x);
+                    SafeSetHtmlColor("diffsectioncolor", x => DiffSectionColor = x);
+                    SafeSetHtmlColor("tagcolor", x => TagColor = x);
+                    SafeSetHtmlColor("graphcolor", x => GraphColor = x);
+                    SafeSetHtmlColor("branchcolor", x => BranchColor = x);
+                    SafeSetHtmlColor("remotebranchcolor", x => RemoteBranchColor = x);
+                    SafeSetHtmlColor("othertagcolor", x => OtherTagColor = x);
+                    SafeSetBool("multicolorbranches", x => MulticolorBranches = x);
+                    SafeSetBool("branchborders", x => BranchBorders = x);
+                    SafeSetBool("stripedbanchchange", x => StripedBranchChange = x);
                 }
                 catch (Exception ex)
                 {
                     Trace.WriteLine(ex.Message);
                 }
 
-                if (appData != null)
-                {
-                    if (appData.GetValue("translation") != null)
-                        Translation = appData.GetValue("translation").ToString();
-                    if (appData.GetValue("pullmerge") != null)
-                        PullMerge = appData.GetValue("pullmerge").ToString();
-                    if (appData.GetValue("gitssh") != null)
-                        GitCommands.SetSsh(appData.GetValue("gitssh").ToString());
-                    if (appData.GetValue("plink") != null)
-                        Plink = appData.GetValue("plink").ToString();
-                    if (appData.GetValue("puttygen") != null)
-                        Puttygen = appData.GetValue("puttygen").ToString();
-                    if (appData.GetValue("pageant") != null)
-                        Pageant = appData.GetValue("pageant").ToString();
-
-                    if (appData.GetValue("dictionary") != null)
-                        Dictionary = appData.GetValue("dictionary").ToString();
-                    if (appData.GetValue("smtp") != null)
-                        Smtp = appData.GetValue("smtp").ToString();
-
-                    if (appData.GetValue("showauthorgravatar") != null)
-                        ShowAuthorGravatar = appData.GetValue("showauthorgravatar").ToString() ==
-                                             "True";
-
-                    if (appData.GetValue("userprofilehomedir") != null)
-                        UserProfileHomeDir = appData.GetValue("userprofilehomedir").ToString() ==
-                                             "True";
-                    if (appData.GetValue("customhomedir") != null)
-                        CustomHomeDir = appData.GetValue("customhomedir").ToString();
-
-                    if (appData.GetValue("closeCommitDialogAfterCommit") != null)
-                        CloseCommitDialogAfterCommit =
-                            appData.GetValue("closeCommitDialogAfterCommit").ToString() == "True";
-                    if (appData.GetValue("markIllFormedLinesInCommitMsg") != null)
-                        MarkIllFormedLinesInCommitMsg =
-                            appData.GetValue("markIllFormedLinesInCommitMsg").ToString() == "True";
-                    if (appData.GetValue("followrenamesinfilehistory") != null)
-                        FollowRenamesInFileHistory =
-                            appData.GetValue("followrenamesinfilehistory").ToString() == "True";
-                    if (appData.GetValue("autostash") != null)
-                        AutoStash = appData.GetValue("autostash").ToString() == "True";
-
-                    if (appData.GetValue("iconcolor") != null)
-                        IconColor = appData.GetValue("iconcolor").ToString();
-                    if (appData.GetValue("relativedate") != null)
-                        RelativeDate = appData.GetValue("relativedate").ToString() == "True";
-                    if (appData.GetValue("usefastchecks") != null)
-                        UseFastChecks = appData.GetValue("usefastchecks").ToString() == "True";
-                    if (appData.GetValue("showgitcommandline") != null)
-                        ShowGitCommandLine = appData.GetValue("showgitcommandline").ToString() ==
-                                             "True";
-                    if (appData.GetValue("showrevisiongraph") != null)
-                        ShowRevisionGraph = appData.GetValue("showrevisiongraph").ToString() ==
-                                            "True";
-                    if (appData.GetValue("showauthordate") != null)
-                        ShowAuthorDate = appData.GetValue("showauthordate").ToString() == "True";
-                    if (appData.GetValue("closeprocessdialog") != null)
-                        CloseProcessDialog = appData.GetValue("closeprocessdialog").ToString() ==
-                                             "True";
-                    if (appData.GetValue("showallbranches") != null)
-                        ShowCurrentBranchOnly = appData.GetValue("showallbranches").ToString() ==
-                                                "False";
-                    if (appData.GetValue("branchfilterenabled") != null)
-                        BranchFilterEnabled = appData.GetValue("branchfilterenabled").ToString() ==
-                                              "True";
-                    if (appData.GetValue("orderrevisiongraphbydate") != null)
-                        OrderRevisionByDate =
-                            appData.GetValue("orderrevisiongraphbydate").ToString() == "True";
-                    if (appData.GetValue("gitdir") != null)
-                        GitCommand = appData.GetValue("gitdir").ToString();
-                    if (appData.GetValue("gitbindir") != null)
-                        GitBinDir = appData.GetValue("gitbindir").ToString();
-
-                    if (appData.GetValue("history") != null)
-                        Repositories.DeserializeHistory(appData.GetValue("history").ToString());
-                    if (appData.GetValue("repositories") != null)
-                        Repositories.DeserializeRepositories(
-                            appData.GetValue("repositories").ToString());
-                }
+                SafeSetString("translation", x => Translation = x);
+                SafeSetString("pullmerge", x => PullMerge = x);
+                SafeSetString("gitssh", GitCommands.SetSsh);
+                SafeSetString("plink", x => Plink = x);
+                SafeSetString("puttygen", x => Puttygen = x);
+                SafeSetString("pageant", x => Pageant = x);
+                SafeSetString("dictionary", x => Dictionary = x);
+                SafeSetString("smtp", x => Smtp = x);
+                SafeSetBool("showauthorgravatar", x => ShowAuthorGravatar = x);
+                SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
+                SafeSetString("customhomedir", x => CustomHomeDir = x);
+                SafeSetBool("closeCommitDialogAfterCommit", x => CloseCommitDialogAfterCommit = x);
+                SafeSetBool("markIllFormedLinesInCommitMsg", x => MarkIllFormedLinesInCommitMsg = x);
+                SafeSetBool("followrenamesinfilehistory", x => FollowRenamesInFileHistory = x);
+                SafeSetBool("autostash", x => AutoStash = x);
+                SafeSetString("iconcolor", x => IconColor = x);
+                SafeSetBool("relativedate", x => RelativeDate = x);
+                SafeSetBool("usefastchecks", x => UseFastChecks = x);
+                SafeSetBool("showgitcommandline", x => ShowGitCommandLine = x);
+                SafeSetBool("showrevisiongraph", x => ShowRevisionGraph = x);
+                SafeSetBool("showauthordate", x => ShowAuthorDate = x);
+                SafeSetBool("closeprocessdialog", x => CloseProcessDialog = x);
+                SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
+                SafeSetBool("branchfilterenabled", x => BranchFilterEnabled = x);
+                SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
+                SafeSetString("gitdir", x => GitCommand = x);
+                SafeSetString("gitbindir", x => GitBinDir = x);
+                SafeSetString("history", Repositories.DeserializeHistory);
+                SafeSetString("repositories", Repositories.DeserializeRepositories);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
+        }
+
+        private static void SafeSetBool(string key, Action<bool> actionToPerformIfValueExists)
+        {
+            SafeSetString(key, x => actionToPerformIfValueExists(x == "True"));
+        }
+
+        private static void SafeSetHtmlColor(string key, Action<Color> actionToPerformIfValueExists)
+        {
+            SafeSetString(key, x => actionToPerformIfValueExists(ColorTranslator.FromHtml(x)));
+        }
+
+        private static void SafeSetInt(string key, Action<int> actionToPerformIfValueExists)
+        {
+            SafeSetString(key, x =>
+                                   {
+                                       int result;
+                                       if (int.TryParse(x, out result))
+                                       {
+                                           actionToPerformIfValueExists(result);
+                                       }
+                                   });
+        }
+
+        private static void SafeSetString(string key, Action<string> actionToPerformIfValueExists)
+        {
+            if (Application.UserAppDataRegistry == null) return;
+            var value = Application.UserAppDataRegistry.GetValue(key);
+            if (value == null)
+                return;
+            actionToPerformIfValueExists(value.ToString());
         }
     }
 }
