@@ -76,7 +76,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ShortDiff.cs" />
     <Compile Include="Strings.cs" />
-    <Compile Include="TempRemoveFileAttributes.cs" />
+    <Compile Include="FileInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

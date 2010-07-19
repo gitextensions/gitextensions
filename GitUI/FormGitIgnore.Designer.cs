@@ -79,7 +79,7 @@
             this.AddDefault.TabIndex = 2;
             this.AddDefault.Text = "Add default ignores";
             this.AddDefault.UseVisualStyleBackColor = true;
-            this.AddDefault.Click += new System.EventHandler(this.AddDefault_Click);
+            this.AddDefault.Click += new System.EventHandler(this.AddDefaultClick);
             // 
             // Save
             // 
@@ -90,7 +90,7 @@
             this.Save.TabIndex = 1;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this.Save.Click += new System.EventHandler(this.SaveClick);
             // 
             // label1
             // 
@@ -110,8 +110,8 @@
             this.Name = "FormGitIgnore";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit .gitignore";
-            this.Load += new System.EventHandler(this.FormGitIgnore_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitIgnore_FormClosing);
+            this.Load += new System.EventHandler(this.FormGitIgnoreLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitIgnoreFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
