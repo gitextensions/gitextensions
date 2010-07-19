@@ -1,117 +1,111 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace GitStatistics
 {
     /// <summary>
-    /// Represents a .NET file containing code: a .vb, .cs, .cpp, or .h file here.
+    ///   Represents a .NET file containing code: a .vb, .cs, .cpp, or .h file here.
     /// </summary>
     public class CodeFile
     {
-        #region Member variables
-        protected FileInfo file;
-        protected string relativeFileName = "";
-        protected int numberLines = 0;
-        protected int numberBlankLines = 0;
-        protected int numberLinesInDesignerFiles = 0;
-        protected int numberCommentsLines = 0;
-        protected int numberCodeFiles = 0;
+        private readonly bool _isDesignerFile;
+        protected FileInfo File;
+        protected int NumberCodeFiles;
+        protected string RelativeFileName = "";
+        private bool _inCodeGeneratedRegion;
+        private bool _inCommentBlock;
 
-        #endregion
-
-        #region Getters
-        internal int NumberLines { get { return numberLines; } }
-        internal int NumberBlankLines { get { return numberBlankLines; } }
-        internal int NumberLinesInDesignerFiles { get { return numberLinesInDesignerFiles; } }
-        internal int NumberCommentsLines { get { return numberCommentsLines; } }
-        internal bool IsTestFile { get { return isTestFile; } }
-        #endregion
-
-
-
-        bool isDesignerFile = false;
-        bool isTestFile = false;
-
-        #region Constructors
         internal CodeFile(string fullName)
         {
-            file = new FileInfo(fullName);
-            isDesignerFile = IsDesignerFile();
-            isTestFile = false;
+            File = new FileInfo(fullName);
+            _isDesignerFile = IsDesignerFile();
+            IsTestFile = false;
         }
+
         internal CodeFile(string fullName, string relativeName)
         {
-            file = new FileInfo(fullName);
-            this.relativeFileName = relativeName;
-            isDesignerFile = IsDesignerFile();
-            isTestFile = false;
+            File = new FileInfo(fullName);
+            RelativeFileName = relativeName;
+            _isDesignerFile = IsDesignerFile();
+            IsTestFile = false;
         }
+
+        protected internal int NumberLines { get; protected set; }
+
+        protected internal int NumberBlankLines { get; protected set; }
+
+        protected internal int NumberLinesInDesignerFiles { get; protected set; }
+
+        protected internal int NumberCommentsLines { get; protected set; }
+
+        internal bool IsTestFile { get; private set; }
+
+
         private bool IsDesignerFile()
         {
-            bool isWebReferenceFile = file.FullName.Contains(@"\Web References\") && file.Name == "Reference.cs";  // Ugh
-            return isWebReferenceFile || file.Name.Contains(".Designer.") || file.Name.Contains(".designer.");
+            return
+                IsWebReferenceFile() ||
+                File.Name.Contains(".Designer.") ||
+                File.Name.Contains(".designer.");
         }
-        #endregion
 
-        #region Count lines method
-        bool inCodeGeneratedRegion = false;
-        bool inCommentBlock = false;
+        private bool IsWebReferenceFile()
+        {
+            return File.FullName.Contains(@"\Web References\") &&
+                   File.Name == "Reference.cs"; // Ugh
+        }
+
         public void CountLines()
         {
             InitializeCountLines();
-            if (file.Exists)
+            if (!File.Exists)
+                return;
+
+            using (var sr = new StreamReader(File.FullName, true))
             {
-                StreamReader sr = new StreamReader(file.FullName, true);
                 try
                 {
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
-                        IncrementLineCountsFromLine(line);
+                        var line = sr.ReadLine();
+                        if (line != null)
+                            IncrementLineCountsFromLine(line.Trim());
                     }
                 }
                 finally
                 {
-                    if (sr != null) sr.Close();
+                    sr.Close();
                 }
-
-            }
-
-            if (isTestFile)
-            {
             }
         }
 
         private void InitializeCountLines()
         {
             SetLineCountsToZero();
-            numberCodeFiles = 1;
-            inCodeGeneratedRegion = false;
-            inCommentBlock = false;
+            NumberCodeFiles = 1;
+            _inCodeGeneratedRegion = false;
+            _inCommentBlock = false;
         }
 
         protected void SetLineCountsToZero()
         {
-            numberLines = 0;
-            numberBlankLines = 0;
-            numberLinesInDesignerFiles = 0;
-            numberCommentsLines = 0;
-            numberCodeFiles = 0;
+            NumberLines = 0;
+            NumberBlankLines = 0;
+            NumberLinesInDesignerFiles = 0;
+            NumberCommentsLines = 0;
+            NumberCodeFiles = 0;
         }
 
         private void IncrementLineCountsFromLine(string line)
         {
             SetCodeBlockFlags(line);
 
-            this.numberLines++;
-            if (inCodeGeneratedRegion || this.isDesignerFile)
-                this.numberLinesInDesignerFiles++;
+            NumberLines++;
+            if (_inCodeGeneratedRegion || _isDesignerFile)
+                NumberLinesInDesignerFiles++;
             else if (line == "")
-                this.numberBlankLines++;
-            else if (inCommentBlock || line.StartsWith("'") || line.StartsWith(@"//"))
-                this.numberCommentsLines++;
+                NumberBlankLines++;
+            else if (_inCommentBlock || line.StartsWith("'") || line.StartsWith(@"//"))
+                NumberCommentsLines++;
 
             ResetCodeBlockFlags(line);
         }
@@ -128,27 +122,24 @@ namespace GitStatistics
                 line.StartsWith("#region Web Form Designer generated code") ||
                 line.StartsWith("#Region \" Web Form Designer Generated Code \"")
                 )
-                inCodeGeneratedRegion = true;
+                _inCodeGeneratedRegion = true;
             if (line.StartsWith("/*"))
-                inCommentBlock = true;
-            if (!inCommentBlock && !inCodeGeneratedRegion && (
-                line.StartsWith("[Test")
-                ))
+                _inCommentBlock = true;
+            if (!_inCommentBlock && !_inCodeGeneratedRegion && (
+                                                                   line.StartsWith("[Test")
+                                                               ))
             {
-                isTestFile = true;
+                IsTestFile = true;
             }
-
         }
 
         private void ResetCodeBlockFlags(string line)
         {
-            if (inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
-                inCodeGeneratedRegion = false;
-            if (inCommentBlock && line.Contains("*/"))
-                inCommentBlock = false;
+            if (_inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
+                _inCodeGeneratedRegion = false;
+            if (_inCommentBlock && line.Contains("*/"))
+                _inCommentBlock = false;
         }
-        #endregion
-
 
         public bool CheckValidExtension(string fileName)
         {
