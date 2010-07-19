@@ -1,26 +1,26 @@
-﻿using System.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace GitCommands
 {
     public class CommandLogger
     {
-        const int logLimit = 100;
-        private Queue<string> logQueue = new Queue<string>(logLimit);
+        private const int LogLimit = 100;
+        private readonly Queue<string> _logQueue = new Queue<string>(LogLimit);
 
         public void Log(string command)
         {
-            if (logQueue.Count >= logLimit)
-                logQueue.Dequeue();
+            if (_logQueue.Count >= LogLimit)
+                _logQueue.Dequeue();
 
-            logQueue.Enqueue(command);           
+            _logQueue.Enqueue(command);
         }
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            
-            foreach (string loggedCmd in logQueue.ToArray())
+            var stringBuilder = new StringBuilder();
+
+            foreach (var loggedCmd in _logQueue)
             {
                 stringBuilder.AppendLine(loggedCmd);
             }
