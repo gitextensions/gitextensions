@@ -336,7 +336,6 @@ namespace GitUI
         private int graphDataCount = 0;
         private int visibleTop = 0;
         private int visibleBottom = 0;
-        private bool isLoading = false;
 
         private void RebuildGraph()
         {

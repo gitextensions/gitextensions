@@ -40,7 +40,7 @@ namespace GitPlugin.Commands
                         {
                             OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
                         }
-                        catch (ArgumentException ex)
+                        catch (ArgumentException)
                         {
                             if (sel.ProjectItem.FileCount > 0)
                             {
