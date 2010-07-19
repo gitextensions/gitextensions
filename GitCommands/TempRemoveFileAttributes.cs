@@ -1,50 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace GitCommands
 {
+    /// <summary>
+    ///   Remove all attributes that could cause the file to be read-only 
+    ///   and restores them later
+    /// </summary>
     public class TempRemoveFileAttributes : IDisposable
     {
-        private FileInfo file;
-        private FileAttributes oldAttributes;
+        private readonly FileInfo _file;
+        private readonly FileAttributes _oldAttributes;
 
         public TempRemoveFileAttributes(string fileName)
         {
-            //Remove all attributes that could cause the file to be read-only
-            file = new FileInfo(fileName);
-            if (file.Exists)
-            {
-                oldAttributes = file.Attributes;
-                file.Attributes = FileAttributes.Normal;
-            }
+            _file = new FileInfo(fileName);
+            if (!_file.Exists) return;
+            _oldAttributes = _file.Attributes;
+            _file.Attributes = FileAttributes.Normal;
         }
-        
-        ~TempRemoveFileAttributes()
-        {
-            Dispose(false);
-        }
-
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            Dispose(true);   
+            Dispose(true);
         }
 
         #endregion
+
+        ~TempRemoveFileAttributes()
+        {
+            Dispose(false);
+        }
 
         public void Dispose(bool disposing)
         {
             if (disposing)
             {
-
             }
 
-            if (file != null && file.Exists)
-            file.Attributes = oldAttributes;
+            if (_file != null && _file.Exists)
+                _file.Attributes = _oldAttributes;
         }
     }
 }
