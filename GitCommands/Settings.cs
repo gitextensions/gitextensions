@@ -179,21 +179,17 @@ namespace GitCommands
 
         public static string GetDictionaryDir()
         {
-            if (Application.UserAppDataRegistry != null &&
-                Application.UserAppDataRegistry.GetValue("InstallDir") != null)
-                return GetInstallDir() + "\\Dictionaries\\";
-
-            return "";
+            var result = "";
+            SafeSetString("InstallDir", x => result = x + "\\Dictionaries\\");
+            return result;
         }
 
 
         public static string GetInstallDir()
         {
-            if (Application.UserAppDataRegistry != null &&
-                Application.UserAppDataRegistry.GetValue("InstallDir") != null)
-                return Application.UserAppDataRegistry.GetValue("InstallDir").ToString();
-
-            return "";
+            var result = "";
+            SafeSetString("InstallDir", x => result = x);
+            return result;
         }
 
         public static void SetInstallDir(string dir)
@@ -248,18 +244,7 @@ namespace GitCommands
                     throw new Exception("Application.UserAppDataRegistry is not available");
 
                 var appData = Application.UserAppDataRegistry;
-                if (Encoding.GetType() == typeof (ASCIIEncoding))
-                    appData.SetValue("encoding", "ASCII");
-                else if (Encoding.GetType() == typeof (UnicodeEncoding))
-                    appData.SetValue("encoding", "Unicode");
-                else if (Encoding.GetType() == typeof (UTF7Encoding))
-                    appData.SetValue("encoding", "UTF7");
-                else if (Encoding.GetType() == typeof (UTF8Encoding))
-                    appData.SetValue("encoding", "UTF8");
-                else if (Encoding.GetType() == typeof (UTF32Encoding))
-                    appData.SetValue("encoding", "UTF32");
-                else if (Encoding == Encoding.Default)
-                    appData.SetValue("encoding", "Default");
+                SetEncoding();
 
                 appData.SetValue("history", Repositories.SerializeHistory());
                 appData.SetValue("repositories", Repositories.SerializeRepositories());
@@ -313,6 +298,25 @@ namespace GitCommands
             }
         }
 
+        private static void SetEncoding()
+        {
+            if (Application.UserAppDataRegistry == null)
+                return;
+
+            if (Encoding == Encoding.ASCII)
+                Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
+            else if (Encoding == Encoding.Unicode)
+                Application.UserAppDataRegistry.SetValue("encoding", "Unicode");
+            else if (Encoding == Encoding.UTF7)
+                Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
+            else if (Encoding == Encoding.UTF8)
+                Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+            else if (Encoding == Encoding.UTF32)
+                Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+            else if (Encoding == Encoding.Default)
+                Application.UserAppDataRegistry.SetValue("encoding", "Default");
+        }
+
         public static void LoadSettings()
         {
             try
@@ -321,23 +325,7 @@ namespace GitCommands
                 SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
                 SafeSetInt("authorimagesize", x => AuthorImageSize = x);
 
-                string encoding = null;
-                SafeSetString("encoding", x => encoding = x);
-
-                if (string.IsNullOrEmpty(encoding))
-                    Encoding = new UTF8Encoding(false);
-                else if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                    Encoding = Encoding.Default;
-                else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                    Encoding = new UnicodeEncoding();
-                else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                    Encoding = new ASCIIEncoding();
-                else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                    Encoding = new UTF7Encoding();
-                else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                    Encoding = new UTF32Encoding(true, false);
-                else
-                    Encoding = new UTF8Encoding(false);
+                GetEncoding();
 
                 try
                 {
@@ -394,6 +382,27 @@ namespace GitCommands
             {
                 Trace.WriteLine(ex.Message);
             }
+        }
+
+        private static void GetEncoding()
+        {
+            string encoding = null;
+            SafeSetString("encoding", x => encoding = x);
+
+            if (string.IsNullOrEmpty(encoding))
+                Encoding = new UTF8Encoding(false);
+            else if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                Encoding = Encoding.Default;
+            else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                Encoding = new UnicodeEncoding();
+            else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                Encoding = new ASCIIEncoding();
+            else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                Encoding = new UTF7Encoding();
+            else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                Encoding = new UTF32Encoding(true, false);
+            else
+                Encoding = new UTF8Encoding(false);
         }
 
         private static void SafeSetBool(string key, Action<bool> actionToPerformIfValueExists)
