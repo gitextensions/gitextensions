@@ -85,7 +85,7 @@
             this.ShowPreview.TabIndex = 3;
             this.ShowPreview.Text = "Show preview";
             this.ShowPreview.UseVisualStyleBackColor = true;
-            this.ShowPreview.Click += new System.EventHandler(this.ShowPreview_Click);
+            this.ShowPreview.Click += new System.EventHandler(this.ShowPreviewClick);
             // 
             // AddToIngore
             // 
@@ -95,7 +95,7 @@
             this.AddToIngore.TabIndex = 2;
             this.AddToIngore.Text = "Add to .gitignore";
             this.AddToIngore.UseVisualStyleBackColor = true;
-            this.AddToIngore.Click += new System.EventHandler(this.AddToIngore_Click);
+            this.AddToIngore.Click += new System.EventHandler(this.AddToIngoreClick);
             // 
             // Preview
             // 

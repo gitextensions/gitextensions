@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
 using GitCommands;
 
 namespace GitUI
@@ -14,29 +10,32 @@ namespace GitUI
     {
         public FormAddToGitIgnore(string filePattern)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             FilePattern.Text = filePattern;
             Height = 100;
         }
 
-        private void AddToIngore_Click(object sender, EventArgs e)
+        private void AddToIngoreClick(object sender, EventArgs e)
         {
             try
             {
-                using (TempRemoveFileAttributes tempRemoveFileAttributes = new TempRemoveFileAttributes(Settings.WorkingDir + ".gitignore"))
-                {
-                    StringBuilder gitIgnoreFile = new StringBuilder();
-                    gitIgnoreFile.Append(Environment.NewLine);
-                    gitIgnoreFile.Append(FilePattern.Text);
+                FileInfoExtensions
+                    .TemporayMakeFileWriteable(Settings.WorkingDir + ".gitignore",
+                                       x =>
+                                           {
+                                               var gitIgnoreFile = new StringBuilder();
+                                               gitIgnoreFile.Append(Environment.NewLine);
+                                               gitIgnoreFile.Append(FilePattern.Text);
 
-                    using (TextWriter tw = new StreamWriter(Settings.WorkingDir + ".gitignore", true, Settings.Encoding))
-                    {
-                        tw.Write(gitIgnoreFile);
-                        tw.Close();
-                    }
-                }
+                                               using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
+                                               {
+                                                   tw.Write(gitIgnoreFile);
+                                                   tw.Close();
+                                               }
+                                           });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
@@ -44,10 +43,10 @@ namespace GitUI
             Close();
         }
 
-        private void ShowPreview_Click(object sender, EventArgs e)
+        private void ShowPreviewClick(object sender, EventArgs e)
         {
             Preview.DataSource = GitCommands.GitCommands.GetFiles(FilePattern.Text);
-            
+
             if (Height < 110)
                 Height = 300;
         }
