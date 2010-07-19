@@ -131,7 +131,7 @@ namespace GitUI
                 return;  
             }
             char key = (char)e.KeyValue;
-            if (char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
+            if (!e.Alt && !e.Control && char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
             {
                 quickSearchTimer.Stop();
                 quickSearchTimer.Interval = 700;
@@ -153,6 +153,7 @@ namespace GitUI
             {
                 quickSearchString = "";
                 HideQuickSearchString();
+                e.Handled = false;
                 return;
             }
         }
