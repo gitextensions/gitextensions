@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangedFile.cs" />
-    <Compile Include="ChangedFileManager.cs" />
     <Compile Include="Checkout.cs" />
     <Compile Include="Clone.cs" />
     <Compile Include="CommandLogger.cs" />
