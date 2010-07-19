@@ -2127,7 +2127,7 @@
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
             // 
-            // StripedBanchChange
+            // StripedBranchChange
             // 
             this.StripedBanchChange.AutoSize = true;
             this.StripedBanchChange.Location = new System.Drawing.Point(9, 46);
