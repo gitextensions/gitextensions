@@ -1,75 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
-using GitUIPluginInterfaces;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Globalization;
+using GitUIPluginInterfaces;
 
 namespace AutoCheckForUpdates
 {
     public class AutoCheckForUpdates : IGitPlugin
     {
         //Description of the plugin
-        public string Description 
+
+        #region IGitPlugin Members
+
+        public string Description
         {
-            get
-            {
-                return "Check for updates";
-            }
+            get { return "Check for updates"; }
         }
 
         //Store settings to use later
-        private IGitPluginSettingsContainer settings;
-        public IGitPluginSettingsContainer Settings 
-        {
-            get
-            {
-                return settings;
-            }
-            set
-            {
-                settings = value;
-            }
-        }
+        public IGitPluginSettingsContainer Settings { get; set; }
 
-        public void Register(IGitUICommands gitUICommands)
+        public void Register(IGitUICommands gitUiCommands)
         {
             //Register settings
             Settings.AddSetting("Enabled (true / false)", "true");
             Settings.AddSetting("Check every # days", "7");
-            Settings.AddSetting("Last check (yyyy/M/dd)", new DateTime(2000, 1, 1).ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+            Settings.AddSetting("Last check (yyyy/M/dd)",
+                                new DateTime(2000, 1, 1).ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
 
             //Connect to events
-            gitUICommands.PreBrowse += new GitUIEventHandler(gitUICommands_PreBrowse);
-        }
-
-        void gitUICommands_PreBrowse(IGitUIEventArgs e)
-        {
-            //Only check at startup when plugin is enabled
-            if (Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase))
-            {
-                int days = 0;
-                if (!int.TryParse(Settings.GetSetting("Check every # days"), out days))
-                    days = 0;
-
-                if (DateTime.ParseExact(Settings.GetSetting("Last check (yyyy/M/dd)"), "yyyy/M/dd", CultureInfo.InvariantCulture).AddDays(7) < DateTime.Now)
-                {
-                    Settings.SetSetting("Last check (yyyy/M/dd)", DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
-
-                    Updates updateForm = new Updates(e.GitVersion);
-                    updateForm.AutoClose = true;
-                    updateForm.ShowDialog();
-                }
-            }
+            gitUiCommands.PreBrowse += GitUiCommandsPreBrowse;
         }
 
         public void Execute(IGitUIEventArgs e)
         {
-            Updates updateForm = new Updates(e.GitVersion);
-            updateForm.AutoClose = false;
+            var updateForm = new Updates(e.GitVersion) {AutoClose = false};
+            updateForm.ShowDialog();
+        }
+
+        #endregion
+
+        private void GitUiCommandsPreBrowse(IGitUIEventArgs e)
+        {
+            //Only check at startup when plugin is enabled
+            if (!Settings.GetSetting("Enabled (true / false)")
+                     .Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            int days;
+            int.TryParse(Settings.GetSetting("Check every # days"), out days);
+
+            if (DateTime.ParseExact(
+                Settings.GetSetting("Last check (yyyy/M/dd)"),
+                "yyyy/M/dd",
+                CultureInfo.InvariantCulture).AddDays(7) >= DateTime.Now)
+                return;
+
+            Settings.SetSetting("Last check (yyyy/M/dd)",
+                                DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+
+            var updateForm = new Updates(e.GitVersion) {AutoClose = true};
             updateForm.ShowDialog();
         }
     }
