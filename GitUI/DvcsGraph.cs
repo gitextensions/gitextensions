@@ -2548,9 +2548,11 @@ namespace GitUI
                 lane.Next();
 
                 // See if we can pull up ancestors
-                if (lane.Junction == null)
+                if (lane.Count == 0 && lane.Junction == null)
                 {
-                    // Handle a single node branch. Nothing to do.
+                    // Handle a single node branch.
+                    currentRow.Collapse(curLane);
+                    laneNodes.RemoveAt(curLane);
                 }
                 else if (lane.Count == 0)
                 {
@@ -2624,6 +2626,7 @@ namespace GitUI
                         {
                             int left;
                             int right;
+                            Junction junction = laneNodes[curLane].Junction;
                             if (i > curLane)
                             {
                                 left = curLane;
@@ -2633,10 +2636,10 @@ namespace GitUI
                             {
                                 left = i;
                                 right = curLane;
+                                curLane = i;
                             }
                             currentRow.Replace(right, left);
                             currentRow.Collapse(right);
-                            Junction junction = laneNodes[curLane].Junction;
                             laneNodes[right].Clear();
                             laneNodes.RemoveAt(right);
 

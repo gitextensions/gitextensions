@@ -43,7 +43,12 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Guid;
+            string sha = Guid;
+            if (sha.Length > 8)
+            {
+                sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
+            }
+            return string.Format("{0}:{1}", sha, Message);
         }
     }
 }
