@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace GitCommands
+namespace GitCommands.Logging
 {
     public class CommandLogger
     {
