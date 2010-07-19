@@ -691,16 +691,6 @@ namespace GitUI
 
         }
 
-        private void Workingdir_Click_1(object sender, EventArgs e)
-        {
-            openToolStripMenuItem_Click(sender, e);
-        }
-
-        private void CurrentBranch_Click_1(object sender, EventArgs e)
-        {
-            checkoutBranchToolStripMenuItem_Click(sender, e);
-        }
-
         private void AddFiles_Click(object sender, EventArgs e)
         {
             addFilesToolStripMenuItem_Click(sender, e);
@@ -1266,6 +1256,12 @@ namespace GitUI
         private void fileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(_Workingdir.Text);
+        }
+
+        private void _Status_Click(object sender, EventArgs e)
+        {
+            // TODO: Replace with a status page?
+            commitToolStripMenuItem_Click(sender, e);
         }
 
     }

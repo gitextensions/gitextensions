@@ -519,6 +519,12 @@
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="System.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="ToolStripGitStatus.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolStripGitStatus.Designer.cs">
+      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="WindowPositionList.cs" />
   </ItemGroup>
@@ -824,6 +830,9 @@
       <DependentUpon>RevisionGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ToolStripGitStatus.resx">
+      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
@@ -865,6 +874,10 @@
     <None Include="Icons\221.png" />
     <None Include="Icons\brokendocument1.png" />
     <None Include="Icons\bug.png" />
+    <None Include="Icons\81.png" />
+    <None Include="Icons\82.png" />
+    <None Include="Icons\83.png" />
+    <None Include="Icons\84.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -906,7 +919,6 @@
     <None Include="Resources\puttygen.ico" />
     <None Include="Resources\pageant.ico" />
     <None Include="Resources\putty.ico" />
-    <None Include="Icons\82.png" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
@@ -935,7 +947,6 @@
     <None Include="Icons\40.png" />
     <None Include="Icons\35.png" />
     <None Include="Icons\33.png" />
-    <None Include="Icons\81.png" />
     <None Include="Icons\21.png" />
     <None Include="Icons\49.png" />
     <None Include="Icons\53.png" />

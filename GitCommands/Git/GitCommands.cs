@@ -266,23 +266,20 @@ namespace GitCommands
 
         public void Kill()
         {
-            try
+            //If there was another process running, kill it
+            if (Process != null)
             {
-                //If there was another process running, kill it
-                if (Process != null && !Process.HasExited)
+                try
                 {
-                    try
+                    if (!Process.HasExited)
                     {
                         Process.Kill();
                     }
-                    catch
-                    {
-                    }
-                    Process.Close();
                 }
-            }
-            catch
-            {
+                catch
+                {
+                }
+                Process.Close();
             }
         }
 
