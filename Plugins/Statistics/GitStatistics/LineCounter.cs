@@ -1,35 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using GitStatistics;
-using System.Text.RegularExpressions;
 
 namespace GitStatistics
 {
     public class LineCounter
     {
+        private readonly DirectoryInfo _directory;
+        public Dictionary<string, int> LinesOfCodePerExtension = new Dictionary<string, int>();
+
+        public int NumberBlankLines;
+        public int NumberCodeLines;
+        public int NumberCommentsLines;
+        public int NumberLines;
+        public int NumberLinesInDesignerFiles;
+        public int NumberTestCodeLines;
+
         public LineCounter(DirectoryInfo directory)
         {
-            this.Directory = directory;
+            _directory = directory;
         }
 
-        private DirectoryInfo Directory;
-
-        public int NumberLines = 0;
-        public int NumberBlankLines = 0;
-        public int NumberLinesInDesignerFiles = 0;
-        public int NumberCommentsLines = 0;
-        public int NumberCodeLines = 0;
-        public int NumberTestCodeLines = 0;
-
-        public Dictionary<string, int> LinesOfCodePerExtension = new Dictionary<string,int>();
-
-        private bool DirectoryIsFiltered(DirectoryInfo dir, string[] directoryFilters)
+        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {
-            foreach(string directoryFilter in directoryFilters)
+            foreach (var directoryFilter in directoryFilters)
             {
-                //if (Regex.IsMatch(dir.FullName, directoryFilter, RegexOptions.IgnoreCase))
                 if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             }
@@ -38,36 +33,35 @@ namespace GitStatistics
 
         public void Count(string filePattern, string directoriesToIgnore)
         {
-            string[] filters = filePattern.Split(';');
-            string[] directoryFilter = directoriesToIgnore.Split(';');
+            var filters = filePattern.Split(';');
+            var directoryFilter = directoriesToIgnore.Split(';');
 
-            foreach (string filter in filters)
+            foreach (var filter in filters)
             {
-                FileInfo[] files = Directory.GetFiles(filter.Trim(), SearchOption.AllDirectories);
+                var files = _directory.GetFiles(filter.Trim(), SearchOption.AllDirectories);
 
-                foreach (FileInfo file in files)
+                foreach (var file in files)
                 {
+                    if (DirectoryIsFiltered(file.Directory, directoryFilter)) 
+                        continue;
 
-                    if (!DirectoryIsFiltered(file.Directory, directoryFilter))
+                    if (!LinesOfCodePerExtension.ContainsKey(file.Extension.ToLower()))
+                        LinesOfCodePerExtension.Add(file.Extension.ToLower(), 0);
+
+                    var codeFile = new CodeFile(file.FullName);
+                    codeFile.CountLines();
+                    NumberLines += codeFile.NumberLines;
+                    NumberBlankLines += codeFile.NumberBlankLines;
+                    NumberCommentsLines += codeFile.NumberCommentsLines;
+                    NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
+                    var codeLines = codeFile.NumberLines - codeFile.NumberBlankLines - codeFile.NumberCommentsLines -
+                                    codeFile.NumberLinesInDesignerFiles;
+                    LinesOfCodePerExtension[file.Extension.ToLower()] += codeLines;
+                    NumberCodeLines += codeLines;
+
+                    if (codeFile.IsTestFile)
                     {
-
-                        if (!LinesOfCodePerExtension.ContainsKey(file.Extension.ToLower()))
-                            LinesOfCodePerExtension.Add(file.Extension.ToLower(), 0);
-
-                        CodeFile codeFile = new CodeFile(file.FullName);
-                        codeFile.CountLines();
-                        NumberLines += codeFile.NumberLines;
-                        NumberBlankLines += codeFile.NumberBlankLines;
-                        NumberCommentsLines += codeFile.NumberCommentsLines;
-                        NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
-                        int codeLines = codeFile.NumberLines - codeFile.NumberBlankLines - codeFile.NumberCommentsLines - codeFile.NumberLinesInDesignerFiles;
-                        LinesOfCodePerExtension[file.Extension.ToLower()] += codeLines;
-                        NumberCodeLines += codeLines;
-
-                        if (codeFile.IsTestFile)
-                        {
-                            NumberTestCodeLines += codeLines;
-                        }
+                        NumberTestCodeLines += codeLines;
                     }
                 }
 
