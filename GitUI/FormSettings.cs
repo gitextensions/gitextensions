@@ -119,7 +119,7 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
 
                 BranchBorders.Checked = Settings.BranchBorders;
-                StripedBanchChange.Checked = Settings.StripedBanchChange;
+                StripedBanchChange.Checked = Settings.StripedBranchChange;
 
                 _ColorGraphLabel.BackColor = Settings.GraphColor;
                 _ColorGraphLabel.Text = Settings.GraphColor.Name;
@@ -351,7 +351,7 @@ namespace GitUI
 
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
-            Settings.StripedBanchChange = StripedBanchChange.Checked;
+            Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _ColorGraphLabel.BackColor;
             Settings.TagColor = _ColorTagLabel.BackColor;
             Settings.BranchColor = _ColorBranchLabel.BackColor;
