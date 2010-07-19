@@ -182,6 +182,7 @@ namespace GitUI
         {
             if (Staged.SelectedItems.Count == 0) return;
 
+            Unstaged.SelectedItem = null;
             ShowChanges(Staged.SelectedItems[0], true);
         }
 
@@ -189,6 +190,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count == 0) return;
 
+            Staged.SelectedItem = null;
             ShowChanges(Unstaged.SelectedItems[0], false);
         }
 
