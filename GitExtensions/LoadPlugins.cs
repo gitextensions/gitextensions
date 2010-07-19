@@ -1,50 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GitUI;
+using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitExtensions
 {
-    static class PluginLoader
+    internal static class PluginLoader
     {
         public static void Load()
         {
-            FileInfo file = new FileInfo(Application.ExecutablePath);
+            var file = new FileInfo(Application.ExecutablePath);
 
-            //Only search for plugins in the plugins folder. This increases performance a little bit.
-            //In DEBUG search for plugins in the root folder to make debugging plugins easier.
-            #if DEBUG 
-            FileInfo [] plugins = file.Directory.GetFiles("Plugins\\*.dll", SearchOption.AllDirectories);
+            // Only search for plugins in the plugins folder. This increases performance a little bit.
+            // In DEBUG search for plugins in the root folder to make debugging plugins easier.
+            #if DEBUG
+            var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
             #else
-            FileInfo [] plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
+            var plugins =
+                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
+                    ? file.Directory.GetFiles("Plugins\\*.dll", SearchOption.AllDirectories)
+                    : new FileInfo[] {};
             #endif
 
-            foreach (FileInfo pluginFile in plugins)
+            foreach (var pluginFile in plugins)
             {
                 try
                 {
-                    Type[] types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
-                    foreach (Type type in types)
+                    var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
+                    foreach (var type in types)
                     {
-                        if (typeof(IGitPlugin).IsAssignableFrom(type) && !type.IsInterface)
-                        {
-                            IGitPlugin gitPlugin = Activator.CreateInstance(type) as IGitPlugin;
-                            if (gitPlugin != null)
-                            {
-                                gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
-                                gitPlugin.Register(GitUICommands.Instance);
+                        if (!typeof (IGitPlugin).IsAssignableFrom(type) || type.IsInterface) 
+                            continue;
 
-                                GitUIPluginCollection.Plugins.Add(gitPlugin);
-                            }
-                        }
+                        var gitPlugin = Activator.CreateInstance(type) as IGitPlugin;
+                        if (gitPlugin == null) 
+                            continue;
+
+                        gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
+                        gitPlugin.Register(GitUICommands.Instance);
+
+                        GitUIPluginCollection.Plugins.Add(gitPlugin);
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Trace.WriteLine(ex.Message);
                 }
             }
         }
