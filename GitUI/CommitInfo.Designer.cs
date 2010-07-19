@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.gravatar1 = new GitUI.Gravatar();
+            this.gravatar1 = new GitUI.GravatarControl();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +55,6 @@
             // 
             this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
             this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.email = null;
             this.gravatar1.Location = new System.Drawing.Point(0, 0);
             this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
             this.gravatar1.Name = "gravatar1";
@@ -90,7 +89,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayout;
-        private Gravatar gravatar1;
+        private GravatarControl gravatar1;
         private System.Windows.Forms.RichTextBox RevisionInfo;
     }
 }

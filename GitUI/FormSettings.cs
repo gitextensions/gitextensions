@@ -6,6 +6,7 @@ using System.Drawing;
 
 using System.Text;
 using System.Windows.Forms;
+using Gravatar;
 using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
@@ -298,7 +299,7 @@ namespace GitUI
             if ((int)_authorImageSize.Value != GitCommands.Settings.AuthorImageSize)
             {
                 GitCommands.Settings.AuthorImageSize = (int)_authorImageSize.Value;
-                Gravatar.ClearImageCache();
+                GravatarService.ClearImageCache();
             }
             GitCommands.Settings.Translation = Language.Text;
 
@@ -1622,7 +1623,7 @@ namespace GitUI
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            Gravatar.ClearImageCache();
+            GravatarService.ClearImageCache();
         }
 
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)

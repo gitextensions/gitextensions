@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -471,11 +471,11 @@
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="GitUIPluginCollection.cs" />
-    <Compile Include="Gravatar.cs">
+    <Compile Include="GravatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Gravatar.Designer.cs">
-      <DependentUpon>Gravatar.cs</DependentUpon>
+    <Compile Include="GravatarControl.Designer.cs">
+      <DependentUpon>GravatarControl.cs</DependentUpon>
     </Compile>
     <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
@@ -798,8 +798,8 @@
       <DependentUpon>GitLogForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Gravatar.resx">
-      <DependentUpon>Gravatar.cs</DependentUpon>
+    <EmbeddedResource Include="GravatarControl.resx">
+      <DependentUpon>GravatarControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MergePatch.resx">
@@ -828,6 +828,10 @@
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gravatar\Gravatar.csproj">
+      <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
+      <Name>Gravatar</Name>
     </ProjectReference>
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
