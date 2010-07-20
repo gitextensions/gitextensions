@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
 using GitCommands;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Util;
@@ -12,19 +12,57 @@ namespace GitUI
 {
     public partial class FileViewer : GitExtensionsControl
     {
+        private readonly AsyncLoader _async;
+        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
+        private int _currentScrollPos = -1;
+        private bool _currentViewIsPatch;
+
+        public FileViewer()
+        {
+            TreatAllFilesAsText = false;
+            ShowEntireFile = false;
+            NumberOfVisibleLines = 3;
+            InitializeComponent();
+            Translate();
+            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextAreaKeyUp;
+            IgnoreWhitespaceChanges = false;
+
+            _async = new AsyncLoader();
+            _async.LoadingError +=
+                (sender, args) =>
+                    {
+                        ResetForText(null);
+                        TextEditor.Text = "Unsupported file";
+                        TextEditor.Refresh();
+                    };
+
+
+            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += TextAreaMouseMove;
+            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextAreaMouseLeave;
+
+            TextEditor.ShowVRuler = false;
+        }
+
         public bool IgnoreWhitespaceChanges { get; set; }
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
-        private bool currentViewIsPatch = false;
+
+        public int ScrollPos
+        {
+            get { return TextEditor.ActiveTextAreaControl.VScrollBar.Value; }
+            set
+            {
+                var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+                scrollBar.Value = scrollBar.Maximum > value ? value : scrollBar.Maximum;
+            }
+        }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
-        private readonly AsyncLoader async;
-
         private void EnableDiffContextMenu(bool enable)
         {
-            currentViewIsPatch = enable;
+            _currentViewIsPatch = enable;
             ignoreWhitespaceChangesToolStripMenuItem.Enabled = enable;
             increaseNumberOfLinesToolStripMenuItem.Enabled = enable;
             descreaseNumberOfLinesToolStripMenuItem.Enabled = enable;
@@ -40,7 +78,7 @@ namespace GitUI
 
         public string GetExtraDiffArguments()
         {
-            StringBuilder diffArguments = new StringBuilder();
+            var diffArguments = new StringBuilder();
             if (IgnoreWhitespaceChanges)
                 diffArguments.Append(" --ignore-space-change");
 
@@ -55,90 +93,46 @@ namespace GitUI
             return diffArguments.ToString();
         }
 
-        public FileViewer()
+        private void TextAreaMouseMove(object sender, MouseEventArgs e)
         {
-            TreatAllFilesAsText = false;
-            ShowEntireFile = false;
-            NumberOfVisibleLines = 3;
-            InitializeComponent(); Translate();
-            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyUp;
-            IgnoreWhitespaceChanges = false;
-
-            async = new AsyncLoader();
-            async.LoadingError += delegate
-            {
-                ResetForText(null);
-                TextEditor.Text = "Unsupported file";
-                TextEditor.Refresh();
-            };
-
-
-            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += new MouseEventHandler(TextArea_MouseMove);
-            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
-
-            TextEditor.ShowVRuler = false;
-        }
-
-        void TextArea_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (currentViewIsPatch && !fileviewerToolbar.Visible)
+            if (_currentViewIsPatch && !fileviewerToolbar.Visible)
                 fileviewerToolbar.Visible = true;
         }
 
-        void TextArea_MouseLeave(object sender, EventArgs e)
+        private void TextAreaMouseLeave(object sender, EventArgs e)
         {
-            if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar)
+            if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
+                fileviewerToolbar != null)
                 fileviewerToolbar.Visible = false;
         }
-        
-        void TextArea_KeyUp(object sender, KeyEventArgs e)
+
+        private void TextAreaKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
                 Find();
 
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
-                findAndReplaceForm.FindNext(true, true, "Text not found");
-            else
-                if (e.KeyCode == Keys.F3)
-                    findAndReplaceForm.FindNext(true, false, "Text not found");
-
+                _findAndReplaceForm.FindNext(true, true, "Text not found");
+            else if (e.KeyCode == Keys.F3)
+                _findAndReplaceForm.FindNext(true, false, "Text not found");
         }
 
-        private int currentScrollPos = -1;
         public void SaveCurrentScrollPos()
         {
-            currentScrollPos = TextEditor.ActiveTextAreaControl.VScrollBar.Value;
+            _currentScrollPos = TextEditor.ActiveTextAreaControl.VScrollBar.Value;
         }
 
         private void RestoreCurrentScrollPos()
         {
-            if (currentScrollPos >= 0)
-            {
-                ScrollPos = currentScrollPos;
-                currentScrollPos = 0;
-            }
+            if (_currentScrollPos < 0)
+                return;
+            ScrollPos = _currentScrollPos;
+            _currentScrollPos = 0;
         }
-
-        public int ScrollPos
-        {
-            get
-            {
-                return TextEditor.ActiveTextAreaControl.VScrollBar.Value;
-            }
-            set
-            {
-                if (TextEditor.ActiveTextAreaControl.VScrollBar.Maximum > value)
-                    TextEditor.ActiveTextAreaControl.VScrollBar.Value = value;
-                else
-                    TextEditor.ActiveTextAreaControl.VScrollBar.Value = TextEditor.ActiveTextAreaControl.VScrollBar.Maximum;
-            }
-        }
-
-        FindAndReplaceForm findAndReplaceForm = new FindAndReplaceForm();
 
         public void Find()
         {
-            findAndReplaceForm.ShowFor(TextEditor, false);
+            _findAndReplaceForm.ShowFor(TextEditor, false);
         }
 
         public void ViewFile(string fileName)
@@ -148,7 +142,7 @@ namespace GitUI
 
         public void ViewCurrentChanges(string fileName, bool staged)
         {
-            async.Load(() => Git.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
+            _async.Load(() => Git.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
         }
 
         public void ViewPatch(string text)
@@ -162,61 +156,71 @@ namespace GitUI
 
         public void ViewPatch(Func<string> loadPatchText)
         {
-            async.Load(loadPatchText, ViewPatch);
+            _async.Load(loadPatchText, ViewPatch);
         }
 
         private void AddExtraPatchHighlighting()
         {
-            IDocument document = TextEditor.Document;
-            MarkerStrategy markerStrategy = document.MarkerStrategy;
+            var document = TextEditor.Document;
+            var markerStrategy = document.MarkerStrategy;
 
-            Color color;
-
-            for (int line = 0; line + 3 < document.TotalNumberOfLines; line++)
+            for (var line = 0; line + 3 < document.TotalNumberOfLines; line++)
             {
-                LineSegment lineSegment1 = document.GetLineSegment(line);
-                LineSegment lineSegment2 = document.GetLineSegment(line + 1);
-                LineSegment lineSegment3 = document.GetLineSegment(line + 2);
-                LineSegment lineSegment4 = document.GetLineSegment(line + 3);
+                var lineSegment1 = document.GetLineSegment(line);
+                var lineSegment2 = document.GetLineSegment(line + 1);
+                var lineSegment3 = document.GetLineSegment(line + 2);
+                var lineSegment4 = document.GetLineSegment(line + 3);
 
-                if (document.GetCharAt(lineSegment1.Offset) == ' ' &&
-                    document.GetCharAt(lineSegment2.Offset) == '-' &&
-                    document.GetCharAt(lineSegment3.Offset) == '+' &&
-                    document.GetCharAt(lineSegment4.Offset) == ' ')
+                if (document.GetCharAt(lineSegment1.Offset) != ' ' ||
+                    document.GetCharAt(lineSegment2.Offset) != '-' ||
+                    document.GetCharAt(lineSegment3.Offset) != '+' ||
+                    document.GetCharAt(lineSegment4.Offset) != ' ')
+                    continue;
+
+                var beginOffset = 0;
+                var endOffset = lineSegment3.Length;
+                var reverseOffset = 0;
+
+                for (; beginOffset < endOffset; beginOffset++)
                 {
-                    int beginOffset = 0;
-                    int endOffset = lineSegment3.Length;
-                    int reverseOffset = 0;
+                    if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+') &&
+                        !document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-') &&
+                        !document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(
+                            document.GetCharAt(lineSegment2.Offset + beginOffset)))
+                        break;
+                }
 
-                    for (; beginOffset < endOffset; beginOffset++)
-                    {
-                        if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+'))
-                            if (!document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-'))
-                                if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(document.GetCharAt(lineSegment2.Offset + beginOffset)))
-                                    break;
-                    }
+                for (; endOffset > beginOffset; endOffset--)
+                {
+                    reverseOffset = lineSegment3.Length - endOffset;
 
-                    for (; endOffset > beginOffset; endOffset--)
-                    {
-                        reverseOffset = lineSegment3.Length - endOffset;
+                    if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset)
+                             .Equals('+') &&
+                        !document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset)
+                             .Equals('-') &&
+                        !document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).
+                             Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 -
+                                                       reverseOffset)))
+                        break;
+                }
 
-                        if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).Equals('+'))
-                            if (!document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset).Equals('-'))
-                                if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset)))
-                                    break;
-                    }
+                Color color;
+                if (lineSegment3.Length - beginOffset - reverseOffset > 0)
+                {
+                    color = Settings.DiffAddedExtraColor;
+                    markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset,
+                                                            lineSegment3.Length - beginOffset - reverseOffset,
+                                                            TextMarkerType.SolidBlock, color,
+                                                            ColorHelper.GetForeColorForBackColor(color)));
+                }
 
-                    if (lineSegment3.Length - beginOffset - reverseOffset > 0)
-                    {
-                        color = Settings.DiffAddedExtraColor;
-                        markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset, lineSegment3.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    }
-
-                    if (lineSegment2.Length - beginOffset - reverseOffset > 0)
-                    {
-                        color = Settings.DiffRemovedExtraColor;
-                        markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset, lineSegment2.Length - beginOffset - reverseOffset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
-                    }
+                if (lineSegment2.Length - beginOffset - reverseOffset > 0)
+                {
+                    color = Settings.DiffRemovedExtraColor;
+                    markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset,
+                                                            lineSegment2.Length - beginOffset - reverseOffset,
+                                                            TextMarkerType.SolidBlock, color,
+                                                            ColorHelper.GetForeColorForBackColor(color)));
                 }
             }
         }
@@ -225,63 +229,69 @@ namespace GitUI
         {
             AddExtraPatchHighlighting();
 
-            IDocument document = TextEditor.Document;
-            MarkerStrategy markerStrategy = document.MarkerStrategy;
+            var document = TextEditor.Document;
+            var markerStrategy = document.MarkerStrategy;
 
-            for (int line = 0; line < document.TotalNumberOfLines; line++)
+            for (var line = 0; line < document.TotalNumberOfLines; line++)
             {
-                LineSegment lineSegment = document.GetLineSegment(line);
+                var lineSegment = document.GetLineSegment(line);
 
-                if (lineSegment.TotalLength != 0)
+                if (lineSegment.TotalLength == 0)
+                    continue;
+
+                if (document.GetCharAt(lineSegment.Offset) == '+')
                 {
-                    if (document.GetCharAt(lineSegment.Offset) == '+')
+                    var color = Settings.DiffAddedColor;
+                    var endLine = document.GetLineSegment(line);
+
+                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '+'; line++)
                     {
-                        Color color = Settings.DiffAddedColor;
-                        LineSegment endLine = document.GetLineSegment(line);
-
-                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '+'; line++)
-                        {
-                            endLine = document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
                         endLine = document.GetLineSegment(line);
-
-                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
-                    if (document.GetCharAt(lineSegment.Offset) == '-')
+                    line--;
+                    line--;
+                    endLine = document.GetLineSegment(line);
+
+                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+                                                            (endLine.Offset + endLine.TotalLength) -
+                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
+                                                            ColorHelper.GetForeColorForBackColor(color)));
+                }
+                if (document.GetCharAt(lineSegment.Offset) == '-')
+                {
+                    var color = Settings.DiffRemovedColor;
+                    var endLine = document.GetLineSegment(line);
+
+                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '-'; line++)
                     {
-                        Color color = Settings.DiffRemovedColor;
-                        LineSegment endLine = document.GetLineSegment(line);
-
-                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '-'; line++)
-                        {
-                            endLine = document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
                         endLine = document.GetLineSegment(line);
-
-                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
-                    if (document.GetCharAt(lineSegment.Offset) == '@')
+                    line--;
+                    line--;
+                    endLine = document.GetLineSegment(line);
+
+                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+                                                            (endLine.Offset + endLine.TotalLength) -
+                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
+                                                            ColorHelper.GetForeColorForBackColor(color)));
+                }
+                if (document.GetCharAt(lineSegment.Offset) == '@')
+                {
+                    var color = Settings.DiffSectionColor;
+                    var endLine = document.GetLineSegment(line);
+
+                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '@'; line++)
                     {
-                        Color color = Settings.DiffSectionColor;
-                        LineSegment endLine = document.GetLineSegment(line);
-
-                        for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '@'; line++)
-                        {
-                            endLine = document.GetLineSegment(line);
-
-                        }
-                        line--;
-                        line--;
                         endLine = document.GetLineSegment(line);
-
-                        markerStrategy.AddMarker(new TextMarker(lineSegment.Offset, (endLine.Offset + endLine.TotalLength) - lineSegment.Offset, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color)));
                     }
+                    line--;
+                    line--;
+                    endLine = document.GetLineSegment(line);
+
+                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+                                                            (endLine.Offset + endLine.TotalLength) -
+                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
+                                                            ColorHelper.GetForeColorForBackColor(color)));
                 }
             }
         }
@@ -308,22 +318,23 @@ namespace GitUI
         {
             if (IsImage(fileName))
             {
-                async.Load(getImage, image =>
-                {
-                    ResetForImage();
+                _async.Load(getImage,
+                            image =>
+                                {
+                                    ResetForImage();
 
-                    if (image.Size.Height > PictureBox.Size.Height ||
-                        image.Size.Width > PictureBox.Size.Width)
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                    }
-                    else
-                    {
-                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                    }
+                                    if (image.Size.Height > PictureBox.Size.Height ||
+                                        image.Size.Width > PictureBox.Size.Width)
+                                    {
+                                        PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                                    }
+                                    else
+                                    {
+                                        PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                                    }
 
-                    PictureBox.Image = image;
-                });
+                                    PictureBox.Image = image;
+                                });
             }
             else if (IsBinaryFile(fileName))
             {
@@ -331,7 +342,7 @@ namespace GitUI
             }
             else
             {
-                async.Load(getFileText, text => ViewText(fileName, text));
+                _async.Load(getFileText, text => ViewText(fileName, text));
             }
         }
 
@@ -352,7 +363,7 @@ namespace GitUI
 
         private static Image GetImage(string fileName, string guid)
         {
-            using (Stream stream = Git.GetFileStream(guid))
+            using (var stream = Git.GetFileStream(guid))
             {
                 return CreateImage(fileName, stream);
             }
@@ -370,7 +381,7 @@ namespace GitUI
         {
             if (IsIcon(fileName))
             {
-                using (Icon icon = new Icon(stream))
+                using (var icon = new Icon(stream))
                 {
                     return icon.ToBitmap();
                 }
@@ -381,19 +392,14 @@ namespace GitUI
 
         private static MemoryStream CreateCopy(Stream stream)
         {
-            return new MemoryStream(new BinaryReader(stream).ReadBytes((int)stream.Length));
+            return new MemoryStream(new BinaryReader(stream).ReadBytes((int) stream.Length));
         }
 
         private static string GetFileText(string fileName)
         {
-            string path = Settings.WorkingDir + fileName;
+            var path = Settings.WorkingDir + fileName;
 
-            if (!File.Exists(path))
-            {
-                return null;
-            }
-
-            return FileReader.ReadFileContent(path, Encoding.ASCII);
+            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Encoding.ASCII);
         }
 
         private void ResetForImage()
@@ -430,47 +436,25 @@ namespace GitUI
         {
             PictureBox.ImageLocation = "";
 
-            if (PictureBox.Image != null)
-            {
-                PictureBox.Image.Dispose();
-                PictureBox.Image = null;
-            }
+            if (PictureBox.Image == null) return;
+            PictureBox.Image.Dispose();
+            PictureBox.Image = null;
         }
 
-        private void TextEditor_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
-        private void TextEditor_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void findToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Find();
-        }
-
-        private void TextEditor_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void ignoreWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             OnExtraDiffArgumentsChanged();
         }
 
-        private void increaseNumberOfLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void IncreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             NumberOfVisibleLines++;
             OnExtraDiffArgumentsChanged();
         }
 
-        private void descreaseNumberOfLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DescreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (NumberOfVisibleLines > 0)
                 NumberOfVisibleLines--;
@@ -479,7 +463,7 @@ namespace GitUI
             OnExtraDiffArgumentsChanged();
         }
 
-        private void showEntireFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowEntireFileToolStripMenuItemClick(object sender, EventArgs e)
         {
             showEntireFileToolStripMenuItem.Checked = !showEntireFileToolStripMenuItem.Checked;
             showEntireFileButton.Checked = showEntireFileToolStripMenuItem.Checked;
@@ -488,41 +472,35 @@ namespace GitUI
             OnExtraDiffArgumentsChanged();
         }
 
-        private void treatAllFilesAsTextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TreatAllFilesAsTextToolStripMenuItemClick(object sender, EventArgs e)
         {
             treatAllFilesAsTextToolStripMenuItem.Checked = !treatAllFilesAsTextToolStripMenuItem.Checked;
             TreatAllFilesAsText = treatAllFilesAsTextToolStripMenuItem.Checked;
             OnExtraDiffArgumentsChanged();
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
+            if (string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
+                return;
+
+            string code;
+            if (_currentViewIsPatch)
             {
-                string code;
-                if (currentViewIsPatch)
-                {
-                    code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
+                code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
 
-                    if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
-                        code = code.Substring(1);
+                if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
+                    code = code.Substring(1);
 
-                    code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
-                }
-                else
-                    code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
-
-                Clipboard.SetText(code);
+                code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
             }
+            else
+                code = TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
+
+            Clipboard.SetText(code);
         }
 
-        private void copyCodeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
-                Clipboard.SetText(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText);
-        }
-
-        private void copyPatchToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText))
             {
@@ -534,15 +512,15 @@ namespace GitUI
             }
         }
 
-        private void nextChangeButton_Click(object sender, EventArgs e)
+        private void NextChangeButtonClick(object sender, EventArgs e)
         {
-            int firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
-            int totalNumberOfLines = TextEditor.Document.TotalNumberOfLines;
-            bool emptyLineCheck = false;
+            var firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
+            var totalNumberOfLines = TextEditor.Document.TotalNumberOfLines;
+            var emptyLineCheck = false;
 
-            for (int line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
+            for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
             {
-                string lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+                var lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
                 if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
                 {
                     if (emptyLineCheck)
@@ -561,15 +539,14 @@ namespace GitUI
             //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
         }
 
-        private void previousChangeButton_Click(object sender, EventArgs e)
+        private void PreviousChangeButtonClick(object sender, EventArgs e)
         {
-            int firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
-            int totalNumberOfLines = TextEditor.Document.TotalNumberOfLines;
-            bool emptyLineCheck = false;
+            var firstVisibleLine = TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
+            var emptyLineCheck = false;
 
-            for (int line = firstVisibleLine - 1; line > 0; line--)
+            for (var line = firstVisibleLine - 1; line > 0; line--)
             {
-                string lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+                var lineContent = TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
                 if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
                 {
                     emptyLineCheck = true;
@@ -588,27 +565,27 @@ namespace GitUI
             //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
         }
 
-        private void increaseNumberOfLines_Click(object sender, EventArgs e)
+        private void IncreaseNumberOfLinesClick(object sender, EventArgs e)
         {
-            increaseNumberOfLinesToolStripMenuItem_Click(null, null);
+            IncreaseNumberOfLinesToolStripMenuItemClick(null, null);
         }
 
-        private void DecreaseNumberOfLines_Click(object sender, EventArgs e)
+        private void DecreaseNumberOfLinesClick(object sender, EventArgs e)
         {
-            descreaseNumberOfLinesToolStripMenuItem_Click(null, null);
+            DescreaseNumberOfLinesToolStripMenuItemClick(null, null);
         }
 
-        private void showEntireFileButton_Click(object sender, EventArgs e)
+        private void ShowEntireFileButtonClick(object sender, EventArgs e)
         {
-            showEntireFileToolStripMenuItem_Click(null, null);
+            ShowEntireFileToolStripMenuItemClick(null, null);
         }
 
-        private void showNonPrintChars_Click(object sender, EventArgs e)
+        private void ShowNonPrintCharsClick(object sender, EventArgs e)
         {
-            showNonprintableCharactersToolStripMenuItem_Click(null, null);
+            ShowNonprintableCharactersToolStripMenuItemClick(null, null);
         }
 
-        private void showNonprintableCharactersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowNonprintableCharactersToolStripMenuItemClick(object sender, EventArgs e)
         {
             showNonprintableCharactersToolStripMenuItem.Checked = !showNonprintableCharactersToolStripMenuItem.Checked;
             showNonPrintChars.Checked = showNonprintableCharactersToolStripMenuItem.Checked;
@@ -616,6 +593,11 @@ namespace GitUI
             TextEditor.ShowEOLMarkers = showNonprintableCharactersToolStripMenuItem.Checked;
             TextEditor.ShowSpaces = showNonprintableCharactersToolStripMenuItem.Checked;
             TextEditor.ShowTabs = showNonprintableCharactersToolStripMenuItem.Checked;
+        }
+
+        private void FindToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            Find();
         }
     }
 }
