@@ -110,27 +110,9 @@ namespace GitCommands
         {
             try
             {
-                SetEnvironmentVariable();
+                createAndStartCommand(cmd, arguments, true);
+                
 
-                Settings.GitLog.Log(cmd + " " + arguments);
-                //process used to execute external commands
-
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = true;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = false;
-                process.StartInfo.RedirectStandardInput = false;
-
-                process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = "\"" + cmd + "\"";
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-
-                process.Start();
-                process.WaitForExit();
-                process.Close();
             }
             catch
             {
@@ -151,26 +133,7 @@ namespace GitCommands
         {
             try
             {
-                SetEnvironmentVariable();
-
-                Settings.GitLog.Log(cmd + " " + arguments);
-                //process used to execute external commands
-
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = true;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = false;
-                process.StartInfo.RedirectStandardInput = false;
-
-
-                process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = "\"" + cmd + "\"";
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-
-                process.Start();
+                createAndStartCommand(cmd, arguments, false);
             }
             catch (Exception)
             {
@@ -178,6 +141,35 @@ namespace GitCommands
             }
 
 
+        }
+
+        private static void createAndStartCommand(string cmd, string arguments, bool waitAndExit)
+        {                    
+            SetEnvironmentVariable();
+
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.ErrorDialog = false;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
+
+
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.FileName = "\"" + cmd + "\"";
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+            if (waitAndExit)
+            {
+                process.WaitForExit();
+                process.Close();
+            }
         }
 
         public static void Run(string cmd, string arguments)
