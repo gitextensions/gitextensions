@@ -32,7 +32,7 @@
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.DiffText = new GitUI.FileViewer();
+            this.diffViewer = new GitUI.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -71,7 +71,7 @@
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
             this.RevisionGrid.TabIndex = 1;
-            this.RevisionGrid.SelectionChanged += new System.EventHandler(this.RevisionGrid_SelectionChanged);
+            this.RevisionGrid.SelectionChanged += new System.EventHandler(this.RevisionGridSelectionChanged);
             // 
             // splitContainer3
             // 
@@ -86,7 +86,7 @@
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.DiffText);
+            this.splitContainer3.Panel2.Controls.Add(this.diffViewer);
             this.splitContainer3.Size = new System.Drawing.Size(750, 320);
             this.splitContainer3.SplitterDistance = 188;
             this.splitContainer3.TabIndex = 1;
@@ -100,21 +100,21 @@
             this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(188, 320);
             this.DiffFiles.TabIndex = 0;
-            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             // 
             // DiffText
             // 
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IgnoreWhitespaceChanges = false;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Margin = new System.Windows.Forms.Padding(4);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.NumberOfVisibleLines = 3;
-            this.DiffText.ScrollPos = 0;
-            this.DiffText.ShowEntireFile = false;
-            this.DiffText.Size = new System.Drawing.Size(558, 320);
-            this.DiffText.TabIndex = 1;
-            this.DiffText.TreatAllFilesAsText = false;
+            this.diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.diffViewer.IgnoreWhitespaceChanges = false;
+            this.diffViewer.Location = new System.Drawing.Point(0, 0);
+            this.diffViewer.Margin = new System.Windows.Forms.Padding(4);
+            this.diffViewer.Name = "diffViewer";
+            this.diffViewer.NumberOfVisibleLines = 3;
+            this.diffViewer.ScrollPos = 0;
+            this.diffViewer.ShowEntireFile = false;
+            this.diffViewer.Size = new System.Drawing.Size(558, 320);
+            this.diffViewer.TabIndex = 1;
+            this.diffViewer.TreatAllFilesAsText = false;
             // 
             // FormDiff
             // 
@@ -125,8 +125,8 @@
             this.Name = "FormDiff";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDiff_FormClosing);
-            this.Load += new System.EventHandler(this.FormDiff_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDiffFormClosing);
+            this.Load += new System.EventHandler(this.FormDiffLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -143,6 +143,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private FileStatusList DiffFiles;
         private RevisionGrid RevisionGrid;
-        private FileViewer DiffText;
+        private FileViewer diffViewer;
     }
 }
