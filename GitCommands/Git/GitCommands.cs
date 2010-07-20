@@ -476,7 +476,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectBase(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "1"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "1"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -486,7 +486,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectLocal(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "2"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "2"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -496,7 +496,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectRemote(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "3"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "3"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -504,7 +504,7 @@ namespace GitCommands
             return false;
         }
 
-        public static bool HandeConflicts_SaveSide(string fileName, string saveAs, string side)
+        public static bool HandleConflicts_SaveSide(string fileName, string saveAs, string side)
         {
             if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
                 side = "3";
@@ -1346,10 +1346,10 @@ namespace GitCommands
         {
             //message = message.Replace('\"', '\'');
 
+            var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
             if (amend)
-                return "commit --amend -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
-            else
-                return "commit  -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
+                return "commit --amend -F \"" + path;
+            return "commit  -F \"" + path;
         }
 
         static public string Patch(string patchFile)
@@ -1403,8 +1403,7 @@ namespace GitCommands
 
             if (string.IsNullOrEmpty(location))
                 return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"\"");
-            else
-                return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"" + location + "\"");
+            return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"" + location + "\"");
         }
 
         public static string[] GetRemotes()
