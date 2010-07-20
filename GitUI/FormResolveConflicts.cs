@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GitCommands;
+using GitUI.Editor;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
 
