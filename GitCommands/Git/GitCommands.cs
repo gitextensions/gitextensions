@@ -179,28 +179,7 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-
-                Settings.GitLog.Log(cmd + " " + arguments);
-                //process used to execute external commands
-
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-                process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
-
-
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = "\"" + cmd + "\"";
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-
-                process.Start();
+                Process process = CreateAndStartProcess(arguments, cmd);                
                 //process.WaitForExit();
             }
             catch
@@ -227,14 +206,7 @@ namespace GitCommands
 
             //process used to execute external commands
             Process = new System.Diagnostics.Process();
-            Process.StartInfo.UseShellExecute = false;
-            Process.StartInfo.ErrorDialog = false;
-            Process.StartInfo.RedirectStandardOutput = true;
-            Process.StartInfo.RedirectStandardInput = true;
-            Process.StartInfo.RedirectStandardError = true;
-            Process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-            Process.StartInfo.StandardOutputEncoding = Process.StartInfo.StandardErrorEncoding;
-
+            setCommonProcessAttributes(Process, arguments);
             Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             Process.StartInfo.FileName = "\"" + cmd + "\"";
             Process.StartInfo.Arguments = arguments;
@@ -261,6 +233,17 @@ namespace GitCommands
             }
 
             return Process;
+        }
+
+        private static void setCommonProcessAttributes(Process Process, string arguments)
+        {
+            Process.StartInfo.UseShellExecute = false;
+            Process.StartInfo.ErrorDialog = false;
+            Process.StartInfo.RedirectStandardOutput = true;
+            Process.StartInfo.RedirectStandardInput = true;
+            Process.StartInfo.RedirectStandardError = true;
+            Process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
+            Process.StartInfo.StandardOutputEncoding = Process.StartInfo.StandardErrorEncoding;
         }
 
         private bool UseSSH(string arguments)
@@ -357,28 +340,7 @@ namespace GitCommands
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
-                Settings.GitLog.Log(cmd + " " + arguments);
-                //process used to execute external commands
-
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
-                process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
-
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = "\"" + cmd + "\"";
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-
-                process.Start();
-
-
+                Process process = CreateAndStartProcess(arguments, cmd);
                 string error;
 
                 output = process.StandardOutput.ReadToEnd();
@@ -398,6 +360,25 @@ namespace GitCommands
                 return "";
             }
             return output;
+        }
+
+        private static Process CreateAndStartProcess(string arguments, string cmd)
+        {                       
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            setCommonProcessAttributes(process, arguments);
+                        
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.FileName = "\"" + cmd + "\"";
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+
+            process.Start();
+            return process;
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -1613,12 +1594,14 @@ namespace GitCommands
             {
                 if (string.IsNullOrEmpty(statusString.Trim()))
                     continue;
-                GitItemStatus itemStatus = new GitItemStatus();
-                itemStatus.IsNew = false;
-                itemStatus.IsChanged = true;
-                itemStatus.IsDeleted = false;
-                itemStatus.IsTracked = true;
-                itemStatus.Name = statusString.Trim();
+                GitItemStatus itemStatus = new GitItemStatus
+                                               {
+                                                   IsNew = false,
+                                                   IsChanged = true,
+                                                   IsDeleted = false,
+                                                   IsTracked = true,
+                                                   Name = statusString.Trim()
+                                               };
                 gitItemStatusList.Add(itemStatus);
             }
 
