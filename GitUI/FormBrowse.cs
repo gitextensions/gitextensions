@@ -21,6 +21,7 @@ namespace GitUI
         private readonly TranslationString _menuOpen = new TranslationString("Open");
         private readonly TranslationString _menuOpenWith = new TranslationString("Open with");
         private readonly TranslationString _menuSaveAs = new TranslationString("Save as");
+        TranslationString menuFindFile = new TranslationString("Find file");
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
@@ -252,8 +253,8 @@ namespace GitUI
             if (RevisionGrid.GetRevisions().Count > 0)
                 LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
             GitTree.Sort();
-
-
+                //GitTree.Nodes
+                
             // Load state
             var currenNodes = GitTree.Nodes;
             while (lastSelectedNodes.Count > 0 && lastSelectedNodes.Peek() != null)
@@ -269,6 +270,33 @@ namespace GitUI
                     currenNodes = node.Nodes;
                 }
             }
+        }
+        
+        private IList<TreeNode> FindMatches(TreeNodeCollection treeNodes, Predicate<TreeNode> predicate, bool searchDecendants)
+        {
+            var items = new List<TreeNode>();
+            var children = new Stack<TreeNodeCollection>();
+            while(treeNodes != null)
+            {
+                for (int i = 0; i < treeNodes.Count; i++)
+                {
+                    TreeNode node = treeNodes[i];
+                    if (predicate(node))
+                    {
+                        items.Add(node);
+                    }
+                    if (searchDecendants)
+                    {
+                        var childTreeNodes = node.Nodes;
+                        if (childTreeNodes.Count > 0)
+                        {
+                            children.Push(childTreeNodes);
+                        }
+                    }
+                }
+                treeNodes = children.Count > 0 ? children.Pop() : null;
+            }
+            return items;
         }
 
         private void FillDiff()
@@ -330,6 +358,7 @@ namespace GitUI
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpen.Text, OpenOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpenWith.Text, OpenWithOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuFileHistory.Text, FileHistoryOnClick));
+                treeContextMenu.MenuItems.Add(new MenuItem(menuFindFile.Text, new EventHandler(FindFile)));
             }
             return _treeContextMenu;
         }
@@ -344,6 +373,14 @@ namespace GitUI
             if (item.ItemType == "blob")
                 GitUICommands.Instance.StartFileHistoryDialog(item.FileName);
         }
+
+        public void FindFile(object sender, EventArgs e)
+        {
+            
+        }
+                
+
+            
 
         public void OpenWithOnClick(object sender, EventArgs e)
         {
