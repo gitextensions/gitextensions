@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.Editor
 {
     partial class FileViewer
     {
@@ -80,9 +80,6 @@
             this.TextEditor.Name = "TextEditor";
             this.TextEditor.Size = new System.Drawing.Size(649, 449);
             this.TextEditor.TabIndex = 3;
-            this.TextEditor.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextEditor_KeyUp);
-            this.TextEditor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextEditor_KeyPress);
-            this.TextEditor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextEditor_KeyDown);
             // 
             // ContextMenu
             // 
@@ -107,7 +104,7 @@
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.findToolStripMenuItem.Text = "Find";
-            this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
+            this.findToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItemClick);
             // 
             // copyToolStripMenuItem
             // 
@@ -115,14 +112,14 @@
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
             // 
             // copyPatchToolStripMenuItem
             // 
             this.copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
             this.copyPatchToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.copyPatchToolStripMenuItem.Text = "Copy patch";
-            this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.copyPatchToolStripMenuItem_Click);
+            this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.CopyPatchToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -134,28 +131,28 @@
             this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
             this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore whitespace changes";
-            this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.ignoreWhitespaceChangesToolStripMenuItem_Click);
+            this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
             this.increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
             this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase number of lines visible";
-            this.increaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.increaseNumberOfLinesToolStripMenuItem_Click);
+            this.increaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // descreaseNumberOfLinesToolStripMenuItem
             // 
             this.descreaseNumberOfLinesToolStripMenuItem.Name = "descreaseNumberOfLinesToolStripMenuItem";
             this.descreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.descreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
-            this.descreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.descreaseNumberOfLinesToolStripMenuItem_Click);
+            this.descreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.DescreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // showEntireFileToolStripMenuItem
             // 
             this.showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
             this.showEntireFileToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.showEntireFileToolStripMenuItem.Text = "Show entire file";
-            this.showEntireFileToolStripMenuItem.Click += new System.EventHandler(this.showEntireFileToolStripMenuItem_Click);
+            this.showEntireFileToolStripMenuItem.Click += new System.EventHandler(this.ShowEntireFileToolStripMenuItemClick);
             // 
             // toolStripSeparator2
             // 
@@ -167,7 +164,7 @@
             this.treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
             this.treatAllFilesAsTextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
-            this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.treatAllFilesAsTextToolStripMenuItem_Click);
+            this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.TreatAllFilesAsTextToolStripMenuItemClick);
             // 
             // fileviewerToolbar
             // 
@@ -197,7 +194,7 @@
             this.nextChangeButton.Name = "nextChangeButton";
             this.nextChangeButton.Size = new System.Drawing.Size(23, 20);
             this.nextChangeButton.ToolTipText = "Next change";
-            this.nextChangeButton.Click += new System.EventHandler(this.nextChangeButton_Click);
+            this.nextChangeButton.Click += new System.EventHandler(this.NextChangeButtonClick);
             // 
             // previousChangeButton
             // 
@@ -207,7 +204,7 @@
             this.previousChangeButton.Name = "previousChangeButton";
             this.previousChangeButton.Size = new System.Drawing.Size(23, 20);
             this.previousChangeButton.ToolTipText = "Previous change";
-            this.previousChangeButton.Click += new System.EventHandler(this.previousChangeButton_Click);
+            this.previousChangeButton.Click += new System.EventHandler(this.PreviousChangeButtonClick);
             // 
             // toolStripSeparator3
             // 
@@ -222,7 +219,7 @@
             this.increaseNumberOfLines.Name = "increaseNumberOfLines";
             this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
             this.increaseNumberOfLines.ToolTipText = "Increase number of visible lines";
-            this.increaseNumberOfLines.Click += new System.EventHandler(this.increaseNumberOfLines_Click);
+            this.increaseNumberOfLines.Click += new System.EventHandler(this.IncreaseNumberOfLinesClick);
             // 
             // DecreaseNumberOfLines
             // 
@@ -232,7 +229,7 @@
             this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
             this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
             this.DecreaseNumberOfLines.ToolTipText = "Decrease number of visible lines";
-            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLines_Click);
+            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesClick);
             // 
             // toolStripSeparator4
             // 
@@ -247,7 +244,7 @@
             this.showEntireFileButton.Name = "showEntireFileButton";
             this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);
             this.showEntireFileButton.ToolTipText = "Show entire file";
-            this.showEntireFileButton.Click += new System.EventHandler(this.showEntireFileButton_Click);
+            this.showEntireFileButton.Click += new System.EventHandler(this.ShowEntireFileButtonClick);
             // 
             // showNonPrintChars
             // 
@@ -257,14 +254,14 @@
             this.showNonPrintChars.Name = "showNonPrintChars";
             this.showNonPrintChars.Size = new System.Drawing.Size(23, 20);
             this.showNonPrintChars.ToolTipText = "Show nonprinting characters";
-            this.showNonPrintChars.Click += new System.EventHandler(this.showNonPrintChars_Click);
+            this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonPrintCharsClick);
             // 
             // showNonprintableCharactersToolStripMenuItem
             // 
             this.showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
             this.showNonprintableCharactersToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
-            this.showNonprintableCharactersToolStripMenuItem.Click += new System.EventHandler(this.showNonprintableCharactersToolStripMenuItem_Click);
+            this.showNonprintableCharactersToolStripMenuItem.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
             // 
             // FileViewer
             // 

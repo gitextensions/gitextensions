@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.Editor;
+
+namespace GitUI
 {
     partial class FormEdit
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEdit));
-            this.Viewer = new GitUI.FileViewer();
+            this.Viewer = new FileViewer();
             this.SuspendLayout();
             // 
             // Viewer

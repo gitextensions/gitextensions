@@ -42,6 +42,25 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
+        ///   Gets or sets the tool tips.
+        /// </summary>
+        /// <value>The tool tips.</value>
+        public string[] ToolTips { get; set; }
+
+        /// <summary>
+        ///   Sets the initial angle from which pies are drawn.
+        /// </summary>
+        public float InitialAngle
+        {
+            get { return _initialAngle; }
+            set
+            {
+                _initialAngle = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
         ///   Sets the left margin for the chart.
         /// </summary>
         public void SetLeftMargin(float value)
@@ -126,12 +145,6 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        /// Gets or sets the tool tips.
-        /// </summary>
-        /// <value>The tool tips.</value>
-        public string[] ToolTips { get; set; }
-
-        /// <summary>
         ///   Sets pie slice reative height.
         /// </summary>
         public void SetSliceRelativeHeight(float value)
@@ -168,19 +181,6 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Sets the initial angle from which pies are drawn.
-        /// </summary>
-        public float InitialAngle
-        {
-            get { return _initialAngle; }
-            set
-            {
-                _initialAngle = value;
-                Invalidate();
-            }
-        }
-
-        /// <summary>
         ///   Handles <c>OnPaint</c> event.
         /// </summary>
         /// <param name = "args">
@@ -209,8 +209,9 @@ namespace GitStatistics.PieChart
         /// </param>
         protected void DoDraw(Graphics graphics)
         {
-            if (_values == null || _values.Length <= 0)
+            if (_values == null || _values.Length <= 0 || !HasNonZeroValue())
                 return;
+
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             var width = ClientSize.Width - _leftMargin - _rightMargin;
             var height = ClientSize.Height - _topMargin - _bottomMargin;
@@ -233,6 +234,16 @@ namespace GitStatistics.PieChart
             _pieChart.ShadowStyle = _shadowStyle;
             _pieChart.HighlightedIndex = _highlightedIndex;
             _pieChart.Draw(graphics);
+        }
+
+        private bool HasNonZeroValue()
+        {
+            foreach (var value in _values)
+            {
+                if (value != 0)
+                    return true;
+            }
+            return false;
         }
 
         protected override void OnMouseEnter(EventArgs e)

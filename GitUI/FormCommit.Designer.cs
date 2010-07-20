@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.Editor;
+
+namespace GitUI
 {
     partial class FormCommit
     {
@@ -75,7 +77,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
-            this.SelectedDiff = new GitUI.FileViewer();
+            this.SelectedDiff = new FileViewer();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Scan = new System.Windows.Forms.Button();

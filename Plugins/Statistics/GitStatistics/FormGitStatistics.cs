@@ -10,8 +10,8 @@ namespace GitStatistics
 {
     public partial class FormGitStatistics : Form
     {
+        private readonly string _codeFilePattern;
         private readonly IGitUIEventArgs _gitUiEventArgs;
-        public string CodeFilePattern;
 
         protected Color[] DecentColors =
             new[]
@@ -34,9 +34,10 @@ namespace GitStatistics
         public string DirectoriesToIgnore;
         public DirectoryInfo WorkingDir;
 
-        public FormGitStatistics(IGitUIEventArgs gitUiEventArgs)
+        public FormGitStatistics(IGitUIEventArgs gitUiEventArgs, string codeFilePattern)
         {
             _gitUiEventArgs = gitUiEventArgs;
+            _codeFilePattern = codeFilePattern;
             InitializeComponent();
         }
 
@@ -105,7 +106,8 @@ namespace GitStatistics
         private void InitializeLinesOfCode()
         {
             var lineCounter = new LineCounter(WorkingDir);
-            lineCounter.Count(CodeFilePattern, DirectoriesToIgnore);
+
+            lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore);
 
             TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 

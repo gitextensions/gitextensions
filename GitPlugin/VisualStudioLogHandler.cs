@@ -1,27 +1,26 @@
-// Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
-using System;
 using EnvDTE;
-using EnvDTE80;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Aurora
+namespace GitPlugin
 {
-	public class VisualStudioLogHandler : Log.Handler
-	{
-		private OutputWindowPane mPane;
+    public class VisualStudioLogHandler : Log.Handler
+    {
+        private readonly OutputWindowPane _outputWindowPane;
 
-		public VisualStudioLogHandler(OutputWindowPane pane)
-		{
-			mPane = pane;
-		}
+        public VisualStudioLogHandler(OutputWindowPane pane)
+        {
+            _outputWindowPane = pane;
+        }
 
-		public void OnMessage(Log.Level level, string message, string formattedLine)
-		{
-			if (null == mPane)
-				return;
+        #region Handler Members
 
-			mPane.OutputString(formattedLine);
-		}
-	}
+        public void OnMessage(Log.Level level, string message, string formattedLine)
+        {
+            if (null == _outputWindowPane)
+                return;
+
+            _outputWindowPane.OutputString(formattedLine);
+        }
+
+        #endregion
+    }
 }
