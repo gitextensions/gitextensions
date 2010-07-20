@@ -105,7 +105,8 @@ namespace GitStatistics
         private void InitializeLinesOfCode()
         {
             var lineCounter = new LineCounter(WorkingDir);
-            lineCounter.Count(CodeFilePattern, DirectoriesToIgnore);
+
+            lineCounter.FindAndAnalyzeCodeFiles(CodeFilePattern, DirectoriesToIgnore);
 
             TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 
