@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -39,12 +38,8 @@ namespace GitUI
 			Graphics canvas = Graphics.FromHwnd(rtb.Handle); 
 			IntPtr canvasHdc = canvas.GetHdc();
 
-            NativeMethods.FORMATRANGE formatRange; 
-			formatRange.chrg = charRange; 
-			formatRange.hdc = canvasHdc; 
-			formatRange.hdcTarget = canvasHdc; 
-			formatRange.rc = rect; 
-			formatRange.rcPage = rectPage;
+            NativeMethods.FORMATRANGE formatRange = GetFormatRange(charRange, canvasHdc, rect, rectPage);
+            
 
             NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange); 
 
@@ -88,12 +83,7 @@ namespace GitUI
 			Graphics canvas = Graphics.FromHwnd(rtb.Handle); 
 			IntPtr canvasHdc = canvas.GetHdc();
 
-            NativeMethods.FORMATRANGE formatRange; 
-			formatRange.chrg = charRange; 
-			formatRange.hdc = canvasHdc; 
-			formatRange.hdcTarget = canvasHdc; 
-			formatRange.rc = rect; 
-			formatRange.rcPage = rectPage;
+            NativeMethods.FORMATRANGE formatRange = GetFormatRange(charRange, canvasHdc, rect, rectPage);
 
             NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange).ToInt32(); 
 
@@ -101,12 +91,20 @@ namespace GitUI
 			canvas.Dispose();
 			
 			return (int)((formatRange.rc.Bottom - formatRange.rc.Top) / anInch); 
-		} 
+		}
 
+	    private static NativeMethods.FORMATRANGE GetFormatRange(NativeMethods.CHARRANGE charRange, IntPtr canvasHdc, NativeMethods.RECT rect, NativeMethods.RECT rectPage)
+	    {
+	        NativeMethods.FORMATRANGE formatRange; 
+	        formatRange.chrg = charRange; 
+	        formatRange.hdc = canvasHdc; 
+	        formatRange.hdcTarget = canvasHdc; 
+	        formatRange.rc = rect; 
+	        formatRange.rcPage = rectPage;
+	        return formatRange;
+	    }
 
-
-
-		/// <summary>
+	    /// <summary>
 		/// Attempts to make the caret visible in a TextBox control.
 		/// This will not always succeed since the TextBox control
 		/// appears to destroy its caret fairly frequently.

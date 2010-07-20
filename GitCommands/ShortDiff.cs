@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
-
-namespace GitCommands
+﻿namespace GitCommands
 {
     public class ShortDiffDto
     {
@@ -13,8 +8,8 @@ namespace GitCommands
 
         public ShortDiffDto(string from, string to)
         {
-            this.From = from;
-            this.To = to;
+            From = from;
+            To = to;
         }
     }
 
@@ -23,7 +18,7 @@ namespace GitCommands
         public ShortDiffDto Dto { get; set; }
         public ShortDiff(ShortDiffDto dto)
         {
-            this.Dto = dto;
+            Dto = dto;
         }
 
         public void Execute()
