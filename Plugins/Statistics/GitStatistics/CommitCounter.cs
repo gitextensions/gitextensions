@@ -1,42 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
     public class CommitCounter
     {
-        public CommitCounter(IGitUIEventArgs gitUIEventArgs)
-        {
-            GitUIEventArgs = gitUIEventArgs;
-        }
+        private readonly IGitUIEventArgs _gitUiEventArgs;
 
-        private IGitUIEventArgs GitUIEventArgs;
-
+        public int TotalCommits;
         public Dictionary<string, int> UserCommitCount = new Dictionary<string, int>();
-        public int TotalCommits = 0;
+
+        public CommitCounter(IGitUIEventArgs gitUiEventArgs)
+        {
+            _gitUiEventArgs = gitUiEventArgs;
+        }
 
         public void Count()
         {
-            string[] userCommitCounts = GitUIEventArgs.GitUICommands.CommandLineCommand("cmd.exe", "/c \"\"" + GitUIEventArgs.GitCommand + "\" log --all --pretty=short | \"" + GitUIEventArgs.GitCommand + "\" shortlog --all -s -n\"").Split('\n');
+            var userCommitCounts =
+                _gitUiEventArgs.GitUICommands
+                    .CommandLineCommand("cmd.exe",
+                                        string.Format(
+                                            "/c \"\"{0}\" log --all --pretty=short | \"{1}\" shortlog --all -s -n\"",
+                                            _gitUiEventArgs.GitCommand, _gitUiEventArgs.GitCommand))
+                    .Split('\n');
 
-            foreach (string userCommitCount in userCommitCounts)
+            foreach (var userCommitCount in userCommitCounts)
             {
-                string commitCount = userCommitCount.Trim(); //remove whitespaces at start and end
-                int tab = commitCount.IndexOfAny(new char[] { ' ', '\t' });//find space or tab
+                var commitCount = userCommitCount.Trim(); //remove whitespaces at start and end
+                var tab = commitCount.IndexOfAny(new[] {' ', '\t'}); //find space or tab
 
-                if (tab > 0)
-                {
-                    int count = 0;
-                    string user;
-                    if (int.TryParse(commitCount.Substring(0, tab), out count))
-                    {
-                        user = commitCount.Substring(tab+1);
-                        TotalCommits += count;
-                        UserCommitCount.Add(user, count);
-                    }
-                }
+                if (tab <= 0)
+                    continue;
+                int count;
+                if (!int.TryParse(commitCount.Substring(0, tab), out count))
+                    continue;
+
+                var user = commitCount.Substring(tab + 1);
+                TotalCommits += count;
+                UserCommitCount.Add(user, count);
             }
         }
     }
