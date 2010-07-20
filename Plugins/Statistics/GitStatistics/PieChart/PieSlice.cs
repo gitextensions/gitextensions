@@ -111,13 +111,6 @@ namespace GitStatistics.PieChart
         protected Quadrilateral StartSide = Quadrilateral.Empty;
 
         /// <summary>
-        ///   Initializes an empty instance of <c>PieSlice</c>.
-        /// </summary>
-        protected PieSlice()
-        {
-        }
-
-        /// <summary>
         ///   Initializes a new instance of flat <c>PieSlice</c> class with given 
         ///   bounds and visual style.
         /// </summary>
@@ -194,7 +187,7 @@ namespace GitStatistics.PieChart
         /// </param>
         public PieSlice(float xBoundingRect, float yBoundingRect, float widthBoundingRect,
                         float heightBoundingRect, float sliceHeight, float startAngle, float sweepAngle,
-                        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType) : this()
+                        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType)
         {
             // set some persistent values
             _actualStartAngle = startAngle;
@@ -606,7 +599,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         internal bool StartSideContainsPoint(PointF point)
         {
-            return SliceHeight > 0 && (StartSide.Contains(point));
+            return SliceHeight > 0 && StartSide.Contains(point);
         }
 
         /// <summary>
@@ -620,7 +613,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         internal bool EndSideContainsPoint(PointF point)
         {
-            return SliceHeight > 0 && (EndSide.Contains(point));
+            return SliceHeight > 0 && EndSide.Contains(point);
         }
 
         /// <summary>
@@ -634,14 +627,10 @@ namespace GitStatistics.PieChart
         /// </returns>
         internal bool BottomSurfaceSectionContainsPoint(PointF point)
         {
-            if (SliceHeight > 0)
-            {
-                return
-                    (PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
-                                           BoundingRectangle.Width, BoundingRectangle.Height, StartAngle,
-                                           SweepAngle));
-            }
-            return false;
+            return SliceHeight > 0 &&
+                   PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
+                                         BoundingRectangle.Width, BoundingRectangle.Height, StartAngle,
+                                         SweepAngle);
         }
 
         /// <summary>
