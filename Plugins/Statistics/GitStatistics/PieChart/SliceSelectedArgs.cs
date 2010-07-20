@@ -2,8 +2,6 @@
 
 namespace GitStatistics.PieChart
 {
-    public delegate void SliceSelectedHandler(object sender, SliceSelectedArgs e);
-
     public class SliceSelectedArgs : EventArgs
     {
         public object Tag;
