@@ -299,7 +299,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "BASE");
+            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "BASE");
 
             OpenWith.OpenAs(fileName);
         }
@@ -312,7 +312,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "LOCAL");
+            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "LOCAL");
 
             OpenWith.OpenAs(fileName);
         }
@@ -334,7 +334,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileName, "REMOTE");
+            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "REMOTE");
 
             OpenWith.OpenAs(fileName);
         }
@@ -366,7 +366,7 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                GitCommands.GitCommands.HandeConflicts_SaveSide(GetFileName(), fileDialog.FileName, side);
+                GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileDialog.FileName, side);
             }
         }
 
