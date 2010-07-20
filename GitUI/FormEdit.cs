@@ -14,6 +14,7 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
             Viewer.ViewText("", text);
+            Viewer.IsReadOnly = false;
         }
 
         private void FormEdit_FormClosing(object sender, FormClosingEventArgs e)
