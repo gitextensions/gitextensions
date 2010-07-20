@@ -46,38 +46,37 @@ namespace GitCommands
             if (!File.Exists(_fileName))
                 return;
 
-            var fileLines = File.ReadAllLines(_fileName, Settings.Encoding);
+            FindSections(File.ReadAllLines(_fileName, Settings.Encoding));
+        }
 
+        private void FindSections(IEnumerable<string> fileLines)
+        {
             ConfigSection configSection = null;
 
             foreach (var line in fileLines)
-            {
-                processLine(line, configSection);
-            }
-        }
-
-        private void processLine(string line, ConfigSection configSection)
-        {
-            var m = RegParseIsSection.Match(line);
-            if (m.Success) //this line is a section
-            {
-                var name = m.Groups["SectionName"].Value;
-
-                configSection = new ConfigSection(name);
-                _sections.Add(configSection);
-            }
-            else
-            {
-                m = RegParseIsKey.Match(line);
-                if (m.Success) //this line is a key
+            {                
+                var m = RegParseIsSection.Match(line);
+                if (m.Success) //this line is a section
                 {
-                    var key = m.Groups["Key"].Value;
-                    var value = UnescapeString(m.Groups["Value"].Value);
+                    var name = m.Groups["SectionName"].Value;
 
-                    if (configSection == null)
-                        throw new Exception("Key " + key + " in configfile " + _fileName + " is not in a section.");
+                    configSection = new ConfigSection(name);
+                    _sections.Add(configSection);
+                }
+                else
+                {
+                    m = RegParseIsKey.Match(line);
+                    if (m.Success) //this line is a key
+                    {
+                        var key = m.Groups["Key"].Value;
+                        var value = UnescapeString(m.Groups["Value"].Value);
 
-                    configSection.SetValue(key, value);
+                        if (configSection == null)
+                            throw new Exception(
+                                string.Format("Key {0} in configfile {1} is not in a section.", key, _fileName));
+
+                        configSection.SetValue(key, value);
+                    }
                 }
             }
         }
