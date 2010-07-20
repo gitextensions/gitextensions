@@ -1,4 +1,6 @@
-﻿namespace GitStatistics
+﻿using GitStatistics.PieChart;
+
+namespace GitStatistics
 {
     partial class FormGitStatistics
     {
@@ -51,10 +53,10 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.CommitStatistics = new System.Windows.Forms.Label();
             this.LoadingLabel = new System.Windows.Forms.Label();
-            this.LinesOfCodeExtensionPie = new System.Drawing.PieChart.PieChartControl();
-            this.LinesOfCodePie = new System.Drawing.PieChart.PieChartControl();
-            this.TestCodePie = new System.Drawing.PieChart.PieChartControl();
-            this.CommitCountPie = new System.Drawing.PieChart.PieChartControl();
+            this.LinesOfCodeExtensionPie = new PieChartControl();
+            this.LinesOfCodePie = new PieChartControl();
+            this.TestCodePie = new PieChartControl();
+            this.CommitCountPie = new PieChartControl();
             this.Tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -472,14 +474,14 @@
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Drawing.PieChart.PieChartControl LinesOfCodePie;
+        private PieChartControl LinesOfCodePie;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Drawing.PieChart.PieChartControl LinesOfCodeExtensionPie;
+        private PieChartControl LinesOfCodeExtensionPie;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label TotalLinesOfCode;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Label TotalCommits;
-        private System.Drawing.PieChart.PieChartControl CommitCountPie;
+        private PieChartControl CommitCountPie;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.Label CommitStatistics;
         private System.Windows.Forms.TabPage tabPage3;
@@ -492,7 +494,7 @@
         private System.Windows.Forms.SplitContainer splitContainer7;
         private System.Windows.Forms.Label TotalLinesOfTestCode;
         private System.Windows.Forms.SplitContainer splitContainer8;
-        private System.Drawing.PieChart.PieChartControl TestCodePie;
+        private PieChartControl TestCodePie;
         private System.Windows.Forms.Label TestCodeText;
         private System.Windows.Forms.Label LoadingLabel;
     }

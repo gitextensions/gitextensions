@@ -4,6 +4,7 @@ using System.Drawing.PieChart;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using GitStatistics.PieChart;
 using GitUIPluginInterfaces;
 
 namespace GitStatistics
@@ -74,7 +75,7 @@ namespace GitStatistics
                 commitCountLabels[n] = keyValuePair.Value + " Commits by " + keyValuePair.Key;
                 n++;
             }
-            CommitCountPie.Values = commitCountValues;
+            CommitCountPie.SetValues(commitCountValues);
             CommitCountPie.ToolTips = commitCountLabels;
 
 
@@ -83,16 +84,16 @@ namespace GitStatistics
 
         private void SetPieStyle(PieChartControl pie)
         {
-            pie.LeftMargin = 10;
-            pie.RightMargin = 10;
-            pie.TopMargin = 10;
-            pie.BottomMargin = 10;
-            pie.FitChart = false;
-            pie.EdgeColorType = EdgeColorType.DarkerThanSurface;
+            pie.SetLeftMargin(10);
+            pie.SetRightMargin(10);
+            pie.SetTopMargin(10);
+            pie.SetBottomMargin(10);
+            pie.SetFitChart(false);
+            pie.SetEdgeColorType(EdgeColorType.DarkerThanSurface);
             pie.InitialAngle = -30;
-            pie.SliceRelativeHeight = 0.20f;
-            pie.Colors = DecentColors;
-            pie.ShadowStyle = ShadowStyle.GradualShadow;
+            pie.SetSliceRelativeHeight(0.20f);
+            pie.SetColors(DecentColors);
+            pie.SetShadowStyle(ShadowStyle.GradualShadow);
             pie.Dock = DockStyle.None;
             pie.Height = pie.Parent.Height;
             pie.Width = pie.Parent.Width;
@@ -109,12 +110,11 @@ namespace GitStatistics
 
             TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 
-            TestCodePie.Values =
-                new Decimal[]
-                    {
-                        lineCounter.NumberTestCodeLines,
-                        lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
-                    };
+            TestCodePie.SetValues(new Decimal[]
+                                      {
+                                          lineCounter.NumberTestCodeLines,
+                                          lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
+                                      });
             TestCodePie.ToolTips =
                 new[]
                     {
@@ -127,14 +127,13 @@ namespace GitStatistics
                                 (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
                                 " Lines of production code";
 
-            LinesOfCodePie.Values =
-                new Decimal[]
-                    {
-                        lineCounter.NumberBlankLines,
-                        lineCounter.NumberCommentsLines,
-                        lineCounter.NumberLines,
-                        lineCounter.NumberLinesInDesignerFiles
-                    };
+            LinesOfCodePie.SetValues(new Decimal[]
+                                         {
+                                             lineCounter.NumberBlankLines,
+                                             lineCounter.NumberCommentsLines,
+                                             lineCounter.NumberLines,
+                                             lineCounter.NumberLinesInDesignerFiles
+                                         });
             LinesOfCodePie.ToolTips =
                 new[]
                     {
@@ -162,7 +161,7 @@ namespace GitStatistics
                 n++;
             }
 
-            LinesOfCodeExtensionPie.Values = extensionValues;
+            LinesOfCodeExtensionPie.SetValues(extensionValues);
             LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
             TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
