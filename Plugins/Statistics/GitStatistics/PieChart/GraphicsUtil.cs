@@ -1,22 +1,24 @@
-using System;
+using System.Drawing;
 
-namespace System.Drawing {
-	/// <summary>
-	///   Structure with graphics utility methods.
-	/// </summary>
-	public struct GraphicsUtil {
-
+namespace GitStatistics.PieChart
+{
+    /// <summary>
+    ///   Structure with graphics utility methods.
+    /// </summary>
+    public struct GraphicsUtil
+    {
         /// <summary>
         ///   Checks if point is contained within <c>RectangleF</c> structure 
         ///   and extends rectangle bounds if neccessary to include the point.
         /// </summary>
-        /// <param name="rect">
+        /// <param name = "rect">
         ///   Reference to <c>RectangleF</c> to check.
         /// </param>
-        /// <param name="pointToInclude">
+        /// <param name = "pointToInclude">
         ///   <c>PontF</c> object to include.
         /// </param>
-        public static void IncludePoint(ref RectangleF rect, PointF pointToInclude) {
+        public static void IncludePoint(ref RectangleF rect, PointF pointToInclude)
+        {
             IncludePointX(ref rect, pointToInclude.X);
             IncludePointY(ref rect, pointToInclude.Y);
         }
@@ -26,14 +28,16 @@ namespace System.Drawing {
         ///   structure and extends rectangle bounds if neccessary to include 
         ///   the point.
         /// </summary>
-        /// <param name="rect">
+        /// <param name = "rect">
         ///   <c>RectangleF</c> to check.
         /// </param>
-        /// <param name="xToInclude">
+        /// <param name = "xToInclude">
         ///   x-coordinate to include.
         /// </param>
-        public static void IncludePointX(ref RectangleF rect, float xToInclude) {
-            if (xToInclude < rect.X) {
+        public static void IncludePointX(ref RectangleF rect, float xToInclude)
+        {
+            if (xToInclude < rect.X)
+            {
                 rect.Width = rect.Right - xToInclude;
                 rect.X = xToInclude;
             }
@@ -46,19 +50,21 @@ namespace System.Drawing {
         ///   structure and extends rectangle bounds if neccessary to include 
         ///   the point.
         /// </summary>
-        /// <param name="rect">
+        /// <param name = "rect">
         ///   <c>RectangleF</c> to check.
         /// </param>
-        /// <param name="yToInclude">
+        /// <param name = "yToInclude">
         ///   y-coordinate to include.
         /// </param>
-        public static void IncludePointY(ref RectangleF rect, float yToInclude) {
-            if (yToInclude < rect.Y) {
+        public static void IncludePointY(ref RectangleF rect, float yToInclude)
+        {
+            if (yToInclude < rect.Y)
+            {
                 rect.Height = rect.Bottom - yToInclude;
                 rect.Y = yToInclude;
             }
             else if (yToInclude > rect.Bottom)
                 rect.Height = yToInclude - rect.Y;
         }
-	}
+    }
 }
