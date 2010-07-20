@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-
 using System.Text;
 using System.Windows.Forms;
 using Gravatar;
@@ -20,8 +16,6 @@ namespace GitUI
         public FormSettings()
         {
             InitializeComponent(); Translate();
-
-
         }
 
         public static bool AutoSolveAllSettings()
@@ -37,13 +31,22 @@ namespace GitUI
         {
             str = str.Trim().ToLower();
 
-            if (str == "true")
-                checkBox.CheckState = CheckState.Checked;
-            else
-                if (str == "false")
-                    checkBox.CheckState = CheckState.Unchecked;
-                else
+            switch (str)
+            {
+                case "true":
+                    {
+                        checkBox.CheckState = CheckState.Checked;
+                        return;        
+                    }
+                case "false":
+                    {
+                        checkBox.CheckState = CheckState.Unchecked;
+                        return;          
+                    }
+                default:
                     checkBox.CheckState = CheckState.Indeterminate;
+                    return;
+            }                     
         }
 
         private static void SetComboBoxFromString(ComboBox comboBox, string option)
@@ -74,16 +77,17 @@ namespace GitUI
         {
             if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
                 return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.guitool");
-            else
-                return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.tool");
+            return GitCommands.GitCommands.GetGlobalConfig().GetValue("diff.tool");
         }
 
         private static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
         {
             if (GitCommands.GitCommands.VersionInUse.GuiDiffToolExist)
+            {
                 configFile.SetValue("diff.guitool", diffTool);
-            else
-                configFile.SetValue("diff.tool", diffTool);
+                return;
+            }
+            configFile.SetValue("diff.tool", diffTool);
         }
 
         private void LoadSettings()
@@ -281,7 +285,7 @@ namespace GitUI
                     new FormFixHome().ShowDialog();
                 }
                 else
-                  Settings.CustomHomeDir = otherHomeDir.Text;
+                    Settings.CustomHomeDir = otherHomeDir.Text;
             }
             else
             {
@@ -457,7 +461,7 @@ namespace GitUI
 
             globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
             globalConfig.Save();
-                
+
             //Only save local settings when we are inside a valid working dir
             if (Settings.ValidWorkingDir())
                 localConfig.Save();
@@ -1707,8 +1711,5 @@ namespace GitUI
                 StripedBanchChange.Enabled = false;
             }
         }
-
-
-
     }
 }
