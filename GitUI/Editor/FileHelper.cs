@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GitUI
+namespace GitUI.Editor
 {
     public static class FileHelper
     {

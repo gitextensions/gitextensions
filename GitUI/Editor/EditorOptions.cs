@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
-
-namespace GitUI
+﻿namespace GitUI.Editor
 {
     public class EditorOptions
     {
