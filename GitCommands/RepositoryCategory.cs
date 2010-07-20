@@ -141,9 +141,6 @@ namespace GitCommands
                 repository.RepositoryType = RepositoryType.RssFeed;
                 Repositories.Add(repository);
             }
-            finally
-            {
-            }
         }
 
         private void handleFeedTag(XmlDocument rssDoc, int r)
