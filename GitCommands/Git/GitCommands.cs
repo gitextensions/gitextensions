@@ -476,7 +476,7 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "ls-files --unmerged").Split('\n');
         }
 
-        static public bool HandleConflice_SelectBase(string fileName)
+        static public bool HandleConflict_SelectBase(string fileName)
         {
             if (HandleConflicts_SaveSide(fileName, fileName, "1"))
             {
@@ -486,7 +486,7 @@ namespace GitCommands
             return false;
         }
 
-        static public bool HandleConflice_SelectLocal(string fileName)
+        static public bool HandleConflict_SelectLocal(string fileName)
         {
             if (HandleConflicts_SaveSide(fileName, fileName, "2"))
             {
@@ -496,7 +496,7 @@ namespace GitCommands
             return false;
         }
 
-        static public bool HandleConflice_SelectRemote(string fileName)
+        static public bool HandleConflict_SelectRemote(string fileName)
         {
             if (HandleConflicts_SaveSide(fileName, fileName, "3"))
             {

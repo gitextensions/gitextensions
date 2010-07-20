@@ -267,21 +267,21 @@ namespace GitUI
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflice_SelectBase(GetFileName());
+            GitCommands.GitCommands.HandleConflict_SelectBase(GetFileName());
             Initialize();
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflice_SelectLocal(GetFileName());
+            GitCommands.GitCommands.HandleConflict_SelectLocal(GetFileName());
             Initialize();
         }
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflice_SelectRemote(GetFileName());
+            GitCommands.GitCommands.HandleConflict_SelectRemote(GetFileName());
             Initialize();
         }
 
