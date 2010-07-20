@@ -40,6 +40,8 @@ namespace GitUI
 
             InitializeComponent();
 
+            Settings.WorkingDirChanged += new Settings.WorkingDirChangedHandler(Settings_WorkingDirChanged);
+
             // Setup a file watcher to detect changes to our files, or the .git repo files. When they
             // change, we'll update our status.
             watcher.Changed += new FileSystemEventHandler(watcher_Changed);
@@ -50,11 +52,21 @@ namespace GitUI
 
             try
             {
-                watcher.Path = Settings.WorkingDir; // TODO: Add a settings event to listen for change to working dir
+                watcher.Path = Settings.WorkingDir;
                 watcher.EnableRaisingEvents = true;
             }
             catch { }
             update();
+        }
+
+        void Settings_WorkingDirChanged(string oldDir, string newDir)
+        {
+            try
+            {
+                watcher.Path = newDir;
+                nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+            }
+            catch { }
         }
 
         ~ToolStripGitStatus()
