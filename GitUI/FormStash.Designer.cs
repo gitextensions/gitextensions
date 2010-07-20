@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.Editor;
+
+namespace GitUI
 {
     partial class FormStash
     {
@@ -43,7 +45,7 @@
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
-            this.View = new GitUI.FileViewer();
+            this.View = new FileViewer();
             this.Stash = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();

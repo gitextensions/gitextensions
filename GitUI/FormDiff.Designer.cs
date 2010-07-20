@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.Editor;
+
+namespace GitUI
 {
     partial class FormDiff
     {
@@ -32,7 +34,7 @@
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.diffViewer = new GitUI.FileViewer();
+            this.diffViewer = new FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();

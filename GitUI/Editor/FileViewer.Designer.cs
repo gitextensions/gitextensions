@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI
+﻿namespace GitUI.Editor
 {
     partial class FileViewer
     {

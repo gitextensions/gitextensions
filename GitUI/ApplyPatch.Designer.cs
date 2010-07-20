@@ -1,4 +1,6 @@
-﻿namespace PatchApply
+﻿using GitUI.Editor;
+
+namespace PatchApply
 {
     partial class ViewPatch
     {
@@ -35,7 +37,7 @@
             this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ChangesList = new GitUI.FileViewer();
+            this.ChangesList = new FileViewer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
@@ -218,7 +220,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameA;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
-        private GitUI.FileViewer ChangesList;
+        private FileViewer ChangesList;
     }
 }
 
