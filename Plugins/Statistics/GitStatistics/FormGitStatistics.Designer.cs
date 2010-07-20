@@ -99,10 +99,7 @@
             this.Tabs.Size = new System.Drawing.Size(751, 465);
             this.Tabs.TabIndex = 0;
             this.Tabs.Visible = false;
-            this.Tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tabs_Selecting);
-            this.Tabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.Tabs_Selected);
-            this.Tabs.TabIndexChanged += new System.EventHandler(this.Tabs_TabIndexChanged);
-            this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
+            this.Tabs.SelectedIndexChanged += new System.EventHandler(this.TabsSelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -427,8 +424,7 @@
             this.Name = "FormGitStatistics";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Statistics";
-            this.Load += new System.EventHandler(this.FormGitStatistics_Load);
-            this.Shown += new System.EventHandler(this.FormGitStatistics_Shown);
+            this.Shown += new System.EventHandler(this.FormGitStatisticsShown);
             this.Tabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
