@@ -80,28 +80,8 @@ namespace GitCommands
                     // If it is the (atom) feed tag
                     if (rssDoc.ChildNodes[r].Name == "feed")
                     {
-                        // <feed> tag found
-                        XmlNode nodeFeed = rssDoc.ChildNodes[r];
-
-                        //loop through all entries
-                        for (int i = 0; i < nodeFeed.ChildNodes.Count; i++)
-                        {
-                            XmlNode nodeItem = nodeFeed.ChildNodes[i];
-
-                            if (nodeItem.Name == "entry")
-                            {
-                                // Create a new row in the ListView containing information from inside the nodes
-                                Repository repository = new Repository();
-                                if (nodeItem["title"] != null)
-                                    repository.Title = nodeItem["title"].InnerText.Trim();
-                                //repository.Description = nodeItem["content"].InnerText.Trim();
-                                if (nodeItem["link"] != null)
-                                    repository.Path = nodeItem["link"].Attributes["href"].Value;
-                                repository.RepositoryType = RepositoryType.RssFeed;
-                                Repositories.Add(repository);
-                            }
-                        }
-
+                        
+                        handleFeedTag(rssDoc, r);
                     }
 
                     // If it is the rss tag
@@ -163,6 +143,31 @@ namespace GitCommands
             }
             finally
             {
+            }
+        }
+
+        private void handleFeedTag(XmlDocument rssDoc, int r)
+        {
+            // <feed> tag found
+            XmlNode nodeFeed = rssDoc.ChildNodes[r];
+
+            //loop through all entries
+            for (int i = 0; i < nodeFeed.ChildNodes.Count; i++)
+            {
+                XmlNode nodeItem = nodeFeed.ChildNodes[i];
+
+                if (nodeItem.Name == "entry")
+                {
+                    // Create a new row in the ListView containing information from inside the nodes
+                    Repository repository = new Repository();
+                    if (nodeItem["title"] != null)
+                        repository.Title = nodeItem["title"].InnerText.Trim();
+                    //repository.Description = nodeItem["content"].InnerText.Trim();
+                    if (nodeItem["link"] != null)
+                        repository.Path = nodeItem["link"].Attributes["href"].Value;
+                    repository.RepositoryType = RepositoryType.RssFeed;
+                    Repositories.Add(repository);
+                }
             }
         }
 
