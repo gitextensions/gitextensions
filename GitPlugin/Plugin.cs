@@ -5,7 +5,6 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 using GitPlugin.Commands;
-using Aurora;
 using System.Windows.Forms;
 
 namespace GitPlugin.Commands

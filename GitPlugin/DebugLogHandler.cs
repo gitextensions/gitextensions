@@ -1,16 +1,20 @@
-// Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 
-namespace Aurora
+namespace GitPlugin
 {
-	public class DebugLogHandler : Log.Handler
-	{
-		public void OnMessage(Log.Level level, string message, string formattedLine)
-		{
-			Debug.Write(formattedLine);
-		}
-	}
+    /// <summary>
+    ///   Aurora.DebugLogHandler
+    ///   Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
+    /// </summary>
+    public class DebugLogHandler : Log.Handler
+    {
+        #region Handler Members
+
+        public void OnMessage(Log.Level level, string message, string formattedLine)
+        {
+            Debug.Write(formattedLine);
+        }
+
+        #endregion
+    }
 }
