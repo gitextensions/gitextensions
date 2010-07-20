@@ -221,31 +221,14 @@ namespace GitCommands
         public System.Diagnostics.Process Process { get; set; }
 
         public bool CollectOutput = true;
-        public bool StreamOutput = false;
+        public bool StreamOutput;
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
             SetEnvironmentVariable();
 
-            bool ssh = false;
-            if (
-                    (!Plink() &&
-                        (
-                        (arguments.Contains("@") && arguments.Contains("://")) ||
-                        (arguments.Contains("@") && arguments.Contains(":")) ||
-                        (arguments.Contains("ssh://")) ||
-                        (arguments.Contains("http://")) ||
-                        (arguments.Contains("git://")) ||
-                        (arguments.Contains("push")) ||
-                        (arguments.Contains("remote")) ||
-                        (arguments.Contains("pull"))
-                        )
-                    ) ||
-                    arguments.Contains("plink")
-                )
-                ssh = true;
-
+            bool ssh = UseSSH(arguments);
 
             Kill();
 
@@ -287,6 +270,25 @@ namespace GitCommands
             }
 
             return Process;
+        }
+
+        private bool UseSSH(string arguments)
+        {
+            if ((!Plink() && (
+                     (arguments.Contains("@") && arguments.Contains("://")) ||
+                     (arguments.Contains("@") && arguments.Contains(":")) ||
+                     (arguments.Contains("ssh://")) ||
+                     (arguments.Contains("http://")) ||
+                     (arguments.Contains("git://")) ||
+                     (arguments.Contains("push")) ||
+                     (arguments.Contains("remote")) ||
+                     (arguments.Contains("pull"))
+                 )
+                ) ||
+                arguments.Contains("plink")
+                )
+                return true;
+            return false;
         }
 
         public void Kill()
@@ -460,18 +462,13 @@ namespace GitCommands
             string fileName = "";
             foreach (string file in unmerged)
             {
-                if (file.LastIndexOfAny(new char[] { ' ', '\t' }) > 0)
-                {
-                    if (file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1) != fileName)
-                    {
-                        fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
-                        GitItem gitFile = new GitItem();
-                        gitFile.FileName = fileName;
-
-
-                        unmergedFiles.Add(gitFile);
-                    }
-                }
+                if (file.LastIndexOfAny(new char[] {' ', '\t'}) <= 0)
+                    continue;
+                if (file.Substring(file.LastIndexOfAny(new char[] {' ', '\t'}) + 1) == fileName)
+                    continue;
+                fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
+                GitItem gitFile = new GitItem {FileName = fileName};
+                unmergedFiles.Add(gitFile);
             }
 
             return unmergedFiles;
@@ -479,7 +476,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectBase(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "1"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "1"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -489,7 +486,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectLocal(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "2"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "2"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -499,7 +496,7 @@ namespace GitCommands
 
         static public bool HandleConflice_SelectRemote(string fileName)
         {
-            if (HandeConflicts_SaveSide(fileName, fileName, "3"))
+            if (HandleConflicts_SaveSide(fileName, fileName, "3"))
             {
                 GitCommands.RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
                 return true;
@@ -507,7 +504,7 @@ namespace GitCommands
             return false;
         }
 
-        public static bool HandeConflicts_SaveSide(string fileName, string saveAs, string side)
+        public static bool HandleConflicts_SaveSide(string fileName, string saveAs, string side)
         {
             if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
                 side = "3";
@@ -1349,10 +1346,10 @@ namespace GitCommands
         {
             //message = message.Replace('\"', '\'');
 
+            var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
             if (amend)
-                return "commit --amend -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
-            else
-                return "commit  -F \"" + Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
+                return "commit --amend -F \"" + path;
+            return "commit  -F \"" + path;
         }
 
         static public string Patch(string patchFile)
@@ -1406,8 +1403,7 @@ namespace GitCommands
 
             if (string.IsNullOrEmpty(location))
                 return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"\"");
-            else
-                return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"" + location + "\"");
+            return RunCmd(Settings.GitCommand, "remote add \"" + name + "\" \"" + location + "\"");
         }
 
         public static string[] GetRemotes()
