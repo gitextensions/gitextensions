@@ -221,31 +221,14 @@ namespace GitCommands
         public System.Diagnostics.Process Process { get; set; }
 
         public bool CollectOutput = true;
-        public bool StreamOutput = false;
+        public bool StreamOutput;
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
             SetEnvironmentVariable();
 
-            bool ssh = false;
-            if (
-                    (!Plink() &&
-                        (
-                        (arguments.Contains("@") && arguments.Contains("://")) ||
-                        (arguments.Contains("@") && arguments.Contains(":")) ||
-                        (arguments.Contains("ssh://")) ||
-                        (arguments.Contains("http://")) ||
-                        (arguments.Contains("git://")) ||
-                        (arguments.Contains("push")) ||
-                        (arguments.Contains("remote")) ||
-                        (arguments.Contains("pull"))
-                        )
-                    ) ||
-                    arguments.Contains("plink")
-                )
-                ssh = true;
-
+            bool ssh = UseSSH(arguments);
 
             Kill();
 
@@ -287,6 +270,28 @@ namespace GitCommands
             }
 
             return Process;
+        }
+
+        private bool UseSSH(string arguments)
+        {
+            bool ssh = false;
+            if (
+                (!Plink() &&
+                 (
+                     (arguments.Contains("@") && arguments.Contains("://")) ||
+                     (arguments.Contains("@") && arguments.Contains(":")) ||
+                     (arguments.Contains("ssh://")) ||
+                     (arguments.Contains("http://")) ||
+                     (arguments.Contains("git://")) ||
+                     (arguments.Contains("push")) ||
+                     (arguments.Contains("remote")) ||
+                     (arguments.Contains("pull"))
+                 )
+                ) ||
+                arguments.Contains("plink")
+                )
+                ssh = true;
+            return ssh;
         }
 
         public void Kill()
