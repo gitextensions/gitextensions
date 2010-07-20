@@ -389,59 +389,7 @@ namespace GitUI
             }
             else
             {
-                ConfigFile localConfig = GitCommands.GitCommands.GetLocalConfig();
-                ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
-
-                GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
-                if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
-                    localConfig.SetValue("user.name", UserName.Text);
-                if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
-                    localConfig.SetValue("user.email", UserEmail.Text);
-                localConfig.SetValue("core.editor", Editor.Text);
-                localConfig.SetValue("merge.tool", MergeTool.Text);
-
-
-                if (KeepMergeBackup.CheckState == CheckState.Checked)
-                    localConfig.SetValue("mergetool.keepBackup", "true");
-                else
-                    if (KeepMergeBackup.CheckState == CheckState.Unchecked)
-                        localConfig.SetValue("mergetool.keepBackup", "false");
-
-                localConfig.SetValue("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
-
-                if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
-                    globalConfig.SetValue("user.name", GlobalUserName.Text);
-                if (string.IsNullOrEmpty(GlobalUserEmail.Text) || !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
-                    globalConfig.SetValue("user.email", GlobalUserEmail.Text);
-                globalConfig.SetValue("core.editor", GlobalEditor.Text);
-
-                FormSettings.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
-
-                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
-                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
-
-                globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
-
-                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
-                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
-
-                if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
-                    globalConfig.SetValue("mergetool.keepBackup", "true");
-                else
-                    if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
-                        globalConfig.SetValue("mergetool.keepBackup", "false");
-
-                globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
-                globalConfig.Save();
-                
-                //Only save local settings when we are inside a valid working dir
-                if (Settings.ValidWorkingDir())
-                    localConfig.Save();
+                handleCanFindGitCommand();
             }
 
             if (OpenSSH.Checked)
@@ -456,6 +404,63 @@ namespace GitUI
             GitCommands.Settings.SaveSettings();
 
             return true;
+        }
+
+        private void handleCanFindGitCommand()
+        {
+            ConfigFile localConfig = GitCommands.GitCommands.GetLocalConfig();
+            ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
+
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+
+            if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
+                localConfig.SetValue("user.name", UserName.Text);
+            if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
+                localConfig.SetValue("user.email", UserEmail.Text);
+            localConfig.SetValue("core.editor", Editor.Text);
+            localConfig.SetValue("merge.tool", MergeTool.Text);
+
+
+            if (KeepMergeBackup.CheckState == CheckState.Checked)
+                localConfig.SetValue("mergetool.keepBackup", "true");
+            else
+                if (KeepMergeBackup.CheckState == CheckState.Unchecked)
+                    localConfig.SetValue("mergetool.keepBackup", "false");
+
+            localConfig.SetValue("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
+
+            if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
+                globalConfig.SetValue("user.name", GlobalUserName.Text);
+            if (string.IsNullOrEmpty(GlobalUserEmail.Text) || !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
+                globalConfig.SetValue("user.email", GlobalUserEmail.Text);
+            globalConfig.SetValue("core.editor", GlobalEditor.Text);
+
+            FormSettings.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
+
+            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
+                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
+            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
+                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
+
+            globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
+
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
+
+            if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
+                globalConfig.SetValue("mergetool.keepBackup", "true");
+            else
+                if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
+                    globalConfig.SetValue("mergetool.keepBackup", "false");
+
+            globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
+            globalConfig.Save();
+                
+            //Only save local settings when we are inside a valid working dir
+            if (Settings.ValidWorkingDir())
+                localConfig.Save();
         }
 
         private void label3_Click(object sender, EventArgs e)
