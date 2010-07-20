@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.PieChart;
 using System.Windows.Forms;
 
 namespace GitStatistics.PieChart
@@ -227,8 +226,8 @@ namespace GitStatistics.PieChart
             else
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _sliceRelativeHeight);
             _pieChart.FitToBoundingRectangle = _fitChart;
-            _pieChart.InitialAngle = _initialAngle;
-            _pieChart.SliceRelativeDisplacements = _relativeSliceDisplacements;
+            _pieChart.SetInitialAngle(_initialAngle);
+            _pieChart.SetSliceRelativeDisplacements(_relativeSliceDisplacements);
             _pieChart.EdgeColorType = _edgeColorType;
             _pieChart.EdgeLineWidth = _edgeLineWidth;
             _pieChart.ShadowStyle = _shadowStyle;
