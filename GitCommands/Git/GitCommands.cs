@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using System.Security.Permissions;
 using System.IO;
@@ -8,8 +7,6 @@ using PatchApply;
 using System.Diagnostics;
 using System.Drawing;
 using GitUIPluginInterfaces;
-using System.ComponentModel;
-using ResourceManager.Translation;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Threading;
