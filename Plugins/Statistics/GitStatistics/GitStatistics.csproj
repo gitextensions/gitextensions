@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{92B57383-233E-46AE-8A86-6E98BF349A72}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="PieChart\PieSlice.cs" />
     <Compile Include="PieChart\Quadrilateral.cs" />
+    <Compile Include="PieChart\SliceSelectedArgs.cs" />
     <Compile Include="PieChart\Util.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
