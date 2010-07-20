@@ -8,7 +8,6 @@ namespace GitStatistics
     public class CodeFile
     {
         private readonly bool _isDesignerFile;
-        protected FileInfo File;
         protected int NumberCodeFiles;
         private bool _inCodeGeneratedRegion;
         private bool _inCommentBlock;
@@ -19,6 +18,8 @@ namespace GitStatistics
             _isDesignerFile = IsDesignerFile();
             IsTestFile = false;
         }
+
+        public FileInfo File { get; private set; }
 
         protected internal int NumberLines { get; protected set; }
 
