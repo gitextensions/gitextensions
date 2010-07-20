@@ -1706,11 +1706,7 @@ namespace GitCommands
                 {
                     if (statusString.StartsWith("#\tnew file:"))
                     {
-                        GitItemStatus itemStatus = new GitItemStatus();
-                        itemStatus.IsNew = true;
-                        itemStatus.IsTracked = true;
-                        itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
-                        gitItemStatusList.Add(itemStatus);
+                        processStatusNewFile(statusString, gitItemStatusList);
                     }
                 }
             }
@@ -1759,11 +1755,7 @@ namespace GitCommands
             {
                 if (statusString.StartsWith("#\tnew file:"))
                 {
-                    GitItemStatus itemStatus = new GitItemStatus();
-                    itemStatus.IsNew = true;
-                    itemStatus.IsTracked = true;
-                    itemStatus.Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim();
-                    gitItemStatusList.Add(itemStatus);
+                    processStatusNewFile(statusString, gitItemStatusList);
                 }
                 else
                     if (statusString.StartsWith("#\tdeleted:"))
@@ -1796,16 +1788,26 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
+        private static void processStatusNewFile(string statusString, List<GitItemStatus> gitItemStatusList)
+        {
+            GitItemStatus itemStatus = new GitItemStatus
+                                           {
+                                               IsNew = true,
+                                               IsTracked = true,
+                                               Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim()
+                                           };
+            gitItemStatusList.Add(itemStatus);
+        }
+
         static public string GetCurrentChanges(string name, bool staged, string extraDiffArguments)
         {
             name = FixPath(name);
+            var args = "diff" + extraDiffArguments + " -- \"" + name + "\"";
             if (staged)
-                return RunCmd(Settings.GitCommand, "diff --cached" + extraDiffArguments + " -- \"" + name + "\"");
-            else
-                return RunCmd(Settings.GitCommand, "diff" + extraDiffArguments + " -- \"" + name + "\"");
+                args = "diff --cached" + extraDiffArguments + " -- \"" + name + "\"";
+
+            return RunCmd(Settings.GitCommand, args);
         }
-
-
 
         static public string StageFiles(IList<GitItemStatus> files)
         {
@@ -1816,13 +1818,12 @@ namespace GitCommands
             Process process1 = null;
             foreach (GitItemStatus file in files)
             {
-                if (!file.IsDeleted)
-                {
-                    if (process1 == null)
-                        process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
+                if (file.IsDeleted)
+                    continue;
+                if (process1 == null)
+                    process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
-                    process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                }
+                process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
             }
             if (process1 != null)
             {
@@ -1836,12 +1837,11 @@ namespace GitCommands
             Process process2 = null;
             foreach (GitItemStatus file in files)
             {
-                if (file.IsDeleted)
-                {
-                    if (process2 == null)
-                        process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-                    process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                }
+                if (!file.IsDeleted)
+                    continue;
+                if (process2 == null)
+                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
+                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
             }
             if (process2 != null)
             {
@@ -1870,13 +1870,12 @@ namespace GitCommands
             Process process1 = null;
             foreach (GitItemStatus file in files)
             {
-                if (!file.IsNew)
-                {
-                    if (process1 == null)
-                        process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --info-only --index-info");
+                if (file.IsNew)
+                    continue;
+                if (process1 == null)
+                    process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --info-only --index-info");
 
-                    process1.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) + "\"");
-                }
+                process1.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) + "\"");
             }
             if (process1 != null)
             {
@@ -1890,12 +1889,11 @@ namespace GitCommands
             Process process2 = null;
             foreach (GitItemStatus file in files)
             {
-                if (file.IsNew)
-                {
-                    if (process2 == null)
-                        process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
-                    process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                }
+                if (!file.IsNew)
+                    continue;
+                if (process2 == null)
+                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
+                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
             }
             if (process2 != null)
             {
@@ -1950,61 +1948,19 @@ namespace GitCommands
         {
             remote = FixPath(remote);
 
-            string tree = "";
+            string tree = GetTreeFromRemoteHeands(remote, tags, branches);
+            return getHeads(tree);
+        }
+
+        private static string GetTreeFromRemoteHeands(string remote, bool tags, bool branches)
+        {
             if (tags && branches)
-                tree = RunCmd(Settings.GitCommand, "ls-remote --heads --tags \"" + remote + "\"");
-            else
-                if (tags)
-                    tree = RunCmd(Settings.GitCommand, "ls-remote --tags \"" + remote + "\"");
-                else
-                    if (branches)
-                        tree = RunCmd(Settings.GitCommand, "ls-remote --heads \"" + remote + "\"");
-
-            string[] itemsStrings = tree.Split('\n');
-
-            List<GitHead> heads = new List<GitHead>();
-
-            foreach (string itemsString in itemsStrings)
-            {
-                if (itemsString.Length > 42)
-                {
-                    GitHead head = new GitHead();
-                    head.Guid = itemsString.Substring(0, 40);
-                    head.Name = itemsString.Substring(41).Trim();
-                    if (head.Name.Length > 0 && head.Name.LastIndexOf("/") > 1)
-                    {
-                        if (head.Name.Contains("refs/tags/"))
-                        {
-                            //we need the one containing ^{}, because it contains the reference
-                            if (head.Name.Contains("^{}"))
-                            {
-                                head.Name = head.Name.Substring(0, head.Name.Length - 3);
-                            }
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
-                            head.IsHead = false;
-                            head.IsTag = true;
-                        }
-                        else
-                        {
-                            head.IsHead = head.Name.Contains("refs/heads/");
-                            head.IsRemote = head.Name.Contains("refs/remotes/");
-                            head.IsTag = false;
-                            head.IsOther = !head.IsHead && !head.IsRemote && !head.IsTag;
-                            if (head.IsHead)
-                                head.Name = head.Name.Substring(head.Name.LastIndexOf("heads/") + 6);
-                            else
-                                if (head.IsRemote)
-                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
-                                else
-                                    head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
-                        }
-                    }
-
-                    heads.Add(head);
-                }
-            }
-
-            return heads;
+                return RunCmd(Settings.GitCommand, "ls-remote --heads --tags \"" + remote + "\"");
+            if (tags)
+                return RunCmd(Settings.GitCommand, "ls-remote --tags \"" + remote + "\"");
+            if (branches)
+                return RunCmd(Settings.GitCommand, "ls-remote --heads \"" + remote + "\"");
+            return "";
         }
 
         static public List<GitHead> GetHeads()
@@ -2019,14 +1975,25 @@ namespace GitCommands
 
         static public List<GitHead> GetHeads(bool tags, bool branches)
         {
-            string tree = "";
-            if (tags && branches)
-                tree = RunCmd(Settings.GitCommand, "show-ref --dereference");
-            else if (tags)
-                tree = RunCmd(Settings.GitCommand, "show-ref --dereference --tags");
-            else if (branches)
-                tree = RunCmd(Settings.GitCommand, "show-ref --dereference --heads");
+            string tree = GetTree(tags, branches);
+            return getHeads(tree);
+        }
 
+        private static string GetTree(bool tags, bool branches)
+        {
+            if (tags && branches)
+                return RunCmd(Settings.GitCommand, "show-ref --dereference");                
+
+            if (tags)
+                return RunCmd(Settings.GitCommand, "show-ref --dereference --tags");
+
+            if (branches)
+                return RunCmd(Settings.GitCommand, "show-ref --dereference --heads");
+            return "";
+        }
+      
+        private static List<GitHead> getHeads(string tree)
+        {
             string[] itemsStrings = tree.Split('\n');
 
             List<GitHead> heads = new List<GitHead>();
@@ -2198,7 +2165,6 @@ namespace GitCommands
             return items;
         }
 
-
         static public List<IGitItem> GetTree(string id)
         {
             string tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
@@ -2291,7 +2257,6 @@ namespace GitCommands
         {
             return RunCachableCmd(Settings.GitCommand, "show " + revision + ":\"" + file.Replace('\\', '/') + "\"");
         }
-
 
         public static string GetFileText(string id)
         {

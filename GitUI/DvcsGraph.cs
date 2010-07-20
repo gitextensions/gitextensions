@@ -817,13 +817,8 @@ namespace GitUI
                 else
                 {
                     // Item already in the cache
-                    return new Rectangle
-                        (
-                        0,
-                        (cacheHeadRow + aNeededRow - cacheHead) % cacheCountMax * RowTemplate.Height,
-                        width,
-                        rowHeight
-                        );
+                    return CreateRectangle(aNeededRow, width);
+                    
                 }
 
                 for (int rowIndex = start; rowIndex < end; rowIndex++)
@@ -877,15 +872,22 @@ namespace GitUI
                     }
                 }
 
-                return new Rectangle
-                    (
-                    0,
-                    (cacheHeadRow + aNeededRow - cacheHead) % cacheCountMax * RowTemplate.Height,
-                    width,
-                    rowHeight
-                    );
+                return CreateRectangle(aNeededRow, width);
             } // end lock
-        } // end drawGraph
+        }
+
+        private Rectangle CreateRectangle(int aNeededRow, int width)
+        {
+            return new Rectangle
+                        (
+                        0,
+                        (cacheHeadRow + aNeededRow - cacheHead) % cacheCountMax * RowTemplate.Height,
+                        width,
+                        rowHeight
+                        );
+        }
+
+// end drawGraph
 
         private bool drawItem(Graphics wa, Graph.LaneRow row)
         {
