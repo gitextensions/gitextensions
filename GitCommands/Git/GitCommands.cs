@@ -454,24 +454,26 @@ namespace GitCommands
 
         static public List<GitItem> GetConflictedFiles()
         {
-            string[] unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged").Split('\n');
-
             List<GitItem> unmergedFiles = new List<GitItem>();
 
 
             string fileName = "";
-            foreach (string file in unmerged)
+            foreach (string file in GetUnmergedFileListing())
             {
                 if (file.LastIndexOfAny(new char[] {' ', '\t'}) <= 0)
                     continue;
                 if (file.Substring(file.LastIndexOfAny(new char[] {' ', '\t'}) + 1) == fileName)
                     continue;
                 fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
-                GitItem gitFile = new GitItem {FileName = fileName};
-                unmergedFiles.Add(gitFile);
+                unmergedFiles.Add(new GitItem {FileName = fileName});
             }
 
             return unmergedFiles;
+        }
+
+        private static string[] GetUnmergedFileListing()
+        {
+            return RunCmd(Settings.GitCommand, "ls-files --unmerged").Split('\n');
         }
 
         static public bool HandleConflice_SelectBase(string fileName)
@@ -747,22 +749,30 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                GitSubmodule gitSubmodule = new GitSubmodule();
-                gitSubmodule.Initialized = submodule[0] != '-';
-                gitSubmodule.UpToDate = submodule[0] != '+';
-                gitSubmodule.CurrentCommitGuid = submodule.Substring(1, 40).Trim();
-                string name = submodule.Substring(42).Trim();
-                if (name.Contains("("))
-                {
-                    gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
-                    gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new char[] { '(', ')', ' ' });
-                }
-                else
-                    gitSubmodule.Name = name;
+                GitSubmodule gitSubmodule = CreateGitSubmodule(submodule);
                 submoduleList.Add(gitSubmodule);
             }
 
             return submoduleList;
+        }
+
+        private GitSubmodule CreateGitSubmodule(string submodule)
+        {
+            GitSubmodule gitSubmodule = new GitSubmodule
+                                            {
+                                                Initialized = submodule[0] != '-',
+                                                UpToDate = submodule[0] != '+',
+                                                CurrentCommitGuid = submodule.Substring(1, 40).Trim()
+                                            };
+            string name = submodule.Substring(42).Trim();
+            if (name.Contains("("))
+            {
+                gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
+                gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new char[] { '(', ')', ' ' });
+            }
+            else
+                gitSubmodule.Name = name;
+            return gitSubmodule;
         }
 
         static public string Stash()
