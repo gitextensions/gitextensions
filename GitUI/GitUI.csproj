@@ -160,12 +160,12 @@
     <Compile Include="EditNetSpell.Designer.cs">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditorOptions.cs" />
-    <Compile Include="FileHelper.cs" />
-    <Compile Include="FileViewer.cs">
+    <Compile Include="Editor\EditorOptions.cs" />
+    <Compile Include="Editor\FileHelper.cs" />
+    <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FileViewer.Designer.cs">
+    <Compile Include="Editor\FileViewer.Designer.cs">
       <DependentUpon>FileViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="FindAndReplaceForm.cs">
@@ -578,7 +578,7 @@
       <DependentUpon>EditNetSpell.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FileViewer.resx">
+    <EmbeddedResource Include="Editor\FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

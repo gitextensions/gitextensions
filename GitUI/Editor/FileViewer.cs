@@ -6,9 +6,8 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Util;
-using Git = GitCommands.GitCommands;
 
-namespace GitUI
+namespace GitUI.Editor
 {
     public partial class FileViewer : GitExtensionsControl
     {
@@ -149,7 +148,7 @@ namespace GitUI
 
         public void ViewCurrentChanges(string fileName, bool staged)
         {
-            _async.Load(() => Git.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
+            _async.Load(() => GitCommands.GitCommands.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
         }
 
         public void ViewPatch(string text)
@@ -313,12 +312,12 @@ namespace GitUI
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Git.GetFileRevisionText(fileName, guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommands.GitCommands.GetFileRevisionText(fileName, guid));
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Git.GetFileText(guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommands.GitCommands.GetFileText(guid));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -370,7 +369,7 @@ namespace GitUI
 
         private static Image GetImage(string fileName, string guid)
         {
-            using (var stream = Git.GetFileStream(guid))
+            using (var stream = GitCommands.GitCommands.GetFileStream(guid))
             {
                 return CreateImage(fileName, stream);
             }

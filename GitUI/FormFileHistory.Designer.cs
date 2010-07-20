@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.Editor;
+
+namespace GitUI
 {
     partial class FormFileHistory
     {
@@ -33,9 +35,9 @@
             this.FileChanges = new GitUI.RevisionGrid(_revision);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
-            this.View = new GitUI.FileViewer();
+            this.View = new FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
-            this.Diff = new GitUI.FileViewer();
+            this.Diff = new FileViewer();
             this.Blame = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
