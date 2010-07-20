@@ -45,18 +45,30 @@ namespace GitUI
                 return;
             }
 
-            RevisionInfo.Text = CommitInformation.GetCommitInfo(revision) + GetBranchesWhichContainsThisCommit(revision);
+            RevisionInfo.Text =
+                CommitInformation.GetCommitInfo(revision) +
+                GetBranchesWhichContainsThisCommit(revision);
 
-            MatchCollection matches = Regex.Matches(RevisionInfo.Text,
-                                                    @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
-            foreach (Match emailMatch in matches)
-                gravatar1.LoadImageForEmail(emailMatch.Value);
+            LoadAuthorImage();
+        }
+
+        private void LoadAuthorImage()
+        {
+            var matches =
+                Regex.Matches(
+                    RevisionInfo.Text,
+                    @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
+
+            if (matches.Count == 0)
+                return;
+
+            gravatar1.LoadImageForEmail(matches[0].Value);
         }
 
         private static string GetBranchesWhichContainsThisCommit(string revision)
         {
-            string branchString = "";
-            foreach (string branch in CommitInformation.GetAllBranchesWhichContainGivenCommit(revision))
+            var branchString = "";
+            foreach (var branch in CommitInformation.GetAllBranchesWhichContainGivenCommit(revision))
             {
                 if (branchString != string.Empty)
                     branchString += ", ";
