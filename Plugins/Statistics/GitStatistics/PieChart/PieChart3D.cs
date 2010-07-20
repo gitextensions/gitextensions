@@ -642,7 +642,8 @@ namespace GitStatistics.PieChart
             for (var i = 0; i < Values.Length; ++i)
             {
                 var itemValue = Values[i];
-                var sweepAngle = (double) itemValue/sum*360;
+
+                var sweepAngle = sum == 0 ? 0 : (double) itemValue/sum*360;
                 // displacement from the center of the ellipse
                 var xDisplacement = SliceRelativeDisplacements[displacementIndex];
                 var yDisplacement = SliceRelativeDisplacements[displacementIndex];
