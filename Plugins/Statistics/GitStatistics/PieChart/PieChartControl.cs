@@ -1,364 +1,306 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.PieChart;
 using System.Windows.Forms;
 
-namespace System.Drawing.PieChart 
+namespace GitStatistics.PieChart
 {
-	/// <summary>
-	/// Summary description for PieChartControl.
-	/// </summary>
-	public class PieChartControl : System.Windows.Forms.Panel 
-	{
-		/// <summary>
-		///   Initializes the <c>PieChartControl</c>.
-		/// </summary>
-		public PieChartControl() : base() 
-		{
-			this.SetStyle(ControlStyles.UserPaint, true);
-			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-			this.SetStyle(ControlStyles.DoubleBuffer, true);
-			this.SetStyle(ControlStyles.ResizeRedraw, true);
-		}
+    /// <summary>
+    ///   A PieChartControl for showing statistics.
+    /// </summary>
+    public class PieChartControl : Panel
+    {
+        private readonly ToolTip _toolTip = new ToolTip();
+        private float _bottomMargin;
+        private Color[] _colors;
+        private int _defaultToolTipAutoPopDelay;
+        private EdgeColorType _edgeColorType = EdgeColorType.SystemColor;
+        private float _edgeLineWidth = 1F;
+        private bool _fitChart;
+        private int _highlightedIndex = -1;
+        private float _initialAngle;
+        private float _leftMargin;
+        private PieChart3D _pieChart;
+        private float[] _relativeSliceDisplacements = new[] {0F};
+        private float _rightMargin;
+        private ShadowStyle _shadowStyle = ShadowStyle.GradualShadow;
+        private float _sliceRelativeHeight;
+        private object[] _tags;
+        private float _topMargin;
+        private decimal[] _values;
 
-		/// <summary>
-		///   Sets the left margin for the chart.
-		/// </summary>
-		public float LeftMargin 
-		{
-			set 
-			{ 
-				Debug.Assert(value >= 0);
-				m_leftMargin = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Initializes the <c>PieChartControl</c>.
+        /// </summary>
+        public PieChartControl()
+        {
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+        }
 
-		/// <summary>
-		///   Sets the right margin for the chart.
-		/// </summary>
-		public float RightMargin 
-		{
-			set 
-			{ 
-				Debug.Assert(value >= 0);
-				m_rightMargin = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the left margin for the chart.
+        /// </summary>
+        public void SetLeftMargin(float value)
+        {
+            Debug.Assert(value >= 0);
+            _leftMargin = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the top margin for the chart.
-		/// </summary>
-		public float TopMargin 
-		{
-			set 
-			{ 
-				Debug.Assert(value >= 0);
-				m_topMargin = value;
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the right margin for the chart.
+        /// </summary>
+        public void SetRightMargin(float value)
+        {
+            Debug.Assert(value >= 0);
+            _rightMargin = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the bottom margin for the chart.
-		/// </summary>
-		public float BottomMargin 
-		{
-			set 
-			{ 
-				Debug.Assert(value >= 0);
-				m_bottomMargin = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the top margin for the chart.
+        /// </summary>
+        public void SetTopMargin(float value)
+        {
+            Debug.Assert(value >= 0);
+            _topMargin = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the indicator if chart should fit the bounding rectangle
-		///   exactly.
-		/// </summary>
-		public bool FitChart 
-		{
-			set 
-			{ 
-				m_fitChart = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the bottom margin for the chart.
+        /// </summary>
+        public void SetBottomMargin(float value)
+        {
+            Debug.Assert(value >= 0);
+            _bottomMargin = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets values to be represented by the chart.
-		/// </summary>
-		public decimal[] Values 
-		{
-			set 
-			{ 
-				m_values = value;
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the indicator if chart should fit the bounding rectangle
+        ///   exactly.
+        /// </summary>
+        public void SetFitChart(bool value)
+        {
+            _fitChart = value;
+            Invalidate();
+        }
+
+        /// <summary>
+        ///   Sets values to be represented by the chart.
+        /// </summary>
+        public void SetValues(decimal[] value)
+        {
+            _values = value;
+            Invalidate();
+        }
 
 
-		public object[] Tags
-		{
-			set
-			{
-				m_tags = value;
-				Invalidate();
-			}
-		}
-		/// <summary>
-		///   Sets colors to be used for rendering pie slices.
-		/// </summary>
-		public Color[] Colors 
-		{
-			set 
-			{ 
-				m_colors = value; 
-				Invalidate();
-			}
-		}
+        public void SetTags(object[] value)
+        {
+            _tags = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets values for slice displacements.
-		/// </summary>
-		public float[] SliceRelativeDisplacements 
-		{
-			set 
-			{ 
-				m_relativeSliceDisplacements = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets colors to be used for rendering pie slices.
+        /// </summary>
+        public void SetColors(Color[] value)
+        {
+            _colors = value;
+            Invalidate();
+        }
 
-		public string[] ToolTips 
-		{
-			set { m_toolTipTexts = value; }
-			get { return m_toolTipTexts; }
-		}
-		/// <summary>
-		///   Sets pie slice reative height.
-		/// </summary>
-		public float SliceRelativeHeight 
-		{
-			set 
-			{ 
-				m_sliceRelativeHeight = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets values for slice displacements.
+        /// </summary>
+        public void SetSliceRelativeDisplacements(float[] value)
+        {
+            _relativeSliceDisplacements = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the shadow style.
-		/// </summary>
-		public ShadowStyle ShadowStyle 
-		{
-			set 
-			{ 
-				m_shadowStyle = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        /// Gets or sets the tool tips.
+        /// </summary>
+        /// <value>The tool tips.</value>
+        public string[] ToolTips { get; set; }
 
-		/// <summary>
-		///  Sets the edge color type.
-		/// </summary>
-		public EdgeColorType EdgeColorType 
-		{
-			set 
-			{ 
-				m_edgeColorType = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets pie slice reative height.
+        /// </summary>
+        public void SetSliceRelativeHeight(float value)
+        {
+            _sliceRelativeHeight = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the edge lines width.
-		/// </summary>
-		public float EdgeLineWidth 
-		{
-			set 
-			{ 
-				m_edgeLineWidth = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the shadow style.
+        /// </summary>
+        public void SetShadowStyle(ShadowStyle value)
+        {
+            _shadowStyle = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Sets the initial angle from which pies are drawn.
-		/// </summary>
-		public float InitialAngle 
-		{
-			get{ return m_initialAngle; }
-			set 
-			{ 
-				m_initialAngle = value; 
-				Invalidate();
-			}
-		}
+        /// <summary>
+        ///   Sets the edge color type.
+        /// </summary>
+        public void SetEdgeColorType(EdgeColorType value)
+        {
+            _edgeColorType = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Handles <c>OnPaint</c> event.
-		/// </summary>
-		/// <param name="args">
-		///   <c>PaintEventArgs</c> object.
-		/// </param>
-		protected override void OnPaint(PaintEventArgs args) 
-		{
-			DoDraw(args.Graphics);
-		}
+        /// <summary>
+        ///   Sets the edge lines width.
+        /// </summary>
+        public void SetEdgeLineWidth(float value)
+        {
+            _edgeLineWidth = value;
+            Invalidate();
+        }
 
-		/// <summary>
-		///   Handles <c>OnResize</c> event.
-		/// </summary>
-		/// <param name="args">
-		/// </param>
-		protected override void OnResize(EventArgs args) 
-		{
-			this.Refresh();
-		}
+        /// <summary>
+        ///   Sets the initial angle from which pies are drawn.
+        /// </summary>
+        public float InitialAngle
+        {
+            get { return _initialAngle; }
+            set
+            {
+                _initialAngle = value;
+                Invalidate();
+            }
+        }
 
-		/// <summary>
-		///   Sets values for the chart and draws them.
-		/// </summary>
-		/// <param name="graphics">
-		///   Graphics object used for drawing.
-		/// </param>
-		protected void DoDraw(Graphics graphics) 
-		{
-			if (m_values != null && m_values.Length > 0) 
-			{
-				graphics.SmoothingMode = SmoothingMode.AntiAlias;
-				float width = ClientSize.Width - m_leftMargin - m_rightMargin;
-				float height = ClientSize.Height - m_topMargin - m_bottomMargin;
-				// if the width or height if <=0 an exception would be thrown -> exit method..
-				if (width <= 0 || height <= 0)
-					return;
-				if (m_pieChart != null)
-					m_pieChart.Dispose();
-				if (m_colors != null && m_colors.Length > 0)
-					m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_values, m_colors, m_sliceRelativeHeight); 
-				else
-					m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_values, m_sliceRelativeHeight); 
-				m_pieChart.FitToBoundingRectangle = m_fitChart;
-				m_pieChart.InitialAngle = m_initialAngle;
-				m_pieChart.SliceRelativeDisplacements = m_relativeSliceDisplacements;
-				m_pieChart.EdgeColorType = m_edgeColorType;
-				m_pieChart.EdgeLineWidth = m_edgeLineWidth;
-				m_pieChart.ShadowStyle = m_shadowStyle;
-				m_pieChart.HighlightedIndex = m_highlightedIndex;
-				m_pieChart.Draw(graphics);
-			}
-		}
+        /// <summary>
+        ///   Handles <c>OnPaint</c> event.
+        /// </summary>
+        /// <param name = "args">
+        ///   <c>PaintEventArgs</c> object.
+        /// </param>
+        protected override void OnPaint(PaintEventArgs args)
+        {
+            DoDraw(args.Graphics);
+        }
 
-		protected override void OnMouseEnter(System.EventArgs e) 
-		{
-			base.OnMouseEnter(e);
-			m_defaultToolTipAutoPopDelay = m_toolTip.AutoPopDelay;
-			m_toolTip.AutoPopDelay = Int16.MaxValue;
-		}
+        /// <summary>
+        ///   Handles <c>OnResize</c> event.
+        /// </summary>
+        /// <param name = "args">
+        /// </param>
+        protected override void OnResize(EventArgs args)
+        {
+            Refresh();
+        }
 
-		protected override void OnMouseLeave(System.EventArgs e) 
-		{
-			base.OnMouseLeave(e);
-			m_toolTip.RemoveAll();
-			m_toolTip.AutoPopDelay = m_defaultToolTipAutoPopDelay;
-			m_highlightedIndex = -1;
-			Refresh();
-		}
+        /// <summary>
+        ///   Sets values for the chart and draws them.
+        /// </summary>
+        /// <param name = "graphics">
+        ///   Graphics object used for drawing.
+        /// </param>
+        protected void DoDraw(Graphics graphics)
+        {
+            if (_values == null || _values.Length <= 0)
+                return;
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            var width = ClientSize.Width - _leftMargin - _rightMargin;
+            var height = ClientSize.Height - _topMargin - _bottomMargin;
 
-		protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e) 
-		{
-			base.OnMouseMove(e);
-			if (m_pieChart != null) 
-			{
-				int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
-				if (index != -1) 
-				{
-					if (m_toolTipTexts == null || m_toolTipTexts.Length <= index || m_toolTipTexts[index].Length == 0)
-						m_toolTip.SetToolTip(this, m_values[index].ToString());
-					else
-						m_toolTip.SetToolTip(this, m_toolTipTexts[index]);
-				}
-				else 
-				{
-					m_toolTip.RemoveAll();
-				}
-				m_highlightedIndex = index;
-				Refresh();
-			}
-		}
+            // if the width or height if <=0 an exception would be thrown -> exit method..
+            if (width <= 0 || height <= 0)
+                return;
+            if (_pieChart != null)
+                _pieChart.Dispose();
+            if (_colors != null && _colors.Length > 0)
+                _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
+                                           _sliceRelativeHeight);
+            else
+                _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _sliceRelativeHeight);
+            _pieChart.FitToBoundingRectangle = _fitChart;
+            _pieChart.InitialAngle = _initialAngle;
+            _pieChart.SliceRelativeDisplacements = _relativeSliceDisplacements;
+            _pieChart.EdgeColorType = _edgeColorType;
+            _pieChart.EdgeLineWidth = _edgeLineWidth;
+            _pieChart.ShadowStyle = _shadowStyle;
+            _pieChart.HighlightedIndex = _highlightedIndex;
+            _pieChart.Draw(graphics);
+        }
 
-		protected override void OnMouseDown(MouseEventArgs e)
-		{
-			if (m_pieChart != null) 
-			{
-				int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
-				if (index != -1) 
-				{
-					if (m_toolTipTexts == null || m_toolTipTexts.Length <= index || m_toolTipTexts[index].Length == 0)
-						m_toolTip.SetToolTip(this, m_values[index].ToString());
-					else
-						m_toolTip.SetToolTip(this, m_toolTipTexts[index]);
-					
-					if( SliceSelected != null )
-						SliceSelected( this, new SliceSelectedArgs( m_values[index], m_toolTip.GetToolTip( this ), (m_tags!=null?m_tags[index]:null) ) );
-				}
-				else 
-				{
-					m_toolTip.RemoveAll();
-				}
-				m_highlightedIndex = index;
-				Refresh();
-			}
-			base.OnMouseDown( e );			 
-		}
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            _defaultToolTipAutoPopDelay = _toolTip.AutoPopDelay;
+            _toolTip.AutoPopDelay = Int16.MaxValue;
+        }
 
-		public event SliceSelectedHandler SliceSelected;
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            _toolTip.RemoveAll();
+            _toolTip.AutoPopDelay = _defaultToolTipAutoPopDelay;
+            _highlightedIndex = -1;
+            Refresh();
+        }
 
-		private PieChart3D      m_pieChart = null;
-		private float           m_leftMargin;
-		private float           m_topMargin;
-		private float           m_rightMargin;
-		private float           m_bottomMargin;
-		private bool            m_fitChart = false;
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (_pieChart == null)
+                return;
 
-		private decimal[]       m_values = null;
-		private Color[]         m_colors = null;
-		private float           m_sliceRelativeHeight;
-		private float[]         m_relativeSliceDisplacements = new float[] { 0F };
-		private string[]        m_toolTipTexts = null;
-		private object[]        m_tags = null;
-		private ShadowStyle     m_shadowStyle = ShadowStyle.GradualShadow;
-		private EdgeColorType   m_edgeColorType = EdgeColorType.SystemColor;
-		private float           m_edgeLineWidth = 1F;
-		private float           m_initialAngle;
-		private int             m_highlightedIndex = -1;
-		private ToolTip         m_toolTip = new ToolTip();
-		/// <summary>
-		///   Default AutoPopDelay of the ToolTip control.
-		/// </summary>
-		private int             m_defaultToolTipAutoPopDelay;
-	}
+            var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
+            if (index != -1)
+            {
+                if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                    _toolTip.SetToolTip(this, _values[index].ToString());
+                else
+                    _toolTip.SetToolTip(this, ToolTips[index]);
+            }
+            else
+            {
+                _toolTip.RemoveAll();
+            }
+            _highlightedIndex = index;
+            Refresh();
+        }
 
-	public delegate void SliceSelectedHandler( object sender, SliceSelectedArgs e );
-	public class SliceSelectedArgs : EventArgs
-	{
-		public SliceSelectedArgs( decimal val, string hint )
-		{
-			value = val;
-			tooltip = hint;
-		}
-		
-		public SliceSelectedArgs( decimal val, string hint, Object t )
-		{
-			value = val;
-			tooltip = hint;
-			tag = t;
-		}
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (_pieChart != null)
+            {
+                var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
+                if (index != -1)
+                {
+                    if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                        _toolTip.SetToolTip(this, _values[index].ToString());
+                    else
+                        _toolTip.SetToolTip(this, ToolTips[index]);
 
-		public decimal value;
-		public string tooltip;
-		public object tag;
-	}
+                    if (SliceSelected != null)
+                        SliceSelected(this,
+                                      new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this),
+                                                            (_tags != null ? _tags[index] : null)));
+                }
+                else
+                {
+                    _toolTip.RemoveAll();
+                }
+                _highlightedIndex = index;
+                Refresh();
+            }
+            base.OnMouseDown(e);
+        }
+
+        public event SliceSelectedHandler SliceSelected;
+    }
 }
