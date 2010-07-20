@@ -52,27 +52,32 @@ namespace GitCommands
 
             foreach (var line in fileLines)
             {
-                var m = RegParseIsSection.Match(line);
-                if (m.Success) //this line is a section
+                processLine(line, configSection);
+            }
+        }
+
+        private void processLine(string line, ConfigSection configSection)
+        {
+            var m = RegParseIsSection.Match(line);
+            if (m.Success) //this line is a section
+            {
+                var name = m.Groups["SectionName"].Value;
+
+                configSection = new ConfigSection(name);
+                _sections.Add(configSection);
+            }
+            else
+            {
+                m = RegParseIsKey.Match(line);
+                if (m.Success) //this line is a key
                 {
-                    var name = m.Groups["SectionName"].Value;
+                    var key = m.Groups["Key"].Value;
+                    var value = UnescapeString(m.Groups["Value"].Value);
 
-                    configSection = new ConfigSection(name);
-                    _sections.Add(configSection);
-                }
-                else
-                {
-                    m = RegParseIsKey.Match(line);
-                    if (m.Success) //this line is a key
-                    {
-                        var key = m.Groups["Key"].Value;
-                        var value = UnescapeString(m.Groups["Value"].Value);
+                    if (configSection == null)
+                        throw new Exception("Key " + key + " in configfile " + _fileName + " is not in a section.");
 
-                        if (configSection == null)
-                            throw new Exception("Key " + key + " in configfile " + _fileName + " is not in a section.");
-
-                        configSection.SetValue(key, value);
-                    }
+                    configSection.SetValue(key, value);
                 }
             }
         }
