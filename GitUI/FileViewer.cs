@@ -41,6 +41,13 @@ namespace GitUI
             TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextAreaMouseLeave;
 
             TextEditor.ShowVRuler = false;
+            IsReadOnly = true;
+        }
+
+        public bool IsReadOnly
+        {
+            get { return TextEditor.IsReadOnly;  }
+            set { TextEditor.IsReadOnly = value; }
         }
 
         public bool IgnoreWhitespaceChanges { get; set; }
