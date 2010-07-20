@@ -274,10 +274,7 @@ namespace GitCommands
 
         private bool UseSSH(string arguments)
         {
-            bool ssh = false;
-            if (
-                (!Plink() &&
-                 (
+            if ((!Plink() && (
                      (arguments.Contains("@") && arguments.Contains("://")) ||
                      (arguments.Contains("@") && arguments.Contains(":")) ||
                      (arguments.Contains("ssh://")) ||
@@ -290,8 +287,8 @@ namespace GitCommands
                 ) ||
                 arguments.Contains("plink")
                 )
-                ssh = true;
-            return ssh;
+                return true;
+            return false;
         }
 
         public void Kill()
@@ -465,18 +462,13 @@ namespace GitCommands
             string fileName = "";
             foreach (string file in unmerged)
             {
-                if (file.LastIndexOfAny(new char[] { ' ', '\t' }) > 0)
-                {
-                    if (file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1) != fileName)
-                    {
-                        fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
-                        GitItem gitFile = new GitItem();
-                        gitFile.FileName = fileName;
-
-
-                        unmergedFiles.Add(gitFile);
-                    }
-                }
+                if (file.LastIndexOfAny(new char[] {' ', '\t'}) <= 0)
+                    continue;
+                if (file.Substring(file.LastIndexOfAny(new char[] {' ', '\t'}) + 1) == fileName)
+                    continue;
+                fileName = file.Substring(file.LastIndexOfAny(new char[] { ' ', '\t' }) + 1);
+                GitItem gitFile = new GitItem {FileName = fileName};
+                unmergedFiles.Add(gitFile);
             }
 
             return unmergedFiles;
