@@ -30,17 +30,8 @@ namespace GitUI
         private void LoadLostObjects()
         {
             Cursor.Current = Cursors.WaitCursor;
-            
-            string options = "";
 
-            if (Unreachable.Checked)
-                options += " --unreachable";
-            
-            if (FullCheck.Checked)
-                options += " --full";
-
-            if (NoReflogs.Checked)
-                options += " --no-reflogs";
+            string options = GetOptions();
                 
             FormProcess process = new FormProcess("fsck-objects" + options);
             process.ShowDialog();
@@ -73,6 +64,15 @@ namespace GitUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string options = GetOptions();
+
+            FormProcess process = new FormProcess("fsck-objects --lost-found" + options);
+            process.ShowDialog();
+            FormVerify_Shown(null, null);
+        }
+
+        private string GetOptions()
+        {            
             string options = "";
 
             if (Unreachable.Checked)
@@ -83,10 +83,7 @@ namespace GitUI
 
             if (NoReflogs.Checked)
                 options += " --no-reflogs";
-
-            FormProcess process = new FormProcess("fsck-objects --lost-found" + options);
-            process.ShowDialog();
-            FormVerify_Shown(null, null);
+            return options;
         }
 
         private void Warnings_DoubleClick(object sender, EventArgs e)
