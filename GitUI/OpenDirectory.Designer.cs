@@ -52,8 +52,7 @@
             this._Directory.Name = "_Directory";
             this._Directory.Size = new System.Drawing.Size(266, 21);
             this._Directory.TabIndex = 1;
-            this._Directory.SelectedIndexChanged += new System.EventHandler(this.Directory_SelectedIndexChanged);
-            this._Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Directory_KeyPress);
+            this._Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.DirectoryKeyPress);
             // 
             // Browse
             // 
@@ -63,7 +62,7 @@
             this.Browse.TabIndex = 2;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // Load
             // 
@@ -73,7 +72,7 @@
             this.Load.TabIndex = 3;
             this.Load.Text = "Open";
             this.Load.UseVisualStyleBackColor = true;
-            this.Load.Click += new System.EventHandler(this.Load_Click);
+            this.Load.Click += new System.EventHandler(this.LoadClick);
             // 
             // Open
             // 
