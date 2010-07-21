@@ -216,8 +216,9 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_Updated);
             this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
+            this.Remotes.TextUpdate += new System.EventHandler(this.Remotes_Updated);
             this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
             // 
             // groupBox1
