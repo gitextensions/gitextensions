@@ -1,4 +1,5 @@
 ﻿using GitUI.Editor;
+using GitUI.SpellChecker;
 
 namespace GitUI
 {
@@ -85,7 +86,7 @@ namespace GitUI
             this.Amend = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.Message = new GitUI.EditNetSpell();
+            this.Message = new EditNetSpell();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this._menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
