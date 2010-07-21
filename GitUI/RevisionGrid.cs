@@ -457,13 +457,18 @@ namespace GitUI
             RevisionGraph.RevisionGraphUpdatedEvent updatedEvent = (RevisionGraph.RevisionGraphUpdatedEvent)e;
             update(updatedEvent.Revision);
         }
+
+        private bool FilterIsApplied()
+        {
+            return Filter != "" || BranchFilter != "";
+        }
         
         void gitGetCommitsCommand_Exited(object sender, EventArgs e)
         {
             Revisions.SetExpectedRowCount(revisionGraphCommand.Revisions.Count);
             update(null);
 
-            if (revisionGraphCommand.Revisions.Count == 0 && Filter == "")
+            if (revisionGraphCommand.Revisions.Count == 0 && !FilterIsApplied())
             {
                 // This has to happen on the UI thread
                 syncContext.Send(o =>
