@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+    using GitUI.SpellChecker;
 
 namespace GitUI
 {
@@ -14,13 +15,13 @@ namespace GitUI
         private NetSpell.SpellChecker.Spelling spelling;
         private NetSpell.SpellChecker.Dictionary.WordDictionary wordDictionary;
         //private System.ComponentModel.IContainer components;
-        private CustomPaintTextBox customUnderlines;
+        private SpellCheckEditControl customUnderlines;
 
         public EditNetSpell()
         {
             InitializeComponent(); Translate();
 
-            customUnderlines = new CustomPaintTextBox(TextBox);
+            customUnderlines = new SpellCheckEditControl(TextBox);
             
             SpellCheckTimer.Enabled = false;
 
