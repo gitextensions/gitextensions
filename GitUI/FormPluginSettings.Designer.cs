@@ -55,7 +55,7 @@
             this.PluginList.Name = "PluginList";
             this.PluginList.Size = new System.Drawing.Size(178, 290);
             this.PluginList.TabIndex = 1;
-            this.PluginList.SelectedIndexChanged += new System.EventHandler(this.PluginList_SelectedIndexChanged);
+            this.PluginList.SelectedIndexChanged += new System.EventHandler(this.PluginListSelectedIndexChanged);
             // 
             // FormPluginSettings
             // 
@@ -66,8 +66,8 @@
             this.Name = "FormPluginSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugin settings";
-            this.Load += new System.EventHandler(this.FormPluginSettings_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPluginSettings_FormClosing);
+            this.Load += new System.EventHandler(this.FormPluginSettingsLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPluginSettingsFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
