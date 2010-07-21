@@ -469,12 +469,10 @@ namespace GitUI
 
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         protected static string GetRegistryValue(RegistryKey root, string subkey, string key)
@@ -492,7 +490,6 @@ namespace GitUI
                     rk.Flush();
                     rk.Close();
                 }
-
                 return value;
             }
             catch (UnauthorizedAccessException)
@@ -501,7 +498,6 @@ namespace GitUI
             }
             return "";
         }
-
 
         protected void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
         {
@@ -527,199 +523,24 @@ namespace GitUI
             bool bValid = true;
             try
             {
-                if (string.IsNullOrEmpty(GitCommands.Settings.GetInstallDir()))
-                {
-                    GitExtensionsInstall.BackColor = Color.LightSalmon;
-                    GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
-                    bValid = false;
-                }
-                else
-                {
-                    GitExtensionsInstall.BackColor = Color.LightGreen;
-                    GitExtensionsInstall.Text = "GitExtensions is properly registered.";
-                }
-
-                if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
-                    string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                    string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                    string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2", null)))
-                {
-                    ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                    ShellExtensionsRegistered.Text = "GitExtensionsShellEx.dll needs to be registered in order to use the shell extensions.";
-                    bValid = false;
-                }
-                else
-                {
-                    ShellExtensionsRegistered.BackColor = Color.LightGreen;
-                    ShellExtensionsRegistered.Text = "Shell extensions registered properly.";
-                }
-
-                GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-                if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("user.name")) ||
-                    string.IsNullOrEmpty(gitCommands.GetGlobalSetting("user.email")))
-                {
-                    UserNameSet.BackColor = Color.LightSalmon;
-                    UserNameSet.Text = "You need to configure a user name and an email address.";
-                    bValid = false;
-                }
-                else
-                {
-                    UserNameSet.BackColor = Color.LightGreen;
-                    UserNameSet.Text = "There is a user name and an email address configured.";
-                }
-
-                if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("merge.tool")))
-                {
-                    DiffTool.BackColor = Color.LightSalmon;
-                    DiffTool.Text = "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
-                    bValid = false;
-                }
-                else
-                {
-                    if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        string p = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
-                        if (string.IsNullOrEmpty(p) || !File.Exists(p))
-                        {
-                            DiffTool.BackColor = Color.LightSalmon;
-                            DiffTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
-                            bValid = false;
-                        }
-                        else
-                        {
-                            DiffTool.BackColor = Color.LightGreen;
-                            DiffTool.Text = "KDiff3 is configured as mergetool.";
-                        }
-                    }
-                    else
-                    {
-                        string mergetool = gitCommands.GetGlobalSetting("merge.tool");
-                        if (mergetool.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
-                            mergetool.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            string p = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".cmd");
-                            if (string.IsNullOrEmpty(p))
-                            {
-                                DiffTool.BackColor = Color.LightSalmon;
-                                DiffTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
-                                bValid = false;
-                            }
-                            else
-                            {
-                                DiffTool.BackColor = Color.LightGreen;
-                                DiffTool.Text = "There is a custom mergetool configured: " + mergetool;
-                            }
-                        }
-                        else
-                        {
-                            DiffTool.BackColor = Color.LightGreen;
-                            DiffTool.Text = "There is a mergetool configured.";
-                        }
-                    }
-                }
-
-                if (string.IsNullOrEmpty(FormSettings.GetGlobalDiffToolFromConfig()))
-                {
-                    DiffTool2.BackColor = Color.LightSalmon;
-                    DiffTool2.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
-                    bValid = false;
-                }
-                else
-                {
-                    if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        string p = gitCommands.GetGlobalSetting("difftool.kdiff3.path");
-                        if (string.IsNullOrEmpty(p) || !File.Exists(p))
-                        {
-                            DiffTool2.BackColor = Color.LightSalmon;
-                            DiffTool2.Text = "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
-                            bValid = false;
-                        }
-                        else
-                        {
-                            DiffTool2.BackColor = Color.LightGreen;
-                            DiffTool2.Text = "KDiff3 is configured as difftool.";
-                        }
-                    }
-                    else
-                    {
-                        string difftool = FormSettings.GetGlobalDiffToolFromConfig();
-                        DiffTool2.BackColor = Color.LightGreen;
-                        DiffTool2.Text = "There is a difftool configured: " + difftool;
-                    }
-                }
-
-                if (!CanFindGitCmd())
-                {
-                    GitFound.BackColor = Color.LightSalmon;
-                    GitFound.Text = "git.cmd not found. To solve this problem you can set the correct path in settings.";
-                    bValid = false;
-                }
-                else
-                {
-                    GitFound.BackColor = Color.LightGreen;
-                    GitFound.Text = "git.cmd is found on your computer.";
-                }
-
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
-                {
-                    GitBinFound.BackColor = Color.LightSalmon;
-                    GitBinFound.Text = "git.exe not found. To solve this problem you can set the correct path in settings.";
-                    bValid = false;
-                }
-                else
-                {
-                    GitBinFound.BackColor = Color.LightGreen;
-                    GitBinFound.Text = "git.exe is found on your computer.";
-                }
-                if (GitCommands.GitCommands.Plink())
-                {
-                    if (!File.Exists(GitCommands.Settings.Plink) || !File.Exists(GitCommands.Settings.Puttygen) || !File.Exists(GitCommands.Settings.Pageant))
-                    {
-                        SshConfig.BackColor = Color.LightSalmon;
-                        SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
-                        bValid = false;
-                    }
-                    else
-                    {
-                        SshConfig.BackColor = Color.LightGreen;
-                        SshConfig.Text = "SSH client PuTTY is configured properly";
-                    }
-                }
-                else
-                {
-                    SshConfig.BackColor = Color.LightGreen;
-                    if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
-                        SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
-                    else
-                        SshConfig.Text = "Unknown SSH client configured: " + GitCommands.GitCommands.GetSsh();
-                }
-
+                // once a check fails, we want bValid to stay false
+                bValid = CheckGitExtensionsInstall();
+                bValid = bValid && CheckGitExtensionRegistrySettings();
+                bValid = bValid && CheckGlobalUserSettingsValid();
+                bValid = bValid && CheckMergeTool();
+                bValid = bValid && CheckDiffToolConfiguration();
+                bValid = bValid && CheckGitCmdValid();
+                bValid = bValid && CheckGitExe();
+                bValid = bValid && CheckSSHSettings();
             }
             catch
             {
             }
 
-            if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                  Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
-            {
-                CheckAtStartup.Checked = true;
-            }
-            else
-            {
-                CheckAtStartup.Checked = false;
-            }
-
-
-            if (bValid && CheckAtStartup.Checked)
-            {
-                Application.UserAppDataRegistry.SetValue("checksettings", false);
-                CheckAtStartup.Checked = false;
-            }
-
+            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);          
             return bValid;
         }
-
+        
         private static bool CanFindGitCmd()
         {
             return !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, ""));
@@ -1710,6 +1531,185 @@ namespace GitUI
                 _ColorGraphLabel.Visible = true;
                 StripedBanchChange.Enabled = false;
             }
+        }
+
+        private bool getCheckAtStartupChecked(bool bValid)
+        {
+            var retValue = false;
+            if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
+                  Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
+            {
+                retValue = true;
+            }
+
+            if (bValid && retValue)
+            {
+                Application.UserAppDataRegistry.SetValue("checksettings", false);
+                retValue = false;
+            }
+            return retValue;
+        }
+
+        private bool CheckSSHSettings()
+        {
+            if (GitCommands.GitCommands.Plink())
+            {
+                if (!File.Exists(GitCommands.Settings.Plink) || !File.Exists(GitCommands.Settings.Puttygen) || !File.Exists(GitCommands.Settings.Pageant))
+                {
+                    SshConfig.BackColor = Color.LightSalmon;
+                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                    return false;
+                }
+                SshConfig.BackColor = Color.LightGreen;
+                SshConfig.Text = "SSH client PuTTY is configured properly";
+                return true;
+            }
+            SshConfig.BackColor = Color.LightGreen;
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.GetSsh()))
+                SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
+            else
+                SshConfig.Text = "Unknown SSH client configured: " + GitCommands.GitCommands.GetSsh();
+            return true;
+        }
+
+        private bool CheckGitExe()
+        {
+            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+            {
+                GitBinFound.BackColor = Color.LightSalmon;
+                GitBinFound.Text = "git.exe not found. To solve this problem you can set the correct path in settings.";
+                return false;
+            }
+            GitBinFound.BackColor = Color.LightGreen;
+            GitBinFound.Text = "git.exe is found on your computer.";
+            return true;
+        }
+
+        private bool CheckGitCmdValid()
+        {
+            if (!CanFindGitCmd())
+            {
+                GitFound.BackColor = Color.LightSalmon;
+                GitFound.Text = "git.cmd not found. To solve this problem you can set the correct path in settings.";
+                return false;
+            }
+            GitFound.BackColor = Color.LightGreen;
+            GitFound.Text = "git.cmd is found on your computer.";
+            return true;
+        }
+
+        private bool CheckDiffToolConfiguration()
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            if (string.IsNullOrEmpty(FormSettings.GetGlobalDiffToolFromConfig()))
+            {
+                DiffTool2.BackColor = Color.LightSalmon;
+                DiffTool2.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
+                return false;
+            }
+            if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string p = gitCommands.GetGlobalSetting("difftool.kdiff3.path");
+                if (string.IsNullOrEmpty(p) || !File.Exists(p))
+                {
+                    DiffTool2.BackColor = Color.LightSalmon;
+                    DiffTool2.Text = "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
+                    return false;
+                }
+                DiffTool2.BackColor = Color.LightGreen;
+                DiffTool2.Text = "KDiff3 is configured as difftool.";
+                return true;
+            }
+            string difftool = FormSettings.GetGlobalDiffToolFromConfig();
+            DiffTool2.BackColor = Color.LightGreen;
+            DiffTool2.Text = "There is a difftool configured: " + difftool;
+            return true;
+        }
+
+        private bool CheckMergeTool()
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("merge.tool")))
+            {
+                DiffTool.BackColor = Color.LightSalmon;
+                DiffTool.Text = "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
+                return false;
+            }
+            if (gitCommands.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string p = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
+                if (string.IsNullOrEmpty(p) || !File.Exists(p))
+                {
+                    DiffTool.BackColor = Color.LightSalmon;
+                    DiffTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
+                    return false;
+                }
+                DiffTool.BackColor = Color.LightGreen;
+                DiffTool.Text = "KDiff3 is configured as mergetool.";
+                return true;
+            }
+            string mergetool = gitCommands.GetGlobalSetting("merge.tool");
+            if (mergetool.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
+                mergetool.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string p = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+                if (string.IsNullOrEmpty(p))
+                {
+                    DiffTool.BackColor = Color.LightSalmon;
+                    DiffTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
+                    return false;
+                }
+                DiffTool.BackColor = Color.LightGreen;
+                DiffTool.Text = "There is a custom mergetool configured: " + mergetool;
+                return true;
+            }
+            DiffTool.BackColor = Color.LightGreen;
+            DiffTool.Text = "There is a mergetool configured.";
+            return true;
+        }
+
+        private bool CheckGlobalUserSettingsValid()
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            if (string.IsNullOrEmpty(gitCommands.GetGlobalSetting("user.name")) ||
+                string.IsNullOrEmpty(gitCommands.GetGlobalSetting("user.email")))
+            {
+                UserNameSet.BackColor = Color.LightSalmon;
+                UserNameSet.Text = "You need to configure a user name and an email address.";
+                return false;
+            }
+            UserNameSet.BackColor = Color.LightGreen;
+            UserNameSet.Text = "There is a user name and an email address configured.";
+            return true;
+        }
+
+        private bool CheckGitExtensionRegistrySettings()
+        {
+            if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
+                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
+                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
+                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2", null)))
+            {
+                ShellExtensionsRegistered.BackColor = Color.LightSalmon;
+                ShellExtensionsRegistered.Text = "GitExtensionsShellEx.dll needs to be registered in order to use the shell extensions.";
+                return false;
+            }
+            ShellExtensionsRegistered.BackColor = Color.LightGreen;
+            ShellExtensionsRegistered.Text = "Shell extensions registered properly.";
+            return true;
+        }
+
+        private bool CheckGitExtensionsInstall()
+        {
+            if (string.IsNullOrEmpty(GitCommands.Settings.GetInstallDir()))
+            {
+                GitExtensionsInstall.BackColor = Color.LightSalmon;
+                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                return false;
+            }
+            GitExtensionsInstall.BackColor = Color.LightGreen;
+            GitExtensionsInstall.Text = "GitExtensions is properly registered.";
+            return true;
         }
     }
 }
