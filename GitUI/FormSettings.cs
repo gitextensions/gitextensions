@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitUI.Editor;
 using Gravatar;
 using Microsoft.Win32;
 using System.Reflection;
