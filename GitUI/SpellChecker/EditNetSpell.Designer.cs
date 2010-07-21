@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.SpellChecker
 {
     partial class EditNetSpell
     {
@@ -43,8 +43,7 @@
             this.toolStripSeparator1});
             this.SpellCheckContextMenu.Name = "SpellCheckContextMenu";
             this.SpellCheckContextMenu.Size = new System.Drawing.Size(61, 10);
-            this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenu_Opening);
-            this.SpellCheckContextMenu.Click += new System.EventHandler(this.SpellCheckContextMenu_Click);
+            this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenuOpening);
             // 
             // toolStripSeparator1
             // 
@@ -54,7 +53,7 @@
             // SpellCheckTimer
             // 
             this.SpellCheckTimer.Interval = 250;
-            this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimer_Tick);
+            this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimerTick);
             // 
             // TextBox
             // 
@@ -66,9 +65,9 @@
             this.TextBox.Size = new System.Drawing.Size(331, 291);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
-            this.TextBox.SizeChanged += new System.EventHandler(this.TextBox_SizeChanged);
-            this.TextBox.Leave += new System.EventHandler(this.TextBox_Leave);
-            this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged_3);
+            this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
+            this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
+            this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // EmptyLabel
             // 
@@ -81,7 +80,7 @@
             this.EmptyLabel.Size = new System.Drawing.Size(100, 23);
             this.EmptyLabel.TabIndex = 2;
             this.EmptyLabel.Text = "Enter message";
-            this.EmptyLabel.Click += new System.EventHandler(this.EmptyLabel_Click);
+            this.EmptyLabel.Click += new System.EventHandler(this.EmptyLabelClick);
             // 
             // EditNetSpell
             // 
@@ -91,7 +90,7 @@
             this.Controls.Add(this.TextBox);
             this.Name = "EditNetSpell";
             this.Size = new System.Drawing.Size(331, 291);
-            this.Load += new System.EventHandler(this.EditNetSpell_Load);
+            this.Load += new System.EventHandler(this.EditNetSpellLoad);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
