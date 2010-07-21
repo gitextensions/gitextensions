@@ -99,7 +99,7 @@
     <Compile Include="FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
-    <Compile Include="ColorHelper.cs" />
+    <Compile Include="Editor\ColorHelper.cs" />
     <Compile Include="FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>
