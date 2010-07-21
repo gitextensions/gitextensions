@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using GitUI;
+using GitUI.Plugin;
 using GitUIPluginInterfaces;
 
 namespace GitExtensions
@@ -42,7 +43,7 @@ namespace GitExtensions
                         gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
                         gitPlugin.Register(GitUICommands.Instance);
 
-                        GitUIPluginCollection.Plugins.Add(gitPlugin);
+                        LoadedPlugins.Plugins.Add(gitPlugin);
                     }
                 }
                 catch(Exception ex)
