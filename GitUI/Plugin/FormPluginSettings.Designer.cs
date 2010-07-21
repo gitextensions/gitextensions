@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.Plugin
 {
     partial class FormPluginSettings
     {

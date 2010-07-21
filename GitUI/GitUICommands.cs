@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GitUI.Plugin;
 using PatchApply;
 using GitCommands;
 using System.IO;

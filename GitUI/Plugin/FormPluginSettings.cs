@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using GitUI.Plugin;
 using GitUIPluginInterfaces;
 
-namespace GitUI
+namespace GitUI.Plugin
 {
     public partial class FormPluginSettings : GitExtensionsForm
     {
