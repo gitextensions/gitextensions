@@ -154,10 +154,10 @@
     <Compile Include="FormCherryPickCommitSmall.Designer.cs">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditNetSpell.cs">
+    <Compile Include="SpellChecker\EditNetSpell.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EditNetSpell.Designer.cs">
+    <Compile Include="SpellChecker\EditNetSpell.Designer.cs">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\EditorOptions.cs" />
@@ -575,7 +575,7 @@
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditNetSpell.resx">
+    <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

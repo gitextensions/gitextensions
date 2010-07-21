@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.SpellChecker;
+
+namespace GitUI
 {
     partial class FormTag
     {
@@ -31,7 +33,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.GitRevisions = new GitUI.RevisionGrid();
             this.label2 = new System.Windows.Forms.Label();
-            this.tagMessage = new GitUI.EditNetSpell();
+            this.tagMessage = new EditNetSpell();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.Tagname = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
