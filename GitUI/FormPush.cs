@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using ResourceManager.Translation;
 
+
 namespace GitUI
 {
     public partial class FormPush : GitExtensionsForm
@@ -21,9 +22,11 @@ namespace GitUI
         TranslationString pushCaption = new TranslationString("Push");
         TranslationString branchNewForRemote = new TranslationString("The branch you are about to push seems to be a new branch for the remote." + Environment.NewLine + "Are you sure you want to push this branch?");
         TranslationString pushToCaption = new TranslationString("Push to {0}");
-
+        
+        private readonly string currentBranch;
         public FormPush()
         {
+            currentBranch = GitCommands.GitCommands.GetSelectedBranch(); 
             InitializeComponent(); Translate();
         }
 
@@ -121,7 +124,7 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(curBranch))
             {
-                curBranch = GitCommands.GitCommands.GetSelectedBranch();
+                curBranch = currentBranch;
                 if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
                 {
                     curBranch = "HEAD";
@@ -171,16 +174,8 @@ namespace GitUI
 
         private void FormPush_Load(object sender, EventArgs e)
         {
-            string branch = GitCommands.GitCommands.GetSelectedBranch();
-            Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + branch + ".remote");
-
-            // Doing this makes it pretty easy to accidentally create a branch on the remote.
-            // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
-            // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-            Branch.Text = branch;
-            RemoteBranch.Text = Branch.Text;
-
-            EnableLoadSSHButton();
+            Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + currentBranch + ".remote");
+            Remotes_Updated(null, null);
 
             this.Text = string.Concat(pushCaption.Text, " (", GitCommands.Settings.WorkingDir, ")");
         }
@@ -217,9 +212,36 @@ namespace GitUI
             }
         }
 
-        private void Remotes_SelectedIndexChanged(object sender, EventArgs e)
+        private void Remotes_Updated(object sender, EventArgs e)
         {
             EnableLoadSSHButton();
+
+            string pushSettingName = "remote." + Remotes.Text + ".push";
+            string pushSettingValue = GitCommands.GitCommands.GetSetting(pushSettingName);
+            if (!string.IsNullOrEmpty(pushSettingValue))
+            {
+                string[] values = pushSettingValue.Split(':');
+                if (values.Length > 0)
+                {
+                    Branch.Text = values[0];
+                }
+                if (values.Length > 1)
+                {
+                    RemoteBranch.Text = values[1];
+                }
+                else
+                {
+                    RemoteBranch.Text = "";
+                }
+            }
+            else
+            {
+                // Doing this makes it pretty easy to accidentally create a branch on the remote.
+                // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
+                // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
+                Branch.Text = currentBranch;
+                RemoteBranch.Text = Branch.Text;
+            }
         }
 
         private void EnableLoadSSHButton()
