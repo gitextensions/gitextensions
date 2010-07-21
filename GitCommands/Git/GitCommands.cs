@@ -248,21 +248,20 @@ namespace GitCommands
 
         private bool UseSSH(string arguments)
         {
-            if ((!Plink() && (
-                     (arguments.Contains("@") && arguments.Contains("://")) ||
-                     (arguments.Contains("@") && arguments.Contains(":")) ||
-                     (arguments.Contains("ssh://")) ||
-                     (arguments.Contains("http://")) ||
-                     (arguments.Contains("git://")) ||
-                     (arguments.Contains("push")) ||
-                     (arguments.Contains("remote")) ||
-                     (arguments.Contains("pull"))
-                 )
-                ) ||
-                arguments.Contains("plink")
-                )
-                return true;
-            return false;
+            var x = !Plink() && GetArgumentsRequiresSsh(arguments);
+            return x || arguments.Contains("plink");
+        }
+
+        private bool GetArgumentsRequiresSsh(string arguments)
+        {
+            return ((arguments.Contains("@") && arguments.Contains("://")) ||
+                       (arguments.Contains("@") && arguments.Contains(":")) ||
+                       (arguments.Contains("ssh://")) ||
+                       (arguments.Contains("http://")) ||
+                       (arguments.Contains("git://")) ||
+                       (arguments.Contains("push")) ||
+                       (arguments.Contains("remote")) ||
+                       (arguments.Contains("pull")));
         }
 
         public void Kill()
