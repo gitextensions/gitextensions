@@ -470,7 +470,7 @@
     </Compile>
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
-    <Compile Include="GitUIPluginCollection.cs" />
+    <Compile Include="Plugin\LoadedPlugins.cs" />
     <Compile Include="GravatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

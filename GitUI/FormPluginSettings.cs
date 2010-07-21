@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitUI.Plugin;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -18,7 +19,7 @@ namespace GitUI
 
         private void FormPluginSettings_Load(object sender, EventArgs e)
         {
-            PluginList.DataSource = GitUIPluginCollection.Plugins;
+            PluginList.DataSource = LoadedPlugins.Plugins;
             PluginList.DisplayMember = "Description";
         }
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.Text.RegularExpressions;
+using GitUI.Plugin;
 using PatchApply;
 using System.IO;
 using GitUI.Properties;
@@ -95,7 +96,7 @@ namespace GitUI
             indexWatcher.Reset();
 
             //Load plugins in plugin menu
-            foreach (IGitPlugin plugin in GitUIPluginCollection.Plugins)
+            foreach (IGitPlugin plugin in LoadedPlugins.Plugins)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem();
                 item.Text = plugin.Description;
