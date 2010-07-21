@@ -463,7 +463,7 @@ namespace GitUI
             Revisions.SetExpectedRowCount(revisionGraphCommand.Revisions.Count);
             update(null);
 
-            if (revisionGraphCommand.Revisions.Count == 0)
+            if (revisionGraphCommand.Revisions.Count == 0 && Filter == "")
             {
                 // This has to happen on the UI thread
                 syncContext.Send(o =>
