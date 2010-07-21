@@ -516,9 +516,10 @@
     <Compile Include="RevisionGrid.Designer.cs">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="SpellCheckEditControl.cs" />
+    <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="System.cs" />
-    <Compile Include="TextBoxAPIHelper.cs" />
+    <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="WindowPositionList.cs" />
   </ItemGroup>
   <ItemGroup>

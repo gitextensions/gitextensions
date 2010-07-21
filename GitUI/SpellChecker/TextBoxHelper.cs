@@ -2,17 +2,17 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace GitUI
+namespace GitUI.SpellChecker
 {
     /// <summary>
     ///   Wraps API calls for access to missing functionality
     ///   from the System.Windows.Forms text box.
     /// </summary>
-    internal class TextBoxAPIHelper
+    internal class TextBoxHelper
     {
         private const double AnInch = 14.4;
 
-        private TextBoxAPIHelper()
+        private TextBoxHelper()
         {
             // intentionally left blank
         }
