@@ -129,10 +129,24 @@ namespace GitCommands
 
         public static int MaxCommits { get; set; }
 
+        public delegate void WorkingDirChangedHandler(string oldDir, string newDir);
+        public static event WorkingDirChangedHandler WorkingDirChanged;
+
         public static string WorkingDir
         {
-            get { return _workingdir; }
-            set { _workingdir = GitCommands.FindGitWorkingDir(value.Trim()); }
+            get 
+            { 
+                return _workingdir; 
+            }
+            set 
+            {
+                string old = _workingdir;
+                _workingdir = GitCommands.FindGitWorkingDir(value.Trim());
+                if (WorkingDirChanged != null)
+                {
+                    WorkingDirChanged(old, _workingdir);
+                }
+            }
         }
 
         public static CommandLogger GitLog { get; private set; }
