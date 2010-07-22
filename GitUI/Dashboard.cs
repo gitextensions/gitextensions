@@ -153,73 +153,73 @@ namespace GitUI
 
         public void ShowRecentRepositories()
         {
-            if (Visible)
+            if (!Visible)
             {
-                try
+                return;
+            }
+            try
+            {
+                SuspendLayout();
+
+                //Make sure the dashboard is only initialized once
+                if (!initialized)
                 {
-                    SuspendLayout();
-
-                    //Make sure the dashboard is only initialized once
-                    if (!initialized)
+                    //Remove favourites
+                    for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
                     {
-                        //Remove favourites
-                        for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
-                        {
-                            if (splitContainer5.Panel2.Controls[i - 1] is DashboardCategory)
-                                splitContainer5.Panel2.Controls.RemoveAt(i - 1);
-                        }
-
-                        //Show favourites
-                        int y = 0;
-                        foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
-                        {
-                            y = AddDashboardEntry(y, entry);
-                        }
-
-                        //Clear buttons
-                        CommonActions.Clear();
-                        DonateCategory.Clear();
-                        DonateCategory.Dock = DockStyle.Top;
-                        //Show buttons
-                        CommonActions.DisableContextMenu();
-                        DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
-                        openItem.Click += new EventHandler(openItem_Click);
-                        CommonActions.AddItem(openItem);
-                        DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
-                        cloneItem.Click += new EventHandler(cloneItem_Click);
-                        CommonActions.AddItem(cloneItem);
-                        DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
-                        createItem.Click += new EventHandler(createItem_Click);
-                        CommonActions.AddItem(createItem);
-                        DonateCategory.DisableContextMenu();
-                        DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
-                        GitHubItem.Click += new EventHandler(GitHubItem_Click);
-                        DonateCategory.AddItem(GitHubItem);
-                        DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
-                        DonateItem.Click += new EventHandler(DonateItem_Click);
-                        DonateCategory.AddItem(DonateItem);
-                        DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
-                        TranslateItem.Click += new EventHandler(TranslateItem_Click);
-                        DonateCategory.AddItem(TranslateItem);
-                        DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
-                        IssuesItem.Click += new EventHandler(IssuesItem_Click);
-                        DonateCategory.AddItem(IssuesItem);
-                        
-
-
-                        splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-
-                        initialized = true;
+                        if (splitContainer5.Panel2.Controls[i - 1] is DashboardCategory)
+                            splitContainer5.Panel2.Controls.RemoveAt(i - 1);
                     }
 
-                    //Show recent repositories
-                    RecentRepositories.Clear();
-                    RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+                    //Show favourites
+                    int y = 0;
+                    foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
+                    {
+                        y = AddDashboardEntry(y, entry);
+                    }
+
+                    //Clear buttons
+                    CommonActions.Clear();
+                    DonateCategory.Clear();
+                    DonateCategory.Dock = DockStyle.Top;
+                    //Show buttons
+                    CommonActions.DisableContextMenu();
+                    DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
+                    openItem.Click += new EventHandler(openItem_Click);
+                    CommonActions.AddItem(openItem);
+                    DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
+                    cloneItem.Click += new EventHandler(cloneItem_Click);
+                    CommonActions.AddItem(cloneItem);
+                    DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
+                    createItem.Click += new EventHandler(createItem_Click);
+                    CommonActions.AddItem(createItem);
+                    DonateCategory.DisableContextMenu();
+                    DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
+                    GitHubItem.Click += new EventHandler(GitHubItem_Click);
+                    DonateCategory.AddItem(GitHubItem);
+                    DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
+                    DonateItem.Click += new EventHandler(DonateItem_Click);
+                    DonateCategory.AddItem(DonateItem);
+                    DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
+                    TranslateItem.Click += new EventHandler(TranslateItem_Click);
+                    DonateCategory.AddItem(TranslateItem);
+                    DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
+                    IssuesItem.Click += new EventHandler(IssuesItem_Click);
+                    DonateCategory.AddItem(IssuesItem);
+
+
+                    splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
+
+                    initialized = true;
                 }
-                finally
-                {
-                    ResumeLayout(true);
-                }
+
+                //Show recent repositories
+                RecentRepositories.Clear();
+                RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+            }
+            finally
+            {
+                ResumeLayout(true);
             }
         }
 
