@@ -547,6 +547,12 @@
     <Compile Include="RevisionGrid.Designer.cs">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchWindow.Designer.cs">
+      <DependentUpon>SearchWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
     <Compile Include="ToolStripGitStatus.cs">
@@ -869,6 +875,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolStripGitStatus.resx">
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchWindow.resx">
+      <DependentUpon>SearchWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
