@@ -253,7 +253,6 @@ namespace GitUI
             if (RevisionGrid.GetRevisions().Count > 0)
                 LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
             GitTree.Sort();
-                //GitTree.Nodes
                 
             // Load state
             var currenNodes = GitTree.Nodes;
@@ -272,32 +271,7 @@ namespace GitUI
             }
         }
         
-        private IList<TreeNode> FindMatches(TreeNodeCollection treeNodes, Predicate<TreeNode> predicate, bool searchDecendants)
-        {
-            var items = new List<TreeNode>();
-            var children = new Stack<TreeNodeCollection>();
-            while(treeNodes != null)
-            {
-                for (int i = 0; i < treeNodes.Count; i++)
-                {
-                    TreeNode node = treeNodes[i];
-                    if (predicate(node))
-                    {
-                        items.Add(node);
-                    }
-                    if (searchDecendants)
-                    {
-                        var childTreeNodes = node.Nodes;
-                        if (childTreeNodes.Count > 0)
-                        {
-                            children.Push(childTreeNodes);
-                        }
-                    }
-                }
-                treeNodes = children.Count > 0 ? children.Pop() : null;
-            }
-            return items;
-        }
+        
 
         private void FillDiff()
         {
@@ -376,7 +350,52 @@ namespace GitUI
 
         public void FindFile(object sender, EventArgs e)
         {
+            var searchWindow = new SearchWindow<string>(FindFileMatches)
+            {
+                Owner = this
+            };
+            searchWindow.ShowDialog();
+            if (string.IsNullOrEmpty(searchWindow.SelectedItem))
+            {
+                return;
+            }
             
+            GitTree.Text = searchWindow.SelectedItem;
+        }
+        
+        private IList<string> FindFileMatches(string name)
+        {
+            var fullPaths = new List<string>();
+            string nameAsLower = name.ToLower();
+            
+            var generations = new Stack<List<IGitItem>>();
+            generations.Push(RevisionGrid.GetRevisions()[0].SubItems);
+            while (generations.Count > 0)
+            {
+                var gitItems = generations.Pop();
+                foreach (IGitItem item in gitItems)
+                {
+                    var gitItem = item as GitItem;
+                    if (gitItem == null)
+                    {
+                        continue;
+                    }
+
+                    if (gitItem.ItemType == "tree")
+                        generations.Push(item.SubItems);
+                    //if (((GitItem)item).ItemType == "commit")
+                    //    subNode.Text = item.Name + " (Submodule)";
+                    if (((GitItem) item).ItemType == "blob")
+                    {
+                        string fileName = ((GitItem) item).FileName;
+                        if (fileName.ToLower().Contains(nameAsLower))
+                        {
+                            fullPaths.Add(fileName);
+                        }
+                    }
+                }
+            }
+            return fullPaths;
         }
                 
 
