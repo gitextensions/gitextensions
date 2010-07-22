@@ -479,12 +479,7 @@ namespace GitCommands
 
         public static bool HandleConflicts_SaveSide(string fileName, string saveAs, string side)
         {
-            if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
-                side = "3";
-            if (side.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
-                side = "2";
-            if (side.Equals("BASE", StringComparison.CurrentCultureIgnoreCase))
-                side = "1";
+            side = GetSide(side);
 
             fileName = FixPath(fileName);
             string[] unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged \"" + fileName + "\"").Split('\n');
@@ -494,15 +489,23 @@ namespace GitCommands
                 string[] fileline = file.Split(new char[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
-                if (fileline[2].Trim() == side)
-                {
-                    RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + saveAs + "\"");
-
-                    return true;
-                }
+                if (fileline[2].Trim() != side)
+                    continue;
+                RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + saveAs + "\"");
+                return true;
             }
-
             return false;
+        }
+
+        private static string GetSide(string side)
+        {
+            if (side.Equals("REMOTE", StringComparison.CurrentCultureIgnoreCase))
+                side = "3";
+            if (side.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+                side = "2";
+            if (side.Equals("BASE", StringComparison.CurrentCultureIgnoreCase))
+                side = "1";
+            return side;
         }
 
         static public string[] GetConflictedFiles(string filename)
