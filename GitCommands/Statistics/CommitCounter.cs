@@ -12,8 +12,6 @@ namespace GitCommands.Statistics
 
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer(DateTime since, DateTime until)
         {
-            var commitsPerContributor = new Dictionary<string, int>();
-
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
 
@@ -24,6 +22,13 @@ namespace GitCommands.Statistics
                         "shortlog --all -s -n --no-merges" + sinceParam + untilParam)
                     .Split('\n');
 
+            return ParseCommitsPerContributor(unformattedCommitsPerContributor);
+        }
+
+        public static Tuple<Dictionary<string, int>, int> ParseCommitsPerContributor(
+            IEnumerable<string> unformattedCommitsPerContributor)
+        {
+            var commitsPerContributor = new Dictionary<string, int>();
             var delimiter = new[] {' ', '\t'};
             var totalCommits = 0;
 
