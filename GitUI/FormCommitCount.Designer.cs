@@ -67,8 +67,8 @@
             this.Name = "FormCommitCount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit count";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitCount_FormClosing);
-            this.Load += new System.EventHandler(this.FormCommitCount_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitCountFormClosing);
+            this.Load += new System.EventHandler(this.FormCommitCountLoad);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
 
