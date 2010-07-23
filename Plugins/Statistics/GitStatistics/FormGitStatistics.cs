@@ -3,15 +3,14 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands.Statistics;
 using GitStatistics.PieChart;
-using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
     public partial class FormGitStatistics : Form
     {
         private readonly string _codeFilePattern;
-        private readonly IGitUIEventArgs _gitUiEventArgs;
 
         protected Color[] DecentColors =
             new[]
@@ -34,9 +33,8 @@ namespace GitStatistics
         public string DirectoriesToIgnore;
         public DirectoryInfo WorkingDir;
 
-        public FormGitStatistics(IGitUIEventArgs gitUiEventArgs, string codeFilePattern)
+        public FormGitStatistics(string codeFilePattern)
         {
-            _gitUiEventArgs = gitUiEventArgs;
             _codeFilePattern = codeFilePattern;
             InitializeComponent();
         }
@@ -49,37 +47,40 @@ namespace GitStatistics
             SetPieStyle(TestCodePie);
         }
 
-        public void Initialize(IGitUIEventArgs gitUiEventArgs)
+        public void Initialize()
         {
-            InitializeCommitCount(gitUiEventArgs);
+            InitializeCommitCount();
             InitializeLinesOfCode();
         }
 
-        private void InitializeCommitCount(IGitUIEventArgs gitUiEventArgs)
+        private void InitializeCommitCount()
         {
-            var commitCounter = new CommitCounter(gitUiEventArgs);
-            commitCounter.Count();
-            TotalCommits.Text = commitCounter.TotalCommits + " Commits";
+            var allCommitsByUser = CommitCounter.GroupAllCommitsByUser();
+            var totalCommits = allCommitsByUser.Item2;
+            var commitsPerUser = allCommitsByUser.Item1;
 
-            var commitStatisticsTest = new StringBuilder();
+            TotalCommits.Text = totalCommits + " Commits";
 
+            var builder = new StringBuilder();
 
-            var commitCountValues = new Decimal[commitCounter.UserCommitCount.Count];
-            var commitCountLabels = new string[commitCounter.UserCommitCount.Count];
+            var commitCountValues = new Decimal[commitsPerUser.Count];
+            var commitCountLabels = new string[commitsPerUser.Count];
             var n = 0;
-            foreach (var keyValuePair in commitCounter.UserCommitCount)
+            foreach (var keyValuePair in commitsPerUser)
             {
-                commitStatisticsTest.AppendLine(keyValuePair.Value + " " + keyValuePair.Key);
+                var user = keyValuePair.Key;
+                var commits = keyValuePair.Value;
 
-                commitCountValues[n] = keyValuePair.Value;
-                commitCountLabels[n] = keyValuePair.Value + " Commits by " + keyValuePair.Key;
+                builder.AppendLine(commits + " " + user);
+
+                commitCountValues[n] = commits;
+                commitCountLabels[n] = commits + " Commits by " + user;
                 n++;
             }
             CommitCountPie.SetValues(commitCountValues);
             CommitCountPie.ToolTips = commitCountLabels;
 
-
-            CommitStatistics.Text = commitStatisticsTest.ToString();
+            CommitStatistics.Text = builder.ToString();
         }
 
         private void SetPieStyle(PieChartControl pie)
@@ -170,7 +171,7 @@ namespace GitStatistics
 
         private void FormGitStatisticsShown(object sender, EventArgs e)
         {
-            Initialize(_gitUiEventArgs);
+            Initialize();
 
             Tabs.Visible = true;
             LoadingLabel.Visible = false;
