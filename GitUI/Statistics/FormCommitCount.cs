@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GitCommands.Statistics;
 
-namespace GitUI
+namespace GitUI.Statistics
 {
     public partial class FormCommitCount : GitExtensionsForm
     {
