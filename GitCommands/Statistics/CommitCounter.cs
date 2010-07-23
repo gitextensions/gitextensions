@@ -10,7 +10,7 @@ namespace GitCommands.Statistics
             var commitsPerUser = new Dictionary<string, int>();
             var unformattedCommitsPerUser =
                 GitCommands
-                    .RunCmd(Settings.GitCommand, "shortlog --all -s -n")
+                    .RunCmd(Settings.GitCommand, "shortlog --all -s -n --no-merges")
                     .Split('\n');
 
             var delimiter = new[] {' ', '\t'};
