@@ -252,10 +252,10 @@
     <Compile Include="FormCommandlineHelp.Designer.cs">
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCommitCount.cs">
+    <Compile Include="Statistics\FormCommitCount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCommitCount.Designer.cs">
+    <Compile Include="Statistics\FormCommitCount.Designer.cs">
       <DependentUpon>FormCommitCount.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDashboardCategoryTitle.cs">
@@ -644,7 +644,7 @@
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCommitCount.resx">
+    <EmbeddedResource Include="Statistics\FormCommitCount.resx">
       <DependentUpon>FormCommitCount.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

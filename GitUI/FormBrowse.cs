@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using System.Text.RegularExpressions;
 using GitUI.Plugin;
+using GitUI.Statistics;
 using PatchApply;
 using System.IO;
 using GitUI.Properties;
