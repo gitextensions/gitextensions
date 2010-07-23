@@ -65,7 +65,7 @@
     <Compile Include="ApplyPatch.designer.cs">
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="AsyncLoader.cs" />
+    <Compile Include="Editor\AsyncLoader.cs" />
     <Compile Include="FormFixHome.cs">
       <SubType>Form</SubType>
     </Compile>
