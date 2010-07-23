@@ -7,10 +7,21 @@ namespace GitCommands.Statistics
     {
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer()
         {
+            return GroupAllCommitsByContributer(DateTime.MinValue, DateTime.MaxValue);
+        }
+
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer(DateTime since, DateTime until)
+        {
             var commitsPerContributor = new Dictionary<string, int>();
+
+            var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
+            var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
+
             var unformattedCommitsPerContributor =
                 GitCommands
-                    .RunCmd(Settings.GitCommand, "shortlog --all -s -n --no-merges")
+                    .RunCmd(
+                        Settings.GitCommand,
+                        "shortlog --all -s -n --no-merges" + sinceParam + untilParam)
                     .Split('\n');
 
             var delimiter = new[] {' ', '\t'};
@@ -35,6 +46,11 @@ namespace GitCommands.Statistics
                 commitsPerContributor.Add(contributor, count);
             }
             return Tuple.Create(commitsPerContributor, totalCommits);
+        }
+
+        private static string GetDateParameter(DateTime sinceDate, string paramName)
+        {
+            return string.Format(" --{1}=\"{0}\"", sinceDate.ToString("yyyy-MM-dd hh:mm:ss"), paramName);
         }
     }
 }
