@@ -29,7 +29,7 @@ namespace GitStatistics
                 return;
 
             var formGitStatistics =
-                new FormGitStatistics(gitUiCommands,Settings.GetSetting("Code files"))
+                new FormGitStatistics(Settings.GetSetting("Code files"))
                     {
                         DirectoriesToIgnore =
                             Settings.GetSetting("Directories to ignore (EndsWith)")
