@@ -55,7 +55,7 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            var allCommitsByUser = CommitCounter.GroupAllCommitsByUser();
+            var allCommitsByUser = CommitCounter.GroupAllCommitsByContributer();
             var totalCommits = allCommitsByUser.Item2;
             var commitsPerUser = allCommitsByUser.Item1;
 

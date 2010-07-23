@@ -5,10 +5,10 @@ namespace GitCommands.Statistics
 {
     public class CommitCounter
     {
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByUser()
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer()
         {
-            var commitsPerUser = new Dictionary<string, int>();
-            var unformattedCommitsPerUser =
+            var commitsPerContributor = new Dictionary<string, int>();
+            var unformattedCommitsPerContributor =
                 GitCommands
                     .RunCmd(Settings.GitCommand, "shortlog --all -s -n --no-merges")
                     .Split('\n');
@@ -16,7 +16,7 @@ namespace GitCommands.Statistics
             var delimiter = new[] {' ', '\t'};
             var totalCommits = 0;
 
-            foreach (var userCommitCount in unformattedCommitsPerUser)
+            foreach (var userCommitCount in unformattedCommitsPerContributor)
             {
                 var commitCount = userCommitCount.Trim(); //remove whitespaces at start and end
 
@@ -29,14 +29,14 @@ namespace GitCommands.Statistics
                 if (!int.TryParse(commitCount.Substring(0, tab), out count))
                     continue;
 
-                var user = commitCount.Substring(tab + 1);
+                var contributor = commitCount.Substring(tab + 1);
 
                 totalCommits += count;
-                if (!commitsPerUser.ContainsKey(user))
-                    commitsPerUser.Add(user, 0);
-                commitsPerUser[user] += count;
+                if (!commitsPerContributor.ContainsKey(contributor))
+                    commitsPerContributor.Add(contributor, 0);
+                commitsPerContributor[contributor] += count;
             }
-            return Tuple.Create(commitsPerUser, totalCommits);
+            return Tuple.Create(commitsPerContributor, totalCommits);
         }
     }
 }
