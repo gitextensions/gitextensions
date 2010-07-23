@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace GitCommands
+namespace GitCommands.Config
 {
-    //sections can be defined as:
-    //[section "subsection"] (subsection is case senstive)
-    //or
-    //[section.subsection] (subsection is case insenstive)
+    /// <summary>
+    ///   ConfigSection
+    ///   Sections can be defined as:
+    ///   [section "subsection"] (subsection is case sensitive)
+    ///   or
+    ///   [section.subsection] (subsection is case insensitive)
+    /// </summary>
     public class ConfigSection
     {
-        public IDictionary<string, string> Keys { get; set; }
-
-        public string SectionName { get; set; }
-        public string SubSection { get; set; }
-
         public ConfigSection(string name)
         {
             Keys = new Dictionary<string, string>();
@@ -22,7 +19,7 @@ namespace GitCommands
             if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
                 SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
-                SubSection = name.Substring(name.IndexOf('\"')+1, name.LastIndexOf('\"') - name.IndexOf('\"')-1);
+                SubSection = name.Substring(name.IndexOf('\"') + 1, name.LastIndexOf('\"') - name.IndexOf('\"') - 1);
             }
             else if (!name.Contains("."))
             {
@@ -30,15 +27,19 @@ namespace GitCommands
             }
             else
             {
-                int subSectionIndex = name.IndexOf('.');
+                var subSectionIndex = name.IndexOf('.');
 
                 if (subSectionIndex < 1)
                     throw new Exception("Invalid section name: " + name);
 
                 SectionName = name.Substring(0, subSectionIndex).Trim();
-                SubSection = name.Substring(subSectionIndex+1).Trim();
+                SubSection = name.Substring(subSectionIndex + 1).Trim();
             }
         }
+
+        public IDictionary<string, string> Keys { get; set; }
+        public string SectionName { get; set; }
+        public string SubSection { get; set; }
 
         public void SetValue(string key, string value)
         {
@@ -50,18 +51,15 @@ namespace GitCommands
 
         public string GetValue(string key)
         {
-            if (Keys.ContainsKey(key))
-                return Keys[key];
-
-            return string.Empty;
+            return Keys.ContainsKey(key) ? Keys[key] : string.Empty;
         }
 
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(SubSection))
-                return string.Concat("[", SectionName, "]");
-            else
-                return string.Concat("[", SectionName, " \"", SubSection, "\"]");
+            return
+                string.IsNullOrEmpty(SubSection)
+                    ? string.Concat("[", SectionName, "]")
+                    : string.Concat("[", SectionName, " \"", SubSection, "\"]");
         }
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,8 +47,8 @@
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="CommitInformation.cs" />
-    <Compile Include="ConfigFile.cs" />
-    <Compile Include="ConfigSection.cs" />
+    <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="RepositoryCategory.cs" />
