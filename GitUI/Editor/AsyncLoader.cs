@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace GitUI
+namespace GitUI.Editor
 {
     internal class AsyncLoader
     {
