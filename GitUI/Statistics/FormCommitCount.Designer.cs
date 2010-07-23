@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.Statistics
 {
     partial class FormCommitCount
     {
