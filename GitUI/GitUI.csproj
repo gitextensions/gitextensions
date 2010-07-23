@@ -517,7 +517,6 @@
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
-    <Compile Include="System.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
     <Compile Include="ToolStripGitStatus.cs">
       <SubType>Component</SubType>
