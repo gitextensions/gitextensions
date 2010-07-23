@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Permissions;
 using System.IO;
+using GitCommands.Config;
 using PatchApply;
 using System.Diagnostics;
 using System.Drawing;
