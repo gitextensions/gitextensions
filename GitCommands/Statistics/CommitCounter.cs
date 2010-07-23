@@ -32,9 +32,7 @@ namespace GitCommands.Statistics
                 var contributor = commitCount.Substring(tab + 1);
 
                 totalCommits += count;
-                if (!commitsPerContributor.ContainsKey(contributor))
-                    commitsPerContributor.Add(contributor, 0);
-                commitsPerContributor[contributor] += count;
+                commitsPerContributor.Add(contributor, count);
             }
             return Tuple.Create(commitsPerContributor, totalCommits);
         }
