@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.ComponentModel;
 using System.Xml;
 
@@ -95,11 +92,13 @@ namespace GitCommands
             {
                 Repositories.Clear();
 
-                Repository repository = new Repository();
-                repository.Title = "Error loading rssfeed from :" + RssFeedUrl;
-                repository.Description = ex.Message;
-                repository.Path = RssFeedUrl;
-                repository.RepositoryType = RepositoryType.RssFeed;
+                Repository repository = new Repository
+                                            {
+                                                Title = "Error loading rssfeed from :" + RssFeedUrl,
+                                                Description = ex.Message,
+                                                Path = RssFeedUrl,
+                                                RepositoryType = RepositoryType.RssFeed
+                                            };
                 Repositories.Add(repository);
             }
         }
