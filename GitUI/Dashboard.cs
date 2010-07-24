@@ -32,7 +32,6 @@ namespace GitUI
             pictureBox1.Image = image;
         }
          
-
         private Bitmap getPictureBoxImage(DateTime currentDate)
         {
             // Lemmings
