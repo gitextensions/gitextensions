@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -24,11 +21,10 @@ namespace GitCommands
         {
             foreach (Repository recentRepository in Repositories)
             {
-                if (recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    Repositories.Remove(recentRepository);
-                    break;
-                }
+                if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                    continue;
+                Repositories.Remove(recentRepository);
+                break;
             }
         }
 
@@ -48,15 +44,13 @@ namespace GitCommands
 
             foreach (Repository recentRepository in Repositories)
             {
-                if (recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    Repositories.Remove(recentRepository);
-                    break;
-                }
+                if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                    continue;
+                Repositories.Remove(recentRepository);
+                break;
             }
 
-            Repository repository = new Repository(repo, null, null);
-            repository.RepositoryType = RepositoryType.History;
+            Repository repository = new Repository(repo, null, null) {RepositoryType = RepositoryType.History};
             Repositories.Insert(0, repository);
 
             if (Repositories.Count > 30)
