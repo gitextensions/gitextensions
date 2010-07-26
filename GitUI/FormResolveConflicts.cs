@@ -265,21 +265,21 @@ namespace GitUI
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflict_SelectBase(GetFileName());
+            GitCommands.GitCommands.HandleConflictSelectBase(GetFileName());
             Initialize();
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflict_SelectLocal(GetFileName());
+            GitCommands.GitCommands.HandleConflictSelectLocal(GetFileName());
             Initialize();
         }
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflict_SelectRemote(GetFileName());
+            GitCommands.GitCommands.HandleConflictSelectRemote(GetFileName());
             Initialize();
         }
 
@@ -297,7 +297,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "BASE");
+            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
             OpenWith.OpenAs(fileName);
         }
@@ -310,7 +310,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "LOCAL");
+            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
             OpenWith.OpenAs(fileName);
         }
@@ -332,7 +332,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileName, "REMOTE");
+            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
             OpenWith.OpenAs(fileName);
         }
@@ -364,7 +364,7 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                GitCommands.GitCommands.HandleConflicts_SaveSide(GetFileName(), fileDialog.FileName, side);
+                GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
             }
         }
 
