@@ -537,12 +537,14 @@ namespace GitUI
                         if (heads.Count > 0)
                         {
                             heads.Sort(new Comparison<GitHead>(
-                                           (aLeft, aRight) =>
-                                               {
-                                                   if (aLeft.IsTag && !aRight.IsTag) return -1;
-                                                   if (aLeft.IsRemote && !aRight.IsRemote) return 1;
-                                                   return aLeft.Name.CompareTo(aRight.Name);
-                                               }));
+                                           (left, right) =>
+                                           {
+                                               if (left.IsTag != right.IsTag)
+                                                   return right.IsTag.CompareTo(left.IsTag);
+                                               if (left.IsRemote != right.IsRemote)
+                                                   return left.IsRemote.CompareTo(right.IsRemote);
+                                               return left.Name.CompareTo(right.Name);
+                                           }));
 
                             foreach (var head in heads)
                             {
