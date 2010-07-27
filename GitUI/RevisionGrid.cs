@@ -177,8 +177,6 @@ namespace GitUI
             if (Revisions.RowCount == 0)
                 return;
 
-            Predicate<object> match = x => ((GitRevision) x).MatchesSearchString(searchString);
-
             var isFound = false;
             int index;
             if (reverse)
@@ -189,7 +187,7 @@ namespace GitUI
 
                 for (index = startIndex; index >= 0; --index)
                 {
-                    if (match(Revisions.GetRowData(index)))
+                    if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     {
                         isFound = true;
                         break;
@@ -202,7 +200,7 @@ namespace GitUI
                     //index = Revisions.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
                     for (index = Revisions.RowCount - 1; index > startIndex; --index)
                     {
-                        if (match(Revisions.GetRowData(index)))
+                        if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                         {
                             isFound = true;
                             break;
@@ -218,7 +216,7 @@ namespace GitUI
 
                 for (index = startIndex; index < Revisions.RowCount; ++index)
                 {
-                    if (match(Revisions.GetRowData(index)))
+                    if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     {
                         isFound = true;
                         break;
@@ -230,7 +228,7 @@ namespace GitUI
                     // We didn't find it so start searching from the top
                     for (index = 0; index < startIndex; ++index)
                     {
-                        if (match(Revisions.GetRowData(index)))
+                        if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                         {
                             isFound = true;
                             break;
