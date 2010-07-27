@@ -1,90 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using ResourceManager.Translation;
 using System.IO;
+using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormTag : GitExtensionsForm
     {
-        TranslationString noTagMassage = new TranslationString("Please enter a tag message");
-        TranslationString noRevisionSelected = new TranslationString("Select 1 revision to create the tag on.");
-        TranslationString messageCaption = new TranslationString("Tag");
+        private readonly TranslationString _messageCaption = new TranslationString("Tag");
+
+        private readonly TranslationString _noRevisionSelected =
+            new TranslationString("Select 1 revision to create the tag on.");
+
+        private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
 
         public FormTag()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void FormTag_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormTagFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("tag");
         }
 
-        private void FormTag_Load(object sender, EventArgs e)
+        private void FormTagLoad(object sender, EventArgs e)
         {
             RestorePosition("tag");
         }
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
-        {
 
-        }
-
-        private void CreateTag_Click(object sender, EventArgs e)
+        private void CreateTagClick(object sender, EventArgs e)
         {
             try
             {
-
                 if (GitRevisions.GetRevisions().Count != 1)
                 {
-                    MessageBox.Show(noRevisionSelected.Text, messageCaption.Text);
+                    MessageBox.Show(_noRevisionSelected.Text, _messageCaption.Text);
                     return;
                 }
-                else
+                if (annotate.Checked)
                 {
-                    if (annotate.Checked)
+                    if (string.IsNullOrEmpty(tagMessage.Text))
                     {
-                        if (string.IsNullOrEmpty(tagMessage.Text))
-                        {
-                            MessageBox.Show(noTagMassage.Text, messageCaption.Text);
-                            return;
-                        }
-
-                        File.WriteAllText(Settings.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                        MessageBox.Show(_noTagMessage.Text, _messageCaption.Text);
+                        return;
                     }
 
-
-                    string s = GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid, annotate.Checked);
-
-                    if (!string.IsNullOrEmpty(s))
-                        MessageBox.Show(s, messageCaption.Text);
-                    Close();
+                    File.WriteAllText(Settings.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
                 }
+
+
+                var s = GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
+                                                    annotate.Checked);
+
+                if (!string.IsNullOrEmpty(s))
+                    MessageBox.Show(s, _messageCaption.Text);
+                Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
-        private void annotate_CheckedChanged(object sender, EventArgs e)
+        private void AnnotateCheckedChanged(object sender, EventArgs e)
         {
-            if (annotate.Checked)
-            {
-                tagMessage.Enabled = true;
-            }
-            else
-            {
-                tagMessage.Enabled = false;
-            }
+            tagMessage.Enabled = annotate.Checked;
         }
     }
 }
