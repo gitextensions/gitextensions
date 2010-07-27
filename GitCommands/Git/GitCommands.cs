@@ -2069,6 +2069,11 @@ namespace GitCommands
             return items;
         }
 
+        static public string[] GetFullTree(string id)
+        {
+            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -r --name-only {0}", id));
+            return tree.Split('\n');
+        }
         public static List<IGitItem> GetTree(string id)
         {
             var tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");

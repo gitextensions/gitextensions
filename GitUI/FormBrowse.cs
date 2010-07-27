@@ -361,7 +361,7 @@ namespace GitUI
                 return;
             }
 
-            string[] items = selectedItem.Split(new char[]{'\\'});
+            string[] items = selectedItem.Split(new char[]{'/'});
             TreeNodeCollection nodes = GitTree.Nodes;
             
             TreeNode selectedNode = null;
@@ -399,38 +399,58 @@ namespace GitUI
 
         private IList<string> FindFileMatches(string name)
         {
+            //"git ls-tree -r --name-only HEAD";
+
+            var candidates = GitCommands.GitCommands.GetFullTree(RevisionGrid.GetRevisions()[0].TreeGuid);
+
             var fullPaths = new List<string>();
             string nameAsLower = name.ToLower();
-            
-            var generations = new Stack<List<IGitItem>>();
-            generations.Push(RevisionGrid.GetRevisions()[0].SubItems);
-            while (generations.Count > 0)
-            {
-                var gitItems = generations.Pop();
-                foreach (IGitItem item in gitItems)
-                {
-                    var gitItem = item as GitItem;
-                    if (gitItem == null)
-                    {
-                        continue;
-                    }
 
-                    if (gitItem.ItemType == "tree")
-                        generations.Push(item.SubItems);
-                    //if (((GitItem)item).ItemType == "commit")
-                    //    subNode.Text = item.Name + " (Submodule)";
-                    if (((GitItem) item).ItemType == "blob")
-                    {
-                        string fileName = ((GitItem) item).FileName;
-                        if (fileName.ToLower().Contains(nameAsLower))
-                        {
-                            fullPaths.Add(fileName);
-                        }
-                    }
+            foreach (string fileName in candidates)
+            {
+                if (fileName.ToLower().Contains(nameAsLower))
+                {
+                    fullPaths.Add(fileName);
                 }
             }
+            
             return fullPaths;
         }
+
+        //private IList<string> FindFileMatches(string name)
+        //{
+        //    var fullPaths = new List<string>();
+        //    string nameAsLower = name.ToLower();
+
+        //    var generations = new Stack<List<IGitItem>>();
+        //    generations.Push(RevisionGrid.GetRevisions()[0].SubItems);
+        //    while (generations.Count > 0)
+        //    {
+        //        var gitItems = generations.Pop();
+        //        foreach (IGitItem item in gitItems)
+        //        {
+        //            var gitItem = item as GitItem;
+        //            if (gitItem == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            if (gitItem.ItemType == "tree")
+        //                generations.Push(item.SubItems);
+        //            //if (((GitItem)item).ItemType == "commit")
+        //            //    subNode.Text = item.Name + " (Submodule)";
+        //            if (((GitItem)item).ItemType == "blob")
+        //            {
+        //                string fileName = ((GitItem)item).FileName;
+        //                if (fileName.ToLower().Contains(nameAsLower))
+        //                {
+        //                    fullPaths.Add(fileName);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return fullPaths;
+        //}
                 
 
             
