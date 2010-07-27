@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -62,9 +63,7 @@ namespace GitUI
 
             List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false);
 
-            GitCommands.GitHead noHead = new GitCommands.GitHead();
-            noHead.Name = "";
-            heads.Insert(0, noHead);
+            heads.Insert(0, GitHead.NoHead);
 
             Branch.DisplayMember = "Name";
             Branch.DataSource = heads;

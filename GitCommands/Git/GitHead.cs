@@ -1,42 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using System.Text;
-
 namespace GitCommands
 {
     public class GitHead : IGitItem
     {
-        public string Guid { get; set; }
-        public string Name { get; set; }
-        public string HeadType { get; set; }
-        public bool Selected { get; set; }
+        private readonly string _mergeSettingName;
+        private readonly string _remoteSettingName;
+        private List<IGitItem> _subItems;
 
-        public GitHead()
+        public GitHead(string guid, string completeName)
         {
+            Guid = guid;
             Selected = false;
+            CompleteName = completeName;
+            ParseName();
+            IsTag = CompleteName.Contains("refs/tags/");
+            IsHead = CompleteName.Contains("refs/heads/");
+            IsRemote = CompleteName.Contains("refs/remotes/");
+            _remoteSettingName = String.Format("branch.{0}.remote", Name);
+            _mergeSettingName = String.Format("branch.{0}.merge", Name);
         }
 
-        public bool IsHead { get; set; }
-        public bool IsTag { get; set; }
-        public bool IsRemote { get; set; }
-        public bool IsOther { get; set; }
+        public string CompleteName { get; private set; }
+        public bool Selected { get; set; }
 
-        public string Remote 
+        public bool IsTag { get; private set; }
+
+        public bool IsHead { get; private set; }
+
+        public bool IsRemote { get; private set; }
+
+        public bool IsOther
         {
-            get
-            {
-                return GitCommands.GetSetting("branch." + Name + ".remote");
-            }
+            get { return !IsHead && !IsRemote && !IsTag; }
+        }
+
+        public string Remote
+        {
+            get { return GitCommands.GetSetting(_remoteSettingName); }
             set
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    GitCommands.UnSetSetting("branch." + Name + ".remote");
-                }
+                if (String.IsNullOrEmpty(value))
+                    GitCommands.UnSetSetting(_remoteSettingName);
                 else
                 {
-                    GitCommands.SetSetting("branch." + Name + ".remote", value);
+                    GitCommands.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -48,37 +57,73 @@ namespace GitCommands
         {
             get
             {
-                string merge = GitCommands.GetSetting("branch." + Name + ".merge");
-                if (merge.StartsWith("refs/heads/"))
-                    return merge.Substring(11);
-
-                return merge;
+                var merge = GitCommands.GetSetting(_mergeSettingName);
+                return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
             }
             set
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    GitCommands.UnSetSetting("branch." + Name + ".merge");
-                }
+                if (String.IsNullOrEmpty(value))
+                    GitCommands.UnSetSetting(_mergeSettingName);
                 else
-                {
-                    GitCommands.SetSetting("branch." + Name + ".merge", "refs/heads/" + value);
-                }
+                    GitCommands.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
-        protected List<IGitItem> subItems;
+        public static GitHead NoHead
+        {
+            get { return new GitHead(null, ""); }
+        }
+
+        public static GitHead AllHeads
+        {
+            get { return new GitHead(null, "*"); }
+        }
+
+        #region IGitItem Members
+
+        public string Guid { get; private set; }
+        public string Name { get; private set; }
+
         public List<IGitItem> SubItems
         {
-            get
-            {
-                if (subItems == null)
-                {
-                    subItems = GitCommands.GetTree(Guid);
-                }
+            get { return _subItems ?? (_subItems = GitCommands.GetTree(Guid)); }
+        }
 
-                return subItems;
+        #endregion
+
+        public override string ToString()
+        {
+            return CompleteName;
+        }
+
+        private void ParseName()
+        {
+            if (CompleteName.Length == 0 || !CompleteName.Contains("/"))
+            {
+                Name = CompleteName;
+                return;
             }
+
+            if (IsTag)
+            {
+                // we need the one containing ^{}, because it contains the reference
+                if (CompleteName.Contains("^{}"))
+                    Name = CompleteName.Substring(0, CompleteName.Length - 3);
+
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
+                return;
+            }
+            if (IsHead)
+            {
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
+                return;
+            }
+            if (IsRemote)
+            {
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                return;
+            }
+            Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
         }
     }
 }

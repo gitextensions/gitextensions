@@ -257,7 +257,8 @@ namespace GitUI
         private void TagDropDown(object sender, EventArgs e)
         {
             TagComboBox.DisplayMember = "Name";
-            TagComboBox.DataSource = GitCommands.GitCommands.GetHeads(true, false);
+            var tags = GitCommands.GitCommands.GetHeads(true, false);
+            TagComboBox.DataSource = tags;
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)
