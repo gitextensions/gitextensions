@@ -65,7 +65,7 @@
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.currentCheckout = null;
+            this.RevisionGrid.CurrentCheckout = null;
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.LastRow = 0;

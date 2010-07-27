@@ -48,7 +48,23 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return string.Format("{0}:{1}", sha, Message);
+            return String.Format("{0}:{1}", sha, Message);
+        }
+
+        public bool MatchesSearchString(string searchString)
+        {
+            foreach (var gitHead in Heads)
+            {
+                if (gitHead.Name.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+                    return true;
+            }
+
+            // Make sure it only matches the start of a word
+            var modifiedSearchString = " " + searchString;
+
+            return
+                (" " + Author.ToLower()).Contains(modifiedSearchString) ||
+                (" " + Message.ToLower()).Contains(modifiedSearchString);
         }
     }
 }

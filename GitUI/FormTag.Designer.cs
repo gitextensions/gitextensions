@@ -69,7 +69,7 @@ namespace GitUI
             // 
             // GitRevisions
             // 
-            this.GitRevisions.currentCheckout = null;
+            this.GitRevisions.CurrentCheckout = null;
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitRevisions.Filter = "";
             this.GitRevisions.LastRow = 0;

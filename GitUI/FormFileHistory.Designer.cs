@@ -81,7 +81,7 @@ namespace GitUI
             // FileChanges
             // 
             this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
-            this.FileChanges.currentCheckout = null;
+            this.FileChanges.CurrentCheckout = null;
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
             this.FileChanges.LastRow = 0;
