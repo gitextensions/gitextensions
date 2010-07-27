@@ -178,14 +178,40 @@ namespace GitUI
                 return;
 
             var isFound = false;
+            int index = 
+                reverse ? 
+                SearchInReverseOrder(startIndex, searchString, ref isFound) : 
+                SearchForward(startIndex, searchString, ref isFound);
+
+            if (!isFound) 
+                return;
+
+            Revisions.ClearSelection();
+            Revisions.Rows[index].Selected = true;
+
+            Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
+        }
+
+        private int SearchForward(int startIndex, string searchString, ref bool isFound)
+        {
+            // Check for out of bounds roll over if required
             int index;
-            if (reverse)
-            {
-                // Check for out of bounds roll over if required
-                if (startIndex < 0 || startIndex >= Revisions.RowCount)
-                    startIndex = Revisions.RowCount - 1;
+            if (startIndex < 0 || startIndex >= Revisions.RowCount)
+                startIndex = 0;
 
-                for (index = startIndex; index >= 0; --index)
+            for (index = startIndex; index < Revisions.RowCount; ++index)
+            {
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                {
+                    isFound = true;
+                    break;
+                }
+            }
+
+            if (!isFound)
+            {
+                // We didn't find it so start searching from the top
+                for (index = 0; index < startIndex; ++index)
                 {
                     if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     {
@@ -193,28 +219,31 @@ namespace GitUI
                         break;
                     }
                 }
+            }
+            return index;
+        }
 
-                if (index == -1)
+        private int SearchInReverseOrder(int startIndex, string searchString, ref bool isFound)
+        {
+            // Check for out of bounds roll over if required
+            int index;
+            if (startIndex < 0 || startIndex >= Revisions.RowCount)
+                startIndex = Revisions.RowCount - 1;
+
+            for (index = startIndex; index >= 0; --index)
+            {
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                 {
-                    // We didn't find it so start searching from the bottom
-                    //index = Revisions.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
-                    for (index = Revisions.RowCount - 1; index > startIndex; --index)
-                    {
-                        if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                        {
-                            isFound = true;
-                            break;
-                        }
-                    }
+                    isFound = true;
+                    break;
                 }
             }
-            else
-            {
-                // Check for out of bounds roll over if required
-                if (startIndex < 0 || startIndex >= Revisions.RowCount)
-                    startIndex = 0;
 
-                for (index = startIndex; index < Revisions.RowCount; ++index)
+            if (!isFound)
+            {
+                // We didn't find it so start searching from the bottom
+                //index = Revisions.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
+                for (index = Revisions.RowCount - 1; index > startIndex; --index)
                 {
                     if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     {
@@ -222,28 +251,8 @@ namespace GitUI
                         break;
                     }
                 }
-
-                if (!isFound)
-                {
-                    // We didn't find it so start searching from the top
-                    for (index = 0; index < startIndex; ++index)
-                    {
-                        if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                        {
-                            isFound = true;
-                            break;
-                        }
-                    }
-                }
             }
-
-            if (isFound)
-            {
-                Revisions.ClearSelection();
-                Revisions.Rows[index].Selected = true;
-
-                Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
-            }
+            return index;
         }
 
         public void DisableContextMenu()
