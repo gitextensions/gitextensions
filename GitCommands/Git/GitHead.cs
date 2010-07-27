@@ -14,12 +14,13 @@ namespace GitCommands
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
-            ParseName();
+            
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
             _remoteSettingName = String.Format("branch.{0}.remote", Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
+            ParseName();
         }
 
         public string CompleteName { get; private set; }
@@ -107,10 +108,12 @@ namespace GitCommands
             if (IsTag)
             {
                 // we need the one containing ^{}, because it contains the reference
-                if (CompleteName.Contains("^{}"))
-                    Name = CompleteName.Substring(0, CompleteName.Length - 3);
+                string temp =
+                    CompleteName.Contains("^{}") ?
+                    CompleteName.Substring(0, CompleteName.Length - 3) :
+                    CompleteName;
 
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
+                Name = temp.Substring(CompleteName.LastIndexOf("/") + 1);
                 return;
             }
             if (IsHead)
