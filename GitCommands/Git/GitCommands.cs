@@ -1945,44 +1945,14 @@ namespace GitCommands
             {
                 if (itemsString.Length <= 42) continue;
 
-                var head = new GitHead
-                               {
-                                   Guid = itemsString.Substring(0, 40),
-                                   Name = itemsString.Substring(41).Trim()
-                               };
-                if (head.Name.Length > 0 && head.Name.LastIndexOf("/") > 1)
-                {
-                    if (head.Name.Contains("refs/tags/"))
-                    {
-                        //we need the one containing ^{}, because it contains the reference
-                        if (head.Name.Contains("^{}"))
-                        {
-                            head.Name = head.Name.Substring(0, head.Name.Length - 3);
-                        }
-                        head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
-                        head.IsHead = false;
-                        head.IsTag = true;
-                    }
-                    else
-                    {
-                        head.IsHead = head.Name.Contains("refs/heads/");
-                        head.IsRemote = head.Name.Contains("refs/remotes/");
-                        head.IsTag = false;
-                        head.IsOther = !head.IsHead && !head.IsRemote && !head.IsTag;
-                        if (head.IsHead)
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("heads/") + 6);
-                        else if (head.IsRemote)
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("remotes/") + 8);
-                        else
-                            head.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
-                    }
-                }
-
-                heads.Add(head);
+                var guid = itemsString.Substring(0, 40);
+                var completeName = itemsString.Substring(41).Trim();
+                heads.Add(new GitHead(guid, completeName));
             }
 
             return heads;
         }
+
 
         public static List<string> GetBranches(bool remotes, string filterRemote)
         {

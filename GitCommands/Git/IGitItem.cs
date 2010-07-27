@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GitCommands
 {
     public interface IGitItem
     {
-        string Guid { get; set; }
-        string Name { get; set; }
+        string Guid { get; }
+        string Name { get; }
 
-        List<IGitItem> SubItems
-        {
-            get;
-        }
+        List<IGitItem> SubItems { get; }
     }
 }
