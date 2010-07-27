@@ -30,7 +30,7 @@ namespace GitUI
         private readonly TranslationString _selectRemote = new TranslationString("Please select a remote repository");
 
         private readonly TranslationString _selectTag =
-            new TranslationString("You need to select a tag to push or select \"Push all tags\".");
+            new TranslationString("You need to select a tag to push or select \"Push all tags\".");        
 
         public FormPush()
         {
@@ -58,7 +58,8 @@ namespace GitUI
                 MessageBox.Show(_selectRemote.Text);
                 return;
             }
-            if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(Tag.Text) && !PushAllTags.Checked)
+            if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text) &&
+                !PushAllTags.Checked)
             {
                 MessageBox.Show(_selectTag.Text);
                 return;
@@ -104,22 +105,18 @@ namespace GitUI
                 pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text,
                                                           PushAllBranches.Checked, ForcePushBranches.Checked);
             else
-                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, Tag.Text, PushAllTags.Checked,
+                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
                                                              ForcePushBranches.Checked);
-            new FormProcess(pushCmd)
-                {
-                    Remote = remote,
-                    Text = string.Format(_pushToCaption.Text, destination)
-                }.ShowDialog();
+            var form = new FormProcess(pushCmd)
+                       {
+                           Remote = remote,
+                           Text = string.Format(_pushToCaption.Text, destination)
+                       };
+
+            form.ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() &&
-                !GitCommands.GitCommands.InTheMiddleOfRebase() && !new FormProcess(pushCmd)
-                                                                       {
-                                                                           Remote = remote,
-                                                                           Text =
-                                                                               string.Format(_pushToCaption.Text,
-                                                                                             destination)
-                                                                       }.ErrorOccured())
+                !GitCommands.GitCommands.InTheMiddleOfRebase() && !form.ErrorOccured())
                 Close();
         }
 
@@ -164,10 +161,8 @@ namespace GitUI
                 RemoteBranch.Items.Add(Branch.Text);
 
             foreach (var head in GitCommands.GitCommands.GetBranches(true, Remotes.Text))
-            {
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
-            }
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -261,8 +256,8 @@ namespace GitUI
 
         private void TagDropDown(object sender, EventArgs e)
         {
-            Tag.DisplayMember = "Name";
-            Tag.DataSource = GitCommands.GitCommands.GetHeads(true, false);
+            TagComboBox.DisplayMember = "Name";
+            TagComboBox.DataSource = GitCommands.GitCommands.GetHeads(true, false);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)
