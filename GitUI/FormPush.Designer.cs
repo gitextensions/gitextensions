@@ -47,7 +47,7 @@
             this.labelTo = new System.Windows.Forms.Label();
             this.RemoteBranch = new System.Windows.Forms.ComboBox();
             this.LoadSSHKey = new System.Windows.Forms.Button();
-            this.Tag = new System.Windows.Forms.ComboBox();
+            this.TagComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -112,8 +112,8 @@
             this.Branch.Name = "Branch";
             this.Branch.Size = new System.Drawing.Size(173, 21);
             this.Branch.TabIndex = 0;
-            this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
+            this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             // 
             // PushAllBranches
             // 
@@ -216,10 +216,10 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
-            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
-            this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
             this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
+            this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
+            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
             // 
             // groupBox1
             // 
@@ -269,21 +269,21 @@
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
-            // Tag
+            // TagComboBox
             // 
-            this.Tag.FormattingEnabled = true;
-            this.Tag.Location = new System.Drawing.Point(127, 19);
-            this.Tag.Name = "Tag";
-            this.Tag.Size = new System.Drawing.Size(297, 21);
-            this.Tag.TabIndex = 18;
-            this.Tag.DropDown += new System.EventHandler(this.TagDropDown);
+            this.TagComboBox.FormattingEnabled = true;
+            this.TagComboBox.Location = new System.Drawing.Point(127, 19);
+            this.TagComboBox.Name = "TagComboBox";
+            this.TagComboBox.Size = new System.Drawing.Size(297, 21);
+            this.TagComboBox.TabIndex = 18;
+            this.TagComboBox.DropDown += new System.EventHandler(this.TagDropDown);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.PushAllTags);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.ForcePushTags);
-            this.groupBox3.Controls.Add(this.Tag);
+            this.groupBox3.Controls.Add(this.TagComboBox);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
@@ -399,7 +399,7 @@
         private System.Windows.Forms.ComboBox Remotes;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button LoadSSHKey;
-        private new System.Windows.Forms.ComboBox Tag;
+        private System.Windows.Forms.ComboBox TagComboBox;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl TabControlTagBranch;
