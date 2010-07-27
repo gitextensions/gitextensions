@@ -6,7 +6,7 @@ namespace GitCommands
     public class GitRevision : IGitItem
     {
         public String[] ParentGuids;
-        protected List<IGitItem> _subItems;
+        private List<IGitItem> _subItems;
 
         public GitRevision()
         {
