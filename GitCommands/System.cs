@@ -23,4 +23,54 @@ namespace System
             return new Tuple<T, S>(item1, item2);
         }
     }
+
+    public class Option<T>
+    {
+        private readonly bool _isNone;
+        private readonly T _some;
+
+        private Option(T value)
+        {
+            _some = value;
+        }
+
+        private Option()
+        {
+            _isNone = true;
+        }
+
+        public static Option<T> None
+        {
+            get { return new Option<T>(); }
+        }
+
+        public static Option<T> From(T value)
+        {
+            return new Option<T>(value);
+        }
+
+        public bool IsNone
+        {
+            get { return _isNone; }
+        }
+
+        public T Some
+        {
+            get
+            {
+                if (_isNone)
+                    throw new InvalidOperationException("Maybe is none");
+
+                return _some;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (_isNone)
+                return "None: " + typeof(T).FullName;
+
+            return _some.ToString();
+        }
+    }
 }
