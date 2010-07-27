@@ -38,18 +38,21 @@ namespace GitUI
 
         public void SetRevision(string revision)
         {
+            ResetTextAndImage();
             if (string.IsNullOrEmpty(revision))
-            {
-                RevisionInfo.Text = "";
-                gravatar1.LoadImageForEmail("");
                 return;
-            }
 
             RevisionInfo.Text =
                 CommitInformation.GetCommitInfo(revision) +
                 GetBranchesWhichContainsThisCommit(revision);
 
             LoadAuthorImage();
+        }
+
+        private void ResetTextAndImage()
+        {
+            RevisionInfo.Text = "";
+            gravatar1.LoadImageForEmail("");
         }
 
         private void LoadAuthorImage()
