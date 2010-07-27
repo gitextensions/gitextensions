@@ -512,6 +512,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap loading3 {
+            get {
+                object obj = ResourceManager.GetObject("loading3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap loadingpanel {
             get {
                 object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);
