@@ -1928,7 +1928,7 @@ namespace GitCommands
                 return RunCmd(Settings.GitCommand, "show-ref --dereference");
 
             if (tags)
-                return RunCmd(Settings.GitCommand, "show-ref --dereference --tags");
+                return RunCmd(Settings.GitCommand, "show-ref --tags");
 
             if (branches)
                 return RunCmd(Settings.GitCommand, "show-ref --dereference --heads");
