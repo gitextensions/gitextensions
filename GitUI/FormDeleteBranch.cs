@@ -39,9 +39,8 @@ namespace GitUI
                 if (MessageBox.Show(_deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
-                    MessageBox.Show(_branchDeleted +
-                                    Environment.NewLine +
-                                    GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked),
+                    var deleteBranchResult = GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked);
+                    MessageBox.Show(_branchDeleted.Text + Environment.NewLine + deleteBranchResult,
                                     _deleteBranchCaption.Text);
                 }
             }
