@@ -98,8 +98,7 @@ namespace GitUI
                         {
                             if (head.IsRemote && head.Name.StartsWith(Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
                             {
-                                GitCommands.GitHead remoteHead = new GitCommands.GitHead();
-                                remoteHead.Name = head.Name.Substring(head.Name.LastIndexOf("/") + 1);
+                                var remoteHead = new GitHead(null,head.Name.Substring(head.Name.LastIndexOf("/") + 1));
                                 Heads.Insert(0, remoteHead);
                             }
 
@@ -108,12 +107,8 @@ namespace GitUI
                 }
                 Branches.DisplayMember = "Name";
 
-                GitCommands.GitHead allHead = new GitCommands.GitHead();
-                allHead.Name = "*";
-                Heads.Insert(0, allHead);
-                GitCommands.GitHead noHead = new GitCommands.GitHead();
-                noHead.Name = "";
-                Heads.Insert(0, noHead);
+                Heads.Insert(0, GitHead.AllHeads);
+                Heads.Insert(0, GitHead.NoHead);
                 Branches.DataSource = Heads;
             }
             finally
