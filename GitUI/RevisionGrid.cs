@@ -177,22 +177,21 @@ namespace GitUI
             if (Revisions.RowCount == 0)
                 return;
 
-            var isFound = false;
-            int index = 
-                reverse ? 
-                SearchInReverseOrder(startIndex, searchString, ref isFound) : 
-                SearchForward(startIndex, searchString, ref isFound);
+            var searchResult =
+                reverse
+                    ? SearchInReverseOrder(startIndex, searchString)
+                    : SearchForward(startIndex, searchString);
 
-            if (!isFound) 
+            if (searchResult.IsNone)
                 return;
 
             Revisions.ClearSelection();
-            Revisions.Rows[index].Selected = true;
+            Revisions.Rows[searchResult.Some].Selected = true;
 
-            Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
+            Revisions.CurrentCell = Revisions.Rows[searchResult.Some].Cells[1];
         }
 
-        private int SearchForward(int startIndex, string searchString, ref bool isFound)
+        private Option<int> SearchForward(int startIndex, string searchString)
         {
             // Check for out of bounds roll over if required
             int index;
@@ -201,29 +200,21 @@ namespace GitUI
 
             for (index = startIndex; index < Revisions.RowCount; ++index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                {
-                    isFound = true;
-                    break;
-                }
+                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                    return Option<int>.From(index);
             }
 
-            if (!isFound)
+            // We didn't find it so start searching from the top
+            for (index = 0; index < startIndex; ++index)
             {
-                // We didn't find it so start searching from the top
-                for (index = 0; index < startIndex; ++index)
-                {
-                    if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    {
-                        isFound = true;
-                        break;
-                    }
-                }
+                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                    return Option<int>.From(index);
             }
-            return index;
+
+            return Option<int>.None;
         }
 
-        private int SearchInReverseOrder(int startIndex, string searchString, ref bool isFound)
+        private Option<int> SearchInReverseOrder(int startIndex, string searchString)
         {
             // Check for out of bounds roll over if required
             int index;
@@ -232,27 +223,19 @@ namespace GitUI
 
             for (index = startIndex; index >= 0; --index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                {
-                    isFound = true;
-                    break;
-                }
+                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                    return Option<int>.From(index);
             }
 
-            if (!isFound)
+            // We didn't find it so start searching from the bottom
+            for (index = Revisions.RowCount - 1; index > startIndex; --index)
             {
-                // We didn't find it so start searching from the bottom
-                //index = Revisions.FindLastIndex(bottomIndex, bottomIndex - startIndex, match);
-                for (index = Revisions.RowCount - 1; index > startIndex; --index)
-                {
-                    if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    {
-                        isFound = true;
-                        break;
-                    }
-                }
+                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                    return Option<int>.From(index);
             }
-            return index;
+
+
+            return Option<int>.None;
         }
 
         public void DisableContextMenu()
