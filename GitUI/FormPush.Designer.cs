@@ -72,7 +72,7 @@
             this.BrowseSource.TabIndex = 13;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
-            this.BrowseSource.Click += new System.EventHandler(this.BrowseSource_Click);
+            this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
             // 
             // Push
             // 
@@ -84,7 +84,7 @@
             this.Push.TabIndex = 15;
             this.Push.Text = "&Push";
             this.Push.UseVisualStyleBackColor = true;
-            this.Push.Click += new System.EventHandler(this.Push_Click);
+            this.Push.Click += new System.EventHandler(this.PushClick);
             // 
             // PushDestination
             // 
@@ -94,7 +94,7 @@
             this.PushDestination.Name = "PushDestination";
             this.PushDestination.Size = new System.Drawing.Size(297, 21);
             this.PushDestination.TabIndex = 16;
-            this.PushDestination.DropDown += new System.EventHandler(this.PushDestination_DropDown);
+            this.PushDestination.DropDown += new System.EventHandler(this.PushDestinationDropDown);
             // 
             // label2
             // 
@@ -112,8 +112,8 @@
             this.Branch.Name = "Branch";
             this.Branch.Size = new System.Drawing.Size(173, 21);
             this.Branch.TabIndex = 0;
-            this.Branch.SelectedValueChanged += new System.EventHandler(this.Branch_SelectedValueChanged);
-            this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
+            this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
+            this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             // 
             // PushAllBranches
             // 
@@ -124,7 +124,7 @@
             this.PushAllBranches.TabIndex = 2;
             this.PushAllBranches.Text = "Push &all branches";
             this.PushAllBranches.UseVisualStyleBackColor = true;
-            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranches_CheckedChanged);
+            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranchesCheckedChanged);
             // 
             // ForcePushBranches
             // 
@@ -135,7 +135,7 @@
             this.ForcePushBranches.TabIndex = 3;
             this.ForcePushBranches.Text = "&Force Push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
-            this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranches_CheckedChanged);
+            this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranchesCheckedChanged);
             // 
             // ForcePushTags
             // 
@@ -146,7 +146,7 @@
             this.ForcePushTags.TabIndex = 19;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
-            this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTags_CheckedChanged);
+            this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTagsCheckedChanged);
             // 
             // Pull
             // 
@@ -156,7 +156,7 @@
             this.Pull.TabIndex = 20;
             this.Pull.Text = "Pull";
             this.Pull.UseVisualStyleBackColor = true;
-            this.Pull.Click += new System.EventHandler(this.Pull_Click);
+            this.Pull.Click += new System.EventHandler(PullClick);
             // 
             // groupBox2
             // 
@@ -183,7 +183,7 @@
             this.PullFromUrl.Text = "Url";
             this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
             this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
             // 
             // PullFromRemote
             // 
@@ -197,7 +197,7 @@
             this.PullFromRemote.Text = "Remote";
             this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
             this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
+            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
             // 
             // AddRemote
             // 
@@ -207,7 +207,7 @@
             this.AddRemote.TabIndex = 17;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
+            this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
             // 
             // Remotes
             // 
@@ -216,10 +216,10 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_Updated);
-            this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
-            this.Remotes.TextUpdate += new System.EventHandler(this.Remotes_Updated);
-            this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
+            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
+            this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
+            this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
             // 
             // groupBox1
             // 
@@ -255,7 +255,7 @@
             this.RemoteBranch.Name = "RemoteBranch";
             this.RemoteBranch.Size = new System.Drawing.Size(162, 21);
             this.RemoteBranch.TabIndex = 1;
-            this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranch_DropDown);
+            this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranchDropDown);
             // 
             // LoadSSHKey
             // 
@@ -267,7 +267,7 @@
             this.LoadSSHKey.TabIndex = 23;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
             // Tag
             // 
@@ -276,7 +276,7 @@
             this.Tag.Name = "Tag";
             this.Tag.Size = new System.Drawing.Size(297, 21);
             this.Tag.TabIndex = 18;
-            this.Tag.DropDown += new System.EventHandler(this.Tag_DropDown);
+            this.Tag.DropDown += new System.EventHandler(this.TagDropDown);
             // 
             // groupBox3
             // 
@@ -367,7 +367,7 @@
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
-            this.Load += new System.EventHandler(this.FormPush_Load);
+            this.Load += new System.EventHandler(this.FormPushLoad);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
