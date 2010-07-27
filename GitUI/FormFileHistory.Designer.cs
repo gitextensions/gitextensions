@@ -32,23 +32,24 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.FileChanges = new GitUI.RevisionGrid(_revision);
+            this.FileChanges = new GitUI.RevisionGrid();
+            this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
-            this.View = new FileViewer();
+            this.View = new GitUI.Editor.FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
-            this.Diff = new FileViewer();
+            this.Diff = new GitUI.Editor.FileViewer();
             this.Blame = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
             this.commitInfo = new GitUI.CommitInfo();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.DiffContextMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
@@ -57,7 +58,6 @@ namespace GitUI
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
-            this.DiffContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -80,8 +80,10 @@ namespace GitUI
             // 
             // FileChanges
             // 
+            this.FileChanges.BranchFilter = "";
             this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
-            this.FileChanges.CurrentCheckout = null;
+            this.FileChanges.CurrentCheckout = "\r\nDer Befehl \"git.exe\" ist entweder falsch geschrieben oder\r\nkonnte nicht gefunde" +
+                "n werden.\r\n";
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
             this.FileChanges.LastRow = 0;
@@ -90,6 +92,21 @@ namespace GitUI
             this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FileChanges.Size = new System.Drawing.Size(748, 111);
             this.FileChanges.TabIndex = 2;
+            this.FileChanges.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
+            // 
+            // DiffContextMenu
+            // 
+            this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openWithDifftoolToolStripMenuItem});
+            this.DiffContextMenu.Name = "DiffContextMenu";
+            this.DiffContextMenu.Size = new System.Drawing.Size(172, 48);
+            // 
+            // openWithDifftoolToolStripMenuItem
+            // 
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
             // 
             // tabControl1
             // 
@@ -102,7 +119,7 @@ namespace GitUI
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(748, 329);
             this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
             // 
             // ViewTab
             // 
@@ -119,6 +136,7 @@ namespace GitUI
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
             this.View.IgnoreWhitespaceChanges = false;
+            this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(3, 3);
             this.View.Name = "View";
             this.View.NumberOfVisibleLines = 3;
@@ -143,6 +161,7 @@ namespace GitUI
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Diff.IgnoreWhitespaceChanges = false;
+            this.Diff.IsReadOnly = true;
             this.Diff.Location = new System.Drawing.Point(3, 3);
             this.Diff.Name = "Diff";
             this.Diff.NumberOfVisibleLines = 3;
@@ -180,7 +199,7 @@ namespace GitUI
             this.splitContainer2.Size = new System.Drawing.Size(740, 303);
             this.splitContainer2.SplitterDistance = 246;
             this.splitContainer2.TabIndex = 0;
-            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
+            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2SplitterMoved);
             // 
             // BlameCommitter
             // 
@@ -208,25 +227,11 @@ namespace GitUI
             this.BlameFile.Name = "BlameFile";
             this.BlameFile.Size = new System.Drawing.Size(488, 301);
             this.BlameFile.TabIndex = 4;
-            this.BlameFile.Resize += new System.EventHandler(this.BlameFile_Resize);
+            this.BlameFile.Resize += new System.EventHandler(this.BlameFileResize);
             // 
             // eventLog1
             // 
             this.eventLog1.SynchronizingObject = this;
-            // 
-            // DiffContextMenu
-            // 
-            this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWithDifftoolToolStripMenuItem});
-            this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(172, 48);
-            // 
-            // openWithDifftoolToolStripMenuItem
-            // 
-            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
-            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -237,12 +242,13 @@ namespace GitUI
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
-            this.Load += new System.EventHandler(this.FormFileHistory_Load);
-            this.Shown += new System.EventHandler(this.FormFileHistory_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistory_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistoryFormClosing);
+            this.Load += new System.EventHandler(this.FormFileHistoryLoad);
+            this.Shown += new System.EventHandler(FormFileHistoryShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.DiffContextMenu.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
@@ -251,7 +257,6 @@ namespace GitUI
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
-            this.DiffContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
