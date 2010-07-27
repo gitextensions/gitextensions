@@ -419,7 +419,7 @@ namespace GitUI
             // RevisionGrid
             // 
             this.RevisionGrid.BranchFilter = "";
-            this.RevisionGrid.currentCheckout = "\r\nDer Befehl \"git.exe\" ist entweder falsch geschrieben oder\r\nkonnte nicht gefunde" +
+            this.RevisionGrid.CurrentCheckout = "\r\nDer Befehl \"git.exe\" ist entweder falsch geschrieben oder\r\nkonnte nicht gefunde" +
                 "n werden.\r\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
