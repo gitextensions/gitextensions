@@ -1,59 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
-using System.Windows.Forms;
-using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
+using GitCommands;
 using ResourceManager.Translation;
-
 
 namespace GitUI
 {
     public partial class FormPush : GitExtensionsForm
     {
-        TranslationString selectDestinationDirectory = new TranslationString("Please select a destination directory");
-        TranslationString selectRemote = new TranslationString("Please select a remote repository");
-        TranslationString selectTag = new TranslationString("You need to select a tag to push or select \"Push all tags\".");
-        TranslationString cannotLoadPutty = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-        TranslationString pushCaption = new TranslationString("Push");
-        TranslationString branchNewForRemote = new TranslationString("The branch you are about to push seems to be a new branch for the remote." + Environment.NewLine + "Are you sure you want to push this branch?");
-        TranslationString pushToCaption = new TranslationString("Push to {0}");
-        
-        private readonly string currentBranch;
+        private const string PuttyText = "PuTTY";
+        private const string HeadText = "HEAD";
+
+        private readonly TranslationString _branchNewForRemote =
+            new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
+                                  Environment.NewLine + "Are you sure you want to push this branch?");
+
+        private readonly TranslationString _cannotLoadPutty =
+            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
+
+        private readonly string _currentBranch;
+
+        private readonly TranslationString _pushCaption = new TranslationString("Push");
+
+        private readonly TranslationString _pushToCaption = new TranslationString("Push to {0}");
+
+        private readonly TranslationString _selectDestinationDirectory =
+            new TranslationString("Please select a destination directory");
+
+        private readonly TranslationString _selectRemote = new TranslationString("Please select a remote repository");
+
+        private readonly TranslationString _selectTag =
+            new TranslationString("You need to select a tag to push or select \"Push all tags\".");
+
         public FormPush()
         {
-            currentBranch = GitCommands.GitCommands.GetSelectedBranch(); 
-            InitializeComponent(); Translate();
+            _currentBranch = GitCommands.GitCommands.GetSelectedBranch();
+            InitializeComponent();
+            Translate();
         }
 
-        private void BrowseSource_Click(object sender, EventArgs e)
+        private void BrowseSourceClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = PushDestination.Text;
+            var dialog = new FolderBrowserDialog {SelectedPath = PushDestination.Text};
             if (dialog.ShowDialog() == DialogResult.OK)
                 PushDestination.Text = dialog.SelectedPath;
-
         }
 
-        private void Push_Click(object sender, EventArgs e)
+        private void PushClick(object sender, EventArgs e)
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
-                MessageBox.Show(selectDestinationDirectory.Text);
+                MessageBox.Show(_selectDestinationDirectory.Text);
                 return;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
             {
-                MessageBox.Show(selectRemote.Text);
+                MessageBox.Show(_selectRemote.Text);
                 return;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(Tag.Text) && !PushAllTags.Checked)
             {
-                MessageBox.Show(selectTag.Text);
+                MessageBox.Show(_selectTag.Text);
                 return;
             }
 
@@ -63,18 +70,16 @@ namespace GitUI
             if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
             {
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
-                //if (!GitCommands.GitCommands.GetHeads(true, true).Exists(h => h.Remote.Equals(Remotes.Text) && h.Name.Equals(RemoteBranch.Text)))
-                if (!GitCommands.GitCommands.GetBranches(true, Remotes.Text).Contains(RemoteBranch.Text) )
+                if (!GitCommands.GitCommands.GetBranches(true, Remotes.Text).Contains(RemoteBranch.Text))
                     //Ask if this is what the user wants
-                    if (MessageBox.Show(branchNewForRemote.Text, pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
+                        DialogResult.No)
                         return;
             }
 
-            GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
+            Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
 
-            FormProcess form;
-
-            string remote = "";
+            var remote = "";
             string destination;
             if (PullFromUrl.Checked)
             {
@@ -84,8 +89,8 @@ namespace GitUI
             {
                 if (GitCommands.GitCommands.Plink())
                 {
-                    if (!File.Exists(GitCommands.Settings.Pageant))
-                        MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
+                    if (!File.Exists(Settings.Pageant))
+                        MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
                     else
                         GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
                 }
@@ -96,200 +101,184 @@ namespace GitUI
 
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
-                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text, PushAllBranches.Checked, ForcePushBranches.Checked);
+                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text,
+                                                          PushAllBranches.Checked, ForcePushBranches.Checked);
             else
-                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, Tag.Text, PushAllTags.Checked, ForcePushBranches.Checked);
-            form = new FormProcess(pushCmd);
-            form.Remote = remote;
-            form.Text = string.Format(pushToCaption.Text, destination);
-            form.ShowDialog();
+                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, Tag.Text, PushAllTags.Checked,
+                                                             ForcePushBranches.Checked);
+            new FormProcess(pushCmd)
+                {
+                    Remote = remote,
+                    Text = string.Format(_pushToCaption.Text, destination)
+                }.ShowDialog();
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !form.ErrorOccured())
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() &&
+                !GitCommands.GitCommands.InTheMiddleOfRebase() && !new FormProcess(pushCmd)
+                                                                       {
+                                                                           Remote = remote,
+                                                                           Text =
+                                                                               string.Format(_pushToCaption.Text,
+                                                                                             destination)
+                                                                       }.ErrorOccured())
                 Close();
         }
 
-        private void PushDestination_DropDown(object sender, EventArgs e)
+        private void PushDestinationDropDown(object sender, EventArgs e)
         {
-            PushDestination.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            PushDestination.DataSource = Repositories.RepositoryHistory.Repositories;
             PushDestination.DisplayMember = "Path";
         }
 
-        private void Branch_DropDown(object sender, EventArgs e)
+        private void BranchDropDown(object sender, EventArgs e)
         {
-            string curBranch = Branch.Text;
+            var curBranch = Branch.Text;
 
             Branch.DisplayMember = "Name";
             Branch.Items.Clear();
-            Branch.Items.Add("HEAD");
+            Branch.Items.Add(HeadText);
 
             if (string.IsNullOrEmpty(curBranch))
             {
-                curBranch = currentBranch;
+                curBranch = _currentBranch;
                 if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
-                {
-                    curBranch = "HEAD";
-                }
+                    curBranch = HeadText;
             }
 
-            foreach (GitCommands.GitHead h in GitCommands.GitCommands.GetHeads(false, true))
-            {
-                Branch.Items.Add(h.Name);
-            }
+            foreach (var head in GitCommands.GitCommands.GetHeads(false, true))
+                Branch.Items.Add(head.Name);
+
             Branch.Text = curBranch;
         }
 
-        private void Pull_Click(object sender, EventArgs e)
+        private static void PullClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartPullDialog();
         }
 
-        private void RemoteBranch_DropDown(object sender, EventArgs e)
+        private void RemoteBranchDropDown(object sender, EventArgs e)
         {
             RemoteBranch.DisplayMember = "Name";
             RemoteBranch.Items.Clear();
 
             if (!string.IsNullOrEmpty(Branch.Text))
-            {
                 RemoteBranch.Items.Add(Branch.Text);
-            }
 
-            List<string> heads = GitCommands.GitCommands.GetBranches(true, Remotes.Text);
-            foreach (string h in heads)
+            foreach (var head in GitCommands.GitCommands.GetBranches(true, Remotes.Text))
             {
-                if (!RemoteBranch.Items.Contains(h))
-                {
-                    RemoteBranch.Items.Add(h);
-                }
+                if (!RemoteBranch.Items.Contains(head))
+                    RemoteBranch.Items.Add(head);
             }
-
         }
 
-        private void Branch_SelectedValueChanged(object sender, EventArgs e)
+        private void BranchSelectedValueChanged(object sender, EventArgs e)
         {
-            if (Branch.Text != "HEAD")
-            {
+            if (Branch.Text != HeadText)
                 RemoteBranch.Text = Branch.Text;
-            }
         }
 
-        private void FormPush_Load(object sender, EventArgs e)
+        private void FormPushLoad(object sender, EventArgs e)
         {
-            Remotes.Text = GitCommands.GitCommands.GetSetting("branch." + currentBranch + ".remote");
-            Remotes_Updated(null, null);
+            Remotes.Text = GitCommands.GitCommands.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
+            RemotesUpdated(null, null);
 
-            this.Text = string.Concat(pushCaption.Text, " (", GitCommands.Settings.WorkingDir, ")");
+            Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
         }
 
-        private void AddRemote_Click(object sender, EventArgs e)
+        private static void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
         }
 
-        private void Remotes_DropDown(object sender, EventArgs e)
+        private void RemotesDropDown(object sender, EventArgs e)
         {
             Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
         }
 
-        private void PullFromRemote_CheckedChanged(object sender, EventArgs e)
+        private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
         {
-            if (PullFromRemote.Checked)
-            {
-                PushDestination.Enabled = false;
-                BrowseSource.Enabled = false;
-                Remotes.Enabled = true;
-                AddRemote.Enabled = true;
-            }
+            if (!PullFromRemote.Checked)
+                return;
+
+            PushDestination.Enabled = false;
+            BrowseSource.Enabled = false;
+            Remotes.Enabled = true;
+            AddRemote.Enabled = true;
         }
 
-        private void PullFromUrl_CheckedChanged(object sender, EventArgs e)
+        private void PullFromUrlCheckedChanged(object sender, EventArgs e)
         {
-            if (PullFromUrl.Checked)
-            {
-                PushDestination.Enabled = true;
-                BrowseSource.Enabled = true;
-                Remotes.Enabled = false;
-                AddRemote.Enabled = false;
-            }
+            if (!PullFromUrl.Checked)
+                return;
+
+            PushDestination.Enabled = true;
+            BrowseSource.Enabled = true;
+            Remotes.Enabled = false;
+            AddRemote.Enabled = false;
         }
 
-        private void Remotes_Updated(object sender, EventArgs e)
+        private void RemotesUpdated(object sender, EventArgs e)
         {
-            EnableLoadSSHButton();
+            EnableLoadSshButton();
 
-            string pushSettingName = "remote." + Remotes.Text + ".push";
-            string pushSettingValue = GitCommands.GitCommands.GetSetting(pushSettingName);
+            var pushSettingName = "remote." + Remotes.Text + ".push";
+            var pushSettingValue = GitCommands.GitCommands.GetSetting(pushSettingName);
             if (!string.IsNullOrEmpty(pushSettingValue))
             {
-                string[] values = pushSettingValue.Split(':');
+                var values = pushSettingValue.Split(':');
+                RemoteBranch.Text = "";
                 if (values.Length > 0)
-                {
                     Branch.Text = values[0];
-                }
                 if (values.Length > 1)
-                {
                     RemoteBranch.Text = values[1];
-                }
-                else
-                {
-                    RemoteBranch.Text = "";
-                }
             }
             else
             {
                 // Doing this makes it pretty easy to accidentally create a branch on the remote.
                 // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
                 // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-                Branch.Text = currentBranch;
+                Branch.Text = _currentBranch;
                 RemoteBranch.Text = Branch.Text;
             }
         }
 
-        private void EnableLoadSSHButton()
+        private void EnableLoadSshButton()
         {
-            if (!string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text)))
-            {
-                LoadSSHKey.Visible = true;
-            }
-            else
-            {
-                LoadSSHKey.Visible = false;
-            }
+            LoadSSHKey.Visible = !string.IsNullOrEmpty(GitCommands.GitCommands.GetPuttyKeyFileForRemote(Remotes.Text));
         }
 
-        private void LoadSSHKey_Click(object sender, EventArgs e)
+        private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            if (!File.Exists(GitCommands.Settings.Pageant))
-                MessageBox.Show(cannotLoadPutty.Text, "PuTTY");
+            if (!File.Exists(Settings.Pageant))
+                MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
             else
                 GitCommands.GitCommands.StartPageantForRemote(Remotes.Text);
         }
 
-        private void Remotes_Validated(object sender, EventArgs e)
+        private void RemotesValidated(object sender, EventArgs e)
         {
-            EnableLoadSSHButton();
+            EnableLoadSshButton();
         }
 
-        private void Tag_DropDown(object sender, EventArgs e)
+        private void TagDropDown(object sender, EventArgs e)
         {
             Tag.DisplayMember = "Name";
             Tag.DataSource = GitCommands.GitCommands.GetHeads(true, false);
         }
 
-        void ForcePushBranches_CheckedChanged(object sender, System.EventArgs e)
+        private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)
         {
-            this.ForcePushTags.Checked = this.ForcePushBranches.Checked;
+            ForcePushTags.Checked = ForcePushBranches.Checked;
         }
 
-        void ForcePushTags_CheckedChanged(object sender, System.EventArgs e)
+        private void ForcePushTagsCheckedChanged(object sender, EventArgs e)
         {
-            this.ForcePushBranches.Checked = this.ForcePushTags.Checked;
+            ForcePushBranches.Checked = ForcePushTags.Checked;
         }
 
-        private void PushAllBranches_CheckedChanged(object sender, EventArgs e)
+        private void PushAllBranchesCheckedChanged(object sender, EventArgs e)
         {
             Branch.Enabled = !PushAllBranches.Checked;
             RemoteBranch.Enabled = !PushAllBranches.Checked;
         }
-
     }
 }
