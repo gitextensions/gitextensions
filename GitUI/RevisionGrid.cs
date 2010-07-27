@@ -16,7 +16,6 @@ namespace GitUI
         private readonly TranslationString _authorDateCaption = new TranslationString("AuthorDate");
         private readonly TranslationString _commitDateCaption = new TranslationString("CommitDate");
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
-        private readonly GitRevision _initialSelectedRevision;
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
@@ -25,19 +24,14 @@ namespace GitUI
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
+        private GitRevision _initialSelectedRevision;
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
-
-        public RevisionGrid() : this(null)
+        public RevisionGrid()
         {
-        }
-
-        public RevisionGrid(GitRevision initialSelectedRevision)
-        {
-            _initialSelectedRevision = initialSelectedRevision;
             _syncContext = SynchronizationContext.Current;
 
             base.InitLayout();
@@ -74,6 +68,11 @@ namespace GitUI
         public Font NormalFont { get; set; }
         public string CurrentCheckout { get; set; }
         public int LastRow { get; set; }
+
+        public void SetInitialRevision(GitRevision initialSelectedRevision)
+        {
+            _initialSelectedRevision = initialSelectedRevision;
+        }
 
         public event EventHandler ChangedCurrentBranch;
 
@@ -538,13 +537,13 @@ namespace GitUI
                         {
                             heads.Sort(new Comparison<GitHead>(
                                            (left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           }));
+                                               {
+                                                   if (left.IsTag != right.IsTag)
+                                                       return right.IsTag.CompareTo(left.IsTag);
+                                                   if (left.IsRemote != right.IsRemote)
+                                                       return left.IsRemote.CompareTo(right.IsRemote);
+                                                   return left.Name.CompareTo(right.Name);
+                                               }));
 
                             foreach (var head in heads)
                             {
