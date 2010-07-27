@@ -47,10 +47,7 @@ namespace GitUI
             BlameFile.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
             BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
 
-            BlameFile.ActiveTextAreaControl.TextArea.MouseMove += TextAreaMouseMove;
             BlameFile.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
-            BlameFile.ActiveTextAreaControl.TextArea.MouseLeave += BlameFileMouseLeave;
-            BlameFile.ActiveTextAreaControl.TextArea.MouseEnter += TextAreaMouseEnter;
         }
 
         public FormFileHistory(string fileName) : this(fileName, null)
@@ -69,21 +66,10 @@ namespace GitUI
 
             FileName = fileName;
 
-
-            commitInfo.Visible = false;
-
             if (Settings.FollowRenamesInFileHistory)
                 FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
             else
                 FileChanges.Filter = " -- \"" + fileName + "\"";
-
-            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
-        }
-
-        private void TextAreaMouseEnter(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_lastRevision))
-                commitInfo.Visible = true;
         }
 
         private void TextAreaMouseDown(object sender, MouseEventArgs e)
@@ -94,34 +80,12 @@ namespace GitUI
             if (BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= _blameList.Count)
                 return;
 
-            commitInfo.Visible = true;
-
-            var newRevision =
-                _blameList[BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)].CommitGuid;
+            var newRevision = _blameList[BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)].CommitGuid;
             if (_lastRevision == newRevision)
                 return;
 
             _lastRevision = newRevision;
             commitInfo.SetRevision(_lastRevision);
-        }
-
-        private void TextAreaMouseMove(object sender, MouseEventArgs e)
-        {
-            commitInfo.Size = new Size(BlameFile.Width - 10, BlameFile.Height/4);
-
-            if (e.Y > (BlameFile.Height/3)*2)
-            {
-                commitInfo.Location = new Point(5, 5);
-            }
-            else if (e.Y < BlameFile.Height/3)
-            {
-                commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
-            }
-        }
-
-        private void BlameFileMouseLeave(object sender, EventArgs e)
-        {
-            commitInfo.Visible = false;
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -285,21 +249,6 @@ namespace GitUI
             var form = new FormDiffSmall();
             form.SetRevision(revision.Guid);
             form.ShowDialog();
-        }
-
-        private static void FormFileHistoryShown(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-        }
-
-        private void BlameFileResize(object sender, EventArgs e)
-        {
-            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
-        }
-
-        private void SplitContainer2SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            commitInfo.Location = new Point(5, BlameFile.Height - commitInfo.Height - 5);
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
