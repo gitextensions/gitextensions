@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
 using ResourceManager.Translation;
 
@@ -12,43 +7,47 @@ namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
     {
-        TranslationString deleteBranchQuestion = new TranslationString("Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!");
-        TranslationString deleteBranchCaption = new TranslationString("Delete branch");
-        TranslationString branchDeleted = new TranslationString("Command executed");
+        private readonly TranslationString _branchDeleted = new TranslationString("Command executed");
 
-        private System.ComponentModel.ComponentResourceManager resources;
-        private readonly string defaultBranch;
+        private readonly string _defaultBranch;
+        private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branch");
+
+        private readonly TranslationString _deleteBranchQuestion =
+            new TranslationString(
+                "Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!");
 
         public FormDeleteBranch(string defaultBranch)
         {
-            resources = new ComponentResourceManager(typeof(FormDeleteBranch));
-
-            InitializeComponent(); Translate();
-            this.defaultBranch = defaultBranch;
+            InitializeComponent();
+            Translate();
+            _defaultBranch = defaultBranch;
         }
 
-        private void FormDeleteBranch_Load(object sender, EventArgs e)
+        private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
 
-            if (defaultBranch != null)
-            {
-                Branches.Text = defaultBranch;
-            }
+            if (_defaultBranch != null)
+                Branches.Text = _defaultBranch;
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                if (MessageBox.Show(deleteBranchQuestion.Text, deleteBranchCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(_deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
+                    DialogResult.Yes)
                 {
-                    MessageBox.Show(branchDeleted + Environment.NewLine + GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked), deleteBranchCaption.Text);
+                    MessageBox.Show(_branchDeleted +
+                                    Environment.NewLine +
+                                    GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked),
+                                    _deleteBranchCaption.Text);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
             Close();
         }

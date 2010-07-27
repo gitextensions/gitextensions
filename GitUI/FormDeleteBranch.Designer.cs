@@ -47,7 +47,7 @@
             this.Ok.TabIndex = 5;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // Branches
             // 
@@ -115,7 +115,7 @@
             this.Name = "FormDeleteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
-            this.Load += new System.EventHandler(this.FormDeleteBranch_Load);
+            this.Load += new System.EventHandler(this.FormDeleteBranchLoad);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
