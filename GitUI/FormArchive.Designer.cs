@@ -101,7 +101,7 @@
             // 
             // revisionGrid1
             // 
-            this.revisionGrid1.currentCheckout = null;
+            this.revisionGrid1.CurrentCheckout = null;
             this.revisionGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.revisionGrid1.LastRow = 0;
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
