@@ -41,9 +41,10 @@ namespace GitUI
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new GitUI.Editor.FileViewer();
             this.Blame = new System.Windows.Forms.TabPage();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.commitInfo = new GitUI.CommitInfo();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
-            this.commitInfo = new GitUI.CommitInfo();
             this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -54,6 +55,9 @@ namespace GitUI
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
             this.Blame.SuspendLayout();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -173,13 +177,40 @@ namespace GitUI
             // 
             // Blame
             // 
-            this.Blame.Controls.Add(this.splitContainer2);
+            this.Blame.Controls.Add(this.splitContainer3);
             this.Blame.Location = new System.Drawing.Point(4, 22);
             this.Blame.Name = "Blame";
             this.Blame.Size = new System.Drawing.Size(740, 303);
             this.Blame.TabIndex = 2;
             this.Blame.Text = "Blame";
             this.Blame.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.commitInfo);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer3.Size = new System.Drawing.Size(740, 303);
+            this.splitContainer3.SplitterDistance = 51;
+            this.splitContainer3.TabIndex = 6;
+            // 
+            // commitInfo
+            // 
+            this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commitInfo.Location = new System.Drawing.Point(0, 0);
+            this.commitInfo.Name = "commitInfo";
+            this.commitInfo.Size = new System.Drawing.Size(740, 51);
+            this.commitInfo.TabIndex = 5;
             // 
             // splitContainer2
             // 
@@ -194,12 +225,10 @@ namespace GitUI
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.commitInfo);
             this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
-            this.splitContainer2.Size = new System.Drawing.Size(740, 303);
+            this.splitContainer2.Size = new System.Drawing.Size(740, 248);
             this.splitContainer2.SplitterDistance = 246;
             this.splitContainer2.TabIndex = 0;
-            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2SplitterMoved);
             // 
             // BlameCommitter
             // 
@@ -207,17 +236,8 @@ namespace GitUI
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(244, 301);
+            this.BlameCommitter.Size = new System.Drawing.Size(244, 246);
             this.BlameCommitter.TabIndex = 5;
-            // 
-            // commitInfo
-            // 
-            this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.commitInfo.Location = new System.Drawing.Point(250, 17);
-            this.commitInfo.Name = "commitInfo";
-            this.commitInfo.Size = new System.Drawing.Size(193, 85);
-            this.commitInfo.TabIndex = 5;
-            this.commitInfo.Visible = false;
             // 
             // BlameFile
             // 
@@ -225,9 +245,8 @@ namespace GitUI
             this.BlameFile.IsReadOnly = false;
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(488, 301);
+            this.BlameFile.Size = new System.Drawing.Size(488, 246);
             this.BlameFile.TabIndex = 4;
-            this.BlameFile.Resize += new System.EventHandler(this.BlameFileResize);
             // 
             // eventLog1
             // 
@@ -244,7 +263,6 @@ namespace GitUI
             this.Text = "File History";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistoryFormClosing);
             this.Load += new System.EventHandler(this.FormFileHistoryLoad);
-            this.Shown += new System.EventHandler(FormFileHistoryShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -253,6 +271,9 @@ namespace GitUI
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
             this.Blame.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -278,5 +299,6 @@ namespace GitUI
         private CommitInfo commitInfo;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer3;
     }
 }
