@@ -21,7 +21,7 @@ namespace GitUI
         private readonly TranslationString _menuOpen = new TranslationString("Open");
         private readonly TranslationString _menuOpenWith = new TranslationString("Open with");
         private readonly TranslationString _menuSaveAs = new TranslationString("Save as");
-        TranslationString menuFindFile = new TranslationString("Find file");
+        TranslationString menuFindFile = new TranslationString("Find");
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
@@ -355,14 +355,48 @@ namespace GitUI
                 Owner = this
             };
             searchWindow.ShowDialog();
-            if (string.IsNullOrEmpty(searchWindow.SelectedItem))
+            string selectedItem = searchWindow.SelectedItem;
+            if (string.IsNullOrEmpty(selectedItem))
             {
                 return;
             }
+
+            string[] items = selectedItem.Split(new char[]{'\\'});
+            TreeNodeCollection nodes = GitTree.Nodes;
             
-            GitTree.Text = searchWindow.SelectedItem;
+            TreeNode selectedNode = null;
+            for (int i = 0; i < items.Length - 1; i++)
+            {
+                selectedNode = Find(nodes, items[i]);
+                
+                if (selectedNode == null)
+                {
+                    return; //Item does not exist in the tree
+                }
+                
+                selectedNode.Expand();
+                nodes = selectedNode.Nodes;
+            }
+            
+            var lastItem = Find(nodes, items[items.Length - 1]);
+            if (lastItem != null)
+            {
+                GitTree.SelectedNode = lastItem;
+            }
         }
         
+        private TreeNode Find(TreeNodeCollection nodes, string label)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].Text == label)
+                {
+                    return nodes[i];
+                }
+            }
+            return null;
+        }
+
         private IList<string> FindFileMatches(string name)
         {
             var fullPaths = new List<string>();

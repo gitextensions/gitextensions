@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -18,6 +19,10 @@ namespace GitUI
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
             InitializeComponent();
+            pictureBox1.Visible = false;
+
+            pictureBox1.Location = new Point(Width / 2 - pictureBox1.Width / 2, Height / 2 - pictureBox1.Height / 2);
+            
             if (getCandidates == null)
             {
                 throw new InvalidOperationException("getCandidates cannot be null");
@@ -45,7 +50,7 @@ namespace GitUI
             backgroundThread.SetApartmentState(ApartmentState.STA);
             
             m_SelectedText = comboBox1.Text;
-            
+            pictureBox1.Visible = true;
             backgroundThread.Start();
         }
         
@@ -63,6 +68,8 @@ namespace GitUI
                 }
                 comboBox1.SelectionStart = selectionStart;
                 comboBox1.SelectionLength = selectionLength;
+                
+                pictureBox1.Visible = false;
             }));
         }
 
