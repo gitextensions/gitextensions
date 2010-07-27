@@ -1,9 +1,9 @@
-GitExtensions is a shell extension, a Visual Studio 2008 plugin and a standalone Git repository tool.
+GitExtensions is a shell extension, a Visual Studio 2008 / 2010 plugin and a standalone Git repository tool.
 
 How to compile GitExtensions
 ============================
 
-- Open the solution file (GitCommands.sln)
+- Open the solution file (GitCommands.sln or GitCommands.VS2010.sln)
 - Compile SimpleShlExt in release for 64bit windows
 - Compile SimpleShlExt in release for 32bit windows
 - Compile entire solution in release, mixed platforms
