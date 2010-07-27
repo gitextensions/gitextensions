@@ -53,7 +53,6 @@ namespace GitUI
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.GitRevisions);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
@@ -109,7 +108,7 @@ namespace GitUI
             this.annotate.TabIndex = 12;
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
-            this.annotate.CheckedChanged += new System.EventHandler(this.annotate_CheckedChanged);
+            this.annotate.CheckedChanged += new System.EventHandler(this.AnnotateCheckedChanged);
             // 
             // Tagname
             // 
@@ -138,7 +137,7 @@ namespace GitUI
             this.CreateTag.TabIndex = 0;
             this.CreateTag.Text = "Create tag";
             this.CreateTag.UseVisualStyleBackColor = true;
-            this.CreateTag.Click += new System.EventHandler(this.CreateTag_Click);
+            this.CreateTag.Click += new System.EventHandler(this.CreateTagClick);
             // 
             // FormTag
             // 
@@ -149,8 +148,8 @@ namespace GitUI
             this.Name = "FormTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tag";
-            this.Load += new System.EventHandler(this.FormTag_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTag_FormClosing);
+            this.Load += new System.EventHandler(this.FormTagLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTagFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
