@@ -934,8 +934,12 @@ namespace GitUI
 
         private void RemoveSubmoduleButtons()
         {
-            foreach (ToolStripButton toolStripButton in openSubmoduleToolStripMenuItem.DropDownItems)
-                toolStripButton.Click -= SubmoduleToolStripButtonClick;
+            foreach (var item in openSubmoduleToolStripMenuItem.DropDownItems)
+            {
+                var toolStripButton = item as ToolStripButton;
+                if(toolStripButton != null)
+                    toolStripButton.Click -= SubmoduleToolStripButtonClick;
+            }
             openSubmoduleToolStripMenuItem.DropDownItems.Clear();
         }
 
