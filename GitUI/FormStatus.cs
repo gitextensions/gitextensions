@@ -60,6 +60,7 @@ namespace GitUI
         public void AddOutput(string text)
         {
             Output.Text += text + Environment.NewLine;
+            Output.Visible = true;
         }
 
         public void Done(bool isSuccess)
@@ -94,6 +95,7 @@ namespace GitUI
         public void Reset()
         {
             Output.Text = "";
+            Output.Visible = false;
             ProgressBar.Visible = true;
             Ok.Enabled = false;
         }
