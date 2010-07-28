@@ -1,4 +1,7 @@
-﻿using GitUI.Editor;
+﻿using System;
+using System.Windows.Forms;
+using GitCommands;
+using GitUI.Editor;
 
 namespace GitUI
 {
@@ -120,7 +123,7 @@ namespace GitUI
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.updateAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initializeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -189,7 +192,6 @@ namespace GitUI
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.ToolStrip);
-            this.splitContainer2.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer2_Panel1_Paint);
             // 
             // splitContainer2.Panel2
             // 
@@ -198,7 +200,6 @@ namespace GitUI
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 2;
             this.splitContainer2.TabStop = false;
-            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             // 
             // ToolStrip
             // 
@@ -225,7 +226,6 @@ namespace GitUI
             this.ToolStrip.Size = new System.Drawing.Size(796, 25);
             this.ToolStrip.TabIndex = 4;
             this.ToolStrip.Text = "toolStrip1";
-            this.ToolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ToolStrip_ItemClicked);
             // 
             // RefreshButton
             // 
@@ -235,7 +235,7 @@ namespace GitUI
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(23, 22);
             this.RefreshButton.ToolTipText = "Refresh";
-            this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
+            this.RefreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
             // _Status
             // 
@@ -244,7 +244,7 @@ namespace GitUI
             this._Status.Name = "_Status";
             this._Status.Size = new System.Drawing.Size(88, 25);
             this._Status.Text = "4 changes";
-            this._Status.Click += new System.EventHandler(this._Status_Click);
+            this._Status.Click += new System.EventHandler(this.StatusClick);
             // 
             // toolStripSeparator17
             // 
@@ -259,8 +259,8 @@ namespace GitUI
             this._Workingdir.Size = new System.Drawing.Size(99, 22);
             this._Workingdir.Text = "WorkingDir";
             this._Workingdir.ToolTipText = "Change working directory";
-            this._Workingdir.ButtonClick += new System.EventHandler(this.Workingdir_Click);
-            this._Workingdir.DropDownOpening += new System.EventHandler(this.Workingdir_DropDownOpening);
+            this._Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
+            this._Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);
             // 
             // _CurrentBranch
             // 
@@ -270,7 +270,7 @@ namespace GitUI
             this._CurrentBranch.Size = new System.Drawing.Size(64, 22);
             this._CurrentBranch.Text = "Branch";
             this._CurrentBranch.ToolTipText = "Switch branch";
-            this._CurrentBranch.Click += new System.EventHandler(this.CurrentBranch_Click);
+            this._CurrentBranch.Click += new System.EventHandler(this.CurrentBranchClick);
             // 
             // toolStripSeparator1
             // 
@@ -291,7 +291,7 @@ namespace GitUI
             this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitStash.Text = "toolStripSplitButton1";
             this.toolStripSplitStash.ToolTipText = "Stash changes";
-            this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.toolStripSplitStash_ButtonClick);
+            this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.ToolStripSplitStashButtonClick);
             // 
             // stashChangesToolStripMenuItem
             // 
@@ -299,7 +299,7 @@ namespace GitUI
             this.stashChangesToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.stashChangesToolStripMenuItem.Text = "Stash";
             this.stashChangesToolStripMenuItem.ToolTipText = "Stash changes";
-            this.stashChangesToolStripMenuItem.Click += new System.EventHandler(this.stashChangesToolStripMenuItem_Click);
+            this.stashChangesToolStripMenuItem.Click += new System.EventHandler(this.StashChangesToolStripMenuItemClick);
             // 
             // stashPopToolStripMenuItem
             // 
@@ -307,7 +307,7 @@ namespace GitUI
             this.stashPopToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.stashPopToolStripMenuItem.Text = "Stash pop";
             this.stashPopToolStripMenuItem.ToolTipText = "Apply and drop single stash";
-            this.stashPopToolStripMenuItem.Click += new System.EventHandler(this.stashPopToolStripMenuItem_Click);
+            this.stashPopToolStripMenuItem.Click += new System.EventHandler(this.StashPopToolStripMenuItemClick);
             // 
             // toolStripSeparator9
             // 
@@ -320,7 +320,7 @@ namespace GitUI
             this.viewStashToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.viewStashToolStripMenuItem.Text = "View stash";
             this.viewStashToolStripMenuItem.ToolTipText = "View stash";
-            this.viewStashToolStripMenuItem.Click += new System.EventHandler(this.viewStashToolStripMenuItem_Click);
+            this.viewStashToolStripMenuItem.Click += new System.EventHandler(this.ViewStashToolStripMenuItemClick);
             // 
             // toolStripButton1
             // 
@@ -329,7 +329,7 @@ namespace GitUI
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
             this.toolStripButton1.Text = "Commit";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1Click);
             // 
             // toolStripButtonPull
             // 
@@ -339,7 +339,7 @@ namespace GitUI
             this.toolStripButtonPull.Name = "toolStripButtonPull";
             this.toolStripButtonPull.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonPull.Text = "Pull";
-            this.toolStripButtonPull.Click += new System.EventHandler(this.toolStripButtonPull_Click);
+            this.toolStripButtonPull.Click += new System.EventHandler(this.ToolStripButtonPullClick);
             // 
             // toolStripButtonPush
             // 
@@ -349,7 +349,7 @@ namespace GitUI
             this.toolStripButtonPush.Name = "toolStripButtonPush";
             this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonPush.Text = "Push";
-            this.toolStripButtonPush.Click += new System.EventHandler(this.toolStripButtonPush_Click);
+            this.toolStripButtonPush.Click += new System.EventHandler(this.ToolStripButtonPushClick);
             // 
             // toolStripSeparator2
             // 
@@ -363,7 +363,7 @@ namespace GitUI
             this.GitBash.Name = "GitBash";
             this.GitBash.Size = new System.Drawing.Size(23, 22);
             this.GitBash.ToolTipText = "Git bash";
-            this.GitBash.Click += new System.EventHandler(this.GitBash_Click);
+            this.GitBash.Click += new System.EventHandler(GitBashClick);
             // 
             // EditSettings
             // 
@@ -373,7 +373,7 @@ namespace GitUI
             this.EditSettings.Name = "EditSettings";
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
             this.EditSettings.ToolTipText = "Settings";
-            this.EditSettings.Click += new System.EventHandler(this.Settings_Click);
+            this.EditSettings.Click += new System.EventHandler(this.SettingsClick);
             // 
             // toolStripSeparator5
             // 
@@ -385,7 +385,7 @@ namespace GitUI
             this.toolStripLabel2.Name = "toolStripLabel2";
             this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
             this.toolStripLabel2.Text = "Filter:";
-            this.toolStripLabel2.Click += new System.EventHandler(this.toolStripLabel2_Click);
+            this.toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
             // 
             // toolStripTextBoxFilter
             // 
@@ -393,9 +393,8 @@ namespace GitUI
             this.toolStripTextBoxFilter.ForeColor = System.Drawing.Color.Black;
             this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
             this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
-            this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.toolStripTextBoxFilter_Leave);
-            this.toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBoxFilter_KeyPress);
-            this.toolStripTextBoxFilter.Click += new System.EventHandler(this.toolStripTextBox1_Click);
+            this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.ToolStripTextBoxFilterLeave);
+            this.toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBoxFilterKeyPress);
             // 
             // splitContainer3
             // 
@@ -423,13 +422,14 @@ namespace GitUI
                 "n werden.\r\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionGrid.Size = new System.Drawing.Size(796, 229);
             this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGrid_DoubleClick);
-            this.RevisionGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionGrid_MouseDoubleClick);
+            this.RevisionGrid.DoubleClick += new System.EventHandler(RevisionGridDoubleClick);
             // 
             // tabControl1
             // 
@@ -442,15 +442,15 @@ namespace GitUI
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(796, 287);
             this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
             // 
             // CommitInfo
             // 
             this.CommitInfo.Controls.Add(this.RevisionInfo);
-            this.CommitInfo.Location = new System.Drawing.Point(4, 22);
+            this.CommitInfo.Location = new System.Drawing.Point(4, 24);
             this.CommitInfo.Margin = new System.Windows.Forms.Padding(15);
             this.CommitInfo.Name = "CommitInfo";
-            this.CommitInfo.Size = new System.Drawing.Size(788, 261);
+            this.CommitInfo.Size = new System.Drawing.Size(788, 259);
             this.CommitInfo.TabIndex = 2;
             this.CommitInfo.Text = "Commit";
             this.CommitInfo.UseVisualStyleBackColor = true;
@@ -460,19 +460,20 @@ namespace GitUI
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(10);
             this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.Size = new System.Drawing.Size(788, 261);
+            this.RevisionInfo.Size = new System.Drawing.Size(788, 259);
             this.RevisionInfo.TabIndex = 1;
             // 
             // Tree
             // 
             this.Tree.Controls.Add(this.splitContainer4);
-            this.Tree.Location = new System.Drawing.Point(4, 22);
+            this.Tree.Location = new System.Drawing.Point(4, 24);
             this.Tree.Name = "Tree";
             this.Tree.Padding = new System.Windows.Forms.Padding(3);
-            this.Tree.Size = new System.Drawing.Size(788, 261);
+            this.Tree.Size = new System.Drawing.Size(788, 259);
             this.Tree.TabIndex = 0;
             this.Tree.Text = "File tree";
             this.Tree.UseVisualStyleBackColor = true;
@@ -503,14 +504,15 @@ namespace GitUI
             this.GitTree.Name = "GitTree";
             this.GitTree.Size = new System.Drawing.Size(213, 255);
             this.GitTree.TabIndex = 0;
-            this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
-            this.GitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
-            this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.GitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GitTree_MouseDown);
+            this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTreeBeforeExpand);
+            this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1AfterSelect);
+            this.GitTree.DoubleClick += new System.EventHandler(this.GitTreeDoubleClick);
+            this.GitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GitTreeMouseDown);
             // 
             // FileText
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FileText.IgnoreWhitespaceChanges = false;
             this.FileText.IsReadOnly = true;
             this.FileText.Location = new System.Drawing.Point(0, 0);
@@ -525,9 +527,9 @@ namespace GitUI
             // Diff
             // 
             this.Diff.Controls.Add(this.splitContainer1);
-            this.Diff.Location = new System.Drawing.Point(4, 22);
+            this.Diff.Location = new System.Drawing.Point(4, 24);
             this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(788, 261);
+            this.Diff.Size = new System.Drawing.Size(788, 259);
             this.Diff.TabIndex = 1;
             this.Diff.Text = "Diff";
             this.Diff.UseVisualStyleBackColor = true;
@@ -554,6 +556,7 @@ namespace GitUI
             // 
             this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DiffFiles.GitItemStatusses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
@@ -561,8 +564,8 @@ namespace GitUI
             this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(217, 261);
             this.DiffFiles.TabIndex = 1;
-            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
-            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
+            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFilesDoubleClick);
             // 
             // DiffContextMenu
             // 
@@ -581,6 +584,7 @@ namespace GitUI
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DiffText.IgnoreWhitespaceChanges = false;
             this.DiffText.IsReadOnly = true;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
@@ -636,8 +640,7 @@ namespace GitUI
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.fileToolStripMenuItem_DropDownOpening);
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.FileToolStripMenuItemDropDownOpening);
             // 
             // openToolStripMenuItem
             // 
@@ -646,14 +649,14 @@ namespace GitUI
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
             // 
             // refreshToolStripMenuItem
             // 
@@ -662,7 +665,7 @@ namespace GitUI
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItemClick);
             // 
             // recentToolStripMenuItem
             // 
@@ -689,7 +692,7 @@ namespace GitUI
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
             this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.fileExplorerToolStripMenuItem.Text = "File Explorer";
-            this.fileExplorerToolStripMenuItem.Click += new System.EventHandler(this.fileExplorerToolStripMenuItem_Click);
+            this.fileExplorerToolStripMenuItem.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
             // toolStripMenuItem1
             // 
@@ -702,7 +705,7 @@ namespace GitUI
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // gitToolStripMenuItem
             // 
@@ -721,21 +724,21 @@ namespace GitUI
             this.gitBashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
-            this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.gitBashToolStripMenuItem_Click_1);
+            this.gitBashToolStripMenuItem.Click += new System.EventHandler(GitBashToolStripMenuItemClick1);
             // 
             // gitGUIToolStripMenuItem
             // 
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
             this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
-            this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.gitGUIToolStripMenuItem_Click);
+            this.gitGUIToolStripMenuItem.Click += new System.EventHandler(GitGuiToolStripMenuItemClick);
             // 
             // kGitToolStripMenuItem
             // 
             this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
             this.kGitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.kGitToolStripMenuItem.Text = "GitK";
-            this.kGitToolStripMenuItem.Click += new System.EventHandler(this.kGitToolStripMenuItem_Click);
+            this.kGitToolStripMenuItem.Click += new System.EventHandler(KGitToolStripMenuItemClick);
             // 
             // commandsToolStripMenuItem
             // 
@@ -771,14 +774,14 @@ namespace GitUI
             this.applyPatchToolStripMenuItem.Name = "applyPatchToolStripMenuItem";
             this.applyPatchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.applyPatchToolStripMenuItem.Text = "Apply patch";
-            this.applyPatchToolStripMenuItem.Click += new System.EventHandler(this.applyPatchToolStripMenuItem_Click);
+            this.applyPatchToolStripMenuItem.Click += new System.EventHandler(this.ApplyPatchToolStripMenuItemClick);
             // 
             // archiveToolStripMenuItem
             // 
             this.archiveToolStripMenuItem.Name = "archiveToolStripMenuItem";
             this.archiveToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.archiveToolStripMenuItem.Text = "Archive";
-            this.archiveToolStripMenuItem.Click += new System.EventHandler(this.archiveToolStripMenuItem_Click);
+            this.archiveToolStripMenuItem.Click += new System.EventHandler(this.ArchiveToolStripMenuItemClick);
             // 
             // checkoutBranchToolStripMenuItem
             // 
@@ -788,14 +791,14 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemPeriod)));
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
-            this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.checkoutBranchToolStripMenuItem_Click);
+            this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.CheckoutBranchToolStripMenuItemClick);
             // 
             // checkoutToolStripMenuItem
             // 
             this.checkoutToolStripMenuItem.Name = "checkoutToolStripMenuItem";
             this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.checkoutToolStripMenuItem.Text = "Checkout revision";
-            this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.checkoutToolStripMenuItem_Click);
+            this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.CheckoutToolStripMenuItemClick);
             // 
             // cherryPickToolStripMenuItem
             // 
@@ -803,14 +806,14 @@ namespace GitUI
             this.cherryPickToolStripMenuItem.Name = "cherryPickToolStripMenuItem";
             this.cherryPickToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.cherryPickToolStripMenuItem.Text = "Cherry pick";
-            this.cherryPickToolStripMenuItem.Click += new System.EventHandler(this.cherryPickToolStripMenuItem_Click);
+            this.cherryPickToolStripMenuItem.Click += new System.EventHandler(this.CherryPickToolStripMenuItemClick);
             // 
             // cleanupToolStripMenuItem
             // 
             this.cleanupToolStripMenuItem.Name = "cleanupToolStripMenuItem";
             this.cleanupToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.cleanupToolStripMenuItem.Text = "Cleanup";
-            this.cleanupToolStripMenuItem.Click += new System.EventHandler(this.cleanupToolStripMenuItem_Click);
+            this.cleanupToolStripMenuItem.Click += new System.EventHandler(CleanupToolStripMenuItemClick);
             // 
             // cloneToolStripMenuItem
             // 
@@ -818,7 +821,7 @@ namespace GitUI
             this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
             this.cloneToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.cloneToolStripMenuItem.Text = "Clone repository";
-            this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
+            this.cloneToolStripMenuItem.Click += new System.EventHandler(this.CloneToolStripMenuItemClick);
             // 
             // commitToolStripMenuItem
             // 
@@ -827,7 +830,7 @@ namespace GitUI
             this.commitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Right)));
             this.commitToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.commitToolStripMenuItem.Text = "Commit";
-            this.commitToolStripMenuItem.Click += new System.EventHandler(this.commitToolStripMenuItem_Click);
+            this.commitToolStripMenuItem.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
             // 
             // branchToolStripMenuItem
             // 
@@ -835,7 +838,7 @@ namespace GitUI
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.branchToolStripMenuItem.Text = "Create branch";
-            this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
+            this.branchToolStripMenuItem.Click += new System.EventHandler(this.BranchToolStripMenuItemClick);
             // 
             // tagToolStripMenuItem
             // 
@@ -843,28 +846,28 @@ namespace GitUI
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.tagToolStripMenuItem.Text = "Create tag";
-            this.tagToolStripMenuItem.Click += new System.EventHandler(this.tagToolStripMenuItem_Click);
+            this.tagToolStripMenuItem.Click += new System.EventHandler(this.TagToolStripMenuItemClick);
             // 
             // deleteBranchToolStripMenuItem
             // 
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
-            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchToolStripMenuItem_Click);
+            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.DeleteBranchToolStripMenuItemClick);
             // 
             // deleteTagToolStripMenuItem
             // 
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
-            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.deleteTagToolStripMenuItem_Click);
+            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.DeleteTagToolStripMenuItemClick);
             // 
             // formatPatchToolStripMenuItem
             // 
             this.formatPatchToolStripMenuItem.Name = "formatPatchToolStripMenuItem";
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch";
-            this.formatPatchToolStripMenuItem.Click += new System.EventHandler(this.formatPatchToolStripMenuItem_Click);
+            this.formatPatchToolStripMenuItem.Click += new System.EventHandler(this.FormatPatchToolStripMenuItemClick);
             // 
             // initNewRepositoryToolStripMenuItem
             // 
@@ -872,7 +875,7 @@ namespace GitUI
             this.initNewRepositoryToolStripMenuItem.Name = "initNewRepositoryToolStripMenuItem";
             this.initNewRepositoryToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.initNewRepositoryToolStripMenuItem.Text = "Init new repository";
-            this.initNewRepositoryToolStripMenuItem.Click += new System.EventHandler(this.initNewRepositoryToolStripMenuItem_Click);
+            this.initNewRepositoryToolStripMenuItem.Click += new System.EventHandler(this.InitNewRepositoryToolStripMenuItemClick);
             // 
             // mergeBranchToolStripMenuItem
             // 
@@ -880,7 +883,7 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.mergeBranchToolStripMenuItem.Text = "Merge branches";
-            this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.mergeBranchToolStripMenuItem_Click);
+            this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.MergeBranchToolStripMenuItemClick);
             // 
             // pullToolStripMenuItem
             // 
@@ -889,7 +892,7 @@ namespace GitUI
             this.pullToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
             this.pullToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.pullToolStripMenuItem.Text = "Pull";
-            this.pullToolStripMenuItem.Click += new System.EventHandler(this.pullToolStripMenuItem_Click);
+            this.pullToolStripMenuItem.Click += new System.EventHandler(this.PullToolStripMenuItemClick);
             // 
             // pushToolStripMenuItem
             // 
@@ -898,21 +901,21 @@ namespace GitUI
             this.pushToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
             this.pushToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.pushToolStripMenuItem.Text = "Push";
-            this.pushToolStripMenuItem.Click += new System.EventHandler(this.pushToolStripMenuItem_Click);
+            this.pushToolStripMenuItem.Click += new System.EventHandler(this.PushToolStripMenuItemClick);
             // 
             // rebaseToolStripMenuItem
             // 
             this.rebaseToolStripMenuItem.Name = "rebaseToolStripMenuItem";
             this.rebaseToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.rebaseToolStripMenuItem.Text = "Rebase";
-            this.rebaseToolStripMenuItem.Click += new System.EventHandler(this.rebaseToolStripMenuItem_Click);
+            this.rebaseToolStripMenuItem.Click += new System.EventHandler(this.RebaseToolStripMenuItemClick);
             // 
             // runMergetoolToolStripMenuItem
             // 
             this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
             this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.runMergetoolToolStripMenuItem.Text = "Solve mergeconflicts";
-            this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.runMergetoolToolStripMenuItem_Click);
+            this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.RunMergetoolToolStripMenuItemClick);
             // 
             // stashToolStripMenuItem
             // 
@@ -920,21 +923,21 @@ namespace GitUI
             this.stashToolStripMenuItem.Name = "stashToolStripMenuItem";
             this.stashToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.stashToolStripMenuItem.Text = "Stash changes";
-            this.stashToolStripMenuItem.Click += new System.EventHandler(this.stashToolStripMenuItem_Click);
+            this.stashToolStripMenuItem.Click += new System.EventHandler(this.StashToolStripMenuItemClick);
             // 
             // viewDiffToolStripMenuItem
             // 
             this.viewDiffToolStripMenuItem.Name = "viewDiffToolStripMenuItem";
             this.viewDiffToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.viewDiffToolStripMenuItem.Text = "View diff";
-            this.viewDiffToolStripMenuItem.Click += new System.EventHandler(this.viewDiffToolStripMenuItem_Click);
+            this.viewDiffToolStripMenuItem.Click += new System.EventHandler(this.ViewDiffToolStripMenuItemClick);
             // 
             // patchToolStripMenuItem
             // 
             this.patchToolStripMenuItem.Name = "patchToolStripMenuItem";
             this.patchToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.patchToolStripMenuItem.Text = "View patch file";
-            this.patchToolStripMenuItem.Click += new System.EventHandler(this.patchToolStripMenuItem_Click);
+            this.patchToolStripMenuItem.Click += new System.EventHandler(this.PatchToolStripMenuItemClick);
             // 
             // remotesToolStripMenuItem
             // 
@@ -951,7 +954,7 @@ namespace GitUI
             this.manageRemoteRepositoriesToolStripMenuItem1.Name = "manageRemoteRepositoriesToolStripMenuItem1";
             this.manageRemoteRepositoriesToolStripMenuItem1.Size = new System.Drawing.Size(222, 22);
             this.manageRemoteRepositoriesToolStripMenuItem1.Text = "Manage remote repositories";
-            this.manageRemoteRepositoriesToolStripMenuItem1.Click += new System.EventHandler(this.manageRemoteRepositoriesToolStripMenuItem_Click);
+            this.manageRemoteRepositoriesToolStripMenuItem1.Click += new System.EventHandler(this.ManageRemoteRepositoriesToolStripMenuItemClick);
             // 
             // toolStripSeparator6
             // 
@@ -974,7 +977,7 @@ namespace GitUI
             this.startAuthenticationAgentToolStripMenuItem.Name = "startAuthenticationAgentToolStripMenuItem";
             this.startAuthenticationAgentToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.startAuthenticationAgentToolStripMenuItem.Text = "Start authentication agent";
-            this.startAuthenticationAgentToolStripMenuItem.Click += new System.EventHandler(this.startAuthenticationAgentToolStripMenuItem_Click);
+            this.startAuthenticationAgentToolStripMenuItem.Click += new System.EventHandler(StartAuthenticationAgentToolStripMenuItemClick);
             // 
             // generateOrImportKeyToolStripMenuItem
             // 
@@ -982,7 +985,7 @@ namespace GitUI
             this.generateOrImportKeyToolStripMenuItem.Name = "generateOrImportKeyToolStripMenuItem";
             this.generateOrImportKeyToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.generateOrImportKeyToolStripMenuItem.Text = "Generate or import key";
-            this.generateOrImportKeyToolStripMenuItem.Click += new System.EventHandler(this.generateOrImportKeyToolStripMenuItem_Click);
+            this.generateOrImportKeyToolStripMenuItem.Click += new System.EventHandler(GenerateOrImportKeyToolStripMenuItemClick);
             // 
             // submodulesToolStripMenuItem
             // 
@@ -991,7 +994,7 @@ namespace GitUI
             this.toolStripSeparator8,
             this.updateAllSubmodulesRecursiveToolStripMenuItem,
             this.initializeAllSubmodulesRecursiveToolStripMenuItem,
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem,
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem,
             this.toolStripSeparator14,
             this.updateAllSubmodulesToolStripMenuItem,
             this.initializeAllSubmodulesToolStripMenuItem,
@@ -1007,7 +1010,7 @@ namespace GitUI
             this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
             this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules";
-            this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.manageSubmodulesToolStripMenuItem_Click);
+            this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.ManageSubmodulesToolStripMenuItemClick);
             // 
             // toolStripSeparator8
             // 
@@ -1019,21 +1022,21 @@ namespace GitUI
             this.updateAllSubmodulesRecursiveToolStripMenuItem.Name = "updateAllSubmodulesRecursiveToolStripMenuItem";
             this.updateAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.updateAllSubmodulesRecursiveToolStripMenuItem.Text = "Update all submodules recursive";
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesRecursiveToolStripMenuItem_Click);
+            this.updateAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.UpdateAllSubmodulesRecursiveToolStripMenuItemClick);
             // 
             // initializeAllSubmodulesRecursiveToolStripMenuItem
             // 
             this.initializeAllSubmodulesRecursiveToolStripMenuItem.Name = "initializeAllSubmodulesRecursiveToolStripMenuItem";
             this.initializeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.initializeAllSubmodulesRecursiveToolStripMenuItem.Text = "Initialize all submodules recursive";
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesRecursiveToolStripMenuItem_Click);
+            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.InitializeAllSubmodulesRecursiveToolStripMenuItemClick);
             // 
-            // synchronizeAlSubmodulesRecursiveToolStripMenuItem
+            // synchronizeAllSubmodulesRecursiveToolStripMenuItem
             // 
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAlSubmodulesRecursiveToolStripMenuItem";
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize al submodules recursive";
-            this.synchronizeAlSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.synchronizeAlSubmodulesRecursiveToolStripMenuItem_Click);
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAlSubmodulesRecursiveToolStripMenuItem";
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize al submodules recursive";
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick);
             // 
             // toolStripSeparator14
             // 
@@ -1045,21 +1048,21 @@ namespace GitUI
             this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
             this.updateAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
-            this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.updateAllSubmodulesToolStripMenuItem_Click);
+            this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.UpdateAllSubmodulesToolStripMenuItemClick);
             // 
             // initializeAllSubmodulesToolStripMenuItem
             // 
             this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
             this.initializeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
-            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.initializeAllSubmodulesToolStripMenuItem_Click);
+            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.InitializeAllSubmodulesToolStripMenuItemClick);
             // 
             // syncronizeAllSubmodulesToolStripMenuItem
             // 
             this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
             this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
-            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.syncronizeAllSubmodulesToolStripMenuItem_Click);
+            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.SyncronizeAllSubmodulesToolStripMenuItemClick);
             // 
             // toolStripSeparator10
             // 
@@ -1073,8 +1076,7 @@ namespace GitUI
             this.openSubmoduleToolStripMenuItem.Name = "openSubmoduleToolStripMenuItem";
             this.openSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.openSubmoduleToolStripMenuItem.Text = "Browse submodule";
-            this.openSubmoduleToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openSubmoduleToolStripMenuItem_DropDownOpening);
-            this.openSubmoduleToolStripMenuItem.Click += new System.EventHandler(this.openSubmoduleToolStripMenuItem_Click);
+            this.openSubmoduleToolStripMenuItem.DropDownOpening += new System.EventHandler(this.OpenSubmoduleToolStripMenuItemDropDownOpening);
             // 
             // toolStripSeparator11
             // 
@@ -1095,7 +1097,7 @@ namespace GitUI
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(SettingsToolStripMenuItemClick);
             // 
             // toolStripSeparator15
             // 
@@ -1130,14 +1132,14 @@ namespace GitUI
             this.compressGitDatabaseToolStripMenuItem.Name = "compressGitDatabaseToolStripMenuItem";
             this.compressGitDatabaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.compressGitDatabaseToolStripMenuItem.Text = "Compress git database";
-            this.compressGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.compressGitDatabaseToolStripMenuItem_Click);
+            this.compressGitDatabaseToolStripMenuItem.Click += new System.EventHandler(CompressGitDatabaseToolStripMenuItemClick);
             // 
             // verifyGitDatabaseToolStripMenuItem
             // 
             this.verifyGitDatabaseToolStripMenuItem.Name = "verifyGitDatabaseToolStripMenuItem";
             this.verifyGitDatabaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.verifyGitDatabaseToolStripMenuItem.Text = "Recover lost objects";
-            this.verifyGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.verifyGitDatabaseToolStripMenuItem_Click);
+            this.verifyGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.VerifyGitDatabaseToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -1149,14 +1151,14 @@ namespace GitUI
             this.editgitignoreToolStripMenuItem1.Name = "editgitignoreToolStripMenuItem1";
             this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore";
-            this.editgitignoreToolStripMenuItem1.Click += new System.EventHandler(this.editgitignoreToolStripMenuItem1_Click);
+            this.editgitignoreToolStripMenuItem1.Click += new System.EventHandler(this.EditGitignoreToolStripMenuItem1Click);
             // 
             // editmailmapToolStripMenuItem
             // 
             this.editmailmapToolStripMenuItem.Name = "editmailmapToolStripMenuItem";
             this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
-            this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.editmailmapToolStripMenuItem_Click);
+            this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
             // 
             // toolStripSeparator13
             // 
@@ -1169,7 +1171,7 @@ namespace GitUI
             this.settingsToolStripMenuItem2.Name = "settingsToolStripMenuItem2";
             this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(161, 22);
             this.settingsToolStripMenuItem2.Text = "Settings";
-            this.settingsToolStripMenuItem2.Click += new System.EventHandler(this.settingsToolStripMenuItem2_Click);
+            this.settingsToolStripMenuItem2.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1194,7 +1196,7 @@ namespace GitUI
             this.commitcountPerUserToolStripMenuItem.Name = "commitcountPerUserToolStripMenuItem";
             this.commitcountPerUserToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.commitcountPerUserToolStripMenuItem.Text = "Commits per user";
-            this.commitcountPerUserToolStripMenuItem.Click += new System.EventHandler(this.commitcountPerUserToolStripMenuItem_Click);
+            this.commitcountPerUserToolStripMenuItem.Click += new System.EventHandler(CommitcountPerUserToolStripMenuItemClick);
             // 
             // gitcommandLogToolStripMenuItem
             // 
@@ -1202,7 +1204,7 @@ namespace GitUI
             this.gitcommandLogToolStripMenuItem.Name = "gitcommandLogToolStripMenuItem";
             this.gitcommandLogToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.gitcommandLogToolStripMenuItem.Text = "Gitcommand log";
-            this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.gitcommandLogToolStripMenuItem_Click);
+            this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(GitcommandLogToolStripMenuItemClick);
             // 
             // toolStripSeparator7
             // 
@@ -1214,14 +1216,14 @@ namespace GitUI
             this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
             this.userManualToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.userManualToolStripMenuItem.Text = "User Manual";
-            this.userManualToolStripMenuItem.Click += new System.EventHandler(this.userManualToolStripMenuItem_Click);
+            this.userManualToolStripMenuItem.Click += new System.EventHandler(UserManualToolStripMenuItemClick);
             // 
             // changelogToolStripMenuItem
             // 
             this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
             this.changelogToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.changelogToolStripMenuItem.Text = "Changelog";
-            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.changelogToolStripMenuItem_Click);
+            this.changelogToolStripMenuItem.Click += new System.EventHandler(ChangelogToolStripMenuItemClick);
             // 
             // toolStripSeparator3
             // 
@@ -1233,7 +1235,7 @@ namespace GitUI
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
             this.translateToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.translateToolStripMenuItem.Text = "Translate";
-            this.translateToolStripMenuItem.Click += new System.EventHandler(this.translateToolStripMenuItem_Click);
+            this.translateToolStripMenuItem.Click += new System.EventHandler(TranslateToolStripMenuItemClick);
             // 
             // toolStripSeparator16
             // 
@@ -1245,7 +1247,7 @@ namespace GitUI
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
             this.donateToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.donateToolStripMenuItem.Text = "Donate";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+            this.donateToolStripMenuItem.Click += new System.EventHandler(DonateToolStripMenuItemClick);
             // 
             // aboutToolStripMenuItem
             // 
@@ -1253,7 +1255,7 @@ namespace GitUI
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(AboutToolStripMenuItemClick);
             // 
             // gitItemBindingSource
             // 
@@ -1265,7 +1267,7 @@ namespace GitUI
             // 
             // FormBrowse
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(796, 573);
@@ -1273,9 +1275,8 @@ namespace GitUI
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
-            this.Load += new System.EventHandler(this.Browse_Load);
-            this.Shown += new System.EventHandler(this.FormBrowse_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowse_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowseFormClosing);
+            this.Load += new System.EventHandler(this.BrowseLoad);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -1411,7 +1412,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem updateAllSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem initializeAllSubmodulesRecursiveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem synchronizeAlSubmodulesRecursiveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem synchronizeAllSubmodulesRecursiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
