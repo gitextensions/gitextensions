@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
-using GitCommands;
 
 namespace GitUI
 {
@@ -13,10 +8,11 @@ namespace GitUI
     {
         public FormCheckout()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
@@ -26,43 +22,28 @@ namespace GitUI
                     return;
                 }
 
-                string command = "checkout \"" + RevisionGrid.GetRevisions()[0].Guid + "\"";
-                if(Force.Checked)
+                var command = "checkout \"" + RevisionGrid.GetRevisions()[0].Guid + "\"";
+                if (Force.Checked)
                     command += " --force";
 
                 new FormProcess(command).ShowDialog();
 
-                //CheckoutDto dto = new CheckoutDto(RevisionGrid.GetRevisions()[0].Guid);
-                //GitCommands.Checkout commit = new GitCommands.Checkout(dto);
-                //commit.Execute();
-
-                //MessageBox.Show("Command executed \n" + dto.Result, "Checkout");
-
                 Close();
             }
-            catch
+            catch(Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
 
-        private void FormCheckout_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormCheckoutFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("checkout");
         }
 
-        private void FormCheckout_Load(object sender, EventArgs e)
+        private void FormCheckoutLoad(object sender, EventArgs e)
         {
             RestorePosition("checkout");
-        }
-
-        private void Branch_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }
