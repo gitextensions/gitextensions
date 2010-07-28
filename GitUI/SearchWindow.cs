@@ -26,43 +26,28 @@ namespace GitUI
             this.getCandidates = getCandidates;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void comboBox1_TextUpdate(object sender, EventArgs e)
-        {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-            }
-            
-            backgroundThread = new Thread(SearchForCandidates)
-                               {
-                                   IsBackground = true,
-                                   Priority = ThreadPriority.BelowNormal
-                               };
-            backgroundThread.SetApartmentState(ApartmentState.STA);
-            
-            m_SelectedText = comboBox1.Text;
-            backgroundThread.Start();
-        }
-        
         private void SearchForCandidates()
         {
             IList<T> candidates = getCandidates(m_SelectedText);
             BeginInvoke(new Action(delegate
             {
-                var selectionStart = comboBox1.SelectionStart;
-                var selectionLength = comboBox1.SelectionLength;
-                comboBox1.Items.Clear();
+                var selectionStart = textBox1.SelectionStart;
+                var selectionLength = textBox1.SelectionLength;
+                listBox1.BeginUpdate();
+                listBox1.Items.Clear();
+                
                 for (int i = 0; i < candidates.Count && i < 10; i++)
                 {
-                    comboBox1.Items.Add(candidates[i]);
+                    listBox1.Items.Add(candidates[i]);
                 }
-                comboBox1.SelectionStart = selectionStart;
-                comboBox1.SelectionLength = selectionLength;
+                listBox1.EndUpdate();
+                if (candidates.Count > 0)
+                {
+                    listBox1.SelectedIndex = 0;
+                }
+                textBox1.SelectionStart = selectionStart;
+                textBox1.SelectionLength = selectionLength;
+                
             }));
         }
 
@@ -70,21 +55,7 @@ namespace GitUI
         {
             get
             {
-                return (T)comboBox1.SelectedItem;
-            }
-        }
-
-        private void comboBox1_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Close();
-            }
-
-            if (e.KeyCode == Keys.Escape)
-            {
-                comboBox1.SelectedItem = null;
-                Close();
+                return (T)listBox1.SelectedItem;
             }
         }
 
@@ -93,7 +64,68 @@ namespace GitUI
             backgroundThread.Abort();
         }
 
-        private void comboBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (backgroundThread != null)
+            {
+                backgroundThread.Abort();
+            }
+
+            backgroundThread = new Thread(SearchForCandidates)
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.BelowNormal
+            };
+            backgroundThread.SetApartmentState(ApartmentState.STA);
+
+            m_SelectedText = textBox1.Text;
+            backgroundThread.Start();
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Close();
+            }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                listBox1.SelectedItem = null;
+                Close();
+            }
+            
+            
+            e.Handled = true;
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down)
+            {
+                if (listBox1.Items.Count > 1)
+                {
+                    listBox1.SelectedIndex = (listBox1.SelectedIndex + 1) % listBox1.Items.Count;
+                    e.Handled = true;
+                }
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+                if (listBox1.Items.Count > 1)
+                {
+                    listBox1.SelectedIndex = (listBox1.SelectedIndex - 1) % listBox1.Items.Count;
+                    e.Handled = true;
+                }
+            }
+            
+        }
+
+        private void listBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            textBox1_KeyUp(sender, e);
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             Close();
         }
