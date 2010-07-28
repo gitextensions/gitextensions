@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using System;
+
+namespace GitUI
 {
     partial class FormRemotes
     {
@@ -122,7 +124,7 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(177, 186);
             this.Remotes.TabIndex = 0;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -166,7 +168,7 @@
             this.LoadSSHKey.TabIndex = 9;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
             // PuttySshKey
             // 
@@ -174,7 +176,6 @@
             this.PuttySshKey.Name = "PuttySshKey";
             this.PuttySshKey.Size = new System.Drawing.Size(246, 20);
             this.PuttySshKey.TabIndex = 7;
-            this.PuttySshKey.TextChanged += new System.EventHandler(this.PuttySshKey_TextChanged);
             // 
             // TestConnection
             // 
@@ -186,7 +187,7 @@
             this.TestConnection.TabIndex = 8;
             this.TestConnection.Text = "Test connection";
             this.TestConnection.UseVisualStyleBackColor = true;
-            this.TestConnection.Click += new System.EventHandler(this.TestConnection_Click);
+            this.TestConnection.Click += new System.EventHandler(this.TestConnectionClick);
             // 
             // label3
             // 
@@ -205,7 +206,7 @@
             this.SshBrowse.TabIndex = 6;
             this.SshBrowse.Text = "Browse";
             this.SshBrowse.UseVisualStyleBackColor = true;
-            this.SshBrowse.Click += new System.EventHandler(this.SshBrowse_Click);
+            this.SshBrowse.Click += new System.EventHandler(this.SshBrowseClick);
             // 
             // Delete
             // 
@@ -215,7 +216,7 @@
             this.Delete.TabIndex = 7;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
-            this.Delete.Click += new System.EventHandler(this.Delete_Click);
+            this.Delete.Click += new System.EventHandler(this.DeleteClick);
             // 
             // New
             // 
@@ -225,7 +226,7 @@
             this.New.TabIndex = 6;
             this.New.Text = "New";
             this.New.UseVisualStyleBackColor = true;
-            this.New.Click += new System.EventHandler(this.New_Click);
+            this.New.Click += new System.EventHandler(this.NewClick);
             // 
             // Save
             // 
@@ -235,7 +236,7 @@
             this.Save.TabIndex = 5;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this.Save.Click += new System.EventHandler(this.SaveClick);
             // 
             // RemoteName
             // 
@@ -243,7 +244,6 @@
             this.RemoteName.Name = "RemoteName";
             this.RemoteName.Size = new System.Drawing.Size(246, 20);
             this.RemoteName.TabIndex = 1;
-            this.RemoteName.TextChanged += new System.EventHandler(this.RemoteName_TextChanged);
             // 
             // label1
             // 
@@ -270,8 +270,7 @@
             this.Url.Name = "Url";
             this.Url.Size = new System.Drawing.Size(246, 21);
             this.Url.TabIndex = 3;
-            this.Url.SelectedIndexChanged += new System.EventHandler(this.Url_SelectedIndexChanged);
-            this.Url.DropDown += new System.EventHandler(this.Url_DropDown);
+            this.Url.DropDown += new System.EventHandler(this.UrlDropDown);
             // 
             // Browse
             // 
@@ -281,7 +280,7 @@
             this.Browse.TabIndex = 4;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // tabControl1
             // 
@@ -390,8 +389,7 @@
             this.RemoteBranches.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.RemoteBranches.Size = new System.Drawing.Size(376, 155);
             this.RemoteBranches.TabIndex = 0;
-            this.RemoteBranches.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.RemoteBranches_RowValidated);
-            this.RemoteBranches.SelectionChanged += new System.EventHandler(this.RemoteBranches_SelectionChanged);
+            this.RemoteBranches.SelectionChanged += new System.EventHandler(this.RemoteBranchesSelectionChanged);
             // 
             // BranchName
             // 
@@ -506,7 +504,7 @@
             this.SaveDefaultPushPull.TabIndex = 6;
             this.SaveDefaultPushPull.Text = "Save";
             this.SaveDefaultPushPull.UseVisualStyleBackColor = true;
-            this.SaveDefaultPushPull.Click += new System.EventHandler(this.SaveDefaultPushPull_Click);
+            this.SaveDefaultPushPull.Click += new System.EventHandler(this.SaveDefaultPushPullClick);
             // 
             // LocalBranchNameEdit
             // 
@@ -514,7 +512,6 @@
             this.LocalBranchNameEdit.Name = "LocalBranchNameEdit";
             this.LocalBranchNameEdit.Size = new System.Drawing.Size(133, 20);
             this.LocalBranchNameEdit.TabIndex = 5;
-            this.LocalBranchNameEdit.TextChanged += new System.EventHandler(this.LocalBranchNameEdit_TextChanged);
             // 
             // RemoteRepositoryCombo
             // 
@@ -523,8 +520,7 @@
             this.RemoteRepositoryCombo.Name = "RemoteRepositoryCombo";
             this.RemoteRepositoryCombo.Size = new System.Drawing.Size(133, 21);
             this.RemoteRepositoryCombo.TabIndex = 4;
-            this.RemoteRepositoryCombo.SelectedIndexChanged += new System.EventHandler(this.RemoteRepositoryCombo_SelectedIndexChanged);
-            this.RemoteRepositoryCombo.Validated += new System.EventHandler(this.RemoteRepositoryCombo_Validated);
+            this.RemoteRepositoryCombo.Validated += new System.EventHandler(this.RemoteRepositoryComboValidated);
             // 
             // DefaultMergeWithCombo
             // 
@@ -533,9 +529,8 @@
             this.DefaultMergeWithCombo.Name = "DefaultMergeWithCombo";
             this.DefaultMergeWithCombo.Size = new System.Drawing.Size(133, 21);
             this.DefaultMergeWithCombo.TabIndex = 3;
-            this.DefaultMergeWithCombo.SelectedIndexChanged += new System.EventHandler(this.DefaultMergeWithCombo_SelectedIndexChanged);
-            this.DefaultMergeWithCombo.Validated += new System.EventHandler(this.DefaultMergeWithCombo_Validated);
-            this.DefaultMergeWithCombo.DropDown += new System.EventHandler(this.DefaultMergeWithCombo_DropDown);
+            this.DefaultMergeWithCombo.Validated += new System.EventHandler(this.DefaultMergeWithComboValidated);
+            this.DefaultMergeWithCombo.DropDown += new System.EventHandler(this.DefaultMergeWithComboDropDown);
             // 
             // label6
             // 
@@ -572,7 +567,7 @@
             this.Prune.TabIndex = 11;
             this.Prune.Text = "Prune remote branches";
             this.Prune.UseVisualStyleBackColor = true;
-            this.Prune.Click += new System.EventHandler(this.Prune_Click);
+            this.Prune.Click += new System.EventHandler(this.PruneClick);
             // 
             // UpdateBranch
             // 
@@ -582,7 +577,7 @@
             this.UpdateBranch.TabIndex = 10;
             this.UpdateBranch.Text = "Update all remote branch info";
             this.UpdateBranch.UseVisualStyleBackColor = true;
-            this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranch_Click);
+            this.UpdateBranch.Click += new System.EventHandler(UpdateBranchClick);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -616,7 +611,7 @@
             this.Name = "FormRemotes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remote repositories";
-            this.Load += new System.EventHandler(this.FormRemotes_Load);
+            this.Load += new System.EventHandler(this.FormRemotesLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
