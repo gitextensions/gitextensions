@@ -52,7 +52,7 @@
             this.Created.TabIndex = 1;
             this.Created.Text = "Created";
             this.Created.UseVisualStyleBackColor = true;
-            this.Created.Click += new System.EventHandler(this.Created_Click);
+            this.Created.Click += new System.EventHandler(this.CreatedClick);
             // 
             // Deleted
             // 
@@ -62,7 +62,7 @@
             this.Deleted.TabIndex = 2;
             this.Deleted.Text = "Deleted";
             this.Deleted.UseVisualStyleBackColor = true;
-            this.Deleted.Click += new System.EventHandler(this.Deleted_Click);
+            this.Deleted.Click += new System.EventHandler(this.DeletedClick);
             // 
             // Abort
             // 
@@ -72,7 +72,7 @@
             this.Abort.TabIndex = 3;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            this.Abort.Click += new System.EventHandler(this.AbortClick);
             // 
             // FormModifiedDeletedCreated
             // 
