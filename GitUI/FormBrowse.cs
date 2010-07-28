@@ -909,16 +909,21 @@ namespace GitUI
 
         private void OpenSubmoduleToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            LoadSubmodulesIntoDropDownMenu();
+        }
+
+        private void LoadSubmodulesIntoDropDownMenu()
+        {
             Cursor.Current = Cursors.WaitCursor;
 
-            openSubmoduleToolStripMenuItem.DropDownItems.Clear();
+            RemoveSubmoduleButtons();
 
             var submodules = (new GitCommands.GitCommands()).GetSubmodules();
 
             foreach (var submodule in submodules)
             {
                 var submenu = new ToolStripButton(submodule.Name);
-                submenu.Click += SubmenuClick;
+                submenu.Click += SubmoduleToolStripButtonClick;
                 submenu.Width = 200;
                 openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
             }
@@ -927,7 +932,14 @@ namespace GitUI
                 openSubmoduleToolStripMenuItem.DropDownItems.Add("No submodules");
         }
 
-        private void SubmenuClick(object sender, EventArgs e)
+        private void RemoveSubmoduleButtons()
+        {
+            foreach (ToolStripButton toolStripButton in openSubmoduleToolStripMenuItem.DropDownItems)
+                toolStripButton.Click -= SubmoduleToolStripButtonClick;
+            openSubmoduleToolStripMenuItem.DropDownItems.Clear();
+        }
+
+        private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
             var button = sender as ToolStripButton;
 
