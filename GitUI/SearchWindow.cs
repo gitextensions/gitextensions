@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,6 +25,7 @@ namespace GitUI
                 throw new InvalidOperationException("getCandidates cannot be null");
             }
             this.getCandidates = getCandidates;
+            AutoFit();
         }
 
         private void SearchForCandidates()
@@ -35,11 +37,12 @@ namespace GitUI
                 var selectionLength = textBox1.SelectionLength;
                 listBox1.BeginUpdate();
                 listBox1.Items.Clear();
-                
-                for (int i = 0; i < candidates.Count && i < 10; i++)
+
+                for (int i = 0; i < candidates.Count && i < 20; i++)
                 {
                     listBox1.Items.Add(candidates[i]);
                 }
+                
                 listBox1.EndUpdate();
                 if (candidates.Count > 0)
                 {
@@ -47,8 +50,30 @@ namespace GitUI
                 }
                 textBox1.SelectionStart = selectionStart;
                 textBox1.SelectionLength = selectionLength;
-                
+                AutoFit();
             }));
+        }
+
+        private void AutoFit()
+        {
+            if (listBox1.Items.Count == 0)
+                listBox1.Visible = false;
+                
+            listBox1.Visible = true;
+                
+            int width = 300;
+            using (Graphics g = listBox1.CreateGraphics())
+            {
+                for (int i1 = 0; i1 < listBox1.Items.Count; i1++)
+                {
+                    int itemWidth = Convert.ToInt32(g.MeasureString(Convert.ToString(listBox1.Items[i1]), listBox1.Font).Width);
+                    width = Math.Max(width, itemWidth);
+                }
+            }
+            listBox1.Width = width;
+            textBox1.Width = width;
+            groupBox1.Width = width + 12;
+            this.Width = groupBox1.Width + 15;
         }
 
         public T SelectedItem
@@ -61,6 +86,10 @@ namespace GitUI
 
         private void SearchWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (backgroundThread == null)
+            {
+                return;
+            }
             backgroundThread.Abort();
         }
 
@@ -113,7 +142,12 @@ namespace GitUI
             {
                 if (listBox1.Items.Count > 1)
                 {
-                    listBox1.SelectedIndex = (listBox1.SelectedIndex - 1) % listBox1.Items.Count;
+                    var newSelectedIndex =listBox1.SelectedIndex - 1;
+                    if (newSelectedIndex < 0)
+                    {
+                        newSelectedIndex = listBox1.Items.Count - 1;
+                    }
+                    listBox1.SelectedIndex = newSelectedIndex;
                     e.Handled = true;
                 }
             }
