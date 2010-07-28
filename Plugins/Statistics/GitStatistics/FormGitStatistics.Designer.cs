@@ -136,7 +136,6 @@ namespace GitStatistics
             // TotalLinesOfCode
             // 
             this.TotalLinesOfCode.AutoSize = true;
-            this.TotalLinesOfCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TotalLinesOfCode.Location = new System.Drawing.Point(5, 2);
             this.TotalLinesOfCode.Name = "TotalLinesOfCode";
             this.TotalLinesOfCode.Size = new System.Drawing.Size(137, 16);
@@ -201,7 +200,6 @@ namespace GitStatistics
             // TotalLinesOfCode2
             // 
             this.TotalLinesOfCode2.AutoSize = true;
-            this.TotalLinesOfCode2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TotalLinesOfCode2.Location = new System.Drawing.Point(8, 5);
             this.TotalLinesOfCode2.Name = "TotalLinesOfCode2";
             this.TotalLinesOfCode2.Size = new System.Drawing.Size(137, 16);
@@ -266,7 +264,6 @@ namespace GitStatistics
             // TotalLinesOfTestCode
             // 
             this.TotalLinesOfTestCode.AutoSize = true;
-            this.TotalLinesOfTestCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TotalLinesOfTestCode.Location = new System.Drawing.Point(8, 5);
             this.TotalLinesOfTestCode.Name = "TotalLinesOfTestCode";
             this.TotalLinesOfTestCode.Size = new System.Drawing.Size(137, 16);
@@ -332,7 +329,6 @@ namespace GitStatistics
             // TotalCommits
             // 
             this.TotalCommits.AutoSize = true;
-            this.TotalCommits.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TotalCommits.Location = new System.Drawing.Point(5, 2);
             this.TotalCommits.Name = "TotalCommits";
             this.TotalCommits.Size = new System.Drawing.Size(105, 16);
@@ -368,7 +364,6 @@ namespace GitStatistics
             // LoadingLabel
             // 
             this.LoadingLabel.AutoSize = true;
-            this.LoadingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoadingLabel.Location = new System.Drawing.Point(315, 26);
             this.LoadingLabel.Name = "LoadingLabel";
             this.LoadingLabel.Size = new System.Drawing.Size(103, 24);

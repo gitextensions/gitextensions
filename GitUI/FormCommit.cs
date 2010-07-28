@@ -52,6 +52,9 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent(); Translate();
+
+            SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+
             SelectedDiff.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(SelectedDiff_ExtraDiffArgumentsChanged);
 
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, closeDialogAfterCommitTooltip.Text);
