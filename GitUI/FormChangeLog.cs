@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitUI.Properties;
 
@@ -13,15 +8,16 @@ namespace GitUI
     {
         public FormChangeLog()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void FormChangeLog1_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormChangeLog1FormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("change-log");
         }
 
-        private void FormChangeLog1_Load(object sender, EventArgs e)
+        private void FormChangeLog1Load(object sender, EventArgs e)
         {
             RestorePosition("change-log");
             ChangeLog.Text = Resources.ChangeLog;
