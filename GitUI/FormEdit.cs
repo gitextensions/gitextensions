@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -12,17 +7,18 @@ namespace GitUI
     {
         public FormEdit(string text)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             Viewer.ViewText("", text);
             Viewer.IsReadOnly = false;
         }
 
-        private void FormEdit_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormEditFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("edit");
         }
 
-        private void FormEdit_Load(object sender, EventArgs e)
+        private void FormEditLoad(object sender, EventArgs e)
         {
             RestorePosition("edit");
         }
