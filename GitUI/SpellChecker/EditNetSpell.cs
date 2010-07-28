@@ -21,6 +21,8 @@ namespace GitUI.SpellChecker
             InitializeComponent();
             Translate();
 
+            EmptyLabel.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+
             _customUnderlines = new SpellCheckEditControl(TextBox);
 
             SpellCheckTimer.Enabled = false;

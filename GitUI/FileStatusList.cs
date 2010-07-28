@@ -28,6 +28,7 @@ namespace GitUI
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
 
             NoFiles.Visible = false;
+            NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
         }
 
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)

@@ -20,7 +20,10 @@ namespace GitUI
 
         public FormSplash()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            this.Font = SystemFonts.MessageBoxFont;
+            _programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
         }
 
         public void SetAction(string action)
