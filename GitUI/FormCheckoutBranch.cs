@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -14,7 +10,8 @@ namespace GitUI
     {
         public FormCheckoutBranch()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             Initialize();
         }
@@ -29,11 +26,10 @@ namespace GitUI
             }
             else
             {
-                List<GitHead> heads = GitCommands.GitCommands.GetHeads(true, true);
+                var heads = GitCommands.GitCommands.GetHeads(true, true);
+                var remoteHeads = new List<GitHead>();
 
-                List<GitHead> remoteHeads = new List<GitHead>();
-
-                foreach (GitHead head in heads)
+                foreach (var head in heads)
                 {
                     if (head.IsRemote)
                         remoteHeads.Add(head);
@@ -45,51 +41,41 @@ namespace GitUI
             Branches.Text = null;
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                FormProcess form;
-
                 //Get a localbranch name
-                int index = Branches.Text.LastIndexOfAny(new char[] { '\\', '/' });
-                string localBranchName = Branches.Text;
+                var index = Branches.Text.LastIndexOfAny(new[] {'\\', '/'});
+                var localBranchName = Branches.Text;
                 if (index > 0 && index + 1 < Branches.Text.Length)
                     localBranchName = localBranchName.Substring(index + 1);
 
-                string command = "checkout";
+                var command = "checkout";
                 if (Remotebranch.Checked)
                 {
-                    DialogResult result = MessageBox.Show( "You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '" + localBranchName + "'" + Environment.NewLine + "that track's this remote branch?", "Checkout branch", MessageBoxButtons.YesNo );
+                    var result =
+                        MessageBox.Show(
+                            "You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine +
+                            "Do you want create a local branch with the name '" + localBranchName + "'" +
+                            Environment.NewLine + "that track's this remote branch?", "Checkout branch",
+                            MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)
-                        command += string.Format( " -b " + localBranchName );
-                }
-                else
-                {
-                    
+                        command += string.Format(" -b {0}", localBranchName);
                 }
 
                 if (Force.Checked)
                     command += " --force";
-                command +=  " \"" + Branches.Text + "\"";
-                form = new FormProcess( command );
+                command += " \"" + Branches.Text + "\"";
+                var form = new FormProcess(command);
                 form.ShowDialog();
                 if (!form.ErrorOccured())
                     Close();
             }
-            catch
+            catch(Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
-        }
-
-        private void FormCheckoutBranck_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Branches_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void BranchTypeChanged()
@@ -97,12 +83,12 @@ namespace GitUI
             Initialize();
         }
 
-        private void Remotebranch_CheckedChanged(object sender, EventArgs e)
+        private void LocalBranchCheckedChanged(object sender, EventArgs e)
         {
             BranchTypeChanged();
         }
 
-        private void LocalBranch_CheckedChanged(object sender, EventArgs e)
+        private void RemoteBranchCheckedChanged(object sender, EventArgs e)
         {
             BranchTypeChanged();
         }
