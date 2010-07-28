@@ -110,8 +110,10 @@
             // 
             // Output
             // 
-            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Output.BackColor = System.Drawing.SystemColors.Window;
+            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Output.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
@@ -236,6 +238,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormStatus";
+            this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
             this.Load += new System.EventHandler(this.FormStatus_Load);
