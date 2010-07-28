@@ -1,30 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
+using System.IO;
 
 namespace GitCommands
 {
     public class CommitDto
     {
+        public CommitDto(string message, bool amend)
+        {
+            Message = message;
+            Amend = amend;
+        }
+
         public string Message { get; set; }
         public string Result { get; set; }
         public bool Amend { get; set; }
-
-        public CommitDto(string message, bool amend)
-        {
-            this.Message = message;
-            this.Amend = amend;
-        }
     }
 
     public class Commit
     {
-        public CommitDto Dto { get; set; }
         public Commit(CommitDto dto)
         {
-            this.Dto = dto;
+            Dto = dto;
         }
+
+        public CommitDto Dto { get; set; }
 
         public void Execute()
         {
@@ -32,6 +31,26 @@ namespace GitCommands
                 Dto.Result = GitCommands.RunCmd(Settings.GitCommand, "commit --amend -m \"" + Dto.Message + "\"");
             else
                 Dto.Result = GitCommands.RunCmd(Settings.GitCommand, "commit -m \"" + Dto.Message + "\"");
+        }
+
+        public static void SetCommitMessage(string commitMessageText)
+        {
+            if (String.IsNullOrEmpty(commitMessageText))
+            {
+                File.Delete(GetCommitMessagePath());
+                return;
+            }
+
+            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false))
+            {
+                textWriter.Write(commitMessageText);
+                textWriter.Close();
+            }
+        }
+
+        public static string GetCommitMessagePath()
+        {
+            return Settings.WorkingDirGitDir() + "\\COMMITMESSAGE";
         }
     }
 }
