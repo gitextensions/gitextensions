@@ -57,8 +57,7 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                var gitSubmodule = CreateGitSubmodule(submodule);
-                submoduleList.Add(gitSubmodule);
+                submoduleList.Add(CreateGitSubmodule(submodule));
             }
 
             return submoduleList;
