@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -13,27 +8,28 @@ namespace GitUI
     {
         public FormSubmodules()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void FormSubmodules_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormSubmodulesFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("submodules");
         }
 
-        private void FormSubmodules_Load(object sender, EventArgs e)
+        private void FormSubmodulesLoad(object sender, EventArgs e)
         {
             RestorePosition("submodules");
         }
 
-        private void AddSubmodule_Click(object sender, EventArgs e)
+        private void AddSubmoduleClick(object sender, EventArgs e)
         {
-            FormAddSubmodule formAddSubmodule = new FormAddSubmodule();
+            var formAddSubmodule = new FormAddSubmodule();
             formAddSubmodule.ShowDialog();
             Initialize();
         }
 
-        private void FormSubmodules_Shown(object sender, EventArgs e)
+        private void FormSubmodulesShown(object sender, EventArgs e)
         {
             Initialize();
         }
@@ -44,56 +40,45 @@ namespace GitUI
             Submodules.DataSource = (new GitCommands.GitCommands()).GetSubmodules();
         }
 
-        private void Submodules_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void Submodules_SelectionChanged(object sender, EventArgs e)
+        private void SubmodulesSelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (Submodules.SelectedRows.Count == 1)
-            {
-                GitSubmodule submodule = Submodules.SelectedRows[0].DataBoundItem as GitSubmodule;
-                if (submodule != null)
-                {
-                    SubModuleName.Text = submodule.Name;
-                    SubModuleRemotePath.Text = submodule.RemotePath;
-                    SubModuleLocalPath.Text = submodule.LocalPath;
-                    SubModuleCommit.Text = submodule.CurrentCommitGuid;
-                    SubModuleBranch.Text = submodule.Branch;
-                    SubModuleStatus.Text = submodule.Status;
-                }
-            }
+            if (Submodules.SelectedRows.Count != 1) 
+                return;
+
+            var submodule = Submodules.SelectedRows[0].DataBoundItem as GitSubmodule;
+            if (submodule == null) 
+                return;
+
+            SubModuleName.Text = submodule.Name;
+            SubModuleRemotePath.Text = submodule.RemotePath;
+            SubModuleLocalPath.Text = submodule.LocalPath;
+            SubModuleCommit.Text = submodule.CurrentCommitGuid;
+            SubModuleBranch.Text = submodule.Branch;
+            SubModuleStatus.Text = submodule.Status;
         }
 
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SynchronizeSubmodule_Click(object sender, EventArgs e)
+        private void SynchronizeSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(SubModuleName.Text));
+            var process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(SubModuleName.Text));
             process.ShowDialog();
             Initialize();
         }
 
-        private void InitSubmodule_Click(object sender, EventArgs e)
+        private void InitSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(SubModuleName.Text));
+            var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(SubModuleName.Text));
             process.ShowDialog();
             Initialize();
         }
 
-        private void UpdateSubmodule_Click(object sender, EventArgs e)
+        private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             GitUICommands.Instance.StartUpdateSubmodulesDialog();
             Initialize();
         }
-
     }
 }
