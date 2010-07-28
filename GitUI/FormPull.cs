@@ -92,7 +92,7 @@ namespace GitUI
                     // all remote branches but it is also the slowest.
                     // Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
 
-                    // The code below is a quick way to get a lost containg all remote branches.
+                    // The code below is a quick way to get a list containg all remote branches.
                     // It only returns the heads that are allready known to the repository. This
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
@@ -102,8 +102,9 @@ namespace GitUI
                         if (!head.IsRemote ||
                             !head.Name.StartsWith(Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
                             continue;
-                        var remoteHead = new GitHead(null, head.Name.Substring(head.Name.LastIndexOf("/") + 1));
-                        _heads.Insert(0, remoteHead);
+
+                        var localHead = new GitHead(null, head.LocalName);
+                        _heads.Insert(0, localHead);
                     }
                 }
             }
