@@ -14,7 +14,7 @@ namespace GitCommands
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
-            
+
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
@@ -35,6 +35,11 @@ namespace GitCommands
         public bool IsOther
         {
             get { return !IsHead && !IsRemote && !IsTag; }
+        }
+
+        public string LocalName
+        {
+            get { return IsRemote ? Name.Substring(Name.LastIndexOf("/") + 1) : Name; }
         }
 
         public string Remote
@@ -108,10 +113,10 @@ namespace GitCommands
             if (IsTag)
             {
                 // we need the one containing ^{}, because it contains the reference
-                string temp =
-                    CompleteName.Contains("^{}") ?
-                    CompleteName.Substring(0, CompleteName.Length - 3) :
-                    CompleteName;
+                var temp =
+                    CompleteName.Contains("^{}")
+                        ? CompleteName.Substring(0, CompleteName.Length - 3)
+                        : CompleteName;
 
                 Name = temp.Substring(CompleteName.LastIndexOf("/") + 1);
                 return;
