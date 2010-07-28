@@ -42,7 +42,6 @@
             // 
             this._Caption.AutoSize = true;
             this._Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
-            this._Caption.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this._Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this._Caption.Location = new System.Drawing.Point(3, 2);
             this._Caption.Name = "Caption";
