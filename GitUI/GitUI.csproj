@@ -898,6 +898,8 @@
     <None Include="Resources\_81.bmp" />
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
+    <Content Include="Resources\success.png" />
+    <Content Include="Resources\success1.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -934,8 +936,6 @@
     <None Include="Icons\merge.png" />
     <None Include="Icons\fetch.png" />
     <None Include="Icons\Rebase.png" />
-    <None Include="Resources\success1.gif" />
-    <None Include="Resources\success.gif" />
     <None Include="Resources\puttygen.ico" />
     <None Include="Resources\pageant.ico" />
     <None Include="Resources\putty.ico" />
