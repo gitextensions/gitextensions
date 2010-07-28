@@ -123,7 +123,7 @@
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
             this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrl_CheckedChanged);
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
             // 
             // PullFromRemote
             // 
@@ -137,7 +137,7 @@
             this.PullFromRemote.Text = "Remote";
             this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
             this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemote_CheckedChanged);
+            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
             // 
             // AddRemote
             // 
@@ -147,7 +147,7 @@
             this.AddRemote.TabIndex = 17;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(this.AddRemote_Click);
+            this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
             // 
             // Remotes
             // 
@@ -156,10 +156,10 @@
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
             this.Remotes.TabIndex = 16;
-            this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.Remotes_Validating);
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.Remotes_SelectedIndexChanged);
-            this.Remotes.Validated += new System.EventHandler(this.Remotes_Validated);
-            this.Remotes.DropDown += new System.EventHandler(this.Remotes_DropDown);
+            this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
+            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
+            this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
             // 
             // BrowseSource
             // 
@@ -170,7 +170,7 @@
             this.BrowseSource.TabIndex = 4;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
-            this.BrowseSource.Click += new System.EventHandler(this.BrowseSource_Click);
+            this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
             // 
             // PullSource
             // 
@@ -180,10 +180,8 @@
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(297, 21);
             this.PullSource.TabIndex = 13;
-            this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSource_Validating);
-            this.PullSource.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.PullSource_DrawItem);
-            this.PullSource.SelectedIndexChanged += new System.EventHandler(this.PullSource_SelectedIndexChanged);
-            this.PullSource.DropDown += new System.EventHandler(this.PullSource_DropDown);
+            this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
+            this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
             // 
             // LoadSSHKey
             // 
@@ -195,7 +193,7 @@
             this.LoadSSHKey.TabIndex = 24;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
             // Pull
             // 
@@ -207,7 +205,7 @@
             this.Pull.TabIndex = 7;
             this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
-            this.Pull.Click += new System.EventHandler(this.Pull_Click);
+            this.Pull.Click += new System.EventHandler(this.PullClick);
             // 
             // AutoStash
             // 
@@ -218,7 +216,6 @@
             this.AutoStash.TabIndex = 20;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
-            this.AutoStash.CheckedChanged += new System.EventHandler(this.AutoStash_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -242,7 +239,7 @@
             this.Fetch.TabStop = true;
             this.Fetch.Text = "Do not merge, only &fetch remote branch";
             this.Fetch.UseVisualStyleBackColor = true;
-            this.Fetch.CheckedChanged += new System.EventHandler(this.Fetch_CheckedChanged);
+            this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
             // Rebase
             // 
@@ -254,7 +251,7 @@
             this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
                 "d\r\nto choose a remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
-            this.Rebase.CheckedChanged += new System.EventHandler(this.Rebase_CheckedChanged);
+            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
             // Merge
             // 
@@ -267,7 +264,7 @@
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
-            this.Merge.CheckedChanged += new System.EventHandler(this.Merge_CheckedChanged);
+            this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
             // 
             // groupBox3
             // 
@@ -287,7 +284,7 @@
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(297, 21);
             this.Branches.TabIndex = 5;
-            this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
+            this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
             // label2
             // 
@@ -298,7 +295,6 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Remote branch";
             this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // Stash
             // 
@@ -308,7 +304,7 @@
             this.Stash.TabIndex = 14;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(this.Stash_Click);
+            this.Stash.Click += new System.EventHandler(StashClick);
             // 
             // Mergetool
             // 
@@ -318,7 +314,7 @@
             this.Mergetool.TabIndex = 11;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
-            this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
+            this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
             // 
             // FormPull
             // 
@@ -333,7 +329,7 @@
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pull";
-            this.Load += new System.EventHandler(this.FormPull_Load);
+            this.Load += new System.EventHandler(this.FormPullLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
