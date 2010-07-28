@@ -422,11 +422,9 @@ namespace GitUI
                 "n werden.\r\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionGrid.Size = new System.Drawing.Size(796, 229);
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(RevisionGridDoubleClick);
@@ -460,7 +458,6 @@ namespace GitUI
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(10);
             this.RevisionInfo.Name = "RevisionInfo";
@@ -512,7 +509,6 @@ namespace GitUI
             // FileText
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FileText.IgnoreWhitespaceChanges = false;
             this.FileText.IsReadOnly = true;
             this.FileText.Location = new System.Drawing.Point(0, 0);
@@ -556,7 +552,6 @@ namespace GitUI
             // 
             this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DiffFiles.GitItemStatusses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
@@ -584,7 +579,6 @@ namespace GitUI
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DiffText.IgnoreWhitespaceChanges = false;
             this.DiffText.IsReadOnly = true;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
