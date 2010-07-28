@@ -87,7 +87,6 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
             this.tagMessage.Location = new System.Drawing.Point(108, 56);
-            this.tagMessage.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 99);
             this.tagMessage.TabIndex = 10;

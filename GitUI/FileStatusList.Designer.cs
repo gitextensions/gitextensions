@@ -37,7 +37,6 @@
             // FileStatusListBox
             // 
             this.FileStatusListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileStatusListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.FileStatusListBox.FormattingEnabled = true;
             this.FileStatusListBox.Location = new System.Drawing.Point(0, 0);
             this.FileStatusListBox.Name = "FileStatusListBox";
@@ -49,7 +48,6 @@
             // NoFiles
             // 
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
-            this.NoFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic);
             this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.NoFiles.Location = new System.Drawing.Point(5, 5);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);

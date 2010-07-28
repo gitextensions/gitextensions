@@ -20,6 +20,8 @@ namespace GitUI
         public FormTagSmall()
         {
             InitializeComponent(); Translate();
+        
+            tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
         }
 
         public GitRevision Revision { get; set; }

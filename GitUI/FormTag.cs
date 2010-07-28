@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -19,6 +20,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
         }
 
         private void FormTagFormClosing(object sender, FormClosingEventArgs e)

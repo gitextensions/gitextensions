@@ -74,7 +74,6 @@ namespace GitUI
             this.GitRevisions.LastRow = 0;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";
-            this.GitRevisions.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GitRevisions.Size = new System.Drawing.Size(734, 352);
             this.GitRevisions.TabIndex = 0;
             // 
@@ -94,7 +93,6 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
             this.tagMessage.Location = new System.Drawing.Point(110, 56);
-            this.tagMessage.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(612, 99);
             this.tagMessage.TabIndex = 13;
