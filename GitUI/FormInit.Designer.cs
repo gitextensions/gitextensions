@@ -55,7 +55,7 @@
             this.Directory.Name = "Directory";
             this.Directory.Size = new System.Drawing.Size(364, 21);
             this.Directory.TabIndex = 1;
-            this.Directory.DropDown += new System.EventHandler(this.Directory_DropDown);
+            this.Directory.DropDown += new System.EventHandler(this.DirectoryDropDown);
             // 
             // Browse
             // 
@@ -65,7 +65,7 @@
             this.Browse.TabIndex = 2;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // groupBox1
             // 
@@ -108,7 +108,7 @@
             this.Init.TabIndex = 4;
             this.Init.Text = "Initialize";
             this.Init.UseVisualStyleBackColor = true;
-            this.Init.Click += new System.EventHandler(this.Init_Click);
+            this.Init.Click += new System.EventHandler(this.InitClick);
             // 
             // FormInit
             // 
@@ -121,13 +121,11 @@
             this.Controls.Add(this.Directory);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormInit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Initialize new repository";
-            this.Load += new System.EventHandler(this.FormInit_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
