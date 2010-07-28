@@ -989,7 +989,7 @@ namespace GitUI
             _indexWatcher.Reset();
         }
 
-        public override void cancelButton_Click(object sender, EventArgs e)
+        public override void CancelButtonClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Settings.WorkingDir))
             {
