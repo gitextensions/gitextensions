@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
-            this.BName = new System.Windows.Forms.TextBox();
+            this.BranchNameTextBox = new System.Windows.Forms.TextBox();
             this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(77, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Branch name";
             // 
@@ -51,15 +51,15 @@
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
-            // BName
+            // BranchNameTextBox
             // 
-            this.BName.Location = new System.Drawing.Point(127, 6);
-            this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(223, 20);
-            this.BName.TabIndex = 3;
-            this.BName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BName_KeyUp);
+            this.BranchNameTextBox.Location = new System.Drawing.Point(127, 6);
+            this.BranchNameTextBox.Name = "BranchNameTextBox";
+            this.BranchNameTextBox.Size = new System.Drawing.Size(223, 23);
+            this.BranchNameTextBox.TabIndex = 3;
+            this.BranchNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BranchNameTextBoxKeyUp);
             // 
             // CheckoutAfterCreate
             // 
@@ -68,20 +68,20 @@
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckoutAfterCreate.Location = new System.Drawing.Point(127, 32);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(139, 19);
             this.CheckoutAfterCreate.TabIndex = 6;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // FormBranchSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.CheckoutAfterCreate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
-            this.Controls.Add(this.BName);
+            this.Controls.Add(this.BranchNameTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -96,7 +96,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.TextBox BName;
+        private System.Windows.Forms.TextBox BranchNameTextBox;
         private System.Windows.Forms.CheckBox CheckoutAfterCreate;
     }
 }
