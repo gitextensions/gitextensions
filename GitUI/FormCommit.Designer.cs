@@ -592,7 +592,6 @@ namespace GitUI
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.SeaShell;
             this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.SolveMergeconflicts.Image = ((System.Drawing.Image)(resources.GetObject("SolveMergeconflicts.Image")));
             this.SolveMergeconflicts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SolveMergeconflicts.Location = new System.Drawing.Point(14, 12);
@@ -746,7 +745,6 @@ namespace GitUI
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Message.Location = new System.Drawing.Point(4, 34);
             this.Message.Margin = new System.Windows.Forms.Padding(4);
-            this.Message.MistakeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(356, 96);
             this.Message.TabIndex = 0;

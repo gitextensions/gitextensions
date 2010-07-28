@@ -70,7 +70,6 @@ namespace GitUI
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
             this.RevisionGrid.TabIndex = 1;
             this.RevisionGrid.SelectionChanged += new System.EventHandler(this.RevisionGridSelectionChanged);

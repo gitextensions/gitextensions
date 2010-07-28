@@ -37,6 +37,12 @@ namespace GitStatistics
         {
             _codeFilePattern = codeFilePattern;
             InitializeComponent();
+
+            TotalLinesOfCode.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalLinesOfCode2.Font = TotalLinesOfCode.Font;
+            TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
+            TotalCommits.Font = TotalLinesOfCode.Font;
+            LoadingLabel.Font = TotalLinesOfCode.Font;
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)

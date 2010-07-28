@@ -13,12 +13,12 @@ namespace GitUI
     {
         public DashboardCategory()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); SetUpFonts(); Translate();
         }
 
         public DashboardCategory(string title, RepositoryCategory repositoryCategory)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); SetUpFonts(); Translate();
 
             this.Title = title;
             this.RepositoryCategory = repositoryCategory;
@@ -28,6 +28,11 @@ namespace GitUI
         public void DisableContextMenu()
         {
             _Caption.ContextMenuStrip = null;
+        }
+
+        private void SetUpFonts()
+        {
+            _Caption.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 10, FontStyle.Bold, GraphicsUnit.Point);
         }
 
         private RepositoryCategory repositoryCategory;

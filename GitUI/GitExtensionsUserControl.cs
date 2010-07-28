@@ -16,6 +16,8 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
+            this.Font = SystemFonts.MessageBoxFont;
+
             this.Load += new EventHandler(GitExtensionsControl_Load);
         }
 

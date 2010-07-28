@@ -41,6 +41,7 @@ namespace GitUI
         public GitExtensionsForm()
         {
             this.Icon = ApplicationIcon;
+            this.Font = SystemFonts.MessageBoxFont;
 
             if (Application.OpenForms.Count > 0)
                 this.ShowInTaskbar = false;
