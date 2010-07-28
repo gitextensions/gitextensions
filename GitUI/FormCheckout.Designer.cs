@@ -54,7 +54,6 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Force);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(699, 456);
             this.splitContainer1.SplitterDistance = 425;
             this.splitContainer1.TabIndex = 0;
@@ -80,7 +79,7 @@
             this.Ok.TabIndex = 2;
             this.Ok.Text = "Checkout";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // Force
             // 
@@ -102,8 +101,8 @@
             this.Name = "FormCheckout";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCheckout_FormClosing);
-            this.Load += new System.EventHandler(this.FormCheckout_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCheckoutFormClosing);
+            this.Load += new System.EventHandler(this.FormCheckoutLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
