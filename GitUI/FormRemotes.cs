@@ -1,31 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
+using GitCommands;
 
 namespace GitUI
 {
     public partial class FormRemotes : GitExtensionsForm
     {
+        private string _remote = "";
+
         public FormRemotes()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void FormRemotes_Load(object sender, EventArgs e)
+        private void FormRemotesLoad(object sender, EventArgs e)
         {
             Initialize();
-
         }
 
-        void RemoteBranches_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
-            MessageBox.Show(string.Format("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine + "Value has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText));
+            MessageBox.Show(
+                string.Format(
+                    "Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
+                    "Value has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
+                    RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }
@@ -34,132 +34,109 @@ namespace GitUI
         {
             Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
 
-            List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false, true);
+            var heads = GitCommands.GitCommands.GetHeads(false, true);
             RemoteBranches.DataSource = heads;
-/*            foreach (object item in GitCommands.GitCommands.GetRemotes())
-            {
-                RemoteCombo.Items.Add(item);
-            }
-            mergeWithDataGridViewTextBoxColumn.Items.Add("");
-            /*foreach (GitCommands.GitHead head in heads)
-            {
-                mergeWithDataGridViewTextBoxColumn.Items.Add(head.Name);
-            }*/
-            RemoteBranches.DataError += new DataGridViewDataErrorEventHandler(RemoteBranches_DataError);
 
-            if (GitCommands.GitCommands.Plink())
-                PuTTYSSH.Visible = true;
-            else
-                PuTTYSSH.Visible = false;
-        }
-        
-        string remote = "";
+            RemoteBranches.DataError += RemoteBranchesDataError;
 
-        private void Remotes_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Remotes.SelectedItem is string)
-            {
-                remote = (string)Remotes.SelectedItem;
-                RemoteName.Text = remote;
-                Url.Text = GitCommands.GitCommands.GetSetting("remote." + remote + ".url");
-                PuttySshKey.Text = GitCommands.GitCommands.GetSetting("remote." + RemoteName.Text + ".puttykeyfile");
-            }
+            PuTTYSSH.Visible = GitCommands.GitCommands.Plink();
         }
 
-        private void Url_DropDown(object sender, EventArgs e)
+        private void UrlDropDown(object sender, EventArgs e)
         {
-            Url.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            Url.DataSource = Repositories.RepositoryHistory.Repositories;
             Url.DisplayMember = "Path";
         }
 
-        private void Browse_Click(object sender, EventArgs e)
+        private void BrowseClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            var dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
                 Url.Text = dialog.SelectedPath;
         }
 
-        private void Save_Click(object sender, EventArgs e)
+        private void SaveClick(object sender, EventArgs e)
         {
-            string output = "";
+            var output = "";
 
-            if (string.IsNullOrEmpty(remote))
+            if (string.IsNullOrEmpty(_remote))
             {
                 if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
-                {
                     return;
-                }
 
                 output = GitCommands.GitCommands.AddRemote(RemoteName.Text, Url.Text);
 
-                if (MessageBox.Show("You have added a new remote repository." + Environment.NewLine + "Do you want to automaticly configure the default push and pull behaviour for this remote?", "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(
+                        "You have added a new remote repository." + Environment.NewLine +
+                        "Do you want to automaticly configure the default push and pull behaviour for this remote?",
+                        "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    string remoteUrl = Url.Text;
+                    var remoteUrl = Url.Text;
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
                         new FormProcess("remote update").ShowDialog();
-
-                        foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
-                        {
-                            foreach (GitCommands.GitHead localHead in GitCommands.GitCommands.GetHeads(true, true))
-                            {
-                                if (remoteHead.IsRemote &&
-                                    !localHead.IsRemote &&
-                                    string.IsNullOrEmpty(localHead.Remote) &&
-                                    string.IsNullOrEmpty(localHead.Remote) &&
-                                    !remoteHead.IsTag &&
-                                    !localHead.IsTag &&
-                                    remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) &&
-                                    remoteHead.Name.ToLower().Contains(remote.ToLower()))
-                                {
-                                    localHead.Remote = RemoteName.Text;
-                                    localHead.MergeWith = remoteHead.Name;
-                                }
-                            }
-                        }
+                        ConfigureRemotes();
                     }
-
                     else
-                    {
                         MessageBox.Show("You need to configure a valid url for this remote", "Url needed");
-                    }
-
                 }
             }
             else
             {
-
-                if (RemoteName.Text != remote)
+                if (RemoteName.Text != _remote)
                 {
-                    output = GitCommands.GitCommands.RenameRemote(remote, RemoteName.Text);
+                    output = GitCommands.GitCommands.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                GitCommands.GitCommands.SetSetting("remote." + RemoteName.Text + ".url", Url.Text);
-                GitCommands.GitCommands.SetSetting("remote." + RemoteName.Text + ".puttykeyfile", PuttySshKey.Text);
+                GitCommands.GitCommands.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
+                GitCommands.GitCommands.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
             }
+
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Delete");
 
             Initialize();
         }
 
-        private void New_Click(object sender, EventArgs e)
+        private void ConfigureRemotes()
         {
-            string output = GitCommands.GitCommands.AddRemote("<new>", "");
+            foreach (var remoteHead in GitCommands.GitCommands.GetHeads(true, true))
+            {
+                foreach (var localHead in GitCommands.GitCommands.GetHeads(true, true))
+                {
+                    if (!remoteHead.IsRemote || 
+                        localHead.IsRemote ||
+                        !string.IsNullOrEmpty(localHead.Remote) || 
+                        !string.IsNullOrEmpty(localHead.Remote) ||
+                        remoteHead.IsTag || 
+                        localHead.IsTag ||
+                        !remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) ||
+                        !remoteHead.Name.ToLower().Contains(_remote.ToLower())) 
+                        continue;
+                    localHead.Remote = RemoteName.Text;
+                    localHead.MergeWith = remoteHead.Name;
+                }
+            }
+        }
+
+        private void NewClick(object sender, EventArgs e)
+        {
+            var output = GitCommands.GitCommands.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Delete");
             Initialize();
         }
 
-        private void Delete_Click(object sender, EventArgs e)
+        private void DeleteClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(remote))
+            if (string.IsNullOrEmpty(_remote))
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this remote?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this remote?", "Delete", MessageBoxButtons.YesNo) ==
+                DialogResult.Yes)
             {
-                string output = GitCommands.GitCommands.RemoveRemote(remote);
+                var output = GitCommands.GitCommands.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(output, "Delete");
             }
@@ -167,34 +144,20 @@ namespace GitUI
             Initialize();
         }
 
-        private void UpdateBranch_Click(object sender, EventArgs e)
+        private void SshBrowseClick(object sender, EventArgs e)
         {
-            new FormProcess("remote update").ShowDialog();
-        }
-
-        private void SshBrowse_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Private key (*.ppk)|*.ppk";
-            dialog.InitialDirectory = ".";
-            dialog.Title = "Select ssh key file";
+            var dialog =
+                new OpenFileDialog
+                    {
+                        Filter = "Private key (*.ppk)|*.ppk",
+                        InitialDirectory = ".",
+                        Title = "Select ssh key file"
+                    };
             if (dialog.ShowDialog() == DialogResult.OK)
                 PuttySshKey.Text = dialog.FileName;
         }
 
-        private void RemoteName_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void Url_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void PuttySshKey_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void LoadSSHKey_Click(object sender, EventArgs e)
+        private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
                 MessageBox.Show("No SSH key file entered");
@@ -202,32 +165,24 @@ namespace GitUI
                 GitCommands.GitCommands.StartPageantWithKey(PuttySshKey.Text);
         }
 
-        private void TestConnection_Click(object sender, EventArgs e)
+        private void TestConnectionClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmdDetatched("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" -T \"" + Url.Text + "\"\"");
+            GitCommands.GitCommands.RunRealCmdDetatched(
+                "cmd.exe",
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, Url.Text));
         }
 
-        private void Prune_Click(object sender, EventArgs e)
+        private void PruneClick(object sender, EventArgs e)
         {
-            new FormProcess("remote prune " + remote).ShowDialog();
+            new FormProcess("remote prune " + _remote).ShowDialog();
         }
 
-        private void RemoteBranches_RowValidated(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-
-        private void RemoteBranches_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void RemoteBranches_SelectionChanged(object sender, EventArgs e)
+        private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
         {
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
 
             if (head == null)
                 return;
@@ -236,31 +191,21 @@ namespace GitUI
             LocalBranchNameEdit.ReadOnly = true;
             RemoteRepositoryCombo.Items.Clear();
             RemoteRepositoryCombo.Items.Add("");
-            foreach (string remote in GitCommands.GitCommands.GetRemotes())
+            foreach (var remote in GitCommands.GitCommands.GetRemotes())
                 RemoteRepositoryCombo.Items.Add(remote);
 
             RemoteRepositoryCombo.Text = head.Remote;
 
             DefaultMergeWithCombo.Text = head.MergeWith;
-
         }
 
-        private void RemoteRepositoryCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void DefaultMergeWithCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DefaultMergeWithCombo_DropDown(object sender, EventArgs e)
+        private void DefaultMergeWithComboDropDown(object sender, EventArgs e)
         {
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
 
             if (head == null)
                 return;
@@ -268,62 +213,69 @@ namespace GitUI
             DefaultMergeWithCombo.Items.Clear();
             DefaultMergeWithCombo.Items.Add("");
 
-            string currentSelectedRemote = RemoteRepositoryCombo.Text.Trim();
+            var currentSelectedRemote = RemoteRepositoryCombo.Text.Trim();
 
-            if (!string.IsNullOrEmpty(head.Remote) && !string.IsNullOrEmpty(currentSelectedRemote))
+            if (string.IsNullOrEmpty(head.Remote) || string.IsNullOrEmpty(currentSelectedRemote))
+                return;
+
+            var remoteUrl = GitCommands.GitCommands.GetSetting("remote." + currentSelectedRemote + ".url");
+
+            if (string.IsNullOrEmpty(remoteUrl))
+                return;
+
+            foreach (var remoteHead in GitCommands.GitCommands.GetHeads(true, true))
             {
-                string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + currentSelectedRemote + ".url");
-
-                if (!string.IsNullOrEmpty(remoteUrl))
-                {
-                    foreach (GitCommands.GitHead remoteHead in GitCommands.GitCommands.GetHeads(true, true))
-                    {
-                        if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()))
-                        {
-                            if (string.IsNullOrEmpty(remoteHead.MergeWith))
-                            {
-                                DefaultMergeWithCombo.Items.Add(remoteHead.Name);
-                            }
-                        }
-                    }
-                }
+                if (remoteHead.IsRemote &&
+                    remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) &&
+                    string.IsNullOrEmpty(remoteHead.MergeWith))
+                    DefaultMergeWithCombo.Items.Add(remoteHead.Name);
             }
-
         }
 
-        private void RemoteRepositoryCombo_Validated(object sender, EventArgs e)
+        private void RemoteRepositoryComboValidated(object sender, EventArgs e)
         {
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
             if (head == null)
                 return;
 
             head.Remote = RemoteRepositoryCombo.Text;
         }
 
-        private void DefaultMergeWithCombo_Validated(object sender, EventArgs e)
+        private void DefaultMergeWithComboValidated(object sender, EventArgs e)
         {
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            GitCommands.GitHead head = RemoteBranches.SelectedRows[0].DataBoundItem as GitCommands.GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
             if (head == null)
                 return;
 
             head.MergeWith = DefaultMergeWithCombo.Text;
         }
 
-        private void LocalBranchNameEdit_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SaveDefaultPushPull_Click(object sender, EventArgs e)
+        private void SaveDefaultPushPullClick(object sender, EventArgs e)
         {
             Initialize();
         }
+
+        private void RemotesSelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(Remotes.SelectedItem is string))
+                return;
+
+            _remote = (string) Remotes.SelectedItem;
+            RemoteName.Text = _remote;
+            Url.Text = GitCommands.GitCommands.GetSetting(string.Format("remote.{0}.url", _remote));
+            PuttySshKey.Text =
+                GitCommands.GitCommands.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
+        }
+
+        private static void UpdateBranchClick(object sender, EventArgs e)
+        {
+            new FormProcess("remote update").ShowDialog();
+        }
     }
 }
-
