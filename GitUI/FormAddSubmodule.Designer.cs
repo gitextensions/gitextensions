@@ -47,7 +47,7 @@
             this.Add.TabIndex = 7;
             this.Add.Text = "Add";
             this.Add.UseVisualStyleBackColor = true;
-            this.Add.Click += new System.EventHandler(this.Add_Click);
+            this.Add.Click += new System.EventHandler(this.AddClick);
             // 
             // Browse
             // 
@@ -57,7 +57,7 @@
             this.Browse.TabIndex = 6;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // Directory
             // 
@@ -66,8 +66,8 @@
             this.Directory.Name = "Directory";
             this.Directory.Size = new System.Drawing.Size(266, 21);
             this.Directory.TabIndex = 5;
-            this.Directory.SelectedIndexChanged += new System.EventHandler(this.Directory_SelectedIndexChanged);
-            this.Directory.TextUpdate += new System.EventHandler(this.Directory_TextUpdate);
+            this.Directory.SelectedIndexChanged += new System.EventHandler(this.DirectorySelectedIndexChanged);
+            this.Directory.TextUpdate += new System.EventHandler(this.DirectoryTextUpdate);
             // 
             // label1
             // 
@@ -110,7 +110,7 @@
             this.Branch.Name = "Branch";
             this.Branch.Size = new System.Drawing.Size(266, 21);
             this.Branch.TabIndex = 11;
-            this.Branch.DropDown += new System.EventHandler(this.Branch_DropDown);
+            this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             // 
             // FormAddSubmodule
             // 
@@ -132,7 +132,7 @@
             this.Name = "FormAddSubmodule";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add submodule";
-            this.Shown += new System.EventHandler(this.FormAddSubmodule_Shown);
+            this.Shown += new System.EventHandler(this.FormAddSubmoduleShown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
