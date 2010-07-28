@@ -1,67 +1,78 @@
 ﻿using System;
-using System.Text;
+using System.Collections;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.ComponentModel;
 
 namespace GitUI
 {
     /// <summary>
-    /// Stores the state and position of a single window
+    ///   Stores the state and position of a single window
     /// </summary>
     public class WindowPosition
     {
-        public FormWindowState state;
-        public Rectangle rect;
+        public WindowPosition(Rectangle rect, FormWindowState state)
+        {
+            Rect = rect;
+            State = state;
+        }
+
+        public Rectangle Rect { get; private set; }
+        public FormWindowState State { get; private set; }
     }
 
     /// <summary>
-    /// A Hashtable for storing WindowPosition objects with the ability to
-    /// serialize them to the user's settings.
+    ///   A Hashtable for storing WindowPosition objects with the ability to
+    ///   serialize them to the user's settings.
     /// </summary>
     public class WindowPositionList : Hashtable, IXmlSerializable
     {
-        public System.Xml.Schema.XmlSchema GetSchema()
+        #region IXmlSerializable Members
+
+        public XmlSchema GetSchema()
         {
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (reader.NodeType != XmlNodeType.EndElement)
             {
-                WindowPosition p = new WindowPosition();
                 reader.ReadStartElement("window");
-                string name = reader.ReadElementString("name");
-                p.state =
-                    (FormWindowState)TypeDescriptor.GetConverter(typeof(FormWindowState))
-                    .ConvertFromString(reader.ReadElementString("state"));
-                p.rect =
-                    (Rectangle)TypeDescriptor.GetConverter(typeof(Rectangle))
-                    .ConvertFromString(reader.ReadElementString("position"));
+                var name = reader.ReadElementString("name");
+                var state =
+                    (FormWindowState) TypeDescriptor.GetConverter(typeof (FormWindowState))
+                                          .ConvertFromString(reader.ReadElementString("state"));
+                var rect =
+                    (Rectangle) TypeDescriptor.GetConverter(typeof (Rectangle))
+                                    .ConvertFromString(reader.ReadElementString("position"));
                 reader.ReadEndElement();
-                this.Add(name, p);
+                Add(name, new WindowPosition(rect, state));
             }
             reader.ReadEndElement();
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
-            foreach (object name in this.Keys)
+            foreach (var key in Keys)
             {
-                WindowPosition p = (WindowPosition)this[name];
+                var position = (WindowPosition) this[key];
                 writer.WriteStartElement("window");
-                writer.WriteElementString("name", (String)name);
-                writer.WriteElementString("state",
-                    TypeDescriptor.GetConverter(p.state).ConvertToString(p.state));
-                writer.WriteElementString("position",
-                    TypeDescriptor.GetConverter(p.rect).ConvertToString(p.rect));
+                writer.WriteElementString("name", (String) key);
+                writer.WriteElementString(
+                    "state",
+                    TypeDescriptor.GetConverter(position.State).ConvertToString(position.State));
+                writer.WriteElementString(
+                    "position",
+                    TypeDescriptor.GetConverter(position.Rect).ConvertToString(position.Rect));
                 writer.WriteEndElement();
             }
         }
+
+        #endregion
     }
 }

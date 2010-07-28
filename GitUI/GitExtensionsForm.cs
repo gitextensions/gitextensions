@@ -104,8 +104,8 @@ namespace GitUI
                 return;
 
             StartPosition = FormStartPosition.Manual;
-            DesktopBounds = position.rect;
-            WindowState = position.state;
+            DesktopBounds = position.Rect;
+            WindowState = position.State;
         }
 
         /// <summary>
@@ -116,16 +116,17 @@ namespace GitUI
         ///   settings</param>
         protected void SavePosition(String name)
         {
-            var position =
-                new WindowPosition
-                    {
-                        state = WindowState == FormWindowState.Maximized
-                                    ? FormWindowState.Maximized
-                                    : FormWindowState.Normal,
-                        rect = WindowState == FormWindowState.Normal
-                                   ? DesktopBounds
-                                   : RestoreBounds
-                    };
+            var rectangle =
+                WindowState == FormWindowState.Normal
+                    ? DesktopBounds
+                    : RestoreBounds;
+
+            var formWindowState =
+                WindowState == FormWindowState.Maximized
+                    ? FormWindowState.Maximized
+                    : FormWindowState.Normal;
+
+            var position = new WindowPosition(rectangle, formWindowState);
 
 
             // Write to the user settings:
@@ -151,12 +152,12 @@ namespace GitUI
                 return null;
 
             var position = (WindowPosition) list[name];
-            if (position == null || position.rect.IsEmpty)
+            if (position == null || position.Rect.IsEmpty)
                 return null;
 
             foreach (var screen in Screen.AllScreens)
             {
-                if (screen.WorkingArea.IntersectsWith(position.rect))
+                if (screen.WorkingArea.IntersectsWith(position.Rect))
                     return position;
             }
             return null;
