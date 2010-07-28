@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -13,22 +8,19 @@ namespace GitUI
     {
         public FormAddSubmodule()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void Browse_Click(object sender, EventArgs e)
+        private void BrowseClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-            browseDialog.SelectedPath = Directory.Text;
+            var browseDialog = new FolderBrowserDialog {SelectedPath = Directory.Text};
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
-            {
                 Directory.Text = browseDialog.SelectedPath;
-            }
-
         }
 
-        private void Add_Click(object sender, EventArgs e)
+        private void AddClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
             {
@@ -37,52 +29,50 @@ namespace GitUI
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess formProcess = new FormProcess(GitCommands.GitCommands.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text));
-            formProcess.ShowDialog();
+            var addSubmoduleCmd = GitCommands.GitCommands.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text);
+            new FormProcess(addSubmoduleCmd).ShowDialog();
 
             Close();
         }
 
-        private void Directory_SelectedIndexChanged(object sender, EventArgs e)
+        private void DirectorySelectedIndexChanged(object sender, EventArgs e)
         {
-            Directory_TextUpdate(null, null);
+            DirectoryTextUpdate(null, null);
         }
 
-        private void FormAddSubmodule_Shown(object sender, EventArgs e)
+        private void FormAddSubmoduleShown(object sender, EventArgs e)
         {
-            Directory.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
             Directory.DisplayMember = "Path";
             Directory.Text = "";
             LocalPath.Text = "";
         }
 
-        private void Branch_DropDown(object sender, EventArgs e)
+        private void BranchDropDown(object sender, EventArgs e)
         {
-            string realWorkingDir = GitCommands.Settings.WorkingDir;
-            GitCommands.Settings.WorkingDir = Directory.Text;
+            var realWorkingDir = Settings.WorkingDir;
+            Settings.WorkingDir = Directory.Text;
 
-            List<GitCommands.GitHead> heads = GitCommands.GitCommands.GetHeads(false);
+            var heads = GitCommands.GitCommands.GetHeads(false);
 
             heads.Insert(0, GitHead.NoHead);
 
             Branch.DisplayMember = "Name";
             Branch.DataSource = heads;
 
-            GitCommands.Settings.WorkingDir = realWorkingDir;
-
+            Settings.WorkingDir = realWorkingDir;
         }
 
-        private void Directory_TextUpdate(object sender, EventArgs e)
+        private void DirectoryTextUpdate(object sender, EventArgs e)
         {
-            string path = Directory.Text;
-            path = path.TrimEnd(new char[] { '\\', '/' });
+            var path = Directory.Text;
+            path = path.TrimEnd(new[] {'\\', '/'});
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
             if (path.Contains("\\") || path.Contains("/"))
-                LocalPath.Text = path.Substring(path.LastIndexOfAny(new char[] { '\\', '/' }) + 1);
-
+                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] {'\\', '/'}) + 1);
         }
     }
 }
