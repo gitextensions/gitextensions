@@ -320,7 +320,6 @@
             // NoGitRepo
             // 
             this.NoGitRepo.AutoSize = true;
-            this.NoGitRepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
             this.NoGitRepo.Location = new System.Drawing.Point(460, 76);
             this.NoGitRepo.Name = "NoGitRepo";
