@@ -260,7 +260,7 @@ namespace GitCommands
                 var appData = Application.UserAppDataRegistry;
                 SetEncoding();
 
-                appData.SetValue("history", Repositories.SerializeHistory());
+                appData.SetValue("history", Repositories.SerializeHistoryIntoXml());
                 appData.SetValue("repositories", Repositories.SerializeRepositories());
                 appData.SetValue("showauthorgravatar", ShowAuthorGravatar);
                 appData.SetValue("userprofilehomedir", UserProfileHomeDir);
@@ -389,7 +389,7 @@ namespace GitCommands
                 SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
                 SafeSetString("gitdir", x => GitCommand = x);
                 SafeSetString("gitbindir", x => GitBinDir = x);
-                SafeSetString("history", Repositories.DeserializeHistory);
+                SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
             }
             catch (Exception ex)

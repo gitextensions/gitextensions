@@ -12,6 +12,8 @@ namespace GitCommands
 
     public class RepositoryCategory
     {
+        private BindingList<Repository> _repositories;
+
         public RepositoryCategory()
         {
             Repositories.AllowNew = true;
@@ -21,34 +23,15 @@ namespace GitCommands
 
         public RepositoryCategory(string description)
         {
-            this.Description = description;
+            Description = description;
             Repositories.AllowNew = true;
             Repositories.RaiseListChangedEvents = false;
         }
 
-        public virtual void SetIcon()
-        {
-            foreach (Repository recentRepository in Repositories)
-            {
-                if (CategoryType == RepositoryCategoryType.RssFeed)
-                    recentRepository.RepositoryType = RepositoryType.RssFeed;
-            }
-        }
-
-
-        private BindingList<Repository> repositories;
         public BindingList<Repository> Repositories
         {
-            get
-            {
-                if (repositories == null)
-                    repositories = new BindingList<Repository>();
-                return repositories;
-            }
-            set
-            {
-                repositories = value;
-            }
+            get { return _repositories ?? (_repositories = new BindingList<Repository>()); }
+            set { _repositories = value; }
         }
 
         public string Description { get; set; }
@@ -57,13 +40,22 @@ namespace GitCommands
 
         public RepositoryCategoryType CategoryType { get; set; }
 
+        public virtual void SetIcon()
+        {
+            foreach (var recentRepository in Repositories)
+            {
+                if (CategoryType == RepositoryCategoryType.RssFeed)
+                    recentRepository.RepositoryType = RepositoryType.RssFeed;
+            }
+        }
+
         public void DownloadRssFeed()
         {
             try
             {
                 // Create a new XmlTextReader from the specified URL (RSS feed)
-                XmlTextReader rssReader = new XmlTextReader(RssFeedUrl);
-                XmlDocument rssDoc = new XmlDocument();
+                var rssReader = new XmlTextReader(RssFeedUrl);
+                var rssDoc = new XmlDocument();
 
                 // Load the XML content into a XmlDocument
                 rssDoc.Load(rssReader);
@@ -72,19 +64,18 @@ namespace GitCommands
                 Repositories.Clear();
 
                 // Loop for the <rss> or (atom) <feed> tag
-                for (int r = 0; r < rssDoc.ChildNodes.Count; r++)
+                for (var r = 0; r < rssDoc.ChildNodes.Count; r++)
                 {
                     // If it is the (atom) feed tag
                     if (rssDoc.ChildNodes[r].Name == "feed")
                     {
-                        
-                        handleFeedTag(rssDoc, r);
+                        HandleFeedTag(rssDoc, r);
                     }
 
                     // If it is the rss tag
                     if (rssDoc.ChildNodes[r].Name == "rss")
-                    {                        
-                        handleRSSTag(rssDoc, r);
+                    {
+                        HandleRssTag(rssDoc, r);
                     }
                 }
             }
@@ -92,30 +83,30 @@ namespace GitCommands
             {
                 Repositories.Clear();
 
-                Repository repository = new Repository
-                                            {
-                                                Title = "Error loading rssfeed from :" + RssFeedUrl,
-                                                Description = ex.Message,
-                                                Path = RssFeedUrl,
-                                                RepositoryType = RepositoryType.RssFeed
-                                            };
+                var repository = new Repository
+                                     {
+                                         Title = "Error loading rssfeed from :" + RssFeedUrl,
+                                         Description = ex.Message,
+                                         Path = RssFeedUrl,
+                                         RepositoryType = RepositoryType.RssFeed
+                                     };
                 Repositories.Add(repository);
             }
         }
 
-        private void handleRSSTag(XmlDocument rssDoc, int r)
+        private void HandleRssTag(XmlNode rssDoc, int r)
         {
             // <rss> tag found
-            XmlNode nodeRss = rssDoc.ChildNodes[r];
+            var nodeRss = rssDoc.ChildNodes[r];
 
             // Loop for the <channel> tag
-            for (int c = 0; c < nodeRss.ChildNodes.Count; c++)
+            for (var c = 0; c < nodeRss.ChildNodes.Count; c++)
             {
                 // If it is the channel tag
                 if (nodeRss.ChildNodes[c].Name != "channel")
                     continue;
                 // <channel> tag found
-                XmlNode nodeChannel = nodeRss.ChildNodes[c];
+                var nodeChannel = nodeRss.ChildNodes[c];
 
                 // Set the labels with information from inside the nodes
                 /*string title = nodeChannel["title"].InnerText;
@@ -123,46 +114,51 @@ namespace GitCommands
                                 string description = nodeChannel["description"].InnerText;*/
 
                 //loop through all items
-                for (int i = 0; i < nodeChannel.ChildNodes.Count; i++)
+                for (var i = 0; i < nodeChannel.ChildNodes.Count; i++)
                 {
                     // If it is the item tag, then it has children tags which we will add as items to the ListView
                     if (nodeChannel.ChildNodes[i].Name != "item")
                         continue;
-                    XmlNode nodeItem = nodeChannel.ChildNodes[i];
+                    var nodeItem = nodeChannel.ChildNodes[i];
 
                     // Create a new row in the ListView containing information from inside the nodes
-                    Repository repository = new Repository();
-                    if (nodeItem["title"] != null)
-                        repository.Title = nodeItem["title"].InnerText.Trim();
-                    if (nodeItem["description"] != null)
-                        repository.Description = nodeItem["description"].InnerText.Trim();
-                    if (nodeItem["link"] != null)
-                        repository.Path = nodeItem["link"].InnerText.Trim();
+                    var repository = new Repository();
+                    var title = nodeItem["title"];
+                    if (title != null)
+                        repository.Title = title.InnerText.Trim();
+                    var description = nodeItem["description"];
+                    if (description != null)
+                        repository.Description = description.InnerText.Trim();
+                    var link = nodeItem["link"];
+                    if (link != null)
+                        repository.Path = link.InnerText.Trim();
                     repository.RepositoryType = RepositoryType.RssFeed;
                     Repositories.Add(repository);
                 }
             }
         }
 
-        private void handleFeedTag(XmlDocument rssDoc, int r)
+        private void HandleFeedTag(XmlDocument rssDoc, int r)
         {
             // <feed> tag found
-            XmlNode nodeFeed = rssDoc.ChildNodes[r];
+            var nodeFeed = rssDoc.ChildNodes[r];
 
             //loop through all entries
-            for (int i = 0; i < nodeFeed.ChildNodes.Count; i++)
+            for (var i = 0; i < nodeFeed.ChildNodes.Count; i++)
             {
-                XmlNode nodeItem = nodeFeed.ChildNodes[i];
+                var nodeItem = nodeFeed.ChildNodes[i];
 
                 if (nodeItem.Name != "entry")
                     continue;
                 // Create a new row in the ListView containing information from inside the nodes
-                Repository repository = new Repository();
-                if (nodeItem["title"] != null)
-                    repository.Title = nodeItem["title"].InnerText.Trim();
+                var repository = new Repository();
+                var title = nodeItem["title"];
+                if (title != null)
+                    repository.Title = title.InnerText.Trim();
                 //repository.Description = nodeItem["content"].InnerText.Trim();
-                if (nodeItem["link"] != null)
-                    repository.Path = nodeItem["link"].Attributes["href"].Value;
+                var link = nodeItem["link"];
+                if (link != null)
+                    repository.Path = link.Attributes["href"].Value;
                 repository.RepositoryType = RepositoryType.RssFeed;
                 Repositories.Add(repository);
             }
