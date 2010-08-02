@@ -1,21 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace GitCommands
 {
     public static class Repositories
     {
+        private static RepositoryHistory _repositoryHistory;
+        private static BindingList<RepositoryCategory> _repositoryCategories;
+
+        public static RepositoryHistory RepositoryHistory
+        {
+            get { return _repositoryHistory ?? (_repositoryHistory = new RepositoryHistory()); }
+            set { _repositoryHistory = value; }
+        }
+
+        public static BindingList<RepositoryCategory> RepositoryCategories
+        {
+            get { return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>()); }
+            set { _repositoryCategories = value; }
+        }
+
         public static string SerializeRepositories()
         {
             try
             {
-                StringWriter sw = new StringWriter();
-                XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
+                var sw = new StringWriter();
+                var serializer = new XmlSerializer(typeof (BindingList<RepositoryCategory>));
                 serializer.Serialize(sw, RepositoryCategories);
                 return sw.ToString();
             }
@@ -29,33 +43,34 @@ namespace GitCommands
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-                using (StringReader stringReader = new StringReader(xml))
-                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                var serializer = new XmlSerializer(typeof (BindingList<RepositoryCategory>));
+                using (var stringReader = new StringReader(xml))
+                using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    BindingList<RepositoryCategory> obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                    var obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
                     if (obj != null)
                     {
                         RepositoryCategories = obj;
 
-                        foreach (RepositoryCategory repositoryCategory in RepositoryCategories)
+                        foreach (var repositoryCategory in RepositoryCategories)
                         {
                             repositoryCategory.SetIcon();
                         }
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
 
-        public static string SerializeHistory()
+        public static string SerializeHistoryIntoXml()
         {
             try
             {
-                StringWriter sw = new StringWriter();
-                XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
+                var sw = new StringWriter();
+                var serializer = new XmlSerializer(typeof (RepositoryHistory));
                 serializer.Serialize(sw, RepositoryHistory);
                 return sw.ToString();
             }
@@ -65,15 +80,15 @@ namespace GitCommands
             }
         }
 
-        public static void DeserializeHistory(string xml)
+        public static void DeserializeHistoryFromXml(string xml)
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(RepositoryHistory));
-                using (StringReader stringReader = new StringReader(xml))
-                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                var serializer = new XmlSerializer(typeof (RepositoryHistory));
+                using (var stringReader = new StringReader(xml))
+                using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    RepositoryHistory obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
+                    var obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
                     if (obj != null)
                     {
                         RepositoryHistory = obj;
@@ -81,50 +96,15 @@ namespace GitCommands
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-            }
-        }
-
-        static Repositories()
-        {
-        }
-
-        private static RepositoryHistory repositoryHistory;
-        public static RepositoryHistory RepositoryHistory 
-        {
-            get
-            {
-                if (repositoryHistory == null)
-                    repositoryHistory = new RepositoryHistory();
-                return repositoryHistory;
-            }
-            set
-            {
-                repositoryHistory = value;
-            }
-        }
-
-        private static BindingList<RepositoryCategory> repositoryCategories;
-        public static BindingList<RepositoryCategory> RepositoryCategories 
-        { 
-            get
-            {
-                if (repositoryCategories == null)
-                    repositoryCategories = new BindingList<RepositoryCategory>();
-                return repositoryCategories;
-            }
-            set
-            {
-                repositoryCategories = value;
+                Trace.WriteLine(ex.Message);
             }
         }
 
         public static void AddCategory(string title)
         {
-            RepositoryCategory repositoryCategory = new RepositoryCategory();
-            repositoryCategory.Description = title;
-            RepositoryCategories.Add( repositoryCategory);
+            RepositoryCategories.Add(new RepositoryCategory {Description = title});
         }
     }
 }

@@ -11,7 +11,7 @@ namespace GitCommands
 
         public override void SetIcon()
         {
-            foreach (Repository recentRepository in Repositories)
+            foreach (var recentRepository in Repositories)
             {
                 recentRepository.RepositoryType = RepositoryType.History;
             }
@@ -19,7 +19,7 @@ namespace GitCommands
 
         public void RemoveRecentRepository(string repo)
         {
-            foreach (Repository recentRepository in Repositories)
+            foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
                     continue;
@@ -36,13 +36,13 @@ namespace GitCommands
                 return;
 
             repo = repo.Replace('/', '\\');
-            if (!repo.EndsWith("\\") && 
+            if (!repo.EndsWith("\\") &&
                 !repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
                 repo += "\\";
 
-            foreach (Repository recentRepository in Repositories)
+            foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
                     continue;
@@ -50,7 +50,7 @@ namespace GitCommands
                 break;
             }
 
-            Repository repository = new Repository(repo, null, null) {RepositoryType = RepositoryType.History};
+            var repository = new Repository(repo, null, null) {RepositoryType = RepositoryType.History};
             Repositories.Insert(0, repository);
 
             if (Repositories.Count > 30)
