@@ -118,17 +118,17 @@ namespace GitUI
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
                 Close();
             }
 
             if (e.KeyCode == Keys.Escape)
             {
                 listBox1.SelectedItem = null;
+                e.SuppressKeyPress = true;
                 Close();
             }
-            
-            
-            e.Handled = true;
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -138,7 +138,7 @@ namespace GitUI
                 if (listBox1.Items.Count > 1)
                 {
                     listBox1.SelectedIndex = (listBox1.SelectedIndex + 1) % listBox1.Items.Count;
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
             }
             if (e.KeyCode == Keys.Up)
@@ -151,10 +151,13 @@ namespace GitUI
                         newSelectedIndex = listBox1.Items.Count - 1;
                     }
                     listBox1.SelectedIndex = newSelectedIndex;
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
             }
-            
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void listBox1_KeyUp(object sender, KeyEventArgs e)
@@ -166,7 +169,5 @@ namespace GitUI
         {
             Close();
         }
-
-        
     }
 }
