@@ -39,7 +39,7 @@ namespace GitUI
             try
             {
                 FileInfoExtensions
-                    .TemporayMakeFileWriteable(
+                    .MakeFileTemporaryWriteable(
                         Settings.WorkingDir + ".gitignore",
                         x =>
                             {

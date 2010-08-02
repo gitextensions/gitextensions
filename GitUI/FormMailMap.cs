@@ -36,7 +36,7 @@ namespace GitUI
         private void SaveClick(object sender, EventArgs e)
         {
             FileInfoExtensions
-                .TemporayMakeFileWriteable(
+                .MakeFileTemporaryWriteable(
                     Settings.WorkingDir + ".mailmap",
                     x =>
                         {
