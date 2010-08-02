@@ -9,7 +9,7 @@ namespace GitCommands
         ///   Remove all attributes that could cause the file to be read-only 
         ///   and restores them later
         /// </summary>
-        public static void TemporayMakeFileWriteable(string fileName, Action<string> writeableAction)
+        public static void MakeFileTemporaryWriteable(string fileName, Action<string> writeableAction)
         {
             var fileInfo = new FileInfo(fileName);
             if (!fileInfo.Exists)
