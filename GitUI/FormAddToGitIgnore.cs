@@ -21,7 +21,7 @@ namespace GitUI
             try
             {
                 FileInfoExtensions
-                    .TemporayMakeFileWriteable(Settings.WorkingDir + ".gitignore",
+                    .MakeFileTemporaryWriteable(Settings.WorkingDir + ".gitignore",
                                        x =>
                                            {
                                                var gitIgnoreFile = new StringBuilder();
