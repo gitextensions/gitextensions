@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Repository;
 
 namespace GitUI
 {
