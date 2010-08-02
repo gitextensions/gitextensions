@@ -2,14 +2,8 @@
 using System.ComponentModel;
 using System.Xml;
 
-namespace GitCommands
+namespace GitCommands.Repository
 {
-    public enum RepositoryCategoryType
-    {
-        Repositories,
-        RssFeed
-    }
-
     public class RepositoryCategory
     {
         private BindingList<Repository> _repositories;
@@ -138,7 +132,7 @@ namespace GitCommands
             }
         }
 
-        private void HandleFeedTag(XmlDocument rssDoc, int r)
+        private void HandleFeedTag(XmlNode rssDoc, int r)
         {
             // <feed> tag found
             var nodeFeed = rssDoc.ChildNodes[r];

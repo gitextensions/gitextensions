@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitCommands.Repository;
+
+namespace GitUI
 {
     partial class DashboardEditor
     {
@@ -187,7 +189,7 @@
             // 
             // repositoryBindingSource
             // 
-            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository);
+            this.repositoryBindingSource.DataSource = typeof(Repository);
             // 
             // tableLayoutPanel4
             // 

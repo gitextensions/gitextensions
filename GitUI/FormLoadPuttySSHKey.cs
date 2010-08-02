@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using GitCommands.Repository;
 
 namespace GitUI
 {
@@ -18,7 +19,7 @@ namespace GitUI
 
         private void PrivateKeypath_DropDown(object sender, EventArgs e)
         {
-            PrivateKeypath.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            PrivateKeypath.DataSource = Repositories.RepositoryHistory.Repositories;
             PrivateKeypath.DisplayMember = "Path";
 
         }
@@ -29,7 +30,7 @@ namespace GitUI
                 MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
             else
             {
-                GitCommands.Repositories.RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
+                Repositories.RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
                 if (!string.IsNullOrEmpty(PrivateKeypath.Text))
                 {
                     GitCommands.GitCommands.StartPageantWithKey(PrivateKeypath.Text);
