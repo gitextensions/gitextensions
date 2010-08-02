@@ -19,6 +19,7 @@ namespace GitUI
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
             InitializeComponent();
+            textBox1.Select();
             
             if (getCandidates == null)
             {
@@ -62,6 +63,7 @@ namespace GitUI
             listBox1.Visible = true;
                 
             int width = 300;
+            
             using (Graphics g = listBox1.CreateGraphics())
             {
                 for (int i1 = 0; i1 < listBox1.Items.Count; i1++)
@@ -70,10 +72,11 @@ namespace GitUI
                     width = Math.Max(width, itemWidth);
                 }
             }
+            
             listBox1.Width = width;
-            textBox1.Width = width;
-            groupBox1.Width = width + 12;
-            this.Width = groupBox1.Width + 15;
+            listBox1.Height = Math.Min(800, listBox1.Font.Height * (listBox1.Items.Count + 1));
+            
+            Width = listBox1.Width + 15;
         }
 
         public T SelectedItem
@@ -163,5 +166,7 @@ namespace GitUI
         {
             Close();
         }
+
+        
     }
 }
