@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitCommands
+namespace GitCommands.Repository
 {
     public class RepositoryHistory : RepositoryCategory
     {

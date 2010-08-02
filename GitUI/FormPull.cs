@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Repository;
 using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;

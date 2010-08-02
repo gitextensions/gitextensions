@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Repository;
 using GitUI.Properties;
 using System.Text.RegularExpressions;
 using ResourceManager.Translation;

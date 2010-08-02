@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace GitCommands
+namespace GitCommands.Repository
 {
     public static class Repositories
     {
