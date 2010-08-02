@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.IO;
+using GitCommands.Repository;
 
 namespace GitUI
 {
@@ -121,14 +122,14 @@ namespace GitUI
 
         private void From_DropDown(object sender, EventArgs e)
         {
-            _From.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            _From.DataSource = Repositories.RepositoryHistory.Repositories;
             _From.DisplayMember = "Path";
 
         }
 
         private void To_DropDown(object sender, EventArgs e)
         {
-            _To.DataSource = GitCommands.Repositories.RepositoryHistory.Repositories;
+            _To.DataSource = Repositories.RepositoryHistory.Repositories;
             _To.DisplayMember = "Path";
         }
 

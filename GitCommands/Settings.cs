@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
+using GitCommands.Repository;
 
 namespace GitCommands
 {

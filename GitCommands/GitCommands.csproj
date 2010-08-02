@@ -69,8 +69,8 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="RepositoryCategory.cs" />
+    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\RepositoryCategory.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
@@ -89,8 +89,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pull.cs" />
     <Compile Include="Push.cs" />
-    <Compile Include="Repositories.cs" />
-    <Compile Include="RepositoryHistory.cs" />
+    <Compile Include="Repository\Repositories.cs" />
+    <Compile Include="Repository\RepositoryCategoryType.cs" />
+    <Compile Include="Repository\RepositoryHistory.cs" />
+    <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShortDiff.cs" />

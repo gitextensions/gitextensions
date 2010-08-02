@@ -1,14 +1,7 @@
 ﻿using System.Xml.Serialization;
 
-namespace GitCommands
+namespace GitCommands.Repository
 {
-    public enum RepositoryType
-    {
-        Repository,
-        RssFeed,
-        History
-    }
-
     public class Repository
     {
         public Repository()
