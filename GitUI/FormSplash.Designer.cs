@@ -30,7 +30,7 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._version = new System.Windows.Forms.Label();
+            this._versionLabel = new System.Windows.Forms.Label();
             this._programTitle = new System.Windows.Forms.Label();
             this._actionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -50,7 +50,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this._version);
+            this.panel1.Controls.Add(this._versionLabel);
             this.panel1.Controls.Add(this._programTitle);
             this.panel1.Controls.Add(this._actionLabel);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -60,14 +60,14 @@
             this.panel1.Size = new System.Drawing.Size(256, 128);
             this.panel1.TabIndex = 1;
             // 
-            // _version
+            // _versionLabel
             // 
-            this._version.AutoSize = true;
-            this._version.Location = new System.Drawing.Point(134, 30);
-            this._version.Name = "_version";
-            this._version.Size = new System.Drawing.Size(59, 13);
-            this._version.TabIndex = 3;
-            this._version.Text = "Version {0}";
+            this._versionLabel.AutoSize = true;
+            this._versionLabel.Location = new System.Drawing.Point(134, 30);
+            this._versionLabel.Name = "_versionLabel";
+            this._versionLabel.Size = new System.Drawing.Size(59, 13);
+            this._versionLabel.TabIndex = 3;
+            this._versionLabel.Text = "Version {0}";
             // 
             // _programTitle
             // 
@@ -111,6 +111,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label _programTitle;
         private System.Windows.Forms.Label _actionLabel;
-        private System.Windows.Forms.Label _version;
+        private System.Windows.Forms.Label _versionLabel;
     }
 }
