@@ -96,6 +96,18 @@ namespace GitExtensions
                 case "remotes":
                     GitUICommands.Instance.StartRemotesDialog();
                     return;
+                case "blame":
+                    if (args.Length > 2)
+                    {
+                        // Remove working dir from filename. This is to prevent filenames that are too
+                        // long while there is room left when the workingdir was not in the path.
+                        string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+
+                        GitUICommands.Instance.StartBlameDialog(fileName);
+                    }
+                    else
+                        MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
+                    return;
                 case "browse":
                     GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
                     return;
