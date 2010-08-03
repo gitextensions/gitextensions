@@ -347,7 +347,7 @@ namespace GitUI
         private System.Windows.Forms.BindingSource gitStashBindingSource;
         private System.Windows.Forms.RichTextBox StashMessage;
         private System.Windows.Forms.Label label3;
-        private new System.Windows.Forms.Button RefreshButton;
+        private System.Windows.Forms.Button RefreshButton;
         private FileViewer View;
     }
 }

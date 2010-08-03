@@ -70,7 +70,6 @@
             this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
@@ -98,7 +97,7 @@
             this._NewDirectory.Name = "_NewDirectory";
             this._NewDirectory.Size = new System.Drawing.Size(152, 20);
             this._NewDirectory.TabIndex = 3;
-            this._NewDirectory.TextChanged += new System.EventHandler(this.NewDirectory_TextChanged);
+            this._NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
             // label3
             // 
@@ -149,9 +148,9 @@
             this._From.Name = "_From";
             this._From.Size = new System.Drawing.Size(255, 21);
             this._From.TabIndex = 1;
-            this._From.SelectedIndexChanged += new System.EventHandler(this.From_SelectedIndexChanged);
-            this._From.TextUpdate += new System.EventHandler(this.From_TextUpdate);
-            this._From.DropDown += new System.EventHandler(this.From_DropDown);
+            this._From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
+            this._From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
+            this._From.DropDown += new System.EventHandler(this.FromDropDown);
             // 
             // _To
             // 
@@ -160,9 +159,9 @@
             this._To.Name = "_To";
             this._To.Size = new System.Drawing.Size(255, 21);
             this._To.TabIndex = 2;
-            this._To.SelectedIndexChanged += new System.EventHandler(this.To_SelectedIndexChanged);
-            this._To.TextUpdate += new System.EventHandler(this.To_TextUpdate);
-            this._To.DropDown += new System.EventHandler(this.To_DropDown);
+            this._To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
+            this._To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
+            this._To.DropDown += new System.EventHandler(this.ToDropDown);
             // 
             // ToBrowse
             // 
@@ -172,7 +171,7 @@
             this.ToBrowse.TabIndex = 6;
             this.ToBrowse.Text = "Browse";
             this.ToBrowse.UseVisualStyleBackColor = true;
-            this.ToBrowse.Click += new System.EventHandler(this.ToBrowse_Click);
+            this.ToBrowse.Click += new System.EventHandler(this.ToBrowseClick);
             // 
             // FromBrowse
             // 
@@ -182,7 +181,7 @@
             this.FromBrowse.TabIndex = 5;
             this.FromBrowse.Text = "Browse";
             this.FromBrowse.UseVisualStyleBackColor = true;
-            this.FromBrowse.Click += new System.EventHandler(this.FromBrowse_Click);
+            this.FromBrowse.Click += new System.EventHandler(this.FromBrowseClick);
             // 
             // label2
             // 
@@ -192,7 +191,6 @@
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Destination";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
@@ -213,7 +211,7 @@
             this.LoadSSHKey.TabIndex = 25;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(LoadSshKeyClick);
             // 
             // Ok
             // 
@@ -223,7 +221,7 @@
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // Central
             // 
@@ -259,7 +257,7 @@
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
-            this.Load += new System.EventHandler(this.FormClone_Load);
+            this.Load += new System.EventHandler(this.FormCloneLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
