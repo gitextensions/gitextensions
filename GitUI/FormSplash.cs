@@ -1,29 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using ResourceManager.Translation;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     /// <summary>
-    /// DO NOT INHERIT FORM GITEXTENIONSFORM SINCE THE SETTINGS ARE NOT YET LOADED WHEN THIS
-    /// FORM IS SHOWN! TRANSLATIONS AND COLORED APPLICATION ICONS WILL BREAK!!!!
+    ///   DO NOT INHERIT FORM GITEXTENIONSFORM SINCE THE SETTINGS ARE NOT YET LOADED WHEN THIS
+    ///   FORM IS SHOWN! TRANSLATIONS AND COLORED APPLICATION ICONS WILL BREAK!!!!
     /// </summary>
     public partial class FormSplash : Form
     {
-        TranslationString version = new TranslationString("Version {0}");
+        private readonly TranslationString _version = new TranslationString("Version {0}");
 
         public FormSplash()
         {
             InitializeComponent();
 
-            this.Font = SystemFonts.MessageBoxFont;
+            SetFont();
             _programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+        }
+
+        private void SetFont()
+        {
+            Font = SystemFonts.MessageBoxFont;
         }
 
         public void SetAction(string action)
@@ -36,7 +37,7 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _version.Text = string.Format(version.Text, Settings.GitExtensionsVersionString);
+            _versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
         }
     }
 }
