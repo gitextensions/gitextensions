@@ -35,7 +35,7 @@ namespace GitUI
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.Refresh = new System.Windows.Forms.Button();
+            this.RefreshButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Changes = new System.Windows.Forms.ListBox();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
@@ -45,7 +45,7 @@ namespace GitUI
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
-            this.View = new FileViewer();
+            this.View = new GitUI.Editor.FileViewer();
             this.Stash = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
@@ -84,7 +84,6 @@ namespace GitUI
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Clear);
-            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(708, 520);
             this.splitContainer1.SplitterDistance = 485;
             this.splitContainer1.TabIndex = 0;
@@ -134,7 +133,7 @@ namespace GitUI
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.Refresh);
+            this.splitContainer4.Panel1.Controls.Add(this.RefreshButton);
             this.splitContainer4.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer4.Panel2
@@ -144,22 +143,22 @@ namespace GitUI
             this.splitContainer4.SplitterDistance = 25;
             this.splitContainer4.TabIndex = 0;
             // 
-            // Refresh
+            // RefreshButton
             // 
-            this.Refresh.Location = new System.Drawing.Point(173, 0);
-            this.Refresh.Name = "Refresh";
-            this.Refresh.Size = new System.Drawing.Size(75, 23);
-            this.Refresh.TabIndex = 1;
-            this.Refresh.Text = "Refresh";
-            this.Refresh.UseVisualStyleBackColor = true;
-            this.Refresh.Click += new System.EventHandler(this.Refresh_Click);
+            this.RefreshButton.Location = new System.Drawing.Point(173, 0);
+            this.RefreshButton.Name = "Refresh";
+            this.RefreshButton.Size = new System.Drawing.Size(75, 23);
+            this.RefreshButton.TabIndex = 1;
+            this.RefreshButton.Text = "Refresh";
+            this.RefreshButton.UseVisualStyleBackColor = true;
+            this.RefreshButton.Click += new System.EventHandler(this.RefreshClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 13);
+            this.label1.Size = new System.Drawing.Size(172, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tracked changes in working dir";
             // 
@@ -167,11 +166,12 @@ namespace GitUI
             // 
             this.Changes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Changes.FormattingEnabled = true;
+            this.Changes.ItemHeight = 15;
             this.Changes.Location = new System.Drawing.Point(0, 0);
             this.Changes.Name = "Changes";
-            this.Changes.Size = new System.Drawing.Size(251, 173);
+            this.Changes.Size = new System.Drawing.Size(251, 177);
             this.Changes.TabIndex = 0;
-            this.Changes.SelectedIndexChanged += new System.EventHandler(this.Changes_SelectedIndexChanged);
+            this.Changes.SelectedIndexChanged += new System.EventHandler(this.ChangesSelectedIndexChanged);
             // 
             // splitContainer5
             // 
@@ -198,10 +198,10 @@ namespace GitUI
             // StashMessage
             // 
             this.StashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.StashMessage.Location = new System.Drawing.Point(52, 29);
+            this.StashMessage.Location = new System.Drawing.Point(63, 29);
             this.StashMessage.Name = "StashMessage";
             this.StashMessage.ReadOnly = true;
-            this.StashMessage.Size = new System.Drawing.Size(196, 49);
+            this.StashMessage.Size = new System.Drawing.Size(185, 49);
             this.StashMessage.TabIndex = 3;
             this.StashMessage.Text = "";
             // 
@@ -210,7 +210,7 @@ namespace GitUI
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(1, 29);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.Size = new System.Drawing.Size(56, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "Message:";
             // 
@@ -219,11 +219,11 @@ namespace GitUI
             this.Stashes.DataSource = this.gitStashBindingSource;
             this.Stashes.DisplayMember = "Name";
             this.Stashes.FormattingEnabled = true;
-            this.Stashes.Location = new System.Drawing.Point(52, 3);
+            this.Stashes.Location = new System.Drawing.Point(63, 3);
             this.Stashes.Name = "Stashes";
-            this.Stashes.Size = new System.Drawing.Size(196, 21);
+            this.Stashes.Size = new System.Drawing.Size(185, 23);
             this.Stashes.TabIndex = 1;
-            this.Stashes.SelectedIndexChanged += new System.EventHandler(this.Stashes_SelectedIndexChanged);
+            this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
             // 
             // gitStashBindingSource
             // 
@@ -234,7 +234,7 @@ namespace GitUI
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(1, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 13);
+            this.label2.Size = new System.Drawing.Size(38, 15);
             this.label2.TabIndex = 0;
             this.label2.Text = "Stash:";
             // 
@@ -242,16 +242,19 @@ namespace GitUI
             // 
             this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Stashed.FormattingEnabled = true;
+            this.Stashed.ItemHeight = 15;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(251, 186);
+            this.Stashed.Size = new System.Drawing.Size(251, 190);
             this.Stashed.TabIndex = 0;
-            this.Stashed.SelectedIndexChanged += new System.EventHandler(this.Stashed_SelectedIndexChanged);
+            this.Stashed.SelectedIndexChanged += new System.EventHandler(this.StashedSelectedIndexChanged);
             // 
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.View.IgnoreWhitespaceChanges = false;
+            this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";
@@ -270,7 +273,7 @@ namespace GitUI
             this.Stash.TabIndex = 2;
             this.Stash.Text = "Stash all changes";
             this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(this.Stash_Click);
+            this.Stash.Click += new System.EventHandler(this.StashClick);
             // 
             // Apply
             // 
@@ -280,7 +283,7 @@ namespace GitUI
             this.Apply.TabIndex = 1;
             this.Apply.Text = "Apply selected stash to working dir";
             this.Apply.UseVisualStyleBackColor = true;
-            this.Apply.Click += new System.EventHandler(this.Apply_Click);
+            this.Apply.Click += new System.EventHandler(this.ApplyClick);
             // 
             // Clear
             // 
@@ -290,20 +293,20 @@ namespace GitUI
             this.Clear.TabIndex = 0;
             this.Clear.Text = "Drop selected stash";
             this.Clear.UseVisualStyleBackColor = true;
-            this.Clear.Click += new System.EventHandler(this.Clear_Click);
+            this.Clear.Click += new System.EventHandler(this.ClearClick);
             // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormStash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stash";
-            this.Load += new System.EventHandler(this.FormStash_Load);
-            this.Shown += new System.EventHandler(this.FormStash_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStash_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStashFormClosing);
+            this.Load += new System.EventHandler(this.FormStashLoad);
+            this.Shown += new System.EventHandler(this.FormStashShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -344,7 +347,7 @@ namespace GitUI
         private System.Windows.Forms.BindingSource gitStashBindingSource;
         private System.Windows.Forms.RichTextBox StashMessage;
         private System.Windows.Forms.Label label3;
-        private new System.Windows.Forms.Button Refresh;
+        private new System.Windows.Forms.Button RefreshButton;
         private FileViewer View;
     }
 }
