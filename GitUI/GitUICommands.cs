@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GitUI.Blame;
 using GitUI.Plugin;
 using PatchApply;
 using GitCommands;
@@ -39,6 +40,9 @@ namespace GitUI
 
         public event GitUIEventHandler PreFileHistory;
         public event GitUIEventHandler PostFileHistory;
+
+        public event GitUIEventHandler PreBlame;        
+        public event GitUIEventHandler PostBlame;
 
         public event GitUIEventHandler PreCompareRevisions;
         public event GitUIEventHandler PostCompareRevisions;
@@ -639,5 +643,21 @@ namespace GitUI
             return true;
         }
 
+        public bool StartBlameDialog(string fileName)
+        {
+            return StartBlameDialog(fileName, null);
+        }
+
+        private bool StartBlameDialog(string fileName, GitRevision revision)
+        {
+            if (!InvokeEvent(PreBlame))
+                return false;
+
+            new FormBlame(fileName, revision).ShowDialog();
+
+            InvokeEvent(PostBlame);
+
+            return false;
+        }
     }
 }

@@ -93,7 +93,7 @@
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Name = "BlameFile";
             this.BlameFile.Size = new System.Drawing.Size(569, 493);
-            this.BlameFile.TabIndex = 4;
+            this.BlameFile.TabIndex = 0;
             // 
             // commitInfo
             // 
