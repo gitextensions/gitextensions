@@ -1,63 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
 
 namespace GitUI
 {
     public partial class FormRebase : GitExtensionsForm
     {
-        private readonly string defaultBranch;
+        private readonly string _defaultBranch;
 
         public FormRebase(string defaultBranch)
         {
-            InitializeComponent(); Translate();
-            this.defaultBranch = defaultBranch;
+            InitializeComponent();
+            Translate();
+            _defaultBranch = defaultBranch;
         }
 
-        private void FormRebase_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormRebaseFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("rebase");
         }
 
-        private void FormRebase_Load(object sender, EventArgs e)
+        private void FormRebaseLoad(object sender, EventArgs e)
         {
             RestorePosition("rebase");
 
-            string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
+            var selectedHead = GitCommands.GitCommands.GetSelectedBranch();
             Currentbranch.Text = "Current branch: " + selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
 
-            if (defaultBranch != null)
-            {
-                Branches.Text = defaultBranch;
-            }
+            if (_defaultBranch != null)
+                Branches.Text = _defaultBranch;
 
             Branches.Select();
 
-            if (GitCommands.GitCommands.InTheMiddleOfRebase())
-                splitContainer2.SplitterDistance = 0;
-            else
-                splitContainer2.SplitterDistance = 74;
-            
-
+            splitContainer2.SplitterDistance = GitCommands.GitCommands.InTheMiddleOfRebase() ? 0 : 74;
             EnableButtons();
         }
 
         private void EnableButtons()
         {
-
-
             if (GitCommands.GitCommands.InTheMiddleOfRebase())
             {
-                if (this.Height < 200)
-                    this.Height = 500;
+                if (Height < 200)
+                    Height = 500;
 
                 Branches.Enabled = false;
                 Ok.Enabled = false;
@@ -78,7 +65,7 @@ namespace GitUI
                 Skip.Enabled = false;
                 Abort.Enabled = false;
             }
-            
+
             SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = "Continue rebase";
@@ -93,43 +80,39 @@ namespace GitUI
                 Mergetool.Text = ">Solve conflicts<";
                 MergeToolPanel.BackColor = Color.Black;
             }
-            else
-                if (GitCommands.GitCommands.InTheMiddleOfRebase())
-                {
-                    AcceptButton = Resolved;
-                    Resolved.Focus();
-                    Resolved.Text = ">Continue rebase<";
-                    ContinuePanel.BackColor = Color.Black;
-                }
-
-            
+            else if (GitCommands.GitCommands.InTheMiddleOfRebase())
+            {
+                AcceptButton = Resolved;
+                Resolved.Focus();
+                Resolved.Text = ">Continue rebase<";
+                ContinuePanel.BackColor = Color.Black;
+            }
         }
 
-        private void Mergetool_Click(object sender, EventArgs e)
+        private void MergetoolClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartResolveConflictsDialog();
             EnableButtons();
         }
 
-        private void AddFiles_Click(object sender, EventArgs e)
+        private static void AddFilesClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartAddFilesDialog();
         }
 
-        private void Resolved_Click(object sender, EventArgs e)
+        private void ResolvedClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.ContinueRebaseCmd()).ShowDialog();
 
             if (!GitCommands.GitCommands.InTheMiddleOfRebase())
                 Close();
-            
+
             EnableButtons();
             patchGrid1.Initialize();
-
         }
 
-        private void Skip_Click(object sender, EventArgs e)
+        private void SkipClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.SkipRebaseCmd()).ShowDialog();
@@ -141,7 +124,7 @@ namespace GitUI
             patchGrid1.Initialize();
         }
 
-        private void Abort_Click(object sender, EventArgs e)
+        private void AbortClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.AbortRebaseCmd()).ShowDialog();
@@ -153,7 +136,7 @@ namespace GitUI
             patchGrid1.Initialize();
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(Branches.Text))
@@ -162,26 +145,23 @@ namespace GitUI
                 return;
             }
 
-            FormProcess form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
+            var form = new FormProcess(GitCommands.GitCommands.RebaseCmd(Branches.Text));
             form.ShowDialog();
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
+            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() &&
+                !GitCommands.GitCommands.InTheMiddleOfRebase() && 
+                !GitCommands.GitCommands.InTheMiddleOfPatch())
                 Close();
 
             EnableButtons();
             patchGrid1.Initialize();
         }
 
-        private void SolveMergeconflicts_Click(object sender, EventArgs e)
+        private void SolveMergeconflictsClick(object sender, EventArgs e)
         {
-            Mergetool_Click(sender, e);
-        }
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
+            MergetoolClick(sender, e);
         }
     }
 }
