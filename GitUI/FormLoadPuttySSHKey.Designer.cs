@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormLoadPuttySSHKey
+    partial class FormLoadPuttySshKey
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLoadPuttySSHKey));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLoadPuttySshKey));
             this.label1 = new System.Windows.Forms.Label();
             this.PrivateKeypath = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
@@ -51,7 +51,7 @@
             this.PrivateKeypath.Name = "PrivateKeypath";
             this.PrivateKeypath.Size = new System.Drawing.Size(297, 21);
             this.PrivateKeypath.TabIndex = 28;
-            this.PrivateKeypath.DropDown += new System.EventHandler(this.PrivateKeypath_DropDown);
+            this.PrivateKeypath.DropDown += new System.EventHandler(this.PrivateKeypathDropDown);
             // 
             // Browse
             // 
@@ -61,7 +61,7 @@
             this.Browse.TabIndex = 29;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.Browse_Click);
+            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // LoadSSHKey
             // 
@@ -73,7 +73,7 @@
             this.LoadSSHKey.TabIndex = 26;
             this.LoadSSHKey.Text = "Load";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
             // FormLoadPuttySSHKey
             // 
@@ -88,7 +88,7 @@
             //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormLoadPuttySSHKey";
+            this.Name = "FormLoadPuttySshKey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Load PuTTY SSH key into authentication agent";
             this.ResumeLayout(false);

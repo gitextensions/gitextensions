@@ -141,7 +141,7 @@ namespace GitUI
 
         private static void LoadSshKeyClick(object sender, EventArgs e)
         {
-            new FormLoadPuttySSHKey().ShowDialog();
+            new FormLoadPuttySshKey().ShowDialog();
         }
 
         private void FormCloneLoad(object sender, EventArgs e)
