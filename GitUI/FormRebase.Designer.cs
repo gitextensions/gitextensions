@@ -90,7 +90,7 @@
             this.Ok.TabIndex = 7;
             this.Ok.Text = "Rebase";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // Branches
             // 
@@ -117,7 +117,7 @@
             this.AddFiles.TabIndex = 14;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
+            this.AddFiles.Click += new System.EventHandler(AddFilesClick);
             // 
             // Resolved
             // 
@@ -127,7 +127,7 @@
             this.Resolved.TabIndex = 13;
             this.Resolved.Text = "Continue rebase";
             this.Resolved.UseVisualStyleBackColor = true;
-            this.Resolved.Click += new System.EventHandler(this.Resolved_Click);
+            this.Resolved.Click += new System.EventHandler(this.ResolvedClick);
             // 
             // Abort
             // 
@@ -137,7 +137,7 @@
             this.Abort.TabIndex = 12;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            this.Abort.Click += new System.EventHandler(this.AbortClick);
             // 
             // Skip
             // 
@@ -147,7 +147,7 @@
             this.Skip.TabIndex = 11;
             this.Skip.Text = "Skip this commit";
             this.Skip.UseVisualStyleBackColor = true;
-            this.Skip.Click += new System.EventHandler(this.Skip_Click);
+            this.Skip.Click += new System.EventHandler(this.SkipClick);
             // 
             // Mergetool
             // 
@@ -157,7 +157,7 @@
             this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
-            this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
+            this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
             // 
             // splitContainer1
             // 
@@ -181,7 +181,6 @@
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
             this.splitContainer1.Panel2.Controls.Add(this.ContinuePanel);
             this.splitContainer1.Panel2.Controls.Add(this.MergeToolPanel);
-            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(675, 368);
             this.splitContainer1.SplitterDistance = 557;
             this.splitContainer1.TabIndex = 17;
@@ -260,7 +259,7 @@
             this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
             this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflictsClick);
             // 
             // ContinuePanel
             // 
@@ -321,8 +320,8 @@
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRebase_FormClosing);
-            this.Load += new System.EventHandler(this.FormRebase_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRebaseFormClosing);
+            this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
