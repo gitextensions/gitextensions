@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GitUI.Blame;
 using GitUI.Plugin;
+using GitUI.Tag;
 using PatchApply;
 using GitCommands;
 using System.IO;

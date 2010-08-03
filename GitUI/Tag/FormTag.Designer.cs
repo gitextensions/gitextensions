@@ -1,6 +1,6 @@
 ﻿using GitUI.SpellChecker;
 
-namespace GitUI
+namespace GitUI.Tag
 {
     partial class FormTag
     {
