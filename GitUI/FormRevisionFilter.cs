@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI
@@ -13,15 +7,16 @@ namespace GitUI
     {
         public FormRevisionFilter()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
-        private void FormRevisionFilter_Load(object sender, EventArgs e)
+        private void FormRevisionFilterLoad(object sender, EventArgs e)
         {
             EnableFilters();
         }
 
-        private void SinceCheck_CheckedChanged(object sender, EventArgs e)
+        private void SinceCheckCheckedChanged(object sender, EventArgs e)
         {
             EnableFilters();
         }
@@ -58,23 +53,23 @@ namespace GitUI
 
         public string GetFilter()
         {
-            string filter = "";
+            var filter = "";
             if (SinceCheck.Checked)
-                filter += " --since=\"" + Since.Value.ToString() + "\"";
+                filter += string.Format(" --since=\"{0}\"", Since.Value);
             if (CheckUntil.Checked)
-                filter += " --until=\"" + Until.Value.ToString() + "\"";
+                filter += string.Format(" --until=\"{0}\"", Until.Value);
             if (AuthorCheck.Checked)
-                filter += " --author=\"" + Author.Text + "\"";
+                filter += string.Format(" --author=\"{0}\"", Author.Text);
             if (CommitterCheck.Checked)
-                filter += " --committer=\"" + Committer.Text + "\"";
+                filter += string.Format(" --committer=\"{0}\"", Committer.Text);
             if (MessageCheck.Checked)
-                filter += " --grep=\"" + Message.Text + "\"";
+                filter += string.Format(" --grep=\"{0}\"", Message.Text);
             if (LimitCheck.Checked)
-                filter += " --max-count=\"" + _Limit.Value.ToString("N") + "\"";
+                filter += string.Format(" --max-count=\"{0}\"", _Limit.Value.ToString("N"));
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)
-                filter += " -- \"" + FileFilter.Text.Replace('\\', '/') + "\"";
+                filter += string.Format(" -- \"{0}\"", FileFilter.Text.Replace('\\', '/'));
 
             return filter;
         }
@@ -87,7 +82,7 @@ namespace GitUI
             return BranchFilter.Text;
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             Close();
         }
