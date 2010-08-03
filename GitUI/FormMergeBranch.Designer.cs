@@ -123,7 +123,7 @@
             this.Ok.TabIndex = 4;
             this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // label1
             // 
@@ -173,7 +173,7 @@
             this.Name = "FormMergeBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Merge branches";
-            this.Load += new System.EventHandler(this.FormMergeBranch_Load);
+            this.Load += new System.EventHandler(this.FormMergeBranchLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
