@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddSubmodule));
             this.Add = new System.Windows.Forms.Button();
             this.Browse = new System.Windows.Forms.Button();
             this.Directory = new System.Windows.Forms.ComboBox();
@@ -62,9 +61,9 @@
             // Directory
             // 
             this.Directory.FormattingEnabled = true;
-            this.Directory.Location = new System.Drawing.Point(106, 14);
+            this.Directory.Location = new System.Drawing.Point(119, 14);
             this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(266, 21);
+            this.Directory.Size = new System.Drawing.Size(253, 23);
             this.Directory.TabIndex = 5;
             this.Directory.SelectedIndexChanged += new System.EventHandler(this.DirectorySelectedIndexChanged);
             this.Directory.TextUpdate += new System.EventHandler(this.DirectoryTextUpdate);
@@ -74,7 +73,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(5, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 13);
+            this.label1.Size = new System.Drawing.Size(108, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "Path to submodule";
             // 
@@ -83,15 +82,15 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(5, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.Size = new System.Drawing.Size(62, 15);
             this.label2.TabIndex = 8;
             this.label2.Text = "Local path";
             // 
             // LocalPath
             // 
-            this.LocalPath.Location = new System.Drawing.Point(106, 41);
+            this.LocalPath.Location = new System.Drawing.Point(119, 41);
             this.LocalPath.Name = "LocalPath";
-            this.LocalPath.Size = new System.Drawing.Size(266, 20);
+            this.LocalPath.Size = new System.Drawing.Size(253, 23);
             this.LocalPath.TabIndex = 9;
             // 
             // label3
@@ -99,22 +98,22 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(5, 71);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 13);
+            this.label3.Size = new System.Drawing.Size(44, 15);
             this.label3.TabIndex = 10;
             this.label3.Text = "Branch";
             // 
             // Branch
             // 
             this.Branch.FormattingEnabled = true;
-            this.Branch.Location = new System.Drawing.Point(106, 68);
+            this.Branch.Location = new System.Drawing.Point(119, 68);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(266, 21);
+            this.Branch.Size = new System.Drawing.Size(253, 23);
             this.Branch.TabIndex = 11;
             this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             // 
             // FormAddSubmodule
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(460, 131);
             this.Controls.Add(this.Branch);
@@ -126,7 +125,6 @@
             this.Controls.Add(this.Directory);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAddSubmodule";
