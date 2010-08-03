@@ -18,16 +18,14 @@ namespace GitUI
 
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".mailmap"))
-                {
-                    using (var re = new StreamReader(Settings.WorkingDir + ".mailmap", Settings.Encoding))
-                    {
+                var mailMap = Settings.WorkingDir + ".mailmap";
+                if (File.Exists(mailMap))
+                    using (var re = new StreamReader(mailMap, Settings.Encoding))
                         MailMapFile = re.ReadToEnd();
-                    }
-                }
+
                 _MailMapText.Text = MailMapFile;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
@@ -44,9 +42,7 @@ namespace GitUI
                             // that causes the first line to include 3 extra bytes. (encoding marker??)
                             MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
                             using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
-                            {
                                 tw.Write(MailMapFile);
-                            }
                             Close();
                         });
         }
