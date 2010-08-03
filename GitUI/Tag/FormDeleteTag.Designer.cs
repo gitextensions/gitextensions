@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.Tag
 {
     partial class FormDeleteTag
     {
@@ -43,7 +43,7 @@
             this.Ok.TabIndex = 8;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // Tags
             // 
@@ -78,7 +78,7 @@
             this.Name = "FormDeleteTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete tag";
-            this.Load += new System.EventHandler(this.FormDeleteTag_Load);
+            this.Load += new System.EventHandler(this.FormDeleteTagLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 
