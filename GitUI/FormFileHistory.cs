@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Editor;
-using ICSharpCode.TextEditor.Document;
 
 namespace GitUI
 {
     public partial class FormFileHistory : GitExtensionsForm
     {
-        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private List<GitBlame> _blameList;
-        private string _lastRevision;
-
         public FormFileHistory(string fileName, GitRevision revision)
         {
             InitializeComponent();
@@ -30,24 +21,6 @@ namespace GitUI
 
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
-
-            BlameFile.LineViewerStyle = LineViewerStyle.FullRow;
-
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Width = 0;
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;
-            BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.LineViewerStyle = LineViewerStyle.FullRow;
-            BlameCommitter.Enabled = false;
-            BlameCommitter.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
-
-            BlameFile.ActiveTextAreaControl.VScrollBar.ValueChanged += VScrollBarValueChanged;
-            BlameFile.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.TextArea.Click += BlameFileClick;
-            BlameFile.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
-
-            BlameFile.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
         }
 
         public FormFileHistory(string fileName) : this(fileName, null)
@@ -72,21 +45,6 @@ namespace GitUI
                 FileChanges.Filter = " -- \"" + fileName + "\"";
         }
 
-        private void TextAreaMouseDown(object sender, MouseEventArgs e)
-        {
-            if (_blameList == null)
-                return;
-
-            if (BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= _blameList.Count)
-                return;
-
-            var newRevision = _blameList[BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)].CommitGuid;
-            if (_lastRevision == newRevision)
-                return;
-
-            _lastRevision = newRevision;
-            commitInfo.SetRevision(_lastRevision);
-        }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
@@ -127,14 +85,7 @@ namespace GitUI
             Text = string.Format("File History ({0})", fileName);
 
             if (tabControl1.SelectedTab == Blame)
-            {
-                var scrollpos = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
-                FillBlameTab(revision.Guid, fileName);
-                BlameFile.ActiveTextAreaControl.VScrollBar.Value =
-                    BlameFile.ActiveTextAreaControl.VScrollBar.Maximum >= scrollpos
-                        ? scrollpos
-                        : BlameFile.ActiveTextAreaControl.VScrollBar.Maximum;
-            }
+                blameControl1.LoadBlame(revision.Guid, fileName);
             if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
@@ -176,58 +127,6 @@ namespace GitUI
                     Diff.ViewPatch("You need to select 2 files to view diff.");
                     break;
             }
-        }
-
-        private void FillBlameTab(string guid, string fileName)
-        {
-            var blameCommitter = new StringBuilder();
-            var blameFile = new StringBuilder();
-
-            _blameList = GitCommands.GitCommands.Blame(fileName, guid);
-
-            foreach (var blame in _blameList)
-            {
-                blameCommitter.AppendLine(blame.Author);
-                blameFile.AppendLine(blame.Text);
-            }
-
-            EditorOptions.SetSyntax(BlameFile, fileName);
-
-            BlameCommitter.Text = blameCommitter.ToString();
-            BlameFile.Text = blameFile.ToString();
-        }
-
-        private void BlameFileKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
-                _findAndReplaceForm.ShowFor(BlameFile, false);
-            SyncBlameViews();
-        }
-
-
-        private void VScrollBarValueChanged(object sender, EventArgs e)
-        {
-            SyncBlameViews();
-        }
-
-        private void BlameFileClick(object sender, EventArgs e)
-        {
-            SyncBlameViews();
-        }
-
-        private void SyncBlameViews()
-        {
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Value = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
-        }
-
-        private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
-        {
-            if (_blameList == null || _blameList.Count < BlameFile.ActiveTextAreaControl.TextArea.Caret.Line)
-                return;
-
-            var frm = new FormDiffSmall();
-            frm.SetRevision(_blameList[BlameFile.ActiveTextAreaControl.TextArea.Caret.Line].CommitGuid);
-            frm.ShowDialog();
         }
 
 
