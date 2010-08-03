@@ -95,7 +95,7 @@
             this.PullImage.Location = new System.Drawing.Point(0, 0);
             this.PullImage.Name = "PullImage";
             this.PullImage.Size = new System.Drawing.Size(80, 290);
-            this.PullImage.TabIndex = 0;
+            this.PullImage.TabIndex = 18;
             this.PullImage.TabStop = false;
             // 
             // groupBox2
@@ -109,7 +109,7 @@
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(541, 80);
-            this.groupBox2.TabIndex = 18;
+            this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
             // 
@@ -119,7 +119,7 @@
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
-            this.PullFromUrl.TabIndex = 19;
+            this.PullFromUrl.TabIndex = 3;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
             this.PullFromUrl.UseVisualStyleBackColor = true;
@@ -132,7 +132,7 @@
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
             this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
-            this.PullFromRemote.TabIndex = 18;
+            this.PullFromRemote.TabIndex = 2;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
             this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
@@ -144,7 +144,7 @@
             this.AddRemote.Location = new System.Drawing.Point(431, 18);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 23);
-            this.AddRemote.TabIndex = 17;
+            this.AddRemote.TabIndex = 1;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
@@ -155,7 +155,7 @@
             this.Remotes.Location = new System.Drawing.Point(128, 19);
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(297, 21);
-            this.Remotes.TabIndex = 16;
+            this.Remotes.TabIndex = 0;
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
             this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
@@ -167,7 +167,7 @@
             this.BrowseSource.Location = new System.Drawing.Point(431, 44);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(102, 23);
-            this.BrowseSource.TabIndex = 4;
+            this.BrowseSource.TabIndex = 5;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
             this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
@@ -179,7 +179,7 @@
             this.PullSource.Location = new System.Drawing.Point(128, 46);
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(297, 21);
-            this.PullSource.TabIndex = 13;
+            this.PullSource.TabIndex = 4;
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
             // 
@@ -190,7 +190,7 @@
             this.LoadSSHKey.Location = new System.Drawing.Point(320, 256);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
-            this.LoadSSHKey.TabIndex = 24;
+            this.LoadSSHKey.TabIndex = 16;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -202,7 +202,7 @@
             this.Pull.Location = new System.Drawing.Point(447, 256);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
-            this.Pull.TabIndex = 7;
+            this.Pull.TabIndex = 17;
             this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
@@ -213,7 +213,7 @@
             this.AutoStash.Location = new System.Drawing.Point(219, 260);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(76, 17);
-            this.AutoStash.TabIndex = 20;
+            this.AutoStash.TabIndex = 15;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
@@ -235,7 +235,7 @@
             this.Fetch.Location = new System.Drawing.Point(7, 75);
             this.Fetch.Name = "Fetch";
             this.Fetch.Size = new System.Drawing.Size(212, 17);
-            this.Fetch.TabIndex = 2;
+            this.Fetch.TabIndex = 9;
             this.Fetch.TabStop = true;
             this.Fetch.Text = "Do not merge, only &fetch remote branch";
             this.Fetch.UseVisualStyleBackColor = true;
@@ -247,7 +247,7 @@
             this.Rebase.Location = new System.Drawing.Point(7, 41);
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(411, 30);
-            this.Rebase.TabIndex = 1;
+            this.Rebase.TabIndex = 10;
             this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
                 "d\r\nto choose a remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
@@ -260,7 +260,7 @@
             this.Merge.Location = new System.Drawing.Point(7, 20);
             this.Merge.Name = "Merge";
             this.Merge.Size = new System.Drawing.Size(210, 17);
-            this.Merge.TabIndex = 0;
+            this.Merge.TabIndex = 11;
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
@@ -273,7 +273,7 @@
             this.groupBox3.Location = new System.Drawing.Point(3, 90);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(541, 52);
-            this.groupBox3.TabIndex = 19;
+            this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
             // 
@@ -283,7 +283,7 @@
             this.Branches.Location = new System.Drawing.Point(128, 19);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(297, 21);
-            this.Branches.TabIndex = 5;
+            this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
             // label2
@@ -292,7 +292,7 @@
             this.label2.Location = new System.Drawing.Point(8, 22);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 13);
-            this.label2.TabIndex = 6;
+            this.label2.TabIndex = 7;
             this.label2.Text = "Remote branch";
             this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
             // 
@@ -311,7 +311,7 @@
             this.Mergetool.Location = new System.Drawing.Point(3, 256);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
-            this.Mergetool.TabIndex = 11;
+            this.Mergetool.TabIndex = 13;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
