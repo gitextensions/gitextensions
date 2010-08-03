@@ -28,29 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddFiles));
-            this.button1 = new System.Windows.Forms.Button();
+            this.AddFiles = new System.Windows.Forms.Button();
             this.Filter = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ShowFiles = new System.Windows.Forms.Button();
             this.force = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // button1
+            // AddFiles
             // 
-            this.button1.Location = new System.Drawing.Point(356, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Add files";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.AddFiles.Location = new System.Drawing.Point(356, 5);
+            this.AddFiles.Name = "AddFiles";
+            this.AddFiles.Size = new System.Drawing.Size(75, 23);
+            this.AddFiles.TabIndex = 2;
+            this.AddFiles.Text = "Add files";
+            this.AddFiles.UseVisualStyleBackColor = true;
+            this.AddFiles.Click += new System.EventHandler(this.AddFilesClick);
             // 
             // Filter
             // 
             this.Filter.Location = new System.Drawing.Point(71, 5);
             this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(176, 20);
+            this.Filter.Size = new System.Drawing.Size(176, 23);
             this.Filter.TabIndex = 1;
             this.Filter.Text = ".";
             // 
@@ -59,7 +58,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.Size = new System.Drawing.Size(33, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filter";
             // 
@@ -71,36 +70,34 @@
             this.ShowFiles.TabIndex = 3;
             this.ShowFiles.Text = "Show files";
             this.ShowFiles.UseVisualStyleBackColor = true;
-            this.ShowFiles.Click += new System.EventHandler(this.ShowFiles_Click);
+            this.ShowFiles.Click += new System.EventHandler(this.ShowFilesClick);
             // 
             // force
             // 
             this.force.AutoSize = true;
             this.force.Location = new System.Drawing.Point(71, 32);
             this.force.Name = "force";
-            this.force.Size = new System.Drawing.Size(53, 17);
+            this.force.Size = new System.Drawing.Size(55, 19);
             this.force.TabIndex = 4;
             this.force.Text = "Force";
             this.force.UseVisualStyleBackColor = true;
             // 
             // FormAddFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 56);
             this.Controls.Add(this.force);
             this.Controls.Add(this.ShowFiles);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.AddFiles);
             this.Controls.Add(this.Filter);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAddFiles";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add files";
-            this.Load += new System.EventHandler(this.FormAddFiles_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,7 +107,7 @@
 
         private System.Windows.Forms.TextBox Filter;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.Button ShowFiles;
         private System.Windows.Forms.CheckBox force;
     }
