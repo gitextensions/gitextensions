@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Tag;
 using ResourceManager.Translation;
 
 namespace GitUI

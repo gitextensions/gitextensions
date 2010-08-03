@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace GitUI
+namespace GitUI.Tag
 {
     public partial class FormDeleteTag : GitExtensionsForm
     {
@@ -15,13 +11,13 @@ namespace GitUI
             InitializeComponent(); Translate();
         }
 
-        private void FormDeleteTag_Load(object sender, EventArgs e)
+        private void FormDeleteTagLoad(object sender, EventArgs e)
         {
             Tags.DisplayMember = "Name";
             Tags.DataSource = GitCommands.GitCommands.GetHeads(true, false);
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
@@ -32,8 +28,9 @@ namespace GitUI
 
                 Close();
             }
-            catch
+            catch(Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
     }

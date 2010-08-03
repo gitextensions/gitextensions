@@ -5,18 +5,18 @@ using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 
-namespace GitUI
+namespace GitUI.Tag
 {
-    public partial class FormTag : GitExtensionsForm
+    public partial class FormTagSmall : GitExtensionsForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the tag on.");
 
-        private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
+        private readonly TranslationString _noTagMassage = new TranslationString("Please enter a tag message");
 
-        public FormTag()
+        public FormTagSmall()
         {
             InitializeComponent();
             Translate();
@@ -24,22 +24,13 @@ namespace GitUI
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
         }
 
-        private void FormTagFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("tag");
-        }
+        public GitRevision Revision { get; set; }
 
-        private void FormTagLoad(object sender, EventArgs e)
-        {
-            RestorePosition("tag");
-        }
-
-
-        private void CreateTagClick(object sender, EventArgs e)
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                if (GitRevisions.GetRevisions().Count != 1)
+                if (Revision == null)
                 {
                     MessageBox.Show(_noRevisionSelected.Text, _messageCaption.Text);
                     return;
@@ -48,7 +39,7 @@ namespace GitUI
                 {
                     if (string.IsNullOrEmpty(tagMessage.Text))
                     {
-                        MessageBox.Show(_noTagMessage.Text, _messageCaption.Text);
+                        MessageBox.Show(_noTagMassage.Text, _messageCaption.Text);
                         return;
                     }
 
@@ -56,8 +47,7 @@ namespace GitUI
                 }
 
 
-                var s = GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
-                                                    annotate.Checked);
+                var s = GitCommands.GitCommands.Tag(TName.Text, Revision.Guid, annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))
                     MessageBox.Show(s, _messageCaption.Text);
@@ -67,6 +57,13 @@ namespace GitUI
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+
+        private void NameKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                OkClick(null, null);
         }
 
         private void AnnotateCheckedChanged(object sender, EventArgs e)

@@ -307,10 +307,10 @@
     <Compile Include="FormDeleteBranch.Designer.cs">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDeleteTag.cs">
+    <Compile Include="Tag\FormDeleteTag.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDeleteTag.Designer.cs">
+    <Compile Include="Tag\FormDeleteTag.Designer.cs">
       <DependentUpon>FormDeleteTag.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDiff.cs">
@@ -472,16 +472,16 @@
     <Compile Include="FormSubmodules.Designer.cs">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormTag.cs">
+    <Compile Include="Tag\FormTag.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTag.Designer.cs">
+    <Compile Include="Tag\FormTag.Designer.cs">
       <DependentUpon>FormTag.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormTagSmall.cs">
+    <Compile Include="Tag\FormTagSmall.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTagSmall.Designer.cs">
+    <Compile Include="Tag\FormTagSmall.Designer.cs">
       <DependentUpon>FormTagSmall.cs</DependentUpon>
     </Compile>
     <Compile Include="FormVerify.cs">
@@ -698,7 +698,7 @@
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDeleteTag.resx">
+    <EmbeddedResource Include="Tag\FormDeleteTag.resx">
       <DependentUpon>FormDeleteTag.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -818,11 +818,11 @@
       <DependentUpon>FormSubmodules.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormTag.resx">
+    <EmbeddedResource Include="Tag\FormTag.resx">
       <DependentUpon>FormTag.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormTagSmall.resx">
+    <EmbeddedResource Include="Tag\FormTagSmall.resx">
       <DependentUpon>FormTagSmall.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
