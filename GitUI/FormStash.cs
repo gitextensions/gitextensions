@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -13,23 +7,26 @@ namespace GitUI
 {
     public partial class FormStash : GitExtensionsForm
     {
+        public bool NeedRefresh;
+
         public FormStash()
         {
-            InitializeComponent(); Translate();
-            View.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(View_ExtraDiffArgumentsChanged);
+            InitializeComponent();
+            Translate();
+            View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
 
-        void View_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private void ViewExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ViewCurrentChanges();
         }
 
-        private void FormStash_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormStashFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("stash");
         }
 
-        private void FormStash_Load(object sender, EventArgs e)
+        private void FormStashLoad(object sender, EventArgs e)
         {
             RestorePosition("stash");
         }
@@ -55,19 +52,17 @@ namespace GitUI
 
         private void InitializeTracked()
         {
-            List<GitItemStatus> itemStatusList = GitCommands.GitCommands.GetAllChangedFiles();// GitStatus(false);
+            var itemStatusList = GitCommands.GitCommands.GetAllChangedFiles();
 
             Changes.DisplayMember = "Name";
             Changes.DataSource = itemStatusList;
         }
 
-        private void Stashed_SelectedIndexChanged(object sender, EventArgs e)
+        private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             if (Stashed.SelectedItem is Patch)
-            {
-                ShowPatch((Patch)Stashed.SelectedItem);
-            }
+                ShowPatch((Patch) Stashed.SelectedItem);
         }
 
         private void ShowPatch(Patch patch)
@@ -75,7 +70,7 @@ namespace GitUI
             View.ViewPatch(patch.Text);
         }
 
-        private void Changes_SelectedIndexChanged(object sender, EventArgs e)
+        private void ChangesSelectedIndexChanged(object sender, EventArgs e)
         {
             ViewCurrentChanges();
         }
@@ -83,68 +78,59 @@ namespace GitUI
         private void ViewCurrentChanges()
         {
             Cursor.Current = Cursors.WaitCursor;
-            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
+            View.ViewCurrentChanges(((GitItemStatus) Changes.SelectedItem).Name, false);
         }
 
-        public bool NeedRefresh = false;
-
-        private void Stash_Click(object sender, EventArgs e)
+        private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess("stash save").ShowDialog();
             NeedRefresh = true;
             Initialize();
             InitializeTracked();
-
         }
 
-        private void Clear_Click(object sender, EventArgs e)
+        private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess("stash drop " + Stashes.Text).ShowDialog();
+            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog();
             NeedRefresh = true;
             Initialize();
         }
 
-        private void Apply_Click(object sender, EventArgs e)
+        private void ApplyClick(object sender, EventArgs e)
         {
-            new FormProcess("stash apply " + Stashes.Text).ShowDialog();
-            //MessageBox.Show("Stash apply\n" + GitCommands.GitCommands.StashApply(), "Stash");
+            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
 
             Initialize();
             InitializeTracked();
-
         }
 
-        private void Stashes_SelectedIndexChanged(object sender, EventArgs e)
+        private void StashesSelectedIndexChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             InitializeSoft();
             if (Stashes.SelectedItem != null)
-            {
-                StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
-            }
+                StashMessage.Text = ((GitStash) Stashes.SelectedItem).Message;
         }
 
-        private void Refresh_Click(object sender, EventArgs e)
+        private void RefreshClick(object sender, EventArgs e)
+        {
+            RefreshAll();
+        }
+
+        private void RefreshAll()
         {
             Cursor.Current = Cursors.WaitCursor;
             Initialize();
             InitializeTracked();
         }
 
-        private void FormStash_Shown(object sender, EventArgs e)
+        private void FormStashShown(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Initialize();
-            InitializeTracked();
-        }
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
+            RefreshAll();
         }
     }
 }
