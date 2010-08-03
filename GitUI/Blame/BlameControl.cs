@@ -78,6 +78,8 @@ namespace GitUI.Blame
                 BlameFile.ActiveTextAreaControl.VScrollBar.Maximum >= scrollpos
                     ? scrollpos
                     : BlameFile.ActiveTextAreaControl.VScrollBar.Maximum;
+            BlameFile.ActiveControl = BlameFile.ActiveTextAreaControl;
+            TextAreaMouseDown(this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
         }
 
         private void BlameFileKeyUp(object sender, KeyEventArgs e)

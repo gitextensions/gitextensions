@@ -90,6 +90,12 @@
     <Compile Include="Blame\BlameControl.Designer.cs">
       <DependentUpon>BlameControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Blame\FormBlame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Blame\FormBlame.Designer.cs">
+      <DependentUpon>FormBlame.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\AsyncLoader.cs" />
     <Compile Include="FormFixHome.cs">
       <SubType>Form</SubType>
@@ -563,6 +569,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Blame\BlameControl.resx">
       <DependentUpon>BlameControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Blame\FormBlame.resx">
+      <DependentUpon>FormBlame.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard.nl.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
