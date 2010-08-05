@@ -60,6 +60,7 @@ namespace GitCommands
             CommitterName,
             CommitterDate,
             CommitMessage,
+            FileName,
             Done,
         }
 
@@ -134,6 +135,10 @@ namespace GitCommands
                     /* Commit Message */ "%s";
             }
 
+            // NOTE:
+            // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
+            // the filename is the next line after the commit-format defined above.
+
             if (Settings.OrderRevisionByDate)
             {
                 LogParam = " --date-order " + LogParam;
@@ -160,8 +165,22 @@ namespace GitCommands
                 line = p.StandardOutput.ReadLine();
                 dataReceived(line);
             } while (line != null);
+            finishRevision();
 
             Exited(this, new EventArgs());
+        }
+
+        void finishRevision()
+        {
+            lock (revisions)
+            {
+                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                {
+                    revisions.Add(revision);
+                    Updated(this, new RevisionGraphUpdatedEvent(revision));
+                }
+                nextStep = ReadStep.Commit;
+            }
         }
 
         void dataReceived(string line)
@@ -170,6 +189,15 @@ namespace GitCommands
             {
                 return;
             }
+
+            if (line == COMMIT_BEGIN)
+            {
+                // a new commit finalizes the last revision
+                finishRevision();
+
+                nextStep = ReadStep.Commit;
+            }
+
             switch (nextStep)
             {
                 case ReadStep.Commit:
@@ -234,26 +262,13 @@ namespace GitCommands
                 case ReadStep.CommitMessage:
                     revision.Message = line;
                     break;
+
+                case ReadStep.FileName:
+                    revision.Name = line;
+                    break;
             }
 
             nextStep++;
-            if (ShaOnly && nextStep == ReadStep.Tree)
-            {
-                nextStep = ReadStep.Done;
-            }
-
-            if (nextStep == ReadStep.Done)
-            {
-                lock (revisions)
-                {
-                    if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
-                    {
-                        revisions.Add(revision);
-                        Updated(this, new RevisionGraphUpdatedEvent(revision));
-                    }
-                    nextStep = ReadStep.Commit;
-                }
-            }
         }
     }
 }
