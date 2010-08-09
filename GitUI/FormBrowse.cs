@@ -332,7 +332,7 @@ namespace GitUI
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpen.Text, OpenOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpenWith.Text, OpenWithOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuFileHistory.Text, FileHistoryOnClick));
-                _treeContextMenu.MenuItems.Add(new MenuItem(_menuFindFile.Text, FindFile));
+                _treeContextMenu.MenuItems.Add(new MenuItem(_menuFindFile.Text, FindFileOnClick));
             }
             return _treeContextMenu;
         }
@@ -348,7 +348,7 @@ namespace GitUI
                 GitUICommands.Instance.StartFileHistoryDialog(item.FileName);
         }
 
-        public void FindFile(object sender, EventArgs e)
+        public void FindFileOnClick(object sender, EventArgs e)
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches)
             {
