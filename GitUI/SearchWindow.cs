@@ -14,7 +14,7 @@ namespace GitUI
     {
         private readonly Func<string, IList<T>> getCandidates;
         private Thread backgroundThread;
-        private string m_SelectedText;
+        private string _selectedText;
 
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
@@ -31,7 +31,7 @@ namespace GitUI
 
         private void SearchForCandidates()
         {
-            IList<T> candidates = getCandidates(m_SelectedText);
+            IList<T> candidates = getCandidates(_selectedText);
             BeginInvoke(new Action(delegate
             {
                 var selectionStart = textBox1.SelectionStart;
@@ -81,10 +81,7 @@ namespace GitUI
 
         public T SelectedItem
         {
-            get
-            {
-                return (T)listBox1.SelectedItem;
-            }
+            get { return (T)listBox1.SelectedItem; }
         }
 
         private void SearchWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -99,18 +96,17 @@ namespace GitUI
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (backgroundThread != null)
-            {
                 backgroundThread.Abort();
-            }
-
+            
             backgroundThread = new Thread(SearchForCandidates)
             {
                 IsBackground = true,
                 Priority = ThreadPriority.BelowNormal
             };
+
             backgroundThread.SetApartmentState(ApartmentState.STA);
 
-            m_SelectedText = textBox1.Text;
+            _selectedText = textBox1.Text;
             backgroundThread.Start();
         }
 
@@ -141,23 +137,22 @@ namespace GitUI
                     e.SuppressKeyPress = true;
                 }
             }
+
             if (e.KeyCode == Keys.Up)
             {
                 if (listBox1.Items.Count > 1)
                 {
                     var newSelectedIndex =listBox1.SelectedIndex - 1;
                     if (newSelectedIndex < 0)
-                    {
                         newSelectedIndex = listBox1.Items.Count - 1;
-                    }
+
                     listBox1.SelectedIndex = newSelectedIndex;
                     e.SuppressKeyPress = true;
                 }
             }
+
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
-            {
                 e.SuppressKeyPress = true;
-            }
         }
 
         private void listBox1_KeyUp(object sender, KeyEventArgs e)
