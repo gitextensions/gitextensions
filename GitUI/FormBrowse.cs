@@ -21,8 +21,7 @@ namespace GitUI
         private readonly TranslationString _menuOpen = new TranslationString("Open");
         private readonly TranslationString _menuOpenWith = new TranslationString("Open with");
         private readonly TranslationString _menuSaveAs = new TranslationString("Save as");
-        
-        TranslationString menuFindFile = new TranslationString("Find");
+        private readonly TranslationString _menuFindFile = new TranslationString("Find");
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
@@ -333,7 +332,7 @@ namespace GitUI
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpen.Text, OpenOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuOpenWith.Text, OpenWithOnClick));
                 _treeContextMenu.MenuItems.Add(new MenuItem(_menuFileHistory.Text, FileHistoryOnClick));
-                treeContextMenu.MenuItems.Add(new MenuItem(menuFindFile.Text, new EventHandler(FindFile)));
+                _treeContextMenu.MenuItems.Add(new MenuItem(_menuFindFile.Text, FindFile));
             }
             return _treeContextMenu;
         }
