@@ -439,7 +439,8 @@ namespace GitUI
             if (Revisions.SelectedRows.Count != 0 || _initialSelectedRevision == null) return;
             for (var i = 0; i < _revisionGraphCommand.Revisions.Count; i++)
             {
-                if (_revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
+                if (_revisionGraphCommand.Revisions[i] != null && //A null reference occurred here (? should not be possible)
+                    _revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
                     SetSelectedIndex(i);
             }
         }
