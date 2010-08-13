@@ -142,6 +142,9 @@
   <data name="76" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\76.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ChangeLog.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="Donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Donate.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -211,11 +214,17 @@
   <data name="stash1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\stash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Rebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\Rebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="stash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\stash.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\bug.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
