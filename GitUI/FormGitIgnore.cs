@@ -26,7 +26,7 @@ namespace GitUI
                         re.Close();
                     }
                 }
-                _GitIgnoreEdit.Text = GitIgnoreFile;
+                _NO_TRANSLATE_GitIgnoreEdit.Text = GitIgnoreFile;
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace GitUI
                             {
                                 // Enter a newline to work around a wierd bug 
                                 // that causes the first line to include 3 extra bytes. (encoding marker??)
-                                GitIgnoreFile = Environment.NewLine + _GitIgnoreEdit.Text.Trim();
+                                GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.Text.Trim();
                                 using (var tw = new StreamWriter(x, false, Settings.Encoding))
                                 {
                                     tw.Write(GitIgnoreFile);
@@ -75,7 +75,7 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            _GitIgnoreEdit.Text +=
+            _NO_TRANSLATE_GitIgnoreEdit.Text +=
                 Environment.NewLine + "#ignore thumbnails created by windows" +
                 Environment.NewLine + "Thumbs.db" +
                 Environment.NewLine + "#Ignore files build by Visual Studio" +

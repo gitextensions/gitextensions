@@ -37,7 +37,7 @@
             this.toolStripTranslationLabel = new System.Windows.Forms.ToolStripLabel();
             this.translations = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripTranslationLanguageCode = new System.Windows.Forms.ToolStripLabel();
-            this._languageCode = new System.Windows.Forms.ToolStripComboBox();
+            this._NO_TRANSLATE_languageCode = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.translateProgress = new System.Windows.Forms.ToolStripLabel();
             this.hideTranslatedItems = new System.Windows.Forms.ToolStripButton();
@@ -103,7 +103,7 @@
             this.toolStripTranslationLabel,
             this.translations,
             this.toolStripTranslationLanguageCode,
-            this._languageCode,
+            this._NO_TRANSLATE_languageCode,
             this.toolStripSeparator1,
             this.translateProgress,
             this.hideTranslatedItems,
@@ -162,8 +162,8 @@
             // 
             // _languageCode
             // 
-            this._languageCode.Name = "_languageCode";
-            this._languageCode.Size = new System.Drawing.Size(121, 30);
+            this._NO_TRANSLATE_languageCode.Name = "_NO_TRANSLATE_languageCode";
+            this._NO_TRANSLATE_languageCode.Size = new System.Drawing.Size(121, 30);
             // 
             // toolStripSeparator1
             // 
@@ -196,7 +196,7 @@
             this._toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._toolStripButton1.Name = "_toolStripButton1";
             this._toolStripButton1.Size = new System.Drawing.Size(23, 27);
-            this._toolStripButton1.Text = "_showDetails";
+            this._toolStripButton1.Text = "";
             this._toolStripButton1.CheckedChanged += new System.EventHandler(this.toolStripButton1_CheckedChanged);
             // 
             // splitContainer1
@@ -472,7 +472,7 @@
         private System.Windows.Forms.Button googleTranslate;
         private System.Windows.Forms.ToolStripLabel toolStripTranslationLabel;
         private System.Windows.Forms.ToolStripLabel toolStripTranslationLanguageCode;
-        private System.Windows.Forms.ToolStripComboBox _languageCode;
+        private System.Windows.Forms.ToolStripComboBox _NO_TRANSLATE_languageCode;
         private System.Windows.Forms.Button googleAll;
         private System.Windows.Forms.ToolStripButton toolStripButtonNew;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

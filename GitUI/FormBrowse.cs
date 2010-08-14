@@ -141,7 +141,7 @@ namespace GitUI
             var validWorkingDir = Settings.ValidWorkingDir();
 
 
-            _CurrentBranch.Text = validWorkingDir ? GitCommands.GitCommands.GetSelectedBranch() : "";
+            _NO_TRANSLATE_CurrentBranch.Text = validWorkingDir ? GitCommands.GitCommands.GetSelectedBranch() : "";
 
             if (validWorkingDir)
                 HideDashboard();
@@ -151,7 +151,7 @@ namespace GitUI
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
-            _CurrentBranch.Enabled = validWorkingDir;
+            _NO_TRANSLATE_CurrentBranch.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
@@ -165,7 +165,7 @@ namespace GitUI
             if (hard)
                 ShowRevisions();
 
-            _Workingdir.Text = Settings.WorkingDir;
+            _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = Settings.WorkingDir + " - Git Extensions";
 
             if (validWorkingDir &&
@@ -1136,10 +1136,10 @@ namespace GitUI
 
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
-            _Workingdir.DropDownItems.Clear();
+            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
             foreach (var repository in Repositories.RepositoryHistory.Repositories)
             {
-                var toolStripItem = _Workingdir.DropDownItems.Add(repository.Path);
+                var toolStripItem = _NO_TRANSLATE_Workingdir.DropDownItems.Add(repository.Path);
                 toolStripItem.Click += ToolStripItemClick;
             }
         }
@@ -1162,7 +1162,7 @@ namespace GitUI
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start(_Workingdir.Text);
+            Process.Start(_NO_TRANSLATE_Workingdir.Text);
         }
 
         private void StatusClick(object sender, EventArgs e)

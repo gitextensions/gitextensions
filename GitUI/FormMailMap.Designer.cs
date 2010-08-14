@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
+            this._NO_TRANSLATE_MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
             this.label1 = new System.Windows.Forms.Label();
             this.Save = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -45,7 +45,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this._MailMapText);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_MailMapText);
             // 
             // splitContainer1.Panel2
             // 
@@ -55,16 +55,16 @@
             this.splitContainer1.SplitterDistance = 381;
             this.splitContainer1.TabIndex = 0;
             // 
-            // _MailMapText
+            // _NO_TRANSLATE_MailMapText
             // 
-            this._MailMapText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this._NO_TRANSLATE_MailMapText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this._MailMapText.IsReadOnly = false;
-            this._MailMapText.Location = new System.Drawing.Point(0, 0);
-            this._MailMapText.Name = "_MailMapText";
-            this._MailMapText.Size = new System.Drawing.Size(381, 474);
-            this._MailMapText.TabIndex = 0;
+            this._NO_TRANSLATE_MailMapText.IsReadOnly = false;
+            this._NO_TRANSLATE_MailMapText.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_MailMapText.Name = "_NO_TRANSLATE_MailMapText";
+            this._NO_TRANSLATE_MailMapText.Size = new System.Drawing.Size(381, 474);
+            this._NO_TRANSLATE_MailMapText.TabIndex = 0;
             // 
             // label1
             // 
@@ -108,7 +108,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl _MailMapText;
+        private ICSharpCode.TextEditor.TextEditorControl _NO_TRANSLATE_MailMapText;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label label1;
     }

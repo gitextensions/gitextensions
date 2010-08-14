@@ -28,12 +28,12 @@ namespace GitUI
 
         public void DisableContextMenu()
         {
-            _Caption.ContextMenuStrip = null;
+            _NO_TRANSLATE_Caption.ContextMenuStrip = null;
         }
 
         private void SetUpFonts()
         {
-            _Caption.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 10, FontStyle.Bold, GraphicsUnit.Point);
+            _NO_TRANSLATE_Caption.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 10, FontStyle.Bold, GraphicsUnit.Point);
         }
 
         private RepositoryCategory repositoryCategory;
@@ -235,11 +235,11 @@ namespace GitUI
         {
             get
             {
-                return _Caption.Text;
+                return _NO_TRANSLATE_Caption.Text;
             }
             set
             {
-                _Caption.Text = value;
+                _NO_TRANSLATE_Caption.Text = value;
             }
         }
 
