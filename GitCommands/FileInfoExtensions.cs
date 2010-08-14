@@ -13,7 +13,11 @@ namespace GitCommands
         {
             var fileInfo = new FileInfo(fileName);
             if (!fileInfo.Exists)
+            {
+                //The file doesn't exist yet, no need to make it writable
+                writeableAction(fileName);
                 return;
+            }
 
             var oldAttributes = fileInfo.Attributes;
             fileInfo.Attributes = FileAttributes.Normal;
