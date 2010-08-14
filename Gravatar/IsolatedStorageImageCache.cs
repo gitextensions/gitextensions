@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace Gravatar
 {
-    internal class ImageCache
+    internal class IsolatedStorageImageCache : IImageCache
     {
         public static IsolatedStorageFile GetIsolatedStorageFile()
         {
             return IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
         }
 
-        public static void DeleteCachedFile(string imageFileName)
+        public void DeleteCachedFile(string imageFileName)
         {
             var isolatedStorage = GetIsolatedStorageFile();
 
@@ -24,13 +24,18 @@ namespace Gravatar
             }
         }
 
-        public static void ClearCache()
+        public void ClearCache()
         {
             foreach (var gravatarFileName in GetIsolatedStorageFile().GetFileNames("*.png"))
                 GetIsolatedStorageFile().DeleteFile(gravatarFileName);
         }
 
-        public static bool FileIsExpired(IsolatedStorageFile isolatedStorage, string imageFileName, int cacheDays)
+        public bool FileIsCached(string imageFileName)
+        {
+            return GetIsolatedStorageFile().GetFileNames(imageFileName).Length != 0;
+        }
+
+        public bool FileIsExpired(string imageFileName, int cacheDays)
         {
             // Very very very ugly function to determine lastwritetime of file in isolated storage
             if (cacheDays == 0)
@@ -38,11 +43,11 @@ namespace Gravatar
 
             try
             {
-                var propertyInfo = isolatedStorage.GetType().GetField("m_RootDir",
+                var propertyInfo = GetIsolatedStorageFile().GetType().GetField("m_RootDir",
                                                                       BindingFlags.NonPublic | BindingFlags.Instance);
                 if (propertyInfo != null)
                 {
-                    var rootDir = propertyInfo.GetValue(isolatedStorage) as string;
+                    var rootDir = propertyInfo.GetValue(GetIsolatedStorageFile()) as string;
                     if (rootDir != null)
                     {
                         var file = new FileInfo(rootDir + imageFileName);
@@ -61,12 +66,12 @@ namespace Gravatar
             return false;
         }
 
-        public static Image LoadImageFromCache(string imageFileName, IsolatedStorageFile isolatedStorage,
+        public Image LoadImageFromCache(string imageFileName, 
                                                Bitmap defaultBitmap)
         {
             try
             {
-                using (var stream = new IsolatedStorageFileStream(imageFileName, FileMode.Open, isolatedStorage))
+                using (var stream = new IsolatedStorageFileStream(imageFileName, FileMode.Open, GetIsolatedStorageFile()))
                 {
                     return Image.FromStream(stream);
                 }
@@ -74,7 +79,7 @@ namespace Gravatar
             catch (ArgumentException)
             {
                 // The file is not a valid image, delete it
-                isolatedStorage.DeleteFile(imageFileName);
+                GetIsolatedStorageFile().DeleteFile(imageFileName);
 
                 return defaultBitmap;
             }
@@ -84,5 +89,21 @@ namespace Gravatar
                 return defaultBitmap;
             }
         }
+
+        public void CacheImage(string imageFileName, Stream imageStream)
+        {
+            using (var output = new IsolatedStorageFileStream(imageFileName, FileMode.Create, GetIsolatedStorageFile()))
+            {
+                var buffer = new byte[1024];
+                int read;
+
+                if (imageStream != null)
+                    while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        output.Write(buffer, 0, read);
+                    }
+            }
+        }
+                                
     }
 }
