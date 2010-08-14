@@ -44,12 +44,12 @@ namespace ResourceManager.Translation
 
         public bool HasTranslationItem(string name, string property)
         {
-            return translationItems.Exists(t => t.Name == name && t.Property == property);
+            return translationItems.Exists(t => t.Name == name.TrimStart('_') && t.Property == property);
         }
 
         public TranslationItem GetTranslationItem(string name, string property)
         {
-            return translationItems.Find(t => t.Name == name && t.Property == property);
+            return translationItems.Find(t => t.Name == name.TrimStart('_') && t.Property == property);
         }
 
         public List<TranslationItem> GetTranslationItems()
