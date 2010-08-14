@@ -52,9 +52,9 @@ namespace GitUI
 
             foreach(CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
-                if (!_languageCode.Items.Contains(cultureInfo.TwoLetterISOLanguageName))
+                if (!_NO_TRANSLATE_languageCode.Items.Contains(cultureInfo.TwoLetterISOLanguageName))
                 {
-                    _languageCode.Items.Add(string.Concat(cultureInfo.TwoLetterISOLanguageName, " (", cultureInfo.DisplayName, ")"));
+                    _NO_TRANSLATE_languageCode.Items.Add(string.Concat(cultureInfo.TwoLetterISOLanguageName, " (", cultureInfo.DisplayName, ")"));
                 }
             }
 
@@ -191,9 +191,9 @@ namespace GitUI
 
                             foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
                             {
-                                //Skip controls with a name started with "_"
+                                //Skip controls with a name started with "_NO_TRANSLATE_"
                                 //this is a naming convention, these are not translated
-                                if (fieldInfo.Name.StartsWith("_"))
+                                if (fieldInfo.Name.StartsWith("_NO_TRANSLATE_"))
                                     continue;
 
                                 Component component = fieldInfo.GetValue(control) as Component;
@@ -264,7 +264,7 @@ namespace GitUI
 
         private void saveAs_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_languageCode.Text))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
                 if (MessageBox.Show("There is no languagecode selected." + Environment.NewLine + "Do you want to select a language code first?", "Language code", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return;
 
@@ -273,10 +273,10 @@ namespace GitUI
 
         private string GetSelectedLanguageCode()
         {
-            if (string.IsNullOrEmpty(_languageCode.Text) || _languageCode.Text.Length < 2)
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text) || _NO_TRANSLATE_languageCode.Text.Length < 2)
                 return null;
 
-            return _languageCode.Text.Substring(0, 2);
+            return _NO_TRANSLATE_languageCode.Text.Substring(0, 2);
         }
 
         private void SaveAs()
@@ -318,11 +318,11 @@ namespace GitUI
             try
             {
                 CultureInfo culture = new CultureInfo(translator.LanguageCode);
-                _languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
+                _NO_TRANSLATE_languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
             }
             catch
             {
-                _languageCode.Text = translator.LanguageCode;
+                _NO_TRANSLATE_languageCode.Text = translator.LanguageCode;
             }
         }
 
@@ -434,7 +434,7 @@ namespace GitUI
 
         private void googleTranslate_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_languageCode.Text))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
                 MessageBox.Show("Select a language code first.");
                 return;
@@ -489,7 +489,7 @@ namespace GitUI
 
         private void googleAll_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_languageCode.Text))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
                 MessageBox.Show("Select a language code first.");
                 return;

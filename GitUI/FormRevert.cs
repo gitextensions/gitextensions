@@ -20,7 +20,7 @@ namespace GitUI
 
         private void FormRevert_Load(object sender, EventArgs e)
         {
-            _RevertLabel.Text = "Undo changes in: " + FileName + "?";
+            _NO_TRANSLATE_RevertLabel.Text = "Undo changes in: " + FileName + "?";
         }
 
         private void Revert_Click(object sender, EventArgs e)

@@ -16,9 +16,9 @@ namespace GitUI
             Translate();
 
             if (Settings.ValidWorkingDir())
-                _From.Text = Settings.WorkingDir;
+                _NO_TRANSLATE_From.Text = Settings.WorkingDir;
             else
-                _To.Text = Settings.WorkingDir;
+                _NO_TRANSLATE_To.Text = Settings.WorkingDir;
 
             FromTextUpdate(null, null);
         }
@@ -27,19 +27,19 @@ namespace GitUI
         {
             try
             {
-                var dirTo = _To.Text;
+                var dirTo = _NO_TRANSLATE_To.Text;
                 if (!dirTo.EndsWith("\\") && !dirTo.EndsWith("/"))
                     dirTo += "\\";
 
-                dirTo += _NewDirectory.Text;
+                dirTo += _NO_TRANSLATE_NewDirectory.Text;
 
-                Repositories.RepositoryHistory.AddMostRecentRepository(_From.Text);
+                Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
                 Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
 
                 var fromProcess =
                     new FormProcess(Settings.GitCommand,
-                                    GitCommands.GitCommands.CloneCmd(_From.Text, dirTo,
+                                    GitCommands.GitCommands.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, null));
                 fromProcess.ShowDialog();
 
@@ -110,32 +110,32 @@ namespace GitUI
 
         private void FromBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog {SelectedPath = _From.Text};
+            var dialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_From.Text};
             if (dialog.ShowDialog() == DialogResult.OK)
-                _From.Text = dialog.SelectedPath;
+                _NO_TRANSLATE_From.Text = dialog.SelectedPath;
 
             ToTextUpdate(sender, e);
         }
 
         private void ToBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog {SelectedPath = _To.Text};
+            var dialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_To.Text};
             if (dialog.ShowDialog() == DialogResult.OK)
-                _To.Text = dialog.SelectedPath;
+                _NO_TRANSLATE_To.Text = dialog.SelectedPath;
 
             ToTextUpdate(sender, e);
         }
 
         private void FromDropDown(object sender, EventArgs e)
         {
-            _From.DataSource = Repositories.RepositoryHistory.Repositories;
-            _From.DisplayMember = "Path";
+            _NO_TRANSLATE_From.DataSource = Repositories.RepositoryHistory.Repositories;
+            _NO_TRANSLATE_From.DisplayMember = "Path";
         }
 
         private void ToDropDown(object sender, EventArgs e)
         {
-            _To.DataSource = Repositories.RepositoryHistory.Repositories;
-            _To.DisplayMember = "Path";
+            _NO_TRANSLATE_To.DataSource = Repositories.RepositoryHistory.Repositories;
+            _NO_TRANSLATE_To.DisplayMember = "Path";
         }
 
 
@@ -158,14 +158,14 @@ namespace GitUI
 
         private void FromTextUpdate(object sender, EventArgs e)
         {
-            var path = _From.Text;
+            var path = _NO_TRANSLATE_From.Text;
             path = path.TrimEnd(new[] {'\\', '/'});
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
             if (path.Contains("\\") || path.Contains("/"))
-                _NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] {'\\', '/'}) + 1);
+                _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] {'\\', '/'}) + 1);
 
             ToTextUpdate(sender, e);
         }
@@ -175,17 +175,17 @@ namespace GitUI
             var destinationPath = "";
 
             Info.Text = "The repository will be cloned to a new directory located here:" + Environment.NewLine;
-            if (string.IsNullOrEmpty(_To.Text))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
                 destinationPath += "[destination]";
             else
-                destinationPath += _To.Text.TrimEnd(new[] {'\\', '/'});
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] {'\\', '/'});
             ;
             destinationPath += "\\";
 
-            if (string.IsNullOrEmpty(_NewDirectory.Text))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
                 destinationPath += "[directory]";
             else
-                destinationPath += _NewDirectory.Text;
+                destinationPath += _NO_TRANSLATE_NewDirectory.Text;
 
             Info.Text += "     " + destinationPath;
 

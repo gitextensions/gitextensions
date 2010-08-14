@@ -40,7 +40,7 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _labelVersionInfo.Text += _labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
+            _NO_TRANSLATE_labelVersionInfo.Text += _NO_TRANSLATE_labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
         }
     }
 }

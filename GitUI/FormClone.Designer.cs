@@ -30,13 +30,13 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Info = new System.Windows.Forms.Label();
-            this._NewDirectory = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CentralRepository = new System.Windows.Forms.RadioButton();
             this.PersonalRepository = new System.Windows.Forms.RadioButton();
-            this._From = new System.Windows.Forms.ComboBox();
-            this._To = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_From = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_To = new System.Windows.Forms.ComboBox();
             this.ToBrowse = new System.Windows.Forms.Button();
             this.FromBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -61,11 +61,11 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.Info);
-            this.splitContainer1.Panel1.Controls.Add(this._NewDirectory);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_NewDirectory);
             this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
-            this.splitContainer1.Panel1.Controls.Add(this._From);
-            this.splitContainer1.Panel1.Controls.Add(this._To);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_From);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_To);
             this.splitContainer1.Panel1.Controls.Add(this.ToBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.FromBrowse);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
@@ -93,11 +93,11 @@
             // 
             // _NewDirectory
             // 
-            this._NewDirectory.Location = new System.Drawing.Point(158, 72);
-            this._NewDirectory.Name = "_NewDirectory";
-            this._NewDirectory.Size = new System.Drawing.Size(152, 20);
-            this._NewDirectory.TabIndex = 3;
-            this._NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
+            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(158, 72);
+            this._NO_TRANSLATE_NewDirectory.Name = "_NewDirectory";
+            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(152, 20);
+            this._NO_TRANSLATE_NewDirectory.TabIndex = 3;
+            this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
             // label3
             // 
@@ -143,25 +143,25 @@
             // 
             // _From
             // 
-            this._From.FormattingEnabled = true;
-            this._From.Location = new System.Drawing.Point(158, 17);
-            this._From.Name = "_From";
-            this._From.Size = new System.Drawing.Size(255, 21);
-            this._From.TabIndex = 1;
-            this._From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
-            this._From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
-            this._From.DropDown += new System.EventHandler(this.FromDropDown);
+            this._NO_TRANSLATE_From.FormattingEnabled = true;
+            this._NO_TRANSLATE_From.Location = new System.Drawing.Point(158, 17);
+            this._NO_TRANSLATE_From.Name = "_From";
+            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(255, 21);
+            this._NO_TRANSLATE_From.TabIndex = 1;
+            this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
+            this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
+            this._NO_TRANSLATE_From.DropDown += new System.EventHandler(this.FromDropDown);
             // 
             // _To
             // 
-            this._To.FormattingEnabled = true;
-            this._To.Location = new System.Drawing.Point(158, 45);
-            this._To.Name = "_To";
-            this._To.Size = new System.Drawing.Size(255, 21);
-            this._To.TabIndex = 2;
-            this._To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
-            this._To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
-            this._To.DropDown += new System.EventHandler(this.ToDropDown);
+            this._NO_TRANSLATE_To.FormattingEnabled = true;
+            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(158, 45);
+            this._NO_TRANSLATE_To.Name = "_To";
+            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(255, 21);
+            this._NO_TRANSLATE_To.TabIndex = 2;
+            this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
+            this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
+            this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             // 
             // ToBrowse
             // 
@@ -276,15 +276,15 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.Button ToBrowse;
         private System.Windows.Forms.Button FromBrowse;
-        private System.Windows.Forms.ComboBox _From;
-        private System.Windows.Forms.ComboBox _To;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_From;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_To;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton CentralRepository;
         private System.Windows.Forms.RadioButton PersonalRepository;
         private System.Windows.Forms.RadioButton Central;
         private System.Windows.Forms.RadioButton Personal;
         private System.Windows.Forms.Button LoadSSHKey;
-        private System.Windows.Forms.TextBox _NewDirectory;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_NewDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label Info;
     }

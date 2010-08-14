@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._BranchInfo = new System.Windows.Forms.Label();
-            this._Commit = new System.Windows.Forms.Label();
-            this._Author = new System.Windows.Forms.Label();
-            this._Message = new System.Windows.Forms.Label();
-            this._Date = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_BranchInfo = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Commit = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Author = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Message = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Date = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Hard = new System.Windows.Forms.RadioButton();
             this.Mixed = new System.Windows.Forms.RadioButton();
@@ -44,48 +44,48 @@
             // 
             // BranchInfo
             // 
-            this._BranchInfo.AutoSize = true;
-            this._BranchInfo.Location = new System.Drawing.Point(13, 13);
-            this._BranchInfo.Name = "BranchInfo";
-            this._BranchInfo.Size = new System.Drawing.Size(81, 13);
-            this._BranchInfo.TabIndex = 0;
-            this._BranchInfo.Text = "##Reset {0} to:";
+            this._NO_TRANSLATE_BranchInfo.AutoSize = true;
+            this._NO_TRANSLATE_BranchInfo.Location = new System.Drawing.Point(13, 13);
+            this._NO_TRANSLATE_BranchInfo.Name = "BranchInfo";
+            this._NO_TRANSLATE_BranchInfo.Size = new System.Drawing.Size(81, 13);
+            this._NO_TRANSLATE_BranchInfo.TabIndex = 0;
+            this._NO_TRANSLATE_BranchInfo.Text = "##Reset {0} to:";
             // 
             // Commit
             // 
-            this._Commit.AutoSize = true;
-            this._Commit.Location = new System.Drawing.Point(31, 34);
-            this._Commit.Name = "Commit";
-            this._Commit.Size = new System.Drawing.Size(75, 13);
-            this._Commit.TabIndex = 1;
-            this._Commit.Text = "##Commit: {0}";
+            this._NO_TRANSLATE_Commit.AutoSize = true;
+            this._NO_TRANSLATE_Commit.Location = new System.Drawing.Point(31, 34);
+            this._NO_TRANSLATE_Commit.Name = "Commit";
+            this._NO_TRANSLATE_Commit.Size = new System.Drawing.Size(75, 13);
+            this._NO_TRANSLATE_Commit.TabIndex = 1;
+            this._NO_TRANSLATE_Commit.Text = "##Commit: {0}";
             // 
             // Author
             // 
-            this._Author.AutoSize = true;
-            this._Author.Location = new System.Drawing.Point(31, 57);
-            this._Author.Name = "Author";
-            this._Author.Size = new System.Drawing.Size(72, 13);
-            this._Author.TabIndex = 2;
-            this._Author.Text = "##Author: {0}";
+            this._NO_TRANSLATE_Author.AutoSize = true;
+            this._NO_TRANSLATE_Author.Location = new System.Drawing.Point(31, 57);
+            this._NO_TRANSLATE_Author.Name = "Author";
+            this._NO_TRANSLATE_Author.Size = new System.Drawing.Size(72, 13);
+            this._NO_TRANSLATE_Author.TabIndex = 2;
+            this._NO_TRANSLATE_Author.Text = "##Author: {0}";
             // 
             // Message
             // 
-            this._Message.AutoSize = true;
-            this._Message.Location = new System.Drawing.Point(31, 106);
-            this._Message.Name = "Message";
-            this._Message.Size = new System.Drawing.Size(84, 13);
-            this._Message.TabIndex = 3;
-            this._Message.Text = "##Message: {0}";
+            this._NO_TRANSLATE_Message.AutoSize = true;
+            this._NO_TRANSLATE_Message.Location = new System.Drawing.Point(31, 106);
+            this._NO_TRANSLATE_Message.Name = "Message";
+            this._NO_TRANSLATE_Message.Size = new System.Drawing.Size(84, 13);
+            this._NO_TRANSLATE_Message.TabIndex = 3;
+            this._NO_TRANSLATE_Message.Text = "##Message: {0}";
             // 
             // Date
             // 
-            this._Date.AutoSize = true;
-            this._Date.Location = new System.Drawing.Point(31, 82);
-            this._Date.Name = "Date";
-            this._Date.Size = new System.Drawing.Size(99, 13);
-            this._Date.TabIndex = 4;
-            this._Date.Text = "##Commit date: {0}";
+            this._NO_TRANSLATE_Date.AutoSize = true;
+            this._NO_TRANSLATE_Date.Location = new System.Drawing.Point(31, 82);
+            this._NO_TRANSLATE_Date.Name = "Date";
+            this._NO_TRANSLATE_Date.Size = new System.Drawing.Size(99, 13);
+            this._NO_TRANSLATE_Date.TabIndex = 4;
+            this._NO_TRANSLATE_Date.Text = "##Commit date: {0}";
             // 
             // groupBox1
             // 
@@ -160,11 +160,11 @@
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this._Date);
-            this.Controls.Add(this._Message);
-            this.Controls.Add(this._Author);
-            this.Controls.Add(this._Commit);
-            this.Controls.Add(this._BranchInfo);
+            this.Controls.Add(this._NO_TRANSLATE_Date);
+            this.Controls.Add(this._NO_TRANSLATE_Message);
+            this.Controls.Add(this._NO_TRANSLATE_Author);
+            this.Controls.Add(this._NO_TRANSLATE_Commit);
+            this.Controls.Add(this._NO_TRANSLATE_BranchInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -181,11 +181,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label _BranchInfo;
-        private System.Windows.Forms.Label _Commit;
-        private System.Windows.Forms.Label _Author;
-        private System.Windows.Forms.Label _Message;
-        private System.Windows.Forms.Label _Date;
+        private System.Windows.Forms.Label _NO_TRANSLATE_BranchInfo;
+        private System.Windows.Forms.Label _NO_TRANSLATE_Commit;
+        private System.Windows.Forms.Label _NO_TRANSLATE_Author;
+        private System.Windows.Forms.Label _NO_TRANSLATE_Message;
+        private System.Windows.Forms.Label _NO_TRANSLATE_Date;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Hard;
         private System.Windows.Forms.RadioButton Mixed;

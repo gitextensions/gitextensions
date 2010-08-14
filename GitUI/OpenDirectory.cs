@@ -13,30 +13,30 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            _Directory.DataSource = Repositories.RepositoryHistory.Repositories;
-            _Directory.DisplayMember = "Path";
+            _NO_TRANSLATE_Directory.DataSource = Repositories.RepositoryHistory.Repositories;
+            _NO_TRANSLATE_Directory.DisplayMember = "Path";
 
             Load.Select();
 
-            _Directory.Focus();
-            _Directory.Select();
+            _NO_TRANSLATE_Directory.Focus();
+            _NO_TRANSLATE_Directory.Select();
         }
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog {SelectedPath = _Directory.Text};
+            var browseDialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_Directory.Text};
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
-                _Directory.Text = browseDialog.SelectedPath;
+                _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
             }
         }
 
         private void LoadClick(object sender, EventArgs e)
         {
-            if (Directory.Exists(_Directory.Text))
+            if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                Settings.WorkingDir = _Directory.Text;
+                Settings.WorkingDir = _NO_TRANSLATE_Directory.Text;
 
                 Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 

@@ -23,7 +23,7 @@ namespace GitUI
                     using (var re = new StreamReader(mailMap, Settings.Encoding))
                         MailMapFile = re.ReadToEnd();
 
-                _MailMapText.Text = MailMapFile;
+                _NO_TRANSLATE_MailMapText.Text = MailMapFile;
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@ namespace GitUI
                         {
                             // Enter a newline to work around a wierd bug 
                             // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            MailMapFile = Environment.NewLine + _MailMapText.Text.Trim();
+                            MailMapFile = Environment.NewLine + _NO_TRANSLATE_MailMapText.Text.Trim();
                             using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
                                 tw.Write(MailMapFile);
                             Close();
