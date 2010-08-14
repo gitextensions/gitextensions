@@ -246,34 +246,35 @@ namespace GitCommands
             Settings.GitLog.Log(cmd + " " + arguments);
 
             //process used to execute external commands
-            Process = new Process();
-            SetCommonProcessAttributes(Process, arguments);
-            Process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-            Process.StartInfo.FileName = "\"" + cmd + "\"";
-            Process.StartInfo.Arguments = arguments;
-            Process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            Process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            Process.StartInfo.LoadUserProfile = true;
-            Process.EnableRaisingEvents = true;
+            Process process = new Process();
+            SetCommonProcessAttributes(process, arguments);
+            process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
+            process.StartInfo.FileName = "\"" + cmd + "\"";
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            process.StartInfo.LoadUserProfile = true;
+            process.EnableRaisingEvents = true;
 
             if (!StreamOutput)
             {
-                Process.OutputDataReceived += ProcessOutputDataReceived;
-                Process.ErrorDataReceived += ProcessErrorDataReceived;
+                process.OutputDataReceived += ProcessOutputDataReceived;
+                process.ErrorDataReceived += ProcessErrorDataReceived;
             }
             Output = new StringBuilder();
             ErrorOutput = new StringBuilder();
 
-            Process.Exited += ProcessExited;
-            Process.Start();
+            process.Exited += ProcessExited;
+            process.Start();
+            Process = process;
 
             if (!StreamOutput)
             {
-                Process.BeginErrorReadLine();
-                Process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.BeginOutputReadLine();
             }
 
-            return Process;
+            return process;
         }
 
         private static void SetCommonProcessAttributes(Process process, string arguments)
