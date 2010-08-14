@@ -25,12 +25,12 @@ namespace ResourceManager.Translation
 
         public bool HasTranslationCategory(string name)
         {
-            return translationCategories.Exists(t => t.Name == name);
+            return translationCategories.Exists(t => t.Name == name.TrimStart('_'));
         }
 
         public TranslationCategory GetTranslationCategory(string name)
         {
-            return translationCategories.Find(t => t.Name == name);
+            return translationCategories.Find(t => t.Name == name.TrimStart('_'));
         }
 
         public List<TranslationCategory> GetTranslationCategories()
