@@ -21,9 +21,7 @@
     <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
       Installed OR NETFRAMEWORK20
     </Condition>
-
-    <Condition Message="An administrator must install Git Extensions.">Privileged</Condition>
-    
+   
     <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
 
     <?include AddRemove.wxi?>

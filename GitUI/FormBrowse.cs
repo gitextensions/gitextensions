@@ -39,7 +39,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            ToolStrip.Items.Add(_NO_TRANSLATE_Status);
+            ToolStrip.Items.Insert(1, _NO_TRANSLATE_Status);
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
