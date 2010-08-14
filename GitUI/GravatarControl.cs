@@ -63,7 +63,7 @@ namespace GitUI
 
         private void RefreshImage(Image image)
         {
-            _syncContext.Post(state => { _gravatarImg.Image = image; }, null);
+            _syncContext.Post(state => { _gravatarImg.Image = image; _gravatarImg.Refresh(); }, null);
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
