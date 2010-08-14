@@ -114,7 +114,9 @@ namespace GitUI.SpellChecker
                 {
                     _spelling.Text = TextBox.Text;
                     _spelling.ShowDialog = false;
-                    _spelling.SpellCheck();
+
+                    if (File.Exists(_spelling.Dictionary.DictionaryFile))
+                        _spelling.SpellCheck();
                 }
             }
             catch (Exception ex)
