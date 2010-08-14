@@ -348,7 +348,7 @@ namespace GitUI
                 var unStagedFiles = (List<GitItemStatus>) Unstaged.GitItemStatusses;
                 Unstaged.GitItemStatusses = null;
 
-                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name));
+                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name) && files.Exists(i => i.Name == item.Name));
 
                 Unstaged.GitItemStatusses = unStagedFiles;
 
