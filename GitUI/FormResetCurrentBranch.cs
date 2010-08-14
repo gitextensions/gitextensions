@@ -34,11 +34,11 @@ namespace GitUI
             if (Revision == null)
                 throw new Exception("No revision");
 
-            _BranchInfo.Text = string.Format(branchInfo.Text, GitCommands.GitCommands.GetSelectedBranch());
-            _Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
-            _Author.Text = string.Format(authorInfo.Text, Revision.Author);
-            _Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
-            _Message.Text = string.Format(commitMessage.Text, Revision.Message);
+            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, GitCommands.GitCommands.GetSelectedBranch());
+            _NO_TRANSLATE_Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
+            _NO_TRANSLATE_Author.Text = string.Format(authorInfo.Text, Revision.Author);
+            _NO_TRANSLATE_Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
+            _NO_TRANSLATE_Message.Text = string.Format(commitMessage.Text, Revision.Message);
 
         }
 

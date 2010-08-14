@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this._Limit = new System.Windows.Forms.NumericUpDown();
+            this._NO_TRANSLATE_Limit = new System.Windows.Forms.NumericUpDown();
             this.Message = new System.Windows.Forms.TextBox();
             this.Author = new System.Windows.Forms.TextBox();
             this.Since = new System.Windows.Forms.DateTimePicker();
@@ -58,7 +58,7 @@
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            ((System.ComponentModel.ISupportInitialize)(this._Limit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -76,17 +76,17 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
-            // _Limit
+            // _NO_TRANSLATE_Limit
             // 
-            this._Limit.Location = new System.Drawing.Point(208, 153);
-            this._Limit.Maximum = new decimal(new int[] {
+            this._NO_TRANSLATE_Limit.Location = new System.Drawing.Point(208, 153);
+            this._NO_TRANSLATE_Limit.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
-            this._Limit.Name = "_Limit";
-            this._Limit.Size = new System.Drawing.Size(116, 23);
-            this._Limit.TabIndex = 18;
+            this._NO_TRANSLATE_Limit.Name = "_NO_TRANSLATE_Limit";
+            this._NO_TRANSLATE_Limit.Size = new System.Drawing.Size(116, 23);
+            this._NO_TRANSLATE_Limit.TabIndex = 18;
             // 
             // Message
             // 
@@ -203,7 +203,7 @@
             this.tableLayoutPanel1.Controls.Add(this.Since, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.Author, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.Message, 2, 4);
-            this.tableLayoutPanel1.Controls.Add(this._Limit, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Limit, 2, 6);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
@@ -403,7 +403,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Filter";
             this.Load += new System.EventHandler(this.FormRevisionFilterLoad);
-            ((System.ComponentModel.ISupportInitialize)(this._Limit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -416,7 +416,7 @@
         #endregion
 
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.NumericUpDown _Limit;
+        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_Limit;
         private System.Windows.Forms.TextBox Message;
         private System.Windows.Forms.TextBox Author;
         private System.Windows.Forms.DateTimePicker Since;

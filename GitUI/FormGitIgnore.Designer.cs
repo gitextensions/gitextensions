@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._GitIgnoreEdit = new ICSharpCode.TextEditor.TextEditorControl();
+            this._NO_TRANSLATE_GitIgnoreEdit = new ICSharpCode.TextEditor.TextEditorControl();
             this.AddDefault = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,7 +48,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this._GitIgnoreEdit);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_GitIgnoreEdit);
             // 
             // splitContainer1.Panel2
             // 
@@ -59,16 +59,16 @@
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 0;
             // 
-            // _GitIgnoreEdit
+            // _NO_TRANSLATE_GitIgnoreEdit
             // 
-            this._GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this._NO_TRANSLATE_GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this._GitIgnoreEdit.IsReadOnly = false;
-            this._GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
-            this._GitIgnoreEdit.Name = "_GitIgnoreEdit";
-            this._GitIgnoreEdit.Size = new System.Drawing.Size(400, 473);
-            this._GitIgnoreEdit.TabIndex = 0;
+            this._NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
+            this._NO_TRANSLATE_GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_GitIgnoreEdit.Name = "_GitIgnoreEdit";
+            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(400, 473);
+            this._NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
             // 
             // AddDefault
             // 
@@ -123,7 +123,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl _GitIgnoreEdit;
+        private ICSharpCode.TextEditor.TextEditorControl _NO_TRANSLATE_GitIgnoreEdit;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button AddDefault;

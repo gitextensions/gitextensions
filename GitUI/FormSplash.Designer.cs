@@ -30,9 +30,9 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._versionLabel = new System.Windows.Forms.Label();
-            this._programTitle = new System.Windows.Forms.Label();
-            this._actionLabel = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_versionLabel = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_programTitle = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_actionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -50,9 +50,9 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this._versionLabel);
-            this.panel1.Controls.Add(this._programTitle);
-            this.panel1.Controls.Add(this._actionLabel);
+            this.panel1.Controls.Add(this._NO_TRANSLATE_versionLabel);
+            this.panel1.Controls.Add(this._NO_TRANSLATE_programTitle);
+            this.panel1.Controls.Add(this._NO_TRANSLATE_actionLabel);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -62,30 +62,30 @@
             // 
             // _versionLabel
             // 
-            this._versionLabel.AutoSize = true;
-            this._versionLabel.Location = new System.Drawing.Point(134, 30);
-            this._versionLabel.Name = "_versionLabel";
-            this._versionLabel.Size = new System.Drawing.Size(59, 13);
-            this._versionLabel.TabIndex = 3;
-            this._versionLabel.Text = "Version {0}";
+            this._NO_TRANSLATE_versionLabel.AutoSize = true;
+            this._NO_TRANSLATE_versionLabel.Location = new System.Drawing.Point(134, 30);
+            this._NO_TRANSLATE_versionLabel.Name = "_versionLabel";
+            this._NO_TRANSLATE_versionLabel.Size = new System.Drawing.Size(59, 13);
+            this._NO_TRANSLATE_versionLabel.TabIndex = 3;
+            this._NO_TRANSLATE_versionLabel.Text = "Version {0}";
             // 
             // _programTitle
             // 
-            this._programTitle.AutoSize = true;
-            this._programTitle.Location = new System.Drawing.Point(134, 8);
-            this._programTitle.Name = "_programTitle";
-            this._programTitle.Size = new System.Drawing.Size(99, 15);
-            this._programTitle.TabIndex = 2;
-            this._programTitle.Text = "Git Extensions";
+            this._NO_TRANSLATE_programTitle.AutoSize = true;
+            this._NO_TRANSLATE_programTitle.Location = new System.Drawing.Point(134, 8);
+            this._NO_TRANSLATE_programTitle.Name = "_programTitle";
+            this._NO_TRANSLATE_programTitle.Size = new System.Drawing.Size(99, 15);
+            this._NO_TRANSLATE_programTitle.TabIndex = 2;
+            this._NO_TRANSLATE_programTitle.Text = "Git Extensions";
             // 
             // _actionLabel
             // 
-            this._actionLabel.AutoSize = true;
-            this._actionLabel.Location = new System.Drawing.Point(134, 104);
-            this._actionLabel.Name = "_actionLabel";
-            this._actionLabel.Size = new System.Drawing.Size(54, 13);
-            this._actionLabel.TabIndex = 1;
-            this._actionLabel.Text = "Loading...";
+            this._NO_TRANSLATE_actionLabel.AutoSize = true;
+            this._NO_TRANSLATE_actionLabel.Location = new System.Drawing.Point(134, 104);
+            this._NO_TRANSLATE_actionLabel.Name = "_actionLabel";
+            this._NO_TRANSLATE_actionLabel.Size = new System.Drawing.Size(54, 13);
+            this._NO_TRANSLATE_actionLabel.TabIndex = 1;
+            this._NO_TRANSLATE_actionLabel.Text = "Loading...";
             // 
             // FormSplash
             // 
@@ -109,8 +109,8 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label _programTitle;
-        private System.Windows.Forms.Label _actionLabel;
-        private System.Windows.Forms.Label _versionLabel;
+        private System.Windows.Forms.Label _NO_TRANSLATE_programTitle;
+        private System.Windows.Forms.Label _NO_TRANSLATE_actionLabel;
+        private System.Windows.Forms.Label _NO_TRANSLATE_versionLabel;
     }
 }

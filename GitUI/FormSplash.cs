@@ -19,7 +19,7 @@ namespace GitUI
             InitializeComponent();
 
             SetFont();
-            _programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+            _NO_TRANSLATE_programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
         }
 
         private void SetFont()
@@ -29,7 +29,7 @@ namespace GitUI
 
         public void SetAction(string action)
         {
-            _actionLabel.Text = action;
+            _NO_TRANSLATE_actionLabel.Text = action;
             Refresh();
         }
 
@@ -37,7 +37,7 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
+            _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
         }
     }
 }

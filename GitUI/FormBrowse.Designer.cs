@@ -38,10 +38,10 @@ namespace GitUI
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
-            this._Status = new GitUI.ToolStripGitStatus();
+            this._NO_TRANSLATE_Status = new GitUI.ToolStripGitStatus();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
-            this._Workingdir = new System.Windows.Forms.ToolStripSplitButton();
-            this._CurrentBranch = new System.Windows.Forms.ToolStripButton();
+            this._NO_TRANSLATE_Workingdir = new System.Windows.Forms.ToolStripSplitButton();
+            this._NO_TRANSLATE_CurrentBranch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
             this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -206,10 +206,10 @@ namespace GitUI
             this.ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
-            this._Status,
+            this._NO_TRANSLATE_Status,
             this.toolStripSeparator17,
-            this._Workingdir,
-            this._CurrentBranch,
+            this._NO_TRANSLATE_Workingdir,
+            this._NO_TRANSLATE_CurrentBranch,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
             this.toolStripButton1,
@@ -237,14 +237,12 @@ namespace GitUI
             this.RefreshButton.ToolTipText = "Refresh";
             this.RefreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
-            // _Status
+            // _NO_TRANSLATE_Status
             // 
-            this._Status.Image = ((System.Drawing.Image)(resources.GetObject("_Status.Image")));
-            this._Status.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._Status.Name = "_Status";
-            this._Status.Size = new System.Drawing.Size(88, 25);
-            this._Status.Text = "4 changes";
-            this._Status.Click += new System.EventHandler(this.StatusClick);
+            this._NO_TRANSLATE_Status.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._NO_TRANSLATE_Status.Name = "_NO_TRANSLATE_Status";
+            this._NO_TRANSLATE_Status.Size = new System.Drawing.Size(88, 25);
+            this._NO_TRANSLATE_Status.Click += new System.EventHandler(this.StatusClick);
             // 
             // toolStripSeparator17
             // 
@@ -253,24 +251,24 @@ namespace GitUI
             // 
             // _Workingdir
             // 
-            this._Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("_Workingdir.Image")));
-            this._Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._Workingdir.Name = "_Workingdir";
-            this._Workingdir.Size = new System.Drawing.Size(99, 22);
-            this._Workingdir.Text = "WorkingDir";
-            this._Workingdir.ToolTipText = "Change working directory";
-            this._Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
-            this._Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);
+            this._NO_TRANSLATE_Workingdir.Image = ((System.Drawing.Image)(resources.GetObject("_Workingdir.Image")));
+            this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
+            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(99, 22);
+            this._NO_TRANSLATE_Workingdir.Text = "WorkingDir";
+            this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
+            this._NO_TRANSLATE_Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
+            this._NO_TRANSLATE_Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);
             // 
             // _CurrentBranch
             // 
-            this._CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("_CurrentBranch.Image")));
-            this._CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._CurrentBranch.Name = "_CurrentBranch";
-            this._CurrentBranch.Size = new System.Drawing.Size(64, 22);
-            this._CurrentBranch.Text = "Branch";
-            this._CurrentBranch.ToolTipText = "Switch branch";
-            this._CurrentBranch.Click += new System.EventHandler(this.CurrentBranchClick);
+            this._NO_TRANSLATE_CurrentBranch.Image = ((System.Drawing.Image)(resources.GetObject("_CurrentBranch.Image")));
+            this._NO_TRANSLATE_CurrentBranch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._NO_TRANSLATE_CurrentBranch.Name = "_CurrentBranch";
+            this._NO_TRANSLATE_CurrentBranch.Size = new System.Drawing.Size(64, 22);
+            this._NO_TRANSLATE_CurrentBranch.Text = "Branch";
+            this._NO_TRANSLATE_CurrentBranch.ToolTipText = "Switch branch";
+            this._NO_TRANSLATE_CurrentBranch.Click += new System.EventHandler(this.CurrentBranchClick);
             // 
             // toolStripSeparator1
             // 
@@ -1342,8 +1340,8 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStrip ToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripSplitButton _Workingdir;
-        private System.Windows.Forms.ToolStripButton _CurrentBranch;
+        private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;
+        private System.Windows.Forms.ToolStripButton _NO_TRANSLATE_CurrentBranch;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton GitBash;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -1423,7 +1421,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fileExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
-        private GitUI.ToolStripGitStatus _Status;
+        private GitUI.ToolStripGitStatus _NO_TRANSLATE_Status;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
     }
 }
