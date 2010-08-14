@@ -330,6 +330,8 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
+            Process = null;
+
             if (Exited != null)
                 Exited(this, e);
         }
