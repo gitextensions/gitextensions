@@ -55,7 +55,10 @@ namespace GitCommands
             IconColor = "default";
             CustomHomeDir = "";
             Translation = "";
+            ApplicationDataPath = Application.UserAppDataPath + "\\";
         }
+
+        public static string ApplicationDataPath { get; set; }
 
         public static string Translation { get; set; }
 

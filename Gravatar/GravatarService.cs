@@ -9,32 +9,35 @@ namespace Gravatar
 {
     public class GravatarService
     {
+        static IImageCache cache;
+
         public static void ClearImageCache()
         {
-            ImageCache.ClearCache();
+            cache.ClearCache();
         }
 
         public static void RemoveImageFromCache(string imageFileName)
         {
-            ImageCache.DeleteCachedFile(imageFileName);
+            cache.DeleteCachedFile(imageFileName);
         }
 
         public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,
-                                             int imageSize, Action<Image> onChangedImage)
+                                             int imageSize, string imageCachePath, Action<Image> onChangedImage)
         {
-            var isolatedStorage = ImageCache.GetIsolatedStorageFile();
+            if (cache == null)
+                cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
 
             // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-            if (isolatedStorage.GetFileNames(imageFileName).Length == 0 ||
-                ImageCache.FileIsExpired(isolatedStorage, imageFileName, cacheDays))
+            if (!cache.FileIsCached(imageFileName) ||
+                cache.FileIsExpired(imageFileName, cacheDays))
             {
                 onChangedImage(defaultBitmap);
 
-                GetImageFromGravatar(imageFileName, email, imageSize, isolatedStorage);
+                GetImageFromGravatar(imageFileName, email, imageSize);
             }
-            if (isolatedStorage.GetFileNames(imageFileName).Length != 0)
+            if (cache.FileIsCached(imageFileName))
             {
-                onChangedImage(ImageCache.LoadImageFromCache(imageFileName, isolatedStorage,
+                onChangedImage(cache.LoadImageFromCache(imageFileName,
                                                              defaultBitmap));
             }
             else
@@ -43,8 +46,7 @@ namespace Gravatar
             }
         }
 
-        public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize,
-                                                IsolatedStorageFile isolatedStorage)
+        public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize)
         {
             try
             {
@@ -62,17 +64,7 @@ namespace Gravatar
 
                 var imageStream = webClient.OpenRead(imageUrl);
 
-                using (var output = new IsolatedStorageFileStream(imageFileName, FileMode.Create, isolatedStorage))
-                {
-                    var buffer = new byte[1024];
-                    int read;
-
-                    if (imageStream != null)
-                        while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            output.Write(buffer, 0, read);
-                        }
-                }
+                cache.CacheImage(imageFileName, imageStream);
             }
             catch (Exception ex)
             {
