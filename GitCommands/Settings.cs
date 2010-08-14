@@ -55,8 +55,11 @@ namespace GitCommands
             IconColor = "default";
             CustomHomeDir = "";
             Translation = "";
+            CommitInfoShowContainedInBranches = true;
             ApplicationDataPath = Application.UserAppDataPath + "\\";
         }
+
+        public static bool CommitInfoShowContainedInBranches { get; set; }
 
         public static string ApplicationDataPath { get; set; }
 
@@ -309,6 +312,7 @@ namespace GitCommands
                 appData.SetValue("pageant", Pageant);
                 appData.SetValue("smtp", Smtp);
                 appData.SetValue("dictionary", Dictionary);
+                appData.SetValue("commitinfoshowcontainedinbranches", CommitInfoShowContainedInBranches);
             }
             catch (Exception ex)
             {
@@ -395,6 +399,7 @@ namespace GitCommands
                 SafeSetString("gitbindir", x => GitBinDir = x);
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
+                SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
             }
             catch (Exception ex)
             {

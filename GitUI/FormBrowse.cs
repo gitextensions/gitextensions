@@ -26,19 +26,13 @@ namespace GitUI
 
         public FormBrowse(string filter)
         {
-            this._NO_TRANSLATE_Status = new GitUI.ToolStripGitStatus();
-
-            // 
-            // _NO_TRANSLATE_Status
-            // 
-            this._NO_TRANSLATE_Status.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._NO_TRANSLATE_Status.Name = "_NO_TRANSLATE_Status";
-            this._NO_TRANSLATE_Status.Size = new System.Drawing.Size(88, 25);
-            this._NO_TRANSLATE_Status.Click += new System.EventHandler(this.StatusClick);
-
             InitializeComponent();
             Translate();
 
+
+            this._NO_TRANSLATE_Status = new GitUI.ToolStripGitStatus();
+            this._NO_TRANSLATE_Status.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._NO_TRANSLATE_Status.Click += new System.EventHandler(this.StatusClick);
             ToolStrip.Items.Insert(1, _NO_TRANSLATE_Status);
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;

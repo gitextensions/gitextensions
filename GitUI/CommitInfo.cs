@@ -3,13 +3,18 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using System.Threading;
 
 namespace GitUI
 {
     public partial class CommitInfo : GitExtensionsControl
     {
+        private readonly SynchronizationContext _syncContext;
+
         public CommitInfo()
         {
+            _syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
             Translate();
 
@@ -36,22 +41,39 @@ namespace GitUI
             }
         }
 
+        private string _revision;
         public void SetRevision(string revision)
         {
+            _revision = revision;
+            ReloadCommitInfo();
+        }
+
+        private void ReloadCommitInfo()
+        {
+            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranches;
+
             ResetTextAndImage();
-            if (string.IsNullOrEmpty(revision))
+            if (string.IsNullOrEmpty(_revision))
                 return;
 
-            RevisionInfo.Text =
-                CommitInformation.GetCommitInfo(revision) +
-                GetBranchesWhichContainsThisCommit(revision);
-
+            RevisionInfo.Text = CommitInformation.GetCommitInfo(_revision);
+            RevisionInfo.Refresh();
             LoadAuthorImage();
+
+            if (Settings.CommitInfoShowContainedInBranches)
+            {
+                _syncContext.Post(
+                                    s =>
+                                    {
+                                        RevisionInfo.Text += GetBranchesWhichContainsThisCommit(_revision);
+                                    }, null);
+            }
         }
 
         private void ResetTextAndImage()
         {
             RevisionInfo.Text = "";
+            RevisionInfo.Refresh();
             gravatar1.LoadImageForEmail("");
         }
 
@@ -81,6 +103,17 @@ namespace GitUI
             if (branchString != string.Empty)
                 return "\r\nContained in branches: " + branchString;
             return "Contained in no branch";
+        }
+
+        private void tableLayout_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInBranches = !Settings.CommitInfoShowContainedInBranches;
+            ReloadCommitInfo();
         }
     }
 }
