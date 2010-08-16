@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace GitCommands.Config
 {
@@ -39,6 +40,11 @@ namespace GitCommands.Config
             _fileName = fileName;
 
             Load();
+        }
+
+        public IList<ConfigSection> GetConfigSections()
+        {
+            return _sections;
         }
 
         private void Load()

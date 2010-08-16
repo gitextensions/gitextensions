@@ -37,6 +37,43 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// This is a faster function to get the names of all submodules then the 
+        /// GetSubmodules() function. The command @git submodule is very slow.
+        /// </summary>
+        public IList<string> GetSubmodulesNames()
+        {
+            IList<string> submodulesNames = new List<string>();
+            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+            foreach (ConfigSection configSection in configFile.GetConfigSections())
+            {
+                submodulesNames.Add(configSection.SubSection);
+            }
+
+            return submodulesNames;
+            /*
+            var submodules = RunCmd(Settings.GitCommand, "submodule status").Split('\n');
+
+            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
+
+            string lastLine = null;
+
+            foreach (var submodule in submodules)
+            {
+                if (submodule.Length < 43)
+                    continue;
+
+                if (submodule.Equals(lastLine))
+                    continue;
+
+                lastLine = submodule;
+
+                submoduleList.Add(CreateGitSubmodule(submodule));
+            }
+
+            return submoduleList;*/
+        }
+
         #region IGitCommands Members
 
         public IList<IGitSubmodule> GetSubmodules()

@@ -998,11 +998,11 @@ namespace GitUI
 
             RemoveSubmoduleButtons();
 
-            var submodules = (new GitCommands.GitCommands()).GetSubmodules();
+            var submodules = (new GitCommands.GitCommands()).GetSubmodulesNames();// GetSubmodules();
 
             foreach (var submodule in submodules)
             {
-                var submenu = new ToolStripButton(submodule.Name);
+                var submenu = new ToolStripButton(submodule/*.Name*/);
                 submenu.Click += SubmoduleToolStripButtonClick;
                 submenu.Width = 200;
                 openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
