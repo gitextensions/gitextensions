@@ -1,6 +1,24 @@
 Changelog
 =========
 
+Version 1.99
+	Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
+	Fixed issue 107: alt+f4 not working when revisiongrid has focus
+	Fixed issue 111: Annotated Tags Appear Twice in Push Dialog
+	Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of testcode" fail in empty or non code repo
+	Fixed issue 114: Adding filter which results in no commits shows "empty repository" UI
+	Fixed issue 119: show files in FileHistory also prior to rename
+	Fixed issue 120: choose branch when adding new submodule doesn't work	
+	Fixed issue 121: Local branch and remote tracking branch reverse order on selection
+	Fixed issue 122: Visual Studio 2010 solution file
+	Fixed issue 123: Translation String is missing in Delete branch conformation dialog
+	Fixed issue 129: loading submodules submenu is very slow
+	Fixed issue 131: Add a blame funtion (commandline: GitExtensions blame [filename])
+	Fixed issue 135: settings not saved when closing application
+	Gravatars are not longer stored in the IsolatedStorage, but use the ApplicationData path
+	Default windows font is used instead of Segoe UI
+	Add search file function to file tree in browse dialog (ctrl+f)	
+
 Version 1.98
 	Fixed issue 105: Allow to open "gitex browse" with a given filter.
 	Fixed issue 106: Show all branches which "contain" a given commit in their history.
