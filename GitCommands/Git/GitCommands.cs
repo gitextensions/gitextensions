@@ -760,9 +760,9 @@ namespace GitCommands
             localPath = FixPath(localPath);
 
             if (!string.IsNullOrEmpty(branch))
-                branch = " \"" + branch.Trim() + "\"";
+                branch = " -b \"" + branch.Trim() + "\"";
 
-            return "submodule add \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"" + branch;
+            return "submodule add" + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
         }
 
         private static GitSubmodule CreateGitSubmodule(string submodule)
