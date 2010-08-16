@@ -57,7 +57,10 @@ namespace GitCommands
             Translation = "";
             CommitInfoShowContainedInBranches = true;
             ApplicationDataPath = Application.UserAppDataPath + "\\";
+            ShowGitStatusInBrowseToolbar = false;
         }
+
+        public static bool ShowGitStatusInBrowseToolbar { get; set; }
 
         public static bool CommitInfoShowContainedInBranches { get; set; }
 
@@ -313,6 +316,7 @@ namespace GitCommands
                 appData.SetValue("smtp", Smtp);
                 appData.SetValue("dictionary", Dictionary);
                 appData.SetValue("commitinfoshowcontainedinbranches", CommitInfoShowContainedInBranches);
+                appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
             }
             catch (Exception ex)
             {
@@ -400,6 +404,7 @@ namespace GitCommands
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
                 SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
+                SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
             }
             catch (Exception ex)
             {
