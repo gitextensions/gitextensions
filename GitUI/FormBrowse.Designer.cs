@@ -250,9 +250,10 @@ namespace GitUI
             // 
             // _NO_TRANSLATE_Workingdir
             // 
+            this._NO_TRANSLATE_Workingdir.Image = global::GitUI.Properties.Resources._40;
             this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
-            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(87, 22);
+            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(103, 22);
             this._NO_TRANSLATE_Workingdir.Text = "WorkingDir";
             this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
             this._NO_TRANSLATE_Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
@@ -515,7 +516,7 @@ namespace GitUI
             this.toolStripSeparator18,
             this.findToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
-            this.FileTreeContextMenu.Size = new System.Drawing.Size(157, 142);
+            this.FileTreeContextMenu.Size = new System.Drawing.Size(157, 120);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
             // 
             // saveAsToolStripMenuItem
