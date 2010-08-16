@@ -7,6 +7,7 @@ using GitCommands;
 using GitUI.Editor;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
+using GitCommands.Config;
 
 namespace GitUI
 {
@@ -123,6 +124,7 @@ namespace GitUI
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
+                /* BEGIN REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
                 foreach (IGitSubmodule submodule in submodules)
                 {
@@ -135,7 +137,21 @@ namespace GitUI
                         }
                         return;
                     }
+                }*/
+                ConfigFile submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+                foreach (ConfigSection configSection in submoduleConfig.GetConfigSections())
+                {
+                    if (configSection.GetValue("path").Trim().Equals(filename.Trim()))
+                    {
+                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            stageFile(filename);
+                            Initialize();
+                        }
+                        return;
+                    }
                 }
+                //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
             }
 
             bool file1 = File.Exists(filenames[0]);
