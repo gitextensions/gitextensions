@@ -127,6 +127,8 @@ namespace GitUI
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
+                ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
+
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
                 _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
                 _NO_TRANSLATE_ColorGraphLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorGraphLabel.BackColor);
@@ -308,6 +310,8 @@ namespace GitUI
                 GravatarService.ClearImageCache();
             }
             GitCommands.Settings.Translation = Language.Text;
+
+            GitCommands.Settings.ShowGitStatusInBrowseToolbar = ShowGitStatusInToolbar.Checked;
 
             GitCommands.Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 

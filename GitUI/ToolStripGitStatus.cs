@@ -63,7 +63,17 @@ namespace GitUI
         {
             try
             {
-                watcher.Path = newDir;
+                if (Directory.Exists(newDir))
+                {
+                    watcher.Path = newDir;
+                    watcher.EnableRaisingEvents = true;
+                }
+                else
+                {
+                    watcher.EnableRaisingEvents = false;
+                }
+
+
                 nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
             }
             catch { }

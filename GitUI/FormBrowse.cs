@@ -20,20 +20,20 @@ namespace GitUI
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
-        private ContextMenu _treeContextMenu;
         private ToolStripItem _warning;
-        private ToolStripGitStatus _NO_TRANSLATE_Status;
 
         public FormBrowse(string filter)
         {
             InitializeComponent();
             Translate();
 
-
-            this._NO_TRANSLATE_Status = new GitUI.ToolStripGitStatus();
-            this._NO_TRANSLATE_Status.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._NO_TRANSLATE_Status.Click += new System.EventHandler(this.StatusClick);
-            ToolStrip.Items.Insert(1, _NO_TRANSLATE_Status);
+            if (Settings.ShowGitStatusInBrowseToolbar)
+            {
+                ToolStripGitStatus status = new GitUI.ToolStripGitStatus();
+                status.ImageTransparentColor = System.Drawing.Color.Magenta;
+                status.Click += new System.EventHandler(this.StatusClick);
+                ToolStrip.Items.Insert(1, status);
+            }
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
