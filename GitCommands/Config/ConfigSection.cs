@@ -12,7 +12,7 @@ namespace GitCommands.Config
     /// </summary>
     public class ConfigSection
     {
-        public ConfigSection(string name)
+        internal ConfigSection(string name)
         {
             Keys = new Dictionary<string, string>();
 
@@ -37,7 +37,7 @@ namespace GitCommands.Config
             }
         }
 
-        public IDictionary<string, string> Keys { get; set; }
+        internal IDictionary<string, string> Keys { get; set; }
         public string SectionName { get; set; }
         public string SubSection { get; set; }
 
