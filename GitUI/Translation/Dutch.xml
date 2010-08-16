@@ -1,50 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
-    <TranslationCategory Name="Gravatar">
-      <translationItems>
-        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
-          <Value>Ververs plaatje</Value>
-        </TranslationItem>
-        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
-          <Value>Registreer bij gravatar.com</Value>
-        </TranslationItem>
-        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
-          <Value>Leeg plaatjes cache</Value>
-        </TranslationItem>
-        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
-          <Value>Formaat plaatje</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormTagSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Label naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>Maak geannoteerd label</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="noTagMassage" Property="Text">
-          <Value>Voer een label bericht in</Value>
-        </TranslationItem>
-        <TranslationItem Name="noRevisionSelected" Property="Text">
-          <Value>Selecteer eerst een revisie</Value>
-        </TranslationItem>
-        <TranslationItem Name="messageCaption" Property="Text">
-          <Value>Label</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FindAndReplaceForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -121,8 +77,8 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Controleer database</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Sla opjecten op in .git/lost-found</Value>
+        <TranslationItem Name="SaveObjects" Property="Text">
+          <Value>Sla alles op in .git/lost-found</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Dubbel-klik op een rij om het object te bekijken</Value>
@@ -130,8 +86,8 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>Verwijdere alle rondzwevende objecten</Value>
         </TranslationItem>
-        <TranslationItem Name="button2" Property="Text">
-          <Value>Label geselecteerde objecten</Value>
+        <TranslationItem Name="TagSelectedObject" Property="Text">
+          <Value>Label geselecteerde item</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
           <Value>Toon geselecteerde object</Value>
@@ -143,8 +99,8 @@ andere node.</Value>
         <TranslationItem Name="TagAllObjects" Property="Text">
           <Value>Label alle verloren objecten</Value>
         </TranslationItem>
-        <TranslationItem Name="button3" Property="Text">
-          <Value>Verwijder alle LOST_AND_FOUND labels</Value>
+        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
+          <Value>Verwijder allee LOST_AND_FOUND labels</Value>
         </TranslationItem>
         <TranslationItem Name="FullCheck" Property="Text">
           <Value>Controlleer niet alleen objecten in GIT_OBJECT_DIRECTORY 
@@ -169,16 +125,16 @@ wanneer "Verwijder alle rondzwevende objecten" word gedaan.
 Om rondzwevende objeten te herstellen, label de commit 
 and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
-        <TranslationItem Name="removeDanglingObjectsQuestion" Property="Text">
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>Verwijder</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
           <Value>Weet u zeker dat u alle rondzwevende objecten wilt verwijderen?</Value>
         </TranslationItem>
-        <TranslationItem Name="removeDanglingObjectsCaption" Property="Text">
-          <Value>Verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="xTagsCreated" Property="Text">
-          <Value>{0} Labels aangemaakt. 
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>{0} Labels aangemaakt.
 
-Vergeet niet deze labels weer te verwijderen.</Value>
+Vergeet niet deze labels weet te verwijderen wanneer u klaar bent.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -340,13 +296,6 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormCommitCount">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Aantal commits</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FileStatusList">
       <translationItems>
         <TranslationItem Name="NoFiles" Property="Text">
@@ -358,18 +307,6 @@ _ReSharper*/
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Git Extensions</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuSaveAs" Property="Text">
-          <Value>Opslaan als</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuOpen" Property="Text">
-          <Value>Openen</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuOpenWith" Property="Text">
-          <Value>Openen met</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuFileHistory" Property="Text">
-          <Value>Bestands historie</Value>
         </TranslationItem>
         <TranslationItem Name="Tree" Property="Text">
           <Value>Bestands boom</Value>
@@ -539,16 +476,16 @@ _ReSharper*/
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Value>Versie historie</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="Text">
-          <Value>Ophalen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
           <Value>Ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="Text">
-          <Value>Verzenden</Value>
+        <TranslationItem Name="toolStripButtonPull" Property="Text">
+          <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
+          <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Value>Verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
@@ -614,8 +551,8 @@ _ReSharper*/
         <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
           <Value>Initialiseer alle submodulen recursief</Value>
         </TranslationItem>
-        <TranslationItem Name="synchronizeAlSubmodulesRecursiveToolStripMenuItem" Property="Text">
-          <Value>Synchoniseer alle submodulen recursief</Value>
+        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Synchroniseer alle submodules recursief</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Value>Plugins</Value>
@@ -643,6 +580,28 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Value>Open in verkenner</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>Opslaan als</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
+          <Value>Openen</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
+          <Value>Openen met</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Bestands history</Value>
+        </TranslationItem>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Zoeken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Bestands historie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -794,6 +753,13 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Plugin instellingen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -817,64 +783,25 @@ _ReSharper*/
         <TranslationItem Name="Init" Property="Text">
           <Value>Initialiseren</Value>
         </TranslationItem>
-        <TranslationItem Name="chooseDirectory" Property="Text">
-          <Value>Kies een directorie</Value>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>Kies een directorie.</Value>
         </TranslationItem>
-        <TranslationItem Name="chooseDirectoryNotFile" Property="Text">
-          <Value>Het is niet mogelijk een repository aan te maken op een bestand.
-Kies een directorie</Value>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>Kan nieuwe opslagplaats niet initialiseren op een bestand. 
+Kies een directory.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FileViewer">
+    <TranslationCategory Name="FormDeleteTag">
       <translationItems>
-        <TranslationItem Name="findToolStripMenuItem" Property="Text">
-          <Value>Zoeken</Value>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verwijder label</Value>
         </TranslationItem>
-        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
-          <Value>Negeer wijzigingen in witruimtes</Value>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>Verhoog aantal zichtbare regels</Value>
-        </TranslationItem>
-        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>Verlaag aantal zichtbare regels</Value>
-        </TranslationItem>
-        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
-          <Value>Complete bestand weergeven</Value>
-        </TranslationItem>
-        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
-          <Value>Behandel alle bestanden als tekst</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
-          <Value>Kopieer</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
-          <Value>Kopieer patch</Value>
-        </TranslationItem>
-        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
-          <Value>Volgende wijziging</Value>
-        </TranslationItem>
-        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
-          <Value>Vorige wijziging</Value>
-        </TranslationItem>
-        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
-          <Value>Verhoog aantal zichtbare regels</Value>
-        </TranslationItem>
-        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
-          <Value>Verlaag aantal zichtbare regels</Value>
-        </TranslationItem>
-        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
-          <Value>Toon volledige bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
-          <Value>Toon niet zichtbare tekens</Value>
-        </TranslationItem>
-        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
-          <Value>Toon niet zichtbare tekens</Value>
-        </TranslationItem>
-        <TranslationItem Name="findAndReplaceForm" Property="Text">
-          <Value>Zoeken en vervangen</Value>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Selecteer label</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -920,10 +847,10 @@ Kies een directorie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormChangeLog1">
+    <TranslationCategory Name="FormChangeLog">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Wijzigingen logboek</Value>
+          <Value>Verlander logboek</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -976,7 +903,7 @@ Kies een directorie</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>Filter</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="AddFiles" Property="Text">
           <Value>Bestanden toevoegen</Value>
         </TranslationItem>
         <TranslationItem Name="ShowFiles" Property="Text">
@@ -984,41 +911,6 @@ Kies een directorie</Value>
         </TranslationItem>
         <TranslationItem Name="force" Property="Text">
           <Value>Forceer</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="EditNetSpell">
-      <translationItems>
-        <TranslationItem Name="EmptyLabel" Property="Text">
-          <Value>Bericht invoeren</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormTag">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Label</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Label naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
-          <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>Maak geannoteerd label</Value>
-        </TranslationItem>
-        <TranslationItem Name="noTagMassage" Property="Text">
-          <Value>Voer een label bericht in</Value>
-        </TranslationItem>
-        <TranslationItem Name="noRevisionSelected" Property="Text">
-          <Value>Selecteer een revisie waar het label op moet komen</Value>
-        </TranslationItem>
-        <TranslationItem Name="messageCaption" Property="Text">
-          <Value>Label</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1127,6 +1019,22 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Plaatje verversen</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>Registreer op gravatar.com</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>Leeg afbeelding cache</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>Formaat afbeelding</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1139,32 +1047,31 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="$this" Property="Text">
           <Value>Ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="allMergeConflictSolvedQuestion" Property="Text">
-          <Value>Zijn alle merge conflicten opgelost?
-Wilt u nu committen?</Value>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>Zijn alle samenvoeg problemen opgelost? Wilt u committen?</Value>
         </TranslationItem>
-        <TranslationItem Name="allMergeConflictSolvedQuestionCaption" Property="Text">
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>Conflicten opgelost</Value>
         </TranslationItem>
-        <TranslationItem Name="selectSourceDirectory" Property="Text">
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Value>Weggezette items weer terugzetten naar werk directorie?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
+          <Value>Automatisch wegzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
+          <Value>U kunt alleen alle externe vertakkingen (*) ophalen zonder samenvoegen of rebasen.
+Als u alle branches wilt ophalen, kies alleen ophalen.
+Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemoteRepository" Property="Text">
+          <Value>Selecteer een doel directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectSourceDirectory" Property="Text">
           <Value>Selecteer een bron directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="selectRemoteRepository" Property="Text">
-          <Value>Selecteer een externe opslagplaats</Value>
-        </TranslationItem>
-        <TranslationItem Name="fetchAllBranchesCanOnlyWithFetch" Property="Text">
-          <Value>U kunt alleen alle externe vertakkingen ophalen (*) zonder samenvoegen of rebase.
-Als u alle externe vertakkingen wilt ophalen, kies niet samenvoegen.
-Als u een vertakking wilt ophalen en samenvoegen, kies een specifieke vertakking.</Value>
-        </TranslationItem>
-        <TranslationItem Name="applyShashedItemsAgain" Property="Text">
-          <Value>Weggezette wjzigingen terugzetten op werk directory?</Value>
-        </TranslationItem>
-        <TranslationItem Name="applyShashedItemsAgainCaption" Property="Text">
-          <Value>Automatisch wijzigingen wegzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="cannotLoadPutty" Property="Text">
-          <Value>Kan de SSH sleutel niet laden, PuTTY is niet juist geconfigureerd.</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseSource" Property="Text">
           <Value>Bladeren</Value>
@@ -1221,8 +1128,8 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een specifieke vertakking
         <TranslationItem Name="$this" Property="Text">
           <Value>Vertakkingen samenvoegen</Value>
         </TranslationItem>
-        <TranslationItem Name="currentBranch" Property="Text">
-          <Value>Huidige vertakking:</Value>
+        <TranslationItem Name="_currentBranch" Property="Text">
+          <Value>Huidige vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Voeg huidige vertakking samen met andere vertakking</Value>
@@ -1264,15 +1171,19 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een specifieke vertakking
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Value>Openen met difftool</Value>
         </TranslationItem>
-        <TranslationItem Name="findAndReplaceForm" Property="Text">
-          <Value>Zoeken en vervangen</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDashboardEditor">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Start pagina</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitCount">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Aantal commits</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1360,19 +1271,19 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
           <Value>Toon alleen gefilterde vertakkingen</Value>
         </TranslationItem>
-        <TranslationItem Name="authorDate" Property="Text">
-          <Value>Auteur datum</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitDate" Property="Text">
-          <Value>Commit datum</Value>
-        </TranslationItem>
-        <TranslationItem Name="messageCaption" Property="Text">
-          <Value>Bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="authorCaption" Property="Text">
+        <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
-        <TranslationItem Name="RevisionFilter" Property="Text">
+        <TranslationItem Name="_authorDateCaption" Property="Text">
+          <Value>AuteurDatum</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitDateCaption" Property="Text">
+          <Value>CommitDatum</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
         </TranslationItem>
       </translationItems>
@@ -1390,6 +1301,34 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="Load" Property="Text">
           <Value>Open</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>Selecteer 1 revisie om het label op aan te maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMessage" Property="Text">
+          <Value>Voer een label bericht in</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Label naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="CreateTag" Property="Text">
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Maak geannoteerd label</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1720,15 +1659,11 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="BranchBorders" Property="Text">
           <Value>Teken randen om grafiek</Value>
         </TranslationItem>
-        <TranslationItem Name="StripedBranchChange" Property="Text">
-          <Value>Teken wisseling van vertakking</Value>
+        <TranslationItem Name="StripedBanchChange" Property="Text">
+          <Value>Gestreepte vertakking overgangen</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginSettings">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Plugin instellingen</Value>
+        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+          <Value>Toon opslagplaats status in dialoog (aantal wijzigingen, herstart vereist)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1770,19 +1705,6 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
           <Value>&amp;Ok</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDeleteTag">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Verwijder label</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Selecteer label</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1851,6 +1773,34 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         </TranslationItem>
         <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
           <Value>Maak een nieuwe vertaling</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTagSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Label naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Maak geannoteerd label</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>FormTag	_noRevisionSelected	Text	Select 1 revision to create the tag on.	Selecteer 1 revisie om het label op aan te maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text">
+          <Value>Voer label bericht in</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1936,16 +1886,74 @@ verwijderen die niet is samengevoegd, selecteer de optie 'Geforceerd verwijderen
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Gerforceerd verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteBranchQuestion" Property="Text">
-          <Value>Weet u zeker dat u deze vertakking wilt verwijderen?
-
-Door het het verwijderen van deze vertakking kunnen commits verloren gaan!</Value>
+        <TranslationItem Name="_branchDeleted" Property="Text">
+          <Value>Command uitgevoerd</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteBranchCaption" Property="Text">
+        <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Value>Verwijder vertakking</Value>
         </TranslationItem>
-        <TranslationItem Name="branchDeleted" Property="Text">
-          <Value>Commando uitgevoerd</Value>
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
+          <Value>Weet u zeker dat u deze vertakking wilt verwijderen?
+Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Zoeken</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>Negeer wijzigingen in witruimtes</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Verhoog aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Verlaag aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>Complete bestand weergeven</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>Behandel alle bestanden als tekst</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>Kopieer</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
+          <Value>Kopieer patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>Volgende wijziging</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>Vorige wijziging</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>Verhoog aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>Verlaag aantal zichtbare regels</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>Toon volledige bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>Toon niet zichtbare tekens</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>Toon niet zichtbare tekens</Value>
+        </TranslationItem>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>Zoeken en vervangen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>Bericht invoeren</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1989,13 +1997,13 @@ Door het het verwijderen van deze vertakking kunnen commits verloren gaan!</Valu
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormLoadPuttySSHKey">
+    <TranslationCategory Name="FormLoadPuttySshKey">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Laad SSH sleutel in PuTTY Authentication Agent</Value>
+          <Value>Laad PuTTY SSH sleutel in authenticatie-agent</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Laad</Value>
+          <Value>Laden</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Bestand met geheime sleutel</Value>
@@ -2134,27 +2142,27 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         <TranslationItem Name="labelTo" Property="Text">
           <Value>naar</Value>
         </TranslationItem>
-        <TranslationItem Name="selectDestinationDirectory" Property="Text">
-          <Value>Selecteer een doel directory</Value>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
+Weet u zeker dat u deze vertakking wilt verzenden?</Value>
         </TranslationItem>
-        <TranslationItem Name="selectRemote" Property="Text">
-          <Value>Selecteer een externe opslagplaats</Value>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Kan SSH sleutel niet laden. PuTTY is niet juist geconfigureerd.</Value>
         </TranslationItem>
-        <TranslationItem Name="selectTag" Property="Text">
-          <Value>U moet een label selecteren om te verzenden, of kies "verzend alle labels".</Value>
-        </TranslationItem>
-        <TranslationItem Name="cannotLoadPutty" Property="Text">
-          <Value>Kan de SSH sleutel niet laden, PuTTY is niet juist geconfigureerd.</Value>
-        </TranslationItem>
-        <TranslationItem Name="pushCaption" Property="Text">
+        <TranslationItem Name="_pushCaption" Property="Text">
           <Value>Verzenden</Value>
         </TranslationItem>
-        <TranslationItem Name="branchNewForRemote" Property="Text">
-          <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is bij de externe opslagplaats.
-Weet u zeker dat u door wilt gaan met het verzenden van deze vertakking?</Value>
-        </TranslationItem>
-        <TranslationItem Name="pushToCaption" Property="Text">
+        <TranslationItem Name="_pushToCaption" Property="Text">
           <Value>Verzenden naar {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>Selecteer een doel directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>Selecteer een externe directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Selecteer een label om te verzenden of selecteer "alle labels".</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2210,7 +2218,7 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
           <Value>Wijzigingen in alle bestanden ongedaan maken.</Value>
         </TranslationItem>
-        <TranslationItem Name="eToolStripMenuItem" Property="Text">
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
           <Value>Wijzig genegeerde bestanden</Value>
         </TranslationItem>
         <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="Text">
@@ -2273,100 +2281,99 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
           <Value>Reset deel van bestand</Value>
         </TranslationItem>
-        <TranslationItem Name="closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Gebruik deze optie om dit dialoog na de commit af te sluiten.
-Anders wordt het dialoog alleen gesloten als er geen wijzigingen meer zijn.</Value>
-        </TranslationItem>
-        <TranslationItem Name="noUnstagedChanges" Property="Text">
-          <Value>Er zijn geen wijzigingen die nog niet zijn klaargezet</Value>
-        </TranslationItem>
-        <TranslationItem Name="noStagedChanges" Property="Text">
-          <Value>Er zijn geen klaargezette wijzigingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="enterCommitMessageHint" Property="Text">
-          <Value>Commit bericht invoeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="noFilesStaged" Property="Text">
-          <Value>Er zijn geen klaargezette bestanden om te committen. Weet u zeker dat u wilt committen?</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflicts" Property="Text">
-          <Value>Er zijn nog niet opgeloste samenvoeg conflicten.
-Conflicten moeten worden opgelost voor het committen.</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflictsCaption" Property="Text">
-          <Value>Samenvoeg conflicten</Value>
-        </TranslationItem>
-        <TranslationItem Name="enterCommitMessage" Property="Text">
-          <Value>Voer commit bericht in</Value>
-        </TranslationItem>
-        <TranslationItem Name="enterCommitMessageCaption" Property="Text">
-          <Value>Commit bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="notOnBranch" Property="Text">
-          <Value>U werkt momenteel niet op een benoemde vertakking.
-Er zal niet naar deze commit verwezen worden. 
-Wanneer u naar een andere vertakking gaat zal deze commit verloren gaan.
+        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
+          <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
-Weet u zeker dat u wilt doorgaan?</Value>
+Kies 'Nee' om nieuwe bestanden te behouden.</Value>
         </TranslationItem>
-        <TranslationItem Name="notOnBranchCaption" Property="Text">
-          <Value>Niet op een vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="amendCommit" Property="Text">
-          <Value>U staat op het punt de geschiedenis te herschrijven.
-Gebruik de optie 'toevoegen aan commit' alleen als de commit nog niet verzonden is!
-
-Weet u zeker dat u wilt doorgaan?</Value>
-        </TranslationItem>
-        <TranslationItem Name="amendCommitCaption" Property="Text">
-          <Value>Toevoegen aan commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Value>Weet u zeker dat u de wijzigingen in de geselecteerde bestanden ongedaan wilt maken?</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetChangesCaption" Property="Text">
-          <Value>Wijzigingen ongedaan maken</Value>
-        </TranslationItem>
-        <TranslationItem Name="alsoDeleteUntrackedFiles" Property="Text">
-          <Value>Wilt u ook alle nieuwe geselecteerde bestanden weggooien?
-
-Kies 'Nee' om de nieuwe bestanden te bewaren.</Value>
-        </TranslationItem>
-        <TranslationItem Name="alsoDeleteUntrackedFilesCaption" Property="Text">
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
           <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteSelectedFiles" Property="Text">
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>U staat op het punt de geschienis te herschrijven.
+Gebruik deze optie alleen als de commit nog niet verzonden is!
+
+Weet u zeker dat u door wilt gaan?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>Commit uitbreiden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
+          <Value>Dit dialoog zal worden afgesloten na iedere commit wanneer deze optie aan staat.
+Anders zal dit dialoog alleen sluiten wanneer er geen gewijzigde bestanden meer zijn.
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteFailed" Property="Text">
+          <Value>Het verwijderen van het bestand is mislukt</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
           <Value>Weet u zeker dat u de geselecteerde bestanden wilt verwijderen?</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteSelectedFilesCaption" Property="Text">
+        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
           <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteFailed" Property="Text">
-          <Value>Het verwijderen van bestanden is mislukt</Value>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>Weet u zeker dat u alle nieuwe bestanden wilt verwijderen?</Value>
         </TranslationItem>
-        <TranslationItem Name="resetSelectedChanges" Property="Text">
-          <Value>Wilt u de wijzigingen in de geselecteerde bestanden terugzetten?</Value>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>Verwijder nieuwe bestanden</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteUntrackedFiles" Property="Text">
-          <Value>Weet u zeker dat u alle bestanden buiten git wilt verwijderen?</Value>
+        <TranslationItem Name="_enterCommitMessage" Property="Text">
+          <Value>Voer commit melding in</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteUntrackedFilesCaption" Property="Text">
-          <Value>Verwijdeer bestanden buiten versiebeheer</Value>
+        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
+          <Value>Commit melding</Value>
         </TranslationItem>
-        <TranslationItem Name="onlyStageChunkOfSingleFileError" Property="Text">
-          <Value>Deze optie kan alleen gebruikt worden wanneer 1 bestand is geselecteerd</Value>
+        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
+          <Value>Voer commit melding in</Value>
         </TranslationItem>
-        <TranslationItem Name="stageChunkOfFileCaption" Property="Text">
-          <Value>Zet een deel van het bestand klaar</Value>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>Er zijn niet opgeloste samenvoeg conflicten. Deze moeten opgelost worden voordat u een commit kunt maken.</Value>
         </TranslationItem>
-        <TranslationItem Name="resetStageChunkOfFileCaption" Property="Text">
-          <Value>Zet een deel van het bestand terug</Value>
+        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
+          <Value>Samenvoeg conflicten</Value>
         </TranslationItem>
-        <TranslationItem Name="stageDetails" Property="Text">
-          <Value>Details bestanden klaarzetten</Value>
+        <TranslationItem Name="_noFilesStaged" Property="Text">
+          <Value>Er zijn geen bestanden klaargezet voor deze commit. Weet u zeker dat u wilt doorgaan?</Value>
         </TranslationItem>
-        <TranslationItem Name="stageFiles" Property="Text">
-          <Value>Zet {0} bestanden klaar</Value>
+        <TranslationItem Name="_noStagedChanges" Property="Text">
+          <Value>Er zijn geen klaargezette wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>Er zijn geen wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>U bent niet aan het werk op een vertakking. 
+Deze commit zal daarom niet in een vertakking voorkomen en kan verloren gaan.
+
+Weet u zeker dat u wilt doorgaan?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Value>Geen vertakking geselecteerd</Value>
+        </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>U kunt deze optie alleen gebruiken op een enkel bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChanges" Property="Text">
+          <Value>Weet u zeker dat u de wijzigingen in de geselecteerde bestanden ongedaan wilt maken?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>Alle wijzigingen ongedaan maken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+          <Value>Weet u zeker dat u de wijzigingen in de alle bestanden ongedaan wilt maken?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
+          <Value>Zet deel van bestand terug</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageChunkOfFileCaption" Property="Text">
+          <Value>Zet deel van bestand klaar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageDetails" Property="Text">
+          <Value>Details</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFiles" Property="Text">
+          <Value>{0} Bestanden klaargezet</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2520,6 +2527,13 @@ stash
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="CommitInfo">
+      <translationItems>
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
+          <Value>Toon vertakkingen waar deze commit in voorkomt</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCheckoutBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2565,7 +2579,7 @@ stash
         <TranslationItem Name="label3" Property="Text">
           <Value>Bericht:</Value>
         </TranslationItem>
-        <TranslationItem Name="Refresh" Property="Text">
+        <TranslationItem Name="RefreshButton" Property="Text">
           <Value>Verversen</Value>
         </TranslationItem>
       </translationItems>
