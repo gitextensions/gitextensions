@@ -71,12 +71,9 @@ namespace GitExtensions
                 Settings.WorkingDir = Directory.GetCurrentDirectory();
 
             if (args.Length <= 1)
-            {
                 GitUICommands.Instance.StartBrowseDialog();
-                return;
-            }
-            // if we are here args.Length > 1
-            RunCommand(args);
+            else  // if we are here args.Length > 1
+                RunCommand(args);
 
             Settings.SaveSettings();
         }
