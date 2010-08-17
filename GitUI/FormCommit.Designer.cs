@@ -328,7 +328,6 @@ namespace GitUI
             // 
             this.Unstaged.ContextMenuStrip = this.UnstagedFileContext;
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Unstaged.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Unstaged.GitItemStatusses = null;
             this.Unstaged.Location = new System.Drawing.Point(0, 0);
             this.Unstaged.Name = "Unstaged";
@@ -545,7 +544,6 @@ namespace GitUI
             // Staged
             // 
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Staged.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Staged.GitItemStatusses = null;
             this.Staged.Location = new System.Drawing.Point(0, 0);
             this.Staged.Name = "Staged";
@@ -612,7 +610,6 @@ namespace GitUI
             // SelectedDiff
             // 
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.SelectedDiff.IgnoreWhitespaceChanges = false;
             this.SelectedDiff.IsReadOnly = true;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
@@ -751,10 +748,8 @@ namespace GitUI
             // Message
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Message.Location = new System.Drawing.Point(4, 34);
             this.Message.Margin = new System.Windows.Forms.Padding(4);
-            this.Message.MistakeFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(356, 96);
             this.Message.TabIndex = 0;
