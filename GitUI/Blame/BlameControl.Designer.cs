@@ -99,7 +99,6 @@
             // 
             this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
             this.commitInfo.Name = "commitInfo";
             this.commitInfo.Size = new System.Drawing.Size(735, 142);
