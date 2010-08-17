@@ -476,16 +476,16 @@ _ReSharper*/
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Value>Versie historie</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
-          <Value>Ophalen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
-          <Value>Verzenden</Value>
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
+          <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
+          <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
           <Value>Verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
@@ -1665,6 +1665,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
           <Value>Toon opslagplaats status in dialoog (aantal wijzigingen, herstart vereist)</Value>
         </TranslationItem>
+        <TranslationItem Name="label24" Property="Text">
+          <Value>Revisie lijst snel zoek timout [ms]</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -1944,6 +1947,9 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
         <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
           <Value>Toon niet zichtbare tekens</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>Negeer witruimten</Value>
         </TranslationItem>
         <TranslationItem Name="_findAndReplaceForm" Property="Text">
           <Value>Zoeken en vervangen</Value>
