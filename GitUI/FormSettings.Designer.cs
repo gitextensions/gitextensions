@@ -84,6 +84,8 @@ namespace GitUI
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
             this.showGitStatusInToolbarLabel = new System.Windows.Forms.Label();
             this.ShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
+            this.RevisionGridQuickSearchTimeout = new System.Windows.Forms.NumericUpDown();
+            this.label24 = new System.Windows.Forms.Label();
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.Language = new System.Windows.Forms.ComboBox();
             this.label49 = new System.Windows.Forms.Label();
@@ -213,6 +215,7 @@ namespace GitUI
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
             this.StartPage.SuspendLayout();
             this.AppearancePage.SuspendLayout();
@@ -801,6 +804,8 @@ namespace GitUI
             // 
             this.TabPageGitExtensions.Controls.Add(this.showGitStatusInToolbarLabel);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitStatusInToolbar);
+            this.TabPageGitExtensions.Controls.Add(this.RevisionGridQuickSearchTimeout);
+            this.TabPageGitExtensions.Controls.Add(this.label24);
             this.TabPageGitExtensions.Controls.Add(this.helpTranslate);
             this.TabPageGitExtensions.Controls.Add(this.Language);
             this.TabPageGitExtensions.Controls.Add(this.label49);
@@ -851,6 +856,42 @@ namespace GitUI
             this.ShowGitStatusInToolbar.Size = new System.Drawing.Size(15, 14);
             this.ShowGitStatusInToolbar.TabIndex = 31;
             this.ShowGitStatusInToolbar.UseVisualStyleBackColor = true;
+            // 
+            // RevisionGridQuickSearchTimeout
+            // 
+            this.RevisionGridQuickSearchTimeout.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(382, 313);
+            this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.RevisionGridQuickSearchTimeout.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.RevisionGridQuickSearchTimeout.Name = "RevisionGridQuickSearchTimeout";
+            this.RevisionGridQuickSearchTimeout.Size = new System.Drawing.Size(123, 23);
+            this.RevisionGridQuickSearchTimeout.TabIndex = 33;
+            this.RevisionGridQuickSearchTimeout.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(8, 315);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(234, 16);
+            this.label24.TabIndex = 32;
+            this.label24.Text = "Revision grid quick search timeout [ms]";
             // 
             // helpTranslate
             // 
@@ -951,7 +992,7 @@ namespace GitUI
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(313, 322);
+            this.EncodingLabel.Location = new System.Drawing.Point(8, 345);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(59, 16);
             this.EncodingLabel.TabIndex = 20;
@@ -967,7 +1008,7 @@ namespace GitUI
             "UTF7",
             "UTF8",
             "UTF32"});
-            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(382, 319);
+            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(382, 342);
             this._NO_TRANSLATE_Encoding.Name = "_NO_TRANSLATE_Encoding";
             this._NO_TRANSLATE_Encoding.Size = new System.Drawing.Size(242, 24);
             this._NO_TRANSLATE_Encoding.TabIndex = 19;
@@ -2207,6 +2248,7 @@ namespace GitUI
             this.groupBox7.PerformLayout();
             this.TabPageGitExtensions.ResumeLayout(false);
             this.TabPageGitExtensions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).EndInit();
             this.StartPage.ResumeLayout(false);
             this.AppearancePage.ResumeLayout(false);
@@ -2413,6 +2455,8 @@ namespace GitUI
         private System.Windows.Forms.CheckBox StripedBanchChange;
         private System.Windows.Forms.Label showGitStatusInToolbarLabel;
         private System.Windows.Forms.CheckBox ShowGitStatusInToolbar;
+        private System.Windows.Forms.NumericUpDown RevisionGridQuickSearchTimeout;
+        private System.Windows.Forms.Label label24;
 
     }
 }
