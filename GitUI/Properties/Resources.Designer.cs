@@ -365,13 +365,13 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 1.98
-        ///	Fixed issue 105: Allow to open &quot;gitex browse&quot; with a given filter.
-        ///	Fixed issue 106: Show all branches which &quot;contain&quot; a given commit in their history.
-        ///	Fixed issue 107: Alt+f4 and other function keys not working when rvision graph has focus.
-        ///	Fixed issue 108: Apply patch files from directory not working.
-        ///	Fixed bug: Git Extensions crashes when opening certain repositories (e.g. linux kernel)
-        ///	After opening the FileHistory window the selected revision will be disp [rest of string was truncated]&quot;;.
+        ///Version 1.99
+        ///	Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
+        ///	Fixed issue 107: alt+f4 not working when revisiongrid has focus
+        ///	Fixed issue 111: Annotated Tags Appear Twice in Push Dialog
+        ///	Fixed issue 113: Statistics: &quot;Lines of Code per type&quot; and &quot;Lines of testcode&quot; fail in empty or non code repo
+        ///	Fixed issue 114: Adding filter which results in no commits shows &quot;empty repository&quot; UI
+        ///	Fixed issue 119: show files in FileHistory also  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
@@ -614,6 +614,20 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("User", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap whitespace {
+            get {
+                object obj = ResourceManager.GetObject("whitespace", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon witespace {
+            get {
+                object obj = ResourceManager.GetObject("witespace", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }
