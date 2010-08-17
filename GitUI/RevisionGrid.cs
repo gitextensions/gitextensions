@@ -148,7 +148,7 @@ namespace GitUI
             if (!e.Alt && !e.Control && char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
             {
                 quickSearchTimer.Stop();
-                quickSearchTimer.Interval = 700;
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
                 quickSearchTimer.Start();
 
                 _quickSearchString = string.Concat(_quickSearchString, (char) e.KeyValue).ToLower();
@@ -189,7 +189,9 @@ namespace GitUI
             Revisions.Rows[searchResult.Some].Selected = true;
 
             Revisions.CurrentCell = Revisions.Rows[searchResult.Some].Cells[1];
+
         }
+
 
         private Option<int> SearchForward(int startIndex, string searchString)
         {

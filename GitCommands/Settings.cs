@@ -56,6 +56,7 @@ namespace GitCommands
             CustomHomeDir = "";
             Translation = "";
             CommitInfoShowContainedInBranches = true;
+            RevisionGridQuickSearchTimeout = 700;
             ApplicationDataPath = Application.UserAppDataPath + "\\";
             ShowGitStatusInBrowseToolbar = false;
         }
@@ -115,6 +116,8 @@ namespace GitCommands
         public static bool ShowCurrentBranchOnly { get; set; }
 
         public static bool BranchFilterEnabled { get; set; }
+
+        public static int RevisionGridQuickSearchTimeout { get; set; }
 
         public static string GitCommand { get; set; }
 
@@ -316,6 +319,7 @@ namespace GitCommands
                 appData.SetValue("smtp", Smtp);
                 appData.SetValue("dictionary", Dictionary);
                 appData.SetValue("commitinfoshowcontainedinbranches", CommitInfoShowContainedInBranches);
+                appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
             }
             catch (Exception ex)
@@ -404,6 +408,7 @@ namespace GitCommands
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
                 SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
+                SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
             }
             catch (Exception ex)
