@@ -185,6 +185,7 @@
     <Compile Include="FormCherryPickCommitSmall.Designer.cs">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lemmings.cs" />
     <Compile Include="SpellChecker\EditNetSpell.cs">
       <SubType>UserControl</SubType>
     </Compile>

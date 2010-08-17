@@ -194,7 +194,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = null;
             this.Controls.Add(this.splitContainer5);
-            this.Font = null;
             this.Name = "Dashboard";
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
