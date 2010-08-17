@@ -43,6 +43,7 @@
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showNonprintableCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileviewerToolbar = new System.Windows.Forms.ToolStrip();
             this.nextChangeButton = new System.Windows.Forms.ToolStripButton();
             this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
@@ -52,7 +53,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
-            this.showNonprintableCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.ContextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
@@ -64,8 +65,9 @@
             this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.PictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PictureBox.Location = new System.Drawing.Point(0, 0);
+            this.PictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PictureBox.Name = "PictureBox";
-            this.PictureBox.Size = new System.Drawing.Size(649, 449);
+            this.PictureBox.Size = new System.Drawing.Size(757, 553);
             this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBox.TabIndex = 2;
             this.PictureBox.TabStop = false;
@@ -77,8 +79,9 @@
             this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextEditor.IsReadOnly = false;
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
+            this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(649, 449);
+            this.TextEditor.Size = new System.Drawing.Size(757, 553);
             this.TextEditor.TabIndex = 3;
             // 
             // ContextMenu
@@ -96,7 +99,7 @@
             this.treatAllFilesAsTextToolStripMenuItem,
             this.showNonprintableCharactersToolStripMenuItem});
             this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(275, 236);
+            this.ContextMenu.Size = new System.Drawing.Size(275, 214);
             // 
             // findToolStripMenuItem
             // 
@@ -166,6 +169,13 @@
             this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
             this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.TreatAllFilesAsTextToolStripMenuItemClick);
             // 
+            // showNonprintableCharactersToolStripMenuItem
+            // 
+            this.showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
+            this.showNonprintableCharactersToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
+            this.showNonprintableCharactersToolStripMenuItem.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
+            // 
             // fileviewerToolbar
             // 
             this.fileviewerToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -178,11 +188,12 @@
             this.DecreaseNumberOfLines,
             this.toolStripSeparator4,
             this.showEntireFileButton,
-            this.showNonPrintChars});
+            this.showNonPrintChars,
+            this.ignoreWhiteSpaces});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(474, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(524, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(151, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(205, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
             // 
@@ -256,22 +267,26 @@
             this.showNonPrintChars.ToolTipText = "Show nonprinting characters";
             this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonPrintCharsClick);
             // 
-            // showNonprintableCharactersToolStripMenuItem
+            // ignoreWhiteSpaces
             // 
-            this.showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
-            this.showNonprintableCharactersToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
-            this.showNonprintableCharactersToolStripMenuItem.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
+            this.ignoreWhiteSpaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ignoreWhiteSpaces.Image = ((System.Drawing.Image)(resources.GetObject("ignoreWhiteSpaces.Image")));
+            this.ignoreWhiteSpaces.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
+            this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 20);
+            this.ignoreWhiteSpaces.ToolTipText = "Ignore whitespaces";
+            this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
             // 
             // FileViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.fileviewerToolbar);
             this.Controls.Add(this.TextEditor);
             this.Controls.Add(this.PictureBox);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileViewer";
-            this.Size = new System.Drawing.Size(649, 449);
+            this.Size = new System.Drawing.Size(757, 553);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
             this.ContextMenu.ResumeLayout(false);
             this.fileviewerToolbar.ResumeLayout(false);
@@ -306,5 +321,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton showNonPrintChars;
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
     }
 }

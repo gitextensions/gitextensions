@@ -932,6 +932,9 @@
     <None Include="Icons\_82.png" />
     <Content Include="Resources\success.png" />
     <Content Include="Resources\success1.png" />
+    <None Include="Resources\witespace.ico" />
+    <None Include="Resources\whitespace.bmp" />
+    <None Include="Resources\whitespace.png" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
