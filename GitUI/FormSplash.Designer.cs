@@ -60,29 +60,29 @@
             this.panel1.Size = new System.Drawing.Size(256, 128);
             this.panel1.TabIndex = 1;
             // 
-            // _versionLabel
+            // _NO_TRANSLATE_versionLabel
             // 
             this._NO_TRANSLATE_versionLabel.AutoSize = true;
             this._NO_TRANSLATE_versionLabel.Location = new System.Drawing.Point(134, 30);
-            this._NO_TRANSLATE_versionLabel.Name = "_versionLabel";
+            this._NO_TRANSLATE_versionLabel.Name = "_NO_TRANSLATE_versionLabel";
             this._NO_TRANSLATE_versionLabel.Size = new System.Drawing.Size(59, 13);
             this._NO_TRANSLATE_versionLabel.TabIndex = 3;
             this._NO_TRANSLATE_versionLabel.Text = "Version {0}";
             // 
-            // _programTitle
+            // _NO_TRANSLATE_programTitle
             // 
             this._NO_TRANSLATE_programTitle.AutoSize = true;
             this._NO_TRANSLATE_programTitle.Location = new System.Drawing.Point(134, 8);
-            this._NO_TRANSLATE_programTitle.Name = "_programTitle";
-            this._NO_TRANSLATE_programTitle.Size = new System.Drawing.Size(99, 15);
+            this._NO_TRANSLATE_programTitle.Name = "_NO_TRANSLATE_programTitle";
+            this._NO_TRANSLATE_programTitle.Size = new System.Drawing.Size(74, 13);
             this._NO_TRANSLATE_programTitle.TabIndex = 2;
             this._NO_TRANSLATE_programTitle.Text = "Git Extensions";
             // 
-            // _actionLabel
+            // _NO_TRANSLATE_actionLabel
             // 
             this._NO_TRANSLATE_actionLabel.AutoSize = true;
             this._NO_TRANSLATE_actionLabel.Location = new System.Drawing.Point(134, 104);
-            this._NO_TRANSLATE_actionLabel.Name = "_actionLabel";
+            this._NO_TRANSLATE_actionLabel.Name = "_NO_TRANSLATE_actionLabel";
             this._NO_TRANSLATE_actionLabel.Size = new System.Drawing.Size(54, 13);
             this._NO_TRANSLATE_actionLabel.TabIndex = 1;
             this._NO_TRANSLATE_actionLabel.Text = "Loading...";

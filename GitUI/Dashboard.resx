@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;splitContainer6.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="splitContainer6.SplitterDistance" type="System.Int32, mscorlib">
     <value>126</value>
@@ -127,11 +124,8 @@
   <data name="&gt;&gt;splitContainer6.Panel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;splitContainer5.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer6.Panel2.Name" xml:space="preserve">
-    <value>splitContainer6.Panel2</value>
+  <data name="&gt;&gt;splitContainer6.Name" xml:space="preserve">
+    <value>splitContainer6</value>
   </data>
   <data name="&gt;&gt;RecentRepositories.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -145,8 +139,11 @@
   <data name="&gt;&gt;splitContainer7.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="splitContainer5.Panel2.AutoScroll" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;splitContainer7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CommonActions.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;RecentRepositories.Name" xml:space="preserve">
     <value>RecentRepositories</value>
@@ -201,6 +198,9 @@
   <data name="&gt;&gt;splitContainer7.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="&gt;&gt;splitContainer7.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="splitContainer6.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
     <value>Horizontal</value>
   </data>
@@ -210,6 +210,12 @@
   <data name="splitContainer7.SplitterDistance" type="System.Int32, mscorlib">
     <value>331</value>
   </data>
+  <data name="RecentRepositories.Size" type="System.Drawing.Size, System.Drawing">
+    <value>314, 331</value>
+  </data>
+  <data name="RecentRepositories.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;splitContainer6.Parent" xml:space="preserve">
     <value>splitContainer5.Panel1</value>
   </data>
@@ -218,6 +224,9 @@
   </data>
   <data name="&gt;&gt;splitContainer6.Panel2.Parent" xml:space="preserve">
     <value>splitContainer6</value>
+  </data>
+  <data name="&gt;&gt;splitContainer6.Panel2.Name" xml:space="preserve">
+    <value>splitContainer6.Panel2</value>
   </data>
   <data name="&gt;&gt;splitContainer6.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -258,11 +267,11 @@
   <data name="splitContainer6.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="splitContainer5.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
   <data name="&gt;&gt;splitContainer7.Panel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer5.Panel2.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="CommonActions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -270,17 +279,11 @@
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Dashboard</value>
   </data>
-  <data name="&gt;&gt;splitContainer5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="DonateCategory.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 75</value>
   </data>
   <data name="&gt;&gt;RecentRepositories.Type" xml:space="preserve">
     <value>GitUI.DashboardCategory, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;splitContainer6.Name" xml:space="preserve">
-    <value>splitContainer6</value>
   </data>
   <data name="&gt;&gt;splitContainer5.Panel1.Parent" xml:space="preserve">
     <value>splitContainer5</value>
@@ -336,9 +339,6 @@
   <data name="CommonActions.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;splitContainer7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;splitContainer5.Panel2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
@@ -360,8 +360,8 @@
   <data name="splitContainer7.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 410</value>
   </data>
-  <data name="&gt;&gt;splitContainer7.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;splitContainer5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;splitContainer6.Panel1.Name" xml:space="preserve">
     <value>splitContainer6.Panel1</value>
@@ -369,7 +369,7 @@
   <data name="&gt;&gt;DonateCategory.Type" xml:space="preserve">
     <value>GitUI.DashboardCategory, GitUI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="RecentRepositories.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;splitContainer6.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
@@ -384,11 +384,11 @@
   <data name="&gt;&gt;splitContainer6.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;CommonActions.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="splitContainer5.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="RecentRepositories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 331</value>
+  <data name="&gt;&gt;splitContainer5.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer6.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>

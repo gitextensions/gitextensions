@@ -20,6 +20,11 @@ namespace GitUI
 
             SetFont();
             _NO_TRANSLATE_programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+
+            var image = Lemmings.GetPictureBoxImage(DateTime.Now);
+            if (image != null)
+                pictureBox1.Image = image;
+
         }
 
         private void SetFont()

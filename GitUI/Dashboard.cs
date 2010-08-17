@@ -28,26 +28,12 @@ namespace GitUI
             RecentRepositories.DisableContextMenu();
             RecentRepositories.DashboardCategoryChanged += new EventHandler(dashboardCategory_DashboardCategoryChanged);
             //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
-            
-            var image = getPictureBoxImage(DateTime.Now);
-            pictureBox1.Image = image;
+
+            var image = Lemmings.GetPictureBoxImage(DateTime.Now);
+            if (image != null)
+                pictureBox1.Image = image;
         }
          
-        private Bitmap getPictureBoxImage(DateTime currentDate)
-        {
-            // Lemmings
-            // Also, we removed repeated calls to DateTine.Now and made this method testable
-            if (currentDate.Month == 12 && currentDate.Day > 15 && currentDate.Day < 27) //X-Mass
-            {
-                return Resources.Cow_xmass;
-            }
-            if (currentDate.Month == 6 && currentDate.Day > 17 && currentDate.Day < 24) //summer
-            {
-                return Resources.Cow_sunglass;
-            }
-            return null;
-        }
-
         public event EventHandler WorkingDirChanged;
 
         public virtual void OnWorkingDirChanged()
