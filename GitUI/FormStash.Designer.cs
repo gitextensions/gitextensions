@@ -252,7 +252,6 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.View.IgnoreWhitespaceChanges = false;
             this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(0, 0);

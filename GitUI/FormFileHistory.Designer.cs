@@ -80,11 +80,9 @@ namespace GitUI
                 "n werden.\r\n";
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
-            this.FileChanges.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
-            this.FileChanges.NormalFont = new System.Drawing.Font("Segoe UI", 9F);
             this.FileChanges.Size = new System.Drawing.Size(748, 111);
             this.FileChanges.TabIndex = 2;
             this.FileChanges.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
@@ -130,7 +128,6 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.View.IgnoreWhitespaceChanges = false;
             this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(3, 3);
@@ -156,7 +153,6 @@ namespace GitUI
             // Diff
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Diff.IgnoreWhitespaceChanges = false;
             this.Diff.IsReadOnly = true;
             this.Diff.Location = new System.Drawing.Point(3, 3);
