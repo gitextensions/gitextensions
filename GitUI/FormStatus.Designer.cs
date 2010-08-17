@@ -74,7 +74,7 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(10, 10);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -85,8 +85,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(627, 261);
-            this.splitContainer1.SplitterDistance = 232;
+            this.splitContainer1.Size = new System.Drawing.Size(607, 241);
+            this.splitContainer1.SplitterDistance = 212;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer5
@@ -104,8 +104,8 @@
             // 
             this.splitContainer5.Panel2.Controls.Add(this.SuccessImage);
             this.splitContainer5.Panel2.Controls.Add(this.ErrorImage);
-            this.splitContainer5.Size = new System.Drawing.Size(627, 232);
-            this.splitContainer5.SplitterDistance = 568;
+            this.splitContainer5.Size = new System.Drawing.Size(607, 212);
+            this.splitContainer5.SplitterDistance = 548;
             this.splitContainer5.TabIndex = 3;
             // 
             // Output
@@ -117,7 +117,7 @@
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(568, 232);
+            this.Output.Size = new System.Drawing.Size(548, 212);
             this.Output.TabIndex = 0;
             this.Output.Text = "";
             // 
@@ -157,8 +157,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Ok);
-            this.splitContainer2.Size = new System.Drawing.Size(627, 25);
-            this.splitContainer2.SplitterDistance = 543;
+            this.splitContainer2.Size = new System.Drawing.Size(607, 25);
+            this.splitContainer2.SplitterDistance = 523;
             this.splitContainer2.TabIndex = 0;
             // 
             // splitContainer3
@@ -175,8 +175,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(543, 25);
-            this.splitContainer3.SplitterDistance = 315;
+            this.splitContainer3.Size = new System.Drawing.Size(523, 25);
+            this.splitContainer3.SplitterDistance = 303;
             this.splitContainer3.TabIndex = 0;
             // 
             // ProgressBar
@@ -185,7 +185,7 @@
             this.ProgressBar.Location = new System.Drawing.Point(0, 0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(315, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(303, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
@@ -204,8 +204,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.Abort);
-            this.splitContainer4.Size = new System.Drawing.Size(224, 25);
-            this.splitContainer4.SplitterDistance = 142;
+            this.splitContainer4.Size = new System.Drawing.Size(216, 25);
+            this.splitContainer4.SplitterDistance = 134;
             this.splitContainer4.TabIndex = 0;
             // 
             // KeepDialogOpen
@@ -213,8 +213,7 @@
             this.KeepDialogOpen.AutoSize = true;
             this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.KeepDialogOpen.Size = new System.Drawing.Size(109, 17);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(125, 20);
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
@@ -232,7 +231,7 @@
             // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
