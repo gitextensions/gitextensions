@@ -450,6 +450,7 @@ namespace GitUI.Editor
         private void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
+            ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             OnExtraDiffArgumentsChanged();
         }
@@ -604,6 +605,11 @@ namespace GitUI.Editor
         private void FindToolStripMenuItemClick(object sender, EventArgs e)
         {
             Find();
+        }
+
+        private void ignoreWhiteSpaces_Click(object sender, EventArgs e)
+        {
+            IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
         }
     }
 }
