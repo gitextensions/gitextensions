@@ -109,6 +109,8 @@ namespace GitUI
                 else if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default";
 
+                RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
+
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
                 _NO_TRANSLATE_DaysToCacheImages.Value = GitCommands.Settings.AuthorImageCacheDays;
@@ -358,6 +360,7 @@ namespace GitUI
                                 else
                                     GitCommands.Settings.Encoding = System.Text.Encoding.Default;
 
+            Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
 
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.BranchBorders = BranchBorders.Checked;

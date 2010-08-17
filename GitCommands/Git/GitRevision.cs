@@ -54,6 +54,9 @@ namespace GitCommands
                     return true;
             }
 
+            if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+                return true;
+
             // Make sure it only matches the start of a word
             var modifiedSearchString = " " + searchString;
 
