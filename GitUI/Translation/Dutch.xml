@@ -1275,10 +1275,10 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>Auteur</Value>
         </TranslationItem>
         <TranslationItem Name="_authorDateCaption" Property="Text">
-          <Value>AuteurDatum</Value>
+          <Value>Auteur datum</Value>
         </TranslationItem>
         <TranslationItem Name="_commitDateCaption" Property="Text">
-          <Value>CommitDatum</Value>
+          <Value>Commit datum</Value>
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Value>Bericht</Value>
