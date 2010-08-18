@@ -1241,5 +1241,11 @@ namespace GitUI
             PullToolStripMenuItemClick(sender, e);
         }
 
+        private void editgitattributesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartEditGitAttributesDialog())
+                Initialize();
+        }
+
     }
 }
