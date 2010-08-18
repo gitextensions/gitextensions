@@ -163,6 +163,7 @@ namespace GitUI
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -1164,6 +1165,7 @@ namespace GitUI
             this.gitMaintenanceToolStripMenuItem,
             this.toolStripSeparator4,
             this.editgitignoreToolStripMenuItem1,
+            this.editgitattributesToolStripMenuItem,
             this.editmailmapToolStripMenuItem,
             this.toolStripSeparator13,
             this.settingsToolStripMenuItem2});
@@ -1178,7 +1180,7 @@ namespace GitUI
             this.verifyGitDatabaseToolStripMenuItem});
             this.gitMaintenanceToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("gitMaintenanceToolStripMenuItem.Image")));
             this.gitMaintenanceToolStripMenuItem.Name = "gitMaintenanceToolStripMenuItem";
-            this.gitMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.gitMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.gitMaintenanceToolStripMenuItem.Text = "Git maintenance";
             // 
             // compressGitDatabaseToolStripMenuItem
@@ -1198,32 +1200,32 @@ namespace GitUI
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(183, 6);
             // 
             // editgitignoreToolStripMenuItem1
             // 
             this.editgitignoreToolStripMenuItem1.Name = "editgitignoreToolStripMenuItem1";
-            this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
+            this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(186, 22);
             this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore";
             this.editgitignoreToolStripMenuItem1.Click += new System.EventHandler(this.EditGitignoreToolStripMenuItem1Click);
             // 
             // editmailmapToolStripMenuItem
             // 
             this.editmailmapToolStripMenuItem.Name = "editmailmapToolStripMenuItem";
-            this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
             // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(183, 6);
             // 
             // settingsToolStripMenuItem2
             // 
             this.settingsToolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem2.Image")));
             this.settingsToolStripMenuItem2.Name = "settingsToolStripMenuItem2";
-            this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(181, 22);
+            this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(186, 22);
             this.settingsToolStripMenuItem2.Text = "Settings";
             this.settingsToolStripMenuItem2.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
@@ -1318,6 +1320,13 @@ namespace GitUI
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
+            // 
+            // editgitattributesToolStripMenuItem
+            // 
+            this.editgitattributesToolStripMenuItem.Name = "editgitattributesToolStripMenuItem";
+            this.editgitattributesToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes";
+            this.editgitattributesToolStripMenuItem.Click += new System.EventHandler(this.editgitattributesToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -1492,5 +1501,6 @@ namespace GitUI
         private ToolStripMenuItem fileHistoryToolStripMenuItem;
         private ToolStripMenuItem findToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator18;
+        private ToolStripMenuItem editgitattributesToolStripMenuItem;
     }
 }
