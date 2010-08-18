@@ -596,6 +596,9 @@ _ReSharper*/
         <TranslationItem Name="findToolStripMenuItem" Property="Text">
           <Value>Zoeken</Value>
         </TranslationItem>
+        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
+          <Value>Wijzig .gitattributes</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -2681,6 +2684,33 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitAttributes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Wijzig .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Wijzig de git attributen
+Definieer attributen per pad
+
+Voorbeelden:
+Markeer alle jpg bestanden binair:
+*.jpg binary
+
+Markeer alle sln bestanden binair:
+*.sln binary
+
+markeer enkel bestand als tekst:
+tekstbestand.txt text
+
+Voor meer informatie zie
+de git help documentatie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

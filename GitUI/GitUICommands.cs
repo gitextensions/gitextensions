@@ -99,6 +99,9 @@ namespace GitUI
         public event GitUIEventHandler PreEditGitIgnore;
         public event GitUIEventHandler PostEditGitIgnore;
 
+        public event GitUIEventHandler PreEditGitAttributes;
+        public event GitUIEventHandler PostEditGitAttributes;
+        
         public event GitUIEventHandler PreSettings;
         public event GitUIEventHandler PostSettings;
 
@@ -473,6 +476,19 @@ namespace GitUI
             form.ShowDialog();
 
             InvokeEvent(PostEditGitIgnore);
+
+            return false;
+        }
+
+        public bool StartEditGitAttributesDialog()
+        {
+            if (!InvokeEvent(PreEditGitAttributes))
+                return true;
+
+            FormGitAttributes form = new FormGitAttributes();
+            form.ShowDialog();
+
+            InvokeEvent(PostEditGitAttributes);
 
             return false;
         }
