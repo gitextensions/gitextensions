@@ -12,6 +12,7 @@ Version 1.99
 	Fixed issue 121: Local branch and remote tracking branch reverse order on selection
 	Fixed issue 122: Visual Studio 2010 solution file
 	Fixed issue 123: Translation String is missing in Delete branch conformation dialog
+	Fixed issue 126: Added editor for .gitattributes
 	Fixed issue 129: loading submodules submenu is very slow
 	Fixed issue 131: Add a blame funtion (commandline: GitExtensions blame [filename])
 	Fixed issue 135: settings not saved when closing application
