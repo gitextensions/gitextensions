@@ -102,7 +102,10 @@ namespace GitUI.Editor
         private void TextAreaMouseMove(object sender, MouseEventArgs e)
         {
             if (_currentViewIsPatch && !fileviewerToolbar.Visible)
+            {
                 fileviewerToolbar.Visible = true;
+                fileviewerToolbar.Location = new Point(this.Width - fileviewerToolbar.Width - 40, 0);
+            }
         }
 
         private void TextAreaMouseLeave(object sender, EventArgs e)
