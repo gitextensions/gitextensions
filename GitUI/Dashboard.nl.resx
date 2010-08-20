@@ -136,7 +136,7 @@
     <value>Top</value>
   </data>
   <data name="DonateCategory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 86</value>
+    <value>314, 70</value>
   </data>
   <data name="splitContainer7.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 409</value>
@@ -151,7 +151,7 @@
     <value>5</value>
   </data>
   <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>223, 248</value>
+    <value>256, 280</value>
   </data>
   <data name="pictureBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 4, 3, 4</value>

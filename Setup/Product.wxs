@@ -76,6 +76,9 @@
       <Component Id="GitExtensions.exe" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitExtensions.exe"/>
       </Component>
+      <Component Id="Gravatar.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\Gravatar.dll"/>
+      </Component>
       <Component Id="GitCommands.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitCommands.dll"/>
       </Component>
@@ -321,6 +324,7 @@
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
+      <ComponentRef Id="Gravatar.dll"/>
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
