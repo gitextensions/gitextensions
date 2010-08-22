@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 2.00
+	Fixed bug: refreshing and loading gravatars caused GitExtensions to crash
+	Fixed bug: settings check not shown properly when a problem was found
+
 Version 1.99
 	Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
 	Fixed issue 107: alt+f4 not working when revisiongrid has focus
