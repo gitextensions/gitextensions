@@ -8,6 +8,7 @@ namespace Gravatar
 {
     internal class DirectoryImageCache : IImageCache
     {
+        private static Object padlock = new Object();
         string cachePath;
 
         public DirectoryImageCache(string cachePath)
@@ -22,14 +23,27 @@ namespace Gravatar
 
             foreach (string file in Directory.GetFiles(cachePath))
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                { }
             }
         }
 
         public void DeleteCachedFile(string imageFileName)
         {
             if (File.Exists(cachePath + imageFileName))
-                File.Delete(cachePath + imageFileName);
+            {
+                try
+                {
+
+                    File.Delete(cachePath + imageFileName);
+                }
+                catch
+                { }
+            }
         }
 
         public bool FileIsCached(string imageFileName)
@@ -54,7 +68,10 @@ namespace Gravatar
             if (!File.Exists(cachePath + imageFileName))
                 return null;
 
-            return Image.FromFile(cachePath + imageFileName);
+            using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open))
+            {
+                return Image.FromStream(fileStream);
+            }
         }
 
         public void CacheImage(string imageFileName, System.IO.Stream imageStream)
@@ -62,16 +79,19 @@ namespace Gravatar
             if (!Directory.Exists(cachePath))
                 Directory.CreateDirectory(cachePath);
 
-            using (var output = new FileStream(cachePath + imageFileName, FileMode.Create))
+            lock (padlock)
             {
-                byte[] buffer = new byte[1024];
-                int read;
+                using (var output = new FileStream(cachePath + imageFileName, FileMode.Create))
+                {
+                    byte[] buffer = new byte[1024];
+                    int read;
 
-                if (imageStream != null)
-                    while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        output.Write(buffer, 0, read);
-                    }
+                    if (imageStream != null)
+                        while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            output.Write(buffer, 0, read);
+                        }
+                }
             }
         }
 
