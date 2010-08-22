@@ -534,16 +534,17 @@ namespace GitUI
             {
                 // once a check fails, we want bValid to stay false
                 bValid = CheckGitExtensionsInstall();
-                bValid = bValid && CheckGitExtensionRegistrySettings();
-                bValid = bValid && CheckGlobalUserSettingsValid();
-                bValid = bValid && CheckMergeTool();
-                bValid = bValid && CheckDiffToolConfiguration();
-                bValid = bValid && CheckGitCmdValid();
-                bValid = bValid && CheckGitExe();
-                bValid = bValid && CheckSSHSettings();
+                bValid = CheckGitExtensionRegistrySettings() && bValid;
+                bValid = CheckGlobalUserSettingsValid() && bValid;
+                bValid = CheckMergeTool() && bValid;
+                bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckGitCmdValid() && bValid;
+                bValid = CheckGitExe() && bValid;
+                bValid = CheckSSHSettings() && bValid;
             }
-            catch
+            catch(Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
 
             CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);          
