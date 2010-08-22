@@ -18,37 +18,46 @@ namespace Gravatar
 
         public void ClearCache()
         {
-            if (!Directory.Exists(cachePath))
-                return;
-
-            foreach (string file in Directory.GetFiles(cachePath))
+            lock (padlock)
             {
-                try
+                if (!Directory.Exists(cachePath))
+                    return;
+
+                foreach (string file in Directory.GetFiles(cachePath))
                 {
-                    File.Delete(file);
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
             }
         }
 
         public void DeleteCachedFile(string imageFileName)
         {
-            if (File.Exists(cachePath + imageFileName))
+            lock (padlock)
             {
-                try
+                if (File.Exists(cachePath + imageFileName))
                 {
+                    try
+                    {
 
-                    File.Delete(cachePath + imageFileName);
+                        File.Delete(cachePath + imageFileName);
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
             }
         }
 
         public bool FileIsCached(string imageFileName)
         {
-            return File.Exists(cachePath + imageFileName);
+            lock (padlock)
+            {
+                return File.Exists(cachePath + imageFileName);
+            }
         }
 
         public bool FileIsExpired(string imageFileName, int cacheDays)
@@ -65,12 +74,16 @@ namespace Gravatar
 
         public System.Drawing.Image LoadImageFromCache(string imageFileName, System.Drawing.Bitmap defaultBitmap)
         {
-            if (!File.Exists(cachePath + imageFileName))
-                return null;
-
-            using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open))
+            lock (padlock)
             {
-                return Image.FromStream(fileStream);
+
+                if (!File.Exists(cachePath + imageFileName))
+                    return null;
+
+                using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open))
+                {
+                    return Image.FromStream(fileStream);
+                }
             }
         }
 
@@ -81,16 +94,22 @@ namespace Gravatar
 
             lock (padlock)
             {
-                using (var output = new FileStream(cachePath + imageFileName, FileMode.Create))
+                try
                 {
-                    byte[] buffer = new byte[1024];
-                    int read;
+                    using (var output = new FileStream(cachePath + imageFileName, FileMode.Create))
+                    {
+                        byte[] buffer = new byte[1024];
+                        int read;
 
-                    if (imageStream != null)
-                        while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            output.Write(buffer, 0, read);
-                        }
+                        if (imageStream != null)
+                            while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                output.Write(buffer, 0, read);
+                            }
+                    }
+                }
+                catch
+                {
                 }
             }
         }
