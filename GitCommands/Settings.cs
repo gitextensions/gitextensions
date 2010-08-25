@@ -56,6 +56,7 @@ namespace GitCommands
             CustomHomeDir = "";
             Translation = "";
             CommitInfoShowContainedInBranches = true;
+            CommitInfoShowContainedInTags = true;
             RevisionGridQuickSearchTimeout = 700;
             ApplicationDataPath = Application.UserAppDataPath + "\\";
             ShowGitStatusInBrowseToolbar = false;
@@ -64,6 +65,8 @@ namespace GitCommands
         public static bool ShowGitStatusInBrowseToolbar { get; set; }
 
         public static bool CommitInfoShowContainedInBranches { get; set; }
+        
+        public static bool CommitInfoShowContainedInTags { get; set; }
 
         public static string ApplicationDataPath { get; set; }
 
@@ -319,6 +322,7 @@ namespace GitCommands
                 appData.SetValue("smtp", Smtp);
                 appData.SetValue("dictionary", Dictionary);
                 appData.SetValue("commitinfoshowcontainedinbranches", CommitInfoShowContainedInBranches);
+                appData.SetValue("commitinfoshowcontainedintags", CommitInfoShowContainedInTags);
                 appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
             }
@@ -408,6 +412,7 @@ namespace GitCommands
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
                 SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
+                SafeSetBool("commitinfoshowcontainedintags", x => CommitInfoShowContainedInTags = x);
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
             }

@@ -21,6 +21,21 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Gets all tags which contain the given commit.
+        /// </summary>
+        /// <param name="sha1">The sha1.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
+        {
+            string info = GitCommands.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
+
+
+            if (info.Trim().StartsWith("fatal"))
+                return new List<string>();
+            return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
         /// Gets the commit info.
         /// </summary>
         /// <param name="sha1">The sha1.</param>
