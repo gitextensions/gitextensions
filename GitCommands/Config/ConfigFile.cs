@@ -81,7 +81,7 @@ namespace GitCommands.Config
                             throw new Exception(
                                 string.Format("Key {0} in configfile {1} is not in a section.", key, _fileName));
 
-                        configSection.SetValue(key, value);
+                        configSection.AddValue(key, value);
                     }
                 }
             }
@@ -101,7 +101,10 @@ namespace GitCommands.Config
 
                 foreach (var key in section.Keys)
                 {
-                    configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeString(key.Value)));
+                    foreach (var value in key.Value)
+                    {
+                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeString(value)));
+                    }
                 }
             }
 
@@ -133,6 +136,20 @@ namespace GitCommands.Config
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
 
+        public void AddValue(string setting, string value)
+        {
+            var keyIndex = setting.LastIndexOf('.');
+
+            if (keyIndex < 0 && keyIndex == setting.Length)
+                throw new Exception("Invalid setting name: " + setting);
+
+
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
+
+            FindOrCreateConfigSection(configSectionName).AddValue(keyName, value);
+        }
+
         public string GetValue(string setting)
         {
             var keyIndex = setting.LastIndexOf('.');
@@ -149,6 +166,25 @@ namespace GitCommands.Config
                 return string.Empty;
 
             return configSection.GetValue(keyName);
+        }
+
+
+        public IList<string> GetValues(string setting)
+        {
+            var keyIndex = setting.LastIndexOf('.');
+
+            if (keyIndex < 0 && keyIndex == setting.Length)
+                throw new Exception("Invalid setting name: " + setting);
+
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
+
+            var configSection = FindConfigSection(configSectionName);
+
+            if (configSection == null)
+                return new List<string>();
+
+            return configSection.GetValues(keyName);
         }
 
         public void RemoveSetting(string setting)
