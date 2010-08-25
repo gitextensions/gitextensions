@@ -51,6 +51,7 @@ namespace GitUI
         private void ReloadCommitInfo()
         {
             showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranches;
+            showContainedInTagsToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInTags;
 
             ResetTextAndImage();
             if (string.IsNullOrEmpty(_revision))
@@ -66,6 +67,14 @@ namespace GitUI
                                     s =>
                                     {
                                         RevisionInfo.Text += GetBranchesWhichContainsThisCommit(_revision);
+                                    }, null);
+            }
+            if (Settings.CommitInfoShowContainedInTags)
+            {
+                _syncContext.Post(
+                                    s =>
+                                    {
+                                        RevisionInfo.Text += GetTagsWhichContainsThisCommit(_revision);
                                     }, null);
             }
         }
@@ -102,7 +111,22 @@ namespace GitUI
 
             if (branchString != string.Empty)
                 return "\r\nContained in branches: " + branchString;
-            return "Contained in no branch";
+            return "\r\nContained in no branch";
+        }
+
+        private static string GetTagsWhichContainsThisCommit(string revision)
+        {
+            var tagString = "";
+            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(revision))
+            {
+                if (tagString != string.Empty)
+                    tagString += ", ";
+                tagString += tag;
+            }
+
+            if (tagString != string.Empty)
+                return "\r\nContained in tags: " + tagString;
+            return "\r\nContained in no tag";
         }
 
         private void tableLayout_Paint(object sender, PaintEventArgs e)
@@ -114,6 +138,12 @@ namespace GitUI
         {
             Settings.CommitInfoShowContainedInBranches = !Settings.CommitInfoShowContainedInBranches;
             ReloadCommitInfo();
+        }
+
+        private void showContainedInTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInTags = !Settings.CommitInfoShowContainedInTags;
+            ReloadCommitInfo();            
         }
     }
 }
