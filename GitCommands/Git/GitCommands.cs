@@ -354,12 +354,12 @@ namespace GitCommands
                 {
                     Process.Kill();
                 }
+                Process.Close();
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex);
-            }
-            Process.Close();
+            }            
         }
 
         public event DataReceivedEventHandler DataReceived;

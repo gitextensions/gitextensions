@@ -84,25 +84,19 @@ namespace GitUI
 
         public void Clear()
         {
-            // This has to happen on the UI thread
-            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+            lock (backgroundThread)
             {
-                lock (backgroundThread)
-                {
-                    backgroundScrollTo = 0;
-                }
-                lock (graphData)
-                {
-                    setRowCount(0);
-                    junctionColors.Clear();
-                    graphData.Clear();
-                    graphDataCount = 0;
-                    RebuildGraph();
-                }
-                filterMode = FilterType.None;
-            });
-
-            syncContext.Send(method, this);
+                backgroundScrollTo = 0;
+            }
+            lock (graphData)
+            {
+                setRowCount(0);
+                junctionColors.Clear();
+                graphData.Clear();
+                graphDataCount = 0;
+                RebuildGraph();
+            }
+            filterMode = FilterType.None;
         }
 
         private FilterType filterMode = FilterType.None;
@@ -129,7 +123,7 @@ namespace GitUI
                                 graphData.IsFilter = (filterMode & FilterType.Hide) == FilterType.Hide;
                                 RebuildGraph();
                             }
-                            setRowCount(graphData.Count);
+                            //setRowCount(graphData.Count);
                         }
                     });
                     syncContext.Send(method, this);
@@ -290,23 +284,17 @@ namespace GitUI
 
         public void SetExpectedRowCount(int rowCount)
         {
-            // This has to happen on the UI thread
-            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+            lock (graphData)
             {
-                lock (graphData)
+                if (rowCount > 0)
                 {
-                    if (rowCount > 0)
-                    {
-                        setRowCount(rowCount);
-                    }
-                    else
-                    {
-                        setRowCount(graphData.Count);
-                    }
+                    setRowCount(rowCount);
                 }
-            });
-
-            syncContext.Send(method, this);
+                else
+                {
+                    setRowCount(graphData.Count);
+                }
+            }
         }
 
         private readonly SynchronizationContext syncContext;
@@ -351,7 +339,10 @@ namespace GitUI
         {
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(delegate { setRowCount(count); }));
+                //DO NOT INVOKE! The RowCount is fixed at other strategic points in time.
+                //-Doing this in synch can lock up the application
+                //-Doing this asynch causes the scrollbar to flicker and eats performance
+                //Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
             }
 
@@ -490,14 +481,6 @@ namespace GitUI
                     {
                         rowCount = RowCount;
                     }
-                    if (rowCount < curCount)
-                    {
-                        syncContext.Send(new SendOrPostCallback(delegate(object obj)
-                            {
-                                int addedRow = (int)obj;
-                                setRowCount(addedRow);
-                            }), curCount);
-                    }
                 }
             }
         }
@@ -508,6 +491,28 @@ namespace GitUI
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
+
+                if (visibleBottom-1 > graphData.Count)
+                {
+                    //Currently we are doing some important work; we are recieving
+                    //rows that the user is viewing
+                    SetBackgroundThreadToNormalPriority();
+                    if (Loading != null)
+                    {
+                        Loading(true);
+                    }
+                }
+                else
+                {
+                    //All rows that the user is viewing are loaded. We now can hide the loading
+                    //animation that is shown. (the event Loading(bool) triggers this!)
+                    //Since the graph is not drawn for the visible graph yet, keep the
+                    //priority on Normal. Lower it when the graph is visible.                            
+                    if (Loading != null)
+                    {
+                        Loading(false);
+                    }
+                }
 
                 if (visibleBottom > graphData.Count)
                 {
@@ -521,32 +526,6 @@ namespace GitUI
                     backgroundScrollTo = targetBottom;
                     backgroundEvent.Set();
                 }
-
-                syncContext.Post(new SendOrPostCallback(delegate(object o)
-                    {
-                        if (visibleBottom > graphData.Count)
-                        {
-                            //Currently we are doing some important work; we are recieving
-                            //rows that the user is viewing
-                            SetBackgroundThreadToNormalPriority();
-                            if (Loading != null)
-                            {
-                                Loading(true);
-                            }
-                        }
-                        else
-                        {
-                            //All rows that the user is viewing are loaded. We now can hide the loading
-                            //animation that is shown. (the event Loading(bool) triggers this!)
-                            //Since the graph is not drawn for the visible graph yet, keep the
-                            //priority on Normal. Lower it when the graph is visible.                            
-                            if (Loading != null)
-                            {
-                                Loading(false);
-                            }
-                        }
-                            
-                    }), null);
             }
         }
 
@@ -568,7 +547,7 @@ namespace GitUI
                 {
                     setRowCount(graphData.Count);
                 }
-                                
+
                 // Check to see if the newly added item should be selected
                 IComparable id = graphData[row].Node.Id;
                 if (toBeSelected.Contains(id))
@@ -606,7 +585,7 @@ namespace GitUI
                     // this is processed and the row is larger than RowCount.
                 }
             }
-            
+
         }
 
         private void updateColumnWidth()
@@ -818,7 +797,7 @@ namespace GitUI
                 {
                     // Item already in the cache
                     return CreateRectangle(aNeededRow, width);
-                    
+
                 }
 
                 for (int rowIndex = start; rowIndex < end; rowIndex++)
@@ -887,7 +866,7 @@ namespace GitUI
                         );
         }
 
-// end drawGraph
+        // end drawGraph
 
         private bool drawItem(Graphics wa, Graph.LaneRow row)
         {
@@ -1055,9 +1034,9 @@ namespace GitUI
             }
             public bool IsFiltered
             {
-                get 
-                { 
-                    return (DataType & DataType.Filtered) == DataType.Filtered; 
+                get
+                {
+                    return (DataType & DataType.Filtered) == DataType.Filtered;
                 }
                 set
                 {
@@ -1257,7 +1236,7 @@ namespace GitUI
             public Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
 
             public List<Node> AddedNodes = new List<Node>();
-            
+
             private bool isFilter = false;
             public bool IsFilter
             {
@@ -1423,9 +1402,9 @@ namespace GitUI
 
             private int nodeCount = 0;
             private int filterNodeCount = 0;
-            public int Count 
-            { 
-                get 
+            public int Count
+            {
+                get
                 {
                     if (IsFilter)
                     {
@@ -1435,7 +1414,7 @@ namespace GitUI
                     {
                         return nodeCount;
                     }
-                } 
+                }
             }
 
             public void ProcessNode(Node aNode)
@@ -1643,7 +1622,7 @@ namespace GitUI
                 laneRows.Clear();
                 laneNodes.Clear();
                 currentRow.Clear();
-                
+
                 foreach (Node aNode in sourceGraph.GetHeads())
                 {
                     if (aNode.Descendants.Count == 0)
@@ -2290,7 +2269,7 @@ namespace GitUI
 
                 public Graph.LaneRow Advance()
                 {
-                    SavedLaneRow newLaneRow = new SavedLaneRow( this );
+                    SavedLaneRow newLaneRow = new SavedLaneRow(this);
 
                     Edges newEdges = new Edges();
                     for (int i = 0; i < edges.CountNext(); i++)
@@ -2376,7 +2355,7 @@ namespace GitUI
                 {
                     return false;
                 }
-                
+
                 // Find the new current row's node (newest item in the row)
                 #region Find current node & index
                 currentRow.Node = null;
@@ -2414,7 +2393,7 @@ namespace GitUI
 
                 sourceGraph.ProcessNode(currentRow.Node);
                 #endregion
-                
+
                 // Check for multiple junctions with this node at the top. Remove the 
                 // node from that junction as well. This will happen when there is a branch 
                 #region Check for branches
@@ -2445,7 +2424,7 @@ namespace GitUI
                         // us to try to insert a node into the graph twice)
                         curLane = intoLane;
                     }
-                    
+
                     // Re-process the lane to make sure there are no actions left.
                     curLane--;
                 }
