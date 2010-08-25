@@ -43,6 +43,8 @@ namespace GitUI
             HeadFont = new Font(NormalFont, FontStyle.Underline);
             RefsFont = new Font(NormalFont, FontStyle.Bold);
 
+            Loading.Paint += new PaintEventHandler(Loading_Paint);
+
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
 
@@ -58,6 +60,12 @@ namespace GitUI
             quickSearchTimer.Tick += QuickSearchTimerTick;
 
             Revisions.Loading += RevisionsLoading;
+        }
+
+        void Loading_Paint(object sender, PaintEventArgs e)
+        {
+            if (Loading.Visible != _isLoading)
+                Loading.Visible = _isLoading;
         }
 
         public Font HeadFont { get; private set; }
@@ -83,9 +91,18 @@ namespace GitUI
                 ChangedCurrentBranch(this, null);
         }
 
+        private bool _isLoading = false;
         private void RevisionsLoading(bool isLoading)
         {
-            Loading.Visible = isLoading;
+            _isLoading = isLoading;
+
+            /*if (Loading.Visible != isLoading)
+            {
+                _syncContext.Send(new SendOrPostCallback(delegate(object o)
+                                    {
+                                        Loading.Visible = isLoading;
+                                    }), null);
+            }*/
         }
 
         private void ShowQuickSearchString()
@@ -144,14 +161,14 @@ namespace GitUI
                 e.Handled = true;
                 return;
             }
-            var key = (char) e.KeyValue;
+            var key = (char)e.KeyValue;
             if (!e.Alt && !e.Control && char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
             {
                 quickSearchTimer.Stop();
                 quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
                 quickSearchTimer.Start();
 
-                _quickSearchString = string.Concat(_quickSearchString, (char) e.KeyValue).ToLower();
+                _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
 
                 var oldIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
@@ -202,14 +219,14 @@ namespace GitUI
 
             for (index = startIndex; index < Revisions.RowCount; ++index)
             {
-                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     return Option<int>.From(index);
             }
 
             // We didn't find it so start searching from the top
             for (index = 0; index < startIndex; ++index)
             {
-                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     return Option<int>.From(index);
             }
 
@@ -225,14 +242,14 @@ namespace GitUI
 
             for (index = startIndex; index >= 0; --index)
             {
-                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     return Option<int>.From(index);
             }
 
             // We didn't find it so start searching from the bottom
             for (index = Revisions.RowCount - 1; index > startIndex; --index)
             {
-                if (((GitRevision) Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
                     return Option<int>.From(index);
             }
 
@@ -287,7 +304,7 @@ namespace GitUI
             {
                 foreach (DataGridViewRow row in Revisions.Rows)
                 {
-                    if (((GitRevision) row.DataBoundItem).Guid == revision.Guid)
+                    if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
                         row.Selected = true;
                 }
             }
@@ -384,7 +401,7 @@ namespace GitUI
                 Revisions.Enabled = false;
                 Loading.Visible = true;
                 _indexWatcher.Reset();
-                _revisionGraphCommand = new RevisionGraph {BranchFilter = BranchFilter, LogParam = LogParam + Filter};
+                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Execute();
@@ -400,7 +417,7 @@ namespace GitUI
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
-            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEvent) e;
+            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEvent)e;
             UpdateGraph(updatedEvent.Revision);
         }
 
@@ -411,9 +428,6 @@ namespace GitUI
 
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
         {
-            Revisions.SetExpectedRowCount(_revisionGraphCommand.Revisions.Count);
-            UpdateGraph(null);
-
             if (_revisionGraphCommand.Revisions.Count == 0 && !FilterIsApplied())
             {
                 // This has to happen on the UI thread
@@ -430,6 +444,7 @@ namespace GitUI
                 // This has to happen on the UI thread
                 _syncContext.Send(o =>
                                       {
+                                          UpdateGraph(null);
                                           Loading.Visible = false;
                                           SelectInitialRevision();
                                       }, this);
@@ -474,7 +489,7 @@ namespace GitUI
             }
             else
             {
-                Revisions.SelectedIds = new IComparable[] {CurrentCheckout};
+                Revisions.SelectedIds = new IComparable[] { CurrentCheckout };
             }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
@@ -501,6 +516,9 @@ namespace GitUI
 
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            if (Loading.Visible != _isLoading)
+                Loading.Visible = _isLoading;
+
             // The graph column is handled by the DvcsGraph
             if (e.ColumnIndex == 0)
             {
@@ -541,13 +559,13 @@ namespace GitUI
                         {
                             heads.Sort(new Comparison<GitHead>(
                                            (left, right) =>
-                                               {
-                                                   if (left.IsTag != right.IsTag)
-                                                       return right.IsTag.CompareTo(left.IsTag);
-                                                   if (left.IsRemote != right.IsRemote)
-                                                       return left.IsRemote.CompareTo(right.IsRemote);
-                                                   return left.Name.CompareTo(right.Name);
-                                               }));
+                                           {
+                                               if (left.IsTag != right.IsTag)
+                                                   return right.IsTag.CompareTo(left.IsTag);
+                                               if (left.IsRemote != right.IsRemote)
+                                                   return left.IsRemote.CompareTo(right.IsRemote);
+                                               return left.Name.CompareTo(right.Name);
+                                           }));
 
                             foreach (var head in heads)
                             {
@@ -619,7 +637,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormTagSmall {Revision = GetRevision(LastRow)};
+            var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
             frm.ShowDialog();
             RefreshRevisions();
         }
@@ -639,7 +657,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormBranchSmall {Revision = GetRevision(LastRow)};
+            var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
             frm.ShowDialog();
             RefreshRevisions();
             OnChangedCurrentBranch();
@@ -954,24 +972,24 @@ namespace GitUI
                 return string.Format("{0} seconds ago", span.Seconds);
 
             if (span.TotalHours < 1)
-                return string.Format("{0} minutes ago", span.Minutes + Math.Round(span.Seconds/60.0, 0));
+                return string.Format("{0} minutes ago", span.Minutes + Math.Round(span.Seconds / 60.0, 0));
 
             if (span.TotalHours < 2)
                 return "1 hour ago";
 
             if (span.TotalHours < 24)
-                return string.Format("{0} hours ago", (int) span.TotalHours + Math.Round(span.Minutes/60.0, 0));
+                return string.Format("{0} hours ago", (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
 
             if (span.TotalDays < 30)
-                return string.Format("{0} days ago", (int) span.TotalDays + Math.Round(span.Hours/24.0, 0));
+                return string.Format("{0} days ago", (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 45)
                 return "1 month ago";
 
             if (span.TotalDays < 365)
-                return string.Format("{0} months ago", (int) Math.Round(span.TotalDays/30, 0));
+                return string.Format("{0} months ago", (int)Math.Round(span.TotalDays / 30, 0));
 
-            return string.Format("{0:#.#} years ago", Math.Round(span.TotalDays/365));
+            return string.Format("{0:#.#} years ago", Math.Round(span.TotalDays / 365));
         }
 
         private void UpdateGraph(GitRevision rev)
