@@ -34,6 +34,7 @@
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayout.SuspendLayout();
             this.commitInfoContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -84,9 +85,10 @@
             // commitInfoContextMenuStrip
             // 
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showContainedInBranchesToolStripMenuItem});
+            this.showContainedInBranchesToolStripMenuItem,
+            this.showContainedInTagsToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 26);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 70);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
@@ -94,6 +96,13 @@
             this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.showContainedInBranchesToolStripMenuItem.Text = "Show contained in branches";
             this.showContainedInBranchesToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesToolStripMenuItem_Click);
+            // 
+            // showContainedInTagsToolStripMenuItem
+            // 
+            this.showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
+            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.showContainedInTagsToolStripMenuItem.Text = "Show contained in tags";
+            this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
             // 
             // CommitInfo
             // 
@@ -116,5 +125,6 @@
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
     }
 }
