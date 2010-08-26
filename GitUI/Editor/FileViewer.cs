@@ -24,6 +24,7 @@ namespace GitUI.Editor
             InitializeComponent();
             Translate();
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += TextAreaKeyUp;
+            TextEditor.Encoding = Settings.Encoding;
             IgnoreWhitespaceChanges = false;
 
             _async = new AsyncLoader();
@@ -408,7 +409,7 @@ namespace GitUI.Editor
         {
             var path = Settings.WorkingDir + fileName;
 
-            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Encoding.ASCII);
+            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Settings.Encoding);
         }
 
         private void ResetForImage()

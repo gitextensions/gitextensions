@@ -24,25 +24,33 @@ namespace Gravatar
         public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,
                                              int imageSize, string imageCachePath, Action<Image> onChangedImage)
         {
-            if (cache == null)
-                cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
+            try
+            {
+                if (cache == null)
+                    cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
 
-            // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-            if (!cache.FileIsCached(imageFileName) ||
-                cache.FileIsExpired(imageFileName, cacheDays))
-            {
-                onChangedImage(defaultBitmap);
+                // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
+                if (!cache.FileIsCached(imageFileName) ||
+                    cache.FileIsExpired(imageFileName, cacheDays))
+                {
+                    onChangedImage(defaultBitmap);
 
-                GetImageFromGravatar(imageFileName, email, imageSize);
+                    GetImageFromGravatar(imageFileName, email, imageSize);
+                }
+                if (cache.FileIsCached(imageFileName))
+                {
+                    onChangedImage(cache.LoadImageFromCache(imageFileName,
+                                                                 defaultBitmap));
+                }
+                else
+                {
+                    onChangedImage(defaultBitmap);
+                }
             }
-            if (cache.FileIsCached(imageFileName))
+            catch (Exception ex)
             {
-                onChangedImage(cache.LoadImageFromCache(imageFileName,
-                                                             defaultBitmap));
-            }
-            else
-            {
-                onChangedImage(defaultBitmap);
+                //catch IO errors
+                Trace.WriteLine(ex.Message);
             }
         }
 
@@ -59,7 +67,7 @@ namespace Gravatar
                 //format our url to the Gravatar
                 var imageUrl = String.Format(baseUrl, emailHash);
 
-                var webClient = new WebClient {Proxy = WebRequest.DefaultWebProxy};
+                var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 var imageStream = webClient.OpenRead(imageUrl);
@@ -78,7 +86,7 @@ namespace Gravatar
             new Process
                 {
                     EnableRaisingEvents = false,
-                    StartInfo = {FileName = @"http://www.gravatar.com"}
+                    StartInfo = { FileName = @"http://www.gravatar.com" }
                 }.Start();
         }
     }
