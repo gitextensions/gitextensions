@@ -64,8 +64,11 @@ namespace GitUI
 
         void Loading_Paint(object sender, PaintEventArgs e)
         {
+            // If our loading state has changed since the last paint, update it.
             if (Loading.Visible != _isLoading)
+            {
                 Loading.Visible = _isLoading;
+            }
         }
 
         public Font HeadFont { get; private set; }
@@ -94,15 +97,10 @@ namespace GitUI
         private bool _isLoading = false;
         private void RevisionsLoading(bool isLoading)
         {
+            // Since this can happen on a background thread, we'll just set a
+            // flag and deal with it next time we paint (a bit of a hack, but
+            // it works)
             _isLoading = isLoading;
-
-            /*if (Loading.Visible != isLoading)
-            {
-                _syncContext.Send(new SendOrPostCallback(delegate(object o)
-                                    {
-                                        Loading.Visible = isLoading;
-                                    }), null);
-            }*/
         }
 
         private void ShowQuickSearchString()
@@ -516,8 +514,11 @@ namespace GitUI
 
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            // If our loading state has changed since the last paint, update it.
             if (Loading.Visible != _isLoading)
+            {
                 Loading.Visible = _isLoading;
+            }
 
             // The graph column is handled by the DvcsGraph
             if (e.ColumnIndex == 0)
@@ -998,7 +999,6 @@ namespace GitUI
             {
                 // Prune the graph and make sure the row count matches reality
                 Revisions.Prune();
-                Revisions.SetExpectedRowCount(-1);
                 return;
             }
 
