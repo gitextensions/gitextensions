@@ -76,13 +76,20 @@ namespace Gravatar
         {
             lock (padlock)
             {
-
-                if (!File.Exists(cachePath + imageFileName))
-                    return null;
-
-                using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open))
+                try
                 {
-                    return Image.FromStream(fileStream);
+
+                    if (!File.Exists(cachePath + imageFileName))
+                        return null;
+
+                    using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open, FileAccess.Read))
+                    {
+                        return Image.FromStream(fileStream);
+                    }
+                }
+                catch
+                {
+                    return null;
                 }
             }
         }
