@@ -32,7 +32,7 @@ namespace GitUI
                 new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = {FileName = e.LinkText}
+                        StartInfo = { FileName = e.LinkText }
                     }.Start();
             }
             catch (Exception ex)
@@ -48,6 +48,10 @@ namespace GitUI
             ReloadCommitInfo();
         }
 
+        private string _revisionInfo;
+        private string _tagInfo;
+        private string _branchInfo;
+
         private void ReloadCommitInfo()
         {
             showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranches;
@@ -57,32 +61,47 @@ namespace GitUI
             if (string.IsNullOrEmpty(_revision))
                 return;
 
-            RevisionInfo.Text = CommitInformation.GetCommitInfo(_revision);
-            RevisionInfo.Refresh();
+            _revisionInfo = CommitInformation.GetCommitInfo(_revision);
+            updateText();
             LoadAuthorImage();
 
             if (Settings.CommitInfoShowContainedInBranches)
-            {
-                _syncContext.Post(
-                                    s =>
-                                    {
-                                        RevisionInfo.Text += GetBranchesWhichContainsThisCommit(_revision);
-                                    }, null);
-            }
+                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision));
+
             if (Settings.CommitInfoShowContainedInTags)
+                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision));
+        }
+
+        private void loadTagInfo(string _revision)
+        {
+            _tagInfo = GetTagsWhichContainsThisCommit(_revision);
+            _syncContext.Post(  s =>
+                                {
+                                    updateText();
+                                }, null);
+        }
+
+        private void loadBranchInfo(string _revision)
+        {
+            _branchInfo = GetBranchesWhichContainsThisCommit(_revision);
+            _syncContext.Post(s =>
             {
-                _syncContext.Post(
-                                    s =>
-                                    {
-                                        RevisionInfo.Text += GetTagsWhichContainsThisCommit(_revision);
-                                    }, null);
-            }
+                updateText();
+            }, null);
+        }
+
+        private void updateText()
+        {
+            RevisionInfo.Text = _revisionInfo + _branchInfo + _tagInfo;
+            RevisionInfo.Refresh();
         }
 
         private void ResetTextAndImage()
         {
-            RevisionInfo.Text = "";
-            RevisionInfo.Refresh();
+            _revisionInfo = string.Empty;
+            _branchInfo = string.Empty;
+            _tagInfo = string.Empty;
+            updateText();
             gravatar1.LoadImageForEmail("");
         }
 
@@ -143,7 +162,7 @@ namespace GitUI
         private void showContainedInTagsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings.CommitInfoShowContainedInTags = !Settings.CommitInfoShowContainedInTags;
-            ReloadCommitInfo();            
+            ReloadCommitInfo();
         }
     }
 }
