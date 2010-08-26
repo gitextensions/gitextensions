@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 2.01
+	Fixed issue 144: encoding in 'Diff' view ignores settings
+	Fixed issue 143: hitting refresh in browse dialog causes application to freeze
+	Fixed bug where multiple value entries in a config file section were being stripped from config file
+	
 Version 2.00
 	Fixed bug: refreshing and loading gravatars caused GitExtensions to crash
 	Fixed bug: settings check not shown properly when a problem was found
