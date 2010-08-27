@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 2.02
+	
+
 Version 2.01
 	Fixed issue 144: encoding in 'Diff' view ignores settings
 	Fixed issue 143: hitting refresh in browse dialog causes application to freeze
