@@ -14,7 +14,7 @@ namespace GitCommands.Config
     {
         internal ConfigSection(string name)
         {
-            Keys = new Dictionary<string, string>();
+            Keys = new Dictionary<string, IList<string>>();
 
             if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
@@ -37,7 +37,7 @@ namespace GitCommands.Config
             }
         }
 
-        internal IDictionary<string, string> Keys { get; set; }
+        internal IDictionary<string, IList<string>> Keys { get; set; }
         public string SectionName { get; set; }
         public string SubSection { get; set; }
 
@@ -46,12 +46,25 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(value))
                 Keys.Remove(key);
             else
-                Keys[key] = value;
+                Keys[key] = new List<string> {value};
+        }
+
+        public void AddValue(string key, string value)
+        {
+            if (!Keys.ContainsKey(key))
+                Keys[key] = new List<string>();
+
+            Keys[key].Add(value);
         }
 
         public string GetValue(string key)
         {
-            return Keys.ContainsKey(key) ? Keys[key] : string.Empty;
+            return Keys.ContainsKey(key) && Keys[key].Count > 0 ? Keys[key][0] : string.Empty;
+        }
+
+        public IList<string> GetValues(string key)
+        {
+            return Keys.ContainsKey(key) ? Keys[key] : new List<string>();
         }
 
         public override string ToString()

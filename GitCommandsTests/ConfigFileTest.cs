@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using GitCommands.Config;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
@@ -364,6 +366,31 @@ namespace GitCommandsTests
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
                 Assert.AreEqual(@"test2", configFile.GetValue("section.sub section.test"));
+            }
+        }
+
+        [TestMethod]
+        public void CanSaveMultipleValuesForSameKeyInSections()
+        {
+            // create test data
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+
+                configFile.AddValue("remote.origin.fetch", "+mypath");
+                configFile.AddValue("remote.origin.fetch", "+myotherpath");
+
+                configFile.Save();
+            }
+
+            // verify
+            {
+               
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+
+                IList<string> values = configFile.GetValues("remote.origin.fetch");
+
+                Assert.IsTrue(values.SingleOrDefault(x => x == "+mypath") != null);
+                Assert.IsTrue(values.SingleOrDefault(x => x == "+myotherpath") != null);
             }
         }
 
