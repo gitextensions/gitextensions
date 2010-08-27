@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
+using System.Configuration;
+using System.IO;
 
 namespace GitUI
 {
@@ -116,24 +118,33 @@ namespace GitUI
         ///   settings</param>
         protected void SavePosition(String name)
         {
-            var rectangle =
-                WindowState == FormWindowState.Normal
-                    ? DesktopBounds
-                    : RestoreBounds;
+            try
+            {
+                var rectangle =
+                    WindowState == FormWindowState.Normal
+                        ? DesktopBounds
+                        : RestoreBounds;
 
-            var formWindowState =
-                WindowState == FormWindowState.Maximized
-                    ? FormWindowState.Maximized
-                    : FormWindowState.Normal;
+                var formWindowState =
+                    WindowState == FormWindowState.Maximized
+                        ? FormWindowState.Maximized
+                        : FormWindowState.Normal;
 
-            var position = new WindowPosition(rectangle, formWindowState);
+                var position = new WindowPosition(rectangle, formWindowState);
 
 
-            // Write to the user settings:
-            if (Properties.Settings.Default.WindowPositions == null)
-                Properties.Settings.Default.WindowPositions = new WindowPositionList();
-            Properties.Settings.Default.WindowPositions[name] = position;
-            Properties.Settings.Default.Save();
+                // Write to the user settings:
+                if (Properties.Settings.Default.WindowPositions == null)
+                    Properties.Settings.Default.WindowPositions = new WindowPositionList();
+                Properties.Settings.Default.WindowPositions[name] = position;
+                Properties.Settings.Default.Save();
+            }
+            catch (ConfigurationException ex)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
+
+
         }
 
         /// <summary>
@@ -147,19 +158,27 @@ namespace GitUI
         /// </returns>
         private static WindowPosition LookupWindowPosition(String name)
         {
-            var list = Properties.Settings.Default.WindowPositions;
-            if (list == null)
-                return null;
-
-            var position = (WindowPosition) list[name];
-            if (position == null || position.Rect.IsEmpty)
-                return null;
-
-            foreach (var screen in Screen.AllScreens)
+            try
             {
-                if (screen.WorkingArea.IntersectsWith(position.Rect))
-                    return position;
+                var list = Properties.Settings.Default.WindowPositions;
+                if (list == null)
+                    return null;
+
+                var position = (WindowPosition)list[name];
+                if (position == null || position.Rect.IsEmpty)
+                    return null;
+
+                foreach (var screen in Screen.AllScreens)
+                {
+                    if (screen.WorkingArea.IntersectsWith(position.Rect))
+                        return position;
+                }
             }
+            catch(ConfigurationException ex)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
+
             return null;
         }
     }
