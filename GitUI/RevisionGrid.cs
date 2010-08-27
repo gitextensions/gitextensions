@@ -430,7 +430,9 @@ namespace GitUI
         {
             _isLoading = false;
 
-            if (_revisionGraphCommand.Revisions.Count == 0 && !FilterIsApplied())
+            if (_revisionGraphCommand.Revisions.Count == 1 &&
+                _revisionGraphCommand.Revisions[0] == null && 
+                !FilterIsApplied())
             {
                 // This has to happen on the UI thread
                 _syncContext.Send(o =>
