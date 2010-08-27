@@ -14,13 +14,14 @@ namespace GitCommands
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
-
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
+
+            ParseName();
+
             _remoteSettingName = String.Format("branch.{0}.remote", Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
-            ParseName();
         }
 
         public string CompleteName { get; private set; }
