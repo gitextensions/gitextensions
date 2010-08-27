@@ -15,7 +15,7 @@ namespace GitCommands
             string info = GitCommands.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
 
 
-            if (info.Trim().StartsWith("fatal"))
+            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
             return info.Split(new[] {'\r', '\n', '*', ' '}, StringSplitOptions.RemoveEmptyEntries);
         }
@@ -30,7 +30,7 @@ namespace GitCommands
             string info = GitCommands.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
 
 
-            if (info.Trim().StartsWith("fatal"))
+            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
             return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
