@@ -337,17 +337,17 @@ namespace GitCommands
             if (Application.UserAppDataRegistry == null)
                 return;
 
-            if (Encoding == Encoding.ASCII)
+            if (Encoding.EncodingName == Encoding.ASCII.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
-            else if (Encoding == Encoding.Unicode)
+            else if (Encoding.EncodingName == Encoding.Unicode.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "Unicode");
-            else if (Encoding == Encoding.UTF7)
+            else if (Encoding.EncodingName == Encoding.UTF7.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
-            else if (Encoding == Encoding.UTF8)
+            else if (Encoding.EncodingName == Encoding.UTF8.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
-            else if (Encoding == Encoding.UTF32)
+            else if (Encoding.EncodingName == Encoding.UTF32.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
-            else if (Encoding == Encoding.Default)
+            else if (Encoding.EncodingName == Encoding.Default.EncodingName)
                 Application.UserAppDataRegistry.SetValue("encoding", "Default");
         }
 
