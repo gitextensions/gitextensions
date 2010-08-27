@@ -426,6 +426,8 @@ namespace GitUI
 
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
         {
+            _isLoading = false;
+
             if (_revisionGraphCommand.Revisions.Count == 0 && !FilterIsApplied())
             {
                 // This has to happen on the UI thread
