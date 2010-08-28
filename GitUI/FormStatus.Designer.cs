@@ -104,6 +104,7 @@
             // 
             this.splitContainer5.Panel2.Controls.Add(this.SuccessImage);
             this.splitContainer5.Panel2.Controls.Add(this.ErrorImage);
+            this.splitContainer5.Panel2Collapsed = true;
             this.splitContainer5.Size = new System.Drawing.Size(607, 212);
             this.splitContainer5.SplitterDistance = 548;
             this.splitContainer5.TabIndex = 3;
@@ -117,7 +118,7 @@
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(548, 212);
+            this.Output.Size = new System.Drawing.Size(607, 212);
             this.Output.TabIndex = 0;
             this.Output.Text = "";
             // 
@@ -213,7 +214,7 @@
             this.KeepDialogOpen.AutoSize = true;
             this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(125, 20);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(118, 19);
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
@@ -231,7 +232,7 @@
             // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
