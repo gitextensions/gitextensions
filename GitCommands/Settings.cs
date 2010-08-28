@@ -60,7 +60,10 @@ namespace GitCommands
             RevisionGridQuickSearchTimeout = 700;
             ApplicationDataPath = Application.UserAppDataPath + "\\";
             ShowGitStatusInBrowseToolbar = false;
+            LastCommitMessage = "";
         }
+
+        public static string LastCommitMessage { get; set; }
 
         public static bool ShowGitStatusInBrowseToolbar { get; set; }
 
@@ -325,6 +328,7 @@ namespace GitCommands
                 appData.SetValue("commitinfoshowcontainedintags", CommitInfoShowContainedInTags);
                 appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
+                appData.SetValue("lastcommitmessage", LastCommitMessage);
             }
             catch (Exception ex)
             {
@@ -415,6 +419,8 @@ namespace GitCommands
                 SafeSetBool("commitinfoshowcontainedintags", x => CommitInfoShowContainedInTags = x);
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
+                SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
+                
             }
             catch (Exception ex)
             {
