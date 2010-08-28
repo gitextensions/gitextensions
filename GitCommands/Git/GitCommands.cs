@@ -372,13 +372,19 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
-            //The process is exited already, but this command wait also until all output is recieved.
-            Process.WaitForExit();
+            if (Exited != null)
+            {
+                //The process is exited already, but this command waits also until all output is recieved.
+                //Only WaitForExit when someone is conntected to the exited event. For some reason a
+                //null reference is thrown sometimes when staging/unstaging in the commit dialog when
+                //we wait for exit, probably a timing issue... 
+                Process.WaitForExit();
+
+                Exited(this, e);
+            }
 
             Process = null;
 
-            if (Exited != null)
-                Exited(this, e);
         }
 
         private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
