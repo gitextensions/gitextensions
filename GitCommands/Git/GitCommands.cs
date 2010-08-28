@@ -372,6 +372,9 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
+            //The process is exited already, but this command wait also until all output is recieved.
+            Process.WaitForExit(); 
+
             Process = null;
 
             if (Exited != null)
@@ -496,7 +499,7 @@ namespace GitCommands
 
         public static bool InTheMiddleOfConflictedMerge()
         {
-            return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files --unmerged"));
+            return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files -z --unmerged"));
         }
 
         public static List<GitItem> GetConflictedFiles()
@@ -519,7 +522,7 @@ namespace GitCommands
 
         private static IEnumerable<string> GetUnmergedFileListing()
         {
-            return RunCmd(Settings.GitCommand, "ls-files --unmerged").Split('\n');
+            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split('\0', '\n');
         }
 
         public static bool HandleConflictSelectBase(string fileName)
@@ -554,7 +557,7 @@ namespace GitCommands
             side = GetSide(side);
 
             fileName = FixPath(fileName);
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged \"" + fileName + "\"").Split('\n');
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + fileName + "\"").Split('\0', '\n');
 
             foreach (var file in unmerged)
             {
@@ -591,7 +594,7 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files --unmerged \"" + filename + "\"").Split('\n');
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split('\0', '\n');
 
             foreach (var file in unmerged)
             {
@@ -1550,9 +1553,9 @@ namespace GitCommands
         public static List<GitItemStatus> GetUntrackedFiles()
         {
             var status = RunCmd(Settings.GitCommand,
-                                "ls-files --others --directory --no-empty-directory --exclude-standard");
+                                "ls-files -z --others --directory --no-empty-directory --exclude-standard");
 
-            var statusStrings = status.Split('\n');
+            var statusStrings = status.Split('\0', '\n');
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1576,9 +1579,9 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetModifiedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, "ls-files --modified --exclude-standard");
+            var status = RunCmd(Settings.GitCommand, "ls-files -z --modified --exclude-standard");
 
-            var statusStrings = status.Split('\n');
+            var statusStrings = status.Split('\0', '\n');
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1602,7 +1605,7 @@ namespace GitCommands
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
         {
-            var stringBuilder = new StringBuilder("ls-files --deleted --modified --no-empty-directory -t");
+            var stringBuilder = new StringBuilder("ls-files -z --deleted --modified --no-empty-directory -t");
 
             if (showUntrackedFiles)
                 stringBuilder.Append(" --others");
@@ -1622,7 +1625,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetAllChangedFilesFromString(string status)
         {
-            var statusStrings = status.Split('\n');
+            var statusStrings = status.Split('\0', '\n');
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1649,9 +1652,9 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetDeletedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, "ls-files --deleted --exclude-standard");
+            var status = RunCmd(Settings.GitCommand, "ls-files -z --deleted --exclude-standard");
 
-            var statusStrings = status.Split('\n');
+            var statusStrings = status.Split('\0', '\n');
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -2066,8 +2069,8 @@ namespace GitCommands
 
         public static string[] GetFiles(string filePattern)
         {
-            return RunCmd(Settings.GitCommand, "ls-files -o -m -c \"" + filePattern + "\"")
-                .Split('\n');
+            return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
+                .Split('\0', '\n');
         }
 
         public static List<GitItem> GetFileChanges(string file)
