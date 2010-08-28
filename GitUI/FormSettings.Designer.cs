@@ -1001,13 +1001,6 @@ namespace GitUI
             // _NO_TRANSLATE_Encoding
             // 
             this._NO_TRANSLATE_Encoding.FormattingEnabled = true;
-            this._NO_TRANSLATE_Encoding.Items.AddRange(new object[] {
-            "Default",
-            "ASCII",
-            "Unicode",
-            "UTF7",
-            "UTF8",
-            "UTF32"});
             this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(382, 342);
             this._NO_TRANSLATE_Encoding.Name = "_NO_TRANSLATE_Encoding";
             this._NO_TRANSLATE_Encoding.Size = new System.Drawing.Size(242, 24);
