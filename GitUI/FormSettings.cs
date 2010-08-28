@@ -18,6 +18,8 @@ namespace GitUI
         public FormSettings()
         {
             InitializeComponent(); Translate();
+
+            _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]{"Default (" + Encoding.Default.HeaderName + ")","ASCII","Unicode","UTF7","UTF8","UTF32"});
         }
 
         public static bool AutoSolveAllSettings()
@@ -38,17 +40,17 @@ namespace GitUI
                 case "true":
                     {
                         checkBox.CheckState = CheckState.Checked;
-                        return;        
+                        return;
                     }
                 case "false":
                     {
                         checkBox.CheckState = CheckState.Unchecked;
-                        return;          
+                        return;
                     }
                 default:
                     checkBox.CheckState = CheckState.Indeterminate;
                     return;
-            }                     
+            }
         }
 
         private static void SetComboBoxFromString(ComboBox comboBox, string option)
@@ -107,7 +109,7 @@ namespace GitUI
                 else if (GitCommands.Settings.Encoding.GetType() == typeof(UTF32Encoding))
                     _NO_TRANSLATE_Encoding.Text = "UTF32";
                 else if (GitCommands.Settings.Encoding == System.Text.Encoding.Default)
-                    _NO_TRANSLATE_Encoding.Text = "Default";
+                    _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
 
@@ -340,7 +342,7 @@ namespace GitUI
             GitCommands.Settings.Pageant = PageantPath.Text;
             GitCommands.Settings.AutoStartPageant = AutostartPageant.Checked;
 
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_Encoding.Text) || _NO_TRANSLATE_Encoding.Text.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+            if (string.IsNullOrEmpty(_NO_TRANSLATE_Encoding.Text) || _NO_TRANSLATE_Encoding.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 GitCommands.Settings.Encoding = System.Text.Encoding.Default;
             else
                 if (_NO_TRANSLATE_Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
@@ -542,15 +544,15 @@ namespace GitUI
                 bValid = CheckGitExe() && bValid;
                 bValid = CheckSSHSettings() && bValid;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
-            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);          
+            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
             return bValid;
         }
-        
+
         private static bool CanFindGitCmd()
         {
             return !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, ""));
