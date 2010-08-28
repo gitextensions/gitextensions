@@ -641,7 +641,7 @@ namespace GitUI
                 if (MessageBox.Show("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" + Environment.NewLine + "Select no if you want to configure a different mergetool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveKDiff();
-                    GlobalDiffTool.Text = "kdiff3";
+                    GlobalMergeTool.Text = "kdiff3";
                 }
                 else
                 {
