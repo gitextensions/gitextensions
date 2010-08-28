@@ -124,14 +124,19 @@ namespace GitCommands
 
         public static Encoding EndcodingRouter(string arg)
         {
-            var regcol = new StringCollection {"ls-files", "diff", "ls-tree"};
+            //Disabled the EndcodingRouter because it is ment to fix
+            //using Russian chars but doesn't seem to work. Now
+            //it does more damage then good...
+            /*var regcol = new StringCollection {"ls-files", "diff", "ls-tree"};
             var r = new Regex(ConvertRegCollectionToString(regcol));
             return
                 r.IsMatch(arg)
                     ? Encoding.GetEncoding(Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage)
-                    : Encoding.UTF8;
+                    : Encoding.UTF8;*/
+            return Settings.Encoding;
         }
 
+        /*
         public static string ConvertRegCollectionToString(StringCollection regcol)
         {
             var sb = new StringBuilder();
@@ -140,7 +145,7 @@ namespace GitCommands
                 sb.Append("|(" + s + ")");
             }
             return sb.ToString().Substring(1);
-        }
+        }*/
 
         public static string RunCmd(string cmd)
         {
