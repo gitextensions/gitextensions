@@ -76,6 +76,7 @@ namespace GitUI
             SuccessImage.Visible = isSuccess;
             ErrorImage.Visible = !isSuccess;
             errorOccured = !isSuccess;
+            splitContainer5.Panel2Collapsed = false;
 
             if (showOnError && !isSuccess)
             {
