@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRevertCommitSmall));
             this.Date = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.Label();
             this.Author = new System.Windows.Forms.Label();
@@ -43,7 +42,7 @@
             this.Date.AutoSize = true;
             this.Date.Location = new System.Drawing.Point(30, 78);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(68, 13);
+            this.Date.Size = new System.Drawing.Size(86, 16);
             this.Date.TabIndex = 9;
             this.Date.Text = "Commit date:";
             // 
@@ -52,7 +51,7 @@
             this.Message.AutoSize = true;
             this.Message.Location = new System.Drawing.Point(30, 102);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(53, 13);
+            this.Message.Size = new System.Drawing.Size(63, 16);
             this.Message.TabIndex = 8;
             this.Message.Text = "Message:";
             // 
@@ -61,7 +60,7 @@
             this.Author.AutoSize = true;
             this.Author.Location = new System.Drawing.Point(30, 53);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(41, 13);
+            this.Author.Size = new System.Drawing.Size(51, 16);
             this.Author.TabIndex = 7;
             this.Author.Text = "Author:";
             // 
@@ -70,7 +69,7 @@
             this.Commit.AutoSize = true;
             this.Commit.Location = new System.Drawing.Point(30, 30);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(44, 13);
+            this.Commit.Size = new System.Drawing.Size(57, 16);
             this.Commit.TabIndex = 6;
             this.Commit.Text = "Commit:";
             // 
@@ -79,7 +78,7 @@
             this.BranchInfo.AutoSize = true;
             this.BranchInfo.Location = new System.Drawing.Point(12, 9);
             this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(97, 13);
+            this.BranchInfo.Size = new System.Drawing.Size(120, 16);
             this.BranchInfo.TabIndex = 5;
             this.BranchInfo.Text = "Revert this commit:";
             // 
@@ -96,16 +95,16 @@
             // AutoCommit
             // 
             this.AutoCommit.AutoSize = true;
-            this.AutoCommit.Location = new System.Drawing.Point(276, 139);
+            this.AutoCommit.Location = new System.Drawing.Point(12, 138);
             this.AutoCommit.Name = "AutoCommit";
-            this.AutoCommit.Size = new System.Drawing.Size(171, 17);
+            this.AutoCommit.Size = new System.Drawing.Size(206, 20);
             this.AutoCommit.TabIndex = 11;
             this.AutoCommit.Text = "Automatically creates a commit";
             this.AutoCommit.UseVisualStyleBackColor = true;
             // 
             // FormRevertCommitSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(574, 170);
             this.Controls.Add(this.AutoCommit);
@@ -116,7 +115,6 @@
             this.Controls.Add(this.Commit);
             this.Controls.Add(this.BranchInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormRevertCommitSmall";
