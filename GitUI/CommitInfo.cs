@@ -4,11 +4,17 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using System.Threading;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class CommitInfo : GitExtensionsControl
     {
+        private TranslationString containedInBranches = new TranslationString("Contained in branches:");
+        private TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
+        private TranslationString containedInTags = new TranslationString("Contained in tags:");
+        private TranslationString containedInNoTag = new TranslationString("Contained in no tag");
+
         private readonly SynchronizationContext _syncContext;
 
         public CommitInfo()
@@ -118,7 +124,8 @@ namespace GitUI
             gravatar1.LoadImageForEmail(matches[0].Value);
         }
 
-        private static string GetBranchesWhichContainsThisCommit(string revision)
+
+        private string GetBranchesWhichContainsThisCommit(string revision)
         {
             var branchString = "";
             foreach (var branch in CommitInformation.GetAllBranchesWhichContainGivenCommit(revision))
@@ -129,11 +136,11 @@ namespace GitUI
             }
 
             if (branchString != string.Empty)
-                return "\r\nContained in branches: " + branchString;
-            return "\r\nContained in no branch";
+                return "\r\n" + containedInBranches.Text + " " + branchString;
+            return "\r\n" + containedInNoBranch.Text;
         }
 
-        private static string GetTagsWhichContainsThisCommit(string revision)
+        private string GetTagsWhichContainsThisCommit(string revision)
         {
             var tagString = "";
             foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(revision))
@@ -144,8 +151,8 @@ namespace GitUI
             }
 
             if (tagString != string.Empty)
-                return "\r\nContained in tags: " + tagString;
-            return "\r\nContained in no tag";
+                return "\r\n" + containedInTags.Text + " " + tagString;
+            return "\r\n" + containedInNoTag.Text;
         }
 
         private void tableLayout_Paint(object sender, PaintEventArgs e)
