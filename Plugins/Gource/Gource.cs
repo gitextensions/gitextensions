@@ -226,7 +226,7 @@ namespace Gource
                 var response = webClient.DownloadString(@"http://code.google.com/p/gource/");
 
                 //find http://gource.googlecode.com/files/gource-0.26b.win32.zip
-                var regEx = new Regex(@"gource-.*\.win32\.zip");
+                var regEx = new Regex(@"gource-.[0-9a-z.]{3,5}.win32\.zip");
 
 
                 var matches = regEx.Matches(response);
