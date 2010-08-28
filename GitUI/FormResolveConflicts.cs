@@ -30,7 +30,7 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
             ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
-            
+
         }
 
 
@@ -196,9 +196,12 @@ namespace GitUI
                     }
                     else
                     {
-                        File.Delete(filenames[0]);
-                        File.Delete(filenames[1]);
-                        File.Delete(filenames[2]);
+                        if (File.Exists(filenames[0]))
+                            File.Delete(filenames[0]);
+                        if (File.Exists(filenames[1]))
+                            File.Delete(filenames[1]);
+                        if (File.Exists(filenames[2]))
+                            File.Delete(filenames[2]);
 
                         Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
                         GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
@@ -210,9 +213,12 @@ namespace GitUI
 
                 if (frm.Aborted)
                 {
-                    File.Delete(filenames[0]);
-                    File.Delete(filenames[1]);
-                    File.Delete(filenames[2]);
+                    if (File.Exists(filenames[0]))
+                        File.Delete(filenames[0]);
+                    if (File.Exists(filenames[1]))
+                        File.Delete(filenames[1]);
+                    if (File.Exists(filenames[2]))
+                        File.Delete(filenames[2]);
                     return;
                 }
                 else
@@ -225,9 +231,12 @@ namespace GitUI
                 Initialize();
             }
 
-            File.Delete(filenames[0]);
-            File.Delete(filenames[1]);
-            File.Delete(filenames[2]);
+            if (File.Exists(filenames[0]))
+                File.Delete(filenames[0]);
+            if (File.Exists(filenames[1]))
+                File.Delete(filenames[1]);
+            if (File.Exists(filenames[2]))
+                File.Delete(filenames[2]);
         }
 
         private void InitMergetool()
@@ -256,7 +265,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
 
-            mergetoolPath = mergetoolCmd.Substring(0, mergetoolCmd.IndexOf(".exe") + 5).Trim(new char[]{'\"', ' '});
+            mergetoolPath = mergetoolCmd.Substring(0, mergetoolCmd.IndexOf(".exe") + 5).Trim(new char[] { '\"', ' ' });
             mergetoolCmd = mergetoolCmd.Substring(mergetoolCmd.IndexOf(".exe") + 5);
         }
 
@@ -275,7 +284,7 @@ namespace GitUI
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
