@@ -588,6 +588,9 @@ namespace GitUI
 
         public static void SetCommitMessageFromTextBox(string commitMessageText)
         {
+            //Save last commit message in settings. This way it can be used in multiple repositories.
+            Settings.LastCommitMessage = commitMessageText;
+
             var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE";
             using (var textWriter = new StreamWriter(path, false, Settings.Encoding))
             {
@@ -646,28 +649,31 @@ namespace GitUI
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
             commitMessageToolStripMenuItem.DropDownItems.Clear();
-            AddCommitMessageToMenu(0);
-            AddCommitMessageToMenu(1);
-            AddCommitMessageToMenu(2);
-            AddCommitMessageToMenu(3);
+            AddCommitMessageToMenu(Settings.LastCommitMessage);
+
+            string localLastCommitMessage = GitCommands.GitCommands.GetPreviousCommitMessage(0);
+            if (!localLastCommitMessage.Trim().Equals(Settings.LastCommitMessage.Trim()))
+                AddCommitMessageToMenu(localLastCommitMessage);
+            AddCommitMessageToMenu(GitCommands.GitCommands.GetPreviousCommitMessage(1));
+            AddCommitMessageToMenu(GitCommands.GitCommands.GetPreviousCommitMessage(2));
+            AddCommitMessageToMenu(GitCommands.GitCommands.GetPreviousCommitMessage(3));
         }
 
-        private void AddCommitMessageToMenu(int numberBack)
+        private void AddCommitMessageToMenu(string commitMessage)
         {
-            var commitMessage = GitCommands.GitCommands.GetPreviousCommitMessage(numberBack);
             if (string.IsNullOrEmpty(commitMessage))
                 return;
 
             var toolStripItem =
                 new ToolStripMenuItem
-                    {
-                        Tag = commitMessage,
-                        Text =
-                            commitMessage.Substring(0,
-                                                    Math.Min(Math.Min(50, commitMessage.Length),
-                                                             commitMessage.IndexOf('\n'))) +
-                            "..."
-                    };
+                {
+                    Tag = commitMessage,
+                    Text =
+                        commitMessage.Substring(0,
+                                                Math.Min(Math.Min(50, commitMessage.Length),
+                                                         commitMessage.Contains("\n") ? commitMessage.IndexOf('\n') : 99)) +
+                        "..."
+                };
 
             commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
         }
