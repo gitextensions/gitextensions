@@ -45,7 +45,7 @@ namespace GitCommands
             OrderRevisionByDate = true;
             Smtp = "";
             PullMerge = "merge";
-            Encoding = Encoding.UTF8;
+            Encoding = Encoding.Default;
             RevisionGraphThickness = 1F;
             RevisionGraphWidth = 6;
             FollowRenamesInFileHistory = true;
