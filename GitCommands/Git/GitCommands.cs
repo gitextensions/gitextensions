@@ -112,9 +112,9 @@ namespace GitCommands
 
             var dir = startDir;
 
-            while (dir.LastIndexOfAny(new[] {'\\', '/'}) > 0)
+            while (dir.LastIndexOfAny(new[] { '\\', '/' }) > 0)
             {
-                dir = dir.Substring(0, dir.LastIndexOfAny(new[] {'\\', '/'}));
+                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { '\\', '/' }));
 
                 if (Settings.ValidWorkingDir(dir))
                     return dir + "\\";
@@ -364,7 +364,7 @@ namespace GitCommands
             catch (Exception ex)
             {
                 Trace.WriteLine(ex);
-            }            
+            }
         }
 
         public event DataReceivedEventHandler DataReceived;
@@ -373,7 +373,7 @@ namespace GitCommands
         private void ProcessExited(object sender, EventArgs e)
         {
             //The process is exited already, but this command wait also until all output is recieved.
-            Process.WaitForExit(); 
+            Process.WaitForExit();
 
             Process = null;
 
@@ -509,12 +509,12 @@ namespace GitCommands
             var fileName = "";
             foreach (var file in GetUnmergedFileListing())
             {
-                if (file.LastIndexOfAny(new[] {' ', '\t'}) <= 0)
+                if (file.LastIndexOfAny(new[] { ' ', '\t' }) <= 0)
                     continue;
-                if (file.Substring(file.LastIndexOfAny(new[] {' ', '\t'}) + 1) == fileName)
+                if (file.Substring(file.LastIndexOfAny(new[] { ' ', '\t' }) + 1) == fileName)
                     continue;
-                fileName = file.Substring(file.LastIndexOfAny(new[] {' ', '\t'}) + 1);
-                unmergedFiles.Add(new GitItem {FileName = fileName});
+                fileName = file.Substring(file.LastIndexOfAny(new[] { ' ', '\t' }) + 1);
+                unmergedFiles.Add(new GitItem { FileName = fileName });
             }
 
             return unmergedFiles;
@@ -522,7 +522,7 @@ namespace GitCommands
 
         private static IEnumerable<string> GetUnmergedFileListing()
         {
-            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split('\0', '\n');
+            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static bool HandleConflictSelectBase(string fileName)
@@ -557,11 +557,11 @@ namespace GitCommands
             side = GetSide(side);
 
             fileName = FixPath(fileName);
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + fileName + "\"").Split('\0', '\n');
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + fileName + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var file in unmerged)
             {
-                var fileline = file.Split(new[] {' ', '\t'});
+                var fileline = file.Split(new[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
                 if (fileline[2].Trim() != side)
@@ -594,11 +594,11 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split('\0', '\n');
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var file in unmerged)
             {
-                var fileline = file.Split(new[] {' ', '\t'});
+                var fileline = file.Split(new[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
 
@@ -787,7 +787,7 @@ namespace GitCommands
             if (name.Contains("("))
             {
                 gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
-                gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new[] {'(', ')', ' '});
+                gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
             }
             else
                 gitSubmodule.Name = name;
@@ -890,7 +890,7 @@ namespace GitCommands
         {
             var from = FixPath(fromPath);
             var to = FixPath(toPath);
-            var options = new List<string> {"-v"};
+            var options = new List<string> { "-v" };
             if (central)
                 options.Add("--bare");
             if (depth.HasValue)
@@ -1508,41 +1508,25 @@ namespace GitCommands
             return patchManager.patches;
         }
 
-        public static List<string> GetDiffFiles(string from)
-        {
-            var result = RunCmd(Settings.GitCommand, "diff --name-only \"" + from + "\"");
-
-            var files = result.Split('\n');
-
-            var diffFiles = new List<string>();
-            foreach (var s in files)
-            {
-                if (!string.IsNullOrEmpty(s))
-                    diffFiles.Add(s);
-            }
-
-            return diffFiles;
-        }
-
         public static List<GitItemStatus> GetDiffFiles(string from, string to)
         {
-            var result = RunCachableCmd(Settings.GitCommand, "diff --name-status \"" + to + "\" \"" + from + "\"");
+            var result = RunCachableCmd(Settings.GitCommand, "diff -z --name-status \"" + to + "\" \"" + from + "\"");
 
-            var files = result.Split('\n');
+            var files = result.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var diffFiles = new List<GitItemStatus>();
-            foreach (var s in files)
+            for (int n = 0; n + 1 < files.Length; n = n + 2)
             {
-                if (string.IsNullOrEmpty(s))
+                if (string.IsNullOrEmpty(files[n]))
                     continue;
 
                 diffFiles.Add(
                     new GitItemStatus
                         {
-                            Name = s.Substring(1).Trim(),
-                            IsNew = s[0] == 'A',
-                            IsChanged = s[0] == 'M',
-                            IsDeleted = s[0] == 'D',
+                            Name = files[n + 1].Trim(),
+                            IsNew = files[n] == "A",
+                            IsChanged = files[n] == "M",
+                            IsDeleted = files[n] == "D",
                             IsTracked = true
                         });
             }
@@ -1555,7 +1539,7 @@ namespace GitCommands
             var status = RunCmd(Settings.GitCommand,
                                 "ls-files -z --others --directory --no-empty-directory --exclude-standard");
 
-            var statusStrings = status.Split('\0', '\n');
+            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1581,7 +1565,7 @@ namespace GitCommands
         {
             var status = RunCmd(Settings.GitCommand, "ls-files -z --modified --exclude-standard");
 
-            var statusStrings = status.Split('\0', '\n');
+            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1625,7 +1609,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetAllChangedFilesFromString(string status)
         {
-            var statusStrings = status.Split('\0', '\n');
+            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1637,7 +1621,7 @@ namespace GitCommands
 
                 if (!(itemStatus != null && itemStatus.Name == statusString.Substring(1).Trim()))
                 {
-                    itemStatus = new GitItemStatus {Name = statusString.Substring(1).Trim()};
+                    itemStatus = new GitItemStatus { Name = statusString.Substring(1).Trim() };
                     gitItemStatusList.Add(itemStatus);
                 }
 
@@ -1654,7 +1638,7 @@ namespace GitCommands
         {
             var status = RunCmd(Settings.GitCommand, "ls-files -z --deleted --exclude-standard");
 
-            var statusStrings = status.Split('\0', '\n');
+            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1678,13 +1662,13 @@ namespace GitCommands
 
         public static bool FileIsStaged(string filename)
         {
-            var status = RunCmd(Settings.GitCommand, "diff --cached --numstat -- \"" + filename + "\"");
+            var status = RunCmd(Settings.GitCommand, "diff -z --cached --numstat -- \"" + filename + "\"");
             return !string.IsNullOrEmpty(status);
         }
 
         public static List<GitItemStatus> GetStagedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, "diff --cached --name-status");
+            var status = RunCmd(Settings.GitCommand, "diff -z --cached --name-status");
 
             var gitItemStatusList = new List<GitItemStatus>();
 
@@ -1704,25 +1688,21 @@ namespace GitCommands
             }
             else
             {
-                var statusStrings = status.Split('\n');
-
-                foreach (var statusString in statusStrings)
+                var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int n = 0; n + 1 < statusStrings.Length; n = n + 2)
                 {
-                    if (string.IsNullOrEmpty(statusString.Trim()))
+                    if (string.IsNullOrEmpty(statusStrings[n]))
                         continue;
-                    var itemStatus =
+
+                    gitItemStatusList.Add(
                         new GitItemStatus
                             {
-                                IsTracked = true,
-                                Name = statusString.Substring(1).Trim()
-                            };
-
-                    itemStatus.IsNew = itemStatus.IsNew || statusString[0] == 'A';
-                    itemStatus.IsChanged = itemStatus.IsChanged || statusString[0] == 'M';
-                    itemStatus.IsDeleted = itemStatus.IsDeleted || statusString[0] == 'D';
-                    itemStatus.IsTracked = itemStatus.IsTracked || statusString[0] != '?';
-
-                    gitItemStatusList.Add(itemStatus);
+                                Name = statusStrings[n + 1].Trim(),
+                                IsNew = statusStrings[n] == "A",
+                                IsChanged = statusStrings[n] == "M",
+                                IsDeleted = statusStrings[n] == "D",
+                                IsTracked = true
+                            });
                 }
             }
 
@@ -2070,7 +2050,7 @@ namespace GitCommands
         public static string[] GetFiles(string filePattern)
         {
             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
-                .Split('\0', '\n');
+                .Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static List<GitItem> GetFileChanges(string file)
@@ -2087,7 +2067,7 @@ namespace GitCommands
             {
                 if (itemsString.StartsWith("commit "))
                 {
-                    item = new GitItem {CommitGuid = itemsString.Substring(7).Trim()};
+                    item = new GitItem { CommitGuid = itemsString.Substring(7).Trim() };
 
                     items.Add(item);
                 }
@@ -2135,7 +2115,7 @@ namespace GitCommands
                 if (itemsString.Length <= 53)
                     continue;
 
-                var item = new GitItem {Mode = itemsString.Substring(0, 6)};
+                var item = new GitItem { Mode = itemsString.Substring(0, 6) };
                 var guidStart = itemsString.IndexOf(' ', 7);
                 item.ItemType = itemsString.Substring(7, guidStart - 7);
                 item.Guid = itemsString.Substring(guidStart + 1, 40);
@@ -2177,7 +2157,7 @@ namespace GitCommands
                 if (lastCommitGuid != commitGuid)
                     currentColor = currentColor == color1 ? color2 : color1;
 
-                item = new GitBlame {color = currentColor, CommitGuid = commitGuid};
+                item = new GitBlame { color = currentColor, CommitGuid = commitGuid };
                 items.Add(item);
 
                 var codeIndex = itemsString.IndexOf(')', 41) + 1;
@@ -2188,7 +2168,7 @@ namespace GitCommands
 
                     if (!string.IsNullOrEmpty(item.Text))
                         item.Text += Environment.NewLine;
-                    item.Text += itemsString.Substring(codeIndex).Trim(new[] {'\r'});
+                    item.Text += itemsString.Substring(codeIndex).Trim(new[] { '\r' });
                 }
 
                 lastCommitGuid = commitGuid;
