@@ -11,8 +11,8 @@ namespace GitCommands
 {
     public static class Settings
     {
-        public static string GitExtensionsVersionString = "2.01";
-        public static int GitExtensionsVersionInt = 201;
+        public static string GitExtensionsVersionString = "2.02";
+        public static int GitExtensionsVersionInt = 202;
         private static string _gitBinDir = "";
         private static string _workingdir;
 
