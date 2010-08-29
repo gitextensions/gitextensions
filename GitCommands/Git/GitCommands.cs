@@ -133,6 +133,34 @@ namespace GitCommands
                 r.IsMatch(arg)
                     ? Encoding.GetEncoding(Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage)
                     : Encoding.UTF8;*/
+
+            //use setting 18n.logoutputencoding
+            if (arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+                arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase) ||
+                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string encodingString;
+                encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
+                if (string.IsNullOrEmpty(encodingString))
+                    encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
+
+                if (!string.IsNullOrEmpty(encodingString))
+                {
+                    try
+                    {
+                        return Encoding.GetEncoding(encodingString);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                    }
+                }
+                else
+                {
+                    return Encoding.UTF8;
+                }
+            }
+
             return Settings.Encoding;
         }
 
@@ -1499,7 +1527,7 @@ namespace GitCommands
             to = FixPath(to);
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
+            var arguments = string.Format("diff{0} -z \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.patches.Count > 0 ? patchManager.patches[0] : null;
@@ -1508,7 +1536,7 @@ namespace GitCommands
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
+            var arguments = string.Format("diff{0} -z \"{1}\" \"{2}\"", extraDiffArguments, from, to);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.patches;
