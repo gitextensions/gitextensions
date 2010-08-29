@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using PatchApply;
 
 namespace GitUI
 {
@@ -104,8 +105,14 @@ namespace GitUI
                         {
                             Diff.ViewPatch(
                                 () =>
-                                GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
-                                                                      Diff.GetExtraDiffArguments()).Text);
+                                {
+                                    Patch diff = GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
+                                                                          Diff.GetExtraDiffArguments());
+                                    if (diff == null)
+                                        return string.Empty;
+                                    return diff.Text;
+                                }
+                                );
                         }
                     }
                     break;

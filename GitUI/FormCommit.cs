@@ -619,7 +619,7 @@ namespace GitUI
             }
             else
             {
-                encoding = Encoding.UTF8;
+                encoding = new UTF8Encoding(false);
             }
 
             using (var textWriter = new StreamWriter(path, false, encoding))

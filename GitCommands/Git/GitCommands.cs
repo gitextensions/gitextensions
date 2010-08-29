@@ -135,7 +135,7 @@ namespace GitCommands
                     : Encoding.UTF8;*/
 
             //use setting 18n.logoutputencoding
-            if (arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+            if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
                 arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase) ||
                 arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -1527,7 +1527,7 @@ namespace GitCommands
             to = FixPath(to);
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -z \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
+            var arguments = string.Format("diff{0} \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.patches.Count > 0 ? patchManager.patches[0] : null;
@@ -1536,7 +1536,7 @@ namespace GitCommands
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -z \"{1}\" \"{2}\"", extraDiffArguments, from, to);
+            var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.patches;
@@ -2133,14 +2133,14 @@ namespace GitCommands
 
         static public string[] GetFullTree(string id)
         {
-            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -r --name-only {0}", id));
-            return tree.Split('\n');
+            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+            return tree.Split(new char[]{'\0','\n'});
         }
         public static List<IGitItem> GetTree(string id)
         {
-            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
+            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
 
-            var itemsStrings = tree.Split('\n');
+            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
             var items = new List<IGitItem>();
 
