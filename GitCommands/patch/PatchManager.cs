@@ -298,7 +298,7 @@ namespace PatchApply
                     patch = new Patch();
                     patches.Add(patch);
 
-                    Match match = Regex.Match(input, "[ ][\"]{0,1}[a]/(.*)[\"]{0,1}[ ][\"]{0,1}[b]/(.*)[\"]{0,1}");
+                    Match match = Regex.Match(input, "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
 
                     patch.FileNameA = match.Groups[1].Value;
                     patch.FileNameB = match.Groups[2].Value;
@@ -458,10 +458,12 @@ namespace PatchApply
                     //we expect a new file now!
                     if (input.StartsWith("+++ ") && !input.StartsWith("+++ /dev/null"))
                     {
-                        if (gitPatch && patch.FileNameB != (input.Substring(6).Trim()))
+                        Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
+
+                        if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
                             throw new Exception("New filename not parsed correct: " + input);
 
-                        patch.FileNameB = (input.Substring(6).Trim());
+                        patch.FileNameB = (regexMatch.Groups[1].Value.Trim());
 
                         //This line is parsed, NEXT!
                         if ((input = re.ReadLine()) == null)
