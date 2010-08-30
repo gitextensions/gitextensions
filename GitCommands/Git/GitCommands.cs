@@ -135,7 +135,7 @@ namespace GitCommands
                     : Encoding.UTF8;*/
 
             //use setting 18n.logoutputencoding
-            if (arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+            if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
                 arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
                 arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/)
             {
