@@ -63,6 +63,10 @@ namespace GitUI
         }
 
         public delegate void LoadingHandler(bool isLoading);
+        /// <summary>
+        /// Loading Handler. NOTE: This will often happen on a background thread
+        /// so UI operations may not be safe!
+        /// </summary>
         public event LoadingHandler Loading;
 
         public void ShowHideRevisionGraph(bool show)
@@ -282,21 +286,6 @@ namespace GitUI
             return status;
         }
 
-        public void SetExpectedRowCount(int rowCount)
-        {
-            lock (graphData)
-            {
-                if (rowCount > 0)
-                {
-                    setRowCount(rowCount);
-                }
-                else
-                {
-                    setRowCount(graphData.Count);
-                }
-            }
-        }
-
         private readonly SynchronizationContext syncContext;
 
         private Graph graphData;
@@ -339,9 +328,14 @@ namespace GitUI
         {
             if (InvokeRequired)
             {
-                //DO NOT INVOKE! The RowCount is fixed at other strategic points in time.
-                //-Doing this in synch can lock up the application
-                //-Doing this asynch causes the scrollbar to flicker and eats performance
+                // DO NOT INVOKE! The RowCount is fixed at other strategic points in time.
+                // -Doing this in synch can lock up the application
+                // -Doing this asynch causes the scrollbar to flicker and eats performance
+                // -At first I was concerned that returning might lead to some cases where 
+                //  we have more items in the list than we're showing, but I'm pretty sure 
+                //  when we're done processing we'll update with the final count, so the 
+                //  problem will only be temporary, and not able to distinguish it from 
+                //  just git giving us data slowly.
                 //Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
             }
