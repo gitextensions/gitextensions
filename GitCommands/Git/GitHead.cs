@@ -18,9 +18,11 @@ namespace GitCommands
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
+            
             _remoteSettingName = String.Format("branch.{0}.remote", Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
             ParseName();
+            Remote = IsRemote ? GetRemoteName() : String.Empty;
         }
 
         public string CompleteName { get; private set; }
@@ -39,10 +41,12 @@ namespace GitCommands
 
         public string LocalName
         {
-            get { return IsRemote ? Name.Substring(Name.LastIndexOf("/") + 1) : Name; }
+            get { return IsRemote ? Name.Substring(Remote.Length + 1) : Name; }
         }
 
-        public string Remote
+        public string Remote { get; private set; }
+
+        public string TrackingRemote
         {
             get { return GitCommands.GetSetting(_remoteSettingName); }
             set
@@ -132,6 +136,17 @@ namespace GitCommands
                 return;
             }
             Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
+        }
+
+        private string GetRemoteName()
+        {
+            foreach (var remote in GitCommands.GetRemotes())
+            {
+                if (Name.StartsWith(remote))
+                    return remote;
+            }
+
+            return string.Empty;
         }
     }
 }
