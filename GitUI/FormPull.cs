@@ -103,13 +103,12 @@ namespace GitUI
                         if (!head.IsRemote ||
                             !head.Name.StartsWith(Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
                             continue;
-
-                        var localHead = new GitHead(null, head.LocalName);
-                        _heads.Insert(0, localHead);
+                        
+                        _heads.Insert(0, head);
                     }
                 }
             }
-            Branches.DisplayMember = "Name";
+            Branches.DisplayMember = "LocalName";
 
             _heads.Insert(0, GitHead.AllHeads);
             _heads.Insert(0, GitHead.NoHead);
