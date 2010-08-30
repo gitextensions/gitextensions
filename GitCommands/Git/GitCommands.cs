@@ -135,15 +135,18 @@ namespace GitCommands
                     : Encoding.UTF8;*/
 
             //use setting 18n.logoutputencoding
-            if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
-                arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase) ||
-                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase))
+            if (arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+                arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
+                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/)
             {
                 string encodingString;
                 encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
                 if (string.IsNullOrEmpty(encodingString))
                     encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
-
+                if (string.IsNullOrEmpty(encodingString))
+                    encodingString = GetLocalConfig().GetValue("i18n.commitEncoding");
+                if (string.IsNullOrEmpty(encodingString))
+                    encodingString = GetGlobalConfig().GetValue("i18n.commitEncoding");
                 if (!string.IsNullOrEmpty(encodingString))
                 {
                     try
@@ -2169,7 +2172,9 @@ namespace GitCommands
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename))
+                    
+                    string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename)
+                    )
                     .Split('\n');
 
             var items = new List<GitBlame>();
