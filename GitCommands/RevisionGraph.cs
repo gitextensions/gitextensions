@@ -268,7 +268,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitMessage:
-                    revision.Message = Encoding.UTF8.GetString(Settings.Encoding.GetBytes(line));
+                    revision.Message = line;
                     break;
 
                 case ReadStep.FileName:
