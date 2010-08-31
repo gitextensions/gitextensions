@@ -9,11 +9,14 @@ namespace GitCommands
         private readonly string _remoteSettingName;
         private List<IGitItem> _subItems;
 
-        public GitHead(string guid, string completeName)
+        public GitHead(string guid, string completeName) : this(guid, completeName, string.Empty) {}
+
+        public GitHead(string guid, string completeName, string remote)
         {
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
+            Remote = remote;
 
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
@@ -22,7 +25,6 @@ namespace GitCommands
             _remoteSettingName = String.Format("branch.{0}.remote", Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
             ParseName();
-            Remote = IsRemote ? GetRemoteName() : String.Empty;
         }
 
         public string CompleteName { get; private set; }
@@ -136,17 +138,6 @@ namespace GitCommands
                 return;
             }
             Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
-        }
-
-        private string GetRemoteName()
-        {
-            foreach (var remote in GitCommands.GetRemotes())
-            {
-                if (Name.StartsWith(remote))
-                    return remote;
-            }
-
-            return string.Empty;
         }
     }
 }
