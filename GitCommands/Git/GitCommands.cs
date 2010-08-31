@@ -133,7 +133,43 @@ namespace GitCommands
                 r.IsMatch(arg)
                     ? Encoding.GetEncoding(Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage)
                     : Encoding.UTF8;*/
+
+            //use setting 18n.logoutputencoding
+            if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+                arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
+                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/)
+            {
+                return GetLogoutputEncoding();
+            }
+
             return Settings.Encoding;
+        }
+
+        public static Encoding GetLogoutputEncoding()
+        {
+            string encodingString;
+            encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetLocalConfig().GetValue("i18n.commitEncoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetGlobalConfig().GetValue("i18n.commitEncoding");
+            if (!string.IsNullOrEmpty(encodingString))
+            {
+                try
+                {
+                    return Encoding.GetEncoding(encodingString);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                }
+            }
+            else
+            {
+                return Encoding.UTF8;
+            }
         }
 
         /*
@@ -2105,14 +2141,14 @@ namespace GitCommands
 
         static public string[] GetFullTree(string id)
         {
-            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -r --name-only {0}", id));
-            return tree.Split('\n');
+            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+            return tree.Split(new char[]{'\0','\n'});
         }
         public static List<IGitItem> GetTree(string id)
         {
-            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree \"" + id + "\"");
+            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
 
-            var itemsStrings = tree.Split('\n');
+            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
             var items = new List<IGitItem>();
 
@@ -2141,7 +2177,9 @@ namespace GitCommands
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename))
+                    
+                    string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename)
+                    )
                     .Split('\n');
 
             var items = new List<GitBlame>();
