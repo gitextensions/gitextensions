@@ -1247,5 +1247,27 @@ namespace GitUI
                 Initialize();
         }
 
+        private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+            {
+                var fileName = Settings.WorkingDir + ((GitItem)item).FileName;
+
+                Clipboard.SetText(fileName.Replace('/', '\\'));
+            }
+        }
+
+        private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem == null)
+                return;
+
+            var fileName = Settings.WorkingDir + (DiffFiles.SelectedItem).Name;
+
+            Clipboard.SetText(fileName.Replace('/', '\\'));
+        }
+
     }
 }

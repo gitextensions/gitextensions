@@ -9,6 +9,7 @@ Version 2.02
 	Fixed bug: "download gource" not working in gource plugin
 	Fixed bug: encoding not handled correctly in commit message and filenames
 	Fixed bug: blame doesn't refresh properly
+	Added "Copy filename to clipboard" to context menu's in browse dialog
 	Last commit message is stored in settings so it can be used in multiple repositories
 
 Version 2.01
