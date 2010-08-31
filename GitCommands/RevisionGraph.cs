@@ -269,10 +269,13 @@ namespace GitCommands
 
                 case ReadStep.CommitMessage:
                     //We need to recode the commit message because of a bug in Git.
-                    //We cannot let git recode the message to Windows-1252 which is
-                    //needed to allow the "git log" to print the filename in Windows-1252.
-                    revision.Message = Encoding.UTF8.GetString(Settings.Encoding.GetBytes(line));
-                    //revision.Message = line;
+                    //We cannot let git recode the message to Settings.Encoding which is
+                    //needed to allow the "git log" to print the filename in Settings.Encoding
+                    Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+                    if (logoutputEncoding != Settings.Encoding)
+                        revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
+                    else 
+                        revision.Message = line;
                     break;
 
                 case ReadStep.FileName:
