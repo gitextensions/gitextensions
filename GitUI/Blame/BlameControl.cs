@@ -73,6 +73,8 @@ namespace GitUI.Blame
 
             BlameCommitter.Text = blameCommitter.ToString();
             BlameFile.Text = blameFile.ToString();
+            BlameCommitter.Refresh();
+            BlameFile.Refresh();
 
             BlameFile.ActiveTextAreaControl.VScrollBar.Value =
                 BlameFile.ActiveTextAreaControl.VScrollBar.Maximum >= scrollpos
