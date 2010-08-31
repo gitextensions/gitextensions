@@ -599,6 +599,12 @@ _ReSharper*/
         <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
           <Value>Wijzig .gitattributes</Value>
         </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>Kopieer bestandsnaam naar klembord</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
+          <Value>Kopieer bestandsnaam naar klembord</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
