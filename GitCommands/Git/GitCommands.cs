@@ -139,32 +139,37 @@ namespace GitCommands
                 arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
                 arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/)
             {
-                string encodingString;
-                encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
-                if (string.IsNullOrEmpty(encodingString))
-                    encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
-                if (string.IsNullOrEmpty(encodingString))
-                    encodingString = GetLocalConfig().GetValue("i18n.commitEncoding");
-                if (string.IsNullOrEmpty(encodingString))
-                    encodingString = GetGlobalConfig().GetValue("i18n.commitEncoding");
-                if (!string.IsNullOrEmpty(encodingString))
-                {
-                    try
-                    {
-                        return Encoding.GetEncoding(encodingString);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
-                    }
-                }
-                else
-                {
-                    return Encoding.UTF8;
-                }
+                return GetLogoutputEncoding();
             }
 
             return Settings.Encoding;
+        }
+
+        public static Encoding GetLogoutputEncoding()
+        {
+            string encodingString;
+            encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetLocalConfig().GetValue("i18n.commitEncoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GetGlobalConfig().GetValue("i18n.commitEncoding");
+            if (!string.IsNullOrEmpty(encodingString))
+            {
+                try
+                {
+                    return Encoding.GetEncoding(encodingString);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                }
+            }
+            else
+            {
+                return Encoding.UTF8;
+            }
         }
 
         /*
