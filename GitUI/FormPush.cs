@@ -72,7 +72,7 @@ namespace GitUI
             if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
             {
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
-                if (!GitCommands.GitCommands.GetBranches(true, Remotes.Text).Contains(RemoteBranch.Text))
+                if (!GitCommands.GitCommands.GetHeads(true, true).Exists(x => x.Remote == Remotes.Text && x.LocalName == RemoteBranch.Text))
                     //Ask if this is what the user wants
                     if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
@@ -161,7 +161,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(Branch.Text))
                 RemoteBranch.Items.Add(Branch.Text);
 
-            foreach (var head in GitCommands.GitCommands.GetBranches(true, Remotes.Text))
+            foreach (var head in GitCommands.GitCommands.GetHeads())
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
         }
