@@ -2,7 +2,14 @@ Changelog
 =========
 
 Version 2.02
-	
+	Fixed bug: changing encoding in settings is not saved properly
+	Fixed bug: no branches found in remotes dialog
+	Fixed bug: application shows exception and fails to close when application settings file is corrupt
+	Fixed bug: "No commits" screen in revision grid not shown
+	Fixed bug: "download gource" not working in gource plugin
+	Fixed bug: encoding not handled correctly in commit message and filenames
+	Fixed bug: blame doesn't refresh properly
+	Last commit message is stored in settings so it can be used in multiple repositories
 
 Version 2.01
 	Fixed issue 144: encoding in 'Diff' view ignores settings
