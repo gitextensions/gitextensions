@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 
 namespace GitCommands
 {
@@ -149,7 +150,7 @@ namespace GitCommands
             }
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log {2} --pretty=format:\"{1}\" {0}",
+                "log -z {2} --pretty=format:\"{1}\" {0}",
                 LogParam,
                 formatString,
                 BranchFilter);
@@ -163,7 +164,14 @@ namespace GitCommands
             do
             {
                 line = p.StandardOutput.ReadLine();
-                dataReceived(line);
+
+                if (line != null)
+                {
+                    foreach (string entry in line.Split('\0'))
+                    {
+                        dataReceived(entry);
+                    }
+                }
             } while (line != null);
             finishRevision();
 
@@ -260,7 +268,14 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitMessage:
-                    revision.Message = line;
+                    //We need to recode the commit message because of a bug in Git.
+                    //We cannot let git recode the message to Settings.Encoding which is
+                    //needed to allow the "git log" to print the filename in Settings.Encoding
+                    Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+                    if (logoutputEncoding != Settings.Encoding)
+                        revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
+                    else 
+                        revision.Message = line;
                     break;
 
                 case ReadStep.FileName:

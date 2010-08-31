@@ -592,7 +592,37 @@ namespace GitUI
             Settings.LastCommitMessage = commitMessageText;
 
             var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE";
-            using (var textWriter = new StreamWriter(path, false, Settings.Encoding))
+
+            //Commit messages are UTF-8 by default unless otherwise in the config file.
+            //The git manual states:
+            //  git commit and git commit-tree issues a warning if the commit log message 
+            //  given to it does not look like a valid UTF-8 string, unless you 
+            //  explicitly say your project uses a legacy encoding. The way to say 
+            //  this is to have i18n.commitencoding in .git/config file, like this:...
+            Encoding encoding;
+            string encodingString;
+            encodingString = GitCommands.GitCommands.GetLocalConfig().GetValue("i18n.commitencoding");
+            if (string.IsNullOrEmpty(encodingString))
+                encodingString = GitCommands.GitCommands.GetGlobalConfig().GetValue("i18n.commitencoding");
+
+            if (!string.IsNullOrEmpty(encodingString))
+            {
+                try
+                {
+                    encoding = Encoding.GetEncoding(encodingString);
+                }
+                catch (ArgumentException ex)
+                {
+                    MessageBox.Show(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Commit aborted.");
+                    return;
+                }
+            }
+            else
+            {
+                encoding = new UTF8Encoding(false);
+            }
+
+            using (var textWriter = new StreamWriter(path, false, encoding))
             {
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
