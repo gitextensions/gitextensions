@@ -9,11 +9,14 @@ namespace GitCommands
         private readonly string _remoteSettingName;
         private List<IGitItem> _subItems;
 
-        public GitHead(string guid, string completeName)
+        public GitHead(string guid, string completeName) : this(guid, completeName, string.Empty) {}
+
+        public GitHead(string guid, string completeName, string remote)
         {
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
+            Remote = remote;
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
@@ -40,10 +43,12 @@ namespace GitCommands
 
         public string LocalName
         {
-            get { return IsRemote ? Name.Substring(Name.LastIndexOf("/") + 1) : Name; }
+            get { return IsRemote ? Name.Substring(Remote.Length + 1) : Name; }
         }
 
-        public string Remote
+        public string Remote { get; private set; }
+
+        public string TrackingRemote
         {
             get { return GitCommands.GetSetting(_remoteSettingName); }
             set

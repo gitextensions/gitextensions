@@ -2012,18 +2012,30 @@ namespace GitCommands
 
             var heads = new List<GitHead>();
 
+            var remotes = GetRemotes();
+
             foreach (var itemsString in itemsStrings)
             {
                 if (itemsString.Length <= 42) continue;
 
                 var guid = itemsString.Substring(0, 40);
                 var completeName = itemsString.Substring(41).Trim();
-                heads.Add(new GitHead(guid, completeName));
+                heads.Add(new GitHead(guid, completeName, GetRemoteName(completeName, remotes)));
             }
 
             return heads;
         }
 
+        private static string GetRemoteName(string completeName, IEnumerable<string> remotes)
+        {
+            foreach (string remote in remotes)
+            {
+                if (completeName.StartsWith("refs/remotes/" + remote))
+                    return remote;
+            }
+
+            return string.Empty;
+        }
 
         public static List<string> GetBranches(bool remotes, string filterRemote)
         {

@@ -108,14 +108,14 @@ namespace GitUI
                 {
                     if (!remoteHead.IsRemote || 
                         localHead.IsRemote ||
-                        !string.IsNullOrEmpty(localHead.Remote) || 
-                        !string.IsNullOrEmpty(localHead.Remote) ||
+                        !string.IsNullOrEmpty(localHead.TrackingRemote) || 
+                        !string.IsNullOrEmpty(localHead.TrackingRemote) ||
                         remoteHead.IsTag || 
                         localHead.IsTag ||
                         !remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) ||
                         !remoteHead.Name.ToLower().Contains(_remote.ToLower())) 
                         continue;
-                    localHead.Remote = RemoteName.Text;
+                    localHead.TrackingRemote = RemoteName.Text;
                     localHead.MergeWith = remoteHead.Name;
                 }
             }
@@ -195,7 +195,7 @@ namespace GitUI
             foreach (var remote in GitCommands.GitCommands.GetRemotes())
                 RemoteRepositoryCombo.Items.Add(remote);
 
-            RemoteRepositoryCombo.Text = head.Remote;
+            RemoteRepositoryCombo.Text = head.TrackingRemote;
 
             DefaultMergeWithCombo.Text = head.MergeWith;
         }
@@ -216,7 +216,7 @@ namespace GitUI
 
             var currentSelectedRemote = RemoteRepositoryCombo.Text.Trim();
 
-            if (string.IsNullOrEmpty(head.Remote) || string.IsNullOrEmpty(currentSelectedRemote))
+            if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
             var remoteUrl = GitCommands.GitCommands.GetSetting("remote." + currentSelectedRemote + ".url");
@@ -242,7 +242,7 @@ namespace GitUI
             if (head == null)
                 return;
 
-            head.Remote = RemoteRepositoryCombo.Text;
+            head.TrackingRemote = RemoteRepositoryCombo.Text;
         }
 
         private void DefaultMergeWithComboValidated(object sender, EventArgs e)
