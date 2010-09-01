@@ -67,7 +67,10 @@ namespace GitUI
             if (string.IsNullOrEmpty(_revision))
                 return;
 
-            _revisionInfo = CommitInformation.GetCommitInfo(_revision);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
+            _RevisionHeader.Text = commitInformation.Header;
+            splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage();
 
@@ -115,7 +118,7 @@ namespace GitUI
         {
             var matches =
                 Regex.Matches(
-                    RevisionInfo.Text,
+                    _RevisionHeader.Text,
                     @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
 
             if (matches.Count == 0)
