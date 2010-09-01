@@ -135,12 +135,13 @@ namespace GitCommands
                     : Encoding.UTF8;*/
 
             //use setting 18n.logoutputencoding
-            if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
+            /*if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
                 arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
-                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/)
+                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/
+            /*)
             {
                 return GetLogoutputEncoding();
-            }
+            }*/
 
             return Settings.Encoding;
         }
@@ -381,6 +382,7 @@ namespace GitCommands
                    (arguments.Contains("git://")) ||
                    (arguments.Contains("push")) ||
                    (arguments.Contains("remote")) ||
+                   (arguments.Contains("fetch")) ||
                    (arguments.Contains("pull"));
         }
 
@@ -723,7 +725,7 @@ namespace GitCommands
 
         public static string ShowSha1(string sha1)
         {
-            return RunCachableCmd(Settings.GitCommand, "show " + sha1);
+            return RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding + " " + sha1);
         }
 
         public static string UserCommitCount()
@@ -2227,7 +2229,7 @@ namespace GitCommands
             return
                 RunCachableCmd(
                     Settings.GitCommand,
-                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')));
+                    string.Format("show --encoding=" + Settings.Encoding + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
         }
 
         public static string GetFileText(string id)
