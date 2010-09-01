@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace GitCommands
 {
     public class CommitInformation
     {
+        /// <summary>
+        /// Private constructor
+        /// </summary>
+        private CommitInformation (string header, string body)
+        {
+            Header = header;
+            Body = body;
+        }
+
+        public string Header {get; private set;}
+        public string Body{get; private set;}
+
         /// <summary>
         /// Gets all branches which contain the given commit.
         /// </summary>
@@ -40,12 +53,12 @@ namespace GitCommands
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
-        public static string GetCommitInfo(string sha1)
+        public static CommitInformation GetCommitInfo(string sha1)
         {
             string info = GitCommands.RunCachableCmd(
                 Settings.GitCommand,
                 string.Format(
-                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
+                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%b\" {5}",
                     Strings.GetAutorText(),
                     Strings.GetAuthorDateText(),
                     Strings.GetCommitterText(),
@@ -53,11 +66,29 @@ namespace GitCommands
                     Strings.GetCommitHashText(), sha1));
 
             if (info.Trim().StartsWith("fatal"))
-                return String.Empty;
+                return new CommitInformation("Cannot find commit" + sha1, "");
 
             info = RemoveRedundancies(info);
 
-            return info;
+            int index = info.IndexOf(sha1) + sha1.Length;
+
+            if (index < 0)
+                return new CommitInformation("Cannot find commit" + sha1, "");
+            if (index >= info.Length)
+                return new CommitInformation(info, "");
+
+            string commitHeader = info.Substring(0, index);
+            string commitMessage = info.Substring(index);
+
+            //We need to recode the commit message because of a bug in Git.
+            //We cannot let git recode the message to Settings.Encoding which is
+            //needed to allow the "git log" to print the filename in Settings.Encoding
+            Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+            if (logoutputEncoding != Settings.Encoding)
+                commitMessage = logoutputEncoding.GetString(Settings.Encoding.GetBytes(commitMessage));
+
+            return new CommitInformation(commitHeader,
+                                         commitMessage);
         }
 
         private static string RemoveRedundancies(string info)

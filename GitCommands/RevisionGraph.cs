@@ -46,6 +46,8 @@ namespace GitCommands
 
         private GitCommands gitGetGraphCommand;
 
+        private Encoding logoutputEncoding = null;
+
         private Thread backgroundThread = null;
 
         private List<GitRevision> revisions = new List<GitRevision>();
@@ -271,7 +273,9 @@ namespace GitCommands
                     //We need to recode the commit message because of a bug in Git.
                     //We cannot let git recode the message to Settings.Encoding which is
                     //needed to allow the "git log" to print the filename in Settings.Encoding
-                    Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+                    if (logoutputEncoding == null)
+                        logoutputEncoding = GitCommands.GetLogoutputEncoding();
+
                     if (logoutputEncoding != Settings.Encoding)
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     else 

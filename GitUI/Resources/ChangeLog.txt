@@ -2,13 +2,14 @@ Changelog
 =========
 
 Version 2.02
+	Fixed issue 149: the system just hangs during a fetch
 	Fixed bug: changing encoding in settings is not saved properly
 	Fixed bug: no branches found in remotes dialog
 	Fixed bug: application shows exception and fails to close when application settings file is corrupt
 	Fixed bug: "No commits" screen in revision grid not shown
 	Fixed bug: "download gource" not working in gource plugin
 	Fixed bug: encoding not handled correctly in commit message and filenames
-	Fixed bug: blame doesn't refresh properly
+	Fixed bug: blame doesn't refresh properly	
 	Added "Copy filename to clipboard" to context menu's in browse dialog
 	Last commit message is stored in settings so it can be used in multiple repositories
 
