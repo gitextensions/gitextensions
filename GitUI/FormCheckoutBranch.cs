@@ -46,11 +46,9 @@ namespace GitUI
             try
             {
                 //Get a localbranch name
-                var index = Branches.Text.LastIndexOfAny(new[] {'\\', '/'});
-                var localBranchName = Branches.Text;
-                if (index > 0 && index + 1 < Branches.Text.Length)
-                    localBranchName = localBranchName.Substring(index + 1);
-
+                var remoteName = GitCommands.GitCommands.GetRemoteName(Branches.Text, GitCommands.GitCommands.GetRemotes());
+                var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
+                
                 var command = "checkout";
                 if (Remotebranch.Checked)
                 {
