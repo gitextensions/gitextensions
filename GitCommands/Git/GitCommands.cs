@@ -2026,11 +2026,13 @@ namespace GitCommands
             return heads;
         }
 
-        private static string GetRemoteName(string completeName, IEnumerable<string> remotes)
+        public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
         {
+            string trimmedName = completeName.StartsWith("refs/remotes/") ? completeName.Substring(13) : completeName;
+
             foreach (string remote in remotes)
             {
-                if (completeName.StartsWith("refs/remotes/" + remote))
+                if (trimmedName.StartsWith(remote))
                     return remote;
             }
 
