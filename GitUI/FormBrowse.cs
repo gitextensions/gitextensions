@@ -811,7 +811,10 @@ namespace GitUI
         private void ShowSelectedFileDiff()
         {
             if (DiffFiles.SelectedItem == null)
+            {
+                DiffText.ViewPatch("");
                 return;
+            }
 
             var selectedItem = (DiffFiles.SelectedItem).Name;
             var revisions = RevisionGrid.GetRevisions();
