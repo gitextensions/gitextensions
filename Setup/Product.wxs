@@ -138,6 +138,9 @@
       <Component Id="AutoCheckForUpdates.dll" Guid="*">
         <File Source="..\Plugins\AutoCheckForUpdates\bin\Release\AutoCheckForUpdates.dll"/>
       </Component>
+      <Component Id="DeleteUnusedBranches.dll" Guid="*">
+        <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll"/>
+      </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
         <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
       </Component>
@@ -335,6 +338,7 @@
       <ComponentRef Id="InstallDir.reg"/>
 
       <ComponentRef Id="AutoCheckForUpdates.dll"/>
+      <ComponentRef Id="DeleteUnusedBranches.dll"/>
       <ComponentRef Id="AutoCompileSubmodules.dll"/>
       <ComponentRef Id="GitStatistics.dll"/>
       <ComponentRef Id="Gource.dll"/>
