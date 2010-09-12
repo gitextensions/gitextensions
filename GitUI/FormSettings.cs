@@ -19,13 +19,13 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
 
-            _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]{"Default (" + Encoding.Default.HeaderName + ")","ASCII","Unicode","UTF7","UTF8","UTF32"});
+            _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
         }
 
         public static bool AutoSolveAllSettings()
         {
-            return SolveGitCmdDir() &&
-                    SolveGitBinDir() &&
+            return SolveGitCommand() &&
+                    SolveLinuxToolsDir() &&
                     SolveKDiff() &&
                     SolveKDiffTool2() &&
                     SolveGitExtensionsDir();
@@ -399,7 +399,7 @@ namespace GitUI
 
             if (!CanFindGitCmd())
             {
-                if (MessageBox.Show("The path to git.cmd is not configured correct." + Environment.NewLine + "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine + Environment.NewLine + "Do you want to set the correct path now?", "Incorrect path", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("The command to run git is not configured correct." + Environment.NewLine + "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine + Environment.NewLine + "Do you want to set the correct command now?", "Incorrect path", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return false;
             }
             else
@@ -761,42 +761,52 @@ namespace GitUI
 
         private void GitFound_Click(object sender, EventArgs e)
         {
-            SolveGitCmdDir();
-
-            if (string.IsNullOrEmpty(GitCommands.Settings.GitCommand))
+            if (!SolveGitCommand())
             {
-                MessageBox.Show("The command to run git could not be determined automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.cmd");
+                MessageBox.Show("The command to run git could not be determined automatically." + Environment.NewLine + "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.", "Locate git");
 
-                tabControl1.SelectTab("TabPageGitExtensions");
+                tabControl1.SelectTab("TabPageGit");
                 return;
             }
 
-            MessageBox.Show("Command git.cmd can be runned using: " + GitCommands.Settings.GitCommand, "Locate git.cmd");
+            MessageBox.Show("Git can be runned using: " + GitCommands.Settings.GitCommand, "Locate git");
             GitPath.Text = GitCommands.Settings.GitCommand;
             Rescan_Click(null, null);
         }
 
-        public static bool SolveGitCmdDir()
+        public static bool SolveGitCommand()
         {
-            GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
+            GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
             {
-                GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
+                GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                 {
-                    GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
+                    GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\bin\git.exe";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                     {
-                        GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
+                        GitCommands.Settings.GitCommand = @"c:\Program Files\Git\bin\git.exe";
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                         {
-                            GitCommands.Settings.GitCommand = "git.cmd";
+                            GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
                             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                             {
-                                GitCommands.Settings.GitCommand = "git";
+                                GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
                                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                                 {
-                                    return false;
+                                    GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
+                                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                                    {
+                                        GitCommands.Settings.GitCommand = "git";
+                                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                                        {
+                                            GitCommands.Settings.GitCommand = "git.cmd";
+                                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -857,7 +867,7 @@ namespace GitUI
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
         {
-            SolveGitCmdDir();
+            SolveGitCommand();
 
             OpenFileDialog browseDialog = new OpenFileDialog();
             browseDialog.FileName = GitCommands.Settings.GitCommand;
@@ -882,43 +892,57 @@ namespace GitUI
 
         private void GitBinFound_Click(object sender, EventArgs e)
         {
-            SolveGitBinDir();
-
-            if (string.IsNullOrEmpty(GitCommands.Settings.GitBinDir))
+            if (!SolveLinuxToolsDir())
             {
-                MessageBox.Show("The path to git.exe could not be found automatically." + Environment.NewLine + "Please make sure git (msysgit) is installed or set the correct path manually.", "Locate git.exe");
-                tabControl1.SelectTab("TabPageGitExtensions");
+                MessageBox.Show("The path to linux tools (sh) could not be found automatically." + Environment.NewLine + "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.", "Locate linux tools");
+                tabControl1.SelectTab("TabPageGit");
                 return;
             }
 
-            MessageBox.Show("Command git.exe can be runned using: " + GitCommands.Settings.GitBinDir + "git.exe", "Locate git.exe");
+            MessageBox.Show("Command sh can be runned using: " + GitCommands.Settings.GitBinDir + "sh", "Locate linux tools");
             GitBinPath.Text = GitCommands.Settings.GitBinDir;
             Rescan_Click(null, null);
         }
 
-        public static bool SolveGitBinDir()
+        public static bool CheckIfFileIsInPath(string fileName)
         {
+            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";", Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
+
+            foreach (string dir in path.Split(';'))
+            {
+                if (File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool SolveLinuxToolsDir()
+        {
+            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+            {
+                GitCommands.Settings.GitBinDir = "";
+                return true;
+            }
+
             GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+            if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
             {
                 GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+                if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                 {
-                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin";
-                    if (!Directory.Exists(GitCommands.Settings.GitBinDir))
+                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
+                    if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                     {
                         GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\");
-                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
+                        if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                         {
                             GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
-                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+                            if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                             {
                                 GitCommands.Settings.GitBinDir = "";
-                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand.Replace("git.cmd", "git.exe"))))
-                                {
-                                    return false;
-                                }
+                                return false;
                             }
                         }
                     }
@@ -1051,7 +1075,7 @@ namespace GitUI
 
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
-            SolveGitBinDir();
+            SolveLinuxToolsDir();
 
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
             browseDialog.SelectedPath = GitCommands.Settings.GitBinDir;
@@ -1586,14 +1610,15 @@ namespace GitUI
 
         private bool CheckGitExe()
         {
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitBinDir + "git.exe", "")))
+            if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh") &&
+                !CheckIfFileIsInPath("sh.exe") && !CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
-                GitBinFound.Text = "git.exe not found. To solve this problem you can set the correct path in settings.";
+                GitBinFound.Text = "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.";
                 return false;
             }
             GitBinFound.BackColor = Color.LightGreen;
-            GitBinFound.Text = "git.exe is found on your computer.";
+            GitBinFound.Text = "Linux tools (sh) found on your computer.";
             return true;
         }
 
@@ -1602,11 +1627,11 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "git.cmd not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = "git not found. To solve this problem you can set the correct path in settings.";
                 return false;
             }
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "git.cmd is found on your computer.";
+            GitFound.Text = "git is found on your computer.";
             return true;
         }
 
