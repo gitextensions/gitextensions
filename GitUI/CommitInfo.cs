@@ -66,7 +66,8 @@ namespace GitUI
             ResetTextAndImage();
             if (string.IsNullOrEmpty(_revision))
                 return;
-
+            _RevisionHeader.Text = string.Empty;
+            _RevisionHeader.Refresh();
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
             _RevisionHeader.Text = commitInformation.Header;
             splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
