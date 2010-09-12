@@ -42,6 +42,7 @@ namespace GitExtensions
                     if (!settings.CheckSettings())
                     {
                         FormSettings.AutoSolveAllSettings();
+                        formSplash.Close();
                         GitUICommands.Instance.StartSettingsDialog();
                     }
                 }

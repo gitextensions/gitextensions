@@ -771,9 +771,9 @@ namespace GitUI
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(8, 70);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(328, 16);
+            this.label14.Size = new System.Drawing.Size(344, 16);
             this.label14.TabIndex = 6;
-            this.label14.Text = "Path to git.exe (leave empty when git.exe is in the path)";
+            this.label14.Text = "Path to linux tools (sh). Leave empty when it is in the path.";
             // 
             // GitPath
             // 
