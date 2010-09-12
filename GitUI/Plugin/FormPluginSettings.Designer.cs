@@ -43,25 +43,26 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.PluginList);
-            this.splitContainer1.Size = new System.Drawing.Size(737, 291);
-            this.splitContainer1.SplitterDistance = 178;
+            this.splitContainer1.Size = new System.Drawing.Size(885, 291);
+            this.splitContainer1.SplitterDistance = 213;
             this.splitContainer1.TabIndex = 0;
             // 
             // PluginList
             // 
             this.PluginList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PluginList.FormattingEnabled = true;
+            this.PluginList.ItemHeight = 16;
             this.PluginList.Location = new System.Drawing.Point(0, 0);
             this.PluginList.Name = "PluginList";
-            this.PluginList.Size = new System.Drawing.Size(178, 290);
+            this.PluginList.Size = new System.Drawing.Size(213, 276);
             this.PluginList.TabIndex = 1;
             this.PluginList.SelectedIndexChanged += new System.EventHandler(this.PluginListSelectedIndexChanged);
             // 
             // FormPluginSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(737, 291);
+            this.ClientSize = new System.Drawing.Size(885, 291);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormPluginSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

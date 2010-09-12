@@ -2018,7 +2018,7 @@ namespace GitCommands
 
             foreach (var itemsString in itemsStrings)
             {
-                if (itemsString.Length <= 42) continue;
+                if (itemsString == null || itemsString.Length <= 42) continue;
 
                 var guid = itemsString.Substring(0, 40);
                 var completeName = itemsString.Substring(41).Trim();
@@ -2254,6 +2254,12 @@ namespace GitCommands
         {
             return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true));
         }
+
+        public string RunGit(string arguments)
+        {
+            return RunCmd(Settings.GitCommand, arguments);
+        }
+
 
         public static string OpenWithDifftool(string filename)
         {

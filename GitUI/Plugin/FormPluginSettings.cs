@@ -47,7 +47,7 @@ namespace GitUI.Plugin
         {
             RestorePosition("plugin-settings");
             const int xLabelStart = 20;
-            const int xEditStart = 200;
+            const int xEditStart = 300;
 
             var yStart = 20;
 

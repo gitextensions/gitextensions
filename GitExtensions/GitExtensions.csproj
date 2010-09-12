@@ -100,6 +100,10 @@
       <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj">
+      <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
+      <Name>DeleteUnusedBranches</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
