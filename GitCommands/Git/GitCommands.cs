@@ -686,7 +686,9 @@ namespace GitCommands
 
         public static void RunGitK()
         {
-            Run("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd") + "\" --all\"");
+            Run("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
+                                                          .Replace("bin\\git.exe", "cmd\\gitk.cmd")
+                                                          .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
         }
 
         public static void RunGui()
