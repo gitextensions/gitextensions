@@ -50,19 +50,17 @@ namespace GitCommands
         {
             foreach (var gitHead in Heads)
             {
-                if (gitHead.Name.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+                if (gitHead.Name.ToLower().Contains(searchString))
                     return true;
             }
 
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
-            // Make sure it only matches the start of a word
-            var modifiedSearchString = " " + searchString;
 
             return
-                (" " + Author.ToLower()).Contains(modifiedSearchString) ||
-                (" " + Message.ToLower()).Contains(modifiedSearchString);
+                Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
+                Message.ToLower().Contains(searchString);
         }
     }
 }
