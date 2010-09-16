@@ -2034,7 +2034,7 @@ namespace GitCommands
 
             foreach (string remote in remotes)
             {
-                if (trimmedName.StartsWith(remote))
+                if (trimmedName.StartsWith(string.Concat(remote, "/")))
                     return remote;
             }
 
