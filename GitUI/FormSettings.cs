@@ -120,6 +120,8 @@ namespace GitUI
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
 
+                showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
+
                 Language.Items.Clear();
                 Language.Items.Add("English");
                 Language.Items.AddRange(Translator.GetAllTranslations());
@@ -305,6 +307,7 @@ namespace GitUI
 
             GitCommands.GitCommands.SetEnvironmentVariable(true);
 
+            GitCommands.Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
 
             GitCommands.Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
 

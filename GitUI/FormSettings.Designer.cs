@@ -206,6 +206,8 @@ namespace GitUI
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
+            this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -258,7 +260,7 @@ namespace GitUI
             this.LocalSettings.Location = new System.Drawing.Point(4, 25);
             this.LocalSettings.Name = "LocalSettings";
             this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(710, 380);
+            this.LocalSettings.Size = new System.Drawing.Size(710, 398);
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
@@ -458,7 +460,7 @@ namespace GitUI
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(718, 409);
+            this.tabControl1.Size = new System.Drawing.Size(718, 427);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -477,7 +479,7 @@ namespace GitUI
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(710, 380);
+            this.tabPage3.Size = new System.Drawing.Size(710, 398);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -639,7 +641,7 @@ namespace GitUI
             this.TabPageGit.Controls.Add(this.groupBox7);
             this.TabPageGit.Location = new System.Drawing.Point(4, 25);
             this.TabPageGit.Name = "TabPageGit";
-            this.TabPageGit.Size = new System.Drawing.Size(710, 380);
+            this.TabPageGit.Size = new System.Drawing.Size(710, 398);
             this.TabPageGit.TabIndex = 7;
             this.TabPageGit.Text = "Git";
             this.TabPageGit.UseVisualStyleBackColor = true;
@@ -802,6 +804,8 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFilesLabel);
+            this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFiles);
             this.TabPageGitExtensions.Controls.Add(this.showGitStatusInToolbarLabel);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitStatusInToolbar);
             this.TabPageGitExtensions.Controls.Add(this.RevisionGridQuickSearchTimeout);
@@ -831,7 +835,7 @@ namespace GitUI
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 25);
             this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 380);
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(710, 398);
             this.TabPageGitExtensions.TabIndex = 3;
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
@@ -864,7 +868,7 @@ namespace GitUI
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(382, 313);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(382, 334);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -887,7 +891,7 @@ namespace GitUI
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(8, 315);
+            this.label24.Location = new System.Drawing.Point(8, 336);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(234, 16);
             this.label24.TabIndex = 32;
@@ -992,7 +996,7 @@ namespace GitUI
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(8, 345);
+            this.EncodingLabel.Location = new System.Drawing.Point(8, 366);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(59, 16);
             this.EncodingLabel.TabIndex = 20;
@@ -1001,7 +1005,7 @@ namespace GitUI
             // _NO_TRANSLATE_Encoding
             // 
             this._NO_TRANSLATE_Encoding.FormattingEnabled = true;
-            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(382, 342);
+            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(382, 363);
             this._NO_TRANSLATE_Encoding.Name = "_NO_TRANSLATE_Encoding";
             this._NO_TRANSLATE_Encoding.Size = new System.Drawing.Size(242, 24);
             this._NO_TRANSLATE_Encoding.TabIndex = 19;
@@ -1138,7 +1142,7 @@ namespace GitUI
             this.AppearancePage.Controls.Add(this.groupBox3);
             this.AppearancePage.Location = new System.Drawing.Point(4, 25);
             this.AppearancePage.Name = "AppearancePage";
-            this.AppearancePage.Size = new System.Drawing.Size(710, 380);
+            this.AppearancePage.Size = new System.Drawing.Size(710, 398);
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
@@ -1341,7 +1345,7 @@ namespace GitUI
             this.groupBox4.Controls.Add(this.label32);
             this.groupBox4.Location = new System.Drawing.Point(8, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(313, 204);
+            this.groupBox4.Size = new System.Drawing.Size(313, 219);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Revision graph";
@@ -1490,9 +1494,9 @@ namespace GitUI
             this.groupBox3.Controls.Add(this.label31);
             this.groupBox3.Controls.Add(this.label29);
             this.groupBox3.Controls.Add(this._NO_TRANSLATE_ColorAddedLineLabel);
-            this.groupBox3.Location = new System.Drawing.Point(9, 213);
+            this.groupBox3.Location = new System.Drawing.Point(8, 229);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(313, 160);
+            this.groupBox3.Size = new System.Drawing.Size(313, 165);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Difference view";
@@ -1639,7 +1643,7 @@ namespace GitUI
             this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 25);
             this.GlobalSettingsPage.Name = "GlobalSettingsPage";
             this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 380);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(710, 398);
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
@@ -1954,7 +1958,7 @@ namespace GitUI
             this.Ssh.Location = new System.Drawing.Point(4, 25);
             this.Ssh.Name = "Ssh";
             this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(710, 380);
+            this.Ssh.Size = new System.Drawing.Size(710, 398);
             this.Ssh.TabIndex = 4;
             this.Ssh.Text = "Ssh";
             this.Ssh.UseVisualStyleBackColor = true;
@@ -2162,8 +2166,8 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(718, 442);
-            this.splitContainer1.SplitterDistance = 409;
+            this.splitContainer1.Size = new System.Drawing.Size(718, 460);
+            this.splitContainer1.SplitterDistance = 427;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -2211,11 +2215,30 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
+            // showErrorsWhenStagingFilesLabel
+            // 
+            this.showErrorsWhenStagingFilesLabel.AutoSize = true;
+            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 312);
+            this.showErrorsWhenStagingFilesLabel.Name = "showErrorsWhenStagingFilesLabel";
+            this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(186, 16);
+            this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
+            this.showErrorsWhenStagingFilesLabel.Text = "Show errors when staging files";
+            // 
+            // showErrorsWhenStagingFiles
+            // 
+            this.showErrorsWhenStagingFiles.AutoSize = true;
+            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 312);
+            this.showErrorsWhenStagingFiles.Name = "showErrorsWhenStagingFiles";
+            this.showErrorsWhenStagingFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.showErrorsWhenStagingFiles.Size = new System.Drawing.Size(15, 14);
+            this.showErrorsWhenStagingFiles.TabIndex = 34;
+            this.showErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(718, 442);
+            this.ClientSize = new System.Drawing.Size(718, 460);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -2450,6 +2473,8 @@ namespace GitUI
         private System.Windows.Forms.CheckBox ShowGitStatusInToolbar;
         private System.Windows.Forms.NumericUpDown RevisionGridQuickSearchTimeout;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label showErrorsWhenStagingFilesLabel;
+        private System.Windows.Forms.CheckBox showErrorsWhenStagingFiles;
 
     }
 }

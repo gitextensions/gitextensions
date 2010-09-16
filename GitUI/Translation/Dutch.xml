@@ -1677,6 +1677,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label24" Property="Text">
           <Value>Revisie lijst snel zoek timout [ms]</Value>
         </TranslationItem>
+        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+          <Value>Toon errors bij het klaarzetten van bestanden voor een commit</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
