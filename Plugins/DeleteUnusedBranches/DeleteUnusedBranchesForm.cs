@@ -58,15 +58,17 @@ namespace DeleteUnusedBranches
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            foreach (Branch branch in Branches)
+            if (MessageBox.Show("Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are not fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (branch.Delete)
+                foreach (Branch branch in Branches)
                 {
-                    branch.Result = GitCommands.RunGit(string.Concat("branch -d " + branch.Name)).Trim();
-                    BranchesGrid.Refresh();
+                    if (branch.Delete)
+                    {
+                        branch.Result = GitCommands.RunGit(string.Concat("branch -d " + branch.Name)).Trim();
+                        BranchesGrid.Refresh();
+                    }
                 }
             }
-
         }
     }
 }
