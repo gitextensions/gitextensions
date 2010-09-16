@@ -426,7 +426,7 @@
       <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
       <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
 
-      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.6.5.1-preview20091022.exe"/>
+      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.2.3-preview20100911.exe"/>
       <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
     <?endif?>
 
