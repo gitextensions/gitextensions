@@ -1409,7 +1409,7 @@ nummer resulteert in een kortere start tijd, maar langzamer scrollen.</Value>
           <Value>Bladeren</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
-          <Value>Pad naar git.exe (leeglaten wanneer git.exe in het pad staat)</Value>
+          <Value>Pad naar linux tools (sh).</Value>
         </TranslationItem>
         <TranslationItem Name="Ssh" Property="Text">
           <Value>Ssh</Value>
