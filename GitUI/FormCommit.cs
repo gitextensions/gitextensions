@@ -160,19 +160,19 @@ namespace GitUI
 
             ThreadPool.QueueUserWorkItem(
                 o =>
-                    {
-                        var inTheMiddleOfConflictedMerge =
-                            GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
-                        var stagedFiles = GitCommands.GitCommands.GetStagedFiles();
+                {
+                    var inTheMiddleOfConflictedMerge =
+                        GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+                    var stagedFiles = GitCommands.GitCommands.GetStagedFiles();
 
-                        _syncContext.Post(
-                            state1 =>
-                                {
-                                    Staged.GitItemStatusses = null;
-                                    SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
-                                    Staged.GitItemStatusses = stagedFiles;
-                                }, null);
-                    });
+                    _syncContext.Post(
+                        state1 =>
+                        {
+                            Staged.GitItemStatusses = null;
+                            SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
+                            Staged.GitItemStatusses = stagedFiles;
+                        }, null);
+                });
         }
 
 
@@ -320,7 +320,7 @@ namespace GitUI
             {
                 Cursor.Current = Cursors.WaitCursor;
                 progressBar.Visible = true;
-                progressBar.Maximum = gitItemStatusses.Count*2;
+                progressBar.Maximum = gitItemStatusses.Count * 2;
                 progressBar.Value = 0;
 
                 var files = new List<GitItemStatus>();
@@ -331,8 +331,10 @@ namespace GitUI
                     files.Add(gitItemStatus);
                 }
 
-                FormStatus.ProcessStart processStart =
-                    form =>
+                if (Settings.ShowErrorsWhenStagingFiles)
+                {
+                    FormStatus.ProcessStart processStart =
+                        form =>
                         {
                             form.AddOutput(string.Format(_stageFiles.Text,
                                                          files.Count));
@@ -340,12 +342,17 @@ namespace GitUI
                             form.AddOutput(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
-                var process = new FormStatus(processStart, null) {Text = _stageDetails.Text};
-                process.ShowDialogOnError();
+                    var process = new FormStatus(processStart, null) { Text = _stageDetails.Text };
+                    process.ShowDialogOnError();
+                }
+                else
+                {
+                    GitCommands.GitCommands.StageFiles(files);
+                }
 
                 InitializedStaged();
-                var stagedFiles = (List<GitItemStatus>) Staged.GitItemStatusses;
-                var unStagedFiles = (List<GitItemStatus>) Unstaged.GitItemStatusses;
+                var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
+                var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatusses;
                 Unstaged.GitItemStatusses = null;
 
                 unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name) && files.Exists(i => i.Name == item.Name));
@@ -385,7 +392,7 @@ namespace GitUI
                 else
                 {
                     progressBar.Visible = true;
-                    progressBar.Maximum = Staged.SelectedItems.Count*2;
+                    progressBar.Maximum = Staged.SelectedItems.Count * 2;
                     progressBar.Value = 0;
 
                     var files = new List<GitItemStatus>();
@@ -409,8 +416,8 @@ namespace GitUI
                     GitCommands.GitCommands.UnstageFiles(files);
 
                     InitializedStaged();
-                    var stagedFiles = (List<GitItemStatus>) Staged.GitItemStatusses;
-                    var unStagedFiles = (List<GitItemStatus>) Unstaged.GitItemStatusses;
+                    var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
+                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatusses;
                     Unstaged.GitItemStatusses = null;
                     foreach (var item in allFiles)
                     {
@@ -577,13 +584,13 @@ namespace GitUI
 
             ThreadPool.QueueUserWorkItem(
                 o =>
-                    {
-                        var text =
-                            string.Format("Commit to {0} ({1})", GitCommands.GitCommands.GetSelectedBranch(),
-                                          Settings.WorkingDir);
+                {
+                    var text =
+                        string.Format("Commit to {0} ({1})", GitCommands.GitCommands.GetSelectedBranch(),
+                                      Settings.WorkingDir);
 
-                        _syncContext.Post(state1 => Text = text, null);
-                    });
+                    _syncContext.Post(state1 => Text = text, null);
+                });
         }
 
         public static void SetCommitMessageFromTextBox(string commitMessageText)
@@ -710,7 +717,7 @@ namespace GitUI
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            Message.Text = (string) e.ClickedItem.Tag;
+            Message.Text = (string)e.ClickedItem.Tag;
         }
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)

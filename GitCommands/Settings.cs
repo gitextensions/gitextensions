@@ -61,7 +61,10 @@ namespace GitCommands
             ApplicationDataPath = Application.UserAppDataPath + "\\";
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
+            ShowErrorsWhenStagingFiles = true;
         }
+
+        public static bool ShowErrorsWhenStagingFiles { get; set; }
 
         public static string LastCommitMessage { get; set; }
 
@@ -329,6 +332,7 @@ namespace GitCommands
                 appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
                 appData.SetValue("lastcommitmessage", LastCommitMessage);
+                appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);                
             }
             catch (Exception ex)
             {
@@ -420,6 +424,7 @@ namespace GitCommands
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
                 SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
+                SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);                
                 
             }
             catch (Exception ex)
