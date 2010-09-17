@@ -733,7 +733,7 @@ namespace GitUI
                     }
                     if (width > 0 && height > 0)
                     {
-                        graphBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                        graphBitmap = new Bitmap(Math.Max(width, LANE_WIDTH * 3), height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                         graphWorkArea = Graphics.FromImage(graphBitmap);
                         graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
                         cacheHead = 0;
