@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Version 2.03
+	Fixed bug: exception when deleting repository form dashboad using dashboardeditor
+	Fixed bug: Settings for autocrlf are now the same as in the msysgit installer
+	Fixed bug: revision header in commitinfo was not cleard between changing selection
+	Fixed bug: branches with '/' are not handled correct
+	Added option "showErrorsWhenStagingFiles" to hide wasernings when staging files
+	Updated git to Git-1.7.2.3-preview20100911.exe
+	Improved performance for rendering graph
+	Added "Delete obsolete branches" plugin
+	Improved cygwin support	
+
 Version 2.02
 	Fixed issue 149: the system just hangs during a fetch
 	Fixed bug: changing encoding in settings is not saved properly

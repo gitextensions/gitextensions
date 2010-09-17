@@ -14,8 +14,8 @@ namespace GitUI
     public partial class RevisionGrid : GitExtensionsControl
     {
         private readonly TranslationString _authorCaption = new TranslationString("Author");
-        private readonly TranslationString _authorDateCaption = new TranslationString("AuthorDate");
-        private readonly TranslationString _commitDateCaption = new TranslationString("CommitDate");
+        private readonly TranslationString _authorDateCaption = new TranslationString("Author date");
+        private readonly TranslationString _commitDateCaption = new TranslationString("Commit date");
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
