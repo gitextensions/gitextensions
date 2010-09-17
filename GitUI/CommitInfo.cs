@@ -140,8 +140,8 @@ namespace GitUI
             }
 
             if (branchString != string.Empty)
-                return "\r\n" + containedInBranches.Text + " " + branchString;
-            return "\r\n" + containedInNoBranch.Text;
+                return Environment.NewLine + containedInBranches.Text + " " + branchString;
+            return Environment.NewLine + containedInNoBranch.Text;
         }
 
         private string GetTagsWhichContainsThisCommit(string revision)
@@ -155,8 +155,8 @@ namespace GitUI
             }
 
             if (tagString != string.Empty)
-                return "\r\n" + containedInTags.Text + " " + tagString;
-            return "\r\n" + containedInNoTag.Text;
+                return Environment.NewLine + containedInTags.Text + " " + tagString;
+            return Environment.NewLine + containedInNoTag.Text;
         }
 
         private void tableLayout_Paint(object sender, PaintEventArgs e)
@@ -174,6 +174,11 @@ namespace GitUI
         {
             Settings.CommitInfoShowContainedInTags = !Settings.CommitInfoShowContainedInTags;
             ReloadCommitInfo();
+        }
+
+        private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(string.Concat(_RevisionHeader.Text, Environment.NewLine, RevisionInfo.Text));
         }
     }
 }
