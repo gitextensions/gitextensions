@@ -6,6 +6,7 @@ Version 2.03
 	Fixed bug: Settings for autocrlf are now the same as in the msysgit installer
 	Fixed bug: revision header in commitinfo was not cleard between changing selection
 	Fixed bug: branches with '/' are not handled correct
+	Fixed bug: merge conflict dialog doesn't support spaces in filename
 	Added option "showErrorsWhenStagingFiles" to hide wasernings when staging files
 	Updated git to Git-1.7.2.3-preview20100911.exe
 	Improved performance for rendering graph
