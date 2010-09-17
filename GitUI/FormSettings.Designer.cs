@@ -33,9 +33,11 @@ namespace GitUI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.LocalSettings = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.localAutoCrlfFalse = new System.Windows.Forms.RadioButton();
+            this.localAutoCrlfInput = new System.Windows.Forms.RadioButton();
+            this.localAutoCrlfTrue = new System.Windows.Forms.RadioButton();
             this.label30 = new System.Windows.Forms.Label();
-            this.lblLocalAutoCRLF = new System.Windows.Forms.Label();
-            this.LocalAutoCRLF = new System.Windows.Forms.ComboBox();
             this.InvalidGitPathLocal = new System.Windows.Forms.Panel();
             this.label21 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -82,6 +84,8 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
+            this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.showGitStatusInToolbarLabel = new System.Windows.Forms.Label();
             this.ShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
             this.RevisionGridQuickSearchTimeout = new System.Windows.Forms.NumericUpDown();
@@ -151,6 +155,10 @@ namespace GitUI
             this.label29 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorAddedLineLabel = new System.Windows.Forms.Label();
             this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.globalAutoCrlfFalse = new System.Windows.Forms.RadioButton();
+            this.globalAutoCrlfInput = new System.Windows.Forms.RadioButton();
+            this.globalAutoCrlfTrue = new System.Windows.Forms.RadioButton();
             this.DiffToolCmdSuggest = new System.Windows.Forms.Button();
             this.DifftoolCmd = new System.Windows.Forms.ComboBox();
             this.label48 = new System.Windows.Forms.Label();
@@ -160,8 +168,6 @@ namespace GitUI
             this.GlobalDiffTool = new System.Windows.Forms.ComboBox();
             this.label41 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.lblGlobalAutoCRLF = new System.Windows.Forms.Label();
-            this.GlobalAutoCRLF = new System.Windows.Forms.ComboBox();
             this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -206,9 +212,8 @@ namespace GitUI
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
-            this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -228,6 +233,7 @@ namespace GitUI
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.GlobalSettingsPage.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.Ssh.SuspendLayout();
@@ -242,9 +248,8 @@ namespace GitUI
             // 
             // LocalSettings
             // 
+            this.LocalSettings.Controls.Add(this.groupBox10);
             this.LocalSettings.Controls.Add(this.label30);
-            this.LocalSettings.Controls.Add(this.lblLocalAutoCRLF);
-            this.LocalSettings.Controls.Add(this.LocalAutoCRLF);
             this.LocalSettings.Controls.Add(this.InvalidGitPathLocal);
             this.LocalSettings.Controls.Add(this.NoGitRepo);
             this.LocalSettings.Controls.Add(this.label20);
@@ -265,6 +270,53 @@ namespace GitUI
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.localAutoCrlfFalse);
+            this.groupBox10.Controls.Add(this.localAutoCrlfInput);
+            this.groupBox10.Controls.Add(this.localAutoCrlfTrue);
+            this.groupBox10.Location = new System.Drawing.Point(13, 147);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(685, 105);
+            this.groupBox10.TabIndex = 32;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Line endings";
+            // 
+            // localAutoCrlfFalse
+            // 
+            this.localAutoCrlfFalse.AutoSize = true;
+            this.localAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
+            this.localAutoCrlfFalse.Name = "localAutoCrlfFalse";
+            this.localAutoCrlfFalse.Size = new System.Drawing.Size(380, 20);
+            this.localAutoCrlfFalse.TabIndex = 2;
+            this.localAutoCrlfFalse.TabStop = true;
+            this.localAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
+            this.localAutoCrlfFalse.UseVisualStyleBackColor = true;
+            // 
+            // localAutoCrlfInput
+            // 
+            this.localAutoCrlfInput.AutoSize = true;
+            this.localAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
+            this.localAutoCrlfInput.Name = "localAutoCrlfInput";
+            this.localAutoCrlfInput.Size = new System.Drawing.Size(481, 20);
+            this.localAutoCrlfInput.TabIndex = 1;
+            this.localAutoCrlfInput.TabStop = true;
+            this.localAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
+                "\")";
+            this.localAutoCrlfInput.UseVisualStyleBackColor = true;
+            // 
+            // localAutoCrlfTrue
+            // 
+            this.localAutoCrlfTrue.AutoSize = true;
+            this.localAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
+            this.localAutoCrlfTrue.Name = "localAutoCrlfTrue";
+            this.localAutoCrlfTrue.Size = new System.Drawing.Size(532, 20);
+            this.localAutoCrlfTrue.TabIndex = 0;
+            this.localAutoCrlfTrue.TabStop = true;
+            this.localAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
+                "o \"true\")";
+            this.localAutoCrlfTrue.UseVisualStyleBackColor = true;
+            // 
             // label30
             // 
             this.label30.AutoSize = true;
@@ -273,27 +325,6 @@ namespace GitUI
             this.label30.Size = new System.Drawing.Size(192, 16);
             this.label30.TabIndex = 23;
             this.label30.Text = "Keep backup (.orig) after merge";
-            // 
-            // lblLocalAutoCRLF
-            // 
-            this.lblLocalAutoCRLF.AutoSize = true;
-            this.lblLocalAutoCRLF.Location = new System.Drawing.Point(8, 156);
-            this.lblLocalAutoCRLF.Name = "lblLocalAutoCRLF";
-            this.lblLocalAutoCRLF.Size = new System.Drawing.Size(353, 16);
-            this.lblLocalAutoCRLF.TabIndex = 22;
-            this.lblLocalAutoCRLF.Text = "Convert CRLF at the end of lines in text files to LF, AutoCRLF";
-            // 
-            // LocalAutoCRLF
-            // 
-            this.LocalAutoCRLF.FormattingEnabled = true;
-            this.LocalAutoCRLF.Items.AddRange(new object[] {
-            "true",
-            "false",
-            "input"});
-            this.LocalAutoCRLF.Location = new System.Drawing.Point(472, 149);
-            this.LocalAutoCRLF.Name = "LocalAutoCRLF";
-            this.LocalAutoCRLF.Size = new System.Drawing.Size(121, 24);
-            this.LocalAutoCRLF.TabIndex = 21;
             // 
             // InvalidGitPathLocal
             // 
@@ -841,6 +872,25 @@ namespace GitUI
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // showErrorsWhenStagingFilesLabel
+            // 
+            this.showErrorsWhenStagingFilesLabel.AutoSize = true;
+            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 312);
+            this.showErrorsWhenStagingFilesLabel.Name = "showErrorsWhenStagingFilesLabel";
+            this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(186, 16);
+            this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
+            this.showErrorsWhenStagingFilesLabel.Text = "Show errors when staging files";
+            // 
+            // showErrorsWhenStagingFiles
+            // 
+            this.showErrorsWhenStagingFiles.AutoSize = true;
+            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 312);
+            this.showErrorsWhenStagingFiles.Name = "showErrorsWhenStagingFiles";
+            this.showErrorsWhenStagingFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.showErrorsWhenStagingFiles.Size = new System.Drawing.Size(15, 14);
+            this.showErrorsWhenStagingFiles.TabIndex = 34;
+            this.showErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
+            // 
             // showGitStatusInToolbarLabel
             // 
             this.showGitStatusInToolbarLabel.AutoSize = true;
@@ -1119,7 +1169,7 @@ namespace GitUI
             this.StartPage.Location = new System.Drawing.Point(4, 25);
             this.StartPage.Name = "StartPage";
             this.StartPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StartPage.Size = new System.Drawing.Size(710, 380);
+            this.StartPage.Size = new System.Drawing.Size(710, 398);
             this.StartPage.TabIndex = 6;
             this.StartPage.Text = "Start page";
             this.StartPage.UseVisualStyleBackColor = true;
@@ -1131,7 +1181,7 @@ namespace GitUI
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(704, 374);
+            this.dashboardEditor1.Size = new System.Drawing.Size(704, 392);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // AppearancePage
@@ -1613,6 +1663,7 @@ namespace GitUI
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.groupBox9);
             this.GlobalSettingsPage.Controls.Add(this.DiffToolCmdSuggest);
             this.GlobalSettingsPage.Controls.Add(this.DifftoolCmd);
             this.GlobalSettingsPage.Controls.Add(this.label48);
@@ -1622,8 +1673,6 @@ namespace GitUI
             this.GlobalSettingsPage.Controls.Add(this.GlobalDiffTool);
             this.GlobalSettingsPage.Controls.Add(this.label41);
             this.GlobalSettingsPage.Controls.Add(this.label28);
-            this.GlobalSettingsPage.Controls.Add(this.lblGlobalAutoCRLF);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalAutoCRLF);
             this.GlobalSettingsPage.Controls.Add(this.InvalidGitPathGlobal);
             this.GlobalSettingsPage.Controls.Add(this.button1);
             this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
@@ -1648,9 +1697,56 @@ namespace GitUI
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.globalAutoCrlfFalse);
+            this.groupBox9.Controls.Add(this.globalAutoCrlfInput);
+            this.groupBox9.Controls.Add(this.globalAutoCrlfTrue);
+            this.groupBox9.Location = new System.Drawing.Point(6, 290);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(685, 105);
+            this.groupBox9.TabIndex = 31;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Line endings";
+            // 
+            // globalAutoCrlfFalse
+            // 
+            this.globalAutoCrlfFalse.AutoSize = true;
+            this.globalAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
+            this.globalAutoCrlfFalse.Name = "globalAutoCrlfFalse";
+            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(380, 20);
+            this.globalAutoCrlfFalse.TabIndex = 2;
+            this.globalAutoCrlfFalse.TabStop = true;
+            this.globalAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
+            this.globalAutoCrlfFalse.UseVisualStyleBackColor = true;
+            // 
+            // globalAutoCrlfInput
+            // 
+            this.globalAutoCrlfInput.AutoSize = true;
+            this.globalAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
+            this.globalAutoCrlfInput.Name = "globalAutoCrlfInput";
+            this.globalAutoCrlfInput.Size = new System.Drawing.Size(481, 20);
+            this.globalAutoCrlfInput.TabIndex = 1;
+            this.globalAutoCrlfInput.TabStop = true;
+            this.globalAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
+                "\")";
+            this.globalAutoCrlfInput.UseVisualStyleBackColor = true;
+            // 
+            // globalAutoCrlfTrue
+            // 
+            this.globalAutoCrlfTrue.AutoSize = true;
+            this.globalAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
+            this.globalAutoCrlfTrue.Name = "globalAutoCrlfTrue";
+            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(532, 20);
+            this.globalAutoCrlfTrue.TabIndex = 0;
+            this.globalAutoCrlfTrue.TabStop = true;
+            this.globalAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
+                "o \"true\")";
+            this.globalAutoCrlfTrue.UseVisualStyleBackColor = true;
+            // 
             // DiffToolCmdSuggest
             // 
-            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 285);
+            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 258);
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
             this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 23);
             this.DiffToolCmdSuggest.TabIndex = 30;
@@ -1669,7 +1765,7 @@ namespace GitUI
                 "LOCAL\" \"$REMOTE\" \"$MERGED\"",
             "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
                 "BASE\" \"$REMOTE\""});
-            this.DifftoolCmd.Location = new System.Drawing.Point(153, 287);
+            this.DifftoolCmd.Location = new System.Drawing.Point(153, 259);
             this.DifftoolCmd.Name = "DifftoolCmd";
             this.DifftoolCmd.Size = new System.Drawing.Size(347, 24);
             this.DifftoolCmd.TabIndex = 29;
@@ -1677,7 +1773,7 @@ namespace GitUI
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(9, 291);
+            this.label48.Location = new System.Drawing.Point(9, 263);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(108, 16);
             this.label48.TabIndex = 28;
@@ -1685,7 +1781,7 @@ namespace GitUI
             // 
             // BrowseDiffTool
             // 
-            this.BrowseDiffTool.Location = new System.Drawing.Point(506, 256);
+            this.BrowseDiffTool.Location = new System.Drawing.Point(506, 229);
             this.BrowseDiffTool.Name = "BrowseDiffTool";
             this.BrowseDiffTool.Size = new System.Drawing.Size(75, 23);
             this.BrowseDiffTool.TabIndex = 27;
@@ -1696,7 +1792,7 @@ namespace GitUI
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(9, 263);
+            this.label42.Location = new System.Drawing.Point(9, 236);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(91, 16);
             this.label42.TabIndex = 26;
@@ -1704,7 +1800,7 @@ namespace GitUI
             // 
             // DifftoolPath
             // 
-            this.DifftoolPath.Location = new System.Drawing.Point(153, 259);
+            this.DifftoolPath.Location = new System.Drawing.Point(153, 232);
             this.DifftoolPath.Name = "DifftoolPath";
             this.DifftoolPath.Size = new System.Drawing.Size(347, 23);
             this.DifftoolPath.TabIndex = 25;
@@ -1726,7 +1822,7 @@ namespace GitUI
             "opendiff",
             "araxis",
             "winmerge"});
-            this.GlobalDiffTool.Location = new System.Drawing.Point(153, 232);
+            this.GlobalDiffTool.Location = new System.Drawing.Point(153, 205);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(164, 24);
             this.GlobalDiffTool.TabIndex = 24;
@@ -1736,7 +1832,7 @@ namespace GitUI
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(10, 235);
+            this.label41.Location = new System.Drawing.Point(10, 208);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(48, 16);
             this.label41.TabIndex = 23;
@@ -1750,27 +1846,6 @@ namespace GitUI
             this.label28.Size = new System.Drawing.Size(192, 16);
             this.label28.TabIndex = 22;
             this.label28.Text = "Keep backup (.orig) after merge";
-            // 
-            // lblGlobalAutoCRLF
-            // 
-            this.lblGlobalAutoCRLF.AutoSize = true;
-            this.lblGlobalAutoCRLF.Location = new System.Drawing.Point(10, 206);
-            this.lblGlobalAutoCRLF.Name = "lblGlobalAutoCRLF";
-            this.lblGlobalAutoCRLF.Size = new System.Drawing.Size(353, 16);
-            this.lblGlobalAutoCRLF.TabIndex = 21;
-            this.lblGlobalAutoCRLF.Text = "Convert CRLF at the end of lines in text files to LF, AutoCRLF";
-            // 
-            // GlobalAutoCRLF
-            // 
-            this.GlobalAutoCRLF.FormattingEnabled = true;
-            this.GlobalAutoCRLF.Items.AddRange(new object[] {
-            "true",
-            "false",
-            "input"});
-            this.GlobalAutoCRLF.Location = new System.Drawing.Point(506, 201);
-            this.GlobalAutoCRLF.Name = "GlobalAutoCRLF";
-            this.GlobalAutoCRLF.Size = new System.Drawing.Size(121, 24);
-            this.GlobalAutoCRLF.TabIndex = 20;
             // 
             // InvalidGitPathGlobal
             // 
@@ -2215,25 +2290,6 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
-            // showErrorsWhenStagingFilesLabel
-            // 
-            this.showErrorsWhenStagingFilesLabel.AutoSize = true;
-            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 312);
-            this.showErrorsWhenStagingFilesLabel.Name = "showErrorsWhenStagingFilesLabel";
-            this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(186, 16);
-            this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
-            this.showErrorsWhenStagingFilesLabel.Text = "Show errors when staging files";
-            // 
-            // showErrorsWhenStagingFiles
-            // 
-            this.showErrorsWhenStagingFiles.AutoSize = true;
-            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 312);
-            this.showErrorsWhenStagingFiles.Name = "showErrorsWhenStagingFiles";
-            this.showErrorsWhenStagingFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.showErrorsWhenStagingFiles.Size = new System.Drawing.Size(15, 14);
-            this.showErrorsWhenStagingFiles.TabIndex = 34;
-            this.showErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -2251,6 +2307,8 @@ namespace GitUI
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettigns_FormClosing);
             this.LocalSettings.ResumeLayout(false);
             this.LocalSettings.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.InvalidGitPathLocal.ResumeLayout(false);
             this.InvalidGitPathLocal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -2280,6 +2338,8 @@ namespace GitUI
             this.groupBox3.PerformLayout();
             this.GlobalSettingsPage.ResumeLayout(false);
             this.GlobalSettingsPage.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -2388,10 +2448,6 @@ namespace GitUI
         private System.Windows.Forms.ComboBox Dictionary;
 		private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox SmtpServer;
-		private System.Windows.Forms.Label lblGlobalAutoCRLF;
-		private System.Windows.Forms.ComboBox GlobalAutoCRLF;
-		private System.Windows.Forms.Label lblLocalAutoCRLF;
-		private System.Windows.Forms.ComboBox LocalAutoCRLF;
         private System.Windows.Forms.Label EncodingLabel;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Encoding;
         private System.Windows.Forms.TabPage AppearancePage;
@@ -2475,6 +2531,17 @@ namespace GitUI
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label showErrorsWhenStagingFilesLabel;
         private System.Windows.Forms.CheckBox showErrorsWhenStagingFiles;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.RadioButton globalAutoCrlfFalse;
+        private System.Windows.Forms.RadioButton globalAutoCrlfInput;
+        private System.Windows.Forms.RadioButton globalAutoCrlfTrue;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.RadioButton localAutoCrlfFalse;
+        private System.Windows.Forms.RadioButton localAutoCrlfInput;
+        private System.Windows.Forms.RadioButton localAutoCrlfTrue;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton3;
 
     }
 }
