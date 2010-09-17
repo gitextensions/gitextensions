@@ -125,6 +125,9 @@
   <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="splitContainer2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
     <value>1</value>
@@ -136,7 +139,7 @@
     <value>3, 0</value>
   </data>
   <data name="CategoriesLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
+    <value>220, 27</value>
   </data>
   <data name="CategoriesLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -156,28 +159,34 @@
   <data name="&gt;&gt;CategoriesLabel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="_Categories.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="_NO_TRANSLATE_Categories.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="_Categories.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 25</value>
+  <data name="_NO_TRANSLATE_Categories.ItemHeight" type="System.Int32, mscorlib">
+    <value>16</value>
   </data>
-  <data name="_Categories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 368</value>
+  <data name="_NO_TRANSLATE_Categories.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 31</value>
   </data>
-  <data name="_Categories.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="_NO_TRANSLATE_Categories.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
-  <data name="&gt;&gt;_Categories.Name" xml:space="preserve">
-    <value>_Categories</value>
+  <data name="_NO_TRANSLATE_Categories.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 452</value>
   </data>
-  <data name="&gt;&gt;_Categories.Type" xml:space="preserve">
+  <data name="_NO_TRANSLATE_Categories.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_NO_TRANSLATE_Categories.Name" xml:space="preserve">
+    <value>_NO_TRANSLATE_Categories</value>
+  </data>
+  <data name="&gt;&gt;_NO_TRANSLATE_Categories.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;_Categories.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_Categories.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
   </data>
-  <data name="&gt;&gt;_Categories.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_Categories.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="tableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
@@ -187,10 +196,13 @@
     <value>Fill</value>
   </data>
   <data name="Remove.Location" type="System.Drawing.Point, System.Drawing">
-    <value>100, 3</value>
+    <value>116, 4</value>
+  </data>
+  <data name="Remove.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="Remove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 24</value>
+    <value>107, 29</value>
   </data>
   <data name="Remove.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -214,10 +226,13 @@
     <value>Fill</value>
   </data>
   <data name="Add.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>3, 4</value>
+  </data>
+  <data name="Add.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="Add.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 24</value>
+    <value>107, 29</value>
   </data>
   <data name="Add.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -241,7 +256,7 @@
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 400</value>
+    <value>0, 492</value>
   </data>
   <data name="tableLayoutPanel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -250,7 +265,7 @@
     <value>1</value>
   </data>
   <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 30</value>
+    <value>226, 37</value>
   </data>
   <data name="tableLayoutPanel2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -268,7 +283,7 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="Remove" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="Add" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,100,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="Remove" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="Add" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,100,Absolute,37" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -283,7 +298,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 430</value>
+    <value>226, 529</value>
   </data>
   <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -301,7 +316,7 @@
     <value>0</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="CategoriesLabel" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_Categories" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel2" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,22,Percent,100,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="CategoriesLabel" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_NO_TRANSLATE_Categories" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel2" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,27,Percent,100,Absolute,37" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel1.Name" xml:space="preserve">
     <value>splitContainer2.Panel1</value>
@@ -343,10 +358,13 @@
     <value>Fill</value>
   </data>
   <data name="RepositoriesGrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 113</value>
+    <value>3, 139</value>
+  </data>
+  <data name="RepositoriesGrid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="RepositoriesGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>485, 314</value>
+    <value>567, 386</value>
   </data>
   <data name="RepositoriesGrid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -376,7 +394,7 @@
     <value>3, 0</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 34</value>
+    <value>135, 42</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -396,38 +414,38 @@
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="_Caption.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="_NO_TRANSLATE_Caption.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 5</value>
   </data>
-  <data name="_Caption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>123, 3</value>
+  <data name="_NO_TRANSLATE_Caption.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 5, 3, 5</value>
   </data>
-  <data name="_Caption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>359, 20</value>
+  <data name="_NO_TRANSLATE_Caption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 23</value>
   </data>
-  <data name="_Caption.TabIndex" type="System.Int32, mscorlib">
+  <data name="_NO_TRANSLATE_Caption.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;_Caption.Name" xml:space="preserve">
-    <value>_Caption</value>
+  <data name="&gt;&gt;_NO_TRANSLATE_Caption.Name" xml:space="preserve">
+    <value>_NO_TRANSLATE_Caption</value>
   </data>
-  <data name="&gt;&gt;_Caption.Type" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_Caption.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;_Caption.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_Caption.Parent" xml:space="preserve">
     <value>tableLayoutPanel4</value>
   </data>
-  <data name="&gt;&gt;_Caption.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_Caption.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 34</value>
+    <value>3, 42</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
+    <value>36, 16</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -451,10 +469,10 @@
     <value>True</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 77</value>
+    <value>3, 95</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 13</value>
+    <value>61, 16</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -474,25 +492,28 @@
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="_RssFeed.Location" type="System.Drawing.Point, System.Drawing">
-    <value>123, 80</value>
+  <data name="_NO_TRANSLATE_RssFeed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 100</value>
   </data>
-  <data name="_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>359, 20</value>
+  <data name="_NO_TRANSLATE_RssFeed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 5, 3, 5</value>
   </data>
-  <data name="_RssFeed.TabIndex" type="System.Int32, mscorlib">
+  <data name="_NO_TRANSLATE_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>418, 23</value>
+  </data>
+  <data name="_NO_TRANSLATE_RssFeed.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;_RssFeed.Name" xml:space="preserve">
-    <value>_RssFeed</value>
+  <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.Name" xml:space="preserve">
+    <value>_NO_TRANSLATE_RssFeed</value>
   </data>
-  <data name="&gt;&gt;_RssFeed.Type" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;_RssFeed.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.Parent" xml:space="preserve">
     <value>tableLayoutPanel4</value>
   </data>
-  <data name="&gt;&gt;_RssFeed.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
   <data name="tableLayoutPanel5.ColumnCount" type="System.Int32, mscorlib">
@@ -502,10 +523,13 @@
     <value>True</value>
   </data>
   <data name="RssFeedType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>3, 4</value>
+  </data>
+  <data name="RssFeedType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="RssFeedType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 15</value>
+    <value>82, 18</value>
   </data>
   <data name="RssFeedType.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -529,10 +553,13 @@
     <value>True</value>
   </data>
   <data name="RepositoriesType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 24</value>
+    <value>3, 30</value>
+  </data>
+  <data name="RepositoriesType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="RepositoriesType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 16</value>
+    <value>96, 19</value>
   </data>
   <data name="RepositoriesType.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -556,7 +583,7 @@
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>120, 34</value>
+    <value>141, 42</value>
   </data>
   <data name="tableLayoutPanel5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -565,7 +592,7 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>365, 43</value>
+    <value>426, 53</value>
   </data>
   <data name="tableLayoutPanel5.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -583,19 +610,22 @@
     <value>5</value>
   </data>
   <data name="tableLayoutPanel5.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RssFeedType" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="RepositoriesType" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100,Absolute,20" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RssFeedType" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="RepositoriesType" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100,Absolute,23" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="tableLayoutPanel4.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>3, 4</value>
+  </data>
+  <data name="tableLayoutPanel4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="tableLayoutPanel4.RowCount" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
   <data name="tableLayoutPanel4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>485, 104</value>
+    <value>567, 127</value>
   </data>
   <data name="tableLayoutPanel4.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -613,7 +643,7 @@
     <value>1</value>
   </data>
   <data name="tableLayoutPanel4.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_Caption" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label2" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label3" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_RssFeed" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel5" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,24.94845,Percent,75.05155" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,42.47787,Percent,24.77876" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_NO_TRANSLATE_Caption" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label2" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label3" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_NO_TRANSLATE_RssFeed" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel5" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,24.94845,Percent,75.05155" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,42.47787,Percent,24.77876" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="tableLayoutPanel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -628,7 +658,7 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>491, 430</value>
+    <value>573, 529</value>
   </data>
   <data name="tableLayoutPanel3.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -646,7 +676,7 @@
     <value>0</value>
   </data>
   <data name="tableLayoutPanel3.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RepositoriesGrid" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel4" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,110,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RepositoriesGrid" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tableLayoutPanel4" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,135,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel2.Name" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -661,10 +691,13 @@
     <value>1</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>689, 430</value>
+    <value>804, 529</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
-    <value>194</value>
+    <value>226</value>
+  </data>
+  <data name="splitContainer2.SplitterWidth" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -685,10 +718,13 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>7, 16</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>689, 430</value>
+    <value>804, 529</value>
   </data>
   <data name="&gt;&gt;pathDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>pathDataGridViewTextBoxColumn</value>
