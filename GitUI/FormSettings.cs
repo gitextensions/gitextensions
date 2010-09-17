@@ -211,8 +211,11 @@ namespace GitUI
                 GlobalMergeTool.Text = globalConfig.GetValue("merge.tool");
 
                 SetCheckboxFromString(KeepMergeBackup, localConfig.GetValue("mergetool.keepBackup"));
-                SetComboBoxFromString(LocalAutoCRLF, localConfig.GetValue("core.autocrlf"));
 
+                localAutoCrlfFalse.Checked = localConfig.GetValue("core.autocrlf").Equals("false", StringComparison.OrdinalIgnoreCase);
+                localAutoCrlfInput.Checked = localConfig.GetValue("core.autocrlf").Equals("input", StringComparison.OrdinalIgnoreCase);
+                localAutoCrlfTrue.Checked = localConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
+                
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                     MergetoolPath.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".path");
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
@@ -234,7 +237,11 @@ namespace GitUI
                     DifftoolCmd.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".cmd");
 
                 SetCheckboxFromString(GlobalKeepMergeBackup, globalConfig.GetValue("mergetool.keepBackup"));
-                SetComboBoxFromString(GlobalAutoCRLF, globalConfig.GetValue("core.autocrlf"));
+
+                globalAutoCrlfFalse.Checked = globalConfig.GetValue("core.autocrlf").Equals("false", StringComparison.OrdinalIgnoreCase);
+                globalAutoCrlfInput.Checked = globalConfig.GetValue("core.autocrlf").Equals("input", StringComparison.OrdinalIgnoreCase);
+                globalAutoCrlfTrue.Checked = globalConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
+
 
                 PlinkPath.Text = GitCommands.Settings.Plink;
                 PuttygenPath.Text = GitCommands.Settings.Puttygen;
@@ -445,7 +452,9 @@ namespace GitUI
                 if (KeepMergeBackup.CheckState == CheckState.Unchecked)
                     localConfig.SetValue("mergetool.keepBackup", "false");
 
-            localConfig.SetValue("core.autocrlf", LocalAutoCRLF.SelectedItem as string);
+            if (localAutoCrlfFalse.Checked) localConfig.SetValue("core.autocrlf", "false");
+            if (localAutoCrlfInput.Checked) localConfig.SetValue("core.autocrlf", "input");
+            if (localAutoCrlfTrue.Checked) localConfig.SetValue("core.autocrlf", "true");
 
             if (string.IsNullOrEmpty(GlobalUserName.Text) || !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
                 globalConfig.SetValue("user.name", GlobalUserName.Text);
@@ -473,7 +482,10 @@ namespace GitUI
                 if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
                     globalConfig.SetValue("mergetool.keepBackup", "false");
 
-            globalConfig.SetValue("core.autocrlf", GlobalAutoCRLF.SelectedItem as string);
+            if (globalAutoCrlfFalse.Checked) globalConfig.SetValue("core.autocrlf", "false");
+            if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
+            if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
+
             globalConfig.Save();
 
             //Only save local settings when we are inside a valid working dir
@@ -847,7 +859,9 @@ namespace GitUI
             Editor.Enabled = valid;
             MergeTool.Enabled = valid;
             KeepMergeBackup.Enabled = valid;
-            LocalAutoCRLF.Enabled = valid;
+            localAutoCrlfFalse.Enabled = valid;
+            localAutoCrlfInput.Enabled = valid;
+            localAutoCrlfTrue.Enabled = valid;
             NoGitRepo.Visible = !valid;
 
         }
