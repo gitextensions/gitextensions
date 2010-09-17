@@ -35,6 +35,8 @@
             this._RevisionHeader = new System.Windows.Forms.RichTextBox();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayout.SuspendLayout();
@@ -98,6 +100,7 @@
             // 
             this._RevisionHeader.BackColor = System.Drawing.SystemColors.ControlLight;
             this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this._RevisionHeader.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
@@ -123,10 +126,25 @@
             // commitInfoContextMenuStrip
             // 
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyCommitInfoToolStripMenuItem,
+            this.toolStripSeparator1,
             this.showContainedInBranchesToolStripMenuItem,
             this.showContainedInTagsToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 48);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 76);
+            // 
+            // copyCommitInfoToolStripMenuItem
+            // 
+            this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
+            this.copyCommitInfoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
+            this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(247, 6);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
@@ -169,5 +187,7 @@
         private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox _RevisionHeader;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

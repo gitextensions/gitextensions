@@ -2599,6 +2599,9 @@ stash
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Value>Toon labels waar deze commit in voorkomt</Value>
         </TranslationItem>
+        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
+          <Value>Kopieer commit info</Value>
+        </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Value>Komt voor in vertakkingen:</Value>
         </TranslationItem>
