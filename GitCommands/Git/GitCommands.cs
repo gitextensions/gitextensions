@@ -553,11 +553,11 @@ namespace GitCommands
             var fileName = "";
             foreach (var file in GetUnmergedFileListing())
             {
-                if (file.LastIndexOfAny(new[] { ' ', '\t' }) <= 0)
+                if (file.IndexOf('\t') <= 0)
                     continue;
-                if (file.Substring(file.LastIndexOfAny(new[] { ' ', '\t' }) + 1) == fileName)
+                if (file.Substring(file.IndexOf('\t') + 1) == fileName)
                     continue;
-                fileName = file.Substring(file.LastIndexOfAny(new[] { ' ', '\t' }) + 1);
+                fileName = file.Substring(file.IndexOf('\t') + 1);
                 unmergedFiles.Add(new GitItem { FileName = fileName });
             }
 
