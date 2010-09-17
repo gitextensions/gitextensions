@@ -32,9 +32,6 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.CategoriesLabel = new System.Windows.Forms.Label();
@@ -133,39 +130,19 @@ namespace GitUI
             // RepositoriesGrid
             // 
             this.RepositoriesGrid.AutoGenerateColumns = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RepositoriesGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.RepositoriesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RepositoriesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.pathDataGridViewTextBoxColumn,
             this.Title,
             this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.RepositoriesGrid.DefaultCellStyle = dataGridViewCellStyle2;
             resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RepositoriesGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             this.RepositoriesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.RepositoriesGrid_CellValidating);
             // 
             // pathDataGridViewTextBoxColumn
@@ -189,7 +166,7 @@ namespace GitUI
             // 
             // repositoryBindingSource
             // 
-            this.repositoryBindingSource.DataSource = typeof(Repository);
+            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
             // tableLayoutPanel4
             // 
@@ -224,10 +201,10 @@ namespace GitUI
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
-            // _RssFeed
+            // _NO_TRANSLATE_RssFeed
             // 
-            resources.ApplyResources(this._NO_TRANSLATE_RssFeed, "_RssFeed");
-            this._NO_TRANSLATE_RssFeed.Name = "_RssFeed";
+            resources.ApplyResources(this._NO_TRANSLATE_RssFeed, "_NO_TRANSLATE_RssFeed");
+            this._NO_TRANSLATE_RssFeed.Name = "_NO_TRANSLATE_RssFeed";
             this._NO_TRANSLATE_RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
             this._NO_TRANSLATE_RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
             // 
