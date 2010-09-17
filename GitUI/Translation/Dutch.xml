@@ -1499,12 +1499,6 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="label23" Property="Text">
           <Value>Smtp server voor het versturen van patches per email</Value>
         </TranslationItem>
-        <TranslationItem Name="lblGlobalAutoCRLF" Property="Text">
-          <Value>Converteerd CRLF aan het einde van regels in tekst bestanden naar LF (AutoCRLF)</Value>
-        </TranslationItem>
-        <TranslationItem Name="lblLocalAutoCRLF" Property="Text">
-          <Value>Converteerd CRLF aan het einde van regels in tekst bestanden naar LF (AutoCRLF)</Value>
-        </TranslationItem>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Encoding</Value>
         </TranslationItem>
@@ -1679,6 +1673,31 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
           <Value>Toon errors bij het klaarzetten van bestanden voor een commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text">
+          <Value>Regel einden</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
+          <Value>Ongewijzigd uitchecken, ongewijzigd inchecken (zet "core.autocrlf" op "false")
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfInput" Property="Text">
+          <Value>Ongewijzigd uitchecken, converteren naar unix-stijl regel einden (zet "core.autocrlf" op "input")</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
+          <Value>Windows-stijl uitchecken, Unix-stijl inchecken (zet "core.autocrlf" op "true")</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox10" Property="Text">
+          <Value>Regel einden</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
+          <Value>Ongewijzigd uitchecken, ongewijzigd inchecken (zet "core.autocrlf" op "false")</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfInput" Property="Text">
+          <Value>Ongewijzigd uitchecken, converteren naar unix-stijl regel einden (zet "core.autocrlf" op "input")</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
+          <Value>Windows-stijl uitchecken, Unix-stijl inchecken (zet "core.autocrlf" op "true")</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
