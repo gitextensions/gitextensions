@@ -155,5 +155,20 @@ namespace GitUI
             repositoryCategory.SetIcon();
         }
 
+        private void RepositoriesGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            //We handle this ourself, let .net think the action is cancelled.
+            e.Cancel = true;
+            if (e.Row.DataBoundItem == null)
+                return;
+
+            BindingList<Repository> datasource = ((BindingList<Repository>)((DataGridView)sender).DataSource);
+            Repository repositoryToRemove = (Repository)e.Row.DataBoundItem;
+            
+            RepositoriesGrid.DataSource = null;
+            datasource.Remove(repositoryToRemove);
+            RepositoriesGrid.DataSource = datasource;
+        }
+
     }
 }

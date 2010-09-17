@@ -12,6 +12,7 @@ namespace GitCommands.Repository
         {
             Repositories.AllowNew = true;
             Repositories.RaiseListChangedEvents = false;
+            Repositories.AllowRemove = true;
         }
 
 
@@ -20,6 +21,7 @@ namespace GitCommands.Repository
             Description = description;
             Repositories.AllowNew = true;
             Repositories.RaiseListChangedEvents = false;
+            Repositories.AllowRemove = true;
         }
 
         public BindingList<Repository> Repositories
