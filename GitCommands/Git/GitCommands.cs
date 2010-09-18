@@ -610,7 +610,7 @@ namespace GitCommands
                     continue;
                 if (fileline[2].Trim() != side)
                     continue;
-                RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\" > \"" + saveAs + "\"");
+                File.WriteAllText(saveAs, RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\""));
                 return true;
             }
             return false;

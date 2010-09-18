@@ -425,9 +425,9 @@ namespace GitUI
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
                     fileName = Path.GetTempPath() + fileName;
-                    GitCommands.GitCommands.RunCmd(Settings.GitCommand,
-                                                   "cat-file blob \"" + ((GitItem) item).Guid + "\" > \"" + fileName +
-                                                   "\"");
+                    File.WriteAllText(fileName,
+                                                GitCommands.GitCommands.RunCmd(Settings.GitCommand,
+                                                                               "cat-file blob \"" + ((GitItem) item).Guid + "\""));
                     OpenWith.OpenAs(fileName);
                 }
         }
@@ -461,9 +461,9 @@ namespace GitUI
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
                     fileName = Path.GetTempPath() + fileName;
-                    GitCommands.GitCommands.RunCmd(Settings.GitCommand,
-                                                   "cat-file blob \"" + ((GitItem) item).Guid + "\" > \"" + fileName +
-                                                   "\"");
+                    
+                    File.WriteAllText(fileName, GitCommands.GitCommands.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem) item).Guid + "\""));
+
                     Process.Start(fileName);
                 }
         }
@@ -1202,9 +1202,12 @@ namespace GitUI
                 "|All files (*.*)|*.*";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
-                GitCommands.GitCommands.RunCmd(
-                    Settings.GitCommand,
-                    string.Format("cat-file blob \"{0}\" > \"{1}\"", item.Guid, fileDialog.FileName));
+            {
+                File.WriteAllText(fileDialog.FileName, 
+                                GitCommands.GitCommands.RunCmd(
+                                    Settings.GitCommand,
+                                    string.Format("cat-file blob \"{0}\"", item.Guid)));
+            }
         }
 
         private void GitTreeBeforeExpand(object sender, TreeViewCancelEventArgs e)
