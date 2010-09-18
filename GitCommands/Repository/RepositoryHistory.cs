@@ -35,12 +35,12 @@ namespace GitCommands.Repository
             if (string.IsNullOrEmpty(repo))
                 return;
 
-            repo = repo.Replace('/', '\\');
-            if (!repo.EndsWith("\\") &&
+            repo = repo.Replace(Settings.PathSeperatorWrong, Settings.PathSeperator);
+            if (!repo.EndsWith(Settings.PathSeperator.ToString()) &&
                 !repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
-                repo += "\\";
+                repo += Settings.PathSeperator;
 
             foreach (var recentRepository in Repositories)
             {

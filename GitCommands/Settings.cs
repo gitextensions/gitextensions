@@ -15,9 +15,17 @@ namespace GitCommands
         public static int GitExtensionsVersionInt = 203;
         private static string _gitBinDir = "";
         private static string _workingdir;
+        public static char PathSeperator = '\\';
+        public static char PathSeperatorWrong = '/';
 
         static Settings()
         {
+            if (!RunningOnWindows())
+            {
+                PathSeperator = '/';
+                PathSeperatorWrong = '\\';
+            }
+
             BranchBorders = true;
             StripedBranchChange = true;
             MulticolorBranches = true;
@@ -136,8 +144,8 @@ namespace GitCommands
             set
             {
                 _gitBinDir = value;
-                if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != '\\')
-                    _gitBinDir += "\\";
+                if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeperator)
+                    _gitBinDir += PathSeperator;
 
                 if (string.IsNullOrEmpty(_gitBinDir))
                     return;
@@ -244,18 +252,18 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + "\\" + ".git"))
+            if (Directory.Exists(dir + PathSeperator + ".git"))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + "\\" + "info") &&
-                   Directory.Exists(dir + "\\" + "objects") &&
-                   Directory.Exists(dir + "\\" + "refs");
+                   Directory.Exists(dir + PathSeperator + "info") &&
+                   Directory.Exists(dir + PathSeperator + "objects") &&
+                   Directory.Exists(dir + PathSeperator + "refs");
         }
 
         public static bool IsBareRepository()
         {
-            return !Directory.Exists(WorkingDir + "\\" + ".git");
+            return !Directory.Exists(WorkingDir + PathSeperator + ".git");
         }
 
         public static string WorkingDirGitDir()
@@ -265,12 +273,47 @@ namespace GitCommands
             if (Directory.Exists(workingDir + ".git"))
                 return workingDir + ".git";
 
-            if (Directory.Exists(workingDir + "\\" + ".git"))
-                return workingDir + "\\" + ".git";
+            if (Directory.Exists(workingDir + PathSeperator + ".git"))
+                return workingDir + PathSeperator + ".git";
 
             return WorkingDir;
         }
 
+        public static bool RunningOnWindows()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool RunningOnUnix()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool RunningOnMacOSX()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.MacOSX:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         public static void SaveSettings()
         {

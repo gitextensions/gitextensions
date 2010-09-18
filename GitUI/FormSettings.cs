@@ -294,7 +294,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not load settings.\n\n" + ex.Message);
+                MessageBox.Show("Could not load settings.\n\n" + ex.ToString());
 
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
@@ -821,34 +821,37 @@ namespace GitUI
 
         public static bool SolveGitCommand()
         {
-            GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
-            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+            if (GitCommands.Settings.RunningOnWindows())
             {
-                GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
+                GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                 {
-                    GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\bin\git.exe";
+                    GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                     {
-                        GitCommands.Settings.GitCommand = @"c:\Program Files\Git\bin\git.exe";
+                        GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\bin\git.exe";
                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                         {
-                            GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
+                            GitCommands.Settings.GitCommand = @"c:\Program Files\Git\bin\git.exe";
                             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                             {
-                                GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
+                                GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
                                 if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                                 {
-                                    GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
+                                    GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
                                     if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                                     {
-                                        GitCommands.Settings.GitCommand = "git";
+                                        GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
                                         if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                                         {
-                                            GitCommands.Settings.GitCommand = "git.cmd";
+                                            GitCommands.Settings.GitCommand = "git";
                                             if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
                                             {
-                                                return false;
+                                                GitCommands.Settings.GitCommand = "git.cmd";
+                                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                                                {
+                                                    return false;
+                                                }
                                             }
                                         }
                                     }
@@ -856,6 +859,14 @@ namespace GitUI
                             }
                         }
                     }
+                }
+            }
+            else
+            {
+                GitCommands.Settings.GitCommand = "git";
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                {
+                    return false;
                 }
             }
 

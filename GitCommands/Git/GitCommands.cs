@@ -107,17 +107,17 @@ namespace GitCommands
             if (string.IsNullOrEmpty(startDir))
                 return "";
 
-            if (!startDir.EndsWith("\\") && !startDir.EndsWith("/"))
-                startDir += "\\";
+            if (!startDir.EndsWith(Settings.PathSeperator.ToString()) && !startDir.EndsWith(Settings.PathSeperatorWrong.ToString()))
+                startDir += Settings.PathSeperator;
 
             var dir = startDir;
 
-            while (dir.LastIndexOfAny(new[] { '\\', '/' }) > 0)
+            while (dir.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }) > 0)
             {
-                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { '\\', '/' }));
+                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }));
 
                 if (Settings.ValidWorkingDir(dir))
-                    return dir + "\\";
+                    return dir + Settings.PathSeperator;
             }
             return startDir;
         }
@@ -284,7 +284,7 @@ namespace GitCommands
                                 RedirectStandardOutput = false,
                                 RedirectStandardInput = false,
                                 CreateNoWindow = false,
-                                FileName = string.Format("\"{0}\"", cmd),
+                                FileName = cmd,
                                 Arguments = arguments,
                                 WorkingDirectory = Settings.WorkingDir,
                                 WindowStyle = ProcessWindowStyle.Normal,
@@ -328,7 +328,7 @@ namespace GitCommands
             Process process = new Process();
             SetCommonProcessAttributes(process, arguments);
             process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-            process.StartInfo.FileName = "\"" + cmd + "\"";
+            process.StartInfo.FileName = cmd;
             process.StartInfo.Arguments = arguments;
             process.StartInfo.WorkingDirectory = Settings.WorkingDir;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
@@ -495,7 +495,7 @@ namespace GitCommands
             SetCommonProcessAttributes(process, arguments);
 
             process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = string.Format("\"{0}\"", cmd);
+            process.StartInfo.FileName = cmd;
             process.StartInfo.Arguments = arguments;
             process.StartInfo.WorkingDirectory = Settings.WorkingDir;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
@@ -525,7 +525,7 @@ namespace GitCommands
 
                 process.StartInfo.LoadUserProfile = true;
                 process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = string.Format("\"{0}\"", cmd);
+                process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -676,7 +676,7 @@ namespace GitCommands
 
         public static string GetMergeMessage()
         {
-            var file = Settings.WorkingDir + ".git\\MERGE_MSG";
+            var file = Settings.WorkingDir + ".git" + Settings.PathSeperator + "MERGE_MSG";
 
             return
                 File.Exists(file)
@@ -774,13 +774,13 @@ namespace GitCommands
 
         public static string GetSubmoduleRemotePath(string name)
         {
-            var configFile = new ConfigFile(Settings.WorkingDir + "\\.gitmodules");
+            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeperator + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".url").Trim();
         }
 
         public static string GetSubmoduleLocalPath(string name)
         {
-            var configFile = new ConfigFile(Settings.WorkingDir + "\\.gitmodules");
+            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeperator + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".path").Trim();
         }
 
@@ -1225,10 +1225,10 @@ namespace GitCommands
 
         public static string GetRebaseDir()
         {
-            if (Directory.Exists(Settings.WorkingDir + ".git\\rebase-apply\\"))
-                return Settings.WorkingDir + ".git\\rebase-apply\\";
-            if (Directory.Exists(Settings.WorkingDir + ".git\\rebase\\"))
-                return Settings.WorkingDir + ".git\\rebase\\";
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase-apply" + Settings.PathSeperator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase-apply" + Settings.PathSeperator;
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase" + Settings.PathSeperator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase" + Settings.PathSeperator;
 
             return "";
         }
@@ -1269,7 +1269,7 @@ namespace GitCommands
             foreach (var fullFileName in files)
             {
                 int n;
-                var file = fullFileName.Substring(fullFileName.LastIndexOf('\\') + 1);
+                var file = fullFileName.Substring(fullFileName.LastIndexOf(Settings.PathSeperator) + 1);
                 if (!int.TryParse(file, out n))
                     continue;
 
@@ -1382,7 +1382,7 @@ namespace GitCommands
 
         public static string CommitCmd(bool amend)
         {
-            var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE\"";
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeperator + "COMMITMESSAGE\"";
             if (amend)
                 return "commit --amend -F \"" + path;
             return "commit  -F \"" + path;
@@ -1458,7 +1458,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + "\\.gitconfig");
+            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + Settings.PathSeperator + ".gitconfig");
         }
 
         public string GetGlobalSetting(string setting)
@@ -1476,7 +1476,7 @@ namespace GitCommands
 
         public static ConfigFile GetLocalConfig()
         {
-            return new ConfigFile(Settings.WorkingDirGitDir() + "\\config");
+            return new ConfigFile(Settings.WorkingDirGitDir() + Settings.PathSeperator + "config");
         }
 
         public static string GetSetting(string setting)

@@ -39,7 +39,11 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            NormalFont = Revisions.Font;
+            Message.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+            Author.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+            Date.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+
+            NormalFont = SystemFonts.DefaultFont;
             HeadFont = new Font(NormalFont, FontStyle.Underline);
             RefsFont = new Font(NormalFont, FontStyle.Bold);
 
@@ -694,7 +698,7 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        private static void GitIgnoreClick(object sender, EventArgs e)
+        private void GitIgnoreClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartEditGitIgnoreDialog();
         }
