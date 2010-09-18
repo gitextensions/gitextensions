@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -854,6 +854,16 @@ namespace GitUI
         {
             showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
             ScanClick(null, null);
+        }
+
+        private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = Unstaged.SelectedItem;
+            var fileName = Settings.WorkingDir + item.Name;
+
+            new FormEditor(fileName).ShowDialog();
+
+            UntrackedSelectionChanged(null, null);
         }
     }
 }

@@ -81,116 +81,127 @@ namespace GitExtensions
 
         private static void RunCommand(string[] args)
         {
-            switch (args[1])
+            if (args.Length > 1)
             {
-                case "mergeconflicts":
-                    GitUICommands.Instance.StartResolveConflictsDialog();
-                    return;
-                case "gitbash":
-                    GitCommands.GitCommands.RunBash();
-                    return;
-                case "gitignore":
-                    GitUICommands.Instance.StartEditGitIgnoreDialog();
-                    return;
-                case "remotes":
-                    GitUICommands.Instance.StartRemotesDialog();
-                    return;
-                case "blame":
-                    if (args.Length > 2)
-                    {
-                        // Remove working dir from filename. This is to prevent filenames that are too
-                        // long while there is room left when the workingdir was not in the path.
-                        string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+                switch (args[1])
+                {
+                    case "mergeconflicts":
+                        GitUICommands.Instance.StartResolveConflictsDialog();
+                        return;
+                    case "gitbash":
+                        GitCommands.GitCommands.RunBash();
+                        return;
+                    case "gitignore":
+                        GitUICommands.Instance.StartEditGitIgnoreDialog();
+                        return;
+                    case "remotes":
+                        GitUICommands.Instance.StartRemotesDialog();
+                        return;
+                    case "blame":
+                        if (args.Length > 2)
+                        {
+                            // Remove working dir from filename. This is to prevent filenames that are too
+                            // long while there is room left when the workingdir was not in the path.
+                            string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
 
-                        GitUICommands.Instance.StartBlameDialog(fileName);
-                    }
-                    else
-                        MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
-                    return;
-                case "browse":
-                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
-                    return;
-                case "add":
-                case "addfiles":
-                    GitUICommands.Instance.StartAddFilesDialog();
-                    return;
-                case "apply":
-                case "applypatch":
-                    GitUICommands.Instance.StartApplyPatchDialog();
-                    return;
-                case "branch":
-                    GitUICommands.Instance.StartCreateBranchDialog();
-                    return;
-                case "checkout":
-                case "checkoutbranch":
-                    GitUICommands.Instance.StartCheckoutBranchDialog();
-                    return;
-                case "checkoutrevision":
-                    GitUICommands.Instance.StartCheckoutRevisionDialog();
-                    return;
-                case "init":
-                    if (args.Length > 2)
-                        GitUICommands.Instance.StartInitializeDialog(args[2]);
-                    else
-                        GitUICommands.Instance.StartInitializeDialog();
-                    return;
-                case "clone":
-                    GitUICommands.Instance.StartCloneDialog();
-                    return;
-                case "commit":
-                    GitUICommands.Instance.StartCommitDialog();
-                    return;
-                case "filehistory":
-                    if (args.Length > 2)
-                    {
-                        //Remove working dir from filename. This is to prevent filenames that are too
-                        //long while there is room left when the workingdir was not in the path.
-                        string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+                            GitUICommands.Instance.StartBlameDialog(fileName);
+                        }
+                        else
+                            MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
+                        return;
+                    case "browse":
+                        GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                        return;
+                    case "add":
+                    case "addfiles":
+                        GitUICommands.Instance.StartAddFilesDialog();
+                        return;
+                    case "apply":
+                    case "applypatch":
+                        GitUICommands.Instance.StartApplyPatchDialog();
+                        return;
+                    case "branch":
+                        GitUICommands.Instance.StartCreateBranchDialog();
+                        return;
+                    case "checkout":
+                    case "checkoutbranch":
+                        GitUICommands.Instance.StartCheckoutBranchDialog();
+                        return;
+                    case "checkoutrevision":
+                        GitUICommands.Instance.StartCheckoutRevisionDialog();
+                        return;
+                    case "init":
+                        if (args.Length > 2)
+                            GitUICommands.Instance.StartInitializeDialog(args[2]);
+                        else
+                            GitUICommands.Instance.StartInitializeDialog();
+                        return;
+                    case "clone":
+                        GitUICommands.Instance.StartCloneDialog();
+                        return;
+                    case "commit":
+                        GitUICommands.Instance.StartCommitDialog();
+                        return;
+                    case "filehistory":
+                        if (args.Length > 2)
+                        {
+                            //Remove working dir from filename. This is to prevent filenames that are too
+                            //long while there is room left when the workingdir was not in the path.
+                            string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
 
-                        GitUICommands.Instance.StartFileHistoryDialog(fileName);
-                    }
-                    else
-                        MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
-                    return;
-                case "formatpatch":
-                    GitUICommands.Instance.StartFormatPatchDialog();
-                    return;
-                case "pull":
-                    GitUICommands.Instance.StartPullDialog();
-                    return;
-                case "push":
-                    GitUICommands.Instance.StartPushDialog();
-                    return;
-                case "settings":
-                    GitUICommands.Instance.StartSettingsDialog();
-                    return;
-                case "viewdiff":
-                    GitUICommands.Instance.StartCompareRevisionsDialog();
-                    return;
-                case "rebase":
-                    GitUICommands.Instance.StartRebaseDialog(null);
-                    return;
-                case "merge":
-                    GitUICommands.Instance.StartMergeBranchDialog(null);
-                    return;
-                case "cherry":
-                    GitUICommands.Instance.StartCherryPickDialog();
-                    return;
-                case "revert":
-                    Application.Run(new FormRevert(args[2]));
-                    return;
-                case "tag":
-                    GitUICommands.Instance.StartCreateTagDialog();
-                    return;
-                case "about":
-                    Application.Run(new AboutBox());
-                    return;
-                case "stash":
-                    GitUICommands.Instance.StartStashDialog();
-                    return;
-                default:
-                    Application.Run(new FormCommandlineHelp());
-                    return;
+                            GitUICommands.Instance.StartFileHistoryDialog(fileName);
+                        }
+                        else
+                            MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
+                        return;
+                    case "fileeditor":
+                        if (args.Length > 2)
+                        {
+                            new FormEditor(args[2]).ShowDialog();
+                        }
+                        else
+                            MessageBox.Show("Cannot open hile editor, there is no file selected.", "File editor");
+                        return;
+                    case "formatpatch":
+                        GitUICommands.Instance.StartFormatPatchDialog();
+                        return;
+                    case "pull":
+                        GitUICommands.Instance.StartPullDialog();
+                        return;
+                    case "push":
+                        GitUICommands.Instance.StartPushDialog();
+                        return;
+                    case "settings":
+                        GitUICommands.Instance.StartSettingsDialog();
+                        return;
+                    case "viewdiff":
+                        GitUICommands.Instance.StartCompareRevisionsDialog();
+                        return;
+                    case "rebase":
+                        GitUICommands.Instance.StartRebaseDialog(null);
+                        return;
+                    case "merge":
+                        GitUICommands.Instance.StartMergeBranchDialog(null);
+                        return;
+                    case "cherry":
+                        GitUICommands.Instance.StartCherryPickDialog();
+                        return;
+                    case "revert":
+                        Application.Run(new FormRevert(args[2]));
+                        return;
+                    case "tag":
+                        GitUICommands.Instance.StartCreateTagDialog();
+                        return;
+                    case "about":
+                        Application.Run(new AboutBox());
+                        return;
+                    case "stash":
+                        GitUICommands.Instance.StartStashDialog();
+                        return;
+                    default:
+                        Application.Run(new FormCommandlineHelp());
+                        return;
+                }
             }
         }
 
