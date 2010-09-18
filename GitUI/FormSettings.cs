@@ -20,7 +20,7 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
-            GlobalEditor.Items.AddRange(new Object[] { GetGitExtensionsFullPath() + " fileeditor", "vi", "notepad" });
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad" });
         }
 
         public static bool AutoSolveAllSettings()
@@ -39,7 +39,7 @@ namespace GitUI
             string editor = gitCommands.GetGlobalSetting("core.editor");
             if (string.IsNullOrEmpty(editor))
             {
-                gitCommands.SetGlobalSetting("core.editor", GetGitExtensionsFullPath() + " fileeditor");
+                gitCommands.SetGlobalSetting("core.editor", "\"" + GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
