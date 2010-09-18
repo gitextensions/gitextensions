@@ -20,6 +20,7 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
+            GlobalEditor.Items.AddRange(new Object[] { GetGitExtensionsFullPath() + " fileeditor", "vi", "notepad" });
         }
 
         public static bool AutoSolveAllSettings()
@@ -28,7 +29,20 @@ namespace GitUI
                     SolveLinuxToolsDir() &&
                     SolveKDiff() &&
                     SolveKDiffTool2() &&
-                    SolveGitExtensionsDir();
+                    SolveGitExtensionsDir() &&
+                    SolveEditor();
+        }
+
+        private static bool SolveEditor()
+        {
+            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
+            string editor = gitCommands.GetGlobalSetting("core.editor");
+            if (string.IsNullOrEmpty(editor))
+            {
+                gitCommands.SetGlobalSetting("core.editor", GetGitExtensionsFullPath() + " fileeditor");
+            }
+
+            return true;
         }
 
         private void SetCheckboxFromString(CheckBox checkBox, string str)
@@ -238,10 +252,20 @@ namespace GitUI
 
                 SetCheckboxFromString(GlobalKeepMergeBackup, globalConfig.GetValue("mergetool.keepBackup"));
 
-                globalAutoCrlfFalse.Checked = globalConfig.GetValue("core.autocrlf").Equals("false", StringComparison.OrdinalIgnoreCase);
-                globalAutoCrlfInput.Checked = globalConfig.GetValue("core.autocrlf").Equals("input", StringComparison.OrdinalIgnoreCase);
-                globalAutoCrlfTrue.Checked = globalConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
+                string globalAutocrlf = string.Empty;
+                if (globalConfig.HasValue("core.autocrlf"))
+                {
+                    globalAutocrlf = globalConfig.GetValue("core.autocrlf");
+                }
+                else
+                {
+                    ConfigFile configFile = new ConfigFile(Settings.GitBinDir.Replace("bin\\", "etc\\gitconfig"));
+                    globalAutocrlf = configFile.GetValue("core.autocrlf");
+                }
 
+                globalAutoCrlfFalse.Checked = globalAutocrlf.Equals("false", StringComparison.OrdinalIgnoreCase);
+                globalAutoCrlfInput.Checked = globalAutocrlf.Equals("input", StringComparison.OrdinalIgnoreCase);
+                globalAutoCrlfTrue.Checked = globalAutocrlf.Equals("true", StringComparison.OrdinalIgnoreCase);
 
                 PlinkPath.Text = GitCommands.Settings.Plink;
                 PuttygenPath.Text = GitCommands.Settings.Puttygen;
@@ -582,16 +606,22 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
-            fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' }));
+            string fileName = GetGitExtensionsFullPath();
 
-            if (File.Exists(fileName + "\\GitExtensions.exe"))
+            if (File.Exists(fileName))
             {
                 GitCommands.Settings.SetInstallDir(fileName);
                 return true;
             }
 
             return false;
+        }
+
+        private static string GetGitExtensionsFullPath()
+        {
+            string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
+            fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' }));
+            return fileName + "\\GitExtensions.exe";
         }
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)

@@ -180,7 +180,7 @@ namespace GitUI
             this.MergetoolPath = new System.Windows.Forms.TextBox();
             this.GlobalKeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.GlobalEditor = new System.Windows.Forms.TextBox();
+            this.GlobalEditor = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.GlobalUserEmail = new System.Windows.Forms.TextBox();
             this.GlobalUserName = new System.Windows.Forms.TextBox();
@@ -345,8 +345,8 @@ namespace GitUI
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(211, 48);
             this.label21.TabIndex = 19;
-            this.label21.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nlocal settin" +
-                "gs.\r\n";
+            this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal settings.\r" +
+                "\n";
             // 
             // pictureBox3
             // 
@@ -415,7 +415,7 @@ namespace GitUI
             // 
             this.Editor.Location = new System.Drawing.Point(118, 67);
             this.Editor.Name = "Editor";
-            this.Editor.Size = new System.Drawing.Size(159, 23);
+            this.Editor.Size = new System.Drawing.Size(280, 23);
             this.Editor.TabIndex = 5;
             // 
             // label5
@@ -431,7 +431,7 @@ namespace GitUI
             // 
             this.UserEmail.Location = new System.Drawing.Point(118, 40);
             this.UserEmail.Name = "UserEmail";
-            this.UserEmail.Size = new System.Drawing.Size(159, 23);
+            this.UserEmail.Size = new System.Drawing.Size(280, 23);
             this.UserEmail.TabIndex = 3;
             this.UserEmail.TextChanged += new System.EventHandler(this.UserEmail_TextChanged);
             // 
@@ -439,7 +439,7 @@ namespace GitUI
             // 
             this.UserName.Location = new System.Drawing.Point(118, 12);
             this.UserName.Name = "UserName";
-            this.UserName.Size = new System.Drawing.Size(159, 23);
+            this.UserName.Size = new System.Drawing.Size(280, 23);
             this.UserName.TabIndex = 1;
             this.UserName.TextChanged += new System.EventHandler(this.UserName_TextChanged);
             // 
@@ -1866,8 +1866,8 @@ namespace GitUI
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(211, 48);
             this.label9.TabIndex = 19;
-            this.label9.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nglobal setti" +
-                "ngs.\r\n";
+            this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
+                "\r\n";
             // 
             // pictureBox1
             // 
@@ -1980,7 +1980,7 @@ namespace GitUI
             // 
             this.GlobalEditor.Location = new System.Drawing.Point(153, 65);
             this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(164, 23);
+            this.GlobalEditor.Size = new System.Drawing.Size(534, 24);
             this.GlobalEditor.TabIndex = 5;
             // 
             // label6
@@ -1996,14 +1996,14 @@ namespace GitUI
             // 
             this.GlobalUserEmail.Location = new System.Drawing.Point(153, 37);
             this.GlobalUserEmail.Name = "GlobalUserEmail";
-            this.GlobalUserEmail.Size = new System.Drawing.Size(164, 23);
+            this.GlobalUserEmail.Size = new System.Drawing.Size(236, 23);
             this.GlobalUserEmail.TabIndex = 3;
             // 
             // GlobalUserName
             // 
             this.GlobalUserName.Location = new System.Drawing.Point(153, 8);
             this.GlobalUserName.Name = "GlobalUserName";
-            this.GlobalUserName.Size = new System.Drawing.Size(164, 23);
+            this.GlobalUserName.Size = new System.Drawing.Size(236, 23);
             this.GlobalUserName.TabIndex = 2;
             this.GlobalUserName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -2374,7 +2374,7 @@ namespace GitUI
         private System.Windows.Forms.TextBox GlobalUserEmail;
         private System.Windows.Forms.TextBox Editor;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox GlobalEditor;
+        private System.Windows.Forms.ComboBox GlobalEditor;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;

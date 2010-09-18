@@ -8,6 +8,7 @@ Version 2.03
 	Fixed bug: branches with '/' are not handled correct
 	Fixed bug: merge conflict dialog doesn't support spaces in filename
 	Added option "showErrorsWhenStagingFiles" to hide wasernings when staging files
+	Added basic file editor to replace vi
 	Updated git to Git-1.7.2.3-preview20100911.exe
 	Improved performance for rendering graph
 	Added "Delete obsolete branches" plugin
