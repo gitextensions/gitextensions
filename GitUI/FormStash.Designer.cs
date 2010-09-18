@@ -45,7 +45,7 @@ namespace GitUI
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.Stashed = new System.Windows.Forms.ListBox();
-            this.View = new GitUI.Editor.FileViewer();
+            this.View = new GitUI.Editor.FileViewerMono();
             this.Stash = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
@@ -347,6 +347,6 @@ namespace GitUI
         private System.Windows.Forms.RichTextBox StashMessage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button RefreshButton;
-        private FileViewer View;
+        private FileViewerMono View;
     }
 }

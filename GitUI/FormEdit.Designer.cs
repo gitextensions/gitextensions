@@ -31,7 +31,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEdit));
-            this.Viewer = new FileViewer();
+            this.Viewer = new FileViewerMono();
             this.SuspendLayout();
             // 
             // Viewer
@@ -60,6 +60,6 @@ namespace GitUI
 
         #endregion
 
-        private FileViewer Viewer;
+        private FileViewerMono Viewer;
     }
 }

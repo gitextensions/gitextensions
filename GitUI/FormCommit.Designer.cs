@@ -81,7 +81,7 @@ namespace GitUI
             this.Ok = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
-            this.SelectedDiff = new GitUI.Editor.FileViewer();
+            this.SelectedDiff = new GitUI.Editor.FileViewerMono();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Scan = new System.Windows.Forms.Button();
@@ -922,7 +922,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem filesListedToCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
-        private FileViewer SelectedDiff;
+        private FileViewerMono SelectedDiff;
         private EditNetSpell Message;
         private System.Windows.Forms.ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

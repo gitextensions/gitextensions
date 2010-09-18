@@ -77,19 +77,19 @@ namespace GitUI
                 defaultHome.Checked = true;
             }
 
-            if (File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig"))
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig"))
             {
                 MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
                 defaultHome.Checked = true;
             }
             else
-                if (File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
                 {
                     MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
                     defaultHome.Checked = true;
                 }
                 else
-                    if (File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
+                    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
                     {
                         MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
                         userprofileHome.Checked = true;
