@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -116,68 +117,75 @@ namespace GitCommands
 
         private void execute()
         {
-            lock (revisions)
+            try
             {
-                revisions.Clear();
-            }
-
-            heads = GitCommands.GetHeads(true);
-
-            string formatString =
-                /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
-                /* Hash           */ "%H%n" +
-                /* Parents        */ "%P%n";
-            if (!ShaOnly)
-            {
-                formatString +=
-                    /* Tree           */ "%T%n" +
-                    /* Author Name    */ "%aN%n" +
-                    /* Author Date    */ "%ai%n" +
-                    /* Committer Name */ "%cN%n" +
-                    /* Committer Date */ "%ci%n" +
-                    /* Commit Message */ "%s";
-            }
-
-            // NOTE:
-            // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
-            // the filename is the next line after the commit-format defined above.
-
-            if (Settings.OrderRevisionByDate)
-            {
-                LogParam = " --date-order " + LogParam;
-            }
-            else
-            {
-                LogParam = " --topo-order " + LogParam;
-            }
-
-            string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0}",
-                LogParam,
-                formatString,
-                BranchFilter);
-
-            gitGetGraphCommand = new GitCommands();
-            gitGetGraphCommand.StreamOutput = true;
-            gitGetGraphCommand.CollectOutput = false;
-            Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
-
-            string line;
-            do
-            {
-                line = p.StandardOutput.ReadLine();
-
-                if (line != null)
+                lock (revisions)
                 {
-                    foreach (string entry in line.Split('\0'))
-                    {
-                        dataReceived(entry);
-                    }
+                    revisions.Clear();
                 }
-            } while (line != null);
-            finishRevision();
 
-            Exited(this, new EventArgs());
+                heads = GitCommands.GetHeads(true);
+
+                string formatString =
+                    /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
+                    /* Hash           */ "%H%n" +
+                    /* Parents        */ "%P%n";
+                if (!ShaOnly)
+                {
+                    formatString +=
+                        /* Tree           */ "%T%n" +
+                        /* Author Name    */ "%aN%n" +
+                        /* Author Date    */ "%ai%n" +
+                        /* Committer Name */ "%cN%n" +
+                        /* Committer Date */ "%ci%n" +
+                        /* Commit Message */ "%s";
+                }
+
+                // NOTE:
+                // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
+                // the filename is the next line after the commit-format defined above.
+
+                if (Settings.OrderRevisionByDate)
+                {
+                    LogParam = " --date-order " + LogParam;
+                }
+                else
+                {
+                    LogParam = " --topo-order " + LogParam;
+                }
+
+                string arguments = String.Format(CultureInfo.InvariantCulture,
+                    "log -z {2} --pretty=format:\"{1}\" {0}",
+                    LogParam,
+                    formatString,
+                    BranchFilter);
+
+                gitGetGraphCommand = new GitCommands();
+                gitGetGraphCommand.StreamOutput = true;
+                gitGetGraphCommand.CollectOutput = false;
+                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+
+                string line;
+                do
+                {
+                    line = p.StandardOutput.ReadLine();
+
+                    if (line != null)
+                    {
+                        foreach (string entry in line.Split('\0'))
+                        {
+                            dataReceived(entry);
+                        }
+                    }
+                } while (line != null);
+                finishRevision();
+
+                Exited(this, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         void finishRevision()

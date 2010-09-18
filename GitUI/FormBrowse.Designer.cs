@@ -72,13 +72,13 @@ namespace GitUI
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileText = new GitUI.Editor.FileViewer();
+            this.FileText = new GitUI.Editor.FileViewerMono();
             this.Diff = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DiffText = new GitUI.Editor.FileViewer();
+            this.DiffText = new GitUI.Editor.FileViewerMono();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -1470,8 +1470,8 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem changelogToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonPull;
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
-        private FileViewer FileText;
-        private FileViewer DiffText;
+        private FileViewerMono FileText;
+        private FileViewerMono DiffText;
         private System.Windows.Forms.TabPage CommitInfo;
         private CommitInfo RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;

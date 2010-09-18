@@ -9,7 +9,7 @@ using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
-    public partial class FileViewer : GitExtensionsControl
+    public partial class FileViewer : GitExtensionsControl, IFileViewer
     {
         private readonly AsyncLoader _async;
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();

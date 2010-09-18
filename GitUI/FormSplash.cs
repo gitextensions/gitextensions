@@ -43,6 +43,13 @@ namespace GitUI
             base.OnLoad(e);
 
             _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
+
+            if (Settings.RunningOnUnix())
+                _NO_TRANSLATE_osLabel.Text = "Unix";
+            if (Settings.RunningOnMacOSX())
+                _NO_TRANSLATE_osLabel.Text = "MacOSX";
+            if (Settings.RunningOnWindows())
+                _NO_TRANSLATE_osLabel.Text = "Windows";
         }
     }
 }

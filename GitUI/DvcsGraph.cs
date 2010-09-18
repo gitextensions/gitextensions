@@ -41,6 +41,16 @@ namespace GitUI
             backgroundThread.Start();
 
             InitializeComponent();
+            
+            this.ColumnHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.Font = SystemFonts.DefaultFont;
+            this.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.AlternatingRowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.RowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+            this.dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+          
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += new DataGridViewCellPaintingEventHandler(dataGrid_CellPainting);
             ColumnWidthChanged += new DataGridViewColumnEventHandler(dataGrid_ColumnWidthChanged);

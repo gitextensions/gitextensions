@@ -32,7 +32,7 @@ namespace GitUI
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.DiffText = new FileViewer();
+            this.DiffText = new FileViewerMono();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.commitInfo = new GitUI.CommitInfo();
@@ -139,7 +139,7 @@ namespace GitUI
         private FileStatusList DiffFiles;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.HelpProvider helpProvider1;
-        private FileViewer DiffText;
+        private FileViewerMono DiffText;
         private CommitInfo commitInfo;
     }
 }
