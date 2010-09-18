@@ -150,6 +150,21 @@ namespace GitCommands.Config
             FindOrCreateConfigSection(configSectionName).AddValue(keyName, value);
         }
 
+        public bool HasValue(string setting)
+        {
+            var keyIndex = setting.LastIndexOf('.');
+
+            if (keyIndex < 0 && keyIndex == setting.Length)
+                throw new Exception("Invalid setting name: " + setting);
+
+            var configSectionName = setting.Substring(0, keyIndex);
+            var keyName = setting.Substring(keyIndex + 1);
+
+            var configSection = FindConfigSection(configSectionName);
+
+            return configSection != null;
+        }
+
         public string GetValue(string setting)
         {
             var keyIndex = setting.LastIndexOf('.');

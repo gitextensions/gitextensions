@@ -2345,6 +2345,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
           <Value>Reset deel van bestand</Value>
         </TranslationItem>
+        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
+          <Value>Wijzig bestand</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2757,6 +2760,13 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editor</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

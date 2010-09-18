@@ -42,6 +42,13 @@ namespace GitUI.Editor
 
             TextEditor.ShowVRuler = false;
             IsReadOnly = true;
+            TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
+        }
+
+        void TextEditor_TextChanged(object sender, EventArgs e)
+        {
+            if (patchHighlighting)
+                AddPatchHighlighting();
         }
 
         public bool IsReadOnly
@@ -67,7 +74,7 @@ namespace GitUI.Editor
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
-        private void EnableDiffContextMenu(bool enable)
+        public void EnableDiffContextMenu(bool enable)
         {
             _currentViewIsPatch = enable;
             ignoreWhitespaceChangesToolStripMenuItem.Enabled = enable;
@@ -150,6 +157,11 @@ namespace GitUI.Editor
             ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName));
         }
 
+        public string GetText()
+        {
+            return TextEditor.Text;
+        }
+
         public void ViewCurrentChanges(string fileName, bool staged)
         {
             _async.Load(() => GitCommands.GitCommands.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
@@ -159,7 +171,6 @@ namespace GitUI.Editor
         {
             ResetForDiff();
             TextEditor.Text = text;
-            AddPatchHighlighting();
             TextEditor.Refresh();
             RestoreCurrentScrollPos();
         }
@@ -237,10 +248,11 @@ namespace GitUI.Editor
 
         private void AddPatchHighlighting()
         {
-            AddExtraPatchHighlighting();
-
             var document = TextEditor.Document;
             var markerStrategy = document.MarkerStrategy;
+            markerStrategy.RemoveAll(m => true);
+
+            AddExtraPatchHighlighting();
 
             for (var line = 0; line < document.TotalNumberOfLines; line++)
             {
@@ -407,7 +419,11 @@ namespace GitUI.Editor
 
         private static string GetFileText(string fileName)
         {
-            var path = Settings.WorkingDir + fileName;
+            string path; 
+            if (File.Exists(fileName))
+                path = fileName;
+            else
+                path = Settings.WorkingDir + fileName;
 
             return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Settings.Encoding);
         }
@@ -426,16 +442,24 @@ namespace GitUI.Editor
                 TextEditor.SetHighlighting("Default");
             else
                 EditorOptions.SetSyntax(TextEditor, fileName);
-        }
 
+            if (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
+                fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase))
+            {
+                ResetForDiff();
+            }
+        }
+        private bool patchHighlighting = false;
         private void ResetForDiff()
         {
             Reset(true, true);
             TextEditor.SetHighlighting("Patch");
+            patchHighlighting = true;
         }
 
         private void Reset(bool diff, bool text)
         {
+            patchHighlighting = diff;
             EnableDiffContextMenu(diff);
             ClearImage();
             PictureBox.Visible = !text;
