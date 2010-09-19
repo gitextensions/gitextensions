@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.fileViewer = new GitUI.Editor.FileViewerMono();
+            this.fileViewer = new GitUI.Editor.FileViewer();
             this.SuspendLayout();
             // 
             // fileViewer
@@ -62,6 +62,6 @@
 
         #endregion
 
-        private GitUI.Editor.FileViewerMono fileViewer;
+        private GitUI.Editor.FileViewer fileViewer;
     }
 }

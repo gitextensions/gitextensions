@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._NO_TRANSLATE_MailMapText = new ICSharpCode.TextEditor.TextEditorControl();
+            this._NO_TRANSLATE_MailMapText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
             this.Save = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -108,7 +108,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl _NO_TRANSLATE_MailMapText;
+        private GitUI.Editor.FileViewer _NO_TRANSLATE_MailMapText;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label label1;
     }

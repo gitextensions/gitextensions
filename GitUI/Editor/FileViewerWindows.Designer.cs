@@ -1,6 +1,6 @@
 ﻿namespace GitUI.Editor
 {
-    partial class FileViewerMono
+    partial class FileViewerWindows
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,33 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.TextEditor = new System.Windows.Forms.RichTextBox();
+            this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.SuspendLayout();
             // 
             // TextEditor
             // 
             this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextEditor.IsReadOnly = false;
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
             this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(660, 512);
-            this.TextEditor.TabIndex = 0;
-            this.TextEditor.Text = "";
+            this.TextEditor.Size = new System.Drawing.Size(757, 553);
+            this.TextEditor.TabIndex = 3;
             // 
-            // FileViewerMono
+            // FileViewerWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TextEditor);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "FileViewerMono";
-            this.Size = new System.Drawing.Size(660, 512);
+            this.Name = "FileViewerWindows";
+            this.Size = new System.Drawing.Size(757, 553);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox TextEditor;
+        private ICSharpCode.TextEditor.TextEditorControl TextEditor;
     }
 }

@@ -30,8 +30,8 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.BlameCommitter = new ICSharpCode.TextEditor.TextEditorControl();
-            this.BlameFile = new ICSharpCode.TextEditor.TextEditorControl();
+            this.BlameCommitter = new GitUI.Editor.FileViewer();
+            this.BlameFile = new GitUI.Editor.FileViewer();
             this.commitInfo = new GitUI.CommitInfo();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -126,7 +126,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private CommitInfo commitInfo;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private ICSharpCode.TextEditor.TextEditorControl BlameCommitter;
-        private ICSharpCode.TextEditor.TextEditorControl BlameFile;
+        private GitUI.Editor.FileViewer BlameCommitter;
+        private GitUI.Editor.FileViewer BlameFile;
     }
 }

@@ -37,9 +37,9 @@ namespace GitUI
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
-            this.View = new GitUI.Editor.FileViewerMono();
+            this.View = new GitUI.Editor.FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
-            this.Diff = new GitUI.Editor.FileViewerMono();
+            this.Diff = new GitUI.Editor.FileViewer();
             this.Blame = new System.Windows.Forms.TabPage();
             this.eventLog1 = new System.Diagnostics.EventLog();
             this.blameControl1 = new GitUI.Blame.BlameControl();
@@ -218,8 +218,8 @@ namespace GitUI
         private System.Windows.Forms.TabPage DiffTab;
         private System.Windows.Forms.TabPage Blame;
         private System.Diagnostics.EventLog eventLog1;
-        private FileViewerMono View;
-        private FileViewerMono Diff;
+        private FileViewer View;
+        private FileViewer Diff;
         private RevisionGrid FileChanges;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;

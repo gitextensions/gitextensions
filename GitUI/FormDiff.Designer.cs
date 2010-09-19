@@ -34,7 +34,7 @@ namespace GitUI
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.diffViewer = new FileViewerMono();
+            this.diffViewer = new FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -144,6 +144,6 @@ namespace GitUI
         private System.Windows.Forms.SplitContainer splitContainer3;
         private FileStatusList DiffFiles;
         private RevisionGrid RevisionGrid;
-        private FileViewerMono diffViewer;
+        private FileViewer diffViewer;
     }
 }
