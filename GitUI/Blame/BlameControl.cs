@@ -10,7 +10,6 @@ namespace GitUI.Blame
 {
     public partial class BlameControl : UserControl
     {
-        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private List<GitBlame> _blameList;
         private string _lastRevision;
 
@@ -18,28 +17,32 @@ namespace GitUI.Blame
         {
             InitializeComponent();
 
-            BlameFile.LineViewerStyle = LineViewerStyle.FullRow;
-
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Width = 0;
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Visible = false;
+            BlameCommitter.IsReadOnly = true;
+            //BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.LineViewerStyle = LineViewerStyle.FullRow;
-            BlameCommitter.Enabled = false;
-            BlameCommitter.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
-
+            BlameCommitter.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
             BlameFile.IsReadOnly = true;
-            BlameFile.ActiveTextAreaControl.VScrollBar.ValueChanged += VScrollBarValueChanged;
+
+            /*
+            BlameFile.LineViewerStyle = LineViewerStyle.FullRow;
+             * 
             BlameFile.KeyDown += BlameFileKeyUp;
             BlameFile.ActiveTextAreaControl.TextArea.Click += BlameFileClick;
             BlameFile.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             BlameFile.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
             BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
-            BlameFile.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
+            BlameFile.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;*/
+        }
+
+        void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
+        {
+            SyncBlameViews();
         }
 
         private void TextAreaMouseDown(object sender, MouseEventArgs e)
         {
-            if (_blameList == null)
+            /*
+             * if (_blameList == null)
                 return;
 
             if (BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= _blameList.Count)
@@ -51,12 +54,12 @@ namespace GitUI.Blame
                 return;
 
             _lastRevision = newRevision;
-            commitInfo.SetRevision(_lastRevision);
+            commitInfo.SetRevision(_lastRevision);*/
         }
 
         public void LoadBlame(string guid, string fileName)
         {
-            var scrollpos = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
+            var scrollpos = BlameFile.ScrollPos;
 
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
@@ -69,32 +72,11 @@ namespace GitUI.Blame
                 blameFile.AppendLine(blame.Text);
             }
 
-            EditorOptions.SetSyntax(BlameFile, fileName);
+            BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
+            BlameFile.ViewText(fileName, blameFile.ToString());
+            BlameFile.ScrollPos = scrollpos;
 
-            BlameCommitter.Text = blameCommitter.ToString();
-            BlameFile.Text = blameFile.ToString();
-            BlameCommitter.Refresh();
-            BlameFile.Refresh();
-
-            BlameFile.ActiveTextAreaControl.VScrollBar.Value =
-                BlameFile.ActiveTextAreaControl.VScrollBar.Maximum >= scrollpos
-                    ? scrollpos
-                    : BlameFile.ActiveTextAreaControl.VScrollBar.Maximum;
-            BlameFile.ActiveControl = BlameFile.ActiveTextAreaControl;
             TextAreaMouseDown(this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
-        }
-
-        private void BlameFileKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
-                _findAndReplaceForm.ShowFor(BlameFile, false);
-            SyncBlameViews();
-        }
-
-
-        private void VScrollBarValueChanged(object sender, EventArgs e)
-        {
-            SyncBlameViews();
         }
 
         private void BlameFileClick(object sender, EventArgs e)
@@ -104,17 +86,19 @@ namespace GitUI.Blame
 
         private void SyncBlameViews()
         {
-            BlameCommitter.ActiveTextAreaControl.VScrollBar.Value = BlameFile.ActiveTextAreaControl.VScrollBar.Value;
+            BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
+            /*
             if (_blameList == null || _blameList.Count < BlameFile.ActiveTextAreaControl.TextArea.Caret.Line)
                 return;
 
             var frm = new FormDiffSmall();
             frm.SetRevision(_blameList[BlameFile.ActiveTextAreaControl.TextArea.Caret.Line].CommitGuid);
             frm.ShowDialog();
+             */
         }
     }
 }

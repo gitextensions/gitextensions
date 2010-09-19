@@ -1,26 +1,34 @@
 ﻿using System;
+using System.Windows.Forms;
+using System.Drawing;
 namespace GitUI.Editor
 {
-    interface IFileViewer
+    public interface IFileViewer
     {
-        void EnableDiffContextMenu(bool enable);
-        event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
-        void Find();
-        string GetExtraDiffArguments();
+        event MouseEventHandler MouseMove;
+        event EventHandler MouseLeave;
+        event EventHandler TextChanged;
+        event EventHandler ScrollPosChanged;
+        event KeyEventHandler KeyDown;
+
+        void EnableScrollBars(bool enable);
+
         string GetText();
-        bool IgnoreWhitespaceChanges { get; set; }
-        bool IsReadOnly { get; set; }
-        int NumberOfVisibleLines { get; set; }
-        void SaveCurrentScrollPos();
+        void SetText(string text);
+        void SetHighlighting(string syntax);
+        string GetSelectedText();
+        void AddPatchHighlighting();
         int ScrollPos { get; set; }
-        bool ShowEntireFile { get; set; }
-        bool TreatAllFilesAsText { get; set; }
-        void ViewCurrentChanges(string fileName, bool staged);
-        void ViewFile(string fileName);
-        void ViewGitItem(string fileName, string guid);
-        void ViewGitItemRevision(string fileName, string guid);
-        void ViewPatch(Func<string> loadPatchText);
-        void ViewPatch(string text);
-        void ViewText(string fileName, string text);
+
+        bool ShowLineNumbers { get; set; }
+        bool ShowEOLMarkers { get; set; }
+        bool ShowSpaces { get; set; }
+        bool ShowTabs { get; set; }
+        bool IsReadOnly { get; set; }
+        bool Visible { get; set; }
+        
+        int FirstVisibleLine { get; set; }
+        string GetLineText(int line);
+        int TotalNumberOfLines { get; }
     }
 }
