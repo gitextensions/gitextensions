@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._NO_TRANSLATE_GitIgnoreEdit = new ICSharpCode.TextEditor.TextEditorControl();
+            this._NO_TRANSLATE_GitIgnoreEdit = new GitUI.Editor.FileViewer();
             this.AddDefault = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -123,7 +123,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ICSharpCode.TextEditor.TextEditorControl _NO_TRANSLATE_GitIgnoreEdit;
+        private GitUI.Editor.FileViewer _NO_TRANSLATE_GitIgnoreEdit;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button AddDefault;

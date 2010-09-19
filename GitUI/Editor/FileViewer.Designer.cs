@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileViewer));
-            this.PictureBox = new System.Windows.Forms.PictureBox();
-            this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.ContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,35 +52,11 @@
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
+            this.PictureBox = new System.Windows.Forms.PictureBox();
             this.ContextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // PictureBox
-            // 
-            this.PictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PictureBox.Location = new System.Drawing.Point(0, 0);
-            this.PictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PictureBox.Name = "PictureBox";
-            this.PictureBox.Size = new System.Drawing.Size(757, 553);
-            this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PictureBox.TabIndex = 2;
-            this.PictureBox.TabStop = false;
-            this.PictureBox.Visible = false;
-            // 
-            // TextEditor
-            // 
-            this.TextEditor.ContextMenuStrip = this.ContextMenu;
-            this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextEditor.IsReadOnly = false;
-            this.TextEditor.Location = new System.Drawing.Point(0, 0);
-            this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(757, 553);
-            this.TextEditor.TabIndex = 3;
             // 
             // ContextMenu
             // 
@@ -191,9 +165,9 @@
             this.showNonPrintChars,
             this.ignoreWhiteSpaces});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(524, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(555, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(205, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(174, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
             // 
@@ -277,20 +251,33 @@
             this.ignoreWhiteSpaces.ToolTipText = "Ignore whitespaces";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
             // 
+            // PictureBox
+            // 
+            this.PictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.PictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PictureBox.Location = new System.Drawing.Point(0, 0);
+            this.PictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.PictureBox.Name = "PictureBox";
+            this.PictureBox.Size = new System.Drawing.Size(757, 553);
+            this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PictureBox.TabIndex = 7;
+            this.PictureBox.TabStop = false;
+            this.PictureBox.Visible = false;
+            // 
             // FileViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.fileviewerToolbar);
-            this.Controls.Add(this.TextEditor);
             this.Controls.Add(this.PictureBox);
+            this.Controls.Add(this.fileviewerToolbar);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileViewer";
             this.Size = new System.Drawing.Size(757, 553);
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
             this.ContextMenu.ResumeLayout(false);
             this.fileviewerToolbar.ResumeLayout(false);
             this.fileviewerToolbar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -298,8 +285,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox PictureBox;
-        private ICSharpCode.TextEditor.TextEditorControl TextEditor;
         private new System.Windows.Forms.ContextMenuStrip ContextMenu;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -322,5 +307,6 @@
         private System.Windows.Forms.ToolStripButton showNonPrintChars;
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
+        private System.Windows.Forms.PictureBox PictureBox;
     }
 }
