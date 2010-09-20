@@ -730,6 +730,7 @@ namespace GitUI
 
         public static bool SolveKDiff()
         {
+
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
             string mergeTool = gitCommands.GetGlobalSetting("merge.tool");
             if (string.IsNullOrEmpty(mergeTool))
@@ -764,6 +765,9 @@ namespace GitUI
 
         public static bool SolveKDiffPath(GitCommands.GitCommands gitCommands)
         {
+            if (!Settings.RunningOnWindows())
+                return false;
+
             string kdiff3path = gitCommands.GetGlobalSetting("mergetool.kdiff3.path");
             if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
             {
@@ -789,6 +793,9 @@ namespace GitUI
 
         public static bool SolveKDiffTool2Path(GitCommands.GitCommands gitCommands)
         {
+            if (!Settings.RunningOnWindows())
+                return false;
+
             string kdiff3path = gitCommands.GetGlobalSetting("difftool.kdiff3.path");
             if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
             {
@@ -985,6 +992,12 @@ namespace GitUI
 
         public static bool SolveLinuxToolsDir()
         {
+            if (!Settings.RunningOnWindows())
+            {
+                GitCommands.Settings.GitBinDir = "";
+                return true;
+            }
+
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
             {
                 GitCommands.Settings.GitBinDir = "";
@@ -1372,6 +1385,9 @@ namespace GitUI
 
         private void ResolveDiffToolPath()
         {
+            if (!Settings.RunningOnWindows())
+                return;
+
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -1560,6 +1576,9 @@ namespace GitUI
 
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
         {
+            if (!Settings.RunningOnWindows())
+                return;
+
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -1801,6 +1820,9 @@ namespace GitUI
 
         private bool CheckGitExtensionRegistrySettings()
         {
+            if (!Settings.RunningOnWindows())
+                return true;
+
             ShellExtensionsRegistered.Visible = true;
             if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
@@ -1818,6 +1840,9 @@ namespace GitUI
 
         private bool CheckGitExtensionsInstall()
         {
+            if (!Settings.RunningOnWindows())
+                return true;
+
             GitExtensionsInstall.Visible = true;
             if (string.IsNullOrEmpty(GitCommands.Settings.GetInstallDir()))
             {

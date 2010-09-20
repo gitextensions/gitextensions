@@ -23,9 +23,12 @@ namespace GitExtensions
             formSplash.Show();
             formSplash.SetAction("Load settings");
             Settings.LoadSettings();
-            //Quick HOME check:
-            formSplash.SetAction("Check home path");
-            FormFixHome.CheckHomePath();
+            if (Settings.RunningOnWindows())
+            {
+                //Quick HOME check:
+                formSplash.SetAction("Check home path");
+                FormFixHome.CheckHomePath();
+            }
             //Register plugins
             formSplash.SetAction("Load plugins");
             PluginLoader.Load();
