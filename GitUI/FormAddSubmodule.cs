@@ -67,13 +67,13 @@ namespace GitUI
         private void DirectoryTextUpdate(object sender, EventArgs e)
         {
             var path = Directory.Text;
-            path = path.TrimEnd(new[] {'\\', '/'});
+            path = path.TrimEnd(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong });
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
-            if (path.Contains("\\") || path.Contains("/"))
-                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] {'\\', '/'}) + 1);
+            if (path.Contains(Settings.PathSeperator.ToString()) || path.Contains(Settings.PathSeperatorWrong.ToString()))
+                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }) + 1);
         }
     }
 }

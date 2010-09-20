@@ -28,8 +28,8 @@ namespace GitUI
             try
             {
                 var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith("\\") && !dirTo.EndsWith("/"))
-                    dirTo += "\\";
+                if (!dirTo.EndsWith(Settings.PathSeperator.ToString()) && !dirTo.EndsWith(Settings.PathSeperatorWrong.ToString()))
+                    dirTo += Settings.PathSeperator.ToString();
 
                 dirTo += _NO_TRANSLATE_NewDirectory.Text;
 

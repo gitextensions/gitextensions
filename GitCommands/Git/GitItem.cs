@@ -31,7 +31,7 @@ namespace GitCommands
 
                     foreach (GitItem item in subItems)
                     {
-                        item.FileName = FileName + "\\" + item.FileName;
+                        item.FileName = FileName + Settings.PathSeperator.ToString() + item.FileName;
                     }
                 }
 

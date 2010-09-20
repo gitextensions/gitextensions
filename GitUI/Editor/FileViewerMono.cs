@@ -20,6 +20,7 @@ namespace GitUI.Editor
 
             TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
             TextEditor.VScroll += new EventHandler(TextEditor_VScroll);
+            TextEditor.WordWrap = false;
         }
 
         void TextEditor_VScroll(object sender, EventArgs e)

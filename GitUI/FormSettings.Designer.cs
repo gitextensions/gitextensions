@@ -522,12 +522,13 @@ namespace GitUI
             this.DiffTool2.FlatAppearance.BorderSize = 0;
             this.DiffTool2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool2.Location = new System.Drawing.Point(9, 174);
+            this.DiffTool2.Location = new System.Drawing.Point(9, 116);
             this.DiffTool2.Name = "DiffTool2";
             this.DiffTool2.Size = new System.Drawing.Size(693, 23);
             this.DiffTool2.TabIndex = 11;
             this.DiffTool2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool2.UseVisualStyleBackColor = false;
+            this.DiffTool2.Visible = false;
             this.DiffTool2.Click += new System.EventHandler(this.DiffTool2_Click);
             // 
             // SshConfig
@@ -543,6 +544,7 @@ namespace GitUI
             this.SshConfig.TabIndex = 10;
             this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshConfig.UseVisualStyleBackColor = false;
+            this.SshConfig.Visible = false;
             this.SshConfig.Click += new System.EventHandler(this.SshConfig_Click);
             // 
             // GitBinFound
@@ -552,12 +554,13 @@ namespace GitUI
             this.GitBinFound.FlatAppearance.BorderSize = 0;
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitBinFound.Location = new System.Drawing.Point(9, 58);
+            this.GitBinFound.Location = new System.Drawing.Point(9, 174);
             this.GitBinFound.Name = "GitBinFound";
             this.GitBinFound.Size = new System.Drawing.Size(693, 23);
             this.GitBinFound.TabIndex = 9;
             this.GitBinFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitBinFound.UseVisualStyleBackColor = false;
+            this.GitBinFound.Visible = false;
             this.GitBinFound.Click += new System.EventHandler(this.GitBinFound_Click);
             // 
             // Rescan
@@ -604,6 +607,7 @@ namespace GitUI
             this.GitFound.TabIndex = 5;
             this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitFound.UseVisualStyleBackColor = false;
+            this.GitFound.Visible = false;
             this.GitFound.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // DiffTool
@@ -613,12 +617,13 @@ namespace GitUI
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(9, 145);
+            this.DiffTool.Location = new System.Drawing.Point(9, 87);
             this.DiffTool.Name = "DiffTool";
             this.DiffTool.Size = new System.Drawing.Size(693, 23);
             this.DiffTool.TabIndex = 4;
             this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool.UseVisualStyleBackColor = false;
+            this.DiffTool.Visible = false;
             this.DiffTool.Click += new System.EventHandler(this.DiffTool_Click);
             // 
             // UserNameSet
@@ -628,12 +633,13 @@ namespace GitUI
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UserNameSet.Location = new System.Drawing.Point(9, 116);
+            this.UserNameSet.Location = new System.Drawing.Point(9, 58);
             this.UserNameSet.Name = "UserNameSet";
             this.UserNameSet.Size = new System.Drawing.Size(693, 23);
             this.UserNameSet.TabIndex = 3;
             this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.UserNameSet.UseVisualStyleBackColor = false;
+            this.UserNameSet.Visible = false;
             this.UserNameSet.Click += new System.EventHandler(this.UserNameSet_Click);
             // 
             // ShellExtensionsRegistered
@@ -643,12 +649,13 @@ namespace GitUI
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 87);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 145);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
             this.ShellExtensionsRegistered.Size = new System.Drawing.Size(693, 23);
             this.ShellExtensionsRegistered.TabIndex = 2;
             this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ShellExtensionsRegistered.UseVisualStyleBackColor = false;
+            this.ShellExtensionsRegistered.Visible = false;
             this.ShellExtensionsRegistered.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
             // GitExtensionsInstall
@@ -664,6 +671,7 @@ namespace GitUI
             this.GitExtensionsInstall.TabIndex = 1;
             this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitExtensionsInstall.UseVisualStyleBackColor = false;
+            this.GitExtensionsInstall.Visible = false;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
             // TabPageGit
