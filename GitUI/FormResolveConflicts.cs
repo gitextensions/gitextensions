@@ -342,10 +342,10 @@ namespace GitUI
 
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-            if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
+            if (fileName.Contains(Settings.PathSeperator.ToString()) && fileName.LastIndexOf(Settings.PathSeperator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperator) + 1);
+            if (fileName.Contains(Settings.PathSeperatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeperatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperatorWrong) + 1);
             return fileName;
         }
 

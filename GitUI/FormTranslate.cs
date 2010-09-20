@@ -143,6 +143,7 @@ namespace GitUI
 
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
+                    if (!assembly.FullName.StartsWith("ICSharpCode", StringComparison.OrdinalIgnoreCase))
                     foreach (Type type in assembly.GetTypes())
                     {
                         if (typeof(GitExtensionsControl).IsAssignableFrom(type) ||

@@ -11,7 +11,7 @@ namespace GitCommands
 {
     public static class Settings
     {
-        public static string GitExtensionsVersionString = "2.03";
+        public static string GitExtensionsVersionString = "2.03 MONO TEST VERSION";
         public static int GitExtensionsVersionInt = 203;
         private static string _gitBinDir = "";
         private static string _workingdir;
@@ -66,7 +66,7 @@ namespace GitCommands
             CommitInfoShowContainedInBranches = true;
             CommitInfoShowContainedInTags = true;
             RevisionGridQuickSearchTimeout = 700;
-            ApplicationDataPath = Application.UserAppDataPath + "\\";
+            ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeperator.ToString();
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
