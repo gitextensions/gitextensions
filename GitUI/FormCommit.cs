@@ -598,7 +598,7 @@ namespace GitUI
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
 
-            var path = Settings.WorkingDirGitDir() + "\\COMMITMESSAGE";
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeperator.ToString() + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
