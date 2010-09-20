@@ -601,10 +601,10 @@ namespace GitUI
                 if (dataGridColumnGraph.Visible)
                 {
                     int laneCount = 2;
-                    if (graphData != null && FirstDisplayedCell != null)
+                    if (graphData != null/* && FirstDisplayedCell != null*/)
                     {
                         int width = 1;
-                        int start = FirstDisplayedCell.RowIndex;
+                        int start = this.VerticalScrollBar.Value / this.rowHeight;
                         int stop = start + DisplayedRowCount(true);
                         for (int i = start; i < stop && graphData[i] != null; i++)
                         {
