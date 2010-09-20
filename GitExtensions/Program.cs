@@ -60,8 +60,8 @@ namespace GitExtensions
 
                 if (string.IsNullOrEmpty(Settings.WorkingDir))
                 {
-                    if (args[2].Contains("\\"))
-                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf('\\'));
+                    if (args[2].Contains(Settings.PathSeperator.ToString()))
+                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeperator));
                 }
 
                 if (Settings.ValidWorkingDir())

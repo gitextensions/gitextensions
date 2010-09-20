@@ -1137,7 +1137,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains("\\") || path.Contains("/");
+            return path.Contains(Settings.PathSeperator.ToString()) || path.Contains(Settings.PathSeperatorWrong.ToString());
         }
 
         public static string FetchCmd(string remote, string branch)

@@ -45,9 +45,26 @@ namespace ResourceManager.Translation
             }
         }
 
+        public static bool RunningOnWindows()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static string GetTranslationDir()
         {
-            return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("\\")) + @"\Translation";
+            if (RunningOnWindows())
+                return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("\\")) + @"\Translation";
+            else
+                return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("/")) + @"/Translation";
         }
 
         public static string[] GetAllTranslations()
