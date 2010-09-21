@@ -458,7 +458,6 @@ namespace GitUI
                                 SendOrPostCallback refreshMethod = new SendOrPostCallback(delegate(object state)
                                 {
                                     updateColumnWidth();
-                                    Refresh();
                                 });
                                 syncContext.Post(refreshMethod, null);
 
@@ -608,13 +607,18 @@ namespace GitUI
             }
         }
 
+        //Color of non-relative branches.
+        private Color nonRelativeColor = Color.LightGray;
+
         private List<Color> getJunctionColors(IEnumerable<Junction> aJunction)
         {
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
                 if (GitCommands.Settings.MulticolorBranches)
+                {
                     colors.Add(getJunctionColor(j));
+                }
                 else
                     colors.Add(GitCommands.Settings.GraphColor);
             }
@@ -645,6 +649,11 @@ namespace GitUI
                 Color.Gold,
                 Color.Orange
             };
+
+            //Draw non-relative branches gray
+            if (!aJunction.IsRelative && GitCommands.Settings.RevisionGraphDrawNonRelativesGray)
+                return nonRelativeColor;
+
             // This is the order to grab the colors in.
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
 
@@ -699,6 +708,12 @@ namespace GitUI
 
             junctionColors[aJunction] = colorIndex;
             return possibleColors[colorIndex];
+        }
+
+        public override void Refresh()
+        {
+            clearDrawCache();
+            base.Refresh();
         }
 
         private void clearDrawCache()
@@ -893,17 +908,20 @@ namespace GitUI
                     curColors = getJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
-                    Brush brushLine;
+                    Brush brushLineColor;
+                    bool drawBorder = GitCommands.Settings.BranchBorders; //hide border for "non-relatives"
                     if (curColors.Count == 1 || !GitCommands.Settings.StripedBranchChange)
                     {
-                        brushLine = new SolidBrush(curColors[0]);
+                        brushLineColor = new SolidBrush(curColors[0]);
+                        if (curColors[0] == nonRelativeColor) drawBorder = false;
                     }
                     else
                     {
-                        brushLine = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);
+                        brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);
+                        if (curColors[0] == nonRelativeColor && curColors[1] == nonRelativeColor) drawBorder = false;
                     }
 
-                    for (int i = GitCommands.Settings.BranchBorders ? 0 : 2; i < 3; i++)
+                    for (int i = drawBorder ? 0 : 2; i < 3; i++)
                     {
                         Pen penLine;
                         if (i == 0)
@@ -916,7 +934,7 @@ namespace GitUI
                         }
                         else
                         {
-                            penLine = new Pen(brushLine, LANE_LINE_WIDTH);
+                            penLine = new Pen(brushLineColor, LANE_LINE_WIDTH);
                         }
 
                         if (laneInfo.ConnectLane == lane)
@@ -945,57 +963,66 @@ namespace GitUI
 
             // Reset the clip region
             wa.Clip = oldClip;
+            {
+                // Draw node
+                Rectangle nodeRect = new Rectangle
+                    (
+                    wa.RenderingOrigin.X + (LANE_WIDTH - NODE_DIMENSION) / 2 + row.NodeLane * LANE_WIDTH,
+                    wa.RenderingOrigin.Y + (rowHeight - NODE_DIMENSION) / 2,
+                    NODE_DIMENSION,
+                    NODE_DIMENSION
+                    );
 
-            // Draw node
-            Rectangle nodeRect = new Rectangle
-                (
-                wa.RenderingOrigin.X + (LANE_WIDTH - NODE_DIMENSION) / 2 + row.NodeLane * LANE_WIDTH,
-                wa.RenderingOrigin.Y + (rowHeight - NODE_DIMENSION) / 2,
-                NODE_DIMENSION,
-                NODE_DIMENSION
-                );
+                Brush nodeBrush;
+                bool drawBorder = GitCommands.Settings.BranchBorders;
+                List<Color> nodeColors = getJunctionColors(row.Node.Ancestors);
+                if (nodeColors.Count == 1)
+                {
+                    nodeBrush = new SolidBrush(nodeColors[0]);
+                    if (nodeColors[0] == nonRelativeColor) drawBorder = false;
+                }
+                else
+                {
+                    nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1], LinearGradientMode.Horizontal);
+                    if (nodeColors[0] == nonRelativeColor && nodeColors[1] == Color.LightGray) drawBorder = false;
+                }
 
-            Brush nodeBrush;
-            List<Color> nodeColors = getJunctionColors(row.Node.Ancestors);
-            if (nodeColors.Count == 1)
-            {
-                nodeBrush = new SolidBrush(nodeColors[0]);
-            }
-            else
-            {
-                nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1], LinearGradientMode.Horizontal);
-            }
+                if (filterMode == FilterType.Highlight && row.Node.IsFiltered)
+                {
+                    Rectangle highlightRect = nodeRect;
+                    highlightRect.Inflate(2, 3);
+                    wa.FillRectangle(Brushes.Yellow, highlightRect);
+                    wa.DrawRectangle(new Pen(Brushes.Black), highlightRect);
+                }
 
-            if (filterMode == FilterType.Highlight && row.Node.IsFiltered)
-            {
-                Rectangle highlightRect = nodeRect;
-                highlightRect.Inflate(2, 3);
-                wa.FillRectangle(Brushes.Yellow, highlightRect);
-                wa.DrawRectangle(new Pen(Brushes.Black), highlightRect);
+                if (row.Node.Data == null)
+                {
+                    wa.FillEllipse(Brushes.White, nodeRect);
+                    wa.DrawEllipse(new Pen(Color.Red, 2), nodeRect);
+                }
+                else if (row.Node.IsActive)
+                {
+                    wa.FillRectangle(nodeBrush, nodeRect);
+                    nodeRect.Inflate(1, 1);
+                    wa.DrawRectangle(new Pen(Color.Black, 3), nodeRect);
+                }
+                else if (row.Node.IsSpecial)
+                {
+                    wa.FillRectangle(nodeBrush, nodeRect);
+                    if (drawBorder)
+                    {
+                        wa.DrawRectangle(new Pen(Color.Black, 1), nodeRect);
+                    }
+                }
+                else
+                {
+                    wa.FillEllipse(nodeBrush, nodeRect);
+                    if (drawBorder)
+                    {
+                        wa.DrawEllipse(new Pen(Color.Black, 1), nodeRect);
+                    }
+                }
             }
-
-            if (row.Node.Data == null)
-            {
-                wa.FillEllipse(Brushes.White, nodeRect);
-                wa.DrawEllipse(new Pen(Color.Red, 2), nodeRect);
-            }
-            else if (row.Node.IsActive)
-            {
-                wa.FillRectangle(nodeBrush, nodeRect);
-                nodeRect.Inflate(1, 1);
-                wa.DrawRectangle(new Pen(Color.Black, 3), nodeRect);
-            }
-            else if (row.Node.IsSpecial)
-            {
-                wa.FillRectangle(nodeBrush, nodeRect);
-                wa.DrawRectangle(new Pen(Color.Black, 1), nodeRect);
-            }
-            else
-            {
-                wa.FillEllipse(nodeBrush, nodeRect);
-                wa.DrawEllipse(new Pen(Color.Black, 1), nodeRect);
-            }
-
             return true;
         }
 
@@ -1074,6 +1101,7 @@ namespace GitUI
             uint DebugId;
 
             public List<Node> Bunch = new List<Node>();
+            public bool IsRelative = false;
 
             public enum State
             {
@@ -1289,7 +1317,8 @@ namespace GitUI
                 Node node = null;
                 if (!GetNode(aId, out node) && (aParentIds == null || aParentIds.Length == 0))
                 {
-                    Junctions.Add(new Junction(node, node));
+                    Junction newJunction = new Junction(node, node);
+                    Junctions.Add(newJunction);
                 }
                 nodeCount++;
                 node.Data = aData;
@@ -1345,10 +1374,25 @@ namespace GitUI
                         Junctions.Add(junction);
                     }
                 }
+                
+                bool isRelative = (aType & DataType.Active) == DataType.Active;
+                if (!isRelative)
+                {
+                    foreach (Junction d in node.Descendants)
+                    {
+                        if (d.IsRelative)
+                        {
+                            isRelative = true;
+                            break;
+                        }
+                    }
+                }
 
                 bool isRebuild = false;
                 foreach (Junction d in node.Ancestors)
                 {
+                    d.IsRelative = isRelative || d.IsRelative;
+
                     // Uh, oh, we've already processed this lane. We'll have to update some rows.
                     int idx = d.Bunch.IndexOf(node);
                     if (idx < d.Bunch.Count && d.Bunch[idx + 1].InLane != int.MaxValue)
