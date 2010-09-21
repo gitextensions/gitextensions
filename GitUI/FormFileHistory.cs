@@ -43,7 +43,11 @@ namespace GitUI
             if (Settings.FollowRenamesInFileHistory)
                 FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
             else
-                FileChanges.Filter = " -- \"" + fileName + "\"";
+            {
+                // --parents doesn't work with --follow enabled, but needed to graph a filtered log
+                FileChanges.Filter = " --parents -- \"" + fileName + "\"";
+                FileChanges.AllowGraphWithFilter = true;
+            }
         }
 
 
