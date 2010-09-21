@@ -56,6 +56,7 @@ namespace GitUI
             BranchFilter = String.Empty;
             SetShowBranches();
             Filter = "";
+            AllowGraphWithFilter = false;
             _quickSearchString = "";
             quickSearchTimer.Tick += QuickSearchTimerTick;
 
@@ -80,6 +81,7 @@ namespace GitUI
         public Font NormalFont { get; set; }
         public string CurrentCheckout { get; set; }
         public int LastRow { get; set; }
+        public bool AllowGraphWithFilter { get; set; }
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
@@ -352,7 +354,8 @@ namespace GitUI
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
                 //Hide graph column when there it is disabled OR when a filter is active
-                if (!Settings.ShowRevisionGraph || !string.IsNullOrEmpty(Filter))
+                //allowing for special case when history of a single file is being displayed
+                if (!Settings.ShowRevisionGraph || (!string.IsNullOrEmpty(Filter) && !AllowGraphWithFilter))
                 {
                     Revisions.ShowHideRevisionGraph(false);
                 }
