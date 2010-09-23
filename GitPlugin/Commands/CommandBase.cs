@@ -4,6 +4,7 @@ using EnvDTE;
 using EnvDTE80;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Text;
 
 namespace GitPlugin.Commands
 {
@@ -61,6 +62,8 @@ namespace GitPlugin.Commands
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = cmd;
