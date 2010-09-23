@@ -48,6 +48,7 @@ namespace GitUI
             }
 
             Warnings.DataSource = warningList;
+            Cursor.Current = Cursors.Default;
         }
 
         private static string ExtendWarning(string warning)
@@ -94,7 +95,6 @@ namespace GitUI
 
         private void WarningsDoubleClick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
             var sha1 = FindSha1(Warnings.SelectedValue as string);
             if (!string.IsNullOrEmpty(sha1))
             {

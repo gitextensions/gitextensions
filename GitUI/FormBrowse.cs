@@ -94,6 +94,7 @@ namespace GitUI
             _indexWatcher.Reset();
 
             LoadPluginsInPluginMenu();
+            Cursor.Current = Cursors.Default;
         }
 
         private void LoadPluginsInPluginMenu()
@@ -217,6 +218,7 @@ namespace GitUI
                     _warning = null;
                 }
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void RebaseClick(object sender, EventArgs e)
@@ -881,6 +883,7 @@ namespace GitUI
 
             if (GitUICommands.Instance.StartUpdateSubmodulesRecursiveDialog())
                 Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void InitializeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
@@ -897,6 +900,7 @@ namespace GitUI
             process.ShowDialog();
             InitSubmodulesRecursive();
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private static void InitSubmodulesRecursive()
@@ -938,6 +942,7 @@ namespace GitUI
             process.ShowDialog();
             SyncSubmodulesRecursive();
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private static void SyncSubmodulesRecursive()
@@ -1013,6 +1018,7 @@ namespace GitUI
 
             if (openSubmoduleToolStripMenuItem.DropDownItems.Count == 0)
                 openSubmoduleToolStripMenuItem.DropDownItems.Add("No submodules");
+            Cursor.Current = Cursors.Default;
         }
 
         private void RemoveSubmoduleButtons()

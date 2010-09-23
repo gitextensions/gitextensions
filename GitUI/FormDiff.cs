@@ -74,6 +74,7 @@ namespace GitUI
             }
 
             diffViewer.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
+            Cursor.Current = Cursors.Default;
         }
 
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
@@ -102,6 +103,7 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)

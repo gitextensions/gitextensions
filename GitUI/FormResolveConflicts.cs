@@ -40,6 +40,7 @@ namespace GitUI
             Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
             GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         public bool ThereWhereMergeConflicts { get; set; }
@@ -93,6 +94,7 @@ namespace GitUI
             {
                 Close();
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -237,11 +239,12 @@ namespace GitUI
                 File.Delete(filenames[1]);
             if (File.Exists(filenames[2]))
                 File.Delete(filenames[2]);
+            Cursor.Current = Cursors.Default;
         }
 
         private void InitMergetool()
         {
-            Cursor.Current = Cursors.WaitCursor;
+            
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             mergetool = GitCommands.GitCommands.GetSetting("merge.tool");
@@ -253,7 +256,8 @@ namespace GitUI
                 MessageBox.Show(noMergeTool.Text);
                 return;
             }
-
+            Cursor.Current = Cursors.WaitCursor;
+            
             mergetoolCmd = GitCommands.GitCommands.GetSetting("mergetool." + mergetool + ".cmd");
             if (string.IsNullOrEmpty(mergetoolCmd))
                 mergetoolCmd = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".cmd");
@@ -267,12 +271,14 @@ namespace GitUI
 
             mergetoolPath = mergetoolCmd.Substring(0, mergetoolCmd.IndexOf(".exe") + 5).Trim(new char[] { '\"', ' ' });
             mergetoolCmd = mergetoolCmd.Substring(mergetoolCmd.IndexOf(".exe") + 5);
+            Cursor.Current = Cursors.Default;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             ConflictedFiles_DoubleClick(sender, e);
+            Cursor.Current = Cursors.Default;
         }
 
         private void Reset_Click(object sender, EventArgs e)
@@ -280,6 +286,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (Abort.AbortCurrentAction())
                 Close();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
@@ -292,6 +299,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflictSelectBase(GetFileName());
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
@@ -299,6 +307,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflictSelectLocal(GetFileName());
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
@@ -306,12 +315,14 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             GitCommands.GitCommands.HandleConflictSelectRemote(GetFileName());
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void OpenMergetool_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             ConflictedFiles_DoubleClick(sender, e);
+            Cursor.Current = Cursors.Default;
         }
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
@@ -325,6 +336,7 @@ namespace GitUI
             GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
             OpenWith.OpenAs(fileName);
+            Cursor.Current = Cursors.Default;
         }
 
         private void ContextOpenLocalWith_Click(object sender, EventArgs e)
@@ -338,6 +350,7 @@ namespace GitUI
             GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
             OpenWith.OpenAs(fileName);
+            Cursor.Current = Cursors.Default;
         }
 
         private static string GetShortFileName(string fileName)
@@ -360,6 +373,7 @@ namespace GitUI
             GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
             OpenWith.OpenAs(fileName);
+            Cursor.Current = Cursors.Default;
         }
 
         private void ConflictedFiles_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -391,6 +405,7 @@ namespace GitUI
             {
                 GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void ContextSaveBaseAs_Click(object sender, EventArgs e)
@@ -413,6 +428,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             stageFile(GetFileName());
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)

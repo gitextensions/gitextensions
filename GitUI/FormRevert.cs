@@ -31,6 +31,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Reset changes");
             Close();
+            Cursor.Current = Cursors.Default;
         }
 
         private void button1_Click(object sender, EventArgs e)
