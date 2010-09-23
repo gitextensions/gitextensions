@@ -11,7 +11,7 @@ namespace GitCommands
 {
     public static class Settings
     {
-        public static string GitExtensionsVersionString = "2.03 MONO TEST VERSION";
+        public static string GitExtensionsVersionString = "2.03";
         public static int GitExtensionsVersionInt = 203;
         private static string _gitBinDir = "";
         private static string _workingdir;
@@ -70,6 +70,7 @@ namespace GitCommands
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
+            RevisionGraphDrawNonRelativesGray = true;
         }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
@@ -101,6 +102,8 @@ namespace GitCommands
         public static bool CloseCommitDialogAfterCommit { get; set; }
 
         public static bool FollowRenamesInFileHistory { get; set; }
+
+        public static bool RevisionGraphDrawNonRelativesGray { get; set; }
 
         public static int RevisionGraphWidth { get; set; }
 
@@ -375,7 +378,8 @@ namespace GitCommands
                 appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
                 appData.SetValue("lastcommitmessage", LastCommitMessage);
-                appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);                
+                appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);
+                appData.SetValue("revisiongraphdrawnonrelativesgray", RevisionGraphDrawNonRelativesGray);
             }
             catch (Exception ex)
             {
@@ -467,8 +471,8 @@ namespace GitCommands
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
                 SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
-                SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);                
-                
+                SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
+                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);                                
             }
             catch (Exception ex)
             {
