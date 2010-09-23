@@ -40,13 +40,11 @@ namespace GitUI
             Translate();
 
             Message.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            Author.DefaultCellStyle.Font = SystemFonts.DefaultFont;
             Date.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
             NormalFont = SystemFonts.DefaultFont;
-            HeadFont = new Font(NormalFont, FontStyle.Underline);
             RefsFont = new Font(NormalFont, FontStyle.Bold);
-
+            HeadFont = new Font(NormalFont, FontStyle.Bold);
             Loading.Paint += new PaintEventHandler(Loading_Paint);
 
             Revisions.CellPainting += RevisionsCellPainting;
@@ -56,6 +54,7 @@ namespace GitUI
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
+            drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -1017,6 +1016,13 @@ namespace GitUI
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+        }
+
+        private void drawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.RevisionGraphDrawNonRelativesGray = !Settings.RevisionGraphDrawNonRelativesGray;
+            drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
+            Revisions.Refresh();
         }
     }
 }
