@@ -62,19 +62,34 @@ namespace GitUI.SpellChecker
             DrawLines(IllFormedLines, DrawType.Mark);
 
             //Mark first line if it is blank
-            var lh = LineHeight();
-            var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
-            if (_richTextBox.Text.Length > 1 &&
-                //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
-                _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
-                && ypos >= -lh && Settings.MarkIllFormedLinesInCommitMsg)
-                DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
+            // If IME mode equals Hiragana,
+            // input is canceled by some method calls(ex. GetPositionFromCharIndex)
+            // and the process is skipped by this if-statement.
+            if (IsEnableFirstLineEmptyWarning)
+            {
+                var lh = LineHeight();
+                var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
+                if (_richTextBox.Text.Length > 1 &&
+                    //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
+                    _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
+                    && ypos >= -lh && Settings.MarkIllFormedLinesInCommitMsg)
+                    DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
+            }
 
             //Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
             // Now we just draw our internal buffer on top of the TextBox.   
             // Everything should be at the right place.   
             _textBoxGraphics.DrawImageUnscaled(_bitmap, 0, 0);
+        }
+
+        private bool IsEnableFirstLineEmptyWarning
+        {
+            get
+            {
+                var mode = _richTextBox.ImeMode;
+                return mode == ImeMode.Hiragana;
+            }
         }
 
         private void DrawLines(IEnumerable<TextPos> list, DrawType type)
