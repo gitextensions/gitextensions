@@ -18,43 +18,32 @@ namespace GitUI.Blame
             InitializeComponent();
 
             BlameCommitter.IsReadOnly = true;
-            //BlameCommitter.EnableScrollBars(false);
+            BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
+            BlameFile.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
             BlameFile.IsReadOnly = true;
+            BlameFile.SelectedLineChanged += new SelectedLineChangedHandler(BlameFile_SelectedLineChanged);
 
-            /*
-            BlameFile.LineViewerStyle = LineViewerStyle.FullRow;
-             * 
-            BlameFile.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.TextArea.Click += BlameFileClick;
-            BlameFile.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
-            BlameFile.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
-            BlameFile.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;*/
+            BlameFile.DoubleClick += ActiveTextAreaControlDoubleClick;
+        }
+
+        void BlameFile_SelectedLineChanged(object sender, int selectedLine)
+        {
+            if (selectedLine >= _blameList.Count)
+                return;
+
+            var newRevision =
+                _blameList[selectedLine].CommitGuid;
+            if (_lastRevision == newRevision)
+                return;
+
+            _lastRevision = newRevision;
+            commitInfo.SetRevision(_lastRevision);
         }
 
         void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
             SyncBlameViews();
-        }
-
-        private void TextAreaMouseDown(object sender, MouseEventArgs e)
-        {
-            /*
-             * if (_blameList == null)
-                return;
-
-            if (BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y) >= _blameList.Count)
-                return;
-
-            var newRevision =
-                _blameList[BlameFile.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)].CommitGuid;
-            if (_lastRevision == newRevision)
-                return;
-
-            _lastRevision = newRevision;
-            commitInfo.SetRevision(_lastRevision);*/
         }
 
         public void LoadBlame(string guid, string fileName)
@@ -76,7 +65,7 @@ namespace GitUI.Blame
             BlameFile.ViewText(fileName, blameFile.ToString());
             BlameFile.ScrollPos = scrollpos;
 
-            TextAreaMouseDown(this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
+            BlameFile_SelectedLineChanged(null, 0);
         }
 
         private void BlameFileClick(object sender, EventArgs e)
@@ -91,14 +80,10 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
-            /*
-            if (_blameList == null || _blameList.Count < BlameFile.ActiveTextAreaControl.TextArea.Caret.Line)
-                return;
-
             var frm = new FormDiffSmall();
-            frm.SetRevision(_blameList[BlameFile.ActiveTextAreaControl.TextArea.Caret.Line].CommitGuid);
+            frm.SetRevision(_lastRevision);
             frm.ShowDialog();
-             */
+             
         }
     }
 }

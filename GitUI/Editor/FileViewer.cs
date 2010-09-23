@@ -10,6 +10,7 @@ using GitUI.Properties;
 
 namespace GitUI.Editor
 {
+
     public partial class FileViewer : GitExtensionsControl
     {
         private readonly AsyncLoader _async;
@@ -53,9 +54,26 @@ namespace GitUI.Editor
             _internalFileViewer.KeyDown += TextAreaKeyUp;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
+            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedHandler(_internalFileViewer_SelectedLineChanged);
+            _internalFileViewer.DoubleClick += new EventHandler(_internalFileViewer_DoubleClick);
         }
 
+        void _internalFileViewer_DoubleClick(object sender, EventArgs e)
+        {
+            if (DoubleClick != null)
+                DoubleClick(sender, e);
+        }
+
+        void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
+        {
+            if (SelectedLineChanged != null)
+                SelectedLineChanged(sender, selectedLine);
+        }
+
+        public event SelectedLineChangedHandler SelectedLineChanged;
+
         public event EventHandler ScrollPosChanged;
+        public event EventHandler DoubleClick;
 
         void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
         {
