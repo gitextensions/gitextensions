@@ -11,6 +11,8 @@ namespace GitUI.Editor
 {
     public partial class FileViewerWindows : GitExtensionsControl, IFileViewer
     {
+        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
+
         public FileViewerWindows()
         {
             InitializeComponent();
@@ -18,6 +20,40 @@ namespace GitUI.Editor
 
             TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+
+            TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
+            TextEditor.KeyDown += BlameFileKeyUp;
+            TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
+            TextEditor.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
+            TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
+        }
+
+        public new event EventHandler DoubleClick;
+
+        private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
+        {
+            if (DoubleClick != null)
+                DoubleClick(sender, e);
+        }
+
+        private void BlameFileKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+                _findAndReplaceForm.ShowFor(TextEditor, false);
+            VScrollBar_ValueChanged(this, e);
+        }
+
+        private void TextAreaMouseDown(object sender, MouseEventArgs e)
+        {
+            OnSelectedLineChanged(TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y));
+        }
+
+        public event SelectedLineChangedHandler SelectedLineChanged;
+
+        void OnSelectedLineChanged(int selectedLine)
+        {
+            if (SelectedLineChanged != null)
+                SelectedLineChanged(this, selectedLine);
         }
 
         void VScrollBar_ValueChanged(object sender, EventArgs e)
@@ -134,7 +170,9 @@ namespace GitUI.Editor
         public void EnableScrollBars(bool enable)
         {
             TextEditor.ActiveTextAreaControl.VScrollBar.Width = 0;
-            TextEditor.ActiveTextAreaControl.VScrollBar.Visible = false;
+            TextEditor.ActiveTextAreaControl.VScrollBar.Visible = enable;
+            TextEditor.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
+            TextEditor.Enabled = enable;
         }
 
         public void AddPatchHighlighting()

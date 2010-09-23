@@ -3,13 +3,17 @@ using System.Windows.Forms;
 using System.Drawing;
 namespace GitUI.Editor
 {
+    public delegate void SelectedLineChangedHandler(object sender, int selectedLine);
+
     public interface IFileViewer
     {
         event MouseEventHandler MouseMove;
         event EventHandler MouseLeave;
         event EventHandler TextChanged;
         event EventHandler ScrollPosChanged;
+        event SelectedLineChangedHandler SelectedLineChanged;
         event KeyEventHandler KeyDown;
+        event EventHandler DoubleClick;
 
         void EnableScrollBars(bool enable);
 
