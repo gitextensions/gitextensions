@@ -34,6 +34,7 @@ namespace GitUI
             new FormProcess(addSubmoduleCmd).ShowDialog();
 
             Close();
+            Cursor.Current = Cursors.Default;
         }
 
         private void DirectorySelectedIndexChanged(object sender, EventArgs e)

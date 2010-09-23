@@ -110,6 +110,7 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void SkipClick(object sender, EventArgs e)
@@ -122,6 +123,7 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void AbortClick(object sender, EventArgs e)
@@ -134,6 +136,7 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -157,6 +160,7 @@ namespace GitUI
 
             EnableButtons();
             patchGrid1.Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void SolveMergeconflictsClick(object sender, EventArgs e)

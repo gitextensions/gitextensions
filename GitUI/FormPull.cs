@@ -69,8 +69,6 @@ namespace GitUI
 
         private void BranchesDropDown(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
             if ((PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text)) &&
                 (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text)))
             {
@@ -78,7 +76,7 @@ namespace GitUI
                 return;
             }
 
-
+            Cursor.Current = Cursors.WaitCursor;
             LoadPuttyKey();
 
             if (_heads == null)
