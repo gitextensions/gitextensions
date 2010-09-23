@@ -144,6 +144,7 @@ namespace GitUI
 
             Commit.Focus();
             AcceptButton = Commit;
+            Cursor.Current = Cursors.Default;
         }
 
         private void InitializedStaged()
@@ -152,6 +153,7 @@ namespace GitUI
             Staged.GitItemStatusses = null;
             SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
             Staged.GitItemStatusses = GitCommands.GitCommands.GetStagedFiles();
+            Cursor.Current = Cursors.Default;
         }
 
         private void InitializedStagedAsync()
@@ -173,6 +175,7 @@ namespace GitUI
                             Staged.GitItemStatusses = stagedFiles;
                         }, null);
                 });
+            Cursor.Current = Cursors.Default;
         }
 
 
@@ -374,6 +377,7 @@ namespace GitUI
             Amend.Enabled = true;
             AcceptButton = Commit;
             Commit.Focus();
+            Cursor.Current = Cursors.Default;
         }
 
         private void UnstageFilesClick(object sender, EventArgs e)
@@ -449,6 +453,7 @@ namespace GitUI
             }
             UnstageFiles.Enabled = true;
             AddFiles.Enabled = true;
+            Cursor.Current = Cursors.Default;
         }
 
 
@@ -832,8 +837,6 @@ namespace GitUI
 
         private void AmendClick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
             if (string.IsNullOrEmpty(Message.Text))
             {
                 Message.Text = GitCommands.GitCommands.GetPreviousCommitMessage(0);

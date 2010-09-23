@@ -74,6 +74,7 @@ namespace GitUI
                     DiffText.ViewPatch("");
                 }
             }
+            Cursor.Current = Cursors.Default;
         }
 
         void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)

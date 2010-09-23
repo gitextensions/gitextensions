@@ -38,11 +38,12 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Submodules.DataSource = (new GitCommands.GitCommands()).GetSubmodules();
+            Cursor.Current = Cursors.Default;
         }
 
         private void SubmodulesSelectionChanged(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            
             if (Submodules.SelectedRows.Count != 1) 
                 return;
 
@@ -50,12 +51,14 @@ namespace GitUI
             if (submodule == null) 
                 return;
 
+            Cursor.Current = Cursors.WaitCursor;
             SubModuleName.Text = submodule.Name;
             SubModuleRemotePath.Text = submodule.RemotePath;
             SubModuleLocalPath.Text = submodule.LocalPath;
             SubModuleCommit.Text = submodule.CurrentCommitGuid;
             SubModuleBranch.Text = submodule.Branch;
             SubModuleStatus.Text = submodule.Status;
+            Cursor.Current = Cursors.Default;
         }
 
         private void SynchronizeSubmoduleClick(object sender, EventArgs e)
@@ -64,6 +67,7 @@ namespace GitUI
             var process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(SubModuleName.Text));
             process.ShowDialog();
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void InitSubmoduleClick(object sender, EventArgs e)
@@ -72,6 +76,7 @@ namespace GitUI
             var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(SubModuleName.Text));
             process.ShowDialog();
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateSubmoduleClick(object sender, EventArgs e)
@@ -79,6 +84,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             GitUICommands.Instance.StartUpdateSubmodulesDialog();
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
     }
 }

@@ -42,6 +42,7 @@ namespace GitUI
             MergeConflictHandler.HandleMergeConflicts();
 
             RevisionGrid.RefreshRevisions();
+            Cursor.Current = Cursors.Default;
         }
     }
 }

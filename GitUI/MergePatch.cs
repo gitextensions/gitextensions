@@ -104,13 +104,12 @@ namespace GitUI
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
                 MessageBox.Show("Please select a patch to apply");
                 return;
             }
-
+            Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
                 new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text)).ShowDialog();
             else
@@ -120,6 +119,7 @@ namespace GitUI
 
             if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
                 Close();
+            Cursor.Current = Cursors.Default;
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -133,6 +133,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.SkipCmd()).ShowDialog();
             EnableButtons();
+            Cursor.Current = Cursors.Default;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -140,6 +141,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.ResolvedCmd()).ShowDialog();
             EnableButtons();
+            Cursor.Current = Cursors.Default;
         }
 
         private void Abort_Click(object sender, EventArgs e)
@@ -147,6 +149,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommands.GitCommands.AbortCmd()).ShowDialog();
             EnableButtons();
+            Cursor.Current = Cursors.Default;
         }
 
         private void AddFiles_Click(object sender, EventArgs e)

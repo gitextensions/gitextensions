@@ -63,6 +63,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (Stashed.SelectedItem is Patch)
                 ShowPatch((Patch) Stashed.SelectedItem);
+            Cursor.Current = Cursors.Default;
         }
 
         private void ShowPatch(Patch patch)
@@ -79,6 +80,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             View.ViewCurrentChanges(((GitItemStatus) Changes.SelectedItem).Name, false);
+            Cursor.Current = Cursors.Default;
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -88,6 +90,7 @@ namespace GitUI
             NeedRefresh = true;
             Initialize();
             InitializeTracked();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ClearClick(object sender, EventArgs e)
@@ -96,6 +99,7 @@ namespace GitUI
             new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog();
             NeedRefresh = true;
             Initialize();
+            Cursor.Current = Cursors.Default;
         }
 
         private void ApplyClick(object sender, EventArgs e)
@@ -114,6 +118,7 @@ namespace GitUI
             InitializeSoft();
             if (Stashes.SelectedItem != null)
                 StashMessage.Text = ((GitStash) Stashes.SelectedItem).Message;
+            Cursor.Current = Cursors.Default;
         }
 
         private void RefreshClick(object sender, EventArgs e)
@@ -126,6 +131,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Initialize();
             InitializeTracked();
+            Cursor.Current = Cursors.Default;
         }
 
         private void FormStashShown(object sender, EventArgs e)

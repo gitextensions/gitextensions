@@ -936,6 +936,7 @@ namespace GitUI
             Save();
             LoadSettings();
             CheckSettings();
+            Cursor.Current = Cursors.Default;
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
@@ -1339,6 +1340,7 @@ namespace GitUI
             LoadSettings();
             CheckSettings();
             this.WindowState = FormWindowState.Normal;
+            Cursor.Current = Cursors.Default;
         }
 
         private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)
@@ -1346,6 +1348,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (DialogResult != DialogResult.Abort && !Save())
                 e.Cancel = true;
+            Cursor.Current = Cursors.Default;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
