@@ -70,7 +70,7 @@ namespace GitCommands
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
-            RevisionGraphDrawNonRelativesGray = true;
+            RevisionGraphDrawNonRelativesGray = false;
         }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
@@ -326,6 +326,10 @@ namespace GitCommands
                     throw new Exception("Application.UserAppDataRegistry is not available");
 
                 var appData = Application.UserAppDataRegistry;
+
+                appData.SetValue("gitdir", GitCommand);
+                appData.SetValue("gitbindir", GitBinDir);
+
                 SetEncoding();
 
                 appData.SetValue("history", Repositories.SerializeHistoryIntoXml());
@@ -353,8 +357,6 @@ namespace GitCommands
                 appData.SetValue("authorImageCacheDays", AuthorImageCacheDays);
                 appData.SetValue("authorimagesize", AuthorImageSize);
                 appData.SetValue("maxcommits", MaxCommits);
-                appData.SetValue("gitdir", GitCommand);
-                appData.SetValue("gitbindir", GitBinDir);
                 appData.SetValue("showallbranches", ShowCurrentBranchOnly);
                 appData.SetValue("branchfilterenabled", BranchFilterEnabled);
                 appData.SetValue("closeprocessdialog", CloseProcessDialog);
@@ -383,7 +385,7 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not load settings.\n\n" + ex.Message);
+                MessageBox.Show("Could not save settings.\n\n" + ex.Message);
             }
         }
 
@@ -410,12 +412,15 @@ namespace GitCommands
         {
             try
             {
+                SafeSetString("gitdir", x => GitCommand = x);
+                SafeSetString("gitbindir", x => GitBinDir = x);
+
                 SafeSetInt("maxcommits", x => MaxCommits = x);
                 SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
                 SafeSetInt("authorimagesize", x => AuthorImageSize = x);
 
                 GetEncoding();
-
+                
                 try
                 {
                     SafeSetHtmlColor("diffaddedcolor", x => DiffAddedColor = x);
@@ -462,17 +467,16 @@ namespace GitCommands
                 SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
                 SafeSetBool("branchfilterenabled", x => BranchFilterEnabled = x);
                 SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
-                SafeSetString("gitdir", x => GitCommand = x);
-                SafeSetString("gitbindir", x => GitBinDir = x);
-                SafeSetString("history", Repositories.DeserializeHistoryFromXml);
-                SafeSetString("repositories", Repositories.DeserializeRepositories);
                 SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
                 SafeSetBool("commitinfoshowcontainedintags", x => CommitInfoShowContainedInTags = x);
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
                 SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
                 SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
-                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);                                
+                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
+
+                SafeSetString("history", Repositories.DeserializeHistoryFromXml);
+                SafeSetString("repositories", Repositories.DeserializeRepositories);
             }
             catch (Exception ex)
             {
