@@ -33,12 +33,12 @@
             this.gravatar1 = new GitUI.GravatarControl();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._RevisionHeader = new System.Windows.Forms.RichTextBox();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -109,20 +109,6 @@
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             // 
-            // RevisionInfo
-            // 
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(6);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(783, 289);
-            this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.Text = "";
-            // 
             // commitInfoContextMenuStrip
             // 
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -131,12 +117,11 @@
             this.showContainedInBranchesToolStripMenuItem,
             this.showContainedInTagsToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 76);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 98);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
-            this.copyCommitInfoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
@@ -159,6 +144,20 @@
             this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.showContainedInTagsToolStripMenuItem.Text = "Show contained in tags";
             this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
+            // 
+            // RevisionInfo
+            // 
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(6);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(783, 289);
+            this.RevisionInfo.TabIndex = 0;
+            this.RevisionInfo.Text = "";
             // 
             // CommitInfo
             // 
