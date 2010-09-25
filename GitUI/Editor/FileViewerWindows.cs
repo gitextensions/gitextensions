@@ -21,11 +21,28 @@ namespace GitUI.Editor
             TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
 
+            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += new MouseEventHandler(TextArea_MouseMove);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
             TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
+        }
+
+        public new event MouseEventHandler MouseMove;
+        public new event EventHandler MouseLeave;
+
+        void TextArea_MouseLeave(object sender, EventArgs e)
+        {
+            if (MouseLeave != null)
+                MouseLeave(sender, e);
+        }
+
+        void TextArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MouseMove != null)
+                MouseMove(sender, e);
         }
 
         public new event EventHandler DoubleClick;
