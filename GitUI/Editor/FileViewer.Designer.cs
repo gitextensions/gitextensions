@@ -269,6 +269,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.ContextMenu;
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.fileviewerToolbar);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

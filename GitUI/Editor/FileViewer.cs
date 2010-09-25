@@ -157,6 +157,7 @@ namespace GitUI.Editor
             {
                 fileviewerToolbar.Visible = true;
                 fileviewerToolbar.Location = new Point(this.Width - fileviewerToolbar.Width - 40, 0);
+                fileviewerToolbar.BringToFront();
             }
         }
 

@@ -24,6 +24,24 @@ namespace GitUI.Editor
             TextEditor.DoubleClick += new EventHandler(TextEditor_DoubleClick);
             TextEditor.MouseDown += new MouseEventHandler(TextEditor_MouseDown);
             TextEditor.BackColor = Color.White;
+            TextEditor.MouseLeave += new EventHandler(TextArea_MouseLeave);
+            TextEditor.MouseMove += new MouseEventHandler(TextArea_MouseLeave);
+        }
+
+
+        public new event MouseEventHandler MouseMove;
+        public new event EventHandler MouseLeave;
+
+        void TextArea_MouseLeave(object sender, EventArgs e)
+        {
+            if (MouseLeave != null)
+                MouseLeave(sender, e);
+        }
+
+        void TextArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MouseMove != null)
+                MouseMove(sender, e);
         }
 
         public event SelectedLineChangedHandler SelectedLineChanged;
