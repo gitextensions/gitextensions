@@ -1763,6 +1763,9 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         <TranslationItem Name="okButton" Property="Text">
           <Value>&amp;Ok</Value>
         </TranslationItem>
+        <TranslationItem Name="thanksTo" Property="Text">
+          <Value>Bedankt:</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPick">
