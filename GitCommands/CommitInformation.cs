@@ -58,7 +58,7 @@ namespace GitCommands
             string info = GitCommands.RunCachableCmd(
                 Settings.GitCommand,
                 string.Format(
-                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%b\" {5}",
+                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
                     Strings.GetAutorText(),
                     Strings.GetAuthorDateText(),
                     Strings.GetCommitterText(),
