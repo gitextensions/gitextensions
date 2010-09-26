@@ -1360,6 +1360,7 @@ namespace GitUI
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Parent == node
                         && parent.Ancestors.Count == 0
+                        && !((aType & DataType.Active) == DataType.Active)
                         )
                     {
                         // The node isn't a junction point. Just the parent to the node's
