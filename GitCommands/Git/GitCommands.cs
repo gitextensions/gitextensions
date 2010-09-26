@@ -1128,9 +1128,8 @@ namespace GitCommands
             remote = FixPath(remote);
 
             Directory.SetCurrentDirectory(Settings.WorkingDir);
-            branch = FetchCmd(remote, branch);
-
-            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + FetchCmd(remote, branch) + "\"");
+            
+            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + FetchCmd(remote, null, branch) + "\"");
 
             return "Done";
         }
@@ -1140,59 +1139,63 @@ namespace GitCommands
             return path.Contains(Settings.PathSeperator.ToString()) || path.Contains(Settings.PathSeperatorWrong.ToString());
         }
 
-        public static string FetchCmd(string remote, string branch)
+        public static string FetchCmd(string remote, string remoteBranch, string localBranch)
         {
-            return "fetch " + GetFetchArgs(remote, branch);
+            return "fetch " + GetFetchArgs(remote, remoteBranch, localBranch);
         }
 
-        public static string Pull(string remote, string branch, bool rebase)
+        public static string Pull(string remote, string remoteBranch, string localBranch, bool rebase)
         {
             remote = FixPath(remote);
 
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + PullCmd(remote, branch, rebase) + "\"");
+            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + PullCmd(remote, localBranch, remoteBranch, rebase) + "\"");
 
             return "Done";
         }
 
-        public static string PullCmd(string remote, string branch, bool rebase)
+        public static string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
         {
             var rebaseOption = "";
             if (rebase)
                 rebaseOption = "--rebase ";
 
-            return "pull " + rebaseOption + GetFetchArgs(remote, branch);
+            return "pull " + rebaseOption + GetFetchArgs(remote, remoteBranch, localBranch);
         }
 
-        private static string GetFetchArgs(string remote, string branch)
+        private static string GetFetchArgs(string remote, string remoteBranch, string localBranch)
         {
             remote = FixPath(remote);
 
-            branch = branch.Replace(" ", "");
+            //Remove spaces... 
+            if (remoteBranch != null)
+                remoteBranch = remoteBranch.Replace(" ", "");
+            if (localBranch != null)
+                localBranch = localBranch.Replace(" ", "");
 
-            string localbranch;
+            string remoteBranchArguments;
 
-            if (string.IsNullOrEmpty(branch))
-                localbranch = "";
+            if (string.IsNullOrEmpty(remoteBranch))
+                remoteBranchArguments = "";
             else
-                localbranch = "+refs/heads/" + branch + "";
+                remoteBranchArguments = "+refs/heads/" + remoteBranch + "";
 
-            string remotebranch;
+            string localBranchArguments;
             var remoteUrl = GetSetting("remote." + remote + ".url");
 
-            if (PathIsUrl(remote) && !string.IsNullOrEmpty(branch) && string.IsNullOrEmpty(remoteUrl))
-                remotebranch = ":refs/heads/" + branch + "";
-            else if (string.IsNullOrEmpty(branch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
-                remotebranch = "";
+            if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
+                localBranchArguments = ":refs/heads/" + localBranch + "";
+            else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
+                localBranchArguments = "";
             else
-                remotebranch = ":" + "refs/remotes/" + remote.Trim() + "/" + branch + "";
+                localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
             var progressOption = "";
             if (VersionInUse.FetchCanAskForProgress)
                 progressOption = "--progress ";
 
-            return progressOption + "\"" + remote.Trim() + "\" " + localbranch + remotebranch;
+            return progressOption + "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments;
         }
 
         public static string ContinueRebase()

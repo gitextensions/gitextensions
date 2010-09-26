@@ -108,7 +108,7 @@ namespace GitUI
             }
             Branches.DisplayMember = "LocalName";
 
-            _heads.Insert(0, GitHead.AllHeads);
+            //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitHead.NoHead);
             Branches.DataSource = _heads;
 
@@ -165,11 +165,20 @@ namespace GitUI
 
             FormProcess process = null;
             if (Fetch.Checked)
-                process = new FormProcess(GitCommands.GitCommands.FetchCmd(source, Branches.Text));
-            else if (Merge.Checked)
-                process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, false));
-            else if (Rebase.Checked)
-                process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, true));
+            {
+                process = new FormProcess(GitCommands.GitCommands.FetchCmd(source, Branches.Text, null));
+            }
+            else
+            {
+                string localBranch = GitCommands.GitCommands.GetSelectedBranch();
+                if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
+                    localBranch = null;
+
+                if (Merge.Checked)
+                    process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, localBranch, false));
+                else if (Rebase.Checked)
+                    process = new FormProcess(GitCommands.GitCommands.PullCmd(source, Branches.Text, localBranch, true));
+            }
 
             if (process != null)
                 process.ShowDialog();
@@ -223,11 +232,10 @@ namespace GitUI
         {
             Pull.Select();
 
-            var branch = GitCommands.GitCommands.GetSelectedBranch();
+            string branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting(string.Format("branch.{0}.remote", branch));
 
-            var branchHead = new GitHead(null, branch);
-            Branches.Text = branchHead.MergeWith;
+            _NO_TRANSLATE_localBranch.Text = branch;
 
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
             EnableLoadSshButton();
@@ -236,6 +244,7 @@ namespace GitUI
             Merge.Checked = Settings.PullMerge == "merge";
             Rebase.Checked = Settings.PullMerge == "rebase";
             Fetch.Checked = Settings.PullMerge == "fetch";
+            SetMergeWithToDefaultIfEmpty();
 
             AutoStash.Checked = Settings.AutoStash;
         }
@@ -246,7 +255,7 @@ namespace GitUI
             PullSource.DisplayMember = "Path";
         }
 
-        private static void StashClick(object sender, EventArgs e)
+        private void StashClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartStashDialog();
         }
@@ -280,7 +289,7 @@ namespace GitUI
             AddRemote.Enabled = false;
         }
 
-        private static void AddRemoteClick(object sender, EventArgs e)
+        private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
         }
@@ -311,16 +320,32 @@ namespace GitUI
         private void MergeCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.merge;
+            SetMergeWithToDefaultIfEmpty();
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.Rebase;
+            SetMergeWithToDefaultIfEmpty();
+        }
+
+        private void SetMergeWithToDefaultIfEmpty()
+        {
+            if (string.IsNullOrEmpty(Branches.Text) && (Rebase.Checked || Merge.Checked))
+            {
+                var branchHead = new GitHead(null, GitCommands.GitCommands.GetSelectedBranch());
+                Branches.Text = branchHead.MergeWith;
+            }
+            if (Fetch.Checked)
+            {
+                Branches.Text = string.Empty;
+            }
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.fetch;
+            SetMergeWithToDefaultIfEmpty();
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

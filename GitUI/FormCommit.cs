@@ -262,7 +262,7 @@ namespace GitUI
                 return;
             }
 
-            if (GitCommands.GitCommands.GetSelectedBranch().CompareTo("(no branch)") == 0 &&
+            if (GitCommands.GitCommands.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
                 MessageBox.Show(_notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
                 return;
 
