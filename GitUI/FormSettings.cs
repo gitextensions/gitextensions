@@ -147,7 +147,7 @@ namespace GitUI
 
                 MulticolorBranches.Checked = Settings.MulticolorBranches;
                 MulticolorBranches_CheckedChanged(null, null);
-
+                DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
@@ -403,6 +403,7 @@ namespace GitUI
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
 
             Settings.MulticolorBranches = MulticolorBranches.Checked;
+            Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;

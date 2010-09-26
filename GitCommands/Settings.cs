@@ -70,7 +70,7 @@ namespace GitCommands
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
-            RevisionGraphDrawNonRelativesGray = false;
+            RevisionGraphDrawNonRelativesGray = true;
         }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
