@@ -4,10 +4,11 @@ Changelog
 Version 2.04
 	Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes
 	Fixed bug: spellings checker allows using Japanese
+	Added possibility to pull non-default remote branch into current branch
+	Added contributors to about box
 	Improved startup speed
 	Non-relative branches are drawn gray
 	Pull dialog shows default remote branch if one is configured for local branch
-	Added possibility to pull non-default remote branch into current branch
 	Removed ctr-c key from commit info control to allow copy part of commit info
 	GitExtensions now can be used in Linux using Mono
 	
