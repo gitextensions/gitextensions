@@ -26,7 +26,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
-            TextEditor.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
+            //TextEditor.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 
@@ -56,8 +56,19 @@ namespace GitUI.Editor
         private void BlameFileKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
-                _findAndReplaceForm.ShowFor(TextEditor, false);
+                Find();
+
+            if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
+                _findAndReplaceForm.FindNext(true, true, "Text not found");
+            else if (e.KeyCode == Keys.F3)
+                _findAndReplaceForm.FindNext(true, false, "Text not found");
+
             VScrollBar_ValueChanged(this, e);
+        }
+
+        public void Find()
+        {
+            _findAndReplaceForm.ShowFor(TextEditor, false);
         }
 
         private void TextAreaMouseDown(object sender, MouseEventArgs e)
