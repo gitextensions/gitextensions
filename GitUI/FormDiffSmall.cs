@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using PatchApply;
 using GitCommands;
-using System.Text.RegularExpressions;
+using PatchApply;
 
 namespace GitUI
 {
@@ -48,7 +42,7 @@ namespace GitUI
         {
             Revision = new GitRevision();
             Revision.Guid = revision;
-            Revision.ParentGuids = new string[]{revision + "^"};
+            Revision.ParentGuids = new string[] { revision + "^" };
             SetRevision(Revision);
         }
 

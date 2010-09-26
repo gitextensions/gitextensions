@@ -3,10 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands;
-using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Util;
-using GitUI.Properties;
 
 namespace GitUI.Editor
 {
@@ -53,13 +50,7 @@ namespace GitUI.Editor
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
             _internalFileViewer.SelectedLineChanged += new SelectedLineChangedHandler(_internalFileViewer_SelectedLineChanged);
-            _internalFileViewer.DoubleClick += new EventHandler(_internalFileViewer_DoubleClick);
-        }
-
-        void _internalFileViewer_DoubleClick(object sender, EventArgs e)
-        {
-            if (DoubleClick != null)
-                DoubleClick(sender, e);
+            _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -71,7 +62,16 @@ namespace GitUI.Editor
         public event SelectedLineChangedHandler SelectedLineChanged;
 
         public event EventHandler ScrollPosChanged;
-        public event EventHandler DoubleClick;
+        public event EventHandler RequestDiffView;
+
+        protected virtual void OnRequestDiffView(EventArgs args)
+        {
+            var handler = RequestDiffView;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
 
         void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
         {
