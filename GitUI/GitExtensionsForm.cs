@@ -140,7 +140,7 @@ namespace GitUI
                 Properties.Settings.Default.WindowPositions[name] = position;
                 Properties.Settings.Default.Save();
             }
-            catch (ConfigurationException ex)
+            catch (ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }
@@ -175,7 +175,7 @@ namespace GitUI
                         return position;
                 }
             }
-            catch(ConfigurationException ex)
+            catch(ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }

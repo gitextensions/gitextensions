@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace ResourceManager.Translation
 {
@@ -12,6 +9,6 @@ namespace ResourceManager.Translation
             Text = text;
         }
 
-        public string Text { get; set; }
+        public string Text { get; private set; }
     }
 }

@@ -71,7 +71,7 @@ namespace GitUI
             new TranslationString("You can only use this option when selecting a single file");
 
         private readonly TranslationString _resetChanges =
-            new TranslationString("Are you sure you want to reset the changes of the selected files?");
+            new TranslationString("Are you sure you want to reset the changes to the selected files?");
 
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
 
