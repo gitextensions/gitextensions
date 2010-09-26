@@ -1137,6 +1137,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Laad SSH sleutel</Value>
         </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Lokale vertakking</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormMergeBranch">
@@ -2028,9 +2031,6 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
           <Value>Negeer witruimten</Value>
-        </TranslationItem>
-        <TranslationItem Name="_findAndReplaceForm" Property="Text">
-          <Value>Zoeken en vervangen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

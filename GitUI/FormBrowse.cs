@@ -38,9 +38,6 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
-
-
-
         }
 
         private void ShowDashboard()
@@ -248,34 +245,43 @@ namespace GitUI
             if (tabControl1.SelectedTab != Tree)
                 return;
 
-            // Save state
-            var lastSelectedNodes = new Stack<TreeNode>();
-            lastSelectedNodes.Push(GitTree.SelectedNode);
-            while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
-                lastSelectedNodes.Push((lastSelectedNodes.Peek()).Parent);
-
-            FileText.SaveCurrentScrollPos();
-
-            // Refresh tree
-            GitTree.Nodes.Clear();
-            if (RevisionGrid.GetRevisions().Count > 0)
-                LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
-            GitTree.Sort();
-                
-            // Load state
-            var currenNodes = GitTree.Nodes;
-            while (lastSelectedNodes.Count > 0 && lastSelectedNodes.Peek() != null)
+            try
             {
-                var next = (lastSelectedNodes.Pop()).Text;
-                foreach (TreeNode node in currenNodes)
-                {
-                    if (node.Text != next && next.Length != 40)
-                        continue;
+                GitTree.SuspendLayout();
 
-                    node.Expand();
-                    GitTree.SelectedNode = node;
-                    currenNodes = node.Nodes;
+                // Save state
+                var lastSelectedNodes = new Stack<TreeNode>();
+                lastSelectedNodes.Push(GitTree.SelectedNode);
+                while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
+                    lastSelectedNodes.Push((lastSelectedNodes.Peek()).Parent);
+
+                FileText.SaveCurrentScrollPos();
+
+                // Refresh tree
+                GitTree.Nodes.Clear();
+                if (RevisionGrid.GetRevisions().Count > 0)
+                    LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
+                GitTree.Sort();
+
+                // Load state
+                var currenNodes = GitTree.Nodes;
+                while (lastSelectedNodes.Count > 0 && lastSelectedNodes.Peek() != null)
+                {
+                    var next = (lastSelectedNodes.Pop()).Text;
+                    foreach (TreeNode node in currenNodes)
+                    {
+                        if (node.Text != next && next.Length != 40)
+                            continue;
+
+                        node.Expand();
+                        GitTree.SelectedNode = node;
+                        currenNodes = node.Nodes;
+                    }
                 }
+            }
+            finally
+            {
+                GitTree.ResumeLayout();
             }
         }
         

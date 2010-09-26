@@ -217,12 +217,12 @@ namespace GitUI
 
                 GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
 
-                    if (gitItemStatus.IsDeleted)
-                        e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                if (gitItemStatus.IsDeleted)
+                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                else
+                    if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
+                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
                     else
-                        if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                            e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-                        else
                         if (gitItemStatus.IsChanged)
                             e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
 
@@ -268,12 +268,20 @@ namespace GitUI
                     {
                         if (e.Control)
                         {
-                            FileStatusListBox.ClearSelected();
-                            for (int n = FileStatusListBox.Items.Count-1; n >=0; n--)
+                            try
                             {
-                                FileStatusListBox.SetSelected(n, true);
+                                FileStatusListBox.SuspendLayout();
+                                FileStatusListBox.ClearSelected();
+                                for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
+                                {
+                                    FileStatusListBox.SetSelected(n, true);
+                                }
+                                e.Handled = true;
                             }
-                            e.Handled = true;
+                            finally
+                            {
+                                FileStatusListBox.ResumeLayout();
+                            }
                         }
                         break;
                     }
