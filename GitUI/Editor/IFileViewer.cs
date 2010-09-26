@@ -16,6 +16,7 @@ namespace GitUI.Editor
         event EventHandler DoubleClick;
 
         void EnableScrollBars(bool enable);
+        void Find();
 
         string GetText();
         void SetText(string text);
