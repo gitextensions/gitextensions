@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Blame
 {
@@ -24,7 +23,7 @@ namespace GitUI.Blame
             BlameFile.IsReadOnly = true;
             BlameFile.SelectedLineChanged += new SelectedLineChangedHandler(BlameFile_SelectedLineChanged);
 
-            BlameFile.DoubleClick += ActiveTextAreaControlDoubleClick;
+            BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
         }
 
         void BlameFile_SelectedLineChanged(object sender, int selectedLine)
@@ -83,7 +82,6 @@ namespace GitUI.Blame
             var frm = new FormDiffSmall();
             frm.SetRevision(_lastRevision);
             frm.ShowDialog();
-             
         }
     }
 }
