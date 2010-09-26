@@ -144,7 +144,7 @@ namespace GitUI.Editor
                 if (document.GetCharAt(lineSegment1.Offset) != ' ' ||
                     document.GetCharAt(lineSegment2.Offset) != '-' ||
                     document.GetCharAt(lineSegment3.Offset) != '+' ||
-                    document.GetCharAt(lineSegment4.Offset) != ' ')
+                    (lineSegment4.Length > 0 && document.GetCharAt(lineSegment4.Offset) != ' ')) //fix for issue 173
                     continue;
 
                 var beginOffset = 0;
