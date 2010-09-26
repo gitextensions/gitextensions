@@ -1105,7 +1105,7 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
           <Value>&amp;Voeg externe vertakking samen met lokale vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
-          <Value>&amp;Rebase externe vertakken op huidige vertakking om een lineaire historie te behouden.</Value>
+          <Value>&amp;Rebase externe vertakking op huidige vertakking om een lineaire historie te behouden.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Samenvoeg opties</Value>
