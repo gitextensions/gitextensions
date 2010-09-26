@@ -46,6 +46,8 @@
             this.Rebase = new System.Windows.Forms.RadioButton();
             this.Merge = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this._NO_TRANSLATE_localBranch = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.Stash = new System.Windows.Forms.Button();
@@ -82,7 +84,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel2.Controls.Add(this.Stash);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
-            this.splitContainer1.Size = new System.Drawing.Size(639, 290);
+            this.splitContainer1.Size = new System.Drawing.Size(639, 312);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 25;
             // 
@@ -94,7 +96,7 @@
             this.PullImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PullImage.Location = new System.Drawing.Point(0, 0);
             this.PullImage.Name = "PullImage";
-            this.PullImage.Size = new System.Drawing.Size(80, 290);
+            this.PullImage.Size = new System.Drawing.Size(80, 312);
             this.PullImage.TabIndex = 18;
             this.PullImage.TabStop = false;
             // 
@@ -118,7 +120,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.Size = new System.Drawing.Size(42, 20);
             this.PullFromUrl.TabIndex = 3;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -131,7 +133,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(70, 20);
             this.PullFromRemote.TabIndex = 2;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -147,14 +149,14 @@
             this.AddRemote.TabIndex = 1;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
+            this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
             // Remotes
             // 
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(128, 19);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(297, 21);
+            this.Remotes.Size = new System.Drawing.Size(297, 24);
             this.Remotes.TabIndex = 0;
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
@@ -178,7 +180,7 @@
             this.PullSource.FormattingEnabled = true;
             this.PullSource.Location = new System.Drawing.Point(128, 46);
             this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(297, 21);
+            this.PullSource.Size = new System.Drawing.Size(297, 24);
             this.PullSource.TabIndex = 4;
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
@@ -187,7 +189,7 @@
             // 
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(320, 256);
+            this.LoadSSHKey.Location = new System.Drawing.Point(320, 282);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
             this.LoadSSHKey.TabIndex = 16;
@@ -199,7 +201,7 @@
             // 
             this.Pull.Image = global::GitUI.Properties.Resources._4;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(447, 256);
+            this.Pull.Location = new System.Drawing.Point(447, 282);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
             this.Pull.TabIndex = 17;
@@ -210,9 +212,9 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(219, 260);
+            this.AutoStash.Location = new System.Drawing.Point(219, 286);
             this.AutoStash.Name = "AutoStash";
-            this.AutoStash.Size = new System.Drawing.Size(76, 17);
+            this.AutoStash.Size = new System.Drawing.Size(87, 20);
             this.AutoStash.TabIndex = 15;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
@@ -222,7 +224,7 @@
             this.groupBox1.Controls.Add(this.Fetch);
             this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Controls.Add(this.Merge);
-            this.groupBox1.Location = new System.Drawing.Point(3, 148);
+            this.groupBox1.Location = new System.Drawing.Point(3, 174);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
             this.groupBox1.TabIndex = 12;
@@ -234,7 +236,7 @@
             this.Fetch.AutoSize = true;
             this.Fetch.Location = new System.Drawing.Point(7, 75);
             this.Fetch.Name = "Fetch";
-            this.Fetch.Size = new System.Drawing.Size(212, 17);
+            this.Fetch.Size = new System.Drawing.Size(255, 20);
             this.Fetch.TabIndex = 9;
             this.Fetch.TabStop = true;
             this.Fetch.Text = "Do not merge, only &fetch remote branch";
@@ -246,7 +248,7 @@
             this.Rebase.AutoSize = true;
             this.Rebase.Location = new System.Drawing.Point(7, 41);
             this.Rebase.Name = "Rebase";
-            this.Rebase.Size = new System.Drawing.Size(411, 30);
+            this.Rebase.Size = new System.Drawing.Size(502, 36);
             this.Rebase.TabIndex = 10;
             this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
                 "d\r\nto choose a remote branch when using rebase. (use with caution)";
@@ -259,7 +261,7 @@
             this.Merge.Checked = true;
             this.Merge.Location = new System.Drawing.Point(7, 20);
             this.Merge.Name = "Merge";
-            this.Merge.Size = new System.Drawing.Size(210, 17);
+            this.Merge.Size = new System.Drawing.Size(253, 20);
             this.Merge.TabIndex = 11;
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch to current branch";
@@ -268,47 +270,70 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this._NO_TRANSLATE_localBranch);
+            this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.Branches);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(3, 90);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(541, 52);
+            this.groupBox3.Size = new System.Drawing.Size(541, 78);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
             // 
+            // _NO_TRANSLATE_localBranch
+            // 
+            this._NO_TRANSLATE_localBranch.AutoSize = true;
+            this._NO_TRANSLATE_localBranch.Location = new System.Drawing.Point(128, 22);
+            this._NO_TRANSLATE_localBranch.Margin = new System.Windows.Forms.Padding(0);
+            this._NO_TRANSLATE_localBranch.Name = "_NO_TRANSLATE_localBranch";
+            this._NO_TRANSLATE_localBranch.Size = new System.Drawing.Size(75, 16);
+            this._NO_TRANSLATE_localBranch.TabIndex = 9;
+            this._NO_TRANSLATE_localBranch.Text = "(no branch)";
+            this.Tooltip.SetToolTip(this._NO_TRANSLATE_localBranch, "Remote branch to pull. Leave empty to pull all branches.");
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 16);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Local branch";
+            this.Tooltip.SetToolTip(this.label1, "Remote branch to pull. Leave empty to pull all branches.");
+            // 
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(128, 19);
+            this.Branches.Location = new System.Drawing.Point(128, 46);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(297, 21);
+            this.Branches.Size = new System.Drawing.Size(297, 24);
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 22);
+            this.label2.Location = new System.Drawing.Point(8, 49);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
+            this.label2.Size = new System.Drawing.Size(95, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "Remote branch";
             this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
             // 
             // Stash
             // 
-            this.Stash.Location = new System.Drawing.Point(111, 256);
+            this.Stash.Location = new System.Drawing.Point(111, 282);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
             this.Stash.TabIndex = 14;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(StashClick);
+            this.Stash.Click += new System.EventHandler(this.StashClick);
             // 
             // Mergetool
             // 
-            this.Mergetool.Location = new System.Drawing.Point(3, 256);
+            this.Mergetool.Location = new System.Drawing.Point(3, 282);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
             this.Mergetool.TabIndex = 13;
@@ -319,9 +344,9 @@
             // FormPull
             // 
             this.AcceptButton = this.Pull;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 290);
+            this.ClientSize = new System.Drawing.Size(639, 312);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -369,5 +394,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox PullImage;
         private System.Windows.Forms.ToolTip Tooltip;
+        private System.Windows.Forms.Label _NO_TRANSLATE_localBranch;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -227,9 +227,9 @@ namespace GitUI
             foreach (var remoteHead in GitCommands.GitCommands.GetHeads(true, true))
             {
                 if (remoteHead.IsRemote &&
-                    remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) &&
-                    string.IsNullOrEmpty(remoteHead.MergeWith))
-                    DefaultMergeWithCombo.Items.Add(remoteHead.Name);
+                    remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) /*&&
+                    string.IsNullOrEmpty(remoteHead.MergeWith)*/)
+                    DefaultMergeWithCombo.Items.Add(remoteHead.LocalName);
             }
         }
 
@@ -274,7 +274,7 @@ namespace GitUI
                 GitCommands.GitCommands.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
-        private static void UpdateBranchClick(object sender, EventArgs e)
+        private void UpdateBranchClick(object sender, EventArgs e)
         {
             new FormProcess("remote update").ShowDialog();
         }

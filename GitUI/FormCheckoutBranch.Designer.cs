@@ -43,7 +43,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.Size = new System.Drawing.Size(86, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select branch";
             // 
@@ -52,16 +52,16 @@ namespace GitUI
             this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(91, 42);
+            this.Branches.Location = new System.Drawing.Point(158, 42);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(235, 23);
+            this.Branches.Size = new System.Drawing.Size(263, 24);
             this.Branches.TabIndex = 1;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(252, 76);
+            this.Ok.Location = new System.Drawing.Point(334, 78);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(87, 23);
             this.Ok.TabIndex = 2;
             this.Ok.Text = "Checkout";
             this.Ok.UseVisualStyleBackColor = true;
@@ -73,7 +73,7 @@ namespace GitUI
             this.LocalBranch.Checked = true;
             this.LocalBranch.Location = new System.Drawing.Point(13, 13);
             this.LocalBranch.Name = "LocalBranch";
-            this.LocalBranch.Size = new System.Drawing.Size(93, 19);
+            this.LocalBranch.Size = new System.Drawing.Size(98, 20);
             this.LocalBranch.TabIndex = 3;
             this.LocalBranch.TabStop = true;
             this.LocalBranch.Text = "Local branch";
@@ -83,9 +83,9 @@ namespace GitUI
             // Remotebranch
             // 
             this.Remotebranch.AutoSize = true;
-            this.Remotebranch.Location = new System.Drawing.Point(128, 13);
+            this.Remotebranch.Location = new System.Drawing.Point(168, 13);
             this.Remotebranch.Name = "Remotebranch";
-            this.Remotebranch.Size = new System.Drawing.Size(106, 19);
+            this.Remotebranch.Size = new System.Drawing.Size(113, 20);
             this.Remotebranch.TabIndex = 4;
             this.Remotebranch.Text = "Remote branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@ namespace GitUI
             this.Force.AutoSize = true;
             this.Force.Location = new System.Drawing.Point(13, 80);
             this.Force.Name = "Force";
-            this.Force.Size = new System.Drawing.Size(55, 19);
+            this.Force.Size = new System.Drawing.Size(59, 20);
             this.Force.TabIndex = 5;
             this.Force.Text = "Force";
             this.Force.UseVisualStyleBackColor = true;
@@ -104,9 +104,9 @@ namespace GitUI
             // FormCheckoutBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(338, 111);
+            this.ClientSize = new System.Drawing.Size(433, 111);
             this.Controls.Add(this.Force);
             this.Controls.Add(this.Remotebranch);
             this.Controls.Add(this.LocalBranch);

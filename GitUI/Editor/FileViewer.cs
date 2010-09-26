@@ -40,8 +40,8 @@ namespace GitUI.Editor
                 (sender, args) =>
                 {
                     ResetForText(null);
-                    _internalFileViewer.SetText( "Unsupported file");
-                    
+                    _internalFileViewer.SetText("Unsupported file");
+
                 };
 
             IgnoreWhitespaceChanges = false;
@@ -231,9 +231,10 @@ namespace GitUI.Editor
             {
                 _async.Load(getImage,
                             image =>
+                            {
+                                ResetForImage();
+                                if (image != null)
                                 {
-                                    ResetForImage();
-
                                     if (image.Size.Height > PictureBox.Size.Height ||
                                         image.Size.Width > PictureBox.Size.Width)
                                     {
@@ -244,8 +245,9 @@ namespace GitUI.Editor
                                         PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
                                     }
 
-                                    PictureBox.Image = image;
-                                });
+                                }
+                                PictureBox.Image = image;
+                            });
             }
             else if (IsBinaryFile(fileName))
             {
@@ -274,17 +276,31 @@ namespace GitUI.Editor
 
         private static Image GetImage(string fileName, string guid)
         {
-            using (var stream = GitCommands.GitCommands.GetFileStream(guid))
+            try
             {
-                return CreateImage(fileName, stream);
+                using (var stream = GitCommands.GitCommands.GetFileStream(guid))
+                {
+                    return CreateImage(fileName, stream);
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
         private static Image GetImage(string fileName)
         {
-            using (Stream stream = File.OpenRead(GitCommands.Settings.WorkingDir + fileName))
+            try
             {
-                return CreateImage(fileName, stream);
+                using (Stream stream = File.OpenRead(GitCommands.Settings.WorkingDir + fileName))
+                {
+                    return CreateImage(fileName, stream);
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -303,12 +319,12 @@ namespace GitUI.Editor
 
         private static MemoryStream CreateCopy(Stream stream)
         {
-            return new MemoryStream(new BinaryReader(stream).ReadBytes((int) stream.Length));
+            return new MemoryStream(new BinaryReader(stream).ReadBytes((int)stream.Length));
         }
 
         private static string GetFileText(string fileName)
         {
-            string path; 
+            string path;
             if (File.Exists(fileName))
                 path = fileName;
             else
