@@ -131,6 +131,7 @@ namespace GitUI
             this.BlueIcon = new System.Windows.Forms.RadioButton();
             this.DefaultIcon = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.DrawNonRelativesGray = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_ColorGraphLabel = new System.Windows.Forms.Label();
             this.StripedBanchChange = new System.Windows.Forms.CheckBox();
             this.BranchBorders = new System.Windows.Forms.CheckBox();
@@ -212,7 +213,6 @@ namespace GitUI
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.DrawNonRelativesGray = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -566,9 +566,9 @@ namespace GitUI
             // 
             // Rescan
             // 
-            this.Rescan.Location = new System.Drawing.Point(574, 286);
+            this.Rescan.Location = new System.Drawing.Point(553, 286);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(128, 24);
+            this.Rescan.Size = new System.Drawing.Size(149, 24);
             this.Rescan.TabIndex = 8;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
@@ -1409,6 +1409,16 @@ namespace GitUI
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Revision graph";
+            // 
+            // DrawNonRelativesGray
+            // 
+            this.DrawNonRelativesGray.AutoSize = true;
+            this.DrawNonRelativesGray.Location = new System.Drawing.Point(9, 96);
+            this.DrawNonRelativesGray.Name = "DrawNonRelativesGray";
+            this.DrawNonRelativesGray.Size = new System.Drawing.Size(163, 20);
+            this.DrawNonRelativesGray.TabIndex = 16;
+            this.DrawNonRelativesGray.Text = "Draw non relatives gray";
+            this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
             // 
             // _NO_TRANSLATE_ColorGraphLabel
             // 
@@ -2299,16 +2309,6 @@ namespace GitUI
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
-            // 
-            // DrawNonRelativesGray
-            // 
-            this.DrawNonRelativesGray.AutoSize = true;
-            this.DrawNonRelativesGray.Location = new System.Drawing.Point(9, 96);
-            this.DrawNonRelativesGray.Name = "DrawNonRelativesGray";
-            this.DrawNonRelativesGray.Size = new System.Drawing.Size(163, 20);
-            this.DrawNonRelativesGray.TabIndex = 16;
-            this.DrawNonRelativesGray.Text = "Draw non relatives gray";
-            this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 

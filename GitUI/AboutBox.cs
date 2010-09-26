@@ -13,7 +13,7 @@ namespace GitUI
         public AboutBox()
         {
             InitializeComponent(); Translate();
-
+            thanksTimer_Tick(null, null);
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -41,6 +41,15 @@ namespace GitUI
             base.OnLoad(e);
 
             _NO_TRANSLATE_labelVersionInfo.Text += _NO_TRANSLATE_labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
+        }
+
+        private int thanksCounter = 0;
+        private void thanksTimer_Tick(object sender, EventArgs e)
+        {
+            string contributers = "               Steffen Forkmann, Jacob Stanley, Nick Mayer, bleis-tift, dominiqueplante, Chris Meaney, Adrian Codrington, Troels Thomsen, Seth Behunin, Wilbert van Dolleweerd, Tobias Bieniek, Stan Angeloff, Grzegorz Pachocki, William Swanson, Emanuel Henrique do Prado, Harald Deischinger, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch";
+            _NO_TRANSLATE_thanksToTicker.Text = string.Concat(contributers.Substring(thanksCounter), contributers);// "Thanks to: " + contributers[thanksCounter % contributers.Length];
+            _NO_TRANSLATE_thanksToTicker.Refresh();
+            thanksCounter = (thanksCounter + 1) % contributers.Length;
         }
     }
 }
