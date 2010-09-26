@@ -625,12 +625,7 @@ namespace GitUI
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
-                if (GitCommands.Settings.MulticolorBranches)
-                {
-                    colors.Add(getJunctionColor(j));
-                }
-                else
-                    colors.Add(GitCommands.Settings.GraphColor);
+                colors.Add(getJunctionColor(j));
             }
 
             if (colors.Count == 0)
@@ -641,10 +636,8 @@ namespace GitUI
             return colors;
         }
 
-        private Color getJunctionColor(Junction aJunction)
-        {
-            // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
-            Color[] possibleColors = 
+        // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
+        private Color[] possibleColors = 
             {
                 Color.Red,
                 Color.MistyRose,
@@ -659,10 +652,15 @@ namespace GitUI
                 Color.Gold,
                 Color.Orange
             };
-
+        
+        private Color getJunctionColor(Junction aJunction)
+        {
             //Draw non-relative branches gray
             if (!aJunction.IsRelative && GitCommands.Settings.RevisionGraphDrawNonRelativesGray)
                 return nonRelativeColor;
+
+            if (!GitCommands.Settings.MulticolorBranches)
+                return GitCommands.Settings.GraphColor;
 
             // This is the order to grab the colors in.
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
@@ -922,8 +920,19 @@ namespace GitUI
                     bool drawBorder = GitCommands.Settings.BranchBorders; //hide border for "non-relatives"
                     if (curColors.Count == 1 || !GitCommands.Settings.StripedBranchChange)
                     {
-                        brushLineColor = new SolidBrush(curColors[0]);
-                        if (curColors[0] == nonRelativeColor) drawBorder = false;
+                        if (curColors[0] != nonRelativeColor)
+                        {
+                            brushLineColor = new SolidBrush(curColors[0]);
+                        }
+                        else if (curColors.Count > 1 && curColors[1] != nonRelativeColor)
+                        {
+                            brushLineColor = new SolidBrush(curColors[1]);
+                        }
+                        else
+                        {
+                            drawBorder = false;
+                            brushLineColor = new SolidBrush(nonRelativeColor);
+                        }
                     }
                     else
                     {
