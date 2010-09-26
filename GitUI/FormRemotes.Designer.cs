@@ -663,7 +663,6 @@ namespace GitUI
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn headTypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button SaveDefaultPushPull;
         private System.Windows.Forms.DataGridViewTextBoxColumn BranchName;
         private System.Windows.Forms.DataGridViewTextBoxColumn RemoteCombo;
