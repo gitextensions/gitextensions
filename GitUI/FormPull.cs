@@ -226,6 +226,9 @@ namespace GitUI
             var branch = GitCommands.GitCommands.GetSelectedBranch();
             Remotes.Text = GitCommands.GitCommands.GetSetting(string.Format("branch.{0}.remote", branch));
 
+            var branchHead = new GitHead(null, branch);
+            Branches.Text = branchHead.MergeWith;
+
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
             EnableLoadSshButton();
 
