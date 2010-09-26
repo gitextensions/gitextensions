@@ -98,7 +98,7 @@
             this.noFastForward.AutoSize = true;
             this.noFastForward.Location = new System.Drawing.Point(13, 131);
             this.noFastForward.Name = "noFastForward";
-            this.noFastForward.Size = new System.Drawing.Size(191, 17);
+            this.noFastForward.Size = new System.Drawing.Size(232, 20);
             this.noFastForward.TabIndex = 7;
             this.noFastForward.Text = "Always create a new merge commit";
             this.noFastForward.UseVisualStyleBackColor = true;
@@ -109,7 +109,7 @@
             this.fastForward.Checked = true;
             this.fastForward.Location = new System.Drawing.Point(13, 108);
             this.fastForward.Name = "fastForward";
-            this.fastForward.Size = new System.Drawing.Size(257, 17);
+            this.fastForward.Size = new System.Drawing.Size(314, 20);
             this.fastForward.TabIndex = 6;
             this.fastForward.TabStop = true;
             this.fastForward.Text = "Keep a single branch line if possible (fast forward)";
@@ -117,9 +117,9 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(347, 208);
+            this.Ok.Location = new System.Drawing.Point(314, 208);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(206, 13);
+            this.label1.Size = new System.Drawing.Size(251, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Merge current branch with another branch";
             // 
@@ -139,7 +139,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(126, 65);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(296, 21);
+            this.Branches.Size = new System.Drawing.Size(296, 24);
             this.Branches.TabIndex = 3;
             // 
             // Currentbranch
@@ -147,7 +147,7 @@
             this.Currentbranch.AutoSize = true;
             this.Currentbranch.Location = new System.Drawing.Point(10, 42);
             this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(44, 13);
+            this.Currentbranch.Size = new System.Drawing.Size(56, 16);
             this.Currentbranch.TabIndex = 1;
             this.Currentbranch.Text = "Current:";
             // 
@@ -156,14 +156,14 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 68);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 13);
+            this.label2.Size = new System.Drawing.Size(72, 16);
             this.label2.TabIndex = 2;
             this.label2.Text = "Merge with";
             // 
             // FormMergeBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(514, 243);
             this.Controls.Add(this.splitContainer1);
