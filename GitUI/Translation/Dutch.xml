@@ -72,6 +72,13 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>Zoeken en vervangen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormVerify">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1280,6 +1287,9 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
           <Value>Toon alleen gefilterde vertakkingen</Value>
         </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>Teken niet gerelateerde vertakkingen grijs</Value>
+        </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
@@ -1699,6 +1709,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="localAutoCrlfTrue" Property="Text">
           <Value>Windows-stijl uitchecken, Unix-stijl inchecken (zet "core.autocrlf" op "true")</Value>
         </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
+          <Value>Teken niet gerelateerde vertakkingen grijs</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -1724,6 +1737,13 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Opslaan</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editor</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2760,13 +2780,6 @@ stash
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormEditor">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Editor</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

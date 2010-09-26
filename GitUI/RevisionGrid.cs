@@ -279,6 +279,13 @@ namespace GitUI
                 _revisionGraphCommand.Kill();
         }
 
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            Revisions.Refresh();
+        }
+
         protected override void OnCreateControl()
         {
             base.OnCreateControl();

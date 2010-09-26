@@ -732,6 +732,8 @@ namespace GitUI
                 Initialize();
 
             Translate();
+
+            RevisionGrid.Refresh();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
