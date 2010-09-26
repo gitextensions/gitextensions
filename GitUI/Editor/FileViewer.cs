@@ -14,7 +14,6 @@ namespace GitUI.Editor
     public partial class FileViewer : GitExtensionsControl
     {
         private readonly AsyncLoader _async;
-        private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private IFileViewer _internalFileViewer;
@@ -51,7 +50,6 @@ namespace GitUI.Editor
 
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
-            _internalFileViewer.KeyDown += TextAreaKeyUp;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
             _internalFileViewer.SelectedLineChanged += new SelectedLineChangedHandler(_internalFileViewer_SelectedLineChanged);
@@ -168,16 +166,6 @@ namespace GitUI.Editor
                 fileviewerToolbar.Visible = false;
         }
 
-        private void TextAreaKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
-                Find();
-
-            if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
-                _findAndReplaceForm.FindNext(true, true, "Text not found");
-            else if (e.KeyCode == Keys.F3)
-                _findAndReplaceForm.FindNext(true, false, "Text not found");
-        }
 
         public void SaveCurrentScrollPos()
         {
@@ -192,10 +180,6 @@ namespace GitUI.Editor
             _currentScrollPos = 0;
         }
 
-        public void Find()
-        {
-            //_findAndReplaceForm.ShowFor(_internalFileViewer, false);
-        }
 
         public void ViewFile(string fileName)
         {
@@ -542,7 +526,7 @@ namespace GitUI.Editor
 
         private void FindToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Find();
+            _internalFileViewer.Find();
         }
 
         private void ignoreWhiteSpaces_Click(object sender, EventArgs e)
