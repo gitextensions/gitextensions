@@ -2559,9 +2559,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton localAutoCrlfFalse;
         private System.Windows.Forms.RadioButton localAutoCrlfInput;
         private System.Windows.Forms.RadioButton localAutoCrlfTrue;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
 
     }
