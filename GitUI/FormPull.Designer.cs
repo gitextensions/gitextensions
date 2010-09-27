@@ -154,9 +154,9 @@
             // Remotes
             // 
             this.Remotes.FormattingEnabled = true;
-            this.Remotes.Location = new System.Drawing.Point(128, 19);
+            this.Remotes.Location = new System.Drawing.Point(148, 19);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(297, 24);
+            this.Remotes.Size = new System.Drawing.Size(279, 24);
             this.Remotes.TabIndex = 0;
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
@@ -178,9 +178,9 @@
             // 
             this.PullSource.Enabled = false;
             this.PullSource.FormattingEnabled = true;
-            this.PullSource.Location = new System.Drawing.Point(128, 46);
+            this.PullSource.Location = new System.Drawing.Point(148, 46);
             this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(297, 24);
+            this.PullSource.Size = new System.Drawing.Size(279, 24);
             this.PullSource.TabIndex = 4;
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
@@ -284,7 +284,7 @@
             // _NO_TRANSLATE_localBranch
             // 
             this._NO_TRANSLATE_localBranch.AutoSize = true;
-            this._NO_TRANSLATE_localBranch.Location = new System.Drawing.Point(128, 22);
+            this._NO_TRANSLATE_localBranch.Location = new System.Drawing.Point(148, 22);
             this._NO_TRANSLATE_localBranch.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_localBranch.Name = "_NO_TRANSLATE_localBranch";
             this._NO_TRANSLATE_localBranch.Size = new System.Drawing.Size(75, 16);
@@ -305,9 +305,9 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(128, 46);
+            this.Branches.Location = new System.Drawing.Point(148, 46);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(297, 24);
+            this.Branches.Size = new System.Drawing.Size(279, 24);
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
