@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
+        private TranslationString trackRemoteBranch = new TranslationString("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '{0}'" + Environment.NewLine + "that track's this remote branch?");
+        private TranslationString trackRemoteBranchCaption = new TranslationString("Checkout branch");
+        
         public FormCheckoutBranch()
         {
             InitializeComponent();
@@ -31,7 +35,7 @@ namespace GitUI
 
                 foreach (var head in heads)
                 {
-                    if (head.IsRemote)
+                    if (head.IsRemote && !head.IsTag)
                         remoteHeads.Add(head);
                 }
 
@@ -45,19 +49,23 @@ namespace GitUI
         {
             try
             {
-                //Get a localbranch name
-                var remoteName = GitCommands.GitCommands.GetRemoteName(Branches.Text, GitCommands.GitCommands.GetRemotes());
-                var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
-                
                 var command = "checkout";
                 if (Remotebranch.Checked)
                 {
-                    var result =
-                        MessageBox.Show(
-                            "You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine +
-                            "Do you want create a local branch with the name '" + localBranchName + "'" +
-                            Environment.NewLine + "that track's this remote branch?", "Checkout branch",
-                            MessageBoxButtons.YesNo);
+                    //Get a localbranch name
+                    var remoteName = GitCommands.GitCommands.GetRemoteName(Branches.Text, GitCommands.GitCommands.GetRemotes());
+                    var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
+
+                    //try to determine the 'best' name for a local branch, check if the local
+                    //name for the remote branch is already used
+                    if (LocalBranchExists(localBranchName))
+                        localBranchName = string.Concat(remoteName, "_", localBranchName);
+
+                    var result = MessageBox.Show(string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel);
+
+                    if (result == DialogResult.Cancel)
+                        return;
+
                     if (result == DialogResult.Yes)
                         command += string.Format(" -b {0}", localBranchName);
                 }
@@ -70,11 +78,22 @@ namespace GitUI
                 if (!form.ErrorOccured())
                     Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
         }
+
+        private bool LocalBranchExists(string name)
+        {
+            foreach (GitHead head in GitCommands.GitCommands.GetHeads(false))
+            {
+                if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+
 
         private void BranchTypeChanged()
         {

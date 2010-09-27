@@ -115,7 +115,11 @@ namespace GitCommands
                 Name = CompleteName;
                 return;
             }
-
+            if (IsRemote)
+            {
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                return;
+            }
             if (IsTag)
             {
                 // we need the one containing ^{}, because it contains the reference
@@ -130,11 +134,6 @@ namespace GitCommands
             if (IsHead)
             {
                 Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
-                return;
-            }
-            if (IsRemote)
-            {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
                 return;
             }
             Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);

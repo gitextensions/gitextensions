@@ -483,16 +483,16 @@ _ReSharper*/
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Value>Versie historie</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="Text">
-          <Value>Ophalen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
           <Value>Ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="Text">
-          <Value>Verzenden</Value>
+        <TranslationItem Name="toolStripButtonPull" Property="Text">
+          <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
+          <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Value>Verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
@@ -2645,6 +2645,15 @@ stash
     <TranslationCategory Name="FormCheckoutBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
+          <Value>Vertakking uitchecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranch" Property="Text">
+          <Value>U staat op het punt een externe vertakking uit te checken.
+
+Wilt u een lokale vertakking aanmaken met de naam '{0}'
+welke deze externe vertakking volgt?</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
           <Value>Vertakking uitchecken</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
