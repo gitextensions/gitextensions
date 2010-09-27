@@ -2289,8 +2289,8 @@ namespace GitCommands
         public static string MergeBranchCmd(string branch, bool allowFastForward)
         {
             if (!allowFastForward)
-                return "merge --no-ff \"" + branch + "\"";
-            return "merge \"" + branch + "\"";
+                return "merge --no-ff " + branch;
+            return "merge " + branch;
         }
 
         public static string GetFileExtension(string fileName)

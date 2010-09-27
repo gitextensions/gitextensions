@@ -18,7 +18,7 @@ namespace GitUI
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
             var selectedHead = GitCommands.GitCommands.GetSelectedBranch();
-            Currentbranch.Text = _currentBranch.Text + selectedHead;
+            currentBranchLabel.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
