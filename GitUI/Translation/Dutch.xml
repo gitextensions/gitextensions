@@ -483,16 +483,16 @@ _ReSharper*/
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Value>Versie historie</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
-          <Value>Ophalen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
-          <Value>Verzenden</Value>
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
+          <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
+          <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
           <Value>Verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
@@ -1154,7 +1154,7 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
           <Value>Voeg huidige vertakking samen met andere vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
-          <Value>Huidig:</Value>
+          <Value>Huidig</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Samenvoegen met</Value>
