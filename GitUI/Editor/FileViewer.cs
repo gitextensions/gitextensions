@@ -353,8 +353,9 @@ namespace GitUI.Editor
             else
                 EditorOptions.SetSyntax(_internalFileViewer, fileName);
 
-            if (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
-                fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(fileName) &&
+                (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
+                 fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
                 ResetForDiff();
             }
