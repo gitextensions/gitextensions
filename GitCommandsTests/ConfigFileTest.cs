@@ -41,7 +41,13 @@ namespace GitCommandsTests
         [TestMethod]
         public void TestWithInvalidFileName()
         {
-            ConfigFile configFile = new ConfigFile("");
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+            }
+            ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\");
+            
+            Assert.IsNotNull(configFile);
         }
 
         [TestMethod]
