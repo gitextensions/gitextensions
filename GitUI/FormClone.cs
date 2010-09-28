@@ -114,7 +114,7 @@ namespace GitUI
             if (dialog.ShowDialog() == DialogResult.OK)
                 _NO_TRANSLATE_From.Text = dialog.SelectedPath;
 
-            ToTextUpdate(sender, e);
+            FromTextUpdate(sender, e);
         }
 
         private void ToBrowseClick(object sender, EventArgs e)

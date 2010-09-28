@@ -44,7 +44,7 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not load" + _fileName, ex);
+                throw new Exception("Could not load config file: " + _fileName, ex);
             }
         }
 

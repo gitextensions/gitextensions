@@ -12,7 +12,7 @@ namespace GitUI
         {
             // Lemmings
             // Also, we removed repeated calls to DateTime.Now and made this method testable
-            if (currentDate.Month == 12 && currentDate.Day > 15 && currentDate.Day < 27) //X-Mass
+            if (currentDate.Month == 12 && currentDate.Day > 12 && currentDate.Day < 27) //X-Mass
             {
                 return Resources.Cow_xmass;
             }
