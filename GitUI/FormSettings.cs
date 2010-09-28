@@ -1048,6 +1048,9 @@ namespace GitUI
 
         private bool AutoFindPuttyPaths()
         {
+            if (!Settings.RunningOnWindows())
+                return false;
+
             if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
             if (AutoFindPuttyPathsInDir("c:\\Program Files (x86)\\PuTTY\\")) return true;
             if (AutoFindPuttyPathsInDir("C:\\Program Files\\TortoiseGit\\bin")) return true;
@@ -1188,6 +1191,9 @@ namespace GitUI
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            if (!Settings.RunningOnWindows())
+                return;
+
             GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))

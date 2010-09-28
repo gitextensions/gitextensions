@@ -38,8 +38,14 @@ namespace GitCommands.Config
             _sections = new List<ConfigSection>();
 
             _fileName = fileName;
-
-            Load();
+            try
+            {
+                Load();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not load" + _fileName, ex);
+            }
         }
 
         public IList<ConfigSection> GetConfigSections()
@@ -60,7 +66,7 @@ namespace GitCommands.Config
             ConfigSection configSection = null;
 
             foreach (var line in fileLines)
-            {                
+            {
                 var m = RegParseIsSection.Match(line);
                 if (m.Success) //this line is a section
                 {
