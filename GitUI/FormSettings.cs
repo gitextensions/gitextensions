@@ -263,7 +263,11 @@ namespace GitUI
                 }
                 else
                 {
-                    ConfigFile configFile = new ConfigFile(Settings.GitBinDir.Replace("bin\\", "etc\\gitconfig"));
+                    //the following lines only work for msysgit (i think). MSysgit has a config file
+                    //in the etc directory which is checked after the local and global config. In
+                    //practice this is only used to core.autocrlf. If there are more cases, we might
+                    //need to consider a better solution.
+                    ConfigFile configFile = new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"));
                     globalAutocrlf = configFile.GetValue("core.autocrlf");
                 }
 

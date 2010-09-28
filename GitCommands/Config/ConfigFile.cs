@@ -55,7 +55,7 @@ namespace GitCommands.Config
 
         private void Load()
         {
-            if (!File.Exists(_fileName))
+            if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
                 return;
 
             FindSections(File.ReadAllLines(_fileName, Settings.Encoding));
