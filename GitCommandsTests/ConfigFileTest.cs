@@ -39,6 +39,12 @@ namespace GitCommandsTests
         }
 
         [TestMethod]
+        public void TestWithInvalidFileName()
+        {
+            ConfigFile configFile = new ConfigFile("");
+        }
+
+        [TestMethod]
         public void TestWithHiddenFile()
         {
             { //TESTDATA
@@ -384,7 +390,7 @@ namespace GitCommandsTests
 
             // verify
             {
-               
+
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
 
                 IList<string> values = configFile.GetValues("remote.origin.fetch");
