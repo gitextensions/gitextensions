@@ -1,8 +1,5 @@
 namespace System
 {
-    public delegate void Action();
-
-    public delegate T Func<T>();    
 
     public class Tuple<T, S>
     {

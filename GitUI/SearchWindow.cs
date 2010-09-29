@@ -7,8 +7,6 @@ using System.Windows.Forms;
 namespace GitUI
 {
     
-    public delegate TReturn Func<T, TReturn>(T item);
-    public delegate void Action<T>(T item);
     
     public partial class SearchWindow<T> : Form where T : class
     {
