@@ -202,18 +202,18 @@ namespace GitUI
                     ? SearchInReverseOrder(startIndex, searchString)
                     : SearchForward(startIndex, searchString);
 
-            if (searchResult.IsNone)
+            if (!searchResult.HasValue)
                 return;
 
             Revisions.ClearSelection();
-            Revisions.Rows[searchResult.Some].Selected = true;
+            Revisions.Rows[searchResult.Value].Selected = true;
 
-            Revisions.CurrentCell = Revisions.Rows[searchResult.Some].Cells[1];
+            Revisions.CurrentCell = Revisions.Rows[searchResult.Value].Cells[1];
 
         }
 
 
-        private Option<int> SearchForward(int startIndex, string searchString)
+        private int? SearchForward(int startIndex, string searchString)
         {
             // Check for out of bounds roll over if required
             int index;
@@ -223,20 +223,20 @@ namespace GitUI
             for (index = startIndex; index < Revisions.RowCount; ++index)
             {
                 if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    return Option<int>.From(index);
+                    return index;
             }
 
             // We didn't find it so start searching from the top
             for (index = 0; index < startIndex; ++index)
             {
                 if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    return Option<int>.From(index);
+                    return index;
             }
 
-            return Option<int>.None;
+            return null;
         }
 
-        private Option<int> SearchInReverseOrder(int startIndex, string searchString)
+        private int? SearchInReverseOrder(int startIndex, string searchString)
         {
             // Check for out of bounds roll over if required
             int index;
@@ -246,18 +246,18 @@ namespace GitUI
             for (index = startIndex; index >= 0; --index)
             {
                 if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    return Option<int>.From(index);
+                    return index;
             }
 
             // We didn't find it so start searching from the bottom
             for (index = Revisions.RowCount - 1; index > startIndex; --index)
             {
                 if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
-                    return Option<int>.From(index);
+                    return index;
             }
 
 
-            return Option<int>.None;
+            return null;
         }
 
         public void DisableContextMenu()
