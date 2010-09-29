@@ -11,6 +11,7 @@ using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using PatchApply;
 using ResourceManager.Translation;
+using System.Text;
 
 namespace GitUI
 {
@@ -1281,12 +1282,20 @@ namespace GitUI
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItems.Count == 0)
                 return;
 
-            var fileName = Settings.WorkingDir + (DiffFiles.SelectedItem).Name;
+            StringBuilder fileNames = new StringBuilder();
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                //Only use appendline when multiple items are selected.
+                //This to make it easier to use the text from clipboard when 1 file is selected.
+                if (fileNames.Length > 0)
+                    fileNames.AppendLine();
 
-            Clipboard.SetText(fileName.Replace('/', '\\'));
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeperatorWrong, Settings.PathSeperator));
+            }
+            Clipboard.SetText(fileNames.ToString());
         }
 
         private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
