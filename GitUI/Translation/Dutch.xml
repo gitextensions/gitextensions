@@ -612,6 +612,9 @@ _ReSharper*/
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
+        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
+          <Value>Verwijder index.lock</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
