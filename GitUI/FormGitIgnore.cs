@@ -20,13 +20,8 @@ namespace GitUI
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
                 {
-                    using (var re = new StreamReader(Settings.WorkingDir + ".gitignore", Settings.Encoding))
-                    {
-                        GitIgnoreFile = re.ReadToEnd();
-                        re.Close();
-                    }
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Settings.WorkingDir + ".gitignore");
                 }
-                _NO_TRANSLATE_GitIgnoreEdit.Text = GitIgnoreFile;
             }
             catch (Exception ex)
             {
@@ -45,7 +40,7 @@ namespace GitUI
                             {
                                 // Enter a newline to work around a wierd bug 
                                 // that causes the first line to include 3 extra bytes. (encoding marker??)
-                                GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.Text.Trim();
+                                GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.GetText().Trim();
                                 using (var tw = new StreamWriter(x, false, Settings.Encoding))
                                 {
                                     tw.Write(GitIgnoreFile);
@@ -75,7 +70,8 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_GitIgnoreEdit.Text +=
+            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore", 
+                _NO_TRANSLATE_GitIgnoreEdit.GetText() +
                 Environment.NewLine + "#ignore thumbnails created by windows" +
                 Environment.NewLine + "Thumbs.db" +
                 Environment.NewLine + "#Ignore files build by Visual Studio" +
@@ -104,7 +100,7 @@ namespace GitUI
                 Environment.NewLine + "[Rr]elease*/" +
                 Environment.NewLine + "_ReSharper*/" +
                 Environment.NewLine + "[Tt]est[Rr]esult*" +
-                Environment.NewLine + "";
+                Environment.NewLine + "");
         }
     }
 }
