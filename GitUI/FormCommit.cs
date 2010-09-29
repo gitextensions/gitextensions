@@ -256,7 +256,7 @@ namespace GitUI
                 MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text);
                 return;
             }
-            if (Message.Text.Length < 2)
+            if (Message.Text.Length < 3)
             {
                 MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text);
                 return;
