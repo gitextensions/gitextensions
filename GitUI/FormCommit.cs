@@ -778,10 +778,17 @@ namespace GitUI
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
-            var item = Unstaged.SelectedItem;
-            var fileName = Settings.WorkingDir + item.Name;
+            StringBuilder fileNames = new StringBuilder();
+            foreach (var item in Unstaged.SelectedItems)
+            {
+                //Only use appendline when multiple items are selected.
+                //This to make it easier to use the text from clipboard when 1 file is selected.
+                if (fileNames.Length > 0) 
+                    fileNames.AppendLine();
 
-            Clipboard.SetText(fileName.Replace('/', '\\'));
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeperatorWrong, Settings.PathSeperator));
+            }
+            Clipboard.SetText(fileNames.ToString());
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
