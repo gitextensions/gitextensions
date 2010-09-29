@@ -1289,5 +1289,18 @@ namespace GitUI
             Clipboard.SetText(fileName.Replace('/', '\\'));
         }
 
+        private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = Path.Combine(Settings.WorkingDirGitDir(), "index.lock");
+
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+                MessageBox.Show("index.lock deleted.");
+            }
+            else
+                MessageBox.Show("index.lock not found at: " + fileName);
+        }
+
     }
 }
