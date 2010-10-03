@@ -328,10 +328,17 @@ namespace GitUI
 
         public bool StartPushDialog()
         {
+            return StartPushDialog(false);
+        }
+
+        public bool StartPushDialog(bool pushOnShow)
+        {
             if (!InvokeEvent(PrePush))
                 return true;
 
-            new FormPush().ShowDialog();
+            FormPush form = new FormPush();
+            form.PushOnShow = pushOnShow;
+            form.ShowDialog();
 
             InvokeEvent(PostPush);
 
