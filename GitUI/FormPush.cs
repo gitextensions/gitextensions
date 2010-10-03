@@ -33,6 +33,8 @@ namespace GitUI
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");        
 
+        public Boolean PushOnShow { get; set;}
+
         public FormPush()
         {
             _currentBranch = GitCommands.GitCommands.GetSelectedBranch();
@@ -276,6 +278,12 @@ namespace GitUI
         {
             Branch.Enabled = !PushAllBranches.Checked;
             RemoteBranch.Enabled = !PushAllBranches.Checked;
+        }
+
+        private void FormPush_Shown(object sender, EventArgs e)
+        {
+            if (PushOnShow)
+                Push.PerformClick();
         }
     }
 }
