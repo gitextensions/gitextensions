@@ -102,6 +102,7 @@ namespace GitUI
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, _closeDialogAfterCommitTooltip.Text);
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
+            PushAfterCommit.Checked = Settings.PushAfterCommit;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
@@ -279,6 +280,11 @@ namespace GitUI
                     return;
 
                 Message.Text = string.Empty;
+
+                if (PushAfterCommit.Checked)
+                {
+                    GitUICommands.Instance.StartPushDialog(true);
+                }
 
                 if (CloseDialogAfterCommit.Checked)
                 {
@@ -874,6 +880,11 @@ namespace GitUI
             new FormEditor(fileName).ShowDialog();
 
             UntrackedSelectionChanged(null, null);
+        }
+
+        private void PushAfterCommit_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.PushAfterCommit = PushAfterCommit.Checked;
         }
     }
 }
