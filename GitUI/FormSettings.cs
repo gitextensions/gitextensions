@@ -642,15 +642,16 @@ namespace GitUI
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            if (File.Exists(GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll"))
-                GitCommands.GitCommands.RunCmd("regsvr32", "\"" + GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll\"");
-            else
+            var path = Path.Combine(GitCommands.Settings.GetInstallDir(), "GitExtensionsShellEx.dll");
+            if (!File.Exists(path))
             {
-                string fileName = Assembly.GetAssembly(GetType()).Location;
-                fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' })) + "\\GitExtensionsShellEx.dll";
-
-                if (File.Exists(fileName))
-                    GitCommands.GitCommands.RunCmd("regsvr32", "\"" + fileName + "\"");
+                path = Assembly.GetAssembly(GetType()).Location;
+                path = Path.GetDirectoryName(path);
+                path = Path.Combine(path, "GitExtensionsShellEx.dll");
+            }
+            if (File.Exists(path))
+            {
+                GitCommands.GitCommands.RunCmd("regsvr32", string.Format("\"{0}\"", path));
             }
 
             CheckSettings();
