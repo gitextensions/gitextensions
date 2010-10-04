@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Config;
 using GitUI.Editor;
 using Gravatar;
 using Microsoft.Win32;
-using System.Reflection;
-using System.IO;
-using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -17,7 +19,7 @@ namespace GitUI
     {
         public FormSettings()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
@@ -28,7 +30,7 @@ namespace GitUI
         {
             if (!Settings.RunningOnWindows())
                 return SolveGitCommand();
-            
+
             return SolveGitCommand() &&
                    SolveLinuxToolsDir() &&
                    SolveKDiff() &&
@@ -271,7 +273,8 @@ namespace GitUI
                         //need to consider a better solution.
                         ConfigFile configFile = new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"));
                         globalAutocrlf = configFile.GetValue("core.autocrlf");
-                    } catch {}
+                    }
+                    catch { }
                 }
 
                 globalAutoCrlfFalse.Checked = globalAutocrlf.Equals("false", StringComparison.OrdinalIgnoreCase);
@@ -642,7 +645,6 @@ namespace GitUI
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-
             if (File.Exists(GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll"))
                 GitCommands.GitCommands.RunCmd("regsvr32", "\"" + GitCommands.Settings.GetInstallDir() + "\\GitExtensionsShellEx.dll\"");
             else
@@ -840,60 +842,6 @@ namespace GitUI
             MessageBox.Show("Git can be runned using: " + GitCommands.Settings.GitCommand, "Locate git");
             GitPath.Text = GitCommands.Settings.GitCommand;
             Rescan_Click(null, null);
-        }
-
-        public static bool SolveGitCommand()
-        {
-            if (GitCommands.Settings.RunningOnWindows())
-            {
-                GitCommands.Settings.GitCommand = @"C:\cygwin\bin\git";
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                {
-                    GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
-                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                    {
-                        GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\bin\git.exe";
-                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                        {
-                            GitCommands.Settings.GitCommand = @"c:\Program Files\Git\bin\git.exe";
-                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                            {
-                                GitCommands.Settings.GitCommand = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
-                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                                {
-                                    GitCommands.Settings.GitCommand = @"c:\Program Files (x86)\Git\cmd\git.cmd";
-                                    if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                                    {
-                                        GitCommands.Settings.GitCommand = @"c:\Program Files\Git\cmd\git.cmd";
-                                        if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                                        {
-                                            GitCommands.Settings.GitCommand = "git";
-                                            if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                                            {
-                                                GitCommands.Settings.GitCommand = "git.cmd";
-                                                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                                                {
-                                                    return false;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                GitCommands.Settings.GitCommand = "git";
-                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private void FormSettigns_Load(object sender, EventArgs e)
@@ -1841,7 +1789,8 @@ namespace GitUI
                 return true;
 
             ShellExtensionsRegistered.Visible = true;
-            if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
+            if (
+                string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved", "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2", null)))
@@ -1871,5 +1820,50 @@ namespace GitUI
             GitExtensionsInstall.Text = "GitExtensions is properly registered.";
             return true;
         }
+
+        private static IEnumerable<string> GetWindowsCommandLocations()
+        {
+            yield return @"C:\cygwin\bin\git";
+            yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
+            yield return @"c:\Program Files (x86)\Git\bin\git.exe";
+            yield return @"c:\Program Files\Git\bin\git.exe";
+            yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
+            yield return @"c:\Program Files (x86)\Git\cmd\git.cmd";
+            yield return @"c:\Program Files\Git\cmd\git.cmd";
+            yield return "git";
+            yield return "git.cmd";
+        }
+
+        private static bool SolveGitCommand()
+        {
+            if (GitCommands.Settings.RunningOnWindows())
+            {
+                var command = GetWindowsCommandLocations()
+                    .Select(cmd => GitCommands.GitCommands.RunCmd(cmd, string.Empty))
+                    .Where(output => !string.IsNullOrEmpty(output))
+                    .FirstOrDefault();
+
+                if (command != null)
+                {
+                    GitCommands.Settings.GitCommand = command;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                GitCommands.Settings.GitCommand = "git";
+                if (string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(GitCommands.Settings.GitCommand, "")))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }
