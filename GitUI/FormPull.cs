@@ -244,7 +244,6 @@ namespace GitUI
             Merge.Checked = Settings.PullMerge == "merge";
             Rebase.Checked = Settings.PullMerge == "rebase";
             Fetch.Checked = Settings.PullMerge == "fetch";
-            SetMergeWithToDefaultIfEmpty();
 
             AutoStash.Checked = Settings.AutoStash;
         }
@@ -320,32 +319,16 @@ namespace GitUI
         private void MergeCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.merge;
-            SetMergeWithToDefaultIfEmpty();
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.Rebase;
-            SetMergeWithToDefaultIfEmpty();
-        }
-
-        private void SetMergeWithToDefaultIfEmpty()
-        {
-            if (string.IsNullOrEmpty(Branches.Text) && (Rebase.Checked || Merge.Checked))
-            {
-                var branchHead = new GitHead(null, GitCommands.GitCommands.GetSelectedBranch());
-                Branches.Text = branchHead.MergeWith;
-            }
-            if (Fetch.Checked)
-            {
-                Branches.Text = string.Empty;
-            }
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             PullImage.BackgroundImage = Resources.fetch;
-            SetMergeWithToDefaultIfEmpty();
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
