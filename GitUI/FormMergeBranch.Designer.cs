@@ -28,9 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.strategyHelp = new System.Windows.Forms.LinkLabel();
+            this.NonDefaultMergeStrategy = new System.Windows.Forms.RadioButton();
+            this._NO_TRANSLATE_mergeStrategy = new System.Windows.Forms.ComboBox();
+            this.currentBranchLabel = new System.Windows.Forms.Label();
             this.noFastForward = new System.Windows.Forms.RadioButton();
             this.fastForward = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
@@ -38,7 +43,7 @@
             this.Branches = new System.Windows.Forms.ComboBox();
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.currentBranchLabel = new System.Windows.Forms.Label();
+            this.strategyToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -79,6 +84,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.strategyHelp);
+            this.groupBox1.Controls.Add(this.NonDefaultMergeStrategy);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_mergeStrategy);
             this.groupBox1.Controls.Add(this.currentBranchLabel);
             this.groupBox1.Controls.Add(this.noFastForward);
             this.groupBox1.Controls.Add(this.fastForward);
@@ -95,10 +103,57 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
             // 
+            // strategyHelp
+            // 
+            this.strategyHelp.AutoSize = true;
+            this.strategyHelp.Location = new System.Drawing.Point(381, 160);
+            this.strategyHelp.Name = "strategyHelp";
+            this.strategyHelp.Size = new System.Drawing.Size(28, 13);
+            this.strategyHelp.TabIndex = 12;
+            this.strategyHelp.TabStop = true;
+            this.strategyHelp.Text = "Help";
+            this.strategyHelp.Visible = false;
+            this.strategyHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.strategyHelp_LinkClicked);
+            // 
+            // NonDefaultMergeStrategy
+            // 
+            this.NonDefaultMergeStrategy.AutoSize = true;
+            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(13, 156);
+            this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
+            this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(179, 17);
+            this.NonDefaultMergeStrategy.TabIndex = 11;
+            this.NonDefaultMergeStrategy.Text = "Use non-default merge strategy";
+            this.NonDefaultMergeStrategy.UseVisualStyleBackColor = true;
+            this.NonDefaultMergeStrategy.CheckedChanged += new System.EventHandler(this.NonDefaultMergeStrategy_CheckedChanged);
+            // 
+            // _NO_TRANSLATE_mergeStrategy
+            // 
+            this._NO_TRANSLATE_mergeStrategy.FormattingEnabled = true;
+            this._NO_TRANSLATE_mergeStrategy.Items.AddRange(new object[] {
+            "resolve",
+            "recursive",
+            "octopus",
+            "ours",
+            "subtree"});
+            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(230, 155);
+            this._NO_TRANSLATE_mergeStrategy.Name = "_NO_TRANSLATE_mergeStrategy";
+            this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(145, 21);
+            this._NO_TRANSLATE_mergeStrategy.TabIndex = 10;
+            this._NO_TRANSLATE_mergeStrategy.Visible = false;
+            // 
+            // currentBranchLabel
+            // 
+            this.currentBranchLabel.AutoSize = true;
+            this.currentBranchLabel.Location = new System.Drawing.Point(126, 42);
+            this.currentBranchLabel.Name = "currentBranchLabel";
+            this.currentBranchLabel.Size = new System.Drawing.Size(12, 13);
+            this.currentBranchLabel.TabIndex = 8;
+            this.currentBranchLabel.Text = "?";
+            // 
             // noFastForward
             // 
             this.noFastForward.AutoSize = true;
-            this.noFastForward.Location = new System.Drawing.Point(13, 131);
+            this.noFastForward.Location = new System.Drawing.Point(13, 133);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(194, 17);
             this.noFastForward.TabIndex = 7;
@@ -109,7 +164,7 @@
             // 
             this.fastForward.AutoSize = true;
             this.fastForward.Checked = true;
-            this.fastForward.Location = new System.Drawing.Point(13, 108);
+            this.fastForward.Location = new System.Drawing.Point(13, 110);
             this.fastForward.Name = "fastForward";
             this.fastForward.Size = new System.Drawing.Size(264, 17);
             this.fastForward.TabIndex = 6;
@@ -139,7 +194,7 @@
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(126, 65);
+            this.Branches.Location = new System.Drawing.Point(126, 64);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(296, 21);
             this.Branches.TabIndex = 3;
@@ -162,14 +217,15 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Merge with";
             // 
-            // currentBranchLabel
+            // strategyToolTip
             // 
-            this.currentBranchLabel.AutoSize = true;
-            this.currentBranchLabel.Location = new System.Drawing.Point(126, 42);
-            this.currentBranchLabel.Name = "currentBranchLabel";
-            this.currentBranchLabel.Size = new System.Drawing.Size(12, 13);
-            this.currentBranchLabel.TabIndex = 8;
-            this.currentBranchLabel.Text = "?";
+            this.strategyToolTip.AutomaticDelay = 1;
+            this.strategyToolTip.AutoPopDelay = 0;
+            this.strategyToolTip.InitialDelay = 1;
+            this.strategyToolTip.ReshowDelay = 1;
+            this.strategyToolTip.ShowAlways = true;
+            this.strategyToolTip.UseAnimation = false;
+            this.strategyToolTip.UseFading = false;
             // 
             // FormMergeBranch
             // 
@@ -208,5 +264,9 @@
         private System.Windows.Forms.RadioButton noFastForward;
         private System.Windows.Forms.RadioButton fastForward;
         private System.Windows.Forms.Label currentBranchLabel;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_mergeStrategy;
+        private System.Windows.Forms.RadioButton NonDefaultMergeStrategy;
+        private System.Windows.Forms.LinkLabel strategyHelp;
+        private System.Windows.Forms.ToolTip strategyToolTip;
     }
 }

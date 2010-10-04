@@ -2255,7 +2255,7 @@ namespace GitCommands
 
         public static string MergeBranch(string branch)
         {
-            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true));
+            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true, null));
         }
 
         public string RunGit(string arguments)
@@ -2286,11 +2286,21 @@ namespace GitCommands
             return output;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, string strategy)
         {
+            StringBuilder command = new StringBuilder("merge");
+
             if (!allowFastForward)
-                return "merge --no-ff " + branch;
-            return "merge " + branch;
+                command.Append(" --no-ff");
+            if (!string.IsNullOrEmpty(strategy))
+            {
+                command.Append(" --strategy=");
+                command.Append(strategy);
+            }
+
+            command.Append(" ");
+            command.Append(branch);
+            return command.ToString();
         }
 
         public static string GetFileExtension(string fileName)
