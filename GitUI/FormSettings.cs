@@ -540,28 +540,25 @@ namespace GitUI
         {
         }
 
-        protected static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
         {
+            string value = null;
             try
             {
-                RegistryKey rk;
-                rk = root.OpenSubKey(subkey, false);
-
-                string value = "";
-
-                if (rk != null && rk.GetValue(key) is string)
+                RegistryKey registryKey = root.OpenSubKey(subkey, false);
+                if (registryKey != null)
                 {
-                    value = rk.GetValue(key).ToString();
-                    rk.Flush();
-                    rk.Close();
+                    using (registryKey)
+                    {
+                        value = registryKey.GetValue(key) as string;
+                    }
                 }
-                return value;
             }
             catch (UnauthorizedAccessException)
             {
                 MessageBox.Show("GitExtensions has insufficient permisions to check the registry.");
             }
-            return "";
+            return value ?? string.Empty;
         }
 
         protected void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
