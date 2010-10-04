@@ -6,6 +6,7 @@ Version 2.04
 	Fixed bug: spellings checker allows using Japanese
 	Added possibility to pull non-default remote branch into current branch
 	Added contributors to about box
+	Added option to choose merge strategy for merge
 	Improved startup speed
 	Non-relative branches are drawn gray
 	Pull dialog shows default remote branch if one is configured for local branch

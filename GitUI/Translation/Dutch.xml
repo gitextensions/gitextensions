@@ -1174,6 +1174,12 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="fastForward" Property="Text">
           <Value>Behoud lineaire geschiedenis indien mogelijk (fast forward)</Value>
         </TranslationItem>
+        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
+          <Value>Gebruik samenvoegen strategie</Value>
+        </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>Help</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormFileHistory">
