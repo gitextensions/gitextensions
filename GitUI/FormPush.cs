@@ -163,7 +163,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(Branch.Text))
                 RemoteBranch.Items.Add(Branch.Text);
 
-            foreach (var head in GitCommands.GitCommands.GetHeads())
+            foreach (var head in GitCommands.GitCommands.GetHeads(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
         }
