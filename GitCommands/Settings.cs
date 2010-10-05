@@ -101,8 +101,6 @@ namespace GitCommands
 
         public static bool CloseCommitDialogAfterCommit { get; set; }
 
-        public static bool PushAfterCommit { get; set; }
-
         public static bool FollowRenamesInFileHistory { get; set; }
 
         public static bool RevisionGraphDrawNonRelativesGray { get; set; }
@@ -340,7 +338,6 @@ namespace GitCommands
                 appData.SetValue("userprofilehomedir", UserProfileHomeDir);
                 appData.SetValue("customhomedir", CustomHomeDir);
                 appData.SetValue("closeCommitDialogAfterCommit", CloseCommitDialogAfterCommit);
-                appData.SetValue("pushAfterCommit", PushAfterCommit);
                 appData.SetValue("markIllFormedLinesInCommitMsg", MarkIllFormedLinesInCommitMsg);
                 appData.SetValue("diffaddedcolor", ColorTranslator.ToHtml(DiffAddedColor));
                 appData.SetValue("diffremovedcolor", ColorTranslator.ToHtml(DiffRemovedColor));
@@ -457,7 +454,6 @@ namespace GitCommands
                 SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
                 SafeSetString("customhomedir", x => CustomHomeDir = x);
                 SafeSetBool("closeCommitDialogAfterCommit", x => CloseCommitDialogAfterCommit = x);
-                SafeSetBool("pushAfterCommit", x => PushAfterCommit = x);
                 SafeSetBool("markIllFormedLinesInCommitMsg", x => MarkIllFormedLinesInCommitMsg = x);
                 SafeSetBool("followrenamesinfilehistory", x => FollowRenamesInFileHistory = x);
                 SafeSetBool("autostash", x => AutoStash = x);

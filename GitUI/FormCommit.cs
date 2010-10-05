@@ -102,7 +102,6 @@ namespace GitUI
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, _closeDialogAfterCommitTooltip.Text);
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
-            PushAfterCommit.Checked = Settings.PushAfterCommit;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
@@ -240,6 +239,11 @@ namespace GitUI
 
         private void CommitClick(object sender, EventArgs e)
         {
+            CheckForStagedAndCommit(false, false);
+        }
+
+        private void CheckForStagedAndCommit(bool amend, bool push)
+        {
             if (Staged.GitItemStatusses.Count == 0)
             {
                 if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo) ==
@@ -247,10 +251,10 @@ namespace GitUI
                     return;
             }
 
-            DoCommit(false);
+            DoCommit(amend, push);
         }
 
-        private void DoCommit(bool amend)
+        private void DoCommit(bool amend, bool push)
         {
             if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
             {
@@ -281,7 +285,7 @@ namespace GitUI
 
                 Message.Text = string.Empty;
 
-                if (PushAfterCommit.Checked)
+                if (push)
                 {
                     GitUICommands.Instance.StartPushDialog(true);
                 }
@@ -858,7 +862,7 @@ namespace GitUI
 
             if (MessageBox.Show(_amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
-                DoCommit(true);
+                DoCommit(true, false);
         }
 
         private void CancelClick(object sender, EventArgs e)
@@ -882,9 +886,9 @@ namespace GitUI
             UntrackedSelectionChanged(null, null);
         }
 
-        private void PushAfterCommit_CheckedChanged(object sender, EventArgs e)
+        private void CommitAndPush_Click(object sender, EventArgs e)
         {
-            Settings.PushAfterCommit = PushAfterCommit.Checked;
+            CheckForStagedAndCommit(false, true);
         }
     }
 }
