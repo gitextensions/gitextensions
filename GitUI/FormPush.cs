@@ -145,7 +145,7 @@ namespace GitUI
             }
 
             foreach (var head in GitCommands.GitCommands.GetHeads(false, true))
-                Branch.Items.Add(head.Name);
+                Branch.Items.Add(head);
 
             Branch.Text = curBranch;
         }
@@ -171,7 +171,20 @@ namespace GitUI
         private void BranchSelectedValueChanged(object sender, EventArgs e)
         {
             if (Branch.Text != HeadText)
+            {
+                if (PullFromRemote.Checked)
+                {
+                    GitHead branch = Branch.SelectedItem as GitHead;
+                    if (branch != null && branch.TrackingRemote.Equals(Remotes.Text.Trim()))
+                    {
+                        RemoteBranch.Text = branch.MergeWith;
+                        if (!string.IsNullOrEmpty(RemoteBranch.Text))
+                            return;
+                    }
+                }
+
                 RemoteBranch.Text = Branch.Text;
+            }
         }
 
         private void FormPushLoad(object sender, EventArgs e)
@@ -194,6 +207,7 @@ namespace GitUI
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
         {
+            BranchSelectedValueChanged(null, null);
             if (!PullFromRemote.Checked)
                 return;
 
@@ -218,25 +232,36 @@ namespace GitUI
         {
             EnableLoadSshButton();
 
-            var pushSettingName = "remote." + Remotes.Text + ".push";
-            var pushSettingValue = GitCommands.GitCommands.GetSetting(pushSettingName);
-            if (!string.IsNullOrEmpty(pushSettingValue))
+            var pushSettingValue = GitCommands.GitCommands.GetSetting("remote." + Remotes.Text + ".push");
+
+            if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {
                 var values = pushSettingValue.Split(':');
                 RemoteBranch.Text = "";
                 if (values.Length > 0)
-                    Branch.Text = values[0];
+                {
+                    GitHead currentBranch = new GitHead(null, values[0], Remotes.Text);
+                    Branch.Items.Add(currentBranch);
+                    Branch.SelectedItem = currentBranch;
+                }
                 if (values.Length > 1)
                     RemoteBranch.Text = values[1];
+
+                return;
             }
-            else
+
+            if (string.IsNullOrEmpty(Branch.Text))
             {
                 // Doing this makes it pretty easy to accidentally create a branch on the remote.
                 // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
                 // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-                Branch.Text = _currentBranch;
-                RemoteBranch.Text = Branch.Text;
+                GitHead currentBranch = new GitHead(null, _currentBranch, Remotes.Text);
+                Branch.Items.Add(currentBranch);
+                Branch.SelectedItem = currentBranch;
+                return;
             }
+
+            BranchSelectedValueChanged(null, null);
         }
 
         private void EnableLoadSshButton()
