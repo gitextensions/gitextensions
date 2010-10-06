@@ -1836,10 +1836,10 @@ namespace GitUI
         {
             if (GitCommands.Settings.RunningOnWindows())
             {
-                var command = GetWindowsCommandLocations()
-                    .Select(cmd => cmd)
-                    .Where(cmd => !string.IsNullOrEmpty(GitCommands.GitCommands.RunCmd(cmd, string.Empty)))
-                    .FirstOrDefault();
+                var command = (from cmd in GetWindowsCommandLocations()
+                               let output = GitCommands.GitCommands.RunCmd(cmd, string.Empty)
+                               where !string.IsNullOrEmpty(output)
+                               select cmd).FirstOrDefault();
 
                 if (command != null)
                 {
