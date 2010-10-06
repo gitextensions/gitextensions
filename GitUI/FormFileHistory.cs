@@ -46,11 +46,11 @@ namespace GitUI
 
             // grab the 8.3 file path
             StringBuilder shortPath = new StringBuilder(4096);
-            GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
+            NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
             // use 8.3 file path to get properly cased full file path
             StringBuilder longPath = new StringBuilder(4096);
-            GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
+            NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
             // remove the working dir and now we have a properly cased file name.
             fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
@@ -67,12 +67,6 @@ namespace GitUI
             }
         }
  
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, int cchBuffer);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetLongPathName(string lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
-
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             UpdateSelectedFileViewers();
