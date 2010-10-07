@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -35,8 +38,22 @@ namespace GitUI
             if (string.IsNullOrEmpty(fileName))
                 return;
 
-            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                fileName = fileName.Substring(Settings.WorkingDir.Length);
+            // we will need this later to look up proper casing for the file
+            string fullFilePath = fileName;
+
+            if (!fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+
+            // grab the 8.3 file path
+            StringBuilder shortPath = new StringBuilder(4096);
+            NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
+
+            // use 8.3 file path to get properly cased full file path
+            StringBuilder longPath = new StringBuilder(4096);
+            NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
+
+            // remove the working dir and now we have a properly cased file name.
+            fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
 
             FileName = fileName;
 
@@ -49,8 +66,7 @@ namespace GitUI
                 FileChanges.AllowGraphWithFilter = true;
             }
         }
-
-
+ 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             UpdateSelectedFileViewers();

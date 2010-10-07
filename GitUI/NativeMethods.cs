@@ -60,6 +60,12 @@ namespace GitUI
         [return: MarshalAs(UnmanagedType.Bool)]
         internal extern static bool ShowCaretAPI(
             IntPtr hwnd);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, int cchBuffer);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int GetLongPathName(string lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
         #endregion
 
         private NativeMethods() { }
