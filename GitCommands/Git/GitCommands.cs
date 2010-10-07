@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 using PatchApply;
@@ -458,7 +456,6 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
-            string output;
             try
             {
                 SetEnvironmentVariable();
@@ -467,7 +464,7 @@ namespace GitCommands
 
                 var process = CreateAndStartProcess(arguments, cmd);
 
-                output = process.StandardOutput.ReadToEnd();
+                var output = process.StandardOutput.ReadToEnd();
                 var error = process.StandardError.ReadToEnd();
 
                 process.WaitForExit();
@@ -478,12 +475,12 @@ namespace GitCommands
                 {
                     output += Environment.NewLine + error;
                 }
+                return output;
             }
-            catch
+            catch (Win32Exception)
             {
-                return "";
+                return string.Empty;
             }
-            return output;
         }
 
         private static Process CreateAndStartProcess(string arguments, string cmd)
@@ -1128,7 +1125,7 @@ namespace GitCommands
             remote = FixPath(remote);
 
             Directory.SetCurrentDirectory(Settings.WorkingDir);
-            
+
             RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + FetchCmd(remote, null, branch) + "\"");
 
             return "Done";
@@ -2096,7 +2093,7 @@ namespace GitCommands
         static public string[] GetFullTree(string id)
         {
             string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
-            return tree.Split(new char[]{'\0','\n'});
+            return tree.Split(new char[] { '\0', '\n' });
         }
         public static List<IGitItem> GetTree(string id)
         {
@@ -2131,7 +2128,7 @@ namespace GitCommands
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    
+
                     string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename)
                     )
                     .Split('\n');
