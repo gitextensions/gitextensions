@@ -254,7 +254,8 @@ namespace GitUI
             }
 
 
-            toolStripSplitStash.Text = string.Format("{0} saved stashes", GitCommands.GitCommands.GetStashes().Count);
+            int stashCount = GitCommands.GitCommands.GetStashes().Count;
+            toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount, stashCount != 1 ? "stashes" : "stash");
             //Only show status strip when there are status items on it.
             //There is always a close (x) button, do not count first item.
             if (statusStrip.Items.Count > 1)
