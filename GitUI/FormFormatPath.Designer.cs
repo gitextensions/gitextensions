@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFormatPath));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -104,25 +103,25 @@
             // 
             // MailBody
             // 
-            this.MailBody.Location = new System.Drawing.Point(189, 93);
+            this.MailBody.Location = new System.Drawing.Point(254, 93);
             this.MailBody.Name = "MailBody";
-            this.MailBody.Size = new System.Drawing.Size(468, 56);
+            this.MailBody.Size = new System.Drawing.Size(403, 56);
             this.MailBody.TabIndex = 13;
             this.MailBody.Text = "";
             // 
             // MailSubject
             // 
-            this.MailSubject.Location = new System.Drawing.Point(189, 66);
+            this.MailSubject.Location = new System.Drawing.Point(254, 66);
             this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(468, 20);
+            this.MailSubject.Size = new System.Drawing.Size(403, 21);
             this.MailSubject.TabIndex = 12;
             // 
             // MailAddress
             // 
             this.MailAddress.FormattingEnabled = true;
-            this.MailAddress.Location = new System.Drawing.Point(189, 38);
+            this.MailAddress.Location = new System.Drawing.Point(254, 38);
             this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(468, 21);
+            this.MailAddress.Size = new System.Drawing.Size(403, 21);
             this.MailAddress.TabIndex = 11;
             // 
             // SendToMail
@@ -141,7 +140,7 @@
             this.SaveToDir.Checked = true;
             this.SaveToDir.Location = new System.Drawing.Point(12, 14);
             this.SaveToDir.Name = "SaveToDir";
-            this.SaveToDir.Size = new System.Drawing.Size(145, 17);
+            this.SaveToDir.Size = new System.Drawing.Size(147, 17);
             this.SaveToDir.TabIndex = 9;
             this.SaveToDir.TabStop = true;
             this.SaveToDir.Text = "Save patches in directory";
@@ -160,9 +159,9 @@
             // 
             // OutputPath
             // 
-            this.OutputPath.Location = new System.Drawing.Point(189, 11);
+            this.OutputPath.Location = new System.Drawing.Point(254, 11);
             this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(468, 20);
+            this.OutputPath.Size = new System.Drawing.Size(403, 21);
             this.OutputPath.TabIndex = 7;
             // 
             // splitContainer2
@@ -188,12 +187,16 @@
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.CurrentCheckout = null;
+            this.RevisionGrid.AllowGraphWithFilter = false;
+            this.RevisionGrid.BranchFilter = "";
+            this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(750, 260);
             this.RevisionGrid.TabIndex = 0;
             // 
@@ -212,7 +215,7 @@
             this.SelectedBranch.AutoSize = true;
             this.SelectedBranch.Location = new System.Drawing.Point(12, 12);
             this.SelectedBranch.Name = "SelectedBranch";
-            this.SelectedBranch.Size = new System.Drawing.Size(41, 13);
+            this.SelectedBranch.Size = new System.Drawing.Size(40, 13);
             this.SelectedBranch.TabIndex = 4;
             this.SelectedBranch.Text = "Branch";
             // 
@@ -239,7 +242,6 @@
             this.ClientSize = new System.Drawing.Size(750, 454);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormFormatPath";
