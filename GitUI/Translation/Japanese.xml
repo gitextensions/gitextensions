@@ -1,9 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
+    <TranslationCategory Name="FindAndReplaceForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>検索と置換</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>検索：</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblReplaceWith" Property="Text">
+          <Value>置換：</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindNext" Property="Text">
+          <Value>次を検索(&amp;F)</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplace" Property="Text">
+          <Value>置換(&amp;R)</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplaceAll" Property="Text">
+          <Value>すべて置換(&amp;A)</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchWholeWord" Property="Text">
+          <Value>単語単位</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchCase" Property="Text">
+          <Value>大文字と小文字を区別する(&amp;c)</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnHighlightAll" Property="Text">
+          <Value>検索結果をハイライト(&amp;a)</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>キャンセル</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindPrevious" Property="Text">
+          <Value>前を検索(&amp;v)</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>リポジトリを開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>リポジトリのclone</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>リポジトリの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>開発</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>寄付</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>翻訳</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>問題</Value>
+        </TranslationItem>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>最近使ったリポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>一般</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>貢献</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>検索と置換</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormVerify">
       <translationItems>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="$this" Property="Text">
+          <Value>データベースの検証</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveObjects" Property="Text">
           <Value>.git/lost-foundにオブジェクトを保存</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -12,8 +93,8 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>遊離オブジェクトを全て削除</Value>
         </TranslationItem>
-        <TranslationItem Name="button2" Property="Text">
-          <Value>選択項目にタグを作成</Value>
+        <TranslationItem Name="TagSelectedObject" Property="Text">
+          <Value>選択オブジェクトにタグを作成</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
           <Value>選択したオブジェクトを表示</Value>
@@ -24,8 +105,8 @@
         <TranslationItem Name="TagAllObjects" Property="Text">
           <Value>全オブジェクトにタグを作成</Value>
         </TranslationItem>
-        <TranslationItem Name="button3" Property="Text">
-          <Value>全てのLOST_AND_FOUNDタグを削除</Value>
+        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
+          <Value>LOST_AND_FOUNDタグを全削除</Value>
         </TranslationItem>
         <TranslationItem Name="FullCheck" Property="Text">
           <Value>GIT_OBJECT_DIRECTORY($GIT_DIR/objects)だけでなく、
@@ -48,10 +129,64 @@
 消してしまったコミットにタグを付けることで、
 再びBrowse画面でそのコミットが見えるようになります。</Value>
         </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
+          <Value>本当にすべての遊離オブジェクトを削除してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>タグが{0}個作成されました。
+
+これらのタグの削除を忘れずに行ってください。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormSubmodules">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>サブモジュール</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddSubmodule" Property="Text">
+          <Value>サブモジュールの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>ステータス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>名前</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>リモートパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>ブランチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>コミット</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>ローカルパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>詳細</Value>
+        </TranslationItem>
+        <TranslationItem Name="SynchronizeSubmodule" Property="Text">
+          <Value>同期</Value>
+        </TranslationItem>
+        <TranslationItem Name="InitSubmodule" Property="Text">
+          <Value>初期化</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateSubmodule" Property="Text">
+          <Value>更新</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResetCurrentBranch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>現在のブランチの移動</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>種類</Value>
         </TranslationItem>
@@ -70,24 +205,117 @@
         <TranslationItem Name="Cancel" Property="Text">
           <Value>キャンセル</Value>
         </TranslationItem>
+        <TranslationItem Name="branchInfo" Property="Text">
+          <Value>{0}から：</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitInfo" Property="Text">
+          <Value>コミット：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorInfo" Property="Text">
+          <Value>著者：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateInfo" Property="Text">
+          <Value>コミット日時：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessage" Property="Text">
+          <Value>メッセージ：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetHardWarning" Property="Text">
+          <Value>ローカルで行った変更をすべて破棄してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCaption" Property="Text">
+          <Value>ブランチの移動</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormStatus">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>進捗</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>ダイアログを閉じない</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>中止</Value>
+        </TranslationItem>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>進捗</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.gitignoreの編集</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>gitに無視させたいファイルのパターンを指定します。
+
+例:
+#Windowsによって作られるサムネイルを無視
+Thumbs.db
+#Visual Studioによって作られるファイルを無視
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddDefault" Property="Text">
+          <Value>デフォルトの無視ファイルを追加</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiffSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>変更なし</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBrowse">
       <translationItems>
-        <TranslationItem Name="menuSaveAs" Property="Text">
-          <Value>名前を付けて保存</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuOpen" Property="Text">
-          <Value>開く</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuOpenWith" Property="Text">
-          <Value>プログラムから開く</Value>
-        </TranslationItem>
-        <TranslationItem Name="menuFileHistory" Property="Text">
-          <Value>ファイルの歴史</Value>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="Tree" Property="Text">
           <Value>ファイルツリー</Value>
+        </TranslationItem>
+        <TranslationItem Name="menuStrip1" Property="Text">
+          <Value>menuStrip1</Value>
         </TranslationItem>
         <TranslationItem Name="fileToolStripMenuItem" Property="Text">
           <Value>ファイル</Value>
@@ -117,10 +345,10 @@
           <Value>リポジトリの作成</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Value>プッシュ(リモートへ反映)</Value>
+          <Value>Push(リモートへ反映)</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Value>プル(リモートから取得)</Value>
+          <Value>Pull (リモートから取得)</Value>
         </TranslationItem>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Value>更新</Value>
@@ -136,6 +364,15 @@
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Value>パッチの適用</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitToolStripMenuItem" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
+          <Value>Git bash</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text">
+          <Value>Git GUI</Value>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
           <Value>Git用パッチの作成</Value>
@@ -161,8 +398,17 @@
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Value>ブランチのマージ</Value>
         </TranslationItem>
+        <TranslationItem Name="ToolStrip" Property="Text">
+          <Value>toolStrip1</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Value>コミット</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
+          <Value>コミット</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitBash" Property="ToolTipText">
+          <Value>Git bash</Value>
         </TranslationItem>
         <TranslationItem Name="EditSettings" Property="ToolTipText">
           <Value>設定</Value>
@@ -175,6 +421,9 @@
         </TranslationItem>
         <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
           <Value>ユーザ毎のコミット数</Value>
+        </TranslationItem>
+        <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
+          <Value>GitK</Value>
         </TranslationItem>
         <TranslationItem Name="donateToolStripMenuItem" Property="Text">
           <Value>寄付</Value>
@@ -215,20 +464,32 @@
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Value>リモートリポジトリの管理</Value>
         </TranslationItem>
+        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
         <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
           <Value>認証エージェントの開始</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Value>キーの生成/インポート</Value>
         </TranslationItem>
+        <TranslationItem Name="Diff" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Value>変更履歴</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
-          <Value>プル(リモートから取得)</Value>
+          <Value>Pull(リモートから取得)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
+          <Value>Pull</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
-          <Value>プッシュ(リモートへ反映)</Value>
+          <Value>Push(リモートへ反映)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
+          <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
           <Value>コミット</Value>
@@ -250,6 +511,9 @@
         </TranslationItem>
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>全てのサブモジュールの同期</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSplitStash" Property="Text">
+          <Value>toolStripSplitButton1</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>変更の一時退避</Value>
@@ -281,14 +545,17 @@
         <TranslationItem Name="recentToolStripMenuItem" Property="Text">
           <Value>最近のリポジトリ</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem2" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
         <TranslationItem Name="updateAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
           <Value>全てのサブモジュールの更新(再帰)</Value>
         </TranslationItem>
         <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
           <Value>全てのサブモジュールを初期化(再帰)</Value>
         </TranslationItem>
-        <TranslationItem Name="synchronizeAlSubmodulesRecursiveToolStripMenuItem" Property="Text">
-          <Value>全てのサブモジュールの同期(再帰)</Value>
+        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>同期らサブモジュール再帰</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Value>プラグイン</Value>
@@ -311,38 +578,302 @@
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Value>Diffツールで開く</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileViewer">
-      <translationItems>
+        <TranslationItem Name="translateToolStripMenuItem" Property="Text">
+          <Value>翻訳</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
+          <Value>ファイルエクスプローラ</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>名前を付けて保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
+          <Value>開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
+          <Value>プログラムから開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>ファイルの履歴</Value>
+        </TranslationItem>
         <TranslationItem Name="findToolStripMenuItem" Property="Text">
           <Value>検索</Value>
         </TranslationItem>
-        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
-          <Value>空白の変更を無視</Value>
+        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
+          <Value>.gitattributeの編集</Value>
         </TranslationItem>
-        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>変更点前後の行数を増やす</Value>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>ファイル名をクリップボードにコピー</Value>
         </TranslationItem>
-        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>変更点前後の行数を減らす</Value>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
+          <Value>ファイル名をクリップボードにコピー</Value>
         </TranslationItem>
-        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
-          <Value>ファイル全体を表示</Value>
+        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
+          <Value>index.lockの削除</Value>
         </TranslationItem>
-        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
-          <Value>全てテキストファイルとして扱う</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ファイルの履歴</Value>
         </TranslationItem>
-        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
-          <Value>コピー</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="MergePatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>パッチを適用</Value>
         </TranslationItem>
-        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
-          <Value>パッチのコピー</Value>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>パッチを適用</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>パッチのスキップ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>パッチをやめる</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>ファイルの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDir" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchDirMode" Property="Text">
+          <Value>パッチディレクトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchFileMode" Property="Text">
+          <Value>パッチファイル</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>未解決のmergeconflictsがあります。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevertCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>コミットのrevert</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>コミット日時：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>メッセージ：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>著者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>コミット：</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>打ち消すコミット：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>コミットを打ち消す(revert)</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>自動的にコミットを作成</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevert">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>変更のrevert</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>変更をrevert</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>キャンセル</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemotes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リモートリポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>名前</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>URL</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>詳細</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Value>リモートリポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Value>デフォルトのpullの振る舞い(fetch &amp; merge)</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateBranch" Property="Text">
+          <Value>すべてのリモートのブランチ情報を更新する</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>秘密鍵ファイル</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>テスト接続</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH鍵の読み込み</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="Prune" Property="Text">
+          <Value>Prune remote branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>デフォルトのマージ先</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>リモートリポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>ローカルブランチ名</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>プラグインの設定</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormInit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リポジトリの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>ディレクトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>リポジトリの種類</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Working dirを持たないCentralリポジトリ(--bare --shared)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>個人リポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Init" Property="Text">
+          <Value>作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>ディレクトリを選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>ファイルにリポジトリを作成することはできません。
+ディレクトリを選択してください。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDeleteTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>タグを削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>タグを選択</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>上へ移動</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>下に移動</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>編集</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>パッチファイル</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Value>パッチファイルの表示</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardCategoryTitle">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>キャプションを入力します。</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>キャプションを入力します。</Value>
+        </TranslationItem>
+        <TranslationItem Name="OkButton" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChangeLog">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>変更ログ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBranchSmall">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ブランチの作成</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>ブランチ名</Value>
         </TranslationItem>
@@ -350,35 +881,236 @@
           <Value>作成</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>作成後に切替える</Value>
+          <Value>作成後に切替</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>サブモジュールの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>サブモジュールのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>ローカルパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>ブランチ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddFiles">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ファイルの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="Filter" Property="Text">
+          <Value>.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>フィルタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>ファイルの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFiles" Property="Text">
+          <Value>ファイルの表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFormatPath">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Git形式のパッチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="SelectedBranch" Property="Text">
+          <Value>ブランチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>パッチの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>パッチをメール</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>パッチをディレクトリに保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>本文</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>題名</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEdit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>表示</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リビジョンのチェックアウト</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>チェックアウト</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>チェリーピック</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>コミット日時：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>メッセージ：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>著者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>コミット：</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>このコミットをチェリーピック：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text">
+          <Value>実行</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>自動的にコミット</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ホーム</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>環境</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>その他</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>HOMEをUSERPROFILEに設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>HOMEにデフォルトを使用</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
+%HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>画像の更新</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>gravatar.comで登録</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>キャッシュのクリア</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>画像サイズ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GitLogForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ログ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>全ての競合を解決しましたか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Value>一時退避(stash)された項目をworking dirに適用し直しますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
+          <Value>自動的にstash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
+          <Value>mergeとrebaseでは全てのブランチ(*)のfetchは使用できません。
+もしすべてのブランチを取得したければ、fetchを選択してください。
+マージも行いたい場合、ブランチを指定してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemoteRepository" Property="Text">
+          <Value>リモートリポジトリを選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectSourceDirectory" Property="Text">
+          <Value>ソースディレクトリを選択してください。</Value>
+        </TranslationItem>
         <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>Browse</Value>
+          <Value>参照</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>リモートブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
-          <Value>プル(&amp;p)</Value>
+          <Value>Pull(&amp;p)</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Value>競合の解決</Value>
         </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
-          <Value>現在のブランチと取得したブランチをマージする(&amp;m)</Value>
+          <Value>現在のブランチと取得したブランチをマージする(&amp;m) : git pull</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
-          <Value>現在のブランチに取得したブランチをリベースする(&amp;r)</Value>
+          <Value>現在のブランチに取得したブランチをリベースする(&amp;r) : git pull --rebase</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>マージオプション</Value>
         </TranslationItem>
         <TranslationItem Name="Fetch" Property="Text">
-          <Value>マージせずに取得のみ行う(&amp;f)</Value>
+          <Value>マージせずに取得のみ行う(&amp;f) : git fetch</Value>
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text">
           <Value>変更の一時退避</Value>
@@ -389,6 +1121,9 @@
         <TranslationItem Name="groupBox2" Property="Text">
           <Value>取得元</Value>
         </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>URLを</Value>
+        </TranslationItem>
         <TranslationItem Name="PullFromRemote" Property="Text">
           <Value>リモート</Value>
         </TranslationItem>
@@ -396,15 +1131,49 @@
           <Value>ブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
-          <Value>自動で一時退避</Value>
+          <Value>自動で一時退避(stash)</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Load SSH key</Value>
+          <Value>SSH鍵を読み込む</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>ローカルブランチ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormMergeBranch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ブランチのマージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentBranch" Property="Text">
+          <Value>現在のブランチ：</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strategyTooltipText" Property="Text">
+          <Value>resolve
+3-wayマージアルゴリズムを用いて、2つのブランチ(例えば、現在のブランチとpullしてきたブランチ)のみをマージできます。
+この戦略はcriss-crossマージの曖昧さを検出します。このアルゴリズムは、高速かつ安全と考えられています。
+訳注：criss-crossマージに遭遇したことがないのでわかりませんが、おそらくcriss-crossマージに遭遇すると、
+この戦略ではマージが中断されるということだと思います。
+
+recursive 
+3-wayマージアルゴリズムを用いて、2つのブランチのみをマージできます。3-wayマージに使用できる1つ以上の共通の分岐点がある場合、
+この戦略は共通の分岐点のマージされた木を作り、3-wayマージの参照木として使用します。
+さらに、この戦略は名前の変更を含むマージを検出し、扱うこともできます。この戦略は対象が1つのpullやmergeのデフォルトのマージ戦略です。
+
+octopus 
+この戦略は2つ以上のブランチのマージを行いますが、手動による解決が必要な複雑なマージを拒否します。
+この戦略はトピックブランチと一緒に使用します。この戦略は対象が2つ以上のpullやmergeのデフォルトのマージ戦略です。
+
+ours 
+この戦略は複数のブランチのマージを行いますが、マージ結果は常に現在のブランチのみ反映され、ほかのブランチの変更はすべて無視されます。
+この戦略はサイドブランチでの古い開発の歴史を破棄するために使用されます。
+訳注：それ以外にも、すでに現在のブランチにマージ対象のブランチで行った変更が反映されていることが明らかな場合にも使用できます。
+
+subtree 
+この戦略はrecursive戦略のバリエーションです。AとBをマージするとき、もしBがAの部分階層と一致するなら、
+同階層で階層を読み込む代わりに、BをAの階層構造と合うように調整されます。この調整は共通の先祖にも行われます。</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>現在のブランチと他のブランチをマージします。</Value>
         </TranslationItem>
@@ -420,8 +1189,53 @@
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>マージ</Value>
         </TranslationItem>
-        <TranslationItem Name="NoFastForward" Property="Text">
-          <Value>高速マージを使用しない</Value>
+        <TranslationItem Name="noFastForward" Property="Text">
+          <Value>常にマージコミットを作成する</Value>
+        </TranslationItem>
+        <TranslationItem Name="fastForward" Property="Text">
+          <Value>可能ならブランチを一直線に保つ(fast forward)</Value>
+        </TranslationItem>
+        <TranslationItem Name="currentBranchLabel" Property="Text">
+          <Value>？</Value>
+        </TranslationItem>
+        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
+          <Value>マージ戦略を選択する</Value>
+        </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>ヘルプ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFileHistory">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ファイルの歴史</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewTab" Property="Text">
+          <Value>表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTab" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+        <TranslationItem Name="Blame" Property="Text">
+          <Value>Blame</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>difftoolで開く</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>スタートページ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitCount">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>コミット数</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -455,8 +1269,8 @@
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Value>リモートブランチの表示</Value>
         </TranslationItem>
-        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
-          <Value>全てのブランチの表示</Value>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>ブランチの表示</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
           <Value>このコミットを打ち消すコミットの作成</Value>
@@ -483,7 +1297,7 @@
           <Value>リビジョンを日付順に並び替え</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Value>ブランチをチェックアウト</Value>
+          <Value>ブランチの切り替え</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Value>ブランチのマージ</Value>
@@ -497,10 +1311,689 @@
         <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
           <Value>相対日付で表示</Value>
         </TranslationItem>
+        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
+          <Value>ここにリベース</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>全てのブランチの表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>現在のブランチのみ表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>フィルタされたブランチを表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>関係のないものを灰色で描画</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorCaption" Property="Text">
+          <Value>著者</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorDateCaption" Property="Text">
+          <Value>著者日付</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitDateCaption" Property="Text">
+          <Value>コミット日時</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>メッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
+          <Value>フィルタ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リポジトリを開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>ディレクトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="Load" Property="Text">
+          <Value>開く</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>タグ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>タグ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>タグを作成するリビジョンを1つ選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMessage" Property="Text">
+          <Value>タグのメッセージを入力してください</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>タグ名</Value>
+        </TranslationItem>
+        <TranslationItem Name="CreateTag" Property="Text">
+          <Value>タグの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>メッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>注釈タグを作成</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalSettings" Property="Text">
+          <Value>ローカル設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>ユーザのメールアドレス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>ユーザ名</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+          <Value>グローバル設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>ユーザ名</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>ユーザのメールアドレス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>エディタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>エディタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>マージツール</Value>
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Value>マージツール</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage3" Property="Text">
+          <Value>チェックリスト</Value>
+        </TranslationItem>
+        <TranslationItem Name="label11" Property="Text">
+          <Value>GitExtensionsを正しく動作させるために必要な基本的な設定を検証するチェックリストです。</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text">
+          <Value>起動時に設定を確認（すべての設定が正しい場合、自動的に無効になります）</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>保存して再スキャン</Value>
+        </TranslationItem>
+        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="label12" Property="Text">
+          <Value>起動時に読み込むコミットの数です。
+読み込まれなかったコミットは必要に応じて読み込まれます。
+低く設定すると早く起動しますが、スクロールは低速になります。</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitPath" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label13" Property="Text">
+          <Value>gitの実行に使用するコマンド(git.cmdかgit.exe)</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitBinPath" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label14" Property="Text">
+          <Value>shのパス。パスに含まれる場合は空のままにしてください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ssh" Property="Text">
+          <Value>SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>使用するSSHクライアントの選択</Value>
+        </TranslationItem>
+        <TranslationItem Name="PlinkBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenSSH" Property="Text">
+          <Value>OpenSSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="Putty" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>PuTTYの設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="label15" Property="Text">
+          <Value>plink.exeのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="PageantBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label17" Property="Text">
+          <Value>pageantのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuttygenBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label16" Property="Text">
+          <Value>pttygenのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label18" Property="Text">
+          <Value>OpenSSHはコマンドラインツールです。 PuTTYはWindowsユーザにとって使いやすいですが、
+バックグラウンドでPuTTY認証クライアントの実行が必要です。
+もしOpenSSHを使う場合、コマンドラインダイアログが表示されます！</Value>
+        </TranslationItem>
+        <TranslationItem Name="OtherSshBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="Other" Property="Text">
+          <Value>その他のsshクライアント</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text">
+          <Value>リモートの秘密鍵が設定されている場合、自動的に認証クライアントを起動する</Value>
+        </TranslationItem>
+        <TranslationItem Name="PathToKDiff3" Property="Text">
+          <Value>マージツールのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="label20" Property="Text">
+          <Value>グローバル設定を
+上書きしたい場合のみ、
+ローカル設定(現在のリポジトリ
+のみで有効)が必要です。</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseMergeTool" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label19" Property="Text">
+          <Value>マージツールのコマンド</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>コマンドを推測</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoGitRepo" Property="Text">
+          <Value>Gitのリポジトリにいない</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>You need to set the correct path to 
+git before you can change
+global settings.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label21" Property="Text">
+          <Value>You need to set the correct path to 
+git before you can change
+local settings.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label10" Property="Text">
+          <Value>You need to set the correct path to 
+git.cmd before you can change
+any global setting.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label22" Property="Text">
+          <Value>スペルチェックのための辞書</Value>
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text">
+          <Value>パッチ送信用のSMTPサーバ</Value>
+        </TranslationItem>
+        <TranslationItem Name="EncodingLabel" Property="Text">
+          <Value>エンコード</Value>
+        </TranslationItem>
+        <TranslationItem Name="AppearancePage" Property="Text">
+          <Value>外観</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>リビジョングラフ</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+        <TranslationItem Name="label27" Property="Text">
+          <Value>削除された行の色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label31" Property="Text">
+          <Value>セクションの色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label29" Property="Text">
+          <Value>追加された行の色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label33" Property="Text">
+          <Value>リモートブランチの色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label36" Property="Text">
+          <Value>他のラベルの色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label25" Property="Text">
+          <Value>タグの色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label32" Property="Text">
+          <Value>ブランチの色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label30" Property="Text">
+          <Value>マージ後にバックアップ(.orig)を残す</Value>
+        </TranslationItem>
+        <TranslationItem Name="label28" Property="Text">
+          <Value>マージ後にバックアップ(.orig)を残す</Value>
+        </TranslationItem>
+        <TranslationItem Name="label37" Property="Text">
+          <Value>コミットログにリビジョングラフを表示する</Value>
+        </TranslationItem>
+        <TranslationItem Name="label35" Property="Text">
+          <Value>処理実行中にGitのコマンドラインダイアログを表示する</Value>
+        </TranslationItem>
+        <TranslationItem Name="label34" Property="Text">
+          <Value>処理に成功したときにダイアログを自動的に閉じる</Value>
+        </TranslationItem>
+        <TranslationItem Name="label39" Property="Text">
+          <Value>絶対日付の代わりに相対日付を表示する</Value>
+        </TranslationItem>
+        <TranslationItem Name="label38" Property="Text">
+          <Value>FileSystemWatcherを使用して、インデックスが変更されたかチェックする</Value>
+        </TranslationItem>
+        <TranslationItem Name="label40" Property="Text">
+          <Value>ファイルの歴史でファイル名の変更も追跡する(実験的)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label41" Property="Text">
+          <Value>Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDiffTool" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="label42" Property="Text">
+          <Value>Difftoolのパス</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox5" Property="Text">
+          <Value>アプリケーションアイコン</Value>
+        </TranslationItem>
+        <TranslationItem Name="GreenIcon" Property="Text">
+          <Value>緑</Value>
+        </TranslationItem>
+        <TranslationItem Name="PurpleIcon" Property="Text">
+          <Value>紫</Value>
+        </TranslationItem>
+        <TranslationItem Name="BlueIcon" Property="Text">
+          <Value>青</Value>
+        </TranslationItem>
+        <TranslationItem Name="DefaultIcon" Property="Text">
+          <Value>デフォルト</Value>
+        </TranslationItem>
+        <TranslationItem Name="YellowIcon" Property="Text">
+          <Value>黄色</Value>
+        </TranslationItem>
+        <TranslationItem Name="RedIcon" Property="Text">
+          <Value>赤</Value>
+        </TranslationItem>
+        <TranslationItem Name="RandomIcon" Property="Text">
+          <Value>ランダム</Value>
+        </TranslationItem>
+        <TranslationItem Name="label43" Property="Text">
+          <Value>削除された行のハイライト時の色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label45" Property="Text">
+          <Value>追加された行のハイライト時の色</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text">
+          <Value>著者画像</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowAuthorGravatar" Property="Text">
+          <Value>gravatar.comから著者のイメージを取得</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text">
+          <Value>キャッシュのクリア</Value>
+        </TranslationItem>
+        <TranslationItem Name="label44" Property="Text">
+          <Value>画像サイズ</Value>
+        </TranslationItem>
+        <TranslationItem Name="StartPage" Property="Text">
+          <Value>スタートページ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label47" Property="Text">
+          <Value>日キャッシュ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label46" Property="Text">
+          <Value>画像を</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
+          <Value>コマンドを推測</Value>
+        </TranslationItem>
+        <TranslationItem Name="label48" Property="Text">
+          <Value>Difftoolコマンド</Value>
+        </TranslationItem>
+        <TranslationItem Name="label49" Property="Text">
+          <Value>言語（再起動が必要）</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text">
+          <Value>翻訳のヘルプ</Value>
+        </TranslationItem>
+        <TranslationItem Name="TabPageGit" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="MulticolorBranches" Property="Text">
+          <Value>ブランチに複数の色を使用する</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox7" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="label50" Property="Text">
+          <Value>Git ExtensionsはGitのリポジトリへのアクセスにmsysgitかcygwinが使用可能です。正しいパスを設定してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>環境変数</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>その他</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>HOMEをUSERPROFILEに設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>デフォルトのHOMEを使用</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
+%HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchBorders" Property="Text">
+          <Value>ブランチの境界線を描画する</Value>
+        </TranslationItem>
+        <TranslationItem Name="StripedBanchChange" Property="Text">
+          <Value>ブランチの変更をストライプする</Value>
+        </TranslationItem>
+        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+          <Value>リポジトリの状態(変更の数)を表示する(再起動が必要)</Value>
+        </TranslationItem>
+        <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
+          <Value>1000</Value>
+        </TranslationItem>
+        <TranslationItem Name="label24" Property="Text">
+          <Value>リビジョングリッドクイック検索のタイムアウト[ms]</Value>
+        </TranslationItem>
+        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+          <Value>ファイルをステージする際のエラーを表示する</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text">
+          <Value>改行の扱い</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
+          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfInput" Property="Text">
+          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox10" Property="Text">
+          <Value>改行の扱い</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
+          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfInput" Property="Text">
+          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
+          <Value>関係のないものを灰色で描画する</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormModifiedDeletedCreated">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="Deleted" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>中止</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormArchive">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>アーカイブ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選択したリビジョンをzipに</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>エディタ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="AboutBox">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>About</Value>
+        </TranslationItem>
+        <TranslationItem Name="textBoxDescription" Property="Text">
+          <Value>Git extensions - GitのためのVisual Studioとエクスプローラーの拡張
+
+This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.
+(このプログラムは、「役に立てば」という想いによって配布されています。そのため、『無保証』です。『the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE』さえありません。)
+訳注：未訳部分が気になる方は、「MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE」でぐぐると幸せになれるかも。</Value>
+        </TranslationItem>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>&amp;OK</Value>
+        </TranslationItem>
+        <TranslationItem Name="thanksTo" Property="Text">
+          <Value>Thanks to:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPick">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>チェリーピック</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>チェリーピックするコミットを選択します。選択されたコミットは、現在のブランチの先頭に再適用されます。</Value>
+        </TranslationItem>
+        <TranslationItem Name="CherryPick" Property="Text">
+          <Value>チェリーピック</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>競合が発生しなかった場合に自動的にコミットする</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTranslate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>翻訳</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateProgressText" Property="Text">
+          <Value>{1}中{0}個が翻訳済み</Value>
+        </TranslationItem>
+        <TranslationItem Name="allText" Property="Text">
+          <Value>すべて</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+          <Value>現在の変更を保存しますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+          <Value>変更を保存する</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsText" Property="Text">
+          <Value>名前を付けて保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStrip1" Property="Text">
+          <Value>toolStrip1</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>翻訳を保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousButton" Property="Text">
+          <Value>前へ(&amp;P)</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextButton" Property="Text">
+          <Value>次へ(&amp;N)</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Goole翻訳</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>現在の翻訳：</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>言語コード：</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>空を全てぐぐる</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>新規</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>新しい翻訳を作成</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitAttributes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.gitattributeを編集</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>git attributesの編集
+パスごとに属性を定義します。
+
+全てのjpgファイルをバイナリとしてマークする例：
+*.jpg binary
+
+slnファイルをバイナリとしてマークする例：
+*.sln binary
+
+あるファイルをテキストとしてマークする例：
+weirdchars.txt text
+
+これより詳しい情報は、gitの
+ヘルプを参照してください。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTagSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>タグの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>タグ名</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>タグの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>注釈タグの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>メッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>タグ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>タグを作成するには、リビジョンを1つ選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text">
+          <Value>メッセージを入力してください。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevisionFilter">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>フィルタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>開始</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>終了</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>著者</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>コミッタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>メッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>制限</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>大文字小文字を無視</Value>
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Value>ファイルフィルタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>ブランチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
+          <Value>現在のブランチのみ表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchFilterCheck" Property="Text">
+          <Value>CheckBox1</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormMailMap">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.mailmapの編集</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>mailmapを編集します。
+このファイルはユーザ名を訂正するためのものです。
+
+例：
+Henk Westhuis &lt;Henk@.(none)&gt;
+Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDeleteBranch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ブランチの削除</Value>
+        </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>削除</Value>
         </TranslationItem>
@@ -516,27 +2009,212 @@
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>強制削除</Value>
         </TranslationItem>
+        <TranslationItem Name="_branchDeleted" Property="Text">
+          <Value>実行完了</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchCaption" Property="Text">
+          <Value>ブランチの削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
+          <Value>本当にこのブランチを削除しますか？
+ブランチの削除はコミットの削除ということでもありますよ！</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>検索</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>空白の変更を無視</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>変更点前後の行数を増やす</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>変更点前後の行数を減らす</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>ファイル全体を表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>全てテキストファイルとして扱う</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>コピー</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
+          <Value>パッチのコピー</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>次の変更</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>前の変更</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>変更点前後の行数を増やす</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>変更点前後の行数を減らす</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>ファイル全体を表示</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>非表示文字を可視化</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>非表示文字を可視化</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>空白の無視</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>メッセージを入力してください</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRebase">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リベース</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>他のブランチに現在のブランチをリベース</Value>
+        </TranslationItem>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>現在</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>リベース</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>リベースの基点</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>ファイルの追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>リベース続行</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>中止</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>スキップ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>未解決の競合があります。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormLoadPuttySshKey">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>認証エージェントにPuTTYのSSH鍵を読み込む</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>読み込む</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>秘密鍵ファイル</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCleanupRepository">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>リポジトリのクリーンアップ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Preview" Property="Text">
+          <Value>プレビュー</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cleanup" Property="Text">
+          <Value>クリーンアップ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>キャンセル</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>リポジトリのクリーンアップ</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveIngnored" Property="Text">
+          <Value>無視された未管理ファイルのみ削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveNonIgnored" Property="Text">
+          <Value>無視されていない未管理ファイルのみ削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveAll" Property="Text">
+          <Value>全ての未管理ファイルを削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveDirectories" Property="Text">
+          <Value>未管理ディレクトリの削除</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPuttyError">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>認証エラー</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>PuTTYの認証エージェントが実行されていないか、
+正しい秘密鍵が(まだ)読み込まれていない可能性があります。
+
+正しい鍵を読み込んで、再試行を押してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH鍵の読み込み</Value>
+        </TranslationItem>
+        <TranslationItem Name="Retry" Property="Text">
+          <Value>再試行</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>中止</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPush">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
         <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>Browse</Value>
+          <Value>参照</Value>
         </TranslationItem>
         <TranslationItem Name="Push" Property="Text">
-          <Value>プッシュ(&amp;p)</Value>
+          <Value>Push(&amp;p)</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>プッシュするブランチ</Value>
+          <Value>Pushするブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllBranches" Property="Text">
-          <Value>全てのブランチをプッシュ(&amp;a)</Value>
+          <Value>全てのブランチをPush(&amp;a)</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>強制プッシュ(&amp;f)</Value>
+          <Value>強制Push(&amp;f)</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
-          <Value>強制プッシュ(&amp;f)</Value>
+          <Value>強制Push(&amp;f)</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Value>Pull</Value>
@@ -545,7 +2223,7 @@
           <Value>反映先</Value>
         </TranslationItem>
         <TranslationItem Name="PullFromUrl" Property="Text">
-          <Value>Url</Value>
+          <Value>URL</Value>
         </TranslationItem>
         <TranslationItem Name="PullFromRemote" Property="Text">
           <Value>リモート</Value>
@@ -557,38 +2235,80 @@
           <Value>ブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Load SSH key</Value>
+          <Value>SSH鍵の読み込み</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>タグ</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>プッシュするタグ</Value>
+          <Value>Pushするタグ</Value>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="Text">
-          <Value>ブランチのプッシュ</Value>
+          <Value>ブランチのPush</Value>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="ToolTipText">
-          <Value>リモートリポジトリにブランチとコミットをプッシュします。</Value>
+          <Value>リモートリポジトリにブランチとコミットをPushします。</Value>
         </TranslationItem>
         <TranslationItem Name="TagTab" Property="Text">
-          <Value>タグのプッシュ</Value>
+          <Value>タグのPush</Value>
         </TranslationItem>
         <TranslationItem Name="TagTab" Property="ToolTipText">
-          <Value>リモートリポジトリにタグをプッシュします。</Value>
+          <Value>リモートリポジトリにタグをPushします。</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
-          <Value>全てのタグをプッシュ(&amp;a)</Value>
+          <Value>全てのタグをPush(&amp;a)</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>から</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>リモートに新しいブランチが作成されます。
+本当にこのブランチをPushしますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>SSH鍵を読み込むことができません。 PuTTYが正しく設定されていません。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushCaption" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>{0}にPush</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>Push先ディレクトリを選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>リモートリポジトリを選択してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Pushするタグを選択するか、「全てのタグをPush」を選択してください。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDonate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>寄付</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>寄付
+
+プロジェクトに貢献するために寄付をしてみませんか？受け取ったお金は、Webサイトのホスト費用をカバーしたり、プロジェクトの継続に必要なリソースの獲得に使用されます。
+
+"Support this project"ボタンを押すと、寄付のための詳しい情報を得ることができます。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCommit">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>コミット</Value>
+        </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>コミット</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
-          <Value>コミット</Value>
+          <Value>コミット(&amp;C)</Value>
         </TranslationItem>
         <TranslationItem Name="AddFiles" Property="Text">
           <Value>ステージ</Value>
@@ -617,6 +2337,9 @@
         <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
           <Value>Git管理下のファイルの変更を全て元に戻す</Value>
         </TranslationItem>
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
+          <Value>無視されたファイルを編集する</Value>
+        </TranslationItem>
         <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="Text">
           <Value>ステージ</Value>
         </TranslationItem>
@@ -642,7 +2365,7 @@
           <Value>無視ファイルを表示</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
-          <Value>過去のメッセージ</Value>
+          <Value>過去のメッセージ(&amp;m)</Value>
         </TranslationItem>
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Value>このファイルを無視</Value>
@@ -654,19 +2377,22 @@
           <Value>変更の再調査</Value>
         </TranslationItem>
         <TranslationItem Name="Scan" Property="Text">
-          <Value>変更の再調査</Value>
+          <Value>変更の再調査(&amp;R)</Value>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>変更を元に戻す</Value>
         </TranslationItem>
         <TranslationItem Name="Amend" Property="Text">
-          <Value>コミットのやり直し</Value>
+          <Value>コミットのやり直し(&amp;A)</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>開く</Value>
         </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>プログラムから開く</Value>
+        </TranslationItem>
         <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
-          <Value>ファイル名をクリップボードへ</Value>
+          <Value>ファイル名をクリップボードにコピー</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Value>Diffツールで開く</Value>
@@ -674,10 +2400,130 @@
         <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
           <Value>チャンクレベルでファイルの変更を元に戻す</Value>
         </TranslationItem>
+        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
+          <Value>ファイルの編集</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>あなたは歴史を書き換えしようとしています。
+コミットがまだ公開されていない場合しかやってはいけません！
+
+本当に続行しますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>コミットやり直し</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
+          <Value>コミット後にダイアログを閉じる場合にチェックしてください。
+チェックしない場合、変更されたファイルがなくなった段階で閉じます。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteFailed" Property="Text">
+          <Value>ファイルの削除に失敗</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
+          <Value>選択したファイルを削除してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>本当にGit管理下にないすべてのファイルを削除してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>Git管理下にないファイルの削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessage" Property="Text">
+          <Value>コミットメッセージを入力してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
+          <Value>コミットメッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
+          <Value>コミットメッセージを入力してください</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>未解決の競合があります。コミット前に競合を解決してください。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
+          <Value>マージの競合</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStaged" Property="Text">
+          <Value>ステージされたファイルがありません。本当にコミットしますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noStagedChanges" Property="Text">
+          <Value>ステージされた変更なし</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>ステージされていない変更なし</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>現在どのブランチ上にもいません。
+このコミットはブランチを切り替えた際に参照されなくなり、ロストします。
+
+本当に続行しますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Value>ブランチ上にいない</Value>
+        </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>ファイルを1つ選択したときのみこのオプションは使用できます</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChanges" Property="Text">
+          <Value>選択したファイルへの変更を取り消してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>変更の取り消し</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+          <Value>選択したファイルへの変更を取り消してもよろしいですか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
+          <Value>チャンクレベルでステージから除く</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageChunkOfFileCaption" Property="Text">
+          <Value>チャンクレベルでステージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageDetails" Property="Text">
+          <Value>ステージ詳細</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFiles" Property="Text">
+          <Value>{0}個のファイルをステージ</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>競合の解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolved" Property="Text">
+          <Value>全ての競合を解決するとコミットできます。
+今すぐコミットしますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
+          <Value>コミット</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
+          <Value>選択された競合はサブモジュールです。競合を解決としますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
+          <Value>サブモジュール</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileIsBinary" Property="Text">
+          <Value>選択されたファイルはバイナリファイルと思われます。
+本当に{0}でこのファイルを開きますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolved" Property="Text">
+          <Value>競合は解決しましたか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="noMergeTool" Property="Text">
+          <Value>マージツールの設定がありません。マージツールの設定を行ってください！</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageFilename" Property="Text">
+          <Value>{0}をステージ</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>解決されていない競合</Value>
         </TranslationItem>
@@ -687,17 +2533,20 @@
         <TranslationItem Name="Rescan" Property="Text">
           <Value>競合の再調査</Value>
         </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>マージツールで開く</Value>
+        </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>中止</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
-          <Value>baseの選択</Value>
+          <Value>baseを選択</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseLocal" Property="Text">
-          <Value>localの選択</Value>
+          <Value>localを選択</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseRemote" Property="Text">
-          <Value>remoteの選択</Value>
+          <Value>remoteを選択</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenBaseWith" Property="Text">
           <Value>baseをプログラムから開く</Value>
@@ -707,6 +2556,9 @@
         </TranslationItem>
         <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
           <Value>remoteをプログラムから開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenMergetool" Property="Text">
+          <Value>マージツールで開く</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveBaseAs" Property="Text">
           <Value>名前を付けてbaseを保存</Value>
@@ -720,10 +2572,172 @@
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Value>解決済みとしてマーク</Value>
         </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>プログラムから開く</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>開く</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommandlineHelp">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>コマンドラインの使用</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>サポートしているコマンドライン引数：
+
+browse
+add
+addfiles
+apply
+applypatch
+branch
+checkout
+checkoutbranch
+checkoutrevision
+init
+clone [path]
+commit
+filehistory [file]
+formatpatch
+pull
+push
+settings
+viewdiff
+rebase
+merge
+cherry
+tag
+stash</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.gitignoreに追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>無視するファイルパターン</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowPreview" Property="Text">
+          <Value>プレビュー</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>.gitignoreに追加</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckoutBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ブランチの切り替え</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranch" Property="Text">
+          <Value>リモートブランチへの切り替えを選択しました。
+
+'{0}'という名前でローカルブランチを作成し、
+選択したリモートブランチを追跡するようにしますか？</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
+          <Value>ブランチの切り替え</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>ブランチの選択</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>切り替え</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalBranch" Property="Text">
+          <Value>ローカルブランチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remotebranch" Property="Text">
+          <Value>リモートブランチ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormStash">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>一時退避(stash)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Clear" Property="Text">
+          <Value>選択したstashの削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>全ての変更を退避</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>選択したstashをworking dirに適用</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>stash:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>メッセージ:</Value>
+        </TranslationItem>
+        <TranslationItem Name="RefreshButton" Property="Text">
+          <Value>リフレッシュ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>クローン</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>クローン先</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>クローンするリポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>クローン</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="FromBrowse" Property="Text">
+          <Value>参照</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>リポジトリの種類</Value>
+        </TranslationItem>
+        <TranslationItem Name="CentralRepository" Property="Text">
+          <Value>working dirを持たないCentralリポジトリ(--bare)</Value>
+        </TranslationItem>
+        <TranslationItem Name="PersonalRepository" Property="Text">
+          <Value>個人リポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>working dirを持たないCentralリポジトリ(--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>個人リポジトリ</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH鍵の読み込み</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>サブディレクトリの作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>リポジトリは次の新しいディレクトリにクローンされます:
+    [クローン先]\gitextnsions</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBranch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>ブランチの作成</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>ブランチ名</Value>
         </TranslationItem>
@@ -734,7 +2748,57 @@
           <Value>ブランチの切替</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>作成後に切替える</Value>
+          <Value>作成後に切替</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>削除</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>追加</Value>
+        </TranslationItem>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>カテゴリー</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>キャプション</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>タイプ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>RSSフィード</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>RSSフィード</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>リポジトリ</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Strings">
+      <translationItems>
+        <TranslationItem Name="dateText" Property="Text">
+          <Value>日付</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorText" Property="Text">
+          <Value>著者</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDateText" Property="Text">
+          <Value>作成日付</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerText" Property="Text">
+          <Value>コミッタ</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerDateText" Property="Text">
+          <Value>コミット日時</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitHashText" Property="Text">
+          <Value>コミットハッシュ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
