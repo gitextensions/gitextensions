@@ -642,16 +642,20 @@ namespace GitUI
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            var path = Path.Combine(GitCommands.Settings.GetInstallDir(), "GitExtensionsShellEx.dll");
+            var path = Path.Combine(GitCommands.Settings.GetInstallDir(), GitExtensionsShellExName);
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
                 path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, "GitExtensionsShellEx.dll");
+                path = Path.Combine(path, GitExtensionsShellExName);
             }
             if (File.Exists(path))
             {
                 GitCommands.GitCommands.RunCmd("regsvr32", string.Format("\"{0}\"", path));
+            }
+            else
+            {
+                MessageBox.Show(string.Format("Could not register the shell extension because '{0}' could not be found.", GitExtensionsShellExName));
             }
 
             CheckSettings();
@@ -1794,7 +1798,7 @@ namespace GitUI
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot, "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2", null)))
             {
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text = "GitExtensionsShellEx.dll needs to be registered in order to use the shell extensions.";
+                ShellExtensionsRegistered.Text = String.Format("{0} needs to be registered in order to use the shell extensions.", GitExtensionsShellExName);
                 return false;
             }
             ShellExtensionsRegistered.BackColor = Color.LightGreen;
@@ -1862,6 +1866,8 @@ namespace GitUI
 
             return true;
         }
+
+        private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
 
     }
 }
