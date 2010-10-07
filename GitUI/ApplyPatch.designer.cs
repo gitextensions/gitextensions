@@ -37,7 +37,7 @@ namespace PatchApply
             this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ChangesList = new FileViewer();
+            this.ChangesList = new GitUI.Editor.FileViewer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
@@ -125,12 +125,15 @@ namespace PatchApply
             // ChangesList
             // 
             this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChangesList.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.ChangesList.IgnoreWhitespaceChanges = false;
+            this.ChangesList.IsReadOnly = true;
             this.ChangesList.Location = new System.Drawing.Point(0, 0);
             this.ChangesList.Name = "ChangesList";
             this.ChangesList.NumberOfVisibleLines = 3;
             this.ChangesList.ScrollPos = 0;
             this.ChangesList.ShowEntireFile = false;
+            this.ChangesList.ShowLineNumbers = true;
             this.ChangesList.Size = new System.Drawing.Size(689, 292);
             this.ChangesList.TabIndex = 1;
             this.ChangesList.TreatAllFilesAsText = false;
@@ -158,7 +161,7 @@ namespace PatchApply
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(339, 9);
+            this.BrowsePatch.Location = new System.Drawing.Point(356, 9);
             this.BrowsePatch.Name = "BrowsePatch";
             this.BrowsePatch.Size = new System.Drawing.Size(75, 23);
             this.BrowsePatch.TabIndex = 5;
@@ -168,9 +171,9 @@ namespace PatchApply
             // 
             // PatchFileNameEdit
             // 
-            this.PatchFileNameEdit.Location = new System.Drawing.Point(76, 9);
+            this.PatchFileNameEdit.Location = new System.Drawing.Point(93, 9);
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
-            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 20);
+            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 21);
             this.PatchFileNameEdit.TabIndex = 3;
             this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
             // 
@@ -179,7 +182,7 @@ namespace PatchApply
             this.labelPatch.AutoSize = true;
             this.labelPatch.Location = new System.Drawing.Point(3, 9);
             this.labelPatch.Name = "labelPatch";
-            this.labelPatch.Size = new System.Drawing.Size(35, 13);
+            this.labelPatch.Size = new System.Drawing.Size(34, 13);
             this.labelPatch.TabIndex = 1;
             this.labelPatch.Text = "Patch";
             // 
