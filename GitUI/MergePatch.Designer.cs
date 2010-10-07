@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MergePatch));
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFile = new System.Windows.Forms.TextBox();
             this.Apply = new System.Windows.Forms.Button();
@@ -55,7 +54,7 @@
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(392, 9);
+            this.BrowsePatch.Location = new System.Drawing.Point(453, 9);
             this.BrowsePatch.Name = "BrowsePatch";
             this.BrowsePatch.Size = new System.Drawing.Size(75, 23);
             this.BrowsePatch.TabIndex = 0;
@@ -65,9 +64,9 @@
             // 
             // PatchFile
             // 
-            this.PatchFile.Location = new System.Drawing.Point(105, 10);
+            this.PatchFile.Location = new System.Drawing.Point(166, 10);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 20);
+            this.PatchFile.Size = new System.Drawing.Size(281, 21);
             this.PatchFile.TabIndex = 2;
             this.PatchFile.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -187,15 +186,15 @@
             // PatchDir
             // 
             this.PatchDir.Enabled = false;
-            this.PatchDir.Location = new System.Drawing.Point(105, 36);
+            this.PatchDir.Location = new System.Drawing.Point(166, 36);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 20);
+            this.PatchDir.Size = new System.Drawing.Size(281, 21);
             this.PatchDir.TabIndex = 6;
             // 
             // BrowseDir
             // 
             this.BrowseDir.Enabled = false;
-            this.BrowseDir.Location = new System.Drawing.Point(392, 35);
+            this.BrowseDir.Location = new System.Drawing.Point(453, 35);
             this.BrowseDir.Name = "BrowseDir";
             this.BrowseDir.Size = new System.Drawing.Size(75, 23);
             this.BrowseDir.TabIndex = 5;
@@ -231,6 +230,7 @@
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Name = "patchGrid1";
             this.patchGrid1.Size = new System.Drawing.Size(642, 315);
@@ -256,7 +256,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "MergePatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
