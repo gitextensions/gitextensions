@@ -444,13 +444,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap Cow1 {
-            get {
-                object obj = ResourceManager.GetObject("Cow1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Icon develop {
             get {
                 object obj = ResourceManager.GetObject("develop", resourceCulture);
