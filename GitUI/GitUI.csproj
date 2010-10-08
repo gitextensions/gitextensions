@@ -965,8 +965,6 @@
     <None Include="Icons\nonprintchar.png" />
     <None Include="Icons\brokendocument.png" />
     <None Include="Icons\22.png" />
-    <None Include="Icons\221.png" />
-    <None Include="Icons\brokendocument1.png" />
     <None Include="Icons\bug.png" />
     <None Include="Icons\loading3.gif" />
     <None Include="Icons\81.png" />
