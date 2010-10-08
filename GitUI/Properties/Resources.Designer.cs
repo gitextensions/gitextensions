@@ -591,13 +591,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap success {
-            get {
-                object obj = ResourceManager.GetObject("success", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap success1 {
             get {
                 object obj = ResourceManager.GetObject("success1", resourceCulture);
