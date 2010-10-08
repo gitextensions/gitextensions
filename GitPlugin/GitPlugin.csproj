@@ -163,7 +163,6 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons.bmp" />
     <None Include="Resources\commit113.bmp" />
     <None Include="Resources\commit12.bmp" />
     <None Include="Resources\commit2.bmp" />
