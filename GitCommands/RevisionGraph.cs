@@ -194,7 +194,8 @@ namespace GitCommands
             {
                 if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
-                    revisions.Add(revision);
+                    if (revision != null)
+                        revisions.Add(revision);
                     Updated(this, new RevisionGraphUpdatedEvent(revision));
                 }
                 nextStep = ReadStep.Commit;
