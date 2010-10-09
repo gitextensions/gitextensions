@@ -179,7 +179,7 @@
             this.pictureBox1.BackgroundImage = null;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Font = null;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow1;
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow;
             this.pictureBox1.ImageLocation = null;
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
