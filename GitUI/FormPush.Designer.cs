@@ -49,6 +49,7 @@
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.TagComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.RemoveAllDeletedTags = new System.Windows.Forms.CheckBox();
             this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
@@ -78,7 +79,7 @@
             // 
             this.Push.Image = global::GitUI.Properties.Resources._31;
             this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Push.Location = new System.Drawing.Point(447, 247);
+            this.Push.Location = new System.Drawing.Point(447, 260);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(101, 23);
             this.Push.TabIndex = 15;
@@ -92,7 +93,7 @@
             this.PushDestination.FormattingEnabled = true;
             this.PushDestination.Location = new System.Drawing.Point(128, 46);
             this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(297, 21);
+            this.PushDestination.Size = new System.Drawing.Size(297, 23);
             this.PushDestination.TabIndex = 16;
             this.PushDestination.DropDown += new System.EventHandler(this.PushDestinationDropDown);
             // 
@@ -101,7 +102,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.Size = new System.Drawing.Size(87, 15);
             this.label2.TabIndex = 17;
             this.label2.Text = "Branch to push";
             // 
@@ -110,7 +111,7 @@
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(173, 21);
+            this.Branch.Size = new System.Drawing.Size(173, 23);
             this.Branch.TabIndex = 0;
             this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
@@ -140,9 +141,9 @@
             // ForcePushTags
             // 
             this.ForcePushTags.AutoSize = true;
-            this.ForcePushTags.Location = new System.Drawing.Point(127, 74);
+            this.ForcePushTags.Location = new System.Drawing.Point(127, 99);
             this.ForcePushTags.Name = "ForcePushTags";
-            this.ForcePushTags.Size = new System.Drawing.Size(80, 17);
+            this.ForcePushTags.Size = new System.Drawing.Size(84, 19);
             this.ForcePushTags.TabIndex = 19;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
@@ -150,7 +151,7 @@
             // 
             // Pull
             // 
-            this.Pull.Location = new System.Drawing.Point(12, 247);
+            this.Pull.Location = new System.Drawing.Point(12, 260);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(101, 23);
             this.Pull.TabIndex = 20;
@@ -214,7 +215,7 @@
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(128, 19);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(297, 21);
+            this.Remotes.Size = new System.Drawing.Size(297, 23);
             this.Remotes.TabIndex = 16;
             this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
@@ -232,7 +233,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(527, 111);
+            this.groupBox1.Size = new System.Drawing.Size(527, 124);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Branch";
@@ -243,7 +244,7 @@
             this.labelTo.Location = new System.Drawing.Point(306, 21);
             this.labelTo.Name = "labelTo";
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelTo.Size = new System.Drawing.Size(16, 13);
+            this.labelTo.Size = new System.Drawing.Size(18, 15);
             this.labelTo.TabIndex = 21;
             this.labelTo.Text = "to";
             this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -253,7 +254,7 @@
             this.RemoteBranch.FormattingEnabled = true;
             this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
             this.RemoteBranch.Name = "RemoteBranch";
-            this.RemoteBranch.Size = new System.Drawing.Size(162, 21);
+            this.RemoteBranch.Size = new System.Drawing.Size(162, 23);
             this.RemoteBranch.TabIndex = 1;
             this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranchDropDown);
             // 
@@ -261,7 +262,7 @@
             // 
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(313, 247);
+            this.LoadSSHKey.Location = new System.Drawing.Point(313, 260);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
             this.LoadSSHKey.TabIndex = 23;
@@ -274,12 +275,13 @@
             this.TagComboBox.FormattingEnabled = true;
             this.TagComboBox.Location = new System.Drawing.Point(127, 19);
             this.TagComboBox.Name = "TagComboBox";
-            this.TagComboBox.Size = new System.Drawing.Size(297, 21);
+            this.TagComboBox.Size = new System.Drawing.Size(297, 23);
             this.TagComboBox.TabIndex = 18;
             this.TagComboBox.DropDown += new System.EventHandler(this.TagDropDown);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.RemoveAllDeletedTags);
             this.groupBox3.Controls.Add(this.PushAllTags);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.ForcePushTags);
@@ -287,17 +289,27 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(527, 111);
+            this.groupBox3.Size = new System.Drawing.Size(527, 124);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tag";
+            // 
+            // RemoveAllDeletedTags
+            // 
+            this.RemoveAllDeletedTags.AutoSize = true;
+            this.RemoveAllDeletedTags.Location = new System.Drawing.Point(127, 75);
+            this.RemoveAllDeletedTags.Name = "RemoveAllDeletedTags";
+            this.RemoveAllDeletedTags.Size = new System.Drawing.Size(151, 19);
+            this.RemoveAllDeletedTags.TabIndex = 23;
+            this.RemoveAllDeletedTags.Text = "&Remove all deleted tags";
+            this.RemoveAllDeletedTags.UseVisualStyleBackColor = true;
             // 
             // PushAllTags
             // 
             this.PushAllTags.AutoSize = true;
             this.PushAllTags.Location = new System.Drawing.Point(127, 51);
             this.PushAllTags.Name = "PushAllTags";
-            this.PushAllTags.Size = new System.Drawing.Size(86, 17);
+            this.PushAllTags.Size = new System.Drawing.Size(92, 19);
             this.PushAllTags.TabIndex = 22;
             this.PushAllTags.Text = "Push &all tags";
             this.PushAllTags.UseVisualStyleBackColor = true;
@@ -307,7 +319,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
+            this.label1.Size = new System.Drawing.Size(70, 15);
             this.label1.TabIndex = 17;
             this.label1.Text = "Tag to push";
             // 
@@ -322,7 +334,7 @@
             this.TabControlTagBranch.Name = "TabControlTagBranch";
             this.TabControlTagBranch.SelectedIndex = 0;
             this.TabControlTagBranch.ShowToolTips = true;
-            this.TabControlTagBranch.Size = new System.Drawing.Size(541, 143);
+            this.TabControlTagBranch.Size = new System.Drawing.Size(541, 156);
             this.TabControlTagBranch.TabIndex = 24;
             // 
             // BranchTab
@@ -332,7 +344,7 @@
             this.BranchTab.Location = new System.Drawing.Point(4, 22);
             this.BranchTab.Name = "BranchTab";
             this.BranchTab.Padding = new System.Windows.Forms.Padding(3);
-            this.BranchTab.Size = new System.Drawing.Size(533, 117);
+            this.BranchTab.Size = new System.Drawing.Size(533, 130);
             this.BranchTab.TabIndex = 0;
             this.BranchTab.Text = "Push branches";
             this.BranchTab.ToolTipText = "Push branches and commits to remote repository.";
@@ -345,7 +357,7 @@
             this.TagTab.Location = new System.Drawing.Point(4, 22);
             this.TagTab.Name = "TagTab";
             this.TagTab.Padding = new System.Windows.Forms.Padding(3);
-            this.TagTab.Size = new System.Drawing.Size(533, 117);
+            this.TagTab.Size = new System.Drawing.Size(533, 130);
             this.TagTab.TabIndex = 1;
             this.TagTab.Text = "Push tags";
             this.TagTab.ToolTipText = "Push tags to remote repository";
@@ -353,9 +365,9 @@
             // 
             // FormPush
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 282);
+            this.ClientSize = new System.Drawing.Size(559, 295);
             this.Controls.Add(this.TabControlTagBranch);
             this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.groupBox2);
@@ -410,5 +422,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label labelTo;
         private System.Windows.Forms.ComboBox RemoteBranch;
+        private System.Windows.Forms.CheckBox RemoveAllDeletedTags;
     }
 }
