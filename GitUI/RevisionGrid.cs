@@ -271,7 +271,7 @@ namespace GitUI
             return
                 string.IsNullOrEmpty(filter)
                     ? ""
-                    : string.Format(" --regexp-ignore-case --grep=\"{0}\" --committer=\"{0}\" --author=\"{0}\" ",
+                    : string.Format(" --regexp-ignore-case --grep=\"{0}\" ",
                                     filter);
         }
 
