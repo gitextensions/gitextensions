@@ -1100,13 +1100,15 @@ namespace GitCommands
             return string.Format("push {0}\"{1}\" {2}", sforce, path.Trim(), fromBranch);
         }
 
-        public static string PushTagCmd(string path, string tag, bool all)
+        public static List<string> PushTagCmd(string path, string tag, bool all)
         {
-            return PushTagCmd(path, tag, all, false);
+            return PushTagCmd(path, tag, all, false, false);
         }
 
-        public static string PushTagCmd(string path, string tag, bool all, bool force)
+        public static List<string> PushTagCmd(string path, string tag, bool all, bool force, bool remove)
         {
+            var commands = new List<string>();
+
             path = FixPath(path);
 
             tag = tag.Replace(" ", "");
@@ -1114,13 +1116,33 @@ namespace GitCommands
             var sforce = "";
             if (force)
                 sforce = "-f ";
+            
+            if (remove)
+            {
+
+                var tags_remote = new List<GitHead>();
+                var tags_local = new List<GitHead>();
+                var tags_diff=new List<GitHead>();
+                tags_remote = GitCommands.GetRemoteHeads(path,true, false);
+                tags_local = GitCommands.GetHeads(true, false);
+                foreach(var tag_remote in tags_remote){
+                    var found = false;
+                    foreach (var tag_local in tags_local)
+                    {
+                        if (tag_local.Guid == tag_remote.Guid) { found = true; break; }                        
+                    }
+                    if (!found) {
+                       commands.Add("push " + sforce + "\"" + path.Trim() + "\"" + " \":" + tag_remote.CompleteName +"\"");
+                    }
+                }
+            }
 
             if (all)
-                return "push " + sforce + "\"" + path.Trim() + "\" --tags";
+                commands.Add("push " + sforce + "\"" + path.Trim() + "\" --tags");
             if (!string.IsNullOrEmpty(tag))
-                return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
+                commands.Add("push " + sforce + "\"" + path.Trim() + "\" tag " + tag);
 
-            return "";
+            return commands;
         }
 
         public static string Fetch(string remote, string branch)
