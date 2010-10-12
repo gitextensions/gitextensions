@@ -42,12 +42,6 @@ namespace GitUI.Editor
                 MouseLeave(sender, e);
         }
 
-        void TextArea_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MouseMove != null)
-                MouseMove(sender, e);
-        }
-
         public event SelectedLineChangedHandler SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
