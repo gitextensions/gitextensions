@@ -67,11 +67,6 @@ namespace GitUI.Blame
             BlameFile_SelectedLineChanged(null, 0);
         }
 
-        private void BlameFileClick(object sender, EventArgs e)
-        {
-            SyncBlameViews();
-        }
-
         private void SyncBlameViews()
         {
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;

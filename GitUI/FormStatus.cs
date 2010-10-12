@@ -153,10 +153,5 @@ namespace GitUI
         {
             GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
         }
-
-        private void FormStatus_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("process");
-        }
     }
 }

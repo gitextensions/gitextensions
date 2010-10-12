@@ -210,8 +210,6 @@ namespace GitUI
 
                 _NO_TRANSLATE_MaxCommits.Value = GitCommands.Settings.MaxCommits;
 
-                GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
                 GitPath.Text = GitCommands.Settings.GitCommand;
                 GitBinPath.Text = GitCommands.Settings.GitBinDir;
 
@@ -474,8 +472,6 @@ namespace GitUI
         {
             ConfigFile localConfig = GitCommands.GitCommands.GetLocalConfig();
             ConfigFile globalConfig = GitCommands.GitCommands.GetGlobalConfig();
-
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
 
             if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
                 localConfig.SetValue("user.name", UserName.Text);
@@ -1129,8 +1125,6 @@ namespace GitUI
 
         private void BrowseMergeTool_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
@@ -1191,7 +1185,6 @@ namespace GitUI
 
         private void AutoConfigMergeToolcmd()
         {
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
             if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
             {
                 if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
@@ -1387,8 +1380,6 @@ namespace GitUI
 
         private void BrowseDiffTool_Click(object sender, EventArgs e)
         {
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 DifftoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", DifftoolPath.Text);

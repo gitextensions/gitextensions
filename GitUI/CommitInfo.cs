@@ -82,18 +82,18 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision));
         }
 
-        private void loadTagInfo(string _revision)
+        private void loadTagInfo(string revision)
         {
-            _tagInfo = GetTagsWhichContainsThisCommit(_revision);
+            _tagInfo = GetTagsWhichContainsThisCommit(revision);
             _syncContext.Post(  s =>
                                 {
                                     updateText();
                                 }, null);
         }
 
-        private void loadBranchInfo(string _revision)
+        private void loadBranchInfo(string revision)
         {
-            _branchInfo = GetBranchesWhichContainsThisCommit(_revision);
+            _branchInfo = GetBranchesWhichContainsThisCommit(revision);
             _syncContext.Post(s =>
             {
                 updateText();
