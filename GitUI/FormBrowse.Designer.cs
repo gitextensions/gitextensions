@@ -166,6 +166,7 @@ namespace GitUI
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteIndexlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -1355,6 +1356,10 @@ namespace GitUI
             // 
             // deleteIndexlockToolStripMenuItem
             // 
+            this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
+            this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.fileHistoryDiffToolstripMenuItem.Text = "File history";
+            this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
             this.deleteIndexlockToolStripMenuItem.Name = "deleteIndexlockToolStripMenuItem";
             this.deleteIndexlockToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.deleteIndexlockToolStripMenuItem.Text = "Delete index.lock";
@@ -1537,5 +1542,6 @@ namespace GitUI
         private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem;
         private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
         private ToolStripMenuItem deleteIndexlockToolStripMenuItem;
+        private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
     }
 }
