@@ -1355,7 +1355,8 @@ namespace GitUI
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
             // deleteIndexlockToolStripMenuItem
-            // 
+            //
+            this.DiffContextMenu.Items.Add(fileHistoryDiffToolstripMenuItem);
             this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
             this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
