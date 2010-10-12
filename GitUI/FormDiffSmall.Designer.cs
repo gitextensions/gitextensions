@@ -34,7 +34,6 @@ namespace GitUI
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.commitInfo = new GitUI.CommitInfo();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -138,7 +137,6 @@ namespace GitUI
         private System.Windows.Forms.SplitContainer splitContainer1;
         private FileStatusList DiffFiles;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.HelpProvider helpProvider1;
         private FileViewer DiffText;
         private CommitInfo commitInfo;
     }

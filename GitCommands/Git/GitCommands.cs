@@ -120,7 +120,7 @@ namespace GitCommands
             return startDir;
         }
 
-        public static Encoding EndcodingRouter(string arg)
+        public static Encoding EncodingRouter(string arg)
         {
             //Disabled the EndcodingRouter because it is ment to fix
             //using Russian chars but doesn't seem to work. Now
@@ -272,7 +272,7 @@ namespace GitCommands
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
-            var process =
+            using (var process =
                 new Process
                     {
                         StartInfo =
@@ -288,14 +288,14 @@ namespace GitCommands
                                 WindowStyle = ProcessWindowStyle.Normal,
                                 LoadUserProfile = true
                             }
-                    };
-
-
-            process.Start();
-            if (!waitAndExit)
-                return;
-            process.WaitForExit();
-            process.Close();
+                    })
+            {
+                process.Start();
+                if (waitAndExit)
+                {
+                    process.WaitForExit();
+                }
+            }
         }
 
         public static void Run(string cmd, string arguments)
@@ -361,7 +361,7 @@ namespace GitCommands
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.StandardErrorEncoding = EndcodingRouter(arguments);
+            process.StartInfo.StandardErrorEncoding = EncodingRouter(arguments);
             process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
         }
 
@@ -953,7 +953,7 @@ namespace GitCommands
         }
 
 
-        public string FormatPatch(string from, string to, string output, int start)
+        public static string FormatPatch(string from, string to, string output, int start)
         {
             output = FixPath(output);
 
@@ -964,7 +964,7 @@ namespace GitCommands
             return result;
         }
 
-        public string FormatPatch(string from, string to, string output)
+        public static string FormatPatch(string from, string to, string output)
         {
             output = FixPath(output);
 

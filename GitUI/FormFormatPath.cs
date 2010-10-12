@@ -86,14 +86,14 @@ namespace GitUI
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[0].Guid;
-                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = GitCommands.GitCommands.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count == 2)
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[1].Guid;
-                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = GitCommands.GitCommands.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count > 2)
@@ -104,7 +104,7 @@ namespace GitUI
                         n++;
                         rev1 = revision.ParentGuids[0];
                         rev2 = revision.Guid;
-                        result += new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir, n);
+                        result += GitCommands.GitCommands.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
                 }
             } else
@@ -166,11 +166,6 @@ namespace GitUI
                 return false;
             }
             return true;
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void SaveToDir_CheckedChanged(object sender, EventArgs e)
