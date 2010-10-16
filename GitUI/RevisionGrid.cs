@@ -271,7 +271,7 @@ namespace GitUI
             return
                 string.IsNullOrEmpty(filter)
                     ? ""
-                    : string.Format(" --regexp-ignore-case --grep=\"{0}\" --committer=\"{0}\" --author=\"{0}\" ",
+                    : string.Format(" --regexp-ignore-case --grep=\"{0}\" ",
                                     filter);
         }
 
@@ -302,6 +302,7 @@ namespace GitUI
             Revisions.ClearSelection();
 
             Revisions.Rows[index].Selected = true;
+            Revisions.CurrentCell = Revisions.Rows[index].Cells[1];
 
             Revisions.Select();
         }
@@ -441,8 +442,7 @@ namespace GitUI
         {
             _isLoading = false;
 
-            if (_revisionGraphCommand.Revisions.Count == 1 &&
-                _revisionGraphCommand.Revisions[0] == null && 
+            if (_revisionGraphCommand.Revisions.Count == 0 && 
                 !FilterIsApplied())
             {
                 // This has to happen on the UI thread
@@ -471,8 +471,7 @@ namespace GitUI
             if (Revisions.SelectedRows.Count != 0 || _initialSelectedRevision == null) return;
             for (var i = 0; i < _revisionGraphCommand.Revisions.Count; i++)
             {
-                if (_revisionGraphCommand.Revisions[i] != null && //A null reference occurred here (? should not be possible)
-                    _revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
+                if (_revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
                     SetSelectedIndex(i);
             }
         }
@@ -502,7 +501,7 @@ namespace GitUI
                 Revisions.SelectedIds = LastSelectedRows;
                 LastSelectedRows = null;
             }
-            else
+            else if (_initialSelectedRevision == null)
             {
                 Revisions.SelectedIds = new IComparable[] { CurrentCheckout };
             }

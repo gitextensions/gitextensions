@@ -49,17 +49,23 @@ namespace GitUI
                 if (!fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
                     fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
 
-                // grab the 8.3 file path
-                StringBuilder shortPath = new StringBuilder(4096);
-                NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
+                if (File.Exists(fullFilePath))
+                {
+                    // grab the 8.3 file path
+                    StringBuilder shortPath = new StringBuilder(4096);
+                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
-                // use 8.3 file path to get properly cased full file path
-                StringBuilder longPath = new StringBuilder(4096);
-                NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
+                    // use 8.3 file path to get properly cased full file path
+                    StringBuilder longPath = new StringBuilder(4096);
+                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                // remove the working dir and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
+                    // remove the working dir and now we have a properly cased file name.
+                    fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
+                }
             }
+
+            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Settings.WorkingDir.Length);
 
             FileName = fileName;
 
