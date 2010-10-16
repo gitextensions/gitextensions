@@ -36,7 +36,7 @@ namespace GitExtensions
         public void SetSetting(string name, string value)
         {
             if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
+                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
 
             settings[name] = value;
 
@@ -46,7 +46,7 @@ namespace GitExtensions
         public string GetSetting(string name) 
         {
             if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
+                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
 
             string value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
             

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -12,14 +13,14 @@ namespace GitUI
         public string Remote { get; set; }
         public bool Plink { get; set; }
         public string ProcessString { get; set; }
-        public string ProcessArguments { get; set; }
+        public List<string> ProcessArguments { get; set; }
         public Process Process { get; set; }
 
         private bool restart = false;
-        private GitCommands.GitCommands gitCommand;
+        private GitCommands.GitCommands[] gitCommands;
 
-        public FormProcess(string process, string arguments)
-        {            
+        public FormProcess(string process, List<string> arguments)
+        {
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
             ProcessString = process ?? GitCommands.Settings.GitCommand;
@@ -32,19 +33,38 @@ namespace GitUI
         {
         }
 
+        public FormProcess(string process, string arguments)
+            : this(process, new List<string>() { arguments })
+        {
+        }
+
+        public FormProcess(List<string> arguments)
+            : this(null, arguments)
+        {
+        }
+
         private void processStart(FormStatus form)
         {
-            restart = false;
-            AddOutput(ProcessString + " " + ProcessArguments);
+            restart = false;            
 
             Plink = GitCommands.GitCommands.Plink();
+            gitCommands = new GitCommands.GitCommands[ProcessArguments.Count];
+            int t=0;
+            // execute each command in list ProcessArguments
+            // - atm return values are async, this needs to be changed before release
+            // - error handling below in gitCommand_Exited() is broken too with this
+            foreach (var ProcessArgument in ProcessArguments)
+            {
+                AddOutput(ProcessString + " " + ProcessArguments[t]);
+                gitCommands[t] = new GitCommands.GitCommands();
+                gitCommands[t].CollectOutput = false;
+                Process = gitCommands[t].CmdStartProcess(ProcessString, ProcessArgument);
+                gitCommands[t].Exited += new EventHandler(gitCommand_Exited);
+                gitCommands[t].DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+                t++;
+            }
+            
 
-            gitCommand = new GitCommands.GitCommands();
-            gitCommand.CollectOutput = false;
-            Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
-
-            gitCommand.Exited += new EventHandler(gitCommand_Exited);
-            gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
         }
 
         private void processAbort(FormStatus form)
@@ -72,46 +92,46 @@ namespace GitUI
             try
             {
                 // An error occurred!
-                if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
-                {
-                    isError = true;
+                //if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
+                //{
+                //    isError = true;
 
-                    // TODO: This Plink stuff here seems misplaced. Is there a better
-                    // home for all of this stuff? For example, if I had a label called pull, 
-                    // we could end up in this code incorrectly.
-                    if (Plink)
-                    {
-                        if (ProcessArguments.ToLower().Contains("pull") ||
-                            ProcessArguments.ToLower().Contains("push") ||
-                            ProcessArguments.ToLower().Contains("plink") ||
-                            ProcessArguments.ToLower().Contains("tortoiseplink") ||
-                            ProcessArguments.ToLower().Contains("remote") ||
-                            ProcessString.ToLower().Contains("clone") ||
-                            ProcessArguments.ToLower().Contains("clone"))
-                        {
-                            if (OutputString.ToString().Contains("successfully authenticated"))
-                            {
-                                isError = false;
-                            }
+                //    //// TODO: This Plink stuff here seems misplaced. Is there a better
+                //    //// home for all of this stuff? For example, if I had a label called pull, 
+                //    //// we could end up in this code incorrectly.
+                //    //if (Plink)
+                //    //{
+                //    //    if (ProcessArguments.ToLower().Contains("pull") ||
+                //    //        ProcessArguments.ToLower().Contains("push") ||
+                //    //        ProcessArguments.ToLower().Contains("plink") ||
+                //    //        ProcessArguments.ToLower().Contains("tortoiseplink") ||
+                //    //        ProcessArguments.ToLower().Contains("remote") ||
+                //    //        ProcessString.ToLower().Contains("clone") ||
+                //    //        ProcessArguments.ToLower().Contains("clone"))
+                //    //    {
+                //    //        if (OutputString.ToString().Contains("successfully authenticated"))
+                //    //        {
+                //    //            isError = false;
+                //    //        }
 
-                            if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
-                            {
-                                FormPuttyError puttyError = new FormPuttyError();
-                                puttyError.ShowDialog();
-                                if (puttyError.RetryProcess)
-                                {
-                                    Reset();
-                                    ProcessCallback(this);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
+                //    //        if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
+                //    //        {
+                //    //            FormPuttyError puttyError = new FormPuttyError();
+                //    //            puttyError.ShowDialog();
+                //    //            if (puttyError.RetryProcess)
+                //    //            {
+                //    //                Reset();
+                //    //                ProcessCallback(this);
+                //    //                return;
+                //    //            }
+                //    //        }
+                //    //    }
+                //    //}
+                //}
+                //else
+                //{
                     isError = false;
-                }
+                //}
             }
             catch
             {
@@ -168,7 +188,7 @@ namespace GitUI
 
                     try
                     {
-                        gitCommand.Process.Kill();
+                        //gitCommand.Process.Kill();
                     }
                     catch
                     {
