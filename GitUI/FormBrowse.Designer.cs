@@ -163,7 +163,6 @@ namespace GitUI
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.deleteIndexlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1524,7 +1523,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fileExplorerToolStripMenuItem;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private ContextMenuStrip FileTreeContextMenu;
         private ToolStripMenuItem saveAsToolStripMenuItem;

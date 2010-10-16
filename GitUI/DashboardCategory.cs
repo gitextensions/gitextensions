@@ -36,19 +36,19 @@ namespace GitUI
             _NO_TRANSLATE_Caption.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 10, FontStyle.Bold, GraphicsUnit.Point);
         }
 
-        private RepositoryCategory repositoryCategory;
+        private RepositoryCategory m_repositoryCategory;
         public RepositoryCategory RepositoryCategory
         {
             get
             {
-                return repositoryCategory;
+                return m_repositoryCategory;
             }
             set
             {
-                repositoryCategory = value;
+                m_repositoryCategory = value;
 
-                if (repositoryCategory != null && repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
-                    repositoryCategory.DownloadRssFeed();
+                if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
+                    m_repositoryCategory.DownloadRssFeed();
 
                 InitRepositoryCategory();
             }
@@ -56,16 +56,16 @@ namespace GitUI
 
         private void InitRepositoryCategory()
         {
-            if (repositoryCategory != null)
+            if (m_repositoryCategory != null)
             {
                 this.Height = top = 26;
-                foreach (Repository repository in repositoryCategory.Repositories)
+                foreach (Repository repository in m_repositoryCategory.Repositories)
                 {
                     DashboardItem dashboardItem = new DashboardItem(repository);
                     dashboardItem.Click += new EventHandler(dashboardItem_Click);
                     AddItem(dashboardItem);                    
 
-                    if (repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
+                    if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                     {
                         ContextMenuStrip contextMenu = new ContextMenuStrip();
                         ToolStripMenuItem moveToMenuItem = new ToolStripMenuItem("Move To Category", null, new ToolStripMenuItem("moveto"));
@@ -272,11 +272,6 @@ namespace GitUI
                 if (Controls[i - 1] is DashboardItem)
                     Controls[i - 1].Width = Width - 13;
             }
-        }
-
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         void addToItem_Click(object sender, EventArgs e)
