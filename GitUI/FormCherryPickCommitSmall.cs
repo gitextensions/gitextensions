@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -30,7 +25,7 @@ namespace GitUI
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommands.GitCommands.CherryPickCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog();
+            new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
 

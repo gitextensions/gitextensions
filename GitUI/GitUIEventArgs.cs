@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GitCommands;
+﻿using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -17,7 +14,7 @@ namespace GitUI
         public bool Cancel { get; set; }
 
         private IGitUICommands gitUICommands;
-        public IGitUICommands GitUICommands 
+        public IGitUICommands GitUICommands
         {
             get
             {
@@ -29,7 +26,7 @@ namespace GitUI
         {
             get
             {
-                return new GitCommands.GitCommands();
+                return new GitCommandsInstance();
             }
         }
 

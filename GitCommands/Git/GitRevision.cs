@@ -31,7 +31,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = GitCommands.GetTree(TreeGuid)); }
+            get { return _subItems ?? (_subItems = GitCommandHelpers.GetTree(TreeGuid)); }
         }
 
         #endregion

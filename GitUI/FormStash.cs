@@ -36,7 +36,7 @@ namespace GitUI
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
-            Stashes.DataSource = GitCommands.GitCommands.GetStashes();
+            Stashes.DataSource = GitCommandHelpers.GetStashes();
             Stashes.DisplayMember = "Name";
             if (Stashes.Items.Count > 0)
                 Stashes.SelectedIndex = 0;
@@ -47,12 +47,12 @@ namespace GitUI
         private void InitializeSoft()
         {
             Stashed.DisplayMember = "FileNameA";
-            Stashed.DataSource = GitCommands.GitCommands.GetStashedItems(Stashes.Text);
+            Stashed.DataSource = GitCommandHelpers.GetStashedItems(Stashes.Text);
         }
 
         private void InitializeTracked()
         {
-            var itemStatusList = GitCommands.GitCommands.GetAllChangedFiles();
+            var itemStatusList = GitCommandHelpers.GetAllChangedFiles();
 
             Changes.DisplayMember = "Name";
             Changes.DataSource = itemStatusList;
@@ -62,7 +62,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             if (Stashed.SelectedItem is Patch)
-                ShowPatch((Patch) Stashed.SelectedItem);
+                ShowPatch((Patch)Stashed.SelectedItem);
             Cursor.Current = Cursors.Default;
         }
 
@@ -79,7 +79,7 @@ namespace GitUI
         private void ViewCurrentChanges()
         {
             Cursor.Current = Cursors.WaitCursor;
-            View.ViewCurrentChanges(((GitItemStatus) Changes.SelectedItem).Name, false);
+            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
             Cursor.Current = Cursors.Default;
         }
 
@@ -117,7 +117,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InitializeSoft();
             if (Stashes.SelectedItem != null)
-                StashMessage.Text = ((GitStash) Stashes.SelectedItem).Message;
+                StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
             Cursor.Current = Cursors.Default;
         }
 

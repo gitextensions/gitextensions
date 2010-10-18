@@ -25,7 +25,7 @@ namespace GitCommands
         /// <returns></returns>
         public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1)
         {
-            string info = GitCommands.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
@@ -40,7 +40,7 @@ namespace GitCommands
         /// <returns></returns>
         public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
-            string info = GitCommands.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
@@ -55,7 +55,7 @@ namespace GitCommands
         /// <returns></returns>
         public static CommitInformation GetCommitInfo(string sha1)
         {
-            string info = GitCommands.RunCachableCmd(
+            string info = GitCommandHelpers.RunCachableCmd(
                 Settings.GitCommand,
                 string.Format(
                     "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
@@ -83,7 +83,7 @@ namespace GitCommands
             //We need to recode the commit message because of a bug in Git.
             //We cannot let git recode the message to Settings.Encoding which is
             //needed to allow the "git log" to print the filename in Settings.Encoding
-            Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
             if (logoutputEncoding != Settings.Encoding)
                 commitMessage = logoutputEncoding.GetString(Settings.Encoding.GetBytes(commitMessage));
 

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 using PatchApply;
 
 namespace GitUI
@@ -34,7 +30,7 @@ namespace GitUI
 
         public void Initialize()
         {
-            Patches.DataSource = GitCommands.GitCommands.GetRebasePatchFiles();
+            Patches.DataSource = GitCommandHelpers.GetRebasePatchFiles();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)

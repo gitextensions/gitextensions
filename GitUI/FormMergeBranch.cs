@@ -1,4 +1,5 @@
 ﻿using System;
+using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -17,11 +18,11 @@ namespace GitUI
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
-            var selectedHead = GitCommands.GitCommands.GetSelectedBranch();
+            var selectedHead = GitCommandHelpers.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(true, true);
+            Branches.DataSource = GitCommandHelpers.GetHeads(true, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
@@ -31,7 +32,7 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommands.GitCommands.MergeBranchCmd(Branches.Text, fastForward.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();

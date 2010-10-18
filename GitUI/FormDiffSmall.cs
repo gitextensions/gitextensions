@@ -32,7 +32,7 @@ namespace GitUI
             DiffFiles.GitItemStatusses = null;
 
             if (revision.ParentGuids.Length > 0)
-                DiffFiles.GitItemStatusses = GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                DiffFiles.GitItemStatusses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
 
             commitInfo.SetRevision(revision.Guid);
 
@@ -58,7 +58,7 @@ namespace GitUI
 
             if (DiffFiles.SelectedItem != null)
             {
-                Patch selectedPatch = GitCommands.GitCommands.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffText.GetExtraDiffArguments());
+                Patch selectedPatch = GitCommandHelpers.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffText.GetExtraDiffArguments());
                 if (selectedPatch != null)
                 {
                     DiffText.ViewPatch(selectedPatch.Text);
