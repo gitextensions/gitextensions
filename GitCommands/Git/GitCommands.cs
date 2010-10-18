@@ -14,12 +14,13 @@ namespace GitCommands
 {
     public class GitCommands : IGitCommands
     {
-        private static GitVersion _versionInUse;
         public bool CollectOutput = true;
         public bool StreamOutput;
-        public Process Process { get; set; }
-        public StringBuilder Output { get; set; }
-        public StringBuilder ErrorOutput { get; set; }
+        public StringBuilder Output { get; private set; }
+        public StringBuilder ErrorOutput { get; private set; }
+
+        private static GitVersion _versionInUse;
+        private Process myProcess;
 
         public static GitVersion VersionInUse
         {
@@ -118,30 +119,6 @@ namespace GitCommands
                     return dir + Settings.PathSeperator;
             }
             return startDir;
-        }
-
-        public static Encoding EncodingRouter(string arg)
-        {
-            //Disabled the EndcodingRouter because it is ment to fix
-            //using Russian chars but doesn't seem to work. Now
-            //it does more damage then good...
-            /*var regcol = new StringCollection {"ls-files", "diff", "ls-tree"};
-            var r = new Regex(ConvertRegCollectionToString(regcol));
-            return
-                r.IsMatch(arg)
-                    ? Encoding.GetEncoding(Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage)
-                    : Encoding.UTF8;*/
-
-            //use setting 18n.logoutputencoding
-            /*if (//arg.StartsWith("log", StringComparison.CurrentCultureIgnoreCase) ||
-                arg.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)/* ||
-                arg.StartsWith("blame", StringComparison.CurrentCultureIgnoreCase)*/
-            /*)
-            {
-                return GetLogoutputEncoding();
-            }*/
-
-            return Settings.Encoding;
         }
 
         public static Encoding GetLogoutputEncoding()
@@ -265,36 +242,37 @@ namespace GitCommands
             }
         }
 
-        private static void CreateAndStartCommand(string cmd, string arguments, bool waitAndExit)
+        private static void CreateAndStartCommand(string cmd, string arguments, bool waitForExit)
         {
             SetEnvironmentVariable();
 
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
-            using (var process =
-                new Process
-                    {
-                        StartInfo =
-                            {
-                                UseShellExecute = true,
-                                ErrorDialog = false,
-                                RedirectStandardOutput = false,
-                                RedirectStandardInput = false,
-                                CreateNoWindow = false,
-                                FileName = cmd,
-                                Arguments = arguments,
-                                WorkingDirectory = Settings.WorkingDir,
-                                WindowStyle = ProcessWindowStyle.Normal,
-                                LoadUserProfile = true
-                            }
-                    })
+            var info = new ProcessStartInfo()
             {
-                process.Start();
-                if (waitAndExit)
+                UseShellExecute = true,
+                ErrorDialog = false,
+                RedirectStandardOutput = false,
+                RedirectStandardInput = false,
+                CreateNoWindow = false,
+                FileName = cmd,
+                Arguments = arguments,
+                WorkingDirectory = Settings.WorkingDir,
+                WindowStyle = ProcessWindowStyle.Normal,
+                LoadUserProfile = true
+            };
+
+            if (waitForExit)
+            {
+                using (var process = Process.Start(info))
                 {
                     process.WaitForExit();
                 }
+            }
+            else
+            {
+                Process.Start(info);
             }
         }
 
@@ -323,8 +301,7 @@ namespace GitCommands
             Settings.GitLog.Log(cmd + " " + arguments);
 
             //process used to execute external commands
-            Process process = new Process();
-            SetCommonProcessAttributes(process, arguments);
+            Process process = new Process() { StartInfo = CreateProcessStartInfo() };
             process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
             process.StartInfo.FileName = cmd;
             process.StartInfo.Arguments = arguments;
@@ -343,7 +320,7 @@ namespace GitCommands
 
             process.Exited += ProcessExited;
             process.Start();
-            Process = process;
+            myProcess = process;
 
             if (!StreamOutput)
             {
@@ -354,15 +331,18 @@ namespace GitCommands
             return process;
         }
 
-        private static void SetCommonProcessAttributes(Process process, string arguments)
+        private static ProcessStartInfo CreateProcessStartInfo()
         {
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.ErrorDialog = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.StandardErrorEncoding = EncodingRouter(arguments);
-            process.StartInfo.StandardOutputEncoding = process.StartInfo.StandardErrorEncoding;
+            return new ProcessStartInfo()
+            {
+                UseShellExecute = false,
+                ErrorDialog = false,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = Settings.Encoding,
+                StandardErrorEncoding = Settings.Encoding
+            };
         }
 
         private static bool UseSsh(string arguments)
@@ -387,15 +367,15 @@ namespace GitCommands
         public void Kill()
         {
             //If there was another process running, kill it
-            if (Process == null)
+            if (myProcess == null)
                 return;
             try
             {
-                if (!Process.HasExited)
+                if (!myProcess.HasExited)
                 {
-                    Process.Kill();
+                    myProcess.Kill();
                 }
-                Process.Close();
+                myProcess.Close();
             }
             catch (Exception ex)
             {
@@ -414,12 +394,12 @@ namespace GitCommands
                 //Only WaitForExit when someone is conntected to the exited event. For some reason a
                 //null reference is thrown sometimes when staging/unstaging in the commit dialog when
                 //we wait for exit, probably a timing issue... 
-                Process.WaitForExit();
+                myProcess.WaitForExit();
 
                 Exited(this, e);
             }
 
-            Process = null;
+            myProcess = null;
 
         }
 
@@ -462,14 +442,8 @@ namespace GitCommands
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
-                var process = CreateAndStartProcess(arguments, cmd);
-
-                var output = process.StandardOutput.ReadToEnd();
-                var error = process.StandardError.ReadToEnd();
-
-                process.WaitForExit();
-                process.Close();
-                // Read the output stream first and then wait. 
+                string output, error;
+                CreateAndStartProcess(arguments, cmd, out output, out error);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -483,59 +457,64 @@ namespace GitCommands
             }
         }
 
-        private static Process CreateAndStartProcess(string arguments, string cmd)
+        private static void CreateAndStartProcess(string argument, string cmd)
+        {
+            string stdOutput, stdError;
+            CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
+        }
+
+        private static void CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
-            var process = new Process();
-            SetCommonProcessAttributes(process, arguments);
+            var startInfo = CreateProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            startInfo.FileName = cmd;
+            startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = Settings.WorkingDir;
+            startInfo.LoadUserProfile = true;
 
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
-
-            process.Start();
-            return process;
+            using (var process = Process.Start(startInfo))
+            {
+                stdOutput = process.StandardOutput.ReadToEnd();
+                stdError = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+            }
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public static Process RunCmdAsync(string cmd, string arguments)
+        public static void RunCmdAsync(string cmd, string arguments)
         {
-            var process = new Process();
+            SetEnvironmentVariable();
+
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            var info = new ProcessStartInfo()
+            {
+                UseShellExecute = true,
+                ErrorDialog = true,
+                RedirectStandardOutput = false,
+                RedirectStandardInput = false,
+                RedirectStandardError = false,
+
+                LoadUserProfile = true,
+                CreateNoWindow = false,
+                FileName = cmd,
+                Arguments = arguments,
+                WorkingDirectory = Settings.WorkingDir,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+
             try
             {
-                SetEnvironmentVariable();
-
-                Settings.GitLog.Log(cmd + " " + arguments);
-                //process used to execute external commands
-
-                process.StartInfo.UseShellExecute = true;
-                process.StartInfo.ErrorDialog = true;
-                process.StartInfo.RedirectStandardOutput = false;
-                process.StartInfo.RedirectStandardInput = false;
-                process.StartInfo.RedirectStandardError = false;
-
-
-                process.StartInfo.LoadUserProfile = true;
-                process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                process.StartInfo.LoadUserProfile = true;
-
-                process.Start();
+                Process.Start(info);
             }
-            catch (Exception ex)
+            catch (Win32Exception ex)
             {
                 Trace.WriteLine(ex);
             }
-
-            return process;
         }
 
         public static bool InTheMiddleOfConflictedMerge()
@@ -1032,18 +1011,6 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "push \"" + FixPath(path).Trim() + "\"");
         }
 
-        public static Process PushAsync(string path, string branch, bool all)
-        {
-            var arguments =
-                string.Format(" /k \"\"{0}\" {1}\"",
-                              Settings.GitCommand,
-                              PushCmd(FixPath(path),
-                                      branch,
-                                      all));
-            return RunCmdAsync("cmd.exe", arguments);
-        }
-
-
         public static bool StartPageantForRemote(string remote)
         {
             var sshKeyFile = GetPuttyKeyFileForRemote(remote);
@@ -1113,23 +1080,25 @@ namespace GitCommands
             var sforce = "";
             if (force)
                 sforce = "-f ";
-            
+
             if (remove)
             {
 
                 var tags_remote = new List<GitHead>();
                 var tags_local = new List<GitHead>();
-                var tags_diff=new List<GitHead>();
-                tags_remote = GitCommands.GetRemoteHeads(path,true, false);
+                var tags_diff = new List<GitHead>();
+                tags_remote = GitCommands.GetRemoteHeads(path, true, false);
                 tags_local = GitCommands.GetHeads(true, false);
-                foreach(var tag_remote in tags_remote){
+                foreach (var tag_remote in tags_remote)
+                {
                     var found = false;
                     foreach (var tag_local in tags_local)
                     {
-                        if (tag_local.Guid == tag_remote.Guid) { found = true; break; }                        
+                        if (tag_local.Guid == tag_remote.Guid) { found = true; break; }
                     }
-                    if (!found) {
-                       commands.Add("push " + sforce + "\"" + path.Trim() + "\"" + " \":" + tag_remote.CompleteName +"\"");
+                    if (!found)
+                    {
+                        commands.Add("push " + sforce + "\"" + path.Trim() + "\"" + " \":" + tag_remote.CompleteName + "\"");
                     }
                 }
             }
@@ -2231,35 +2200,31 @@ namespace GitCommands
                 Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob \"" + id + "\"");
                 //process used to execute external commands
 
-                var process =
-                    new Process
-                        {
-                            StartInfo =
-                                {
-                                    UseShellExecute = false,
-                                    ErrorDialog = false,
-                                    RedirectStandardOutput = true,
-                                    RedirectStandardInput = false,
-                                    RedirectStandardError = false,
-                                    CreateNoWindow = true,
-                                    FileName = "\"" + Settings.GitCommand + "\"",
-                                    Arguments = "cat-file blob \"" + id + "\"",
-                                    WorkingDirectory = Settings.WorkingDir,
-                                    WindowStyle = ProcessWindowStyle.Normal,
-                                    LoadUserProfile = true
-                                }
-                        };
+                var info = new ProcessStartInfo()
+                {
+                    UseShellExecute = false,
+                    ErrorDialog = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = false,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true,
+                    FileName = "\"" + Settings.GitCommand + "\"",
+                    Arguments = "cat-file blob \"" + id + "\"",
+                    WorkingDirectory = Settings.WorkingDir,
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    LoadUserProfile = true
+                };
 
-                process.Start();
+                using (var process = Process.Start(info))
+                {
+                    StreamCopy(process.StandardOutput.BaseStream, newStream);
+                    newStream.Position = 0;
 
-                StreamCopy(process.StandardOutput.BaseStream, newStream);
-                newStream.Position = 0;
-
-                process.WaitForExit();
-
-                return newStream;
+                    process.WaitForExit();
+                    return newStream;
+                }
             }
-            catch (Exception ex)
+            catch (Win32Exception ex)
             {
                 Trace.WriteLine(ex);
             }
