@@ -54,7 +54,7 @@ namespace GitUI
             if (revisions.Count == 2)
             {
                 selectedPatch =
-                    GitCommands.GitCommands
+                    GitCommands.GitCommandHelpers
                         .GetSingleDiff(
                             revisions[0].Guid,
                             revisions[1].Guid,
@@ -65,7 +65,7 @@ namespace GitUI
             {
                 var revision = revisions[0];
                 selectedPatch =
-                    GitCommands.GitCommands
+                    GitCommands.GitCommandHelpers
                         .GetSingleDiff(
                             revision.Guid,
                             revision.ParentGuids[0],
@@ -87,14 +87,14 @@ namespace GitUI
 
                 if (revisions.Count == 1)
                     DiffFiles.GitItemStatusses =
-                        GitCommands.GitCommands.GetDiffFiles(
+                        GitCommandHelpers.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[0].ParentGuids[0]);
 
                 if (revisions.Count == 2)
                 {
                     DiffFiles.GitItemStatusses =
-                        GitCommands.GitCommands.GetDiffFiles(
+                        GitCommandHelpers.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[1].Guid);
                 }

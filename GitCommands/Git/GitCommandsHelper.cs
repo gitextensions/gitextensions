@@ -7,20 +7,42 @@ using System.IO;
 using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
-using GitUIPluginInterfaces;
 using PatchApply;
 
 namespace GitCommands
 {
-    public class GitCommands : IGitCommands
+    public static class GitCommandHelpers
     {
-        public bool CollectOutput = true;
-        public bool StreamOutput;
-        public StringBuilder Output { get; private set; }
-        public StringBuilder ErrorOutput { get; private set; }
-
         private static GitVersion _versionInUse;
-        private Process myProcess;
+
+        /// <summary>
+        /// This is a faster function to get the names of all submodules then the 
+        /// GetSubmodules() function. The command @git submodule is very slow.
+        /// </summary>
+        public static IList<string> GetSubmodulesNames()
+        {
+            IList<string> submodulesNames = new List<string>();
+            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+            foreach (ConfigSection configSection in configFile.GetConfigSections())
+            {
+                submodulesNames.Add(configSection.SubSection);
+            }
+
+            return submodulesNames;
+        }
+
+        public static string GetGlobalSetting(string setting)
+        {
+            var configFile = GitCommandHelpers.GetGlobalConfig();
+            return configFile.GetValue(setting);
+        }
+
+        public static void SetGlobalSetting(string setting, string value)
+        {
+            var configFile = GitCommandHelpers.GetGlobalConfig();
+            configFile.SetValue(setting, value);
+            configFile.Save();
+        }
 
         public static GitVersion VersionInUse
         {
@@ -35,71 +57,6 @@ namespace GitCommands
                 return _versionInUse;
             }
         }
-
-        /// <summary>
-        /// This is a faster function to get the names of all submodules then the 
-        /// GetSubmodules() function. The command @git submodule is very slow.
-        /// </summary>
-        public IList<string> GetSubmodulesNames()
-        {
-            IList<string> submodulesNames = new List<string>();
-            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + ".gitmodules");
-            foreach (ConfigSection configSection in configFile.GetConfigSections())
-            {
-                submodulesNames.Add(configSection.SubSection);
-            }
-
-            return submodulesNames;
-            /*
-            var submodules = RunCmd(Settings.GitCommand, "submodule status").Split('\n');
-
-            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
-
-            string lastLine = null;
-
-            foreach (var submodule in submodules)
-            {
-                if (submodule.Length < 43)
-                    continue;
-
-                if (submodule.Equals(lastLine))
-                    continue;
-
-                lastLine = submodule;
-
-                submoduleList.Add(CreateGitSubmodule(submodule));
-            }
-
-            return submoduleList;*/
-        }
-
-        #region IGitCommands Members
-
-        public IList<IGitSubmodule> GetSubmodules()
-        {
-            var submodules = RunCmd(Settings.GitCommand, "submodule status").Split('\n');
-
-            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
-
-            string lastLine = null;
-
-            foreach (var submodule in submodules)
-            {
-                if (submodule.Length < 43)
-                    continue;
-
-                if (submodule.Equals(lastLine))
-                    continue;
-
-                lastLine = submodule;
-
-                submoduleList.Add(CreateGitSubmodule(submodule));
-            }
-
-            return submoduleList;
-        }
-
-        #endregion
 
         public static string FindGitWorkingDir(string startDir)
         {
@@ -147,17 +104,6 @@ namespace GitCommands
                 return Encoding.UTF8;
             }
         }
-
-        /*
-        public static string ConvertRegCollectionToString(StringCollection regcol)
-        {
-            var sb = new StringBuilder();
-            foreach (var s in regcol)
-            {
-                sb.Append("|(" + s + ")");
-            }
-            return sb.ToString().Substring(1);
-        }*/
 
         public static string RunCmd(string cmd)
         {
@@ -289,49 +235,7 @@ namespace GitCommands
             }
         }
 
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments)
-        {
-            SetEnvironmentVariable();
-
-            var ssh = UseSsh(arguments);
-
-            Kill();
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-
-            //process used to execute external commands
-            Process process = new Process() { StartInfo = CreateProcessStartInfo() };
-            process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
-            process.EnableRaisingEvents = true;
-
-            if (!StreamOutput)
-            {
-                process.OutputDataReceived += ProcessOutputDataReceived;
-                process.ErrorDataReceived += ProcessErrorDataReceived;
-            }
-            Output = new StringBuilder();
-            ErrorOutput = new StringBuilder();
-
-            process.Exited += ProcessExited;
-            process.Start();
-            myProcess = process;
-
-            if (!StreamOutput)
-            {
-                process.BeginErrorReadLine();
-                process.BeginOutputReadLine();
-            }
-
-            return process;
-        }
-
-        private static ProcessStartInfo CreateProcessStartInfo()
+        internal static ProcessStartInfo CreateProcessStartInfo()
         {
             return new ProcessStartInfo()
             {
@@ -345,7 +249,7 @@ namespace GitCommands
             };
         }
 
-        private static bool UseSsh(string arguments)
+        internal static bool UseSsh(string arguments)
         {
             var x = !Plink() && GetArgumentsRequiresSsh(arguments);
             return x || arguments.Contains("plink");
@@ -362,61 +266,6 @@ namespace GitCommands
                    (arguments.Contains("remote")) ||
                    (arguments.Contains("fetch")) ||
                    (arguments.Contains("pull"));
-        }
-
-        public void Kill()
-        {
-            //If there was another process running, kill it
-            if (myProcess == null)
-                return;
-            try
-            {
-                if (!myProcess.HasExited)
-                {
-                    myProcess.Kill();
-                }
-                myProcess.Close();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
-        }
-
-        public event DataReceivedEventHandler DataReceived;
-        public event EventHandler Exited;
-
-        private void ProcessExited(object sender, EventArgs e)
-        {
-            if (Exited != null)
-            {
-                //The process is exited already, but this command waits also until all output is recieved.
-                //Only WaitForExit when someone is conntected to the exited event. For some reason a
-                //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                //we wait for exit, probably a timing issue... 
-                myProcess.WaitForExit();
-
-                Exited(this, e);
-            }
-
-            myProcess = null;
-
-        }
-
-        private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (CollectOutput)
-                Output.Append(e.Data + Environment.NewLine);
-            if (DataReceived != null)
-                DataReceived(this, e);
-        }
-
-        private void ProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (CollectOutput)
-                Output.Append(e.Data + Environment.NewLine);
-            if (DataReceived != null)
-                DataReceived(this, e);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -795,7 +644,7 @@ namespace GitCommands
             return "submodule add" + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
         }
 
-        private static GitSubmodule CreateGitSubmodule(string submodule)
+        internal static GitSubmodule CreateGitSubmodule(string submodule)
         {
             var gitSubmodule =
                 new GitSubmodule
@@ -1087,8 +936,8 @@ namespace GitCommands
                 var tags_remote = new List<GitHead>();
                 var tags_local = new List<GitHead>();
                 var tags_diff = new List<GitHead>();
-                tags_remote = GitCommands.GetRemoteHeads(path, true, false);
-                tags_local = GitCommands.GetHeads(true, false);
+                tags_remote = GitCommandHelpers.GetRemoteHeads(path, true, false);
+                tags_local = GitCommandHelpers.GetHeads(true, false);
                 foreach (var tag_remote in tags_remote)
                 {
                     var found = false;
@@ -1452,19 +1301,6 @@ namespace GitCommands
             return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + Settings.PathSeperator + ".gitconfig");
         }
 
-        public string GetGlobalSetting(string setting)
-        {
-            var configFile = GetGlobalConfig();
-            return configFile.GetValue(setting);
-        }
-
-        public void SetGlobalSetting(string setting, string value)
-        {
-            var configFile = GetGlobalConfig();
-            configFile.SetValue(setting, value);
-            configFile.Save();
-        }
-
         public static ConfigFile GetLocalConfig()
         {
             return new ConfigFile(Settings.WorkingDirGitDir() + Settings.PathSeperator + "config");
@@ -1821,7 +1657,7 @@ namespace GitCommands
 
         public static string StageFiles(IList<GitItemStatus> files)
         {
-            var gitCommand = new GitCommands();
+            var gitCommand = new GitCommandsInstance();
 
             var output = "";
 
@@ -1873,7 +1709,7 @@ namespace GitCommands
 
         public static string UnstageFiles(List<GitItemStatus> files)
         {
-            var gitCommand = new GitCommands();
+            var gitCommand = new GitCommandsInstance();
 
             var output = "";
 
@@ -2241,12 +2077,6 @@ namespace GitCommands
         {
             return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true, null));
         }
-
-        public string RunGit(string arguments)
-        {
-            return RunCmd(Settings.GitCommand, arguments);
-        }
-
 
         public static string OpenWithDifftool(string filename)
         {

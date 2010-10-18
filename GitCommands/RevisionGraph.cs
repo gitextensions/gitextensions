@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using System.Diagnostics;
 using System.Threading;
-using System.IO;
 using System.Windows.Forms;
 
 namespace GitCommands
@@ -45,7 +44,7 @@ namespace GitCommands
 
         private List<GitHead> heads;
 
-        private GitCommands gitGetGraphCommand;
+        private GitCommandsInstance gitGetGraphCommand;
 
         private Encoding logoutputEncoding = null;
 
@@ -124,7 +123,7 @@ namespace GitCommands
                     revisions.Clear();
                 }
 
-                heads = GitCommands.GetHeads(true);
+                heads = GitCommandHelpers.GetHeads(true);
 
                 string formatString =
                     /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -160,7 +159,7 @@ namespace GitCommands
                     formatString,
                     BranchFilter);
 
-                gitGetGraphCommand = new GitCommands();
+                gitGetGraphCommand = new GitCommandsInstance();
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
@@ -234,7 +233,7 @@ namespace GitCommands
 
                 case ReadStep.Hash:
                     revision.Guid = line;
-                    for (int i = heads.Count-1; i >=0; i--)
+                    for (int i = heads.Count - 1; i >= 0; i--)
                     {
                         if (heads[i].Guid == revision.Guid)
                         {
@@ -283,11 +282,11 @@ namespace GitCommands
                     //We cannot let git recode the message to Settings.Encoding which is
                     //needed to allow the "git log" to print the filename in Settings.Encoding
                     if (logoutputEncoding == null)
-                        logoutputEncoding = GitCommands.GetLogoutputEncoding();
+                        logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
 
                     if (logoutputEncoding != Settings.Encoding)
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
-                    else 
+                    else
                         revision.Message = line;
                     break;
 

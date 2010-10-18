@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 
-using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -37,7 +33,7 @@ namespace GitUI
 
 
 
-            MessageBox.Show("Command executed " + Environment.NewLine + GitCommands.GitCommands.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
+            MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
 
             MergeConflictHandler.HandleMergeConflicts();
 

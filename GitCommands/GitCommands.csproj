@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Checkout.cs" />
     <Compile Include="Clone.cs" />
+    <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="CommitInformation.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Diff.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
-    <Compile Include="Git\GitCommands.cs" />
+    <Compile Include="Git\GitCommandsHelper.cs" />
     <Compile Include="Git\GitRevision.cs" />
     <Compile Include="Git\GitHead.cs" />
     <Compile Include="Git\GitItem.cs" />

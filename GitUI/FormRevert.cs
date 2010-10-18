@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -26,7 +22,7 @@ namespace GitUI
         private void Revert_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string output = GitCommands.GitCommands.ResetFile(FileName);
+            string output = GitCommandHelpers.ResetFile(FileName);
 
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Reset changes");

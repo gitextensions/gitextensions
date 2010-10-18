@@ -24,7 +24,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitCommand, "init");
+            Dto.Result = GitCommandHelpers.RunCmd(Settings.GitCommand, "init");
         }
     }
 }

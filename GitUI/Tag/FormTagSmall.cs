@@ -47,7 +47,7 @@ namespace GitUI.Tag
                 }
 
 
-                var s = GitCommands.GitCommands.Tag(TName.Text, Revision.Guid, annotate.Checked);
+                var s = GitCommandHelpers.Tag(TName.Text, Revision.Guid, annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))
                     MessageBox.Show(s, _messageCaption.Text);

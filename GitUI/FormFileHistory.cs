@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -27,7 +26,8 @@ namespace GitUI
             FileChanges.DisableContextMenu();
         }
 
-        public FormFileHistory(string fileName) : this(fileName, null)
+        public FormFileHistory(string fileName)
+            : this(fileName, null)
         {
         }
 
@@ -78,7 +78,7 @@ namespace GitUI
                 FileChanges.AllowGraphWithFilter = true;
             }
         }
- 
+
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             UpdateSelectedFileViewers();
@@ -138,7 +138,7 @@ namespace GitUI
                             Diff.ViewPatch(
                                 () =>
                                 {
-                                    Patch diff = GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
+                                    Patch diff = GitCommandHelpers.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
                                                                           Diff.GetExtraDiffArguments());
                                     if (diff == null)
                                         return string.Empty;
@@ -157,7 +157,7 @@ namespace GitUI
                         {
                             Diff.ViewPatch(
                                 () =>
-                                GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
+                                GitCommandHelpers.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
                                                                       Diff.GetExtraDiffArguments()).Text);
                         }
                     }
@@ -218,7 +218,7 @@ namespace GitUI
                     break;
             }
 
-            var output = GitCommands.GitCommands.OpenWithDifftool(FileName, rev1, rev2);
+            var output = GitCommandHelpers.OpenWithDifftool(FileName, rev1, rev2);
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
         }

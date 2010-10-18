@@ -94,7 +94,7 @@ namespace GitExtensions
                         GitUICommands.Instance.StartResolveConflictsDialog();
                         return;
                     case "gitbash":
-                        GitCommands.GitCommands.RunBash();
+                        GitCommandHelpers.RunBash();
                         return;
                     case "gitignore":
                         GitUICommands.Instance.StartEditGitIgnoreDialog();

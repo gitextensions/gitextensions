@@ -381,7 +381,7 @@ namespace GitUI
                     _revisionGraphCommand.Kill();
                 }
 
-                var newCurrentCheckout = GitCommands.GitCommands.GetCurrentCheckout();
+                var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -442,7 +442,7 @@ namespace GitUI
         {
             _isLoading = false;
 
-            if (_revisionGraphCommand.Revisions.Count == 0 && 
+            if (_revisionGraphCommand.Revisions.Count == 0 &&
                 !FilterIsApplied())
             {
                 // This has to happen on the UI thread
@@ -872,7 +872,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommands.GitCommands.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
+            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
             ForceRefreshRevisions();
         }
 
