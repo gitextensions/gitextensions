@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -26,7 +27,7 @@ namespace GitUI
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommands.GitCommands.GetHeads(false, true);
+            Branches.DataSource = GitCommandHelpers.GetHeads(false, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
@@ -39,7 +40,7 @@ namespace GitUI
                 if (MessageBox.Show(_deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
-                    var deleteBranchResult = GitCommands.GitCommands.DeleteBranch(Branches.Text, ForceDelete.Checked);
+                    var deleteBranchResult = GitCommandHelpers.DeleteBranch(Branches.Text, ForceDelete.Checked);
                     MessageBox.Show(_branchDeleted.Text + Environment.NewLine + deleteBranchResult,
                                     _deleteBranchCaption.Text);
                 }

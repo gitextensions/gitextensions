@@ -16,7 +16,7 @@ namespace GitCommands.Statistics
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
 
             var unformattedCommitsPerContributor =
-                GitCommands
+                GitCommandHelpers
                     .RunCmd(
                         Settings.GitCommand,
                         "shortlog --all -s -n --no-merges" + sinceParam + untilParam)

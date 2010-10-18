@@ -24,7 +24,7 @@ namespace GitUI
                     MessageBox.Show("Select 1 revision to create the branch on.", "Branch");
                     return;
                 }
-                var branchCmd = GitCommands.GitCommands.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
+                var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
                                                                   CheckoutAfterCreate.Checked);
                 new FormProcess(branchCmd).ShowDialog();
 

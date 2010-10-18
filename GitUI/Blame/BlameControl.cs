@@ -52,7 +52,7 @@ namespace GitUI.Blame
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
 
-            _blameList = GitCommands.GitCommands.Blame(fileName, guid);
+            _blameList = GitCommandHelpers.Blame(fileName, guid);
 
             foreach (var blame in _blameList)
             {

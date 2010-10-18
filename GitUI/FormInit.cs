@@ -56,7 +56,7 @@ namespace GitUI
             if (!System.IO.Directory.Exists(Settings.WorkingDir))
                 System.IO.Directory.CreateDirectory(Settings.WorkingDir);
 
-            MessageBox.Show(GitCommands.GitCommands.Init(Central.Checked, Central.Checked), "Initialize new repository");
+            MessageBox.Show(GitCommandHelpers.Init(Central.Checked, Central.Checked), "Initialize new repository");
 
             Repositories.RepositoryHistory.AddMostRecentRepository(Directory.Text);
 

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -26,7 +22,7 @@ namespace GitUI
                     return;
                 }
 
-                new FormProcess(GitCommands.GitCommands.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, CheckoutAfterCreate.Checked)).ShowDialog();
+                new FormProcess(GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, CheckoutAfterCreate.Checked)).ShowDialog();
 
                 Close();
 

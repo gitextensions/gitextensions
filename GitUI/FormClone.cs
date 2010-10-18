@@ -39,18 +39,18 @@ namespace GitUI
 
                 var fromProcess =
                     new FormProcess(Settings.GitCommand,
-                                    GitCommands.GitCommands.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
+                                    GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, null));
                 fromProcess.ShowDialog();
 
-                if (fromProcess.ErrorOccured() || GitCommands.GitCommands.InTheMiddleOfPatch())
+                if (fromProcess.ErrorOccured() || GitCommandHelpers.InTheMiddleOfPatch())
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Settings.WorkingDir = dirTo;
 
-                    if (File.Exists(Settings.WorkingDir + ".gitmodules") && 
+                    if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
                         AskIfSubmodulesShouldBeInitialized())
                         InitSubmodules();
                 }
@@ -82,7 +82,7 @@ namespace GitUI
 
         private static void InitSubmodules()
         {
-            var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
             process.ShowDialog();
             InitializeSubmodulesRecursive();
         }
@@ -91,7 +91,7 @@ namespace GitUI
         {
             var oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
             {
                 if (string.IsNullOrEmpty(submodule.LocalPath))
                     continue;
@@ -110,7 +110,7 @@ namespace GitUI
 
         private void FromBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_From.Text};
+            var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
             if (dialog.ShowDialog() == DialogResult.OK)
                 _NO_TRANSLATE_From.Text = dialog.SelectedPath;
 
@@ -119,7 +119,7 @@ namespace GitUI
 
         private void ToBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_To.Text};
+            var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text };
             if (dialog.ShowDialog() == DialogResult.OK)
                 _NO_TRANSLATE_To.Text = dialog.SelectedPath;
 
@@ -146,7 +146,7 @@ namespace GitUI
 
         private void FormCloneLoad(object sender, EventArgs e)
         {
-            if (!GitCommands.GitCommands.Plink())
+            if (!GitCommandHelpers.Plink())
                 LoadSSHKey.Visible = false;
         }
 
@@ -159,13 +159,13 @@ namespace GitUI
         private void FromTextUpdate(object sender, EventArgs e)
         {
             var path = _NO_TRANSLATE_From.Text;
-            path = path.TrimEnd(new[] {'\\', '/'});
+            path = path.TrimEnd(new[] { '\\', '/' });
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
             if (path.Contains("\\") || path.Contains("/"))
-                _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] {'\\', '/'}) + 1);
+                _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
 
             ToTextUpdate(sender, e);
         }
@@ -178,7 +178,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
                 destinationPath += "[destination]";
             else
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] {'\\', '/'});
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
             ;
             destinationPath += "\\";
 

@@ -50,14 +50,14 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get { return GitCommands.GetSetting(_remoteSettingName); }
+            get { return GitCommandHelpers.GetSetting(_remoteSettingName); }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommands.UnSetSetting(_remoteSettingName);
+                    GitCommandHelpers.UnSetSetting(_remoteSettingName);
                 else
                 {
-                    GitCommands.SetSetting(_remoteSettingName, value);
+                    GitCommandHelpers.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -69,15 +69,15 @@ namespace GitCommands
         {
             get
             {
-                var merge = GitCommands.GetSetting(_mergeSettingName);
+                var merge = GitCommandHelpers.GetSetting(_mergeSettingName);
                 return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommands.UnSetSetting(_mergeSettingName);
+                    GitCommandHelpers.UnSetSetting(_mergeSettingName);
                 else
-                    GitCommands.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    GitCommandHelpers.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
@@ -98,7 +98,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = GitCommands.GetTree(Guid)); }
+            get { return _subItems ?? (_subItems = GitCommandHelpers.GetTree(Guid)); }
         }
 
         #endregion

@@ -174,7 +174,7 @@ namespace GitCommands
             set 
             {
                 string old = _workingdir;
-                _workingdir = GitCommands.FindGitWorkingDir(value.Trim());
+                _workingdir = GitCommandHelpers.FindGitWorkingDir(value.Trim());
                 if (WorkingDirChanged != null)
                 {
                     WorkingDirChanged(old, _workingdir);
@@ -366,7 +366,7 @@ namespace GitCommands
                 appData.SetValue("showgitcommandline", ShowGitCommandLine);
                 appData.SetValue("usefastchecks", UseFastChecks);
                 appData.SetValue("relativedate", RelativeDate);
-                appData.SetValue("gitssh", GitCommands.GetSsh());
+                appData.SetValue("gitssh", GitCommandHelpers.GetSsh());
                 appData.SetValue("pullmerge", PullMerge);
                 appData.SetValue("autostash", AutoStash);
                 appData.SetValue("followrenamesinfilehistory", FollowRenamesInFileHistory);
@@ -444,7 +444,7 @@ namespace GitCommands
 
                 SafeSetString("translation", x => Translation = x);
                 SafeSetString("pullmerge", x => PullMerge = x);
-                SafeSetString("gitssh", GitCommands.SetSsh);
+                SafeSetString("gitssh", GitCommandHelpers.SetSsh);
                 SafeSetString("plink", x => Plink = x);
                 SafeSetString("puttygen", x => Puttygen = x);
                 SafeSetString("pageant", x => Pageant = x);
