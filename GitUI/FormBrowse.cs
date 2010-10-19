@@ -166,6 +166,7 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);   
 
             if (hard)
                 ShowRevisions();
@@ -217,6 +218,40 @@ namespace GitUI
                 }
             }
             Cursor.Current = Cursors.Default;
+        }
+
+        private void InitToolStripBranchFilter(bool local, bool remote)
+        {
+            toolStripBranches.Items.Clear();
+            List<string> branches = GetBranchHeads(local, remote);
+            foreach (var branch in branches)
+                toolStripBranches.Items.Add(branch);
+        }
+
+        private List<string> GetBranchHeads(bool local, bool remote)
+        {
+            List<string> list = new List<string>();
+            if (local && remote)
+            {
+                var branches = GitCommands.GitCommands.GetHeads(true, true);
+                foreach (var branch in branches)
+                    if (!branch.IsTag)
+                        list.Add(branch.Name);
+            }
+            else if (local)
+            {
+                var branches = GitCommands.GitCommands.GetHeads(false);
+                foreach (var branch in branches)
+                    list.Add(branch.Name);
+            }
+            else if (remote)
+            {
+                var branches = GitCommands.GitCommands.GetHeads(true, true);
+                foreach (var branch in branches)
+                    if (branch.IsRemote && !branch.IsTag)
+                        list.Add(branch.Name);
+            }
+            return list;
         }
 
         private void RebaseClick(object sender, EventArgs e)
@@ -797,8 +832,18 @@ namespace GitUI
 
         private void ApplyFilter()
         {
-            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text)) return;
-            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
+            bool[] filterParams = new bool[4];
+            filterParams[0] = commitToolStripMenuItem1.Checked;
+            filterParams[1] = committerToolStripMenuItem.Checked;
+            filterParams[2] = authorToolStripMenuItem.Checked;
+            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams)) return;
+            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams);
+            RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void ApplyBranchFilter()
+        {
+            RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
             RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -1309,6 +1354,37 @@ namespace GitUI
             }
             else
                 MessageBox.Show("index.lock not found at: " + fileName);
+        }
+
+        private void toolStripBranches_TextUpdate(object sender, EventArgs e)
+        {
+            toolStripBranches.Items.Clear();
+            string text = toolStripBranches.Text;
+            var index = toolStripBranches.Text.Length;
+            var branches = GetBranchHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            foreach (var branch in branches)
+                if (branch.Contains(text))
+                    toolStripBranches.Items.Add(branch);
+            toolStripBranches.SelectionStart = index;
+        }
+
+        private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.Enter)
+            {
+                ApplyBranchFilter();
+                InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            }
+        }
+
+        private void remoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+        }
+
+        private void localToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
         }
 
     }
