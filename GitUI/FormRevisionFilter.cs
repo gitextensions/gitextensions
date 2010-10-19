@@ -82,6 +82,11 @@ namespace GitUI
             return BranchFilter.Text;
         }
 
+        public void SetBranchFilter(string filter)
+        {
+            BranchFilter.Text = filter;
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
             Close();
