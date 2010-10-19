@@ -266,13 +266,33 @@ namespace GitUI
             _contextMenuEnabled = false;
         }
 
-        public string FormatQuickFilter(string filter)
+        public string FormatQuickFilter(string filter, bool[] parameters)
         {
-            return
-                string.IsNullOrEmpty(filter)
-                    ? ""
-                    : string.Format(" --regexp-ignore-case --grep=\"{0}\" ",
-                                    filter);
+            if (string.IsNullOrEmpty(filter)) return "";
+            else
+            {
+                string formattedFilter = " --regexp-ignore-case ";
+                if (parameters[0]) formattedFilter += "--grep=\"" + filter + "\" ";
+                if (parameters[1]) formattedFilter += "--committer=\"" + filter + "\" ";
+                if (parameters[2]) formattedFilter += "--author=\"" + filter + "\" ";
+                return formattedFilter;
+            }
+        }
+
+        public void SetAndApplyBranchFilter(string filter)
+        {
+            if (filter.Equals(""))
+            {
+                Settings.BranchFilterEnabled = false;
+                Settings.ShowCurrentBranchOnly = true;
+            }
+            else
+            {
+                Settings.BranchFilterEnabled = true;
+                Settings.ShowCurrentBranchOnly = false;
+                _revisionFilter.SetBranchFilter(filter);
+            }
+            SetShowBranches();
         }
 
         ~RevisionGrid()
