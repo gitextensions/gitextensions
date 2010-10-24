@@ -1411,16 +1411,18 @@ namespace GitUI
             if (e.KeyValue == (char)Keys.Enter)
             {
                 ApplyBranchFilter();
-                InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             }
         }
 
         private void remoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
         }
 
         private void localToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void toolStripBranches_DropDown(object sender, EventArgs e)
         {
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
         }
