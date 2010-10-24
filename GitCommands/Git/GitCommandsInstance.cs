@@ -80,6 +80,7 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
+            ExitCode = myProcess.ExitCode;
             if (Exited != null)
             {
                 //The process is exited already, but this command waits also until all output is recieved.
@@ -137,6 +138,7 @@ namespace GitCommands
 
         public bool CollectOutput = true;
         public bool StreamOutput;
+        public int ExitCode { get; set; }
         public StringBuilder Output { get; private set; }
         public StringBuilder ErrorOutput { get; private set; }
 
