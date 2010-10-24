@@ -1310,5 +1310,44 @@ namespace GitUI
                 MessageBox.Show("index.lock not found at: " + fileName);
         }
 
+        private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+
+            if (DiffFiles.SelectedItem == null)
+                return;
+           
+            GitItemStatus item = DiffFiles.SelectedItem;
+
+            if (item == null)
+                return;
+
+            var fileDialog =
+                new SaveFileDialog
+                {
+                    InitialDirectory = Settings.WorkingDir,
+                    FileName = item.Name.Replace(Settings.PathSeperatorWrong, Settings.PathSeperator),
+                    AddExtension = true
+                };
+            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+            fileDialog.Filter =
+                "Current format (*." +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
+                "|All files (*.*)|*.*";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(fileDialog.FileName,
+                                GitCommandHelpers.RunCmd(
+                                    Settings.GitCommand,
+                                    string.Format("cat-file blob {0}:\"{1}\"", revisions[0].Guid, item.Name)));
+            }
+        }
+
     }
 }
