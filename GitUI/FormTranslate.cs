@@ -235,7 +235,7 @@ namespace GitUI
             }
         }
 
-        private bool ShouldBeTranslated(PropertyInfo propertyInfo)
+        private static bool ShouldBeTranslated(PropertyInfo propertyInfo)
         {
             if (propertyInfo.Name.Equals("Caption", StringComparison.CurrentCultureIgnoreCase))
                 return true;

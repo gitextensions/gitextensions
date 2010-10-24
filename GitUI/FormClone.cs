@@ -28,8 +28,8 @@ namespace GitUI
             try
             {
                 var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith(Settings.PathSeperator.ToString()) && !dirTo.EndsWith(Settings.PathSeperatorWrong.ToString()))
-                    dirTo += Settings.PathSeperator.ToString();
+                if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
+                    dirTo += Settings.PathSeparator.ToString();
 
                 dirTo += _NO_TRANSLATE_NewDirectory.Text;
 
@@ -43,7 +43,7 @@ namespace GitUI
                                                                      CentralRepository.Checked, null));
                 fromProcess.ShowDialog();
 
-                if (fromProcess.ErrorOccured() || GitCommandHelpers.InTheMiddleOfPatch())
+                if (fromProcess.ErrorOccurred() || GitCommandHelpers.InTheMiddleOfPatch())
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))

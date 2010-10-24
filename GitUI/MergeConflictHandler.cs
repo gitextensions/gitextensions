@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public class MergeConflictHandler
+    public static class MergeConflictHandler
     {
         public static bool HandleMergeConflicts()
         {

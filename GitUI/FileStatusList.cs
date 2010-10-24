@@ -225,7 +225,7 @@ namespace GitUI
             }
         }
 
-        public IList<GitItemStatus> GitItemStatusses
+        public IList<GitItemStatus> GitItemStatuses
         {
             get
             {

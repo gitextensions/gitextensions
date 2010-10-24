@@ -236,7 +236,7 @@ namespace GitUI
                 toolStripBranches.Items.Add(branch);
         }
 
-        private List<string> GetBranchHeads(bool local, bool remote)
+        private static List<string> GetBranchHeads(bool local, bool remote)
         {
             List<string> list = new List<string>();
             if (local && remote)
@@ -336,7 +336,7 @@ namespace GitUI
             if (tabControl1.SelectedTab != Diff)
                 return;
 
-            DiffFiles.GitItemStatusses = null;
+            DiffFiles.GitItemStatuses = null;
             var revisions = RevisionGrid.GetRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -344,7 +344,7 @@ namespace GitUI
             switch (revisions.Count)
             {
                 case 2:
-                    DiffFiles.GitItemStatusses =
+                    DiffFiles.GitItemStatuses =
                         GitCommandHelpers.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
@@ -357,16 +357,16 @@ namespace GitUI
                         revision.ParentGuids.Length > 0)
                     {
                         if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetAllChangedFiles();
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetAllChangedFiles();
                         else
                             if (revision.Guid == GitRevision.IndexGuid) //index
-                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetStagedFiles();
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetStagedFiles();
                         else
-                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         DiffFiles.Revision = revision;
                     }
                     else
-                        DiffFiles.GitItemStatusses = null;
+                        DiffFiles.GitItemStatuses = null;
                     break;
             }
         }
@@ -434,7 +434,7 @@ namespace GitUI
             }
         }
 
-        private TreeNode Find(TreeNodeCollection nodes, string label)
+        private static TreeNode Find(TreeNodeCollection nodes, string label)
         {
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -1384,7 +1384,7 @@ namespace GitUI
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeperatorWrong, Settings.PathSeperator));
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -1422,7 +1422,7 @@ namespace GitUI
                 new SaveFileDialog
                 {
                     InitialDirectory = Settings.WorkingDir,
-                    FileName = item.Name.Replace(Settings.PathSeperatorWrong, Settings.PathSeperator),
+                    FileName = item.Name.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator),
                     AddExtension = true
                 };
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);

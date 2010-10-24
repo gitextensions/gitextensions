@@ -350,10 +350,10 @@ namespace GitUI
 
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeperator.ToString()) && fileName.LastIndexOf(Settings.PathSeperator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperator) + 1);
-            if (fileName.Contains(Settings.PathSeperatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeperatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperatorWrong) + 1);
+            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparator) + 1);
+            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparatorWrong) + 1);
             return fileName;
         }
 

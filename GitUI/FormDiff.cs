@@ -82,18 +82,18 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DiffFiles.GitItemStatusses = null;
+                DiffFiles.GitItemStatuses = null;
                 var revisions = RevisionGrid.GetRevisions();
 
                 if (revisions.Count == 1)
-                    DiffFiles.GitItemStatusses =
+                    DiffFiles.GitItemStatuses =
                         GitCommandHelpers.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[0].ParentGuids[0]);
 
                 if (revisions.Count == 2)
                 {
-                    DiffFiles.GitItemStatusses =
+                    DiffFiles.GitItemStatuses =
                         GitCommandHelpers.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[1].Guid);

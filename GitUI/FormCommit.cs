@@ -150,9 +150,9 @@ namespace GitUI
         private void InitializedStaged()
         {
             Cursor.Current = Cursors.WaitCursor;
-            Staged.GitItemStatusses = null;
+            Staged.GitItemStatuses = null;
             SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
-            Staged.GitItemStatusses = GitCommandHelpers.GetStagedFiles();
+            Staged.GitItemStatuses = GitCommandHelpers.GetStagedFiles();
             Cursor.Current = Cursors.Default;
         }
 
@@ -170,9 +170,9 @@ namespace GitUI
                     _syncContext.Post(
                         state1 =>
                         {
-                            Staged.GitItemStatusses = null;
+                            Staged.GitItemStatuses = null;
                             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
-                            Staged.GitItemStatusses = stagedFiles;
+                            Staged.GitItemStatuses = stagedFiles;
                         }, null);
                 });
             Cursor.Current = Cursors.Default;
@@ -186,7 +186,7 @@ namespace GitUI
         /// </summary>
         private void LoadUnstagedOutput()
         {
-            Unstaged.GitItemStatusses =
+            Unstaged.GitItemStatuses =
                 GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
             Loading.Visible = false;
             AddFiles.Enabled = true;
@@ -244,7 +244,7 @@ namespace GitUI
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            if (Staged.GitItemStatusses.Count == 0)
+            if (Staged.GitItemStatuses.Count == 0)
             {
                 if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.No)
@@ -280,7 +280,7 @@ namespace GitUI
 
                 NeedRefresh = true;
 
-                if (form.ErrorOccured())
+                if (form.ErrorOccurred())
                     return;
 
                 Message.Text = string.Empty;
@@ -296,7 +296,7 @@ namespace GitUI
                     return;
                 }
 
-                foreach (var gitItemStatus in Unstaged.GitItemStatusses)
+                foreach (var gitItemStatus in Unstaged.GitItemStatuses)
                 {
                     if (gitItemStatus.IsTracked)
                     {
@@ -364,13 +364,13 @@ namespace GitUI
                 }
 
                 InitializedStaged();
-                var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
-                var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatusses;
-                Unstaged.GitItemStatusses = null;
+                var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatuses;
+                var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
+                Unstaged.GitItemStatuses = null;
 
                 unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name) && files.Exists(i => i.Name == item.Name));
 
-                Unstaged.GitItemStatusses = unStagedFiles;
+                Unstaged.GitItemStatuses = unStagedFiles;
 
                 progressBar.Value = progressBar.Maximum;
 
@@ -397,7 +397,7 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                if (Staged.GitItemStatusses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatusses.Count)
+                if (Staged.GitItemStatuses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatuses.Count)
                 {
                     Loading.Visible = true;
                     GitCommandHelpers.ResetMixed("HEAD");
@@ -430,9 +430,9 @@ namespace GitUI
                     GitCommandHelpers.UnstageFiles(files);
 
                     InitializedStaged();
-                    var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatusses;
-                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatusses;
-                    Unstaged.GitItemStatusses = null;
+                    var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatuses;
+                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
+                    Unstaged.GitItemStatuses = null;
                     foreach (var item in allFiles)
                     {
                         var item1 = item;
@@ -450,8 +450,8 @@ namespace GitUI
 
                         unStagedFiles.Add(item);
                     }
-                    Staged.GitItemStatusses = stagedFiles;
-                    Unstaged.GitItemStatusses = unStagedFiles;
+                    Staged.GitItemStatuses = stagedFiles;
+                    Unstaged.GitItemStatuses = unStagedFiles;
 
                     progressBar.Value = progressBar.Maximum;
                 }
@@ -577,7 +577,7 @@ namespace GitUI
 
         private void StageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Stage(Unstaged.GitItemStatusses);
+            Stage(Unstaged.GitItemStatuses);
         }
 
         private void UnstageAllToolStripMenuItemClick(object sender, EventArgs e)
@@ -613,7 +613,7 @@ namespace GitUI
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
 
-            var path = Settings.WorkingDirGitDir() + Settings.PathSeperator.ToString() + "COMMITMESSAGE";
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -796,7 +796,7 @@ namespace GitUI
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeperatorWrong, Settings.PathSeperator));
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             }
             Clipboard.SetText(fileNames.ToString());
         }

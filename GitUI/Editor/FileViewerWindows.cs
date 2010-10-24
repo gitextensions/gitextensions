@@ -76,7 +76,7 @@ namespace GitUI.Editor
             OnSelectedLineChanged(TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y));
         }
 
-        public event SelectedLineChangedHandler SelectedLineChanged;
+        public event SelectedLineChangedEventHandler SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {

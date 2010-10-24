@@ -467,7 +467,7 @@ namespace GitUI
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
-            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEvent)e;
+            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
             UpdateGraph(updatedEvent.Revision);
         }
 

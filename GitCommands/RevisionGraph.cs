@@ -23,9 +23,9 @@ namespace GitCommands
             }
         }
 
-        public class RevisionGraphUpdatedEvent : EventArgs
+        public class RevisionGraphUpdatedEventArgs : EventArgs
         {
-            public RevisionGraphUpdatedEvent(GitRevision revision)
+            public RevisionGraphUpdatedEventArgs(GitRevision revision)
             {
                 Revision = revision;
             }
@@ -195,7 +195,7 @@ namespace GitCommands
                 {
                     if (revision != null)
                         revisions.Add(revision);
-                    Updated(this, new RevisionGraphUpdatedEvent(revision));
+                    Updated(this, new RevisionGraphUpdatedEventArgs(revision));
                 }
                 nextStep = ReadStep.Commit;
             }

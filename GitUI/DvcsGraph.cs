@@ -72,12 +72,12 @@ namespace GitUI
             backgroundThread.Abort();
         }
 
-        public delegate void LoadingHandler(bool isLoading);
+        public delegate void LoadingEventHandler(bool isLoading);
         /// <summary>
         /// Loading Handler. NOTE: This will often happen on a background thread
         /// so UI operations may not be safe!
         /// </summary>
-        public event LoadingHandler Loading;
+        public event LoadingEventHandler Loading;
 
         public void ShowHideRevisionGraph(bool show)
         {
