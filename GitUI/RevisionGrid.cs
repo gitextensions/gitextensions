@@ -18,6 +18,8 @@ namespace GitUI
         private readonly TranslationString _commitDateCaption = new TranslationString("Commit date");
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
         private readonly TranslationString _messageCaption = new TranslationString("Message");
+        private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
+        private readonly TranslationString _currentIndex = new TranslationString("Commit index");
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
@@ -424,6 +426,7 @@ namespace GitUI
                 {
                     LastSelectedRows = Revisions.SelectedIds;
                 }
+
                 Revisions.ClearSelection();
 
                 CurrentCheckout = newCurrentCheckout;
@@ -1050,6 +1053,23 @@ namespace GitUI
             {
                 // Prune the graph and make sure the row count matches reality
                 Revisions.Prune();
+
+                if (Revisions.RowCount == 0 && Settings.RevisionGraphShowWorkingDirChanges)
+                {
+                    //Add working dir as virtual commit
+                    GitRevision workingDir = new GitRevision();
+                    workingDir.Guid = GitRevision.UncommittedWorkingDirGuid;
+                    workingDir.Message = _currentWorkingDirChanges.Text;
+                    workingDir.ParentGuids = new string[] { GitRevision.IndexGuid };
+                    Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+
+                    //Add index as virtual commit
+                    GitRevision index = new GitRevision();
+                    index.Guid = GitRevision.IndexGuid;
+                    index.Message = _currentIndex.Text;
+                    index.ParentGuids = new string[] { CurrentCheckout };
+                    Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+                }
                 return;
             }
 

@@ -5,6 +5,9 @@ namespace GitCommands
 {
     public class GitRevision : IGitItem
     {
+        public static string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
+        public static string IndexGuid = "1111111111111111111111111111111111111111";
+
         public String[] ParentGuids;
         private List<IGitItem> _subItems;
 

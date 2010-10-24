@@ -71,6 +71,7 @@ namespace GitCommands
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
             RevisionGraphDrawNonRelativesGray = true;
+            RevisionGraphShowWorkingDirChanges = false;
         }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
@@ -102,6 +103,8 @@ namespace GitCommands
         public static bool CloseCommitDialogAfterCommit { get; set; }
 
         public static bool FollowRenamesInFileHistory { get; set; }
+
+        public static bool RevisionGraphShowWorkingDirChanges { get; set; }
 
         public static bool RevisionGraphDrawNonRelativesGray { get; set; }
 
@@ -382,6 +385,7 @@ namespace GitCommands
                 appData.SetValue("lastcommitmessage", LastCommitMessage);
                 appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);
                 appData.SetValue("revisiongraphdrawnonrelativesgray", RevisionGraphDrawNonRelativesGray);
+                appData.SetValue("revisiongraphshowworkingdirchanges", RevisionGraphShowWorkingDirChanges);                
             }
             catch (Exception ex)
             {
@@ -474,6 +478,7 @@ namespace GitCommands
                 SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
                 SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
                 SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
+                SafeSetBool("revisiongraphshowworkingdirchanges", x => RevisionGraphShowWorkingDirChanges = x);
 
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);

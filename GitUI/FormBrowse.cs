@@ -11,6 +11,7 @@ using GitUI.Plugin;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using PatchApply;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI
 {
@@ -355,8 +356,13 @@ namespace GitUI
                         revision.ParentGuids != null &&
                         revision.ParentGuids.Length > 0)
                     {
-                        DiffFiles.GitItemStatusses =
-                            GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetAllChangedFiles();
+                        else
+                            if (revision.Guid == GitRevision.IndexGuid) //index
+                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetStagedFiles();
+                        else
+                            DiffFiles.GitItemStatusses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         DiffFiles.Revision = revision;
                     }
                     else
@@ -543,6 +549,24 @@ namespace GitUI
         {
             try
             {
+                if (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                    RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid)
+                {
+                    if (tabControl1.TabPages.Contains(CommitInfo))
+                        tabControl1.TabPages.Remove(CommitInfo); 
+                    if (tabControl1.TabPages.Contains(Tree)) 
+                        tabControl1.TabPages.Remove(Tree);
+                }
+                else
+                {
+                    if (!tabControl1.TabPages.Contains(CommitInfo))
+                        tabControl1.TabPages.Insert(0, CommitInfo); 
+                    if (!tabControl1.TabPages.Contains(Tree))
+                         tabControl1.TabPages.Insert(1, Tree);
+                }
+                
+
+
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
@@ -879,7 +903,7 @@ namespace GitUI
                 return;
             }
 
-            var selectedItem = (DiffFiles.SelectedItem).Name;
+            GitItemStatus selectedItem = DiffFiles.SelectedItem;
             var revisions = RevisionGrid.GetRevisions();
 
             if (revisions.Count == 0)
@@ -887,18 +911,33 @@ namespace GitUI
 
             DiffText.ViewPatch(() =>
                                    {
-                                       var selectedPatch = GetSelectedPatch(revisions, selectedItem);
-
-                                       return selectedPatch == null ? String.Empty : selectedPatch.Text;
+                                       string selectedPatch = GetSelectedPatch(revisions, selectedItem);
+                                       
+                                       return selectedPatch == null ? String.Empty : selectedPatch;
                                    });
         }
 
-        private Patch GetSelectedPatch(IList<GitRevision> revisions, string fileName)
+        private string GetSelectedPatch(IList<GitRevision> revisions, GitItemStatus file)
         {
-            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
+            if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                if (file.IsTracked)
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, false, DiffText.GetExtraDiffArguments());
+                else
+                    return FileReader.ReadFileContent(GitCommands.Settings.WorkingDir + file.Name, GitCommands.Settings.Encoding);
+            }
+            else
+                if (revisions[0].Guid == GitRevision.IndexGuid) //index
+                {
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, true, DiffText.GetExtraDiffArguments());
+                }
+                else
+                {
+                    var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
-            return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, fileName,
-                                                         DiffText.GetExtraDiffArguments());
+                    return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name,
+                                                                 DiffText.GetExtraDiffArguments()).Text;
+                }
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
