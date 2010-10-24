@@ -76,7 +76,7 @@ namespace GitUI
 
             if (!_translated && !isComponentInDesignMode)
                 throw new Exception("The control " + GetType().Name +
-                                    " is not transated in the constructor. You need to call Translate() right after InitializeComponent().");
+                                    " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
         protected void Translate()

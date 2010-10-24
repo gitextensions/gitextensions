@@ -31,12 +31,12 @@ namespace GitUI
         public StringBuilder OutputString = new StringBuilder();
         public ProcessStart ProcessCallback = null;
         public ProcessAbort AbortCallback = null;
-        private bool errorOccured = false;
+        private bool errorOccurred = false;
         private bool showOnError = false;
 
-        public bool ErrorOccured()
+        public bool ErrorOccurred()
         {
-            return errorOccured;
+            return errorOccurred;
         }
 
         public void SetProgress(string text)
@@ -75,7 +75,7 @@ namespace GitUI
 
             SuccessImage.Visible = isSuccess;
             ErrorImage.Visible = !isSuccess;
-            errorOccured = !isSuccess;
+            errorOccurred = !isSuccess;
             splitContainer5.Panel2Collapsed = false;
 
             if (showOnError && !isSuccess)

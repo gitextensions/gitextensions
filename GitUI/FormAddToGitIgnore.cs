@@ -31,7 +31,6 @@ namespace GitUI
                                            using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
                                            {
                                                tw.Write(gitIgnoreFile);
-                                               tw.Close();
                                            }
                                        });
             }

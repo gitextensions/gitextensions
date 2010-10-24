@@ -37,7 +37,7 @@ namespace GitUI
 
             InitializeComponent();
 
-            Settings.WorkingDirChanged += new Settings.WorkingDirChangedHandler(Settings_WorkingDirChanged);
+            Settings.WorkingDirChanged += new Settings.WorkingDirChangedEventHandler(Settings_WorkingDirChanged);
 
             // Setup a file watcher to detect changes to our files, or the .git repo files. When they
             // change, we'll update our status.

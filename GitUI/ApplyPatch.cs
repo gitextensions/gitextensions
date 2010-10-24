@@ -18,7 +18,7 @@ namespace PatchApply
         {
             InitializeComponent(); Translate();
 
-            patchManager = new PatchManager();
+            PatchManager = new PatchManager();
         }
 
         public void LoadPatch(string patch)
@@ -27,7 +27,7 @@ namespace PatchApply
             LoadButton_Click(null, null);
         }
 
-        public PatchManager patchManager { get; set; }
+        public PatchManager PatchManager { get; set; }
         public Patch CurrentPatch { get; set; }
 
         private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
@@ -79,10 +79,10 @@ namespace PatchApply
         {
             try
             {
-                patchManager.PatchFileName = PatchFileNameEdit.Text;
-                patchManager.LoadPatchFile(false);
+                PatchManager.PatchFileName = PatchFileNameEdit.Text;
+                PatchManager.LoadPatchFile(false);
 
-                GridChangedFiles.DataSource = patchManager.patches;
+                GridChangedFiles.DataSource = PatchManager.patches;
             }
             catch
             {

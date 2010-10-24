@@ -5,12 +5,12 @@ namespace GitCommands.Statistics
 {
     public class CommitCounter
     {
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer()
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor()
         {
-            return GroupAllCommitsByContributer(DateTime.MinValue, DateTime.MaxValue);
+            return GroupAllCommitsByContributor(DateTime.MinValue, DateTime.MaxValue);
         }
 
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributer(DateTime since, DateTime until)
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(DateTime since, DateTime until)
         {
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";

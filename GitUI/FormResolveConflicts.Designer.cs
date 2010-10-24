@@ -185,7 +185,7 @@
             // 
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
             this.ContextMarkAsSolved.Size = new System.Drawing.Size(218, 22);
-            this.ContextMarkAsSolved.Text = "Mark conlfict as solved";
+            this.ContextMarkAsSolved.Text = "Mark conflict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3

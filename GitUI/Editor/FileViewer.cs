@@ -50,7 +50,7 @@ namespace GitUI.Editor
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
-            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedHandler(_internalFileViewer_SelectedLineChanged);
+            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
         }
 
@@ -60,7 +60,7 @@ namespace GitUI.Editor
                 SelectedLineChanged(sender, selectedLine);
         }
 
-        public event SelectedLineChangedHandler SelectedLineChanged;
+        public event SelectedLineChangedEventHandler SelectedLineChanged;
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;

@@ -120,7 +120,7 @@ namespace GitUI
             form.ShowDialog();
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccured())
+                !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 Close();
         }
 

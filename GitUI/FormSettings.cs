@@ -50,7 +50,7 @@ namespace GitUI
             return true;
         }
 
-        private void SetCheckboxFromString(CheckBox checkBox, string str)
+        private static void SetCheckboxFromString(CheckBox checkBox, string str)
         {
             str = str.Trim().ToLower();
 
@@ -553,7 +553,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permisions to check the registry.");
+                MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
             }
             return value ?? string.Empty;
         }
@@ -573,7 +573,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permisions to modify the registry." + Environment.NewLine + "Please add this key to the registry manually." + Environment.NewLine + "Path:   " + root.ToString() + "\\" + subkey + Environment.NewLine + "Value:  " + key + " = " + value);
+                MessageBox.Show("GitExtensions has insufficient permissions to modify the registry." + Environment.NewLine + "Please add this key to the registry manually." + Environment.NewLine + "Path:   " + root.ToString() + "\\" + subkey + Environment.NewLine + "Value:  " + key + " = " + value);
             }
         }
 
@@ -665,7 +665,6 @@ namespace GitUI
 
         private void DiffTool2_Click(object sender, EventArgs e)
         {
-            var gitCommands = new GitCommandsInstance();
             if (string.IsNullOrEmpty(FormSettings.GetGlobalDiffToolFromConfig()))
             {
                 if (MessageBox.Show("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" + Environment.NewLine + "Select no if you want to configure a different difftool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -682,7 +681,7 @@ namespace GitUI
 
             if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
-                SolveKDiffTool2Path(gitCommands);
+                SolveKDiffTool2Path();
             }
 
             if (FormSettings.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("difftool.kdiff3.path")))
@@ -697,7 +696,6 @@ namespace GitUI
 
         private void DiffTool_Click(object sender, EventArgs e)
         {
-            var gitCommands = new GitCommandsInstance();
             if (string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("merge.tool")))
             {
                 if (MessageBox.Show("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" + Environment.NewLine + "Select no if you want to configure a different mergetool yourself.", "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -714,7 +712,7 @@ namespace GitUI
 
             if (GitCommandHelpers.GetGlobalSetting("merge.tool").Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
-                SolveKDiffPath(gitCommands);
+                SolveKDiffPath();
             }
             else
                 if (GitCommandHelpers.GetGlobalSetting("merge.tool").Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
@@ -737,7 +735,6 @@ namespace GitUI
 
         public static bool SolveKDiff()
         {
-            var gitCommands = new GitCommandsInstance();
             string mergeTool = GitCommandHelpers.GetGlobalSetting("merge.tool");
             if (string.IsNullOrEmpty(mergeTool))
             {
@@ -746,14 +743,13 @@ namespace GitUI
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                return SolveKDiffPath(gitCommands);
+                return SolveKDiffPath();
 
             return true;
         }
 
         public static bool SolveKDiffTool2()
         {
-            var gitCommands = new GitCommandsInstance();
             string diffTool = GetGlobalDiffToolFromConfig();
             if (string.IsNullOrEmpty(diffTool))
             {
@@ -764,12 +760,12 @@ namespace GitUI
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                return SolveKDiffTool2Path(gitCommands);
+                return SolveKDiffTool2Path();
 
             return true;
         }
 
-        public static bool SolveKDiffPath(GitCommandsInstance gitCommands)
+        public static bool SolveKDiffPath()
         {
             if (!Settings.RunningOnWindows())
                 return false;
@@ -797,7 +793,7 @@ namespace GitUI
             return true;
         }
 
-        public static bool SolveKDiffTool2Path(GitCommandsInstance gitCommands)
+        public static bool SolveKDiffTool2Path()
         {
             if (!Settings.RunningOnWindows())
                 return false;
@@ -835,7 +831,7 @@ namespace GitUI
                 return;
             }
 
-            MessageBox.Show("Git can be runned using: " + GitCommands.Settings.GitCommand, "Locate git");
+            MessageBox.Show("Git can be run using: " + GitCommands.Settings.GitCommand, "Locate git");
             GitPath.Text = GitCommands.Settings.GitCommand;
             Rescan_Click(null, null);
         }
@@ -925,7 +921,7 @@ namespace GitUI
                 return;
             }
 
-            MessageBox.Show("Command sh can be runned using: " + GitCommands.Settings.GitBinDir + "sh", "Locate linux tools");
+            MessageBox.Show("Command sh can be run using: " + GitCommands.Settings.GitBinDir + "sh", "Locate linux tools");
             GitBinPath.Text = GitCommands.Settings.GitBinDir;
             Rescan_Click(null, null);
         }
@@ -1049,7 +1045,7 @@ namespace GitUI
                 return false;
         }
 
-        private string SelectFile(string initialDirectory, string filter, string prev)
+        private static string SelectFile(string initialDirectory, string filter, string prev)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = filter;
@@ -1102,7 +1098,7 @@ namespace GitUI
             if (Putty.Checked)
             {
                 if (AutoFindPuttyPaths())
-                    MessageBox.Show("All paths needed for PuTTY could be automaticly found and are set.", "PuTTY");
+                    MessageBox.Show("All paths needed for PuTTY could be automatically found and are set.", "PuTTY");
                 else
                     tabControl1.SelectTab("ssh");
             }
@@ -1164,7 +1160,7 @@ namespace GitUI
             AutoConfigMergeToolcmd();
         }
 
-        private string FindFileInFolders(string fileName, params string[] locations)
+        private static string FindFileInFolders(string fileName, params string[] locations)
         {
             foreach (string location in locations)
             {
@@ -1602,7 +1598,7 @@ namespace GitUI
             }
         }
 
-        private bool getCheckAtStartupChecked(bool bValid)
+        private static bool getCheckAtStartupChecked(bool bValid)
         {
             var retValue = false;
             if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
@@ -1705,7 +1701,6 @@ namespace GitUI
         private bool CheckMergeTool()
         {
             DiffTool.Visible = true;
-            var gitCommands = new GitCommandsInstance();
             if (string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("merge.tool")))
             {
                 DiffTool.BackColor = Color.LightSalmon;

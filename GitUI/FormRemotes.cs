@@ -69,7 +69,7 @@ namespace GitUI
 
                 if (MessageBox.Show(
                         "You have added a new remote repository." + Environment.NewLine +
-                        "Do you want to automaticly configure the default push and pull behaviour for this remote?",
+                        "Do you want to automatically configure the default push and pull behavior for this remote?",
                         "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var remoteUrl = Url.Text;
@@ -168,7 +168,7 @@ namespace GitUI
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.RunRealCmdDetatched(
+            GitCommandHelpers.RunRealCmdDetached(
                 "cmd.exe",
                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, Url.Text));
         }

@@ -29,10 +29,10 @@ namespace GitUI
         public void SetRevision(GitRevision revision)
         {
             Revision = revision;
-            DiffFiles.GitItemStatusses = null;
+            DiffFiles.GitItemStatuses = null;
 
             if (revision.ParentGuids.Length > 0)
-                DiffFiles.GitItemStatusses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                DiffFiles.GitItemStatuses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
 
             commitInfo.SetRevision(revision.Guid);
 

@@ -63,17 +63,17 @@ namespace GitCommands
             if (string.IsNullOrEmpty(startDir))
                 return "";
 
-            if (!startDir.EndsWith(Settings.PathSeperator.ToString()) && !startDir.EndsWith(Settings.PathSeperatorWrong.ToString()))
-                startDir += Settings.PathSeperator;
+            if (!startDir.EndsWith(Settings.PathSeparator.ToString()) && !startDir.EndsWith(Settings.PathSeparatorWrong.ToString()))
+                startDir += Settings.PathSeparator;
 
             var dir = startDir;
 
-            while (dir.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }) > 0)
+            while (dir.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }) > 0)
             {
-                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }));
+                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }));
 
                 if (Settings.ValidWorkingDir(dir))
-                    return dir + Settings.PathSeperator;
+                    return dir + Settings.PathSeparator;
             }
             return startDir;
         }
@@ -176,7 +176,7 @@ namespace GitCommands
             return path.StartsWith("\\\\") ? path : path.Replace('\\', '/');
         }
 
-        public static void RunRealCmdDetatched(string cmd, string arguments)
+        public static void RunRealCmdDetached(string cmd, string arguments)
         {
             try
             {
@@ -501,7 +501,7 @@ namespace GitCommands
 
         public static string GetMergeMessage()
         {
-            var file = Settings.WorkingDir + ".git" + Settings.PathSeperator + "MERGE_MSG";
+            var file = Settings.WorkingDir + ".git" + Settings.PathSeparator + "MERGE_MSG";
 
             return
                 File.Exists(file)
@@ -523,7 +523,7 @@ namespace GitCommands
 
         public static void RunBash()
         {
-            RunRealCmdDetatched("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
+            RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
         }
 
         public static string Init(bool bare, bool shared)
@@ -599,13 +599,13 @@ namespace GitCommands
 
         public static string GetSubmoduleRemotePath(string name)
         {
-            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeperator + ".gitmodules");
+            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeparator + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".url").Trim();
         }
 
         public static string GetSubmoduleLocalPath(string name)
         {
-            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeperator + ".gitmodules");
+            var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeparator + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".path").Trim();
         }
 
@@ -949,7 +949,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(Settings.PathSeperator.ToString()) || path.Contains(Settings.PathSeperatorWrong.ToString());
+            return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
         }
 
         public static string FetchCmd(string remote, string remoteBranch, string localBranch)
@@ -1041,10 +1041,10 @@ namespace GitCommands
 
         public static string GetRebaseDir()
         {
-            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase-apply" + Settings.PathSeperator))
-                return Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase-apply" + Settings.PathSeperator;
-            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase" + Settings.PathSeperator))
-                return Settings.WorkingDir + ".git" + Settings.PathSeperator + "rebase" + Settings.PathSeperator;
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator;
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator;
 
             return "";
         }
@@ -1085,7 +1085,7 @@ namespace GitCommands
             foreach (var fullFileName in files)
             {
                 int n;
-                var file = fullFileName.Substring(fullFileName.LastIndexOf(Settings.PathSeperator) + 1);
+                var file = fullFileName.Substring(fullFileName.LastIndexOf(Settings.PathSeparator) + 1);
                 if (!int.TryParse(file, out n))
                     continue;
 
@@ -1198,7 +1198,7 @@ namespace GitCommands
 
         public static string CommitCmd(bool amend)
         {
-            var path = Settings.WorkingDirGitDir() + Settings.PathSeperator + "COMMITMESSAGE\"";
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE\"";
             if (amend)
                 return "commit --amend -F \"" + path;
             return "commit  -F \"" + path;
@@ -1274,12 +1274,12 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + Settings.PathSeperator + ".gitconfig");
+            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + Settings.PathSeparator + ".gitconfig");
         }
 
         public static ConfigFile GetLocalConfig()
         {
-            return new ConfigFile(Settings.WorkingDirGitDir() + Settings.PathSeperator + "config");
+            return new ConfigFile(Settings.WorkingDirGitDir() + Settings.PathSeparator + "config");
         }
 
         public static string GetSetting(string setting)
@@ -1955,7 +1955,7 @@ namespace GitCommands
                 if (lastCommitGuid != commitGuid)
                     currentColor = currentColor == color1 ? color2 : color1;
 
-                item = new GitBlame { color = currentColor, CommitGuid = commitGuid };
+                item = new GitBlame { Color = currentColor, CommitGuid = commitGuid };
                 items.Add(item);
 
                 var codeIndex = itemsString.IndexOf(')', 41) + 1;

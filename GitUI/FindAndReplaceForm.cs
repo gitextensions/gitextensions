@@ -237,10 +237,10 @@ namespace GitUI
                 _editor.Document.UndoStack.EndUndoGroup();
             }
             if (count == 0)
-                MessageBox.Show("No occurrances found.");
+                MessageBox.Show("No occurrences found.");
             else
             {
-                MessageBox.Show(string.Format("Replaced {0} occurrances.", count));
+                MessageBox.Show(string.Format("Replaced {0} occurrences.", count));
                 Close();
             }
         }
@@ -406,7 +406,7 @@ namespace GitUI
             return result;
         }
 
-        private bool MatchFirstCh(char a, char b, bool matchCase)
+        private static bool MatchFirstCh(char a, char b, bool matchCase)
         {
             if (a == b)
                 return true;
