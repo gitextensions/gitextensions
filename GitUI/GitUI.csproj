@@ -972,6 +972,7 @@
     <None Include="Icons\84.png" />
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
+    <None Include="Icons\arrow_refresh.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
