@@ -146,6 +146,7 @@ namespace GitUI
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verifyGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteIndexlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -165,7 +166,7 @@ namespace GitUI
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.deleteIndexlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -638,9 +639,10 @@ namespace GitUI
             // 
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem,
-            this.copyFilenameToClipboardToolStripMenuItem1});
+            this.copyFilenameToClipboardToolStripMenuItem1,
+            this.saveAsToolStripMenuItem1});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(252, 48);
+            this.DiffContextMenu.Size = new System.Drawing.Size(252, 92);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -1221,6 +1223,13 @@ namespace GitUI
             this.verifyGitDatabaseToolStripMenuItem.Text = "Recover lost objects";
             this.verifyGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.VerifyGitDatabaseToolStripMenuItemClick);
             // 
+            // deleteIndexlockToolStripMenuItem
+            // 
+            this.deleteIndexlockToolStripMenuItem.Name = "deleteIndexlockToolStripMenuItem";
+            this.deleteIndexlockToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.deleteIndexlockToolStripMenuItem.Text = "Delete index.lock";
+            this.deleteIndexlockToolStripMenuItem.Click += new System.EventHandler(this.deleteIndexlockToolStripMenuItem_Click);
+            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -1352,12 +1361,12 @@ namespace GitUI
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
             // 
-            // deleteIndexlockToolStripMenuItem
+            // saveAsToolStripMenuItem1
             // 
-            this.deleteIndexlockToolStripMenuItem.Name = "deleteIndexlockToolStripMenuItem";
-            this.deleteIndexlockToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.deleteIndexlockToolStripMenuItem.Text = "Delete index.lock";
-            this.deleteIndexlockToolStripMenuItem.Click += new System.EventHandler(this.deleteIndexlockToolStripMenuItem_Click);
+            this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
+            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+            this.saveAsToolStripMenuItem1.Text = "Save as";
+            this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem1_Click);
             // 
             // FormBrowse
             // 
@@ -1535,5 +1544,6 @@ namespace GitUI
         private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem;
         private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
         private ToolStripMenuItem deleteIndexlockToolStripMenuItem;
+        private ToolStripMenuItem saveAsToolStripMenuItem1;
     }
 }
