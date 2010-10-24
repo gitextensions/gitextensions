@@ -806,7 +806,7 @@ namespace GitUI
 
             Translate();
 
-            RevisionGrid.Refresh();
+            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
