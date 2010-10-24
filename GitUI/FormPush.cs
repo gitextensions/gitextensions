@@ -106,10 +106,10 @@ namespace GitUI
 
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
-                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text,
+                pushCmd = GitCommands.GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
                                                           PushAllBranches.Checked, ForcePushBranches.Checked);
             else
-                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
+                pushCmd = GitCommands.GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
                                                              ForcePushBranches.Checked);
             var form = new FormProcess(pushCmd)
                        {
