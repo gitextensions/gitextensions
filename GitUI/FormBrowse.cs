@@ -874,8 +874,20 @@ namespace GitUI
 
         private void ApplyBranchFilter()
         {
-            RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
-            RevisionGrid.ForceRefreshRevisions();
+            bool success = RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
+            if (success) RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void UpdateBranchFilterItems()
+        {
+            string filter = toolStripBranches.Text;
+            toolStripBranches.Items.Clear();
+            var index = toolStripBranches.Text.Length;
+            var branches = GetBranchHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            foreach (var branch in branches)
+                if (branch.Contains(filter))
+                    toolStripBranches.Items.Add(branch);
+            toolStripBranches.SelectionStart = index;
         }
 
         private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
@@ -1440,17 +1452,10 @@ namespace GitUI
                                     string.Format("cat-file blob {0}:\"{1}\"", revisions[0].Guid, item.Name)));
             }
         }
-        
+
         private void toolStripBranches_TextUpdate(object sender, EventArgs e)
         {
-            toolStripBranches.Items.Clear();
-            string text = toolStripBranches.Text;
-            var index = toolStripBranches.Text.Length;
-            var branches = GetBranchHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            foreach (var branch in branches)
-                if (branch.Contains(text))
-                    toolStripBranches.Items.Add(branch);
-            toolStripBranches.SelectionStart = index;
+            UpdateBranchFilterItems();
         }
 
         private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
@@ -1461,22 +1466,20 @@ namespace GitUI
             }
         }
 
-        private void remoteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void localToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
         private void toolStripBranches_DropDown(object sender, EventArgs e)
         {
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            UpdateBranchFilterItems();
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
             statusStrip.Hide();
+        }
+
+        private void toolStripBranches_Leave(object sender, EventArgs e)
+        {
+            ApplyBranchFilter();
         }
         
 
