@@ -691,6 +691,8 @@ namespace GitUI
             this.Scan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.Scan.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.Scan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Scan.Location = new System.Drawing.Point(3, 131);
             this.Scan.Name = "Scan";
             this.Scan.Size = new System.Drawing.Size(154, 26);
