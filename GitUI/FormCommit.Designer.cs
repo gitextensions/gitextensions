@@ -331,7 +331,7 @@ namespace GitUI
             this.Unstaged.ContextMenuStrip = this.UnstagedFileContext;
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Unstaged.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.Unstaged.GitItemStatusses = null;
+            this.Unstaged.GitItemStatuses = null;
             this.Unstaged.Location = new System.Drawing.Point(0, 0);
             this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Unstaged.Name = "Unstaged";
@@ -557,7 +557,7 @@ namespace GitUI
             // 
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Staged.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.Staged.GitItemStatusses = null;
+            this.Staged.GitItemStatuses = null;
             this.Staged.Location = new System.Drawing.Point(0, 0);
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Staged.Name = "Staged";

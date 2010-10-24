@@ -40,7 +40,7 @@ namespace GitUI.Editor
                 MouseLeave(sender, e);
         }
 
-        public event SelectedLineChangedHandler SelectedLineChanged;
+        public event SelectedLineChangedEventHandler SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {

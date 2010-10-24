@@ -75,7 +75,7 @@ namespace GitUI
                 command += " \"" + Branches.Text + "\"";
                 var form = new FormProcess(command);
                 form.ShowDialog();
-                if (!form.ErrorOccured())
+                if (!form.ErrorOccurred())
                     Close();
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace GitUI
             }
         }
 
-        private bool LocalBranchExists(string name)
+        private static bool LocalBranchExists(string name)
         {
             foreach (GitHead head in GitCommandHelpers.GetHeads(false))
             {

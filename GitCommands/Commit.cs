@@ -50,7 +50,7 @@ namespace GitCommands
 
         public static string GetCommitMessagePath()
         {
-            return Settings.WorkingDirGitDir() + Settings.PathSeperator.ToString() + "COMMITMESSAGE";
+            return Settings.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
         }
     }
 }

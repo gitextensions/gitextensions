@@ -59,7 +59,7 @@ namespace GitCommands
                 Settings.GitCommand,
                 string.Format(
                     "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
-                    Strings.GetAutorText(),
+                    Strings.GetAuthorText(),
                     Strings.GetAuthorDateText(),
                     Strings.GetCommitterText(),
                     Strings.GetCommitterDateText(),
@@ -93,7 +93,7 @@ namespace GitCommands
 
         private static string RemoveRedundancies(string info)
         {
-            string author = GetField(info, Strings.GetAutorText() + ":");
+            string author = GetField(info, Strings.GetAuthorText() + ":");
             string committer = GetField(info, Strings.GetCommitterText() + ":");
 
             if (String.Equals(author, committer, StringComparison.CurrentCulture))

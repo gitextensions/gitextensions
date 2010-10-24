@@ -22,7 +22,7 @@ namespace GitUI.Statistics
             RestorePosition("commit-count");
             Loading.Visible = true;
 
-            foreach (var keyValuePair in CommitCounter.GroupAllCommitsByContributer().Item1)
+            foreach (var keyValuePair in CommitCounter.GroupAllCommitsByContributor().Item1)
             {
                 CommitCount.Text += string.Format("{1,6} - {0}\r\n", keyValuePair.Key, keyValuePair.Value);
             }

@@ -21,7 +21,7 @@ namespace GitUI.Blame
             BlameCommitter.ShowLineNumbers = false;
             BlameFile.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
             BlameFile.IsReadOnly = true;
-            BlameFile.SelectedLineChanged += new SelectedLineChangedHandler(BlameFile_SelectedLineChanged);
+            BlameFile.SelectedLineChanged += new SelectedLineChangedEventHandler(BlameFile_SelectedLineChanged);
 
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
         }

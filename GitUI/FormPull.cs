@@ -31,7 +31,7 @@ namespace GitUI
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
-            new TranslationString("You can only fetch all remote branches (*) whithout merge or rebase." +
+            new TranslationString("You can only fetch all remote branches (*) without merge or rebase." +
                                   Environment.NewLine + "If you want to fetch all remote branches, choose fetch." +
                                   Environment.NewLine +
                                   "If you want to fetch and merge a branch, choose a specific branch.");
@@ -185,7 +185,7 @@ namespace GitUI
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                 !GitCommandHelpers.InTheMiddleOfRebase() &&
-                (process != null && !process.ErrorOccured()))
+                (process != null && !process.ErrorOccurred()))
                 Close();
 
             // Rebase failed -> special 'rebase' merge conflict

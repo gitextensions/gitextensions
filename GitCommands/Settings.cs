@@ -15,15 +15,15 @@ namespace GitCommands
         public static int GitExtensionsVersionInt = 204;
         private static string _gitBinDir = "";
         private static string _workingdir;
-        public static char PathSeperator = '\\';
-        public static char PathSeperatorWrong = '/';
+        public static char PathSeparator = '\\';
+        public static char PathSeparatorWrong = '/';
 
         static Settings()
         {
             if (!RunningOnWindows())
             {
-                PathSeperator = '/';
-                PathSeperatorWrong = '\\';
+                PathSeparator = '/';
+                PathSeparatorWrong = '\\';
             }
 
             BranchBorders = true;
@@ -66,7 +66,7 @@ namespace GitCommands
             CommitInfoShowContainedInBranches = true;
             CommitInfoShowContainedInTags = true;
             RevisionGridQuickSearchTimeout = 700;
-            ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeperator.ToString();
+            ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
             ShowGitStatusInBrowseToolbar = false;
             LastCommitMessage = "";
             ShowErrorsWhenStagingFiles = true;
@@ -150,8 +150,8 @@ namespace GitCommands
             set
             {
                 _gitBinDir = value;
-                if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeperator)
-                    _gitBinDir += PathSeperator;
+                if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeparator)
+                    _gitBinDir += PathSeparator;
 
                 if (string.IsNullOrEmpty(_gitBinDir))
                     return;
@@ -165,8 +165,8 @@ namespace GitCommands
 
         public static int MaxCommits { get; set; }
 
-        public delegate void WorkingDirChangedHandler(string oldDir, string newDir);
-        public static event WorkingDirChangedHandler WorkingDirChanged;
+        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir);
+        public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
         public static string WorkingDir
         {
@@ -258,18 +258,18 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + PathSeperator + ".git"))
+            if (Directory.Exists(dir + PathSeparator + ".git"))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + PathSeperator + "info") &&
-                   Directory.Exists(dir + PathSeperator + "objects") &&
-                   Directory.Exists(dir + PathSeperator + "refs");
+                   Directory.Exists(dir + PathSeparator + "info") &&
+                   Directory.Exists(dir + PathSeparator + "objects") &&
+                   Directory.Exists(dir + PathSeparator + "refs");
         }
 
         public static bool IsBareRepository()
         {
-            return !Directory.Exists(WorkingDir + PathSeperator + ".git");
+            return !Directory.Exists(WorkingDir + PathSeparator + ".git");
         }
 
         public static string WorkingDirGitDir()
@@ -279,8 +279,8 @@ namespace GitCommands
             if (Directory.Exists(workingDir + ".git"))
                 return workingDir + ".git";
 
-            if (Directory.Exists(workingDir + PathSeperator + ".git"))
-                return workingDir + PathSeperator + ".git";
+            if (Directory.Exists(workingDir + PathSeparator + ".git"))
+                return workingDir + PathSeparator + ".git";
 
             return WorkingDir;
         }

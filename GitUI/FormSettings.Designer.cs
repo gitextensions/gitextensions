@@ -1054,7 +1054,7 @@ namespace GitUI
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(295, 13);
             this.label34.TabIndex = 21;
-            this.label34.Text = "Close process dialog automaticly when process is succeeded";
+            this.label34.Text = "Close process dialog automatically when process is succeeded";
             // 
             // EncodingLabel
             // 
