@@ -34,9 +34,6 @@ namespace GitUI
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");
 
-        private readonly TranslationString _noTagsForRemove =
-            new TranslationString("No tags to remove found");
-
         public Boolean PushOnShow { get; set; }
 
         public FormPush()
@@ -66,7 +63,7 @@ namespace GitUI
                 return;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text) &&
-                !PushAllTags.Checked && !RemoveAllDeletedTags.Checked)
+                !PushAllTags.Checked)
             {
                 MessageBox.Show(_selectTag.Text);
                 return;
@@ -107,25 +104,14 @@ namespace GitUI
                 remote = Remotes.Text.Trim();
             }
 
-            List<string> lstPushCmd;
+            string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
-            {
-                string sPushCmd = GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
+                pushCmd = GitCommands.GitCommands.PushCmd(destination, Branch.Text, RemoteBranch.Text,
                                                           PushAllBranches.Checked, ForcePushBranches.Checked);
-                lstPushCmd = new List<string>() { sPushCmd };
-            }
             else
-            {
-                lstPushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
-                                                             ForcePushBranches.Checked, RemoveAllDeletedTags.Checked);
-                if (lstPushCmd.Count == 0)
-                {
-                    MessageBox.Show(_noTagsForRemove.Text);
-                    return;
-                }
-            }
-
-            var form = new FormProcess(lstPushCmd)
+                pushCmd = GitCommands.GitCommands.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
+                                                             ForcePushBranches.Checked);
+            var form = new FormProcess(pushCmd)
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination)
