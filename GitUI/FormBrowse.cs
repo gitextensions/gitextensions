@@ -192,7 +192,7 @@ namespace GitUI
                 if (_rebase != null)
                 {
                     _rebase.Click -= WarningClick;
-                    ToolStrip.Items.Remove(_rebase);
+                    statusStrip.Items.Remove(_rebase);
                     _rebase = null;
                 }
             }
@@ -202,7 +202,7 @@ namespace GitUI
             {
                 if (_warning == null)
                 {
-                    _warning = ToolStrip.Items.Add("There are unresolved merge conflicts!");
+                    _warning = statusStrip.Items.Add("There are unresolved merge conflicts!");
                     _warning.BackColor = Color.Salmon;
                     _warning.Click += WarningClick;
                 }
@@ -212,10 +212,18 @@ namespace GitUI
                 if (_warning != null)
                 {
                     _warning.Click -= WarningClick;
-                    ToolStrip.Items.Remove(_warning);
+                    statusStrip.Items.Remove(_warning);
                     _warning = null;
                 }
             }
+
+            //Only show status strip when there are status items on it.
+            //There is always a close (x) button, do not count first item.
+            if (statusStrip.Items.Count > 1) 
+                statusStrip.Show();
+            else
+                statusStrip.Hide();
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -1425,6 +1433,11 @@ namespace GitUI
         private void toolStripBranches_DropDown(object sender, EventArgs e)
         {
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            statusStrip.Hide();
         }
         
 
