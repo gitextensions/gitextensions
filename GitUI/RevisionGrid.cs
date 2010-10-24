@@ -164,14 +164,29 @@ namespace GitUI
                 e.Handled = true;
                 return;
             }
-            var key = (char)e.KeyValue;
-            if (!e.Alt && !e.Control && char.IsLetterOrDigit(key) || char.IsNumber(key) || char.IsSeparator(key))
+            int key = e.KeyValue;
+            if (!e.Alt && !e.Control && char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key))
             {
                 quickSearchTimer.Stop();
                 quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
                 quickSearchTimer.Start();
 
-                _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
+                //The code below is ment to fix the wierd keyvalues when pressing keys e.g. ".".
+                switch (key)
+                {
+                    case 188:
+                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
+                        break;
+                    case 189:
+                        _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
+                        break;
+                    case 190:
+                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
+                        break;
+                    default:
+                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
+                        break;
+                }
 
                 var oldIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
