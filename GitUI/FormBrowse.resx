@@ -422,6 +422,15 @@
         5nD1GIkDWy4iJIYtrRPSA5IHAC9mGtrPNZ12AAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="PuTTYToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAJVJREFUOE+lkwsO
+        wCAIQ/XmHM2bsRRHRIIfNhNi4tInLa6W/eLN53rQFo5Wa42JCOAdXNiix9YLIuKPAAIqD+itDjE6SXYA
+        G0U8oyDeATQY2SH0hXOF+SAlMBzeCBViJ2ESH757cL3szdEYJ4Am7m6aLPpH9AJ+JK7p2rRTI/MeT56t
+        hfDNpwC2/aiTqx9Hx7XYl3/uA3fvXxjHcEm8AAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="startAuthenticationAgentToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -444,15 +453,6 @@
         f6I2pV3A8Vb78U6wO8DBI56SzwmkSlNn/kAgl2QpAU8SKASmvXD9fUrG8g4yI5CeMSRq6g0gvg5ACXyU
         gKfj1TWzfsDNaxdQ6x2XayQTXARYe2+pYG62egwfr+Gsdcw/XbHLFw8ZUJh2CPwHFOR+6ftiupQAAAAA
         SUVORK5CYII=
-</value>
-  </data>
-  <data name="PuTTYToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAJVJREFUOE+lkwsO
-        wCAIQ/XmHM2bsRRHRIIfNhNi4tInLa6W/eLN53rQFo5Wa42JCOAdXNiix9YLIuKPAAIqD+itDjE6SXYA
-        G0U8oyDeATQY2SH0hXOF+SAlMBzeCBViJ2ESH757cL3szdEYJ4Am7m6aLPpH9AJ+JK7p2rRTI/MeT56t
-        hfDNpwC2/aiTqx9Hx7XYl3/uA3fvXxjHcEm8AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="gitMaintenanceToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
