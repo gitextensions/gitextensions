@@ -132,11 +132,20 @@ namespace GitUI
         private string GetBranchesWhichContainsThisCommit(string revision)
         {
             var branchString = "";
-            foreach (var branch in CommitInformation.GetAllBranchesWhichContainGivenCommit(revision))
+            foreach (var branch in CommitInformation.GetLocalBranchesWhichContainGivenCommit(revision))
             {
                 if (branchString != string.Empty)
                     branchString += ", ";
                 branchString += branch;
+            }
+            if (branchString == string.Empty)
+            {
+                foreach (var branch in CommitInformation.GetRemoteBranchesWhichContainGivenCommit(revision))
+                {
+                    if (branchString != string.Empty)
+                        branchString += ", ";
+                    branchString += branch;
+                }
             }
 
             if (branchString != string.Empty)
