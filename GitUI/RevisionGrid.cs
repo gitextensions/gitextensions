@@ -296,8 +296,9 @@ namespace GitUI
             }
         }
 
-        public void SetAndApplyBranchFilter(string filter)
+        public bool SetAndApplyBranchFilter(string filter)
         {
+            if (filter.Equals(_revisionFilter.GetBranchFilter())) return false;
             if (filter.Equals(""))
             {
                 Settings.BranchFilterEnabled = false;
@@ -310,6 +311,7 @@ namespace GitUI
                 _revisionFilter.SetBranchFilter(filter);
             }
             SetShowBranches();
+            return true;
         }
 
         ~RevisionGrid()
