@@ -93,12 +93,12 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        public event EventHandler ChangedCurrentBranch;
+        public event EventHandler ActionOnRepositoryPerformed;
 
-        public virtual void OnChangedCurrentBranch()
+        public virtual void OnActionOnRepositoryPerformed()
         {
-            if (ChangedCurrentBranch != null)
-                ChangedCurrentBranch(this, null);
+            if (ActionOnRepositoryPerformed != null)
+                ActionOnRepositoryPerformed(this, null);
         }
 
         private bool _isLoading = false;
@@ -707,6 +707,7 @@ namespace GitUI
             var frm = new FormResetCurrentBranch(GetRevision(LastRow));
             frm.ShowDialog();
             RefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -717,7 +718,7 @@ namespace GitUI
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
             frm.ShowDialog();
             RefreshRevisions();
-            OnChangedCurrentBranch();
+            OnActionOnRepositoryPerformed();
         }
 
         private void RevisionsMouseClick(object sender, MouseEventArgs e)
@@ -938,7 +939,7 @@ namespace GitUI
             new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog();
 
             ForceRefreshRevisions();
-            OnChangedCurrentBranch();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
@@ -951,6 +952,7 @@ namespace GitUI
             GitUICommands.Instance.StartMergeBranchDialog(toolStripItem.Text);
 
             ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
@@ -963,6 +965,7 @@ namespace GitUI
             GitUICommands.Instance.StartRebaseDialog(toolStripItem.Text);
 
             ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
@@ -975,7 +978,7 @@ namespace GitUI
                 return;
             new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog();
             ForceRefreshRevisions();
-            OnChangedCurrentBranch();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
@@ -995,7 +998,10 @@ namespace GitUI
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartCheckoutBranchDialog())
+            {
                 RefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1006,6 +1012,7 @@ namespace GitUI
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
             frm.ShowDialog();
             RefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
