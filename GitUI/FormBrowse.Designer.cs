@@ -520,7 +520,7 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.AllowGraphWithFilter = true;
+            this.RevisionGrid.AllowGraphWithFilter = false;
             this.RevisionGrid.BranchFilter = "";
             this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;

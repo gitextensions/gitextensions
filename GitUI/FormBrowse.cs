@@ -88,7 +88,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
-            RevisionGrid.ChangedCurrentBranch += RevisionGridChangedCurrentBranch;
+            RevisionGrid.ActionOnRepositoryPerformed += ActionOnRepositoryPerformed;
             _indexWatcher.Reset();
 
             LoadPluginsInPluginMenu();
@@ -122,7 +122,7 @@ namespace GitUI
             plugin.Execute(eventArgs);
         }
 
-        private void RevisionGridChangedCurrentBranch(object sender, EventArgs e)
+        private void ActionOnRepositoryPerformed(object sender, EventArgs e)
         {
             Initialize();
         }
@@ -174,6 +174,14 @@ namespace GitUI
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = Settings.WorkingDir + " - Git Extensions";
 
+            CheckForMergeConflicts();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void CheckForMergeConflicts()
+        {
+            bool validWorkingDir = Settings.ValidWorkingDir();
             if (validWorkingDir &&
                 (GitCommandHelpers.InTheMiddleOfRebase() || GitCommandHelpers.InTheMiddleOfPatch()))
             {
@@ -220,12 +228,10 @@ namespace GitUI
 
             //Only show status strip when there are status items on it.
             //There is always a close (x) button, do not count first item.
-            if (statusStrip.Items.Count > 1) 
+            if (statusStrip.Items.Count > 1)
                 statusStrip.Show();
             else
                 statusStrip.Hide();
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void InitToolStripBranchFilter(bool local, bool remote)
