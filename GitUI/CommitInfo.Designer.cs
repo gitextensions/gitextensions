@@ -106,6 +106,7 @@
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
             this._RevisionHeader.Name = "_RevisionHeader";
             this._RevisionHeader.Size = new System.Drawing.Size(783, 115);
+            this._RevisionHeader.ReadOnly = true;
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             // 
