@@ -19,18 +19,45 @@ namespace GitCommands
         public string Body{get; private set;}
 
         /// <summary>
-        /// Gets all branches which contain the given commit.
+        /// Gets local branches which contain the given commit.
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1)
+        public static IEnumerable<string> GetLocalBranchesWhichContainGivenCommit(string sha1)
         {
             string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
-
-
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
+
             return info.Split(new[] {'\r', '\n', '*', ' '}, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Gets remote branches which contain the given commit.
+        /// </summary>
+        /// <param name="sha1">The sha1.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetRemoteBranchesWhichContainGivenCommit(string sha1) 
+        {
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch -r --contains " + sha1);
+            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+                return new List<string>();
+
+            string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Remove symlink targets as in "origin/HEAD -> origin/master"
+            for (int i = 0; i < result.Length; i++)
+            {
+                string item = result[i].Trim();
+                int idx;
+                if ((idx = item.IndexOf(" ->")) >= 0)
+                {
+                    item = item.Substring(0, idx);
+                }
+                result[i] = item;
+            }
+
+            return result;
         }
 
         /// <summary>
