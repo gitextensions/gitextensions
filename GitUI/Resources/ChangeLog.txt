@@ -1,6 +1,22 @@
 Changelog
 =========
 
+Version 2.05
+	Fixed issue 194: Remote branches combo contained tags also
+	Fixed bug: fixed pre-selecting tracking branch in push dialog
+	Fixed bug: pull form no longer shows default remote branch to pull, this caused unwanted behaviour
+	Fixed bug: file history doesn't work in some cases when casing on disk is different then in git
+	Fixed bug: selecting initial revision on RevisionGrid launched from FileStatusList
+	Fixed bug: characters '.', ',' and '-' do not work in quick filter
+	Fixed bug: pull using rebase didn't work properly when no remote branch is selected
+	Japanese translation improved
+	Improved filter
+	Added current working dir changes and commit index to revision grid, default disabled
+	Added "Push & Commit" button to commit dialog
+	Added branch filter to browse dialog
+	Added "save as" button to diff view in browse dialog
+	Added statusbar for warnings
+
 Version 2.04
 	Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes
 	Fixed bug: spellings checker allows using Japanese
