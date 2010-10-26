@@ -639,6 +639,9 @@ _ReSharper*/
         <TranslationItem Name="toolStripStatusLabel1" Property="Text">
           <Value>X</Value>
         </TranslationItem>
+        <TranslationItem Name="forceerRefreshToolStripMenuItem" Property="Text">
+          <Value>Verversen forceren</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
