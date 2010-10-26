@@ -148,21 +148,31 @@ namespace GitUI
         {
             if (e.Alt && e.KeyCode == Keys.Up)
             {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
                 var nextIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     nextIndex = Revisions.SelectedRows[0].Index - 1;
-
-                FindNextMatch(nextIndex, _lastQuickSearchString, true);
+                _quickSearchString = _lastQuickSearchString;
+                FindNextMatch(nextIndex, _quickSearchString, true);
+                ShowQuickSearchString();
                 e.Handled = true;
                 return;
             }
             if (e.Alt && e.KeyCode == Keys.Down)
             {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
                 var nextIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     nextIndex = Revisions.SelectedRows[0].Index + 1;
-
-                FindNextMatch(nextIndex, _lastQuickSearchString, false);
+                _quickSearchString = _lastQuickSearchString;
+                FindNextMatch(nextIndex, _quickSearchString, false);
+                ShowQuickSearchString();
                 e.Handled = true;
                 return;
             }
@@ -171,6 +181,10 @@ namespace GitUI
             int key = e.KeyValue;
             if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
             {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
                 _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length-1);
 
                 var oldIndex = 0;
