@@ -148,26 +148,57 @@ namespace GitUI
         {
             if (e.Alt && e.KeyCode == Keys.Up)
             {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
                 var nextIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     nextIndex = Revisions.SelectedRows[0].Index - 1;
-
-                FindNextMatch(nextIndex, _lastQuickSearchString, true);
+                _quickSearchString = _lastQuickSearchString;
+                FindNextMatch(nextIndex, _quickSearchString, true);
+                ShowQuickSearchString();
                 e.Handled = true;
                 return;
             }
             if (e.Alt && e.KeyCode == Keys.Down)
             {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
                 var nextIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
                     nextIndex = Revisions.SelectedRows[0].Index + 1;
-
-                FindNextMatch(nextIndex, _lastQuickSearchString, false);
+                _quickSearchString = _lastQuickSearchString;
+                FindNextMatch(nextIndex, _quickSearchString, false);
+                ShowQuickSearchString();
                 e.Handled = true;
                 return;
             }
+
+
             int key = e.KeyValue;
-            if (!e.Alt && !e.Control && char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key))
+            if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
+            {
+                quickSearchTimer.Stop();
+                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                quickSearchTimer.Start();
+
+                _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length-1);
+
+                var oldIndex = 0;
+                if (Revisions.SelectedRows.Count > 0)
+                    oldIndex = Revisions.SelectedRows[0].Index;
+
+                FindNextMatch(oldIndex, _quickSearchString, false);
+                _lastQuickSearchString = _quickSearchString;
+
+                e.Handled = true;
+                ShowQuickSearchString();
+            }
+            else
+            if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
             {
                 quickSearchTimer.Stop();
                 quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
@@ -184,6 +215,9 @@ namespace GitUI
                         break;
                     case 190:
                         _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
+                        break;
+                    case 191:
+                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
                         break;
                     default:
                         _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
