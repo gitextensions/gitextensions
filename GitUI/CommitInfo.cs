@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using System.Threading;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -60,7 +61,9 @@ namespace GitUI
 
         private void ReloadCommitInfo()
         {
-            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranches;
+            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesLocal;
+            showContainedInBranchesRemoteToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemote;
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             showContainedInTagsToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInTags;
 
             ResetTextAndImage();
@@ -132,13 +135,22 @@ namespace GitUI
         private string GetBranchesWhichContainsThisCommit(string revision)
         {
             var branchString = "";
-            foreach (var branch in CommitInformation.GetLocalBranchesWhichContainGivenCommit(revision))
+            IEnumerable<string> localBranches = new string[]{};
+            if (Settings.CommitInfoShowContainedInBranchesLocal ||
+                Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
             {
-                if (branchString != string.Empty)
-                    branchString += ", ";
-                branchString += branch;
+                localBranches = CommitInformation.GetLocalBranchesWhichContainGivenCommit(revision);
+                if (Settings.CommitInfoShowContainedInBranchesLocal)
+                    foreach (var branch in localBranches)
+                    {
+                        if (branchString != string.Empty)
+                            branchString += ", ";
+                        branchString += branch;
+                    }
             }
-            if (branchString == string.Empty)
+            if (Settings.CommitInfoShowContainedInBranchesRemote ||
+                (Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal && 
+                 (!localBranches.GetEnumerator().MoveNext())))
             {
                 foreach (var branch in CommitInformation.GetRemoteBranchesWhichContainGivenCommit(revision))
                 {
@@ -175,7 +187,7 @@ namespace GitUI
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInBranches = !Settings.CommitInfoShowContainedInBranches;
+            Settings.CommitInfoShowContainedInBranchesLocal = !Settings.CommitInfoShowContainedInBranchesLocal;
             ReloadCommitInfo();
         }
 
@@ -188,6 +200,18 @@ namespace GitUI
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(string.Concat(_RevisionHeader.Text, Environment.NewLine, RevisionInfo.Text));
+        }
+
+        private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInBranchesRemote = !Settings.CommitInfoShowContainedInBranchesRemote;
+            ReloadCommitInfo();
+        }
+
+        private void showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            ReloadCommitInfo();
         }
     }
 }
