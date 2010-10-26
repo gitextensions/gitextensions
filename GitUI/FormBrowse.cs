@@ -187,13 +187,12 @@ namespace GitUI
             {
                 if (_rebase == null)
                 {
-                    _rebase =
-                        ToolStrip.Items.Add(GitCommandHelpers.InTheMiddleOfRebase()
+                    _rebase = new WarningToolStripItem();
+                    _rebase.Text = GitCommandHelpers.InTheMiddleOfRebase()
                                                 ? "You are in the middle of a rebase"
-                                                : "You are in the middle of a patch apply");
-
-                    _rebase.BackColor = Color.Salmon;
+                                                : "You are in the middle of a patch apply";
                     _rebase.Click += RebaseClick;
+                     ToolStrip.Items.Add(_rebase);
                 }
             }
             else
@@ -211,9 +210,10 @@ namespace GitUI
             {
                 if (_warning == null)
                 {
-                    _warning = statusStrip.Items.Add("There are unresolved merge conflicts!");
-                    _warning.BackColor = Color.Salmon;
+                    _warning = new WarningToolStripItem();
+                    _warning.Text = "There are unresolved merge conflicts!";
                     _warning.Click += WarningClick;
+                    statusStrip.Items.Add(_warning);
                 }
             }
             else

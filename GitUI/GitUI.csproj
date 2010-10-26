@@ -591,6 +591,9 @@
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
+    <Compile Include="WarningToolStripItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WindowPositionList.cs" />
   </ItemGroup>
   <ItemGroup>
