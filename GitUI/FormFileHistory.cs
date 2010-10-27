@@ -4,6 +4,9 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
+using System.Globalization;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -70,7 +73,49 @@ namespace GitUI
             FileName = fileName;
 
             if (Settings.FollowRenamesInFileHistory)
-                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
+            {
+                // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
+                //
+                // But we can take a more complicated path to get reasonable results:
+                //  1. use git log --follow to get all previous filenames of the file we are interested in
+                //  2. use git log "list of filesnames" to get the histroy graph 
+                //
+                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
+                // 
+
+                GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance();
+                gitGetGraphCommand.StreamOutput = true;
+                gitGetGraphCommand.CollectOutput = false;
+
+                string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
+                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
+
+                // the sequence of (quoted) file names - start with the initial filename for the search.
+                string listOfFileNames = "\"" + fileName + "\"";
+                
+                // keep a set of the file names already seen
+                HashSet<string> setOfFileNames = new HashSet<string>();
+                setOfFileNames.Add(fileName);
+
+                string line;
+                do
+                {
+                    line = p.StandardOutput.ReadLine();
+
+                    if ( (line != null) && (line != "") )
+                    {
+                        if (!setOfFileNames.Contains(line))
+                        {
+                            listOfFileNames = listOfFileNames + " \"" + line + "\"";
+                            setOfFileNames.Add(line);
+                        }
+                    }
+                } while (line != null);
+
+                // here we need --name-only to get the previous filenames in the revision graph
+                FileChanges.Filter = " --name-only --parents -- " + listOfFileNames;
+                FileChanges.AllowGraphWithFilter = true;
+            }
             else
             {
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
