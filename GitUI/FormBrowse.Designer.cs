@@ -98,6 +98,7 @@ namespace GitUI
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.forceerRefreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -179,7 +180,6 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.forceerRefreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -425,7 +425,6 @@ namespace GitUI
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
             this.toolStripDropDownButton2.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButton2.Text = "toolStripDropDownButton2";
             // 
             // localToolStripMenuItem
             // 
@@ -433,14 +432,14 @@ namespace GitUI
             this.localToolStripMenuItem.CheckOnClick = true;
             this.localToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.localToolStripMenuItem.Name = "localToolStripMenuItem";
-            this.localToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.localToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.localToolStripMenuItem.Text = "Local";
             // 
             // remoteToolStripMenuItem
             // 
             this.remoteToolStripMenuItem.CheckOnClick = true;
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
-            this.remoteToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.remoteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.remoteToolStripMenuItem.Text = "Remote";
             // 
             // toolStripSeparator19
@@ -475,7 +474,6 @@ namespace GitUI
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
             // 
             // commitToolStripMenuItem1
             // 
@@ -483,21 +481,21 @@ namespace GitUI
             this.commitToolStripMenuItem1.CheckOnClick = true;
             this.commitToolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.commitToolStripMenuItem1.Name = "commitToolStripMenuItem1";
-            this.commitToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
+            this.commitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.commitToolStripMenuItem1.Text = "Commit";
             // 
             // committerToolStripMenuItem
             // 
             this.committerToolStripMenuItem.CheckOnClick = true;
             this.committerToolStripMenuItem.Name = "committerToolStripMenuItem";
-            this.committerToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.committerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.committerToolStripMenuItem.Text = "Committer";
             // 
             // authorToolStripMenuItem
             // 
             this.authorToolStripMenuItem.CheckOnClick = true;
             this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            this.authorToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.authorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.authorToolStripMenuItem.Text = "Author";
             // 
             // splitContainer3
@@ -839,14 +837,14 @@ namespace GitUI
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
             // 
@@ -855,16 +853,25 @@ namespace GitUI
             this.refreshToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("refreshToolStripMenuItem.Image")));
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItemClick);
+            // 
+            // forceerRefreshToolStripMenuItem
+            // 
+            this.forceerRefreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh_dirty;
+            this.forceerRefreshToolStripMenuItem.Name = "forceerRefreshToolStripMenuItem";
+            this.forceerRefreshToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F5)));
+            this.forceerRefreshToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.forceerRefreshToolStripMenuItem.Text = "Forceer refresh";
+            this.forceerRefreshToolStripMenuItem.Click += new System.EventHandler(this.forceerRefreshToolStripMenuItem_Click);
             // 
             // recentToolStripMenuItem
             // 
             this.recentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2});
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
-            this.recentToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.recentToolStripMenuItem.Text = "Recent Repositories";
             // 
             // toolStripMenuItem2
@@ -876,26 +883,26 @@ namespace GitUI
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(201, 6);
             // 
             // fileExplorerToolStripMenuItem
             // 
             this.fileExplorerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileExplorerToolStripMenuItem.Image")));
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
-            this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.fileExplorerToolStripMenuItem.Text = "File Explorer";
             this.fileExplorerToolStripMenuItem.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(178, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(201, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
@@ -1490,15 +1497,6 @@ namespace GitUI
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(13, 17);
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
-            // 
-            // forceerRefreshToolStripMenuItem
-            // 
-            this.forceerRefreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh_dirty;
-            this.forceerRefreshToolStripMenuItem.Name = "forceerRefreshToolStripMenuItem";
-            this.forceerRefreshToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F5)));
-            this.forceerRefreshToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.forceerRefreshToolStripMenuItem.Text = "Forceer refresh";
-            this.forceerRefreshToolStripMenuItem.Click += new System.EventHandler(this.forceerRefreshToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
