@@ -970,11 +970,11 @@ namespace GitCommands
 
         public static string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
         {
-            if (rebase && string.IsNullOrEmpty(remoteBranch))
+            if (rebase && !string.IsNullOrEmpty(remoteBranch))
                 return "pull --rebase " + remote + " refs/heads/" + remoteBranch;
 
             if (rebase)
-                return "pull --rebase" + remote;
+                return "pull --rebase " + remote;
 
             return "pull " + GetFetchArgs(remote, remoteBranch, localBranch);
         }
