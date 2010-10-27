@@ -19,27 +19,24 @@ namespace GitCommands
         public string Body{get; private set;}
 
         /// <summary>
-        /// Gets local branches which contain the given commit.
+        /// Gets branches which contain the given commit.
+        /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
+        /// (as returned by git branch -a)
         /// </summary>
         /// <param name="sha1">The sha1.</param>
+        /// <param name="getLocal">Pass true to include local branches</param>
+        /// <param name="getLocal">Pass true to include remote branches</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetLocalBranchesWhichContainGivenCommit(string sha1)
+        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote) 
         {
-            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
-                return new List<string>();
-
-            return info.Split(new[] {'\r', '\n', '*', ' '}, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        /// <summary>
-        /// Gets remote branches which contain the given commit.
-        /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
-        public static IEnumerable<string> GetRemoteBranchesWhichContainGivenCommit(string sha1) 
-        {
-            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch -r --contains " + sha1);
+            string args = "--contains " + sha1;
+            if (getRemote && getLocal)
+                args = "-a "+args;
+            else if (getRemote)
+                args = "-r "+args;
+            else if (!getLocal)
+                return new string[]{};
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch "+args);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
 
@@ -50,7 +47,7 @@ namespace GitCommands
             {
                 string item = result[i].Trim();
                 int idx;
-                if ((idx = item.IndexOf(" ->")) >= 0)
+                if (getRemote && ((idx = item.IndexOf(" ->")) >= 0))
                 {
                     item = item.Substring(0, idx);
                 }
