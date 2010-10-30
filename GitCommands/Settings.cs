@@ -15,6 +15,8 @@ namespace GitCommands
         public static int GitExtensionsVersionInt = 205;
         private static string _gitBinDir = "";
         private static string _workingdir;
+        private static bool _commitInfoShowContainedInBranchesRemote = false;
+        private static bool _commitInfoShowContainedInBranchesRemoteIfNoLocal = false;
         public static char PathSeparator = '\\';
         public static char PathSeparatorWrong = '/';
 
@@ -63,7 +65,9 @@ namespace GitCommands
             IconColor = "default";
             CustomHomeDir = "";
             Translation = "";
-            CommitInfoShowContainedInBranches = true;
+            CommitInfoShowContainedInBranchesLocal = true;
+            CommitInfoShowContainedInBranchesRemote = false;
+            CommitInfoShowContainedInBranchesRemoteIfNoLocal = false;
             CommitInfoShowContainedInTags = true;
             RevisionGridQuickSearchTimeout = 700;
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
@@ -80,8 +84,44 @@ namespace GitCommands
 
         public static bool ShowGitStatusInBrowseToolbar { get; set; }
 
-        public static bool CommitInfoShowContainedInBranches { get; set; }
-        
+        public static bool CommitInfoShowContainedInBranches
+        {
+            get
+            {
+                return CommitInfoShowContainedInBranchesLocal ||
+                    CommitInfoShowContainedInBranchesRemote ||
+                    CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            }
+        }
+
+        public static bool CommitInfoShowContainedInBranchesLocal { get; set; }
+
+        public static bool CommitInfoShowContainedInBranchesRemote {
+            get
+            {
+                return _commitInfoShowContainedInBranchesRemote;
+            }
+            set
+            {
+                _commitInfoShowContainedInBranchesRemote = value;
+                if (value)
+                    CommitInfoShowContainedInBranchesRemoteIfNoLocal = false;
+            }
+        }
+
+        public static bool CommitInfoShowContainedInBranchesRemoteIfNoLocal {
+            get
+            {
+                return _commitInfoShowContainedInBranchesRemoteIfNoLocal;
+            }
+            set
+            {
+                _commitInfoShowContainedInBranchesRemoteIfNoLocal = value;
+                if (value)
+                    CommitInfoShowContainedInBranchesRemote = false;
+            }
+        }
+
         public static bool CommitInfoShowContainedInTags { get; set; }
 
         public static string ApplicationDataPath { get; set; }
@@ -378,7 +418,9 @@ namespace GitCommands
                 appData.SetValue("pageant", Pageant);
                 appData.SetValue("smtp", Smtp);
                 appData.SetValue("dictionary", Dictionary);
-                appData.SetValue("commitinfoshowcontainedinbranches", CommitInfoShowContainedInBranches);
+                appData.SetValue("commitinfoshowcontainedinbrancheslocal", CommitInfoShowContainedInBranchesLocal);
+                appData.SetValue("commitinfoshowcontainedinbranchesremote", CommitInfoShowContainedInBranchesRemote);
+                appData.SetValue("commitinfoshowcontainedinbranchesremoteifnolocal", CommitInfoShowContainedInBranchesRemoteIfNoLocal);
                 appData.SetValue("commitinfoshowcontainedintags", CommitInfoShowContainedInTags);
                 appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
                 appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
@@ -471,7 +513,10 @@ namespace GitCommands
                 SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
                 SafeSetBool("branchfilterenabled", x => BranchFilterEnabled = x);
                 SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
-                SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranches = x);
+                SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranchesLocal = x);
+                SafeSetBool("commitinfoshowcontainedinbrancheslocal", x => CommitInfoShowContainedInBranchesLocal = x);
+                SafeSetBool("commitinfoshowcontainedinbranchesremote", x => CommitInfoShowContainedInBranchesRemote = x);
+                SafeSetBool("commitinfoshowcontainedinbranchesremoteifnolocal", x => CommitInfoShowContainedInBranchesRemoteIfNoLocal = x);
                 SafeSetBool("commitinfoshowcontainedintags", x => CommitInfoShowContainedInTags = x);
                 SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
