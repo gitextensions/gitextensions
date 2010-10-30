@@ -39,6 +39,8 @@
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showContainedInBranchesRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayout.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -116,33 +118,35 @@
             this.copyCommitInfoToolStripMenuItem,
             this.toolStripSeparator1,
             this.showContainedInBranchesToolStripMenuItem,
+            this.showContainedInBranchesRemoteToolStripMenuItem,
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
             this.showContainedInTagsToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 98);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(333, 142);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
-            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
             this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(247, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(250, 6);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
             this.showContainedInBranchesToolStripMenuItem.Name = "showContainedInBranchesToolStripMenuItem";
-            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
-            this.showContainedInBranchesToolStripMenuItem.Text = "Show contained in branches";
+            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.showContainedInBranchesToolStripMenuItem.Text = "Show contained in branches (local)";
             this.showContainedInBranchesToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesToolStripMenuItem_Click);
             // 
             // showContainedInTagsToolStripMenuItem
             // 
             this.showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
-            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
             this.showContainedInTagsToolStripMenuItem.Text = "Show contained in tags";
             this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
             // 
@@ -159,6 +163,20 @@
             this.RevisionInfo.Size = new System.Drawing.Size(783, 289);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
+            // 
+            // showContainedInBranchesRemoteIfNoLocalToolStripMenuItem
+            // 
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Name = "showContainedInBranchesRemoteIfNoLocalToolStripMenuItem";
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new System.Drawing.Size(332, 22);
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text = "Show contained in branches (remote if no local found)";
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click);
+            // 
+            // showContainedInBranchesRemoteToolStripMenuItem
+            // 
+            this.showContainedInBranchesRemoteToolStripMenuItem.Name = "showContainedInBranchesRemoteToolStripMenuItem";
+            this.showContainedInBranchesRemoteToolStripMenuItem.Size = new System.Drawing.Size(332, 22);
+            this.showContainedInBranchesRemoteToolStripMenuItem.Text = "Show contained in branches (remote)";
+            this.showContainedInBranchesRemoteToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteToolStripMenuItem_Click);
             // 
             // CommitInfo
             // 
@@ -189,5 +207,7 @@
         private System.Windows.Forms.RichTextBox _RevisionHeader;
         private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
     }
 }
