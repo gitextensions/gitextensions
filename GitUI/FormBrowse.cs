@@ -487,7 +487,7 @@ namespace GitUI
                     if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-                    fileName = Path.GetTempPath() + fileName;
+                    fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
                     File.WriteAllText(fileName,
                                                 GitCommandHelpers.RunCmd(Settings.GitCommand,
                                                                                "cat-file blob \"" + ((GitItem)item).Guid + "\""));
@@ -523,7 +523,7 @@ namespace GitUI
                     if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-                    fileName = Path.GetTempPath() + fileName;
+                    fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
                     File.WriteAllText(fileName, GitCommandHelpers.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\""));
 
@@ -1487,7 +1487,20 @@ namespace GitUI
         {
             ApplyBranchFilter();
         }
-        
 
+        private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+                if (((GitItem)item).ItemType == "blob")
+                {
+                    string fileName = ((GitItem)item).FileName;
+                    fileName = Settings.WorkingDir + fileName;
+
+                    OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                }
+
+        }
     }
 }
