@@ -651,30 +651,10 @@ namespace GitUI
                 Initialize();
         }
 
-        private void forceerRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-
-            _indexWatcher.Reset();
-
-            if (_dashboard != null)
-                _dashboard.Refresh();
-        }
-
-        private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            //Use filesystemwatcher to determine if refresh is needed.
-            //When Settings.UseFastChecks the filesystemwatcher is enabled.
-            //filesystemwatcher enabled:
-            //Only refresh when index is dirty. This is faster but less reliable. In some cases this even causes slowdowns.
-            //filseystemwatcher disabled:
-            //Always refresh revisions. This is slower, but more reliable.
-            if (!Settings.UseFastChecks)
-                RevisionGrid.ForceRefreshRevisions();
-
-            InternalInitialize(false); 
-
             _indexWatcher.Reset();
 
             if (_dashboard != null)
@@ -1507,5 +1487,7 @@ namespace GitUI
         {
             ApplyBranchFilter();
         }
+        
+
     }
 }
