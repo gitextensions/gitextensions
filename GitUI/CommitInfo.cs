@@ -60,7 +60,9 @@ namespace GitUI
 
         private void ReloadCommitInfo()
         {
-            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranches;
+            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesLocal;
+            showContainedInBranchesRemoteToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemote;
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             showContainedInTagsToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInTags;
 
             ResetTextAndImage();
@@ -131,23 +133,46 @@ namespace GitUI
 
         private string GetBranchesWhichContainsThisCommit(string revision)
         {
+            const string remotesPrefix= "remotes/";
+            // Include local branches if explicitly requested or when needed to decide whether to show remotes
+            bool getLocal = Settings.CommitInfoShowContainedInBranchesLocal ||
+                            Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            // Include remote branches if requested
+            bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
+                             Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
             var branchString = "";
-            foreach (var branch in CommitInformation.GetLocalBranchesWhichContainGivenCommit(revision))
+            bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
+            bool allowRemote = getRemote;
+            foreach (var branch in branches)
             {
-                if (branchString != string.Empty)
-                    branchString += ", ";
-                branchString += branch;
-            }
-            if (branchString == string.Empty)
-            {
-                foreach (var branch in CommitInformation.GetRemoteBranchesWhichContainGivenCommit(revision))
+                string noPrefixBranch = branch;
+                bool branchIsLocal;
+                if (getLocal && getRemote)
+                {
+                    // "git branch -a" prefixes remote branches with "remotes/"
+                    // It is possible to create a local branch named "remotes/origin/something"
+                    // so this check is not 100% reliable.
+                    // This shouldn't be a big problem if we're only displaying information.
+                    branchIsLocal = !branch.StartsWith(remotesPrefix);
+                    if (!branchIsLocal)
+                        noPrefixBranch = branch.Substring(remotesPrefix.Length);
+                }
+                else
+                {
+                    branchIsLocal = !getRemote;
+                }
+
+                if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
                 {
                     if (branchString != string.Empty)
                         branchString += ", ";
-                    branchString += branch;
+                    branchString += noPrefixBranch;
                 }
-            }
 
+                if (branchIsLocal && Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
+                    allowRemote = false;
+            }
             if (branchString != string.Empty)
                 return Environment.NewLine + containedInBranches.Text + " " + branchString;
             return Environment.NewLine + containedInNoBranch.Text;
@@ -175,7 +200,7 @@ namespace GitUI
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInBranches = !Settings.CommitInfoShowContainedInBranches;
+            Settings.CommitInfoShowContainedInBranchesLocal = !Settings.CommitInfoShowContainedInBranchesLocal;
             ReloadCommitInfo();
         }
 
@@ -188,6 +213,18 @@ namespace GitUI
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(string.Concat(_RevisionHeader.Text, Environment.NewLine, RevisionInfo.Text));
+        }
+
+        private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInBranchesRemote = !Settings.CommitInfoShowContainedInBranchesRemote;
+            ReloadCommitInfo();
+        }
+
+        private void showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            ReloadCommitInfo();
         }
     }
 }
