@@ -639,9 +639,6 @@ _ReSharper*/
         <TranslationItem Name="toolStripStatusLabel1" Property="Text">
           <Value>X</Value>
         </TranslationItem>
-        <TranslationItem Name="forceerRefreshToolStripMenuItem" Property="Text">
-          <Value>Verversen forceren</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -2663,13 +2660,19 @@ stash
     <TranslationCategory Name="CommitInfo">
       <translationItems>
         <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
-          <Value>Toon vertakkingen waar deze commit in voorkomt</Value>
+          <Value>Toon lokale vertakkingen waar deze commit in voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Value>Toon labels waar deze commit in voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Value>Kopieer commit info</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
+          <Value>Toon externe vertakkingen waar deze commit in voorkomt</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
+          <Value>Toon externe vertakkingen indien deze commit in geen lokale vertakking voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Value>Komt voor in vertakkingen:</Value>
