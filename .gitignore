@@ -1,8 +1,29 @@
-*/bin
+#basic visual studio directories
+_UpgradeReport_Files/
+[Dd]ebug*/
+[Rr]elease*/
+_ReSharper*/
+TestResults/
+
 */obj
 Plugins/*/obj
 Plugins/*/bin
 Plugins/*/*/obj
 Plugins/*/*/bin
+
+#ignore output mild compiler
+dlldata.c
+SimpleExt.h
+SimpleExt.tlb
+SimpleExt_i.c
+SimpleExt_p.c
+
+#ignore some unwanted files
+*.ncb
 *.suo
 *.csproj.user
+*.orig
+*.msi
+*.user
+Thumbs.db
+GitPlugin/bin/*
