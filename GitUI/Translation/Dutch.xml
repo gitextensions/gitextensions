@@ -592,10 +592,10 @@ _ReSharper*/
           <Value>Opslaan als</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
-          <Value>Openen</Value>
+          <Value>Openen (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
-          <Value>Openen met</Value>
+          <Value>Openen met... (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Bestands history</Value>
@@ -638,6 +638,9 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="toolStripStatusLabel1" Property="Text">
           <Value>X</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Open uitgecheckt bestand  met...</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

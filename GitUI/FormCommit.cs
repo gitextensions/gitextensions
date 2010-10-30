@@ -764,7 +764,7 @@ namespace GitUI
             var item = Unstaged.SelectedItem;
             var fileName = item.Name;
 
-            Process.Start(Settings.WorkingDir + fileName);
+            Process.Start((Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -775,7 +775,7 @@ namespace GitUI
             var item = Unstaged.SelectedItem;
             var fileName = item.Name;
 
-            OpenWith.OpenAs(Settings.WorkingDir + fileName);
+            OpenWith.OpenAs(Settings.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void CloseDialogAfterCommitCheckedChanged(object sender, EventArgs e)
