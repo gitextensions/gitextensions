@@ -16,6 +16,7 @@ Version 2.05
 	Added branch filter to browse dialog
 	Added "save as" button to diff view in browse dialog
 	Added statusbar for warnings
+	Added option to also show remote branches that contain the selected commit in the commitinfo
 
 Version 2.04
 	Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes

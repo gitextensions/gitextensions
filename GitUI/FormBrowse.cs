@@ -508,6 +508,7 @@ namespace GitUI
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
             fileHistoryToolStripMenuItem.Enabled = enableItems;
+            openWithToolStripMenuItem.Enabled = enableItems;
         }
 
         public void OpenOnClick(object sender, EventArgs e)
