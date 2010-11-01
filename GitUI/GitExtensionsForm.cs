@@ -7,6 +7,7 @@ using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using System.Configuration;
 using System.IO;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -30,6 +31,8 @@ namespace GitUI
             CancelButton = cancelButton;
 
             Load += GitExtensionsFormLoad;
+
+            FormClosed += GitExtensionsFormFormClosed;
         }
 
         private void SetFont()
@@ -90,6 +93,14 @@ namespace GitUI
         public virtual void CancelButtonClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
+        {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+            }
         }
 
         /// <summary>
