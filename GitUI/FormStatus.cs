@@ -40,6 +40,7 @@ namespace GitUI
             if (TaskbarManager.IsPlatformSupported)
             {
                 TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+                TaskbarManager.Instance.SetProgressValue(100, 100);
             }
 
             return errorOccurred;
@@ -85,7 +86,7 @@ namespace GitUI
             AcceptButton = Ok;
             Abort.Enabled = false;
 
-            if (TaskbarManager.IsPlatformSupported)
+            if (TaskbarManager.IsPlatformSupported && isSuccess)
             {
                 TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
                 TaskbarManager.Instance.SetProgressValue(100, 100);
