@@ -81,7 +81,7 @@ namespace AutoCompileSubmodules
             return File.Exists(MsBuildPath) ? MsBuildPath : "";
         }
 
-        private void GitUiCommandsPostUpdateSubmodulesRecursive(GitUIBaseEventArgs e)
+        private void GitUiCommandsPostUpdateSubmodulesRecursive(object sender, GitUIBaseEventArgs e)
         {
             if (Settings.GetSetting("Enabled (true / false)")
                 .Equals("true", StringComparison.InvariantCultureIgnoreCase))
@@ -92,7 +92,7 @@ namespace AutoCompileSubmodules
         /// <summary>
         ///   Automaticly compile all solution files found in any submodule
         /// </summary>
-        private void GitUiCommandsPostUpdateSubmodules(GitUIBaseEventArgs e)
+        private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIBaseEventArgs e)
         {
             if (Settings.GetSetting("Enabled (true / false)")
                 .Equals("true", StringComparison.InvariantCultureIgnoreCase))

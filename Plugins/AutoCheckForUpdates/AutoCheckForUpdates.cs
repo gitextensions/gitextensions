@@ -38,7 +38,7 @@ namespace AutoCheckForUpdates
 
         #endregion
 
-        private void GitUiCommandsPreBrowse(GitUIBaseEventArgs e)
+        private void GitUiCommandsPreBrowse(object sender, GitUIBaseEventArgs e)
         {
             //Only check at startup when plugin is enabled
             if (!Settings.GetSetting("Enabled (true / false)")
