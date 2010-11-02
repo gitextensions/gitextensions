@@ -76,11 +76,6 @@ namespace GitUI
             catch { }
         }
 
-        ~ToolStripGitStatus()
-        {
-            gitGetUnstagedCommand.Kill();
-        }
-
         void watcher_Error(object sender, System.IO.ErrorEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);

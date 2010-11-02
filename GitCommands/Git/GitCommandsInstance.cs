@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitCommandsInstance : IGitCommands
+    public sealed class GitCommandsInstance : IGitCommands, IDisposable
     {
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
@@ -68,6 +68,11 @@ namespace GitCommands
             {
                 Trace.WriteLine(ex);
             }
+        }
+
+        public void Dispose()
+        {
+            Kill();
         }
 
         public string RunGit(string arguments)
@@ -143,6 +148,5 @@ namespace GitCommands
         public StringBuilder ErrorOutput { get; private set; }
 
         private Process myProcess;
-
     }
 }
