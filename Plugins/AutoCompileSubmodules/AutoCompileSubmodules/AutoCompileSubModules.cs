@@ -37,7 +37,7 @@ namespace AutoCompileSubmodules
             gitUiCommands.PostUpdateSubmodulesRecursive += GitUiCommandsPostUpdateSubmodulesRecursive;
         }
 
-        public void Execute(IGitUIEventArgs e)
+        public void Execute(GitUIBaseEventArgs e)
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(e.GitWorkingDir))
@@ -81,7 +81,7 @@ namespace AutoCompileSubmodules
             return File.Exists(MsBuildPath) ? MsBuildPath : "";
         }
 
-        private void GitUiCommandsPostUpdateSubmodulesRecursive(IGitUIEventArgs e)
+        private void GitUiCommandsPostUpdateSubmodulesRecursive(GitUIBaseEventArgs e)
         {
             if (Settings.GetSetting("Enabled (true / false)")
                 .Equals("true", StringComparison.InvariantCultureIgnoreCase))
@@ -92,7 +92,7 @@ namespace AutoCompileSubmodules
         /// <summary>
         ///   Automaticly compile all solution files found in any submodule
         /// </summary>
-        private void GitUiCommandsPostUpdateSubmodules(IGitUIEventArgs e)
+        private void GitUiCommandsPostUpdateSubmodules(GitUIBaseEventArgs e)
         {
             if (Settings.GetSetting("Enabled (true / false)")
                 .Equals("true", StringComparison.InvariantCultureIgnoreCase))

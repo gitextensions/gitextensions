@@ -30,7 +30,7 @@ namespace AutoCheckForUpdates
             gitUiCommands.PreBrowse += GitUiCommandsPreBrowse;
         }
 
-        public void Execute(IGitUIEventArgs e)
+        public void Execute(GitUIBaseEventArgs e)
         {
             var updateForm = new Updates(e.GitVersion) {AutoClose = false};
             updateForm.ShowDialog();
@@ -38,7 +38,7 @@ namespace AutoCheckForUpdates
 
         #endregion
 
-        private void GitUiCommandsPreBrowse(IGitUIEventArgs e)
+        private void GitUiCommandsPreBrowse(GitUIBaseEventArgs e)
         {
             //Only check at startup when plugin is enabled
             if (!Settings.GetSetting("Enabled (true / false)")
