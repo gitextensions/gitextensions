@@ -37,12 +37,6 @@ namespace GitUI
 
         public bool ErrorOccurred()
         {
-            if (TaskbarManager.IsPlatformSupported)
-            {
-                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
-                TaskbarManager.Instance.SetProgressValue(100, 100);
-            }
-
             return errorOccurred;
         }
 
@@ -86,9 +80,13 @@ namespace GitUI
             AcceptButton = Ok;
             Abort.Enabled = false;
 
-            if (TaskbarManager.IsPlatformSupported && isSuccess)
+            if (TaskbarManager.IsPlatformSupported)
             {
-                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                if (isSuccess)
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                else
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+
                 TaskbarManager.Instance.SetProgressValue(100, 100);
             }
 
@@ -154,17 +152,13 @@ namespace GitUI
         private void FormStatus_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
-            {
                 TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-            }
         }
 
         private void Start()
         {
             if (TaskbarManager.IsPlatformSupported)
-            {
                 TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
-            }
 
             Reset();
             ProcessCallback(this);
