@@ -3,7 +3,7 @@
 namespace GitUIPluginInterfaces
 {
     [Serializable]
-    public delegate void GitUIEventHandler(GitUIBaseEventArgs e);
+    public delegate void GitUIEventHandler(object sender, GitUIBaseEventArgs e);
 
     public interface IGitUICommands
     {

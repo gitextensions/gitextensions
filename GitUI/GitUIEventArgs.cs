@@ -7,8 +7,6 @@ namespace GitUI
     {
         public GitUIEventArgs(IGitUICommands gitUICommands) : base(gitUICommands) { }
 
-        public IGitUICommands GitUICommands { get; private set; }
-
         public override IGitCommands GitCommands
         {
             get
