@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitCommands;
+﻿using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 
@@ -19,6 +17,11 @@ namespace GitUI
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                _gitGetUnstagedCommand.Dispose();
+            }
+
             if (disposing && (components != null))
             {
                 components.Dispose();
