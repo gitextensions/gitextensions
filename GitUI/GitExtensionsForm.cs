@@ -98,9 +98,7 @@ namespace GitUI
         public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
-            {
                 TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-            }
         }
 
         /// <summary>
