@@ -1043,6 +1043,8 @@ namespace GitCommands
 
         public static string GetRebaseDir()
         {
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator;
             if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator))
                 return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator;
             if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator))
