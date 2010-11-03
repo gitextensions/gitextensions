@@ -149,7 +149,7 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text));
+            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked));
             form.ShowDialog();
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
