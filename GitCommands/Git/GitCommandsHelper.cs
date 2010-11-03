@@ -1141,8 +1141,11 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, RebaseCmd(branch));
         }
 
-        public static string RebaseCmd(string branch)
+        public static string RebaseCmd(string branch, bool interactive = false)
         {
+            if (interactive)
+                return "rebase -i \"" + branch + "\"";
+
             return "rebase \"" + branch + "\"";
         }
 
