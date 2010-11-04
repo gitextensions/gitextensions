@@ -22,10 +22,18 @@ namespace GitUI
 
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
+            OutputPath.Text = Settings.LastFormatPatchDir;
             string selectedHead = GitCommandHelpers.GetSelectedBranch();
             SelectedBranch.Text = "Current branch: " + selectedHead;
 
             SaveToDir_CheckedChanged(null, null);
+            OutputPath.TextChanged += OutputPath_TextChanged;
+        }
+
+        private void OutputPath_TextChanged(object sender, EventArgs e)
+        {
+            if (Directory.Exists(OutputPath.Text))
+               Settings.LastFormatPatchDir = OutputPath.Text;
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
