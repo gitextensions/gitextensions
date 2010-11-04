@@ -76,6 +76,7 @@ namespace GitCommands
             ShowErrorsWhenStagingFiles = true;
             RevisionGraphDrawNonRelativesGray = true;
             RevisionGraphShowWorkingDirChanges = false;
+            LastFormatPatchDir = "";
         }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
@@ -265,6 +266,8 @@ namespace GitCommands
 
         public static bool BranchBorders { get; set; }
 
+        public static string LastFormatPatchDir { get; set; }
+
         #endregion
 
         public static string GetDictionaryDir()
@@ -427,7 +430,8 @@ namespace GitCommands
                 appData.SetValue("lastcommitmessage", LastCommitMessage);
                 appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);
                 appData.SetValue("revisiongraphdrawnonrelativesgray", RevisionGraphDrawNonRelativesGray);
-                appData.SetValue("revisiongraphshowworkingdirchanges", RevisionGraphShowWorkingDirChanges);                
+                appData.SetValue("revisiongraphshowworkingdirchanges", RevisionGraphShowWorkingDirChanges);
+                appData.SetValue("lastformatpatchdir", LastFormatPatchDir);
             }
             catch (Exception ex)
             {
@@ -524,6 +528,7 @@ namespace GitCommands
                 SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
                 SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
                 SafeSetBool("revisiongraphshowworkingdirchanges", x => RevisionGraphShowWorkingDirChanges = x);
+                SafeSetString("lastformatpatchdir", x => LastFormatPatchDir = x);
 
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", Repositories.DeserializeRepositories);
