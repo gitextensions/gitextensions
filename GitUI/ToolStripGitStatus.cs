@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -39,6 +40,11 @@ namespace GitUI
 
             Settings.WorkingDirChanged += new Settings.WorkingDirChangedEventHandler(Settings_WorkingDirChanged);
 
+            GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
+            GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
+            GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
+            GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
+
             // Setup a file watcher to detect changes to our files, or the .git repo files. When they
             // change, we'll update our status.
             watcher.Changed += new FileSystemEventHandler(watcher_Changed);
@@ -54,6 +60,41 @@ namespace GitUI
             }
             catch { }
             update();
+        }
+
+
+        private void GitUICommands_PreCheckout(IGitUIEventArgs e)
+        {
+            try
+            {
+                Pause();
+            }
+            catch (InvalidCastException)
+            {
+                return;
+            }
+        }
+
+        private void GitUICommands_PostCheckout(IGitUIEventArgs e)
+        {
+            try
+            {
+                Resume();
+            }
+            catch (InvalidCastException)
+            {
+                return;
+            }
+        }
+
+        private void Pause()
+        {
+            timerRefresh.Stop();
+        }
+
+        private void Resume()
+        {
+            timerRefresh.Start();
         }
 
         void Settings_WorkingDirChanged(string oldDir, string newDir)
@@ -76,17 +117,19 @@ namespace GitUI
             catch { }
         }
 
+        // destructor shouldn't be used because it's not predictible when
+        // it's going to be called by the GC!
         ~ToolStripGitStatus()
         {
             gitGetUnstagedCommand.Kill();
         }
 
-        void watcher_Error(object sender, System.IO.ErrorEventArgs e)
+        private void watcher_Error(object sender, System.IO.ErrorEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
         }
 
-        void watcher_Changed(object sender, FileSystemEventArgs e)
+        private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
         }
