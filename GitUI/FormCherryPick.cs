@@ -30,15 +30,33 @@ namespace GitUI
                 MessageBox.Show("Select 1 revision to pick.", "Cherry pick");
                 return;
             }
+            bool formClosed = false;
+            string arguments = "";
+            bool IsMerge = GitCommandHelpers.IsMerge(RevisionGrid.GetRevisions()[0].Guid);
+            if (IsMerge && !autoParent.Checked)
+            {
+                GitRevision[] ParentsRevisions = GitCommandHelpers.GetParents(RevisionGrid.GetRevisions()[0].Guid);
+                FormCherryPickMerge choose = new FormCherryPickMerge(ParentsRevisions);
+                choose.ShowDialog();
+                if (choose.OkClicked)
+                    arguments = "-m " + (choose.ParentsList.SelectedItems[0].Index + 1);
+                else
+                    formClosed = true;
+            }
+            else if (IsMerge)
+                arguments = "-m 1";
 
+            if (!formClosed)
+            {
+                MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), "Cherry pick");
 
+                MergeConflictHandler.HandleMergeConflicts();
 
-            MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
+                RevisionGrid.RefreshRevisions();
 
-            MergeConflictHandler.HandleMergeConflicts();
-
-            RevisionGrid.RefreshRevisions();
-            Cursor.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
+            }
+            
         }
     }
 }
