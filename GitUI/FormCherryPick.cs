@@ -33,7 +33,7 @@ namespace GitUI
 
 
 
-            MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked), "Cherry pick");
+            MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, autoParent.Checked), "Cherry pick");
 
             MergeConflictHandler.HandleMergeConflicts();
 

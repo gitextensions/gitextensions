@@ -543,10 +543,14 @@ namespace GitCommands
         }
 
 
-        public static string CherryPick(string cherry, bool commit)
+        public static string CherryPick(string cherry, bool commit, bool ismerge)
         {
+            if (commit && ismerge)
+                return RunCmd(Settings.GitCommand, "cherry-pick -m 1 \"" + cherry + "\"");
             if (commit)
                 return RunCmd(Settings.GitCommand, "cherry-pick \"" + cherry + "\"");
+            if (ismerge)
+                return RunCmd(Settings.GitCommand, "cherry-pick --no-commit -m 1 \"" + cherry + "\"");
             return RunCmd(Settings.GitCommand, "cherry-pick --no-commit \"" + cherry + "\"");
         }
 
