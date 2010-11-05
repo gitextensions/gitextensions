@@ -127,15 +127,25 @@ namespace GitUI
         }
 
         private void FromDropDown(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_From.DataSource = Repositories.RepositoryHistory.Repositories;
-            _NO_TRANSLATE_From.DisplayMember = "Path";
+        {          
+            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            if (_NO_TRANSLATE_From.Items.Count != repos.Count) 
+            {
+                _NO_TRANSLATE_To.Items.Clear();
+                foreach (Repository repo in repos)
+                    _NO_TRANSLATE_From.Items.Add(repo.Path);
+            }
         }
 
         private void ToDropDown(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_To.DataSource = Repositories.RepositoryHistory.Repositories;
-            _NO_TRANSLATE_To.DisplayMember = "Path";
+            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            if (_NO_TRANSLATE_To.Items.Count != repos.Count)
+            {
+                _NO_TRANSLATE_To.Items.Clear();
+                foreach (Repository repo in repos)
+                    _NO_TRANSLATE_To.Items.Add(repo.Path);
+            }
         }
 
 
