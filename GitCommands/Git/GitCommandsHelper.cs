@@ -549,19 +549,57 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "init");
         }
 
-        public static string CherryPickCmd(string cherry, bool commit)
+        public static bool IsMerge(string commit)
         {
-            if (commit)
-                return "cherry-pick \"" + cherry + "\"";
-            return "cherry-pick --no-commit \"" + cherry + "\"";
+            string output = RunCmd(Settings.GitCommand, "log -n 1 --format=format:%P \"" + commit + "\"");
+            string[] parents = output.Split(' ');
+            if (parents.Length > 1) return true;
+            return false;
+        }
+
+        public static GitRevision[] GetParents(string commit)
+        {
+            string output = RunCmd(Settings.GitCommand, "log -n 1 --format=format:%P \"" + commit + "\"");
+            string[] Parents = output.Split(' ');
+            GitRevision[] ParentsRevisions = new GitRevision[Parents.Length];
+            for (int i = 0; i < Parents.Length; i++)
+            {
+                string formatString =
+                    /* Tree           */ "%T%n" +
+                    /* Author Name    */ "%aN%n" +
+                    /* Author Date    */ "%ai%n" +
+                    /* Committer Name */ "%cN%n" +
+                    /* Committer Date */ "%ci%n" +
+                    /* Commit Message */ "%s";
+                string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
+                var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
+                string[] Infos = RevInfo.Split('\n');
+                GitRevision Revision = new GitRevision { 
+                    Guid = Parents[i],
+                    TreeGuid = Infos[0],
+                    Author = Infos[1],
+                    Committer = Infos[3],
+                    Message = Infos[5] };
+                DateTime Date;
+                DateTime.TryParse(Infos[2], out Date);
+                Revision.AuthorDate = Date;
+                DateTime.TryParse(Infos[4], out Date);
+                Revision.CommitDate = Date;
+                ParentsRevisions[i] = Revision;
+            }
+            return ParentsRevisions;
+        }
+
+        public static string CherryPickCmd(string cherry, bool commit, string arguments)
+        {
+            string CherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
+            return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
 
-        public static string CherryPick(string cherry, bool commit)
+        public static string CherryPick(string cherry, bool commit, string arguments)
         {
-            if (commit)
-                return RunCmd(Settings.GitCommand, "cherry-pick \"" + cherry + "\"");
-            return RunCmd(Settings.GitCommand, "cherry-pick --no-commit \"" + cherry + "\"");
+            return RunCmd(Settings.GitCommand, CherryPickCmd(cherry, commit, arguments));
         }
 
         public static string ShowSha1(string sha1)
