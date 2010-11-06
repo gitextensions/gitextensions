@@ -348,12 +348,6 @@ namespace GitUI
             return true;
         }
 
-        ~RevisionGrid()
-        {
-            if (_revisionGraphCommand != null)
-                _revisionGraphCommand.Kill();
-        }
-
         public override void Refresh()
         {
             base.Refresh();
@@ -451,7 +445,8 @@ namespace GitUI
 
                 if (_revisionGraphCommand != null)
                 {
-                    _revisionGraphCommand.Kill();
+                    _revisionGraphCommand.Dispose();
+                    _revisionGraphCommand = null;
                 }
 
                 var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();

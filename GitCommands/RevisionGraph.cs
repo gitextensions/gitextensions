@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitCommands
 {
-    public class RevisionGraph
+    public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
         public event EventHandler Updated;
@@ -78,18 +78,20 @@ namespace GitCommands
 
         ~RevisionGraph()
         {
-            Kill();
+            Dispose();
         }
 
-        public void Kill()
+        public void Dispose()
         {
             if (backgroundThread != null)
             {
                 backgroundThread.Abort();
+                backgroundThread = null;
             }
             if (gitGetGraphCommand != null)
             {
                 gitGetGraphCommand.Kill();
+                gitGetGraphCommand = null;
             }
         }
 

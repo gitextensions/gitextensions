@@ -63,28 +63,14 @@ namespace GitUI
         }
 
 
-        private void GitUICommands_PreCheckout(IGitUIEventArgs e)
+        private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
         {
-            try
-            {
-                Pause();
-            }
-            catch (InvalidCastException)
-            {
-                return;
-            }
+            Pause();
         }
 
-        private void GitUICommands_PostCheckout(IGitUIEventArgs e)
+        private void GitUICommands_PostCheckout(object sender, GitUIBaseEventArgs e)
         {
-            try
-            {
-                Resume();
-            }
-            catch (InvalidCastException)
-            {
-                return;
-            }
+            Resume();
         }
 
         private void Pause()
@@ -119,11 +105,6 @@ namespace GitUI
 
         // destructor shouldn't be used because it's not predictible when
         // it's going to be called by the GC!
-        ~ToolStripGitStatus()
-        {
-            gitGetUnstagedCommand.Kill();
-        }
-
         private void watcher_Error(object sender, System.IO.ErrorEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);

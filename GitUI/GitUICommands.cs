@@ -648,13 +648,18 @@ namespace GitUI
             Settings.WorkingDir = oldworkingdir;
         }
 
-        internal static bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
+        private bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
+        {
+            return InvokeEvent(this, gitUIEventHandler);
+        }
+
+        internal static bool InvokeEvent(object sender, GitUIEventHandler gitUIEventHandler)
         {
             try
             {
                 GitUIEventArgs e = new GitUIEventArgs(GitUICommands.Instance);
                 if (gitUIEventHandler != null)
-                    gitUIEventHandler.Invoke(e);
+                    gitUIEventHandler(sender, e);
 
                 return !e.Cancel;
             }
