@@ -7,6 +7,6 @@
         IGitPluginSettingsContainer Settings { get; set; }
 
         void Register(IGitUICommands gitUiCommands);
-        void Execute(IGitUIEventArgs gitUiCommands);
+        void Execute(GitUIBaseEventArgs gitUiCommands);
     }
 }

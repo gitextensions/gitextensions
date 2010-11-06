@@ -112,15 +112,6 @@ namespace GitUI
         }
 
 
-        /// <summary>
-        ///   Releases unmanaged resources and performs other cleanup operations before the
-        ///   <see cref = "FormCommit" /> is reclaimed by garbage collection.
-        /// </summary>
-        ~FormCommit()
-        {
-            _gitGetUnstagedCommand.Kill();
-        }
-
         private void Initialize()
         {
             UnstageFiles.Enabled = false;
