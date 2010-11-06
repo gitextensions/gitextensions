@@ -3,26 +3,11 @@ using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitUIEventArgs : IGitUIEventArgs
+    public class GitUIEventArgs : GitUIBaseEventArgs
     {
-        public GitUIEventArgs(IGitUICommands gitUICommands)
-        {
-            Cancel = false;
-            this.gitUICommands = gitUICommands;
-        }
+        public GitUIEventArgs(IGitUICommands gitUICommands) : base(gitUICommands) { }
 
-        public bool Cancel { get; set; }
-
-        private IGitUICommands gitUICommands;
-        public IGitUICommands GitUICommands
-        {
-            get
-            {
-                return gitUICommands;
-            }
-        }
-
-        public IGitCommands GitCommands
+        public override IGitCommands GitCommands
         {
             get
             {
@@ -30,7 +15,7 @@ namespace GitUI
             }
         }
 
-        public string GitWorkingDir
+        public override string GitWorkingDir
         {
             get
             {
@@ -38,12 +23,12 @@ namespace GitUI
             }
         }
 
-        public bool IsValidGitWorkingDir(string workingDir)
+        public override bool IsValidGitWorkingDir(string workingDir)
         {
             return Settings.ValidWorkingDir(workingDir);
         }
 
-        public string GitCommand
+        public override string GitCommand
         {
             get
             {
@@ -51,14 +36,12 @@ namespace GitUI
             }
         }
 
-        public string GitVersion
+        public override string GitVersion
         {
             get
             {
                 return Settings.GitExtensionsVersionInt.ToString();
             }
         }
-
-
     }
 }

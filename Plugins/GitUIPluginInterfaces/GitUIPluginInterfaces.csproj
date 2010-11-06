@@ -60,7 +60,7 @@
     <Compile Include="IGitPluginSettingsContainer.cs" />
     <Compile Include="IGitSubmodule.cs" />
     <Compile Include="IGitUICommands.cs" />
-    <Compile Include="IGitUIEventArgs.cs" />
+    <Compile Include="GitUIBaseEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
