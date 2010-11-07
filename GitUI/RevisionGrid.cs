@@ -888,13 +888,19 @@ namespace GitUI
             var mergeBranchDropDown = new ToolStripDropDown();
             var rebaseDropDown = new ToolStripDropDown();
 
+            var tagNameCopy = new ToolStripDropDown();
+            var branchNameCopy = new ToolStripDropDown();
+
             foreach (var head in revision.Heads)
             {
                 if (head.IsTag)
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                    ToolStripItem tagName = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClick;
                     tagDropDown.Items.Add(toolStripItem);
+                    tagName.Click += copyToClipBoard;
+                    tagNameCopy.Items.Add(tagName);
                 }
                 else if (head.IsHead || head.IsRemote)
                 {
@@ -905,6 +911,10 @@ namespace GitUI
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickRebaseBranch;
                     rebaseDropDown.Items.Add(toolStripItem);
+
+                    ToolStripItem branchName = new ToolStripMenuItem(head.Name);
+                    branchName.Click += copyToClipBoard;
+                    branchNameCopy.Items.Add(branchName);
 
                     if (head.IsHead && !head.IsRemote)
                     {
@@ -933,6 +943,14 @@ namespace GitUI
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
             rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
+
+            branchNameToolStripMenuItem.DropDown = branchNameCopy;
+            branchNameToolStripMenuItem.Visible = branchNameCopy.Items.Count > 0;
+
+            tagToolStripMenuItem.DropDown = tagNameCopy;
+            tagToolStripMenuItem.Visible = tagNameCopy.Items.Count > 0;
+
+            toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
@@ -1125,6 +1143,26 @@ namespace GitUI
             Settings.RevisionGraphDrawNonRelativesGray = !Settings.RevisionGraphDrawNonRelativesGray;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             Revisions.Refresh();
+        }
+
+        private void messageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).Message);
+        }
+
+        private void authorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).Author);
+        }
+
+        private void dateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).CommitDate.ToString());
+        }
+
+        private void copyToClipBoard(object sender, EventArgs e)
+        {
+            Clipboard.SetText(sender.ToString());
         }
     }
 }
