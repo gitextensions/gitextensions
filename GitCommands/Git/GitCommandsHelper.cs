@@ -1047,6 +1047,8 @@ namespace GitCommands
 
         public static string GetRebaseDir()
         {
+            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator))
+                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator;
             if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator))
                 return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator;
             if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator))
@@ -1143,8 +1145,11 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, RebaseCmd(branch));
         }
 
-        public static string RebaseCmd(string branch)
+        public static string RebaseCmd(string branch, bool interactive = false)
         {
+            if (interactive)
+                return "rebase -i \"" + branch + "\"";
+
             return "rebase \"" + branch + "\"";
         }
 
