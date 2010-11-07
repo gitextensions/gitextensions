@@ -1463,6 +1463,13 @@ namespace GitCommands
             return GetAllChangedFilesFromString(status);
         }
 
+        public static List<GitItemStatus> GetTrackedChangedFiles()
+        {
+            var status = RunCmd(Settings.GitCommand, GetAllChangedFilesCmd(true, false));
+
+            return GetAllChangedFilesFromString(status);
+        }
+
         public static List<GitItemStatus> GetAllChangedFilesFromString(string status)
         {
             var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);

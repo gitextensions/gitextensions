@@ -65,7 +65,7 @@ namespace GitUI
             if (MessageCheck.Checked)
                 filter += string.Format(" --grep=\"{0}\"", Message.Text);
             if (LimitCheck.Checked)
-                filter += string.Format(" --max-count=\"{0}\"", _NO_TRANSLATE_Limit.Value.ToString("N"));
+                filter += string.Format(" --max-count=\"{0}\"", ((int)_NO_TRANSLATE_Limit.Value).ToString());
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)

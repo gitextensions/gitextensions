@@ -84,6 +84,8 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label26 = new System.Windows.Forms.Label();
+            this.ShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
             this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
             this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.showGitStatusInToolbarLabel = new System.Windows.Forms.Label();
@@ -213,8 +215,6 @@ namespace GitUI
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label26 = new System.Windows.Forms.Label();
-            this.ShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -885,6 +885,25 @@ namespace GitUI
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(32, 149);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(287, 13);
+            this.label26.TabIndex = 37;
+            this.label26.Text = "Show current working dir changes in revision graph (slow!)";
+            // 
+            // ShowCurrentChangesInRevisionGraph
+            // 
+            this.ShowCurrentChangesInRevisionGraph.AutoSize = true;
+            this.ShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(11, 150);
+            this.ShowCurrentChangesInRevisionGraph.Name = "ShowCurrentChangesInRevisionGraph";
+            this.ShowCurrentChangesInRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(15, 14);
+            this.ShowCurrentChangesInRevisionGraph.TabIndex = 36;
+            this.ShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
+            // 
             // showErrorsWhenStagingFilesLabel
             // 
             this.showErrorsWhenStagingFilesLabel.AutoSize = true;
@@ -1052,7 +1071,7 @@ namespace GitUI
             this.label34.AutoSize = true;
             this.label34.Location = new System.Drawing.Point(32, 170);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(295, 13);
+            this.label34.Size = new System.Drawing.Size(303, 13);
             this.label34.TabIndex = 21;
             this.label34.Text = "Close process dialog automatically when process is succeeded";
             // 
@@ -2311,25 +2330,6 @@ namespace GitUI
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(32, 149);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(251, 13);
-            this.label26.TabIndex = 37;
-            this.label26.Text = "Show current working dir changes in revision graph";
-            // 
-            // ShowCurrentChangesInRevisionGraph
-            // 
-            this.ShowCurrentChangesInRevisionGraph.AutoSize = true;
-            this.ShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(11, 150);
-            this.ShowCurrentChangesInRevisionGraph.Name = "ShowCurrentChangesInRevisionGraph";
-            this.ShowCurrentChangesInRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(15, 14);
-            this.ShowCurrentChangesInRevisionGraph.TabIndex = 36;
-            this.ShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 
