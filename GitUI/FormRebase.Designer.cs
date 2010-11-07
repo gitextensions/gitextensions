@@ -49,6 +49,7 @@
             this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -196,6 +197,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.chkInteractive);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             this.splitContainer2.Panel1.Controls.Add(this.Currentbranch);
             this.splitContainer2.Panel1.Controls.Add(this.label2);
@@ -308,6 +310,16 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // chkInteractive
+            // 
+            this.chkInteractive.AutoSize = true;
+            this.chkInteractive.Location = new System.Drawing.Point(421, 49);
+            this.chkInteractive.Name = "chkInteractive";
+            this.chkInteractive.Size = new System.Drawing.Size(121, 19);
+            this.chkInteractive.TabIndex = 7;
+            this.chkInteractive.Text = "Interactive Rebase";
+            this.chkInteractive.UseVisualStyleBackColor = true;
+            // 
             // FormRebase
             // 
             this.AcceptButton = this.Ok;
@@ -363,5 +375,6 @@
         private System.Windows.Forms.Button SolveMergeconflicts;
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
+        private System.Windows.Forms.CheckBox chkInteractive;
     }
 }

@@ -242,6 +242,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
             this.Load += new System.EventHandler(this.FormStatus_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormStatus_FormClosed);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
