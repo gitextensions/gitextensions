@@ -22,6 +22,9 @@ namespace GitUI
             Icon = ApplicationIcon;
             SetFont();
 
+            //This is not very good practice, but it works and it is fast.
+            FormSplash.Hide();
+
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             AutoScaleMode = AutoScaleMode.None;
 
