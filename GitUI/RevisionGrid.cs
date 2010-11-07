@@ -1112,19 +1112,34 @@ namespace GitUI
 
                 if (Revisions.RowCount == 0 && Settings.RevisionGraphShowWorkingDirChanges)
                 {
-                    //Add working dir as virtual commit
-                    GitRevision workingDir = new GitRevision();
-                    workingDir.Guid = GitRevision.UncommittedWorkingDirGuid;
-                    workingDir.Message = _currentWorkingDirChanges.Text;
-                    workingDir.ParentGuids = new string[] { GitRevision.IndexGuid };
-                    Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+                    bool uncommittedChanges = false;
+                    bool stagedChanges = false;
+                    //Only check for tracked files. This usually makes more sense and it performs a lot
+                    //better then checking for untrackd files.
+                    if (GitCommandHelpers.GetTrackedChangedFiles().Count > 0) 
+                        uncommittedChanges = true;
+                    if (GitCommandHelpers.GetStagedFiles().Count > 0)
+                        stagedChanges = true;
 
-                    //Add index as virtual commit
-                    GitRevision index = new GitRevision();
-                    index.Guid = GitRevision.IndexGuid;
-                    index.Message = _currentIndex.Text;
-                    index.ParentGuids = new string[] { CurrentCheckout };
-                    Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+                    if (uncommittedChanges)
+                    {
+                        //Add working dir as virtual commit
+                        GitRevision workingDir = new GitRevision();
+                        workingDir.Guid = GitRevision.UncommittedWorkingDirGuid;
+                        workingDir.Message = _currentWorkingDirChanges.Text;
+                        workingDir.ParentGuids = stagedChanges ? new string[] { GitRevision.IndexGuid } : new string[] { CurrentCheckout };
+                        Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+                    }
+
+                    if (stagedChanges)
+                    {
+                        //Add index as virtual commit
+                        GitRevision index = new GitRevision();
+                        index.Guid = GitRevision.IndexGuid;
+                        index.Message = _currentIndex.Text;
+                        index.ParentGuids = new string[] { CurrentCheckout };
+                        Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+                    }
                 }
                 return;
             }

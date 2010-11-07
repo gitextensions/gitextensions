@@ -379,6 +379,9 @@ namespace GitUI
             AcceptButton = Commit;
             Commit.Focus();
             Cursor.Current = Cursors.Default;
+
+            if (Settings.RevisionGraphShowWorkingDirChanges)
+                NeedRefresh = true;
         }
 
         private void UnstageFilesClick(object sender, EventArgs e)
@@ -455,6 +458,9 @@ namespace GitUI
             UnstageFiles.Enabled = true;
             AddFiles.Enabled = true;
             Cursor.Current = Cursors.Default;
+
+            if (Settings.RevisionGraphShowWorkingDirChanges)
+                NeedRefresh = true;
         }
 
 
