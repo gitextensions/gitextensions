@@ -79,7 +79,6 @@ namespace GitExtensions
             }
             else  // if we are here args.Length > 1
             {
-                FormSplash.Hide();
                 RunCommand(args);
             }
 
