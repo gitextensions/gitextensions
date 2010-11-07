@@ -39,9 +39,6 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
-
-            //This is not very good practice, but it works and it is fast.
-            FormSplash.Hide();
         }
 
         private void ShowDashboard()
