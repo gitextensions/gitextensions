@@ -227,7 +227,16 @@ namespace GitCommands
             try
             {
                 SetEnvironmentVariable();
-                CreateAndStartProcess(arguments, cmd);
+
+                Process process = new Process();
+                ProcessStartInfo processStartInfo = new ProcessStartInfo();
+                processStartInfo.UseShellExecute = false;
+                processStartInfo.RedirectStandardOutput = true;
+                processStartInfo.FileName = cmd;
+                processStartInfo.Arguments = arguments;
+                processStartInfo.CreateNoWindow = true;
+                process.StartInfo = processStartInfo;
+                process.Start();
             }
             catch (Exception ex)
             {
