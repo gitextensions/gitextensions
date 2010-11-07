@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using System.Threading;
 
 namespace GitCommands
 {
@@ -22,6 +23,10 @@ namespace GitCommands
 
         static Settings()
         {
+            //Marked wich can be used to check if all settings that are loaded async
+            //are loaded.
+            AllSettingsLoaded = false;
+
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -78,6 +83,10 @@ namespace GitCommands
             RevisionGraphShowWorkingDirChanges = false;
             LastFormatPatchDir = "";
         }
+
+        //Marked wich can be used to check if all settings that are loaded async
+        //are loaded.
+        public static bool AllSettingsLoaded { get; set; }
 
         public static bool ShowErrorsWhenStagingFiles { get; set; }
 
@@ -368,6 +377,7 @@ namespace GitCommands
         {
             try
             {
+
                 if (Application.UserAppDataRegistry == null)
                     throw new Exception("Application.UserAppDataRegistry is not available");
 
@@ -458,19 +468,46 @@ namespace GitCommands
                 Application.UserAppDataRegistry.SetValue("encoding", "Default");
         }
 
+
         public static void LoadSettings()
+        {
+            AllSettingsLoaded = false;
+
+            //First load the 'important' settings, then load other settings async
+            SafeSetString("gitdir", x => GitCommand = x);
+            SafeSetString("gitbindir", x => GitBinDir = x);
+            SafeSetInt("maxcommits", x => MaxCommits = x);
+            SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
+            SafeSetString("customhomedir", x => CustomHomeDir = x);
+
+            //We need this BEFORE the first form is started, otherwise it will be pointless
+            SafeSetString("iconcolor", x => IconColor = x);
+            SafeSetString("translation", x => Translation = x);
+
+            GetEncoding();
+
+            LoadSettingsAsync();
+        }
+
+        private static void LoadSettingsAsync()
+        {
+            // Create the thread object, passing in the Alpha.Beta method
+            // via a ThreadStart delegate. This does not start the thread.
+            Thread oThread = new Thread(new ThreadStart(DoLoadSettings));
+
+            // Start the thread
+            oThread.Start();
+
+        }
+
+        private static void DoLoadSettings()
         {
             try
             {
-                SafeSetString("gitdir", x => GitCommand = x);
-                SafeSetString("gitbindir", x => GitBinDir = x);
+                //IMPORTANT: most important settings must be loaded first, since
+                //these settings are loading async.
+                SafeSetBool("showrevisiongraph", x => ShowRevisionGraph = x);
 
-                SafeSetInt("maxcommits", x => MaxCommits = x);
-                SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
-                SafeSetInt("authorimagesize", x => AuthorImageSize = x);
-
-                GetEncoding();
-                
                 try
                 {
                     SafeSetHtmlColor("diffaddedcolor", x => DiffAddedColor = x);
@@ -492,7 +529,19 @@ namespace GitCommands
                     Trace.WriteLine(ex.Message);
                 }
 
-                SafeSetString("translation", x => Translation = x);
+                SafeSetBool("showauthordate", x => ShowAuthorDate = x);
+                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
+                SafeSetBool("revisiongraphshowworkingdirchanges", x => RevisionGraphShowWorkingDirChanges = x);
+
+                SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
+                SafeSetBool("relativedate", x => RelativeDate = x);
+                SafeSetBool("usefastchecks", x => UseFastChecks = x);
+
+                SafeSetBool("showauthorgravatar", x => ShowAuthorGravatar = x);
+                SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
+                SafeSetInt("authorimagesize", x => AuthorImageSize = x);
+
+                //Not needed before any dialog is started
                 SafeSetString("pullmerge", x => PullMerge = x);
                 SafeSetString("gitssh", GitCommandHelpers.SetSsh);
                 SafeSetString("plink", x => Plink = x);
@@ -500,23 +549,15 @@ namespace GitCommands
                 SafeSetString("pageant", x => Pageant = x);
                 SafeSetString("dictionary", x => Dictionary = x);
                 SafeSetString("smtp", x => Smtp = x);
-                SafeSetBool("showauthorgravatar", x => ShowAuthorGravatar = x);
-                SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
-                SafeSetString("customhomedir", x => CustomHomeDir = x);
+
                 SafeSetBool("closeCommitDialogAfterCommit", x => CloseCommitDialogAfterCommit = x);
                 SafeSetBool("markIllFormedLinesInCommitMsg", x => MarkIllFormedLinesInCommitMsg = x);
                 SafeSetBool("followrenamesinfilehistory", x => FollowRenamesInFileHistory = x);
                 SafeSetBool("autostash", x => AutoStash = x);
-                SafeSetString("iconcolor", x => IconColor = x);
-                SafeSetBool("relativedate", x => RelativeDate = x);
-                SafeSetBool("usefastchecks", x => UseFastChecks = x);
                 SafeSetBool("showgitcommandline", x => ShowGitCommandLine = x);
-                SafeSetBool("showrevisiongraph", x => ShowRevisionGraph = x);
-                SafeSetBool("showauthordate", x => ShowAuthorDate = x);
                 SafeSetBool("closeprocessdialog", x => CloseProcessDialog = x);
                 SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
                 SafeSetBool("branchfilterenabled", x => BranchFilterEnabled = x);
-                SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
                 SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranchesLocal = x);
                 SafeSetBool("commitinfoshowcontainedinbrancheslocal", x => CommitInfoShowContainedInBranchesLocal = x);
                 SafeSetBool("commitinfoshowcontainedinbranchesremote", x => CommitInfoShowContainedInBranchesRemote = x);
@@ -526,8 +567,6 @@ namespace GitCommands
                 SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
                 SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
                 SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
-                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
-                SafeSetBool("revisiongraphshowworkingdirchanges", x => RevisionGraphShowWorkingDirChanges = x);
                 SafeSetString("lastformatpatchdir", x => LastFormatPatchDir = x);
 
                 SafeSetString("history", Repositories.DeserializeHistoryFromXml);
@@ -536,6 +575,10 @@ namespace GitCommands
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
+            }
+            finally
+            {
+                AllSettingsLoaded = true;
             }
         }
 

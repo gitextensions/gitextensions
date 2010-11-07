@@ -39,6 +39,9 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
+
+            //This is not very good practice, but it works and it is fast.
+            FormSplash.Hide();
         }
 
         private void ShowDashboard()
@@ -91,17 +94,21 @@ namespace GitUI
             RevisionGrid.ActionOnRepositoryPerformed += ActionOnRepositoryPerformed;
             _indexWatcher.Reset();
 
-            LoadPluginsInPluginMenu();
             Cursor.Current = Cursors.Default;
         }
 
+        private bool pluginsLoaded = false;
         private void LoadPluginsInPluginMenu()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            if (!pluginsLoaded)
             {
-                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Add(item);
+                foreach (var plugin in LoadedPlugins.Plugins)
+                {
+                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                    item.Click += ItemClick;
+                    pluginsToolStripMenuItem.DropDownItems.Add(item);
+                }
+                pluginsLoaded = true;
             }
         }
 
@@ -1502,6 +1509,11 @@ namespace GitUI
                     OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
                 }
 
+        }
+
+        private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            LoadPluginsInPluginMenu();
         }
     }
 }
