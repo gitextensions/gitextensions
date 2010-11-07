@@ -1326,6 +1326,24 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
           <Value>Teken niet gerelateerde vertakkingen grijs</Value>
         </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>Kopiëren naar het klembord</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>Melding</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
@@ -2121,6 +2139,9 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Er zijn niet opgeloste conflicten</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkInteractive" Property="Text">
+          <Value>Interactieve rebase</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
