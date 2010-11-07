@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -51,6 +52,12 @@ namespace GitUI
                     if (ProgressBar.Style != ProgressBarStyle.Blocks)
                         ProgressBar.Style = ProgressBarStyle.Blocks;
                     ProgressBar.Value = Math.Min(100, progressValue);
+
+                    if (TaskbarManager.IsPlatformSupported)
+                    {
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                        TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                    }
                 }
                 this.Text = text;
             });
@@ -72,6 +79,16 @@ namespace GitUI
             Ok.Focus();
             AcceptButton = Ok;
             Abort.Enabled = false;
+
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                if (isSuccess)
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                else
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+
+                TaskbarManager.Instance.SetProgressValue(100, 100);
+            }
 
             SuccessImage.Visible = isSuccess;
             ErrorImage.Visible = !isSuccess;
@@ -123,7 +140,7 @@ namespace GitUI
             {
                 throw new InvalidOperationException("You can't load the form without a ProcessCallback");
             }
-
+            
             if (AbortCallback == null)
             {
                 Abort.Visible = false;
@@ -132,8 +149,17 @@ namespace GitUI
             Start();
         }
 
+        private void FormStatus_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        {
+            if (TaskbarManager.IsPlatformSupported)
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+        }
+
         private void Start()
         {
+            if (TaskbarManager.IsPlatformSupported)
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
+
             Reset();
             ProcessCallback(this);
         }
