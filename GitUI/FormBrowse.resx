@@ -239,16 +239,6 @@
         0fr8ixJresJQ16QYIcj+9+G989O0osxYvaPV5aaE1rg/tzBmZDae34mu1J3G3CpsAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="RevisionGrid.CurrentCheckout" xml:space="preserve">
-    <value>
-Nazwa 'getcp' nie jest rozpoznawana jako polecenie wewn©trzne lub zewn©trzne,
-program wykonywalny lub plik wsadowy.
-Nazwa 'getcp' nie jest rozpoznawana jako polecenie wewn©trzne lub zewn©trzne,
-program wykonywalny lub plik wsadowy.
-Nazwa 'git.exe' nie jest rozpoznawana jako polecenie wewn©trzne lub zewn©trzne,
-program wykonywalny lub plik wsadowy.
-</value>
-  </data>
   <metadata name="FileTreeContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>117, 54</value>
   </metadata>
