@@ -19,43 +19,39 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
 
             string[] args = Environment.GetCommandLineArgs();
-            using (var formSplash = new FormSplash())
+            FormSplash.Show("Load settings");
+            Settings.LoadSettings();
+            if (Settings.RunningOnWindows())
             {
-                formSplash.Show();
-                formSplash.SetAction("Load settings");
-                Settings.LoadSettings();
-                if (Settings.RunningOnWindows())
-                {
-                    //Quick HOME check:
-                    formSplash.SetAction("Check home path");
-                    FormFixHome.CheckHomePath();
-                }
-                //Register plugins
-                formSplash.SetAction("Load plugins");
-                PluginLoader.Load();
+                //Quick HOME check:
+                FormSplash.SetAction("Check home path");
+                FormFixHome.CheckHomePath();
+            }
+            //Register plugins
+            FormSplash.SetAction("Load plugins");
+            PluginLoader.LoadAsync();
 
-                try
+            try
+            {
+                if (Application.UserAppDataRegistry == null ||
+                    Application.UserAppDataRegistry.GetValue("checksettings") == null ||
+                    !Application.UserAppDataRegistry.GetValue("checksettings").ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
+                    string.IsNullOrEmpty(Settings.GitCommand))
                 {
-                    if (Application.UserAppDataRegistry == null ||
-                        Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                        !Application.UserAppDataRegistry.GetValue("checksettings").ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
-                        string.IsNullOrEmpty(Settings.GitCommand))
+                    FormSplash.SetAction("Check settings");
+                    using (var settings = new FormSettings())
                     {
-                        formSplash.SetAction("Check settings");
-                        using (var settings = new FormSettings())
+                        if (!settings.CheckSettings())
                         {
-                            if (!settings.CheckSettings())
-                            {
-                                FormSettings.AutoSolveAllSettings();
-                                GitUICommands.Instance.StartSettingsDialog();
-                            }
+                            FormSettings.AutoSolveAllSettings();
+                            GitUICommands.Instance.StartSettingsDialog();
                         }
                     }
                 }
-                catch
-                {
-                    // TODO: remove catch-all
-                }
+            }
+            catch
+            {
+                // TODO: remove catch-all
             }
 
             if (args.Length >= 3)
@@ -77,9 +73,15 @@ namespace GitExtensions
                 Settings.WorkingDir = Directory.GetCurrentDirectory();
 
             if (args.Length <= 1)
+            {
+                FormSplash.SetAction("Load browse dialog");
                 GitUICommands.Instance.StartBrowseDialog();
+            }
             else  // if we are here args.Length > 1
+            {
+                FormSplash.Hide();
                 RunCommand(args);
+            }
 
             Settings.SaveSettings();
         }
