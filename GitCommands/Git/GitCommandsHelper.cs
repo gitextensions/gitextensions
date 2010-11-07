@@ -1142,10 +1142,10 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmd(Settings.GitCommand, RebaseCmd(branch));
+            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false));
         }
 
-        public static string RebaseCmd(string branch, bool interactive = false)
+        public static string RebaseCmd(string branch, bool interactive)
         {
             if (interactive)
                 return "rebase -i \"" + branch + "\"";
