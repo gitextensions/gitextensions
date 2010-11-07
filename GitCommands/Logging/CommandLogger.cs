@@ -19,10 +19,11 @@ namespace GitCommands.Logging
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
+            var logQueueArray = _logQueue.ToArray();
 
-            foreach (var loggedCmd in _logQueue)
+            for (int n = logQueueArray.Length; n > 0; n--)
             {
-                stringBuilder.AppendLine(loggedCmd);
+                stringBuilder.AppendLine(logQueueArray[n - 1]);
             }
 
             return stringBuilder.ToString();
