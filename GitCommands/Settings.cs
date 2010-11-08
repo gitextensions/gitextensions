@@ -84,6 +84,15 @@ namespace GitCommands
             LastFormatPatchDir = "";
         }
 
+
+        public static void WaitUntilAllSettingsLoaded()
+        {
+            while (!AllSettingsLoaded)
+            {
+                Thread.Sleep(50);
+            }
+        }
+
         //Marked wich can be used to check if all settings that are loaded async
         //are loaded.
         public static bool AllSettingsLoaded { get; set; }
