@@ -232,6 +232,8 @@ namespace GitUI
         {
             Pull.Select();
 
+            GitCommands.Settings.WaitUntilAllSettingsLoaded();
+
             string branch = GitCommandHelpers.GetSelectedBranch();
             Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
 
