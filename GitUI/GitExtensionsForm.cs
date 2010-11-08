@@ -22,10 +22,7 @@ namespace GitUI
             Icon = ApplicationIcon;
             SetFont();
 
-            //This is not very good practice, but it works and it is fast.
-            FormSplash.Hide();
-
-            ShowInTaskbar = Application.OpenForms.Count <= 0;
+            ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
             AutoScaleMode = AutoScaleMode.None;
 
             var cancelButton = new Button();
@@ -34,8 +31,14 @@ namespace GitUI
             CancelButton = cancelButton;
 
             Load += GitExtensionsFormLoad;
-
             FormClosed += GitExtensionsFormFormClosed;
+            Shown += GitExtensionsForm_Shown;
+        }
+
+        private static void GitExtensionsForm_Shown(object sender, EventArgs e)
+        {
+            //This is not very good practice, but it works and it is fast.
+            FormSplash.Hide();
         }
 
         private void SetFont()
