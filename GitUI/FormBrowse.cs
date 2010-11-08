@@ -857,12 +857,12 @@ namespace GitUI
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.Run(Settings.Pageant, "");
+            GitCommandHelpers.StartExternalCommand(Settings.Pageant, "");
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.Run(Settings.Puttygen, "");
+            GitCommandHelpers.StartExternalCommand(Settings.Puttygen, "");
         }
 
         private void SetFilter(string filter)
