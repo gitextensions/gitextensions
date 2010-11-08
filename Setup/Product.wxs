@@ -100,6 +100,13 @@
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll"/>
       </Component>
+      <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\Microsoft.WindowsAPICodePack.dll"/>
+      </Component>
+      <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"/>
+      </Component>
+
 
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       
@@ -331,6 +338,8 @@
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
+      <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
