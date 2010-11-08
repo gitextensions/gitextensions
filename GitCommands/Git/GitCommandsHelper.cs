@@ -8,6 +8,7 @@ using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
 using PatchApply;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -222,25 +223,27 @@ namespace GitCommands
             }
         }
 
-        public static void Run(string cmd, string arguments)
+        public static void StartExternalCommand(string cmd, string arguments)
         {
             try
             {
                 SetEnvironmentVariable();
 
-                Process process = new Process();
-                ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                processStartInfo.UseShellExecute = false;
-                processStartInfo.RedirectStandardOutput = true;
-                processStartInfo.FileName = cmd;
-                processStartInfo.Arguments = arguments;
-                processStartInfo.CreateNoWindow = true;
-                process.StartInfo = processStartInfo;
-                process.Start();
+                using (Process process = new Process())
+                {
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo();
+                    processStartInfo.UseShellExecute = false;
+                    processStartInfo.RedirectStandardOutput = false;
+                    processStartInfo.FileName = cmd;
+                    processStartInfo.Arguments = arguments;
+                    processStartInfo.CreateNoWindow = true;
+                    process.StartInfo = processStartInfo;
+                    process.Start();
+                }
             }
             catch (Exception ex)
             {
-                Trace.WriteLine(ex);
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -520,14 +523,14 @@ namespace GitCommands
 
         public static void RunGitK()
         {
-            Run("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
+            StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
                                                           .Replace("bin\\git.exe", "cmd\\gitk.cmd")
                                                           .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
         }
 
         public static void RunGui()
         {
-            Run("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
+            StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
         }
 
         public static void RunBash()
@@ -881,7 +884,7 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            Run(Settings.Pageant, "\"" + sshKeyFile + "\"");
+            StartExternalCommand(Settings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
         public static string GetPuttyKeyFileForRemote(string remote)
