@@ -32,6 +32,7 @@ namespace GitUI
         {
             if (instance != null)
             {
+                instance.TopLevel = false;
                 instance.Dispose();
                 instance = null;
             }
@@ -39,6 +40,8 @@ namespace GitUI
 
         private FormSplash()
         {
+            ShowInTaskbar = false;
+
             InitializeComponent();
 
             SetFont();
