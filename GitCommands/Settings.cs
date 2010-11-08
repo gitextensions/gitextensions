@@ -485,7 +485,6 @@ namespace GitCommands
             //First load the 'important' settings, then load other settings async
             SafeSetString("gitdir", x => GitCommand = x);
             SafeSetString("gitbindir", x => GitBinDir = x);
-            SafeSetInt("maxcommits", x => MaxCommits = x);
             SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
             SafeSetString("customhomedir", x => CustomHomeDir = x);
 
@@ -517,6 +516,8 @@ namespace GitCommands
                 //these settings are loading async.
                 SafeSetBool("showrevisiongraph", x => ShowRevisionGraph = x);
 
+                SafeSetInt("maxcommits", x => MaxCommits = x);
+
                 try
                 {
                     SafeSetHtmlColor("diffaddedcolor", x => DiffAddedColor = x);
@@ -544,7 +545,6 @@ namespace GitCommands
 
                 SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
                 SafeSetBool("relativedate", x => RelativeDate = x);
-                SafeSetBool("usefastchecks", x => UseFastChecks = x);
 
                 SafeSetBool("showauthorgravatar", x => ShowAuthorGravatar = x);
                 SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
@@ -552,6 +552,8 @@ namespace GitCommands
 
                 //Not needed before any dialog is started
                 SafeSetString("pullmerge", x => PullMerge = x);
+                SafeSetBool("autostash", x => AutoStash = x);
+
                 SafeSetString("gitssh", GitCommandHelpers.SetSsh);
                 SafeSetString("plink", x => Plink = x);
                 SafeSetString("puttygen", x => Puttygen = x);
@@ -562,7 +564,6 @@ namespace GitCommands
                 SafeSetBool("closeCommitDialogAfterCommit", x => CloseCommitDialogAfterCommit = x);
                 SafeSetBool("markIllFormedLinesInCommitMsg", x => MarkIllFormedLinesInCommitMsg = x);
                 SafeSetBool("followrenamesinfilehistory", x => FollowRenamesInFileHistory = x);
-                SafeSetBool("autostash", x => AutoStash = x);
                 SafeSetBool("showgitcommandline", x => ShowGitCommandLine = x);
                 SafeSetBool("closeprocessdialog", x => CloseProcessDialog = x);
                 SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
