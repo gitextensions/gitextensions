@@ -72,9 +72,9 @@ namespace GitExtensions
             if (string.IsNullOrEmpty(Settings.WorkingDir))
                 Settings.WorkingDir = Directory.GetCurrentDirectory();
 
+            FormSplash.SetAction("Starting");
             if (args.Length <= 1)
             {
-                FormSplash.SetAction("Load browse dialog");
                 GitUICommands.Instance.StartBrowseDialog();
             }
             else  // if we are here args.Length > 1
