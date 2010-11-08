@@ -232,16 +232,21 @@ namespace GitUI
         {
             Pull.Select();
 
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
             string branch = GitCommandHelpers.GetSelectedBranch();
             Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
 
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
-            EnableLoadSshButton();
+        }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            GitCommands.Settings.WaitUntilAllSettingsLoaded();
+
+            EnableLoadSshButton();
 
             Merge.Checked = Settings.PullMerge == "merge";
             Rebase.Checked = Settings.PullMerge == "rebase";
