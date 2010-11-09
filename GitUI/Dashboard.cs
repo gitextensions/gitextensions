@@ -149,8 +149,6 @@ namespace GitUI
             }
             try
             {
-                GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
                 SuspendLayout();
 
                 //Make sure the dashboard is only initialized once
