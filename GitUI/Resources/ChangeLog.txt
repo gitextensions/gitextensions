@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Version 2.06
+	Fixed issue 218: GitCommandLog now in LIFO order
+	Fixed issue 235, 242 and 248: GitExtensions hangs when loading putty key into pageant
+	Fixed bug: comboboxes affected each other in clone dialog
+	Fixed bug: sporadic crashes during checkout process when status is visible in toolbar
+	Fixed bug: virtual commits showing uncommitted and staged changes are only visible when needed
+	Added checkbox to allow interactive rebase
+	Added support for Windows 7 taskbar progress bar display
+	The "Format patch" dialog now remembers the last (valid) directory
+	Startup speed improved
+	
 Version 2.05
 	Fixed issue 194: Remote branches combo contained tags also
 	Fixed bug: fixed pre-selecting tracking branch in push dialog

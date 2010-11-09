@@ -184,7 +184,7 @@
             this.thanksTo.Location = new System.Drawing.Point(0, 0);
             this.thanksTo.Margin = new System.Windows.Forms.Padding(0);
             this.thanksTo.Name = "thanksTo";
-            this.thanksTo.Size = new System.Drawing.Size(69, 16);
+            this.thanksTo.Size = new System.Drawing.Size(58, 13);
             this.thanksTo.TabIndex = 27;
             this.thanksTo.Text = "Thanks to:";
             // 
@@ -206,7 +206,7 @@
             // AboutBox
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 303);
             this.Controls.Add(this.tableLayoutPanel);
