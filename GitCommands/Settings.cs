@@ -1102,6 +1102,7 @@ namespace GitCommands
         {
             try
             {
+                Application.UserAppDataRegistry.SetValue("gitssh", GitCommandHelpers.GetSsh());
                 Application.UserAppDataRegistry.SetValue("history", Repositories.SerializeHistoryIntoXml());
                 Application.UserAppDataRegistry.SetValue("repositories", Repositories.SerializeRepositories());
             }
@@ -1114,6 +1115,7 @@ namespace GitCommands
         {
             try
             {
+                SafeSetString("gitssh", null, GitCommandHelpers.SetSsh);
                 SafeSetString("history", null, Repositories.DeserializeHistoryFromXml);
                 SafeSetString("repositories", null, Repositories.DeserializeRepositories);
             }
