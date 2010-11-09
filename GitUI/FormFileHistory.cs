@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -71,11 +71,6 @@ namespace GitUI
                 fileName = fileName.Substring(Settings.WorkingDir.Length);
 
             FileName = fileName;
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
 
             if (Settings.FollowRenamesInFileHistory)
             {
@@ -92,22 +87,22 @@ namespace GitUI
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
 
-                string arg = "log --format=\"%n\" --name-only --follow -- \"" + FileName + "\"";
+                string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
-                string listOfFileNames = "\"" + FileName + "\"";
-
+                string listOfFileNames = "\"" + fileName + "\"";
+                
                 // keep a set of the file names already seen
                 HashSet<string> setOfFileNames = new HashSet<string>();
-                setOfFileNames.Add(FileName);
+                setOfFileNames.Add(fileName);
 
                 string line;
                 do
                 {
                     line = p.StandardOutput.ReadLine();
 
-                    if ((line != null) && (line != ""))
+                    if ( (line != null) && (line != "") )
                     {
                         if (!setOfFileNames.Contains(line))
                         {
@@ -124,7 +119,7 @@ namespace GitUI
             else
             {
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                FileChanges.Filter = " --parents -- \"" + FileName + "\"";
+                FileChanges.Filter = " --parents -- \"" + fileName + "\"";
                 FileChanges.AllowGraphWithFilter = true;
             }
         }

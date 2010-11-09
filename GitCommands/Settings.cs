@@ -13,8 +13,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.05";
-        public static readonly int GitExtensionsVersionInt = 205;
+        public static readonly string GitExtensionsVersionString = "2.06";
+        public static readonly int GitExtensionsVersionInt = 206;
 
         //semi-constants
         public static char PathSeparator = '\\';
