@@ -14,9 +14,9 @@ namespace System
 
     public static class Tuple
     {
-        public static Tuple<T, S> Create<T, S>(T item1, S item2)
+        public static Tuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2)
         {
-            return new Tuple<T, S>(item1, item2);
+            return new Tuple<T1, T2>(item1, item2);
         }
     }
 }
