@@ -77,8 +77,6 @@ namespace GitUI
         {
             base.OnShown(e);
 
-            Settings.WaitUntilAllSettingsLoaded();
-
             if (Settings.FollowRenamesInFileHistory)
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)

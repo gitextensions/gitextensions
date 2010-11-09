@@ -12,96 +12,76 @@ namespace GitCommands
 {
     public static class Settings
     {
-        public static string GitExtensionsVersionString = "2.05";
-        public static int GitExtensionsVersionInt = 205;
-        private static string _gitBinDir = "";
-        private static string _workingdir;
-        private static bool _commitInfoShowContainedInBranchesRemote = false;
-        private static bool _commitInfoShowContainedInBranchesRemoteIfNoLocal = false;
+        //Constants
+        public static readonly string GitExtensionsVersionString = "2.05";
+        public static readonly int GitExtensionsVersionInt = 205;
+
+        //semi-constants
         public static char PathSeparator = '\\';
         public static char PathSeparatorWrong = '/';
 
+
+
+
         static Settings()
         {
-            //Marked wich can be used to check if all settings that are loaded async
-            //are loaded.
-            AllSettingsLoaded = false;
-
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
                 PathSeparatorWrong = '\\';
             }
 
-            BranchBorders = true;
-            StripedBranchChange = true;
-            MulticolorBranches = true;
-            DiffAddedExtraColor = Color.FromArgb(135, 255, 135);
-            DiffAddedColor = Color.FromArgb(200, 255, 200);
-            DiffRemovedExtraColor = Color.FromArgb(255, 150, 150);
-            DiffRemovedColor = Color.FromArgb(255, 200, 200);
-            DiffSectionColor = Color.FromArgb(230, 230, 230);
-            RemoteBranchColor = Color.Green;
-            BranchColor = Color.DarkRed;
-            GraphColor = Color.Red;
-            TagColor = Color.DarkBlue;
-            OtherTagColor = Color.Gray;
-            AutoStartPageant = true;
-            Pageant = "";
-            Puttygen = "";
-            Plink = "";
             GitLog = new CommandLogger();
-            MaxCommits = 2000;
-            GitCommand = "git.cmd";
-            ShowRevisionGraph = true;
-            UseFastChecks = true;
-            RelativeDate = true;
-            Dictionary = "en-US";
-            OrderRevisionByDate = true;
-            Smtp = "";
-            PullMerge = "merge";
-            Encoding = Encoding.Default;
-            RevisionGraphThickness = 1F;
-            RevisionGraphWidth = 6;
-            FollowRenamesInFileHistory = true;
-            ShowAuthorGravatar = true;
-            AuthorImageCacheDays = 5;
-            AuthorImageSize = 80;
-            IconColor = "default";
-            CustomHomeDir = "";
-            Translation = "";
-            CommitInfoShowContainedInBranchesLocal = true;
-            CommitInfoShowContainedInBranchesRemote = false;
-            CommitInfoShowContainedInBranchesRemoteIfNoLocal = false;
-            CommitInfoShowContainedInTags = true;
-            RevisionGridQuickSearchTimeout = 700;
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
-            ShowGitStatusInBrowseToolbar = false;
-            LastCommitMessage = "";
-            ShowErrorsWhenStagingFiles = true;
-            RevisionGraphDrawNonRelativesGray = true;
-            RevisionGraphShowWorkingDirChanges = false;
-            LastFormatPatchDir = "";
         }
 
-
-        public static void WaitUntilAllSettingsLoaded()
+        private static bool? _showErrorsWhenStagingFiles;
+        public static bool ShowErrorsWhenStagingFiles
         {
-            while (!AllSettingsLoaded)
+            get
             {
-                Thread.Sleep(50);
+                if (_showErrorsWhenStagingFiles == null)
+                    SafeSetBool("showerrorswhenstagingfiles", true, x => _showErrorsWhenStagingFiles = x);
+                return _showErrorsWhenStagingFiles.Value;
+            }
+            set
+            {
+                _showErrorsWhenStagingFiles = value;
+                Application.UserAppDataRegistry.SetValue("showerrorswhenstagingfiles", _showErrorsWhenStagingFiles);
             }
         }
 
-        //Marked wich can be used to check if all settings that are loaded async
-        //are loaded.
-        public static bool AllSettingsLoaded { get; set; }
+        private static string _lastCommitMessage;
+        public static string LastCommitMessage
+        {
+            get
+            {
+                if (_lastCommitMessage == null)
+                    SafeSetString("lastCommitMessage", "", x => _lastCommitMessage = x);
+                return _lastCommitMessage;
+            }
+            set
+            {
+                _lastCommitMessage = value;
+                Application.UserAppDataRegistry.SetValue("lastCommitMessage", _lastCommitMessage);
+            }
+        }
 
-        public static bool ShowErrorsWhenStagingFiles { get; set; }
-
-        public static string LastCommitMessage { get; set; }
-
-        public static bool ShowGitStatusInBrowseToolbar { get; set; }
+        private static bool? _showGitStatusInBrowseToolbar;
+        public static bool ShowGitStatusInBrowseToolbar
+        {
+            get
+            {
+                if (_showGitStatusInBrowseToolbar == null)
+                    SafeSetBool("showgitstatusinbrowsetoolbar", false, x => _showGitStatusInBrowseToolbar = x);
+                return _showGitStatusInBrowseToolbar.Value;
+            }
+            set
+            {
+                _showGitStatusInBrowseToolbar = value;
+                Application.UserAppDataRegistry.SetValue("showgitstatusinbrowsetoolbar", _showGitStatusInBrowseToolbar);
+            }
+        }
 
         public static bool CommitInfoShowContainedInBranches
         {
@@ -113,102 +93,559 @@ namespace GitCommands
             }
         }
 
-        public static bool CommitInfoShowContainedInBranchesLocal { get; set; }
-
-        public static bool CommitInfoShowContainedInBranchesRemote {
+        private static bool? _commitInfoShowContainedInBranchesLocal;
+        public static bool CommitInfoShowContainedInBranchesLocal
+        {
             get
             {
-                return _commitInfoShowContainedInBranchesRemote;
+                if (_commitInfoShowContainedInBranchesLocal == null)
+                    SafeSetBool("commitinfoshowcontainedinbrancheslocal", true, x => _commitInfoShowContainedInBranchesLocal = x);
+                return _commitInfoShowContainedInBranchesLocal.Value;
+            }
+            set
+            {
+                _commitInfoShowContainedInBranchesLocal = value;
+                Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedinbrancheslocal", _commitInfoShowContainedInBranchesLocal);
+            }
+        }
+
+        private static bool? _commitInfoShowContainedInBranchesRemote;
+        public static bool CommitInfoShowContainedInBranchesRemote
+        {
+            get
+            {
+                if (_commitInfoShowContainedInBranchesRemote == null)
+                    SafeSetBool("commitinfoshowcontainedinbranchesremote", false, x => _commitInfoShowContainedInBranchesRemote = x);
+                return _commitInfoShowContainedInBranchesRemote.Value;
             }
             set
             {
                 _commitInfoShowContainedInBranchesRemote = value;
                 if (value)
                     CommitInfoShowContainedInBranchesRemoteIfNoLocal = false;
+                Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedinbranchesremote", _commitInfoShowContainedInBranchesRemote);
             }
         }
 
-        public static bool CommitInfoShowContainedInBranchesRemoteIfNoLocal {
+        private static bool? _commitInfoShowContainedInBranchesRemoteIfNoLocal;
+        public static bool CommitInfoShowContainedInBranchesRemoteIfNoLocal
+        {
             get
             {
-                return _commitInfoShowContainedInBranchesRemoteIfNoLocal;
+                if (_commitInfoShowContainedInBranchesRemoteIfNoLocal == null)
+                    SafeSetBool("commitinfoshowcontainedinbranchesremoteifnolocal", false, x => _commitInfoShowContainedInBranchesRemoteIfNoLocal = x);
+                return _commitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
             }
             set
             {
                 _commitInfoShowContainedInBranchesRemoteIfNoLocal = value;
                 if (value)
                     CommitInfoShowContainedInBranchesRemote = false;
+                Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedinbranchesremoteifnolocal", _commitInfoShowContainedInBranchesRemoteIfNoLocal);
             }
         }
 
-        public static bool CommitInfoShowContainedInTags { get; set; }
+        private static bool? _commitInfoShowContainedInTags;
+        public static bool CommitInfoShowContainedInTags
+        {
+            get
+            {
+                if (_commitInfoShowContainedInTags == null)
+                    SafeSetBool("commitinfoshowcontainedintags", true, x => _commitInfoShowContainedInTags = x);
+                return _commitInfoShowContainedInTags.Value;
+            }
+            set
+            {
+                _commitInfoShowContainedInTags = value;
+                Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedintags", _commitInfoShowContainedInTags);
+            }
+        }
 
         public static string ApplicationDataPath { get; set; }
 
-        public static string Translation { get; set; }
+        private static string _translation;
+        public static string Translation
+        {
+            get
+            {
+                if (_translation == null)
+                    SafeSetString("translation", "", x => _translation = x);
+                return _translation;
+            }
+            set
+            {
+                _translation = value;
+                Application.UserAppDataRegistry.SetValue("translation", _translation);
+            }
+        }
 
-        public static bool UserProfileHomeDir { get; set; }
+        private static bool? _userProfileHomeDir;
+        public static bool UserProfileHomeDir
+        {
+            get
+            {
+                if (_userProfileHomeDir == null)
+                    SafeSetBool("userprofilehomedir", false, x => _userProfileHomeDir = x);
+                return _userProfileHomeDir.Value;
+            }
+            set
+            {
+                _userProfileHomeDir = value;
+                Application.UserAppDataRegistry.SetValue("userprofilehomedir", _userProfileHomeDir);
+            }
+        }
 
-        public static string CustomHomeDir { get; set; }
+        private static string _customHomeDir;
+        public static string CustomHomeDir
+        {
+            get
+            {
+                if (_customHomeDir == null)
+                    SafeSetString("customhomedir", "", x => _customHomeDir = x);
+                return _customHomeDir;
+            }
+            set
+            {
+                _customHomeDir = value;
+                Application.UserAppDataRegistry.SetValue("customhomedir", _customHomeDir);
+            }
+        }
 
-        public static string IconColor { get; set; }
+        private static string _iconColor;
+        public static string IconColor
+        {
+            get
+            {
+                if (_iconColor == null)
+                    SafeSetString("iconcolor", "default", x => _iconColor = x);
+                return _iconColor;
+            }
+            set
+            {
+                _iconColor = value;
+                Application.UserAppDataRegistry.SetValue("iconcolor", _iconColor);
+            }
+        }
 
-        public static int AuthorImageSize { get; set; }
+        private static int? _authorImageSize;
+        public static int AuthorImageSize
+        {
+            get
+            {
+                if (_authorImageSize == null)
+                    SafeSetInt("authorimagesize", 80, x => _authorImageSize = x);
+                return _authorImageSize.Value;
+            }
+            set
+            {
+                _authorImageSize = value;
+                Application.UserAppDataRegistry.SetValue("authorimagesize", _authorImageSize);
+            }
+        }
+        private static int? _authorImageCacheDays;
+        public static int AuthorImageCacheDays
+        {
+            get
+            {
+                if (_authorImageCacheDays == null)
+                    SafeSetInt("authorimagecachedays", 5, x => _authorImageCacheDays = x);
+                return _authorImageCacheDays.Value;
+            }
+            set
+            {
+                _authorImageCacheDays = value;
+                Application.UserAppDataRegistry.SetValue("authorimagecachedays", _authorImageCacheDays);
+            }
+        }
 
-        public static int AuthorImageCacheDays { get; set; }
+        private static bool? _showAuthorGravatar;
+        public static bool ShowAuthorGravatar
+        {
+            get
+            {
+                if (_showAuthorGravatar == null)
+                    SafeSetBool("showauthorgravatar", true, x => _showAuthorGravatar = x);
+                return _showAuthorGravatar.Value;
+            }
+            set
+            {
+                _showAuthorGravatar = value;
+                Application.UserAppDataRegistry.SetValue("showauthorgravatar", _showAuthorGravatar);
+            }
+        }
 
-        public static bool ShowAuthorGravatar { get; set; }
+        private static bool? _closeCommitDialogAfterCommit;
+        public static bool CloseCommitDialogAfterCommit
+        {
+            get
+            {
+                if (_closeCommitDialogAfterCommit == null)
+                    SafeSetBool("closecommitdialogaftercommit", true, x => _closeCommitDialogAfterCommit = x);
+                return _closeCommitDialogAfterCommit.Value;
+            }
+            set
+            {
+                _closeCommitDialogAfterCommit = value;
+                Application.UserAppDataRegistry.SetValue("closecommitdialogaftercommit", _closeCommitDialogAfterCommit);
+            }
+        }
 
-        public static bool CloseCommitDialogAfterCommit { get; set; }
+        private static bool? _followRenamesInFileHistory;
+        public static bool FollowRenamesInFileHistory
+        {
+            get
+            {
+                if (_followRenamesInFileHistory == null)
+                    SafeSetBool("followrenamesinfilehistory", true, x => _followRenamesInFileHistory = x);
+                return _followRenamesInFileHistory.Value;
+            }
+            set
+            {
+                _followRenamesInFileHistory = value;
+                Application.UserAppDataRegistry.SetValue("followrenamesinfilehistory", _followRenamesInFileHistory);
+            }
+        }
 
-        public static bool FollowRenamesInFileHistory { get; set; }
+        private static bool? _revisionGraphShowWorkingDirChanges;
+        public static bool RevisionGraphShowWorkingDirChanges
+        {
+            get
+            {
+                if (_revisionGraphShowWorkingDirChanges == null)
+                    SafeSetBool("revisiongraphshowworkingdirchanges", false, x => _revisionGraphShowWorkingDirChanges = x);
+                return _revisionGraphShowWorkingDirChanges.Value;
+            }
+            set
+            {
+                _revisionGraphShowWorkingDirChanges = value;
+                Application.UserAppDataRegistry.SetValue("revisiongraphshowworkingdirchanges", _revisionGraphShowWorkingDirChanges);
+            }
+        }
 
-        public static bool RevisionGraphShowWorkingDirChanges { get; set; }
-
-        public static bool RevisionGraphDrawNonRelativesGray { get; set; }
+        private static bool? _revisionGraphDrawNonRelativesGray;
+        public static bool RevisionGraphDrawNonRelativesGray
+        {
+            get
+            {
+                if (_revisionGraphDrawNonRelativesGray == null)
+                    SafeSetBool("revisiongraphdrawnonrelativesgray", true, x => _revisionGraphDrawNonRelativesGray = x);
+                return _revisionGraphDrawNonRelativesGray.Value;
+            }
+            set
+            {
+                _revisionGraphDrawNonRelativesGray = value;
+                Application.UserAppDataRegistry.SetValue("revisiongraphdrawnonrelativesgray", _revisionGraphDrawNonRelativesGray);
+            }
+        }
 
         public static int RevisionGraphWidth { get; set; }
 
         public static float RevisionGraphThickness { get; set; }
 
-        public static Encoding Encoding { get; set; }
+        private static Encoding _encoding;
+        public static Encoding Encoding
+        {
+            get
+            {
+                if (_encoding == null)
+                {
+                    string encoding = null;
+                    SafeSetString("encoding", "", x => encoding = x);
 
-        public static string PullMerge { get; set; }
+                    if (string.IsNullOrEmpty(encoding))
+                        _encoding = new UTF8Encoding(false);
+                    else if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                        _encoding = Encoding.Default;
+                    else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                        _encoding = new UnicodeEncoding();
+                    else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                        _encoding = new ASCIIEncoding();
+                    else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                        _encoding = new UTF7Encoding();
+                    else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                        _encoding = new UTF32Encoding(true, false);
+                    else
+                        _encoding = new UTF8Encoding(false);
+                }
+                return _encoding;
+            }
+            set
+            {
+                _encoding = value;
 
-        public static string Smtp { get; set; }
+                if (Application.UserAppDataRegistry == null)
+                    return;
 
-        public static bool AutoStash { get; set; }
+                if (_encoding.EncodingName == Encoding.ASCII.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
+                else if (_encoding.EncodingName == Encoding.Unicode.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "Unicode");
+                else if (_encoding.EncodingName == Encoding.UTF7.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
+                else if (_encoding.EncodingName == Encoding.UTF8.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
+                else if (_encoding.EncodingName == Encoding.UTF32.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
+                else if (_encoding.EncodingName == Encoding.Default.EncodingName)
+                    Application.UserAppDataRegistry.SetValue("encoding", "Default");
+            }
+        }
 
-        public static bool OrderRevisionByDate { get; set; }
+        private static string _pullMerge;
+        public static string PullMerge
+        {
+            get
+            {
+                if (_pullMerge == null)
+                    SafeSetString("pullmerge", "merge", x => _pullMerge = x);
+                return _pullMerge;
+            }
+            set
+            {
+                _pullMerge = value;
+                Application.UserAppDataRegistry.SetValue("pullmerge", _pullMerge);
+            }
+        }
 
-        public static string Dictionary { get; set; }
 
-        public static bool ShowGitCommandLine { get; set; }
+        private static string _smtp;
+        public static string Smtp
+        {
+            get
+            {
+                if (_smtp == null)
+                    SafeSetString("smtp", "", x => _smtp = x);
+                return _smtp;
+            }
+            set
+            {
+                _smtp = value;
+                Application.UserAppDataRegistry.SetValue("smtp", _smtp);
+            }
+        }
 
-        public static bool RelativeDate { get; set; }
 
-        public static bool UseFastChecks { get; set; }
+        private static bool? _autoStash;
+        public static bool AutoStash
+        {
+            get
+            {
+                if (_autoStash == null)
+                    SafeSetBool("autostash", false, x => _autoStash = x);
+                return _autoStash.Value;
+            }
+            set
+            {
+                _autoStash = value;
+                Application.UserAppDataRegistry.SetValue("autostash", _autoStash);
+            }
+        }
 
-        public static bool ShowRevisionGraph { get; set; }
+        private static bool? _orderRevisionByDate;
+        public static bool OrderRevisionByDate
+        {
+            get
+            {
+                if (_orderRevisionByDate == null)
+                    SafeSetBool("orderrevisionbydate", true, x => _orderRevisionByDate = x);
+                return _orderRevisionByDate.Value;
+            }
+            set
+            {
+                _orderRevisionByDate = value;
+                Application.UserAppDataRegistry.SetValue("orderrevisionbydate", _orderRevisionByDate);
+            }
+        }
 
-        public static bool ShowAuthorDate { get; set; }
+        private static string _dictionary;
+        public static string Dictionary
+        {
+            get
+            {
+                if (_dictionary == null)
+                    SafeSetString("dictionary", "en-US", x => _dictionary = x);
+                return _dictionary;
+            }
+            set
+            {
+                _dictionary = value;
+                Application.UserAppDataRegistry.SetValue("dictionary", _dictionary);
+            }
+        }
 
-        public static bool CloseProcessDialog { get; set; }
+        private static bool? _showGitCommandLine;
+        public static bool ShowGitCommandLine
+        {
+            get
+            {
+                if (_showGitCommandLine == null)
+                    SafeSetBool("showgitcommandline", false, x => _showGitCommandLine = x);
+                return _showGitCommandLine.Value;
+            }
+            set
+            {
+                _showGitCommandLine = value;
+                Application.UserAppDataRegistry.SetValue("showgitcommandline", _showGitCommandLine);
+            }
+        }
 
-        public static bool ShowCurrentBranchOnly { get; set; }
+        private static bool? _relativeDate;
+        public static bool RelativeDate
+        {
+            get
+            {
+                if (_relativeDate == null)
+                    SafeSetBool("relativedate", true, x => _relativeDate = x);
+                return _relativeDate.Value;
+            }
+            set
+            {
+                _relativeDate = value;
+                Application.UserAppDataRegistry.SetValue("relativedate", _relativeDate);
+            }
+        }
 
-        public static bool BranchFilterEnabled { get; set; }
+        private static bool? _useFastChecks;
+        public static bool UseFastChecks
+        {
+            get
+            {
+                if (_useFastChecks == null)
+                    SafeSetBool("usefastchecks", false, x => _useFastChecks = x);
+                return _useFastChecks.Value;
+            }
+            set
+            {
+                _useFastChecks = value;
+                Application.UserAppDataRegistry.SetValue("usefastchecks", _useFastChecks);
+            }
+        }
 
-        public static int RevisionGridQuickSearchTimeout { get; set; }
+        private static bool? _showRevisionGraph;
+        public static bool ShowRevisionGraph
+        {
+            get
+            {
+                if (_showRevisionGraph == null)
+                    SafeSetBool("showrevisiongraph", true, x => _showRevisionGraph = x);
+                return _showRevisionGraph.Value;
+            }
+            set
+            {
+                _showRevisionGraph = value;
+                Application.UserAppDataRegistry.SetValue("showrevisiongraph", _showRevisionGraph);
+            }
+        }
 
-        public static string GitCommand { get; set; }
+        private static bool? _showAuthorDate;
+        public static bool ShowAuthorDate
+        {
+            get
+            {
+                if (_showAuthorDate == null)
+                    SafeSetBool("showauthordate", true, x => _showAuthorDate = x);
+                return _showAuthorDate.Value;
+            }
+            set
+            {
+                _showAuthorDate = value;
+                Application.UserAppDataRegistry.SetValue("showauthordate", _showAuthorDate);
+            }
+        }
 
+        private static bool? _closeProcessDialog;
+        public static bool CloseProcessDialog
+        {
+            get
+            {
+                if (_closeProcessDialog == null)
+                    SafeSetBool("closeprocessdialog", false, x => _closeProcessDialog = x);
+                return _closeProcessDialog.Value;
+            }
+            set
+            {
+                _closeProcessDialog = value;
+                Application.UserAppDataRegistry.SetValue("closeprocessdialog", _closeProcessDialog);
+            }
+        }
+
+        private static bool? _showCurrentBranchOnly;
+        public static bool ShowCurrentBranchOnly
+        {
+            get
+            {
+                if (_showCurrentBranchOnly == null)
+                    SafeSetBool("showcurrentbranchonly", false, x => _showCurrentBranchOnly = x);
+                return _showCurrentBranchOnly.Value;
+            }
+            set
+            {
+                _showCurrentBranchOnly = value;
+                Application.UserAppDataRegistry.SetValue("showcurrentbranchonly", _showCurrentBranchOnly);
+            }
+        }
+
+        private static bool? _branchFilterEnabled;
+        public static bool BranchFilterEnabled
+        {
+            get
+            {
+                if (_branchFilterEnabled == null)
+                    SafeSetBool("branchfilterenabled", false, x => _branchFilterEnabled = x);
+                return _branchFilterEnabled.Value;
+            }
+            set
+            {
+                _branchFilterEnabled = value;
+                Application.UserAppDataRegistry.SetValue("branchfilterenabled", _branchFilterEnabled);
+            }
+        }
+
+        private static int? _revisionGridQuickSearchTimeout;
+        public static int RevisionGridQuickSearchTimeout
+        {
+            get
+            {
+                if (_revisionGridQuickSearchTimeout == null)
+                    SafeSetInt("revisiongridquicksearchtimeout", 750, x => _revisionGridQuickSearchTimeout = x);
+                return _revisionGridQuickSearchTimeout.Value;
+            }
+            set
+            {
+                _revisionGridQuickSearchTimeout = value;
+                Application.UserAppDataRegistry.SetValue("revisiongridquicksearchtimeout", _revisionGridQuickSearchTimeout);
+            }
+        }
+
+        private static string _gitCommand;
+        public static string GitCommand
+        {
+            get
+            {
+                if (_gitCommand == null)
+                    SafeSetString("gitdir", "git.cmd", x => _gitCommand = x);
+                return _gitCommand;
+            }
+            set
+            {
+                _gitCommand = value;
+                Application.UserAppDataRegistry.SetValue("gitcommand", _gitCommand);
+            }
+        }
+
+        private static string _gitBinDir;
         public static string GitBinDir
         {
-            get { return _gitBinDir; }
+            get
+            {
+                if (_gitBinDir == null)
+                    SafeSetString("gitbindir", "", x => GitBinDir = x);
+                return _gitBinDir;
+            }
             set
             {
                 _gitBinDir = value;
+                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
                 if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeparator)
                     _gitBinDir += PathSeparator;
 
@@ -222,18 +659,33 @@ namespace GitCommands
             }
         }
 
-        public static int MaxCommits { get; set; }
+        private static int? _maxCommits;
+        public static int MaxCommits
+        {
+            get
+            {
+                if (_maxCommits == null)
+                    SafeSetInt("maxcommits", 2000, x => _maxCommits = x);
+                return _maxCommits.Value;
+            }
+            set
+            {
+                _maxCommits = value;
+                Application.UserAppDataRegistry.SetValue("maxcommits", _maxCommits);
+            }
+        }
 
         public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
+        private static string _workingdir;
         public static string WorkingDir
         {
-            get 
-            { 
-                return _workingdir; 
+            get
+            {
+                return _workingdir;
             }
-            set 
+            set
             {
                 string old = _workingdir;
                 _workingdir = GitCommandHelpers.FindGitWorkingDir(value.Trim());
@@ -246,60 +698,324 @@ namespace GitCommands
 
         public static CommandLogger GitLog { get; private set; }
 
-        public static string Plink { get; set; }
+        private static string _plink;
+        public static string Plink
+        {
+            get
+            {
+                if (_plink == null)
+                    SafeSetString("plink", "", x => _plink = x);
+                return _plink;
+            }
+            set
+            {
+                _plink = value;
+                Application.UserAppDataRegistry.SetValue("plink", _plink);
+            }
+        }
+        private static string _puttygen;
+        public static string Puttygen
+        {
+            get
+            {
+                if (_puttygen == null)
+                    SafeSetString("puttygen", "", x => _puttygen = x);
+                return _puttygen;
+            }
+            set
+            {
+                _puttygen = value;
+                Application.UserAppDataRegistry.SetValue("puttygen", _puttygen);
+            }
+        }
 
-        public static string Puttygen { get; set; }
+        private static string _pageant;
+        public static string Pageant
+        {
+            get
+            {
+                if (_pageant == null)
+                    SafeSetString("pageant", "", x => _pageant = x);
+                return _pageant;
+            }
+            set
+            {
+                _pageant = value;
+                Application.UserAppDataRegistry.SetValue("pageant", _pageant);
+            }
+        }
 
-        public static string Pageant { get; set; }
+        private static bool? _autoStartPageant;
+        public static bool AutoStartPageant
+        {
+            get
+            {
+                if (_autoStartPageant == null)
+                    SafeSetBool("autostartpageant", true, x => _autoStartPageant = x);
+                return _autoStartPageant.Value;
+            }
+            set
+            {
+                _autoStartPageant = value;
+                Application.UserAppDataRegistry.SetValue("autostartpageant", _autoStartPageant);
+            }
+        }
 
-        public static bool AutoStartPageant { get; set; }
-
-        public static bool MarkIllFormedLinesInCommitMsg { get; set; }
+        private static bool? _markIllFormedLinesInCommitMsg;
+        public static bool MarkIllFormedLinesInCommitMsg
+        {
+            get
+            {
+                if (_markIllFormedLinesInCommitMsg == null)
+                    SafeSetBool("markillformedlinesincommitmsg", false, x => _markIllFormedLinesInCommitMsg = x);
+                return _markIllFormedLinesInCommitMsg.Value;
+            }
+            set
+            {
+                _markIllFormedLinesInCommitMsg = value;
+                Application.UserAppDataRegistry.SetValue("markillformedlinesincommitmsg", _markIllFormedLinesInCommitMsg);
+            }
+        }
 
         #region Colors
 
-        public static Color OtherTagColor { get; set; }
+        private static Color? _otherTagColor;
+        public static Color OtherTagColor
+        {
+            get
+            {
+                if (_otherTagColor == null)
+                    SafeSetHtmlColor("othertagcolor", Color.Gray, x => _otherTagColor = x);
+                return _otherTagColor.Value;
+            }
+            set
+            {
+                _otherTagColor = value;
+                Application.UserAppDataRegistry.SetValue("othertagcolor", ColorTranslator.ToHtml(_otherTagColor.Value));
+            }
+        }
+        private static Color? _tagColor;
+        public static Color TagColor
+        {
+            get
+            {
+                if (_tagColor == null)
+                    SafeSetHtmlColor("tagcolor", Color.DarkBlue, x => _tagColor = x);
+                return _tagColor.Value;
+            }
+            set
+            {
+                _tagColor = value;
+                Application.UserAppDataRegistry.SetValue("tagcolor", ColorTranslator.ToHtml(_tagColor.Value));
+            }
+        }
 
-        public static Color TagColor { get; set; }
+        private static Color? _graphColor;
+        public static Color GraphColor
+        {
+            get
+            {
+                if (_graphColor == null)
+                    SafeSetHtmlColor("graphcolor", Color.DarkRed, x => _graphColor = x);
+                return _graphColor.Value;
+            }
+            set
+            {
+                _graphColor = value;
+                Application.UserAppDataRegistry.SetValue("graphcolor", ColorTranslator.ToHtml(_graphColor.Value));
+            }
+        }
 
-        public static Color GraphColor { get; set; }
+        private static Color? _branchColor;
+        public static Color BranchColor
+        {
+            get
+            {
+                if (_branchColor == null)
+                    SafeSetHtmlColor("branchcolor", Color.DarkRed, x => _branchColor = x);
+                return _branchColor.Value;
+            }
+            set
+            {
+                _branchColor = value;
+                Application.UserAppDataRegistry.SetValue("branchcolor", ColorTranslator.ToHtml(_branchColor.Value));
+            }
+        }
 
-        public static Color BranchColor { get; set; }
+        private static Color? _remoteBranchColor;
+        public static Color RemoteBranchColor
+        {
+            get
+            {
+                if (_remoteBranchColor == null)
+                    SafeSetHtmlColor("remotebranchcolor", Color.Green, x => _remoteBranchColor = x);
+                return _remoteBranchColor.Value;
+            }
+            set
+            {
+                _remoteBranchColor = value;
+                Application.UserAppDataRegistry.SetValue("remotebranchcolor", ColorTranslator.ToHtml(_remoteBranchColor.Value));
+            }
+        }
 
-        public static Color RemoteBranchColor { get; set; }
+        private static Color? _diffSectionColor;
+        public static Color DiffSectionColor
+        {
+            get
+            {
+                if (_diffSectionColor == null)
+                    SafeSetHtmlColor("diffsectioncolor", Color.FromArgb(230, 230, 230), x => _diffSectionColor = x);
+                return _diffSectionColor.Value;
+            }
+            set
+            {
+                _diffSectionColor = value;
+                Application.UserAppDataRegistry.SetValue("diffsectioncolor", ColorTranslator.ToHtml(_diffSectionColor.Value));
+            }
+        }
 
-        public static Color DiffSectionColor { get; set; }
+        private static Color? _diffRemovedColor;
+        public static Color DiffRemovedColor
+        {
+            get
+            {
+                if (_diffRemovedColor == null)
+                    SafeSetHtmlColor("diffremovedcolor", Color.FromArgb(255, 200, 200), x => _diffRemovedColor = x);
+                return _diffRemovedColor.Value;
+            }
+            set
+            {
+                _diffRemovedColor = value;
+                Application.UserAppDataRegistry.SetValue("diffremovedcolor", ColorTranslator.ToHtml(_diffRemovedColor.Value));
+            }
+        }
 
-        public static Color DiffRemovedColor { get; set; }
+        private static Color? _diffRemovedExtraColor;
+        public static Color DiffRemovedExtraColor
+        {
+            get
+            {
+                if (_diffRemovedExtraColor == null)
+                    SafeSetHtmlColor("diffremovedextracolor", Color.FromArgb(255, 150, 150), x => _diffRemovedExtraColor = x);
+                return _diffRemovedExtraColor.Value;
+            }
+            set
+            {
+                _diffRemovedExtraColor = value;
+                Application.UserAppDataRegistry.SetValue("diffremovedextracolor", ColorTranslator.ToHtml(_diffRemovedExtraColor.Value));
+            }
+        }
 
-        public static Color DiffRemovedExtraColor { get; set; }
+        private static Color? _diffAddedColor;
+        public static Color DiffAddedColor
+        {
+            get
+            {
+                if (_diffAddedColor == null)
+                    SafeSetHtmlColor("diffaddedcolor", Color.FromArgb(200, 255, 200), x => _diffAddedColor = x);
+                return _diffAddedColor.Value;
+            }
+            set
+            {
+                _diffAddedColor = value;
+                Application.UserAppDataRegistry.SetValue("diffaddedcolor", ColorTranslator.ToHtml(_diffAddedColor.Value));
+            }
+        }
 
-        public static Color DiffAddedColor { get; set; }
-
-        public static Color DiffAddedExtraColor { get; set; }
-
-        public static bool MulticolorBranches { get; set; }
-
-        public static bool StripedBranchChange { get; set; }
-
-        public static bool BranchBorders { get; set; }
-
-        public static string LastFormatPatchDir { get; set; }
+        private static Color? _diffAddedExtraColor;
+        public static Color DiffAddedExtraColor
+        {
+            get
+            {
+                if (_diffAddedExtraColor == null)
+                    SafeSetHtmlColor("diffaddedextracolor", Color.FromArgb(135, 255, 135), x => _diffAddedExtraColor = x);
+                return _diffAddedExtraColor.Value;
+            }
+            set
+            {
+                _diffAddedExtraColor = value;
+                Application.UserAppDataRegistry.SetValue("diffaddedextracolor", ColorTranslator.ToHtml(_diffAddedExtraColor.Value));
+            }
+        }
 
         #endregion
 
+        private static bool? _multicolorBranches;
+        public static bool MulticolorBranches
+        {
+            get
+            {
+                if (_multicolorBranches == null)
+                    SafeSetBool("multicolorbranches", true, x => _multicolorBranches = x);
+                return _multicolorBranches.Value;
+            }
+            set
+            {
+                _multicolorBranches = value;
+                Application.UserAppDataRegistry.SetValue("multicolorbranches", _multicolorBranches);
+            }
+        }
+
+        private static bool? _stripedBranchChange;
+        public static bool StripedBranchChange
+        {
+            get
+            {
+                if (_stripedBranchChange == null)
+                    SafeSetBool("stripedbranchchange", true, x => _stripedBranchChange = x);
+                return _stripedBranchChange.Value;
+            }
+            set
+            {
+                _stripedBranchChange = value;
+                Application.UserAppDataRegistry.SetValue("stripedbranchchange", _stripedBranchChange);
+            }
+        }
+
+        private static bool? _branchBorders;
+        public static bool BranchBorders
+        {
+            get
+            {
+                if (_branchBorders == null)
+                    SafeSetBool("branchborders", true, x => _branchBorders = x);
+                return _branchBorders.Value;
+            }
+            set
+            {
+                _branchBorders = value;
+                Application.UserAppDataRegistry.SetValue("branchborders", _branchBorders);
+            }
+        }
+
+        private static string _lastFormatPatchDir;
+        public static string LastFormatPatchDir
+        {
+            get
+            {
+                if (_lastFormatPatchDir == null)
+                    SafeSetString("lastformatpatchdir", "", x => _lastFormatPatchDir = x);
+                return _lastFormatPatchDir;
+            }
+            set
+            {
+                _lastFormatPatchDir = value;
+                Application.UserAppDataRegistry.SetValue("lastformatpatchdir", _lastFormatPatchDir);
+            }
+        }
+
+
+
         public static string GetDictionaryDir()
         {
-            var result = "";
-            SafeSetString("InstallDir", x => result = x + "\\Dictionaries\\");
-            return result;
+            return GetInstallDir() + "\\Dictionaries\\";
         }
 
 
         public static string GetInstallDir()
         {
             var result = "";
-            SafeSetString("InstallDir", x => result = x);
+            SafeSetString("InstallDir", "", x => result = x);
             return result;
         }
 
@@ -386,262 +1102,62 @@ namespace GitCommands
         {
             try
             {
-
-                if (Application.UserAppDataRegistry == null)
-                    throw new Exception("Application.UserAppDataRegistry is not available");
-
-                var appData = Application.UserAppDataRegistry;
-
-                appData.SetValue("gitdir", GitCommand);
-                appData.SetValue("gitbindir", GitBinDir);
-
-                SetEncoding();
-
-                appData.SetValue("history", Repositories.SerializeHistoryIntoXml());
-                appData.SetValue("repositories", Repositories.SerializeRepositories());
-                appData.SetValue("showauthorgravatar", ShowAuthorGravatar);
-                appData.SetValue("userprofilehomedir", UserProfileHomeDir);
-                appData.SetValue("customhomedir", CustomHomeDir);
-                appData.SetValue("closeCommitDialogAfterCommit", CloseCommitDialogAfterCommit);
-                appData.SetValue("markIllFormedLinesInCommitMsg", MarkIllFormedLinesInCommitMsg);
-                appData.SetValue("diffaddedcolor", ColorTranslator.ToHtml(DiffAddedColor));
-                appData.SetValue("diffremovedcolor", ColorTranslator.ToHtml(DiffRemovedColor));
-                appData.SetValue("diffaddedextracolor", ColorTranslator.ToHtml(DiffAddedExtraColor));
-                appData.SetValue("diffremovedextracolor", ColorTranslator.ToHtml(DiffRemovedExtraColor));
-                appData.SetValue("diffsectioncolor", ColorTranslator.ToHtml(DiffSectionColor));
-                appData.SetValue("multicolorbranches", MulticolorBranches);
-                appData.SetValue("branchborders", BranchBorders);
-                appData.SetValue("stripedbanchchange", StripedBranchChange);
-                appData.SetValue("tagcolor", ColorTranslator.ToHtml(TagColor));
-                appData.SetValue("graphcolor", ColorTranslator.ToHtml(GraphColor));
-                appData.SetValue("branchcolor", ColorTranslator.ToHtml(BranchColor));
-                appData.SetValue("remotebranchcolor", ColorTranslator.ToHtml(RemoteBranchColor));
-                appData.SetValue("othertagcolor", ColorTranslator.ToHtml(OtherTagColor));
-                appData.SetValue("iconcolor", IconColor);
-                appData.SetValue("translation", Translation);
-                appData.SetValue("authorImageCacheDays", AuthorImageCacheDays);
-                appData.SetValue("authorimagesize", AuthorImageSize);
-                appData.SetValue("maxcommits", MaxCommits);
-                appData.SetValue("showallbranches", ShowCurrentBranchOnly);
-                appData.SetValue("branchfilterenabled", BranchFilterEnabled);
-                appData.SetValue("closeprocessdialog", CloseProcessDialog);
-                appData.SetValue("showrevisiongraph", ShowRevisionGraph);
-                appData.SetValue("showauthordate", ShowAuthorDate);
-                appData.SetValue("orderrevisiongraphbydate", OrderRevisionByDate);
-                appData.SetValue("showgitcommandline", ShowGitCommandLine);
-                appData.SetValue("usefastchecks", UseFastChecks);
-                appData.SetValue("relativedate", RelativeDate);
-                appData.SetValue("gitssh", GitCommandHelpers.GetSsh());
-                appData.SetValue("pullmerge", PullMerge);
-                appData.SetValue("autostash", AutoStash);
-                appData.SetValue("followrenamesinfilehistory", FollowRenamesInFileHistory);
-                appData.SetValue("plink", Plink);
-                appData.SetValue("puttygen", Puttygen);
-                appData.SetValue("pageant", Pageant);
-                appData.SetValue("smtp", Smtp);
-                appData.SetValue("dictionary", Dictionary);
-                appData.SetValue("commitinfoshowcontainedinbrancheslocal", CommitInfoShowContainedInBranchesLocal);
-                appData.SetValue("commitinfoshowcontainedinbranchesremote", CommitInfoShowContainedInBranchesRemote);
-                appData.SetValue("commitinfoshowcontainedinbranchesremoteifnolocal", CommitInfoShowContainedInBranchesRemoteIfNoLocal);
-                appData.SetValue("commitinfoshowcontainedintags", CommitInfoShowContainedInTags);
-                appData.SetValue("revisionGridQuickSearchTimeout", RevisionGridQuickSearchTimeout);
-                appData.SetValue("showgitstatusinbrowsetoolbar", ShowGitStatusInBrowseToolbar);
-                appData.SetValue("lastcommitmessage", LastCommitMessage);
-                appData.SetValue("showerrorswhenstagingfiles", ShowErrorsWhenStagingFiles);
-                appData.SetValue("revisiongraphdrawnonrelativesgray", RevisionGraphDrawNonRelativesGray);
-                appData.SetValue("revisiongraphshowworkingdirchanges", RevisionGraphShowWorkingDirChanges);
-                appData.SetValue("lastformatpatchdir", LastFormatPatchDir);
+                Application.UserAppDataRegistry.SetValue("history", Repositories.SerializeHistoryIntoXml());
+                Application.UserAppDataRegistry.SetValue("repositories", Repositories.SerializeRepositories());
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Could not save settings.\n\n" + ex.Message);
-            }
-        }
-
-        private static void SetEncoding()
-        {
-            if (Application.UserAppDataRegistry == null)
-                return;
-
-            if (Encoding.EncodingName == Encoding.ASCII.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "ASCII");
-            else if (Encoding.EncodingName == Encoding.Unicode.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "Unicode");
-            else if (Encoding.EncodingName == Encoding.UTF7.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "UTF7");
-            else if (Encoding.EncodingName == Encoding.UTF8.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "UTF8");
-            else if (Encoding.EncodingName == Encoding.UTF32.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "UTF32");
-            else if (Encoding.EncodingName == Encoding.Default.EncodingName)
-                Application.UserAppDataRegistry.SetValue("encoding", "Default");
+            catch
+            { }
         }
 
 
         public static void LoadSettings()
         {
-            AllSettingsLoaded = false;
-
-            //First load the 'important' settings, then load other settings async
-            SafeSetString("gitdir", x => GitCommand = x);
-            SafeSetString("gitbindir", x => GitBinDir = x);
-            SafeSetBool("userprofilehomedir", x => UserProfileHomeDir = x);
-            SafeSetString("customhomedir", x => CustomHomeDir = x);
-
-            //We need this BEFORE the first form is started, otherwise it will be pointless
-            SafeSetString("iconcolor", x => IconColor = x);
-            SafeSetString("translation", x => Translation = x);
-
-            GetEncoding();
-
-            LoadSettingsAsync();
-        }
-
-        private static void LoadSettingsAsync()
-        {
-            // Create the thread object, passing in the Alpha.Beta method
-            // via a ThreadStart delegate. This does not start the thread.
-            Thread oThread = new Thread(new ThreadStart(DoLoadSettings));
-
-            // Start the thread
-            oThread.Start();
-
-        }
-
-        private static void DoLoadSettings()
-        {
             try
             {
-                //IMPORTANT: most important settings must be loaded first, since
-                //these settings are loading async.
-                SafeSetBool("showrevisiongraph", x => ShowRevisionGraph = x);
-
-                SafeSetInt("maxcommits", x => MaxCommits = x);
-
-                try
-                {
-                    SafeSetHtmlColor("diffaddedcolor", x => DiffAddedColor = x);
-                    SafeSetHtmlColor("diffremovedcolor", x => DiffRemovedColor = x);
-                    SafeSetHtmlColor("diffaddedextracolor", x => DiffAddedExtraColor = x);
-                    SafeSetHtmlColor("diffremovedextracolor", x => DiffRemovedExtraColor = x);
-                    SafeSetHtmlColor("diffsectioncolor", x => DiffSectionColor = x);
-                    SafeSetHtmlColor("tagcolor", x => TagColor = x);
-                    SafeSetHtmlColor("graphcolor", x => GraphColor = x);
-                    SafeSetHtmlColor("branchcolor", x => BranchColor = x);
-                    SafeSetHtmlColor("remotebranchcolor", x => RemoteBranchColor = x);
-                    SafeSetHtmlColor("othertagcolor", x => OtherTagColor = x);
-                    SafeSetBool("multicolorbranches", x => MulticolorBranches = x);
-                    SafeSetBool("branchborders", x => BranchBorders = x);
-                    SafeSetBool("stripedbanchchange", x => StripedBranchChange = x);
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex.Message);
-                }
-
-                SafeSetBool("showauthordate", x => ShowAuthorDate = x);
-                SafeSetBool("revisiongraphdrawnonrelativesgray", x => RevisionGraphDrawNonRelativesGray = x);
-                SafeSetBool("revisiongraphshowworkingdirchanges", x => RevisionGraphShowWorkingDirChanges = x);
-
-                SafeSetBool("orderrevisiongraphbydate", x => OrderRevisionByDate = x);
-                SafeSetBool("relativedate", x => RelativeDate = x);
-
-                SafeSetBool("showauthorgravatar", x => ShowAuthorGravatar = x);
-                SafeSetInt("authorImageCacheDays", x => AuthorImageCacheDays = x);
-                SafeSetInt("authorimagesize", x => AuthorImageSize = x);
-
-                //Not needed before any dialog is started
-                SafeSetString("pullmerge", x => PullMerge = x);
-                SafeSetBool("autostash", x => AutoStash = x);
-
-                SafeSetString("gitssh", GitCommandHelpers.SetSsh);
-                SafeSetString("plink", x => Plink = x);
-                SafeSetString("puttygen", x => Puttygen = x);
-                SafeSetString("pageant", x => Pageant = x);
-                SafeSetString("dictionary", x => Dictionary = x);
-                SafeSetString("smtp", x => Smtp = x);
-
-                SafeSetBool("closeCommitDialogAfterCommit", x => CloseCommitDialogAfterCommit = x);
-                SafeSetBool("markIllFormedLinesInCommitMsg", x => MarkIllFormedLinesInCommitMsg = x);
-                SafeSetBool("followrenamesinfilehistory", x => FollowRenamesInFileHistory = x);
-                SafeSetBool("showgitcommandline", x => ShowGitCommandLine = x);
-                SafeSetBool("closeprocessdialog", x => CloseProcessDialog = x);
-                SafeSetBool("showallbranches", x => ShowCurrentBranchOnly = !x);
-                SafeSetBool("branchfilterenabled", x => BranchFilterEnabled = x);
-                SafeSetBool("commitinfoshowcontainedinbranches", x => CommitInfoShowContainedInBranchesLocal = x);
-                SafeSetBool("commitinfoshowcontainedinbrancheslocal", x => CommitInfoShowContainedInBranchesLocal = x);
-                SafeSetBool("commitinfoshowcontainedinbranchesremote", x => CommitInfoShowContainedInBranchesRemote = x);
-                SafeSetBool("commitinfoshowcontainedinbranchesremoteifnolocal", x => CommitInfoShowContainedInBranchesRemoteIfNoLocal = x);
-                SafeSetBool("commitinfoshowcontainedintags", x => CommitInfoShowContainedInTags = x);
-                SafeSetInt("revisionGridQuickSearchTimeout", x => RevisionGridQuickSearchTimeout = x);
-                SafeSetBool("showgitstatusinbrowsetoolbar", x => ShowGitStatusInBrowseToolbar = x);
-                SafeSetString("lastcommitmessage", x => LastCommitMessage = x);
-                SafeSetBool("showerrorswhenstagingfiles", x => ShowErrorsWhenStagingFiles = x);
-                SafeSetString("lastformatpatchdir", x => LastFormatPatchDir = x);
-
-                SafeSetString("history", Repositories.DeserializeHistoryFromXml);
-                SafeSetString("repositories", Repositories.DeserializeRepositories);
+                SafeSetString("history", null, Repositories.DeserializeHistoryFromXml);
+                SafeSetString("repositories", null, Repositories.DeserializeRepositories);
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            finally
-            {
-                AllSettingsLoaded = true;
-            }
+            catch
+            { }
+
         }
 
-        private static void GetEncoding()
+
+        private static void SafeSetBool(string key, bool defaultValue, Action<bool> actionToPerformIfValueExists)
         {
-            string encoding = null;
-            SafeSetString("encoding", x => encoding = x);
-
-            if (string.IsNullOrEmpty(encoding))
-                Encoding = new UTF8Encoding(false);
-            else if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                Encoding = Encoding.Default;
-            else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                Encoding = new UnicodeEncoding();
-            else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                Encoding = new ASCIIEncoding();
-            else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                Encoding = new UTF7Encoding();
-            else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                Encoding = new UTF32Encoding(true, false);
-            else
-                Encoding = new UTF8Encoding(false);
+            SafeSetString(key, null, x => actionToPerformIfValueExists(x == null ? defaultValue : x == "True"));
         }
 
-        private static void SafeSetBool(string key, Action<bool> actionToPerformIfValueExists)
+        private static void SafeSetHtmlColor(string key, Color defaultValue, Action<Color> actionToPerformIfValueExists)
         {
-            SafeSetString(key, x => actionToPerformIfValueExists(x == "True"));
+            SafeSetString(key, null, x => actionToPerformIfValueExists(x == null ? defaultValue : ColorTranslator.FromHtml(x)));
         }
 
-        private static void SafeSetHtmlColor(string key, Action<Color> actionToPerformIfValueExists)
+        private static void SafeSetInt(string key, int defaultValue, Action<int> actionToPerformIfValueExists)
         {
-            SafeSetString(key, x => actionToPerformIfValueExists(ColorTranslator.FromHtml(x)));
+            SafeSetString(key, null,
+                                x =>
+                                {
+                                    int result;
+                                    if (x != null && int.TryParse(x, out result))
+                                    {
+                                        actionToPerformIfValueExists(result);
+                                    }
+                                    else
+                                    {
+                                        actionToPerformIfValueExists(defaultValue);
+                                    }
+                                });
         }
 
-        private static void SafeSetInt(string key, Action<int> actionToPerformIfValueExists)
-        {
-            SafeSetString(key, x =>
-                                   {
-                                       int result;
-                                       if (int.TryParse(x, out result))
-                                       {
-                                           actionToPerformIfValueExists(result);
-                                       }
-                                   });
-        }
-
-        private static void SafeSetString(string key, Action<string> actionToPerformIfValueExists)
+        private static void SafeSetString(string key, string defaultValue, Action<string> actionToPerformIfValueExists)
         {
             if (Application.UserAppDataRegistry == null) return;
             var value = Application.UserAppDataRegistry.GetValue(key);
             if (value == null)
-                return;
-            actionToPerformIfValueExists(value.ToString());
+                actionToPerformIfValueExists(defaultValue);
+            else
+                actionToPerformIfValueExists(value.ToString());
         }
     }
 }
