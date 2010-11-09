@@ -6,9 +6,9 @@ namespace GitUI
 {
     public partial class FormCherryPickCommitSmall : GitExtensionsForm
     {
-        public FormCherryPickCommitSmall(GitRevision Revision)
+        public FormCherryPickCommitSmall(GitRevision revision)
         {
-            this.Revision = Revision;
+            this.Revision = revision;
 
             InitializeComponent(); Translate();
         }
