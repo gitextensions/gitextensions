@@ -54,7 +54,7 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommandHelpers.UnSetSetting(_remoteSettingName);
+                    GitCommandHelpers.UnsetSetting(_remoteSettingName);
                 else
                 {
                     GitCommandHelpers.SetSetting(_remoteSettingName, value);
@@ -75,7 +75,7 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommandHelpers.UnSetSetting(_mergeSettingName);
+                    GitCommandHelpers.UnsetSetting(_mergeSettingName);
                 else
                     GitCommandHelpers.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
