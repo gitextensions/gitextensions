@@ -118,7 +118,7 @@ namespace GitCommands.Config
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWriteable(_fileName,
+                    .MakeFileTemporaryWritable(_fileName,
                                        x =>
                                        File.WriteAllText(_fileName, configFileContent.ToString(), Settings.Encoding));
             }

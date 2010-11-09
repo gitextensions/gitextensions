@@ -163,7 +163,7 @@ namespace PatchApply
                             patch.Rate -= 20;
                     }
 
-                    patch.BookMarks.Add(lineNumber);
+                    patch.Bookmarks.Add(lineNumber);
 
                     if (fileLines.Count > lineNumber)
                         fileLines.RemoveAt(lineNumber);
@@ -185,7 +185,7 @@ namespace PatchApply
                     }
 
                     fileLines.Insert(lineNumber, insertLine);
-                    patch.BookMarks.Add(lineNumber);
+                    patch.Bookmarks.Add(lineNumber);
 
                     lineNumber++;
                 }

@@ -456,7 +456,7 @@ namespace GitUI
             }
 
             if (OpenSSH.Checked)
-                GitCommandHelpers.UnSetSsh();
+                GitCommandHelpers.UnsetSsh();
 
             if (Putty.Checked)
                 GitCommandHelpers.SetSsh(PlinkPath.Text);
