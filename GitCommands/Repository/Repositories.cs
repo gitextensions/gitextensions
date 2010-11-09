@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Windows.Forms;
 
 namespace GitCommands.Repository
 {
@@ -14,14 +15,35 @@ namespace GitCommands.Repository
 
         public static RepositoryHistory RepositoryHistory
         {
-            get { return _repositoryHistory ?? (_repositoryHistory = new RepositoryHistory()); }
-            set { _repositoryHistory = value; }
+            get 
+            { 
+                if (_repositoryHistory == null)
+                    Repositories.DeserializeHistoryFromXml(Application.UserAppDataRegistry.GetValue("history").ToString());
+                if (_repositoryHistory == null)
+                    _repositoryHistory = new RepositoryHistory();
+                return _repositoryHistory; 
+            }
+            private set
+            {
+                _repositoryHistory = value;
+            }
+
         }
 
         public static BindingList<RepositoryCategory> RepositoryCategories
         {
-            get { return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>()); }
-            set { _repositoryCategories = value; }
+            get
+            {
+                if (_repositoryCategories == null)
+                    Repositories.DeserializeRepositories(Application.UserAppDataRegistry.GetValue("repositories").ToString());
+                if (_repositoryCategories == null)
+                    _repositoryCategories = new BindingList<RepositoryCategory>();
+                return _repositoryCategories;
+            }
+            private set 
+            { 
+                _repositoryCategories = value; 
+            }
         }
 
         public static string SerializeRepositories()
@@ -82,6 +104,9 @@ namespace GitCommands.Repository
 
         public static void DeserializeHistoryFromXml(string xml)
         {
+            if (string.IsNullOrEmpty(xml))
+                return;
+
             try
             {
                 var serializer = new XmlSerializer(typeof (RepositoryHistory));
