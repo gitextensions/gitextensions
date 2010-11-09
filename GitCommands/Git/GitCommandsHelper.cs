@@ -6,9 +6,9 @@ using System.Drawing;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
+using System.Windows.Forms;
 using GitCommands.Config;
 using PatchApply;
-using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -229,15 +229,17 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                using (Process process = new Process())
+                var processInfo = new ProcessStartInfo()
                 {
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                    processStartInfo.UseShellExecute = false;
-                    processStartInfo.RedirectStandardOutput = false;
-                    processStartInfo.FileName = cmd;
-                    processStartInfo.Arguments = arguments;
-                    processStartInfo.CreateNoWindow = true;
-                    process.StartInfo = processStartInfo;
+                    UseShellExecute = false,
+                    RedirectStandardOutput = false,
+                    FileName = cmd,
+                    Arguments = arguments,
+                    CreateNoWindow = true
+                };
+
+                using (var process = new Process() { StartInfo = processInfo })
+                {
                     process.Start();
                 }
             }
@@ -843,7 +845,7 @@ namespace GitCommands
             return "branch \"" + branchName.Trim() + "\" \"" + revision + "\"";
         }
 
-        public static void UnSetSsh()
+        public static void UnsetSsh()
         {
             Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
         }
@@ -1250,9 +1252,9 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "remote rm \"" + name + "\"");
         }
 
-        public static string RenameRemote(string name, string newname)
+        public static string RenameRemote(string name, string newName)
         {
-            return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newname + "\"");
+            return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newName + "\"");
         }
 
         public static string AddRemote(string name, string path)
@@ -1307,7 +1309,7 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
-        public static void UnSetSetting(string setting)
+        public static void UnsetSetting(string setting)
         {
             var configFile = GetLocalConfig();
             configFile.RemoveSetting(setting);

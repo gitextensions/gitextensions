@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
-using System.Configuration;
-using System.IO;
-using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -104,7 +103,13 @@ namespace GitUI
         public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
-                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                catch (InvalidOperationException) { }
+            }
         }
 
         /// <summary>
@@ -190,7 +195,7 @@ namespace GitUI
                         return position;
                 }
             }
-            catch(ConfigurationException)
+            catch (ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }
