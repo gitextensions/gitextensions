@@ -845,7 +845,7 @@ namespace GitCommands
             return "branch \"" + branchName.Trim() + "\" \"" + revision + "\"";
         }
 
-        public static void UnSetSsh()
+        public static void UnsetSsh()
         {
             Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
         }
@@ -1252,9 +1252,9 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "remote rm \"" + name + "\"");
         }
 
-        public static string RenameRemote(string name, string newname)
+        public static string RenameRemote(string name, string newName)
         {
-            return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newname + "\"");
+            return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newName + "\"");
         }
 
         public static string AddRemote(string name, string path)
@@ -1309,7 +1309,7 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
-        public static void UnSetSetting(string setting)
+        public static void UnsetSetting(string setting)
         {
             var configFile = GetLocalConfig();
             configFile.RemoveSetting(setting);
