@@ -585,8 +585,6 @@ namespace GitUI
 
         private void FormCommitShown(object sender, EventArgs e)
         {
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
             Initialize();
 
             var message = GitCommandHelpers.GetMergeMessage();

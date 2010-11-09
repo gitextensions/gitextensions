@@ -244,8 +244,6 @@ namespace GitUI
         {
             base.OnShown(e);
 
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
             EnableLoadSshButton();
 
             Merge.Checked = Settings.PullMerge == "merge";

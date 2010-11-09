@@ -52,8 +52,6 @@ namespace GitUI
 
         private void PushClick(object sender, EventArgs e)
         {
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show(_selectDestinationDirectory.Text);
@@ -274,8 +272,6 @@ namespace GitUI
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
-
             if (!File.Exists(Settings.Pageant))
                 MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
             else

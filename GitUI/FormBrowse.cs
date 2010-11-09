@@ -172,8 +172,6 @@ namespace GitUI
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
-            Settings.WaitUntilAllSettingsLoaded();
-
             if (hard)
                 ShowRevisions();
 
@@ -562,8 +560,9 @@ namespace GitUI
         {
             try
             {
-                if (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
-                    RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid)
+                if (RevisionGrid.GetRevisions().Count > 0 &&
+                    (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                     RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid))
                 {
                     if (tabControl1.TabPages.Contains(CommitInfo))
                         tabControl1.TabPages.Remove(CommitInfo); 

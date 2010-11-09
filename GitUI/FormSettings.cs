@@ -1286,7 +1286,6 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             this.WindowState = FormWindowState.Normal;
-            GitCommands.Settings.WaitUntilAllSettingsLoaded();
             LoadSettings();
             CheckSettings();
             this.WindowState = FormWindowState.Normal;
