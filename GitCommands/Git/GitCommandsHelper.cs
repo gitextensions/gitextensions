@@ -852,7 +852,8 @@ namespace GitCommands
 
         public static void SetSsh(string path)
         {
-            Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(path))
+                Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
         public static bool Plink()
