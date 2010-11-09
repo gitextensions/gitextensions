@@ -6,9 +6,9 @@ using System.Drawing;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
+using System.Windows.Forms;
 using GitCommands.Config;
 using PatchApply;
-using System.Windows.Forms;
 
 namespace GitCommands
 {
@@ -229,15 +229,17 @@ namespace GitCommands
             {
                 SetEnvironmentVariable();
 
-                using (Process process = new Process())
+                var processInfo = new ProcessStartInfo()
                 {
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                    processStartInfo.UseShellExecute = false;
-                    processStartInfo.RedirectStandardOutput = false;
-                    processStartInfo.FileName = cmd;
-                    processStartInfo.Arguments = arguments;
-                    processStartInfo.CreateNoWindow = true;
-                    process.StartInfo = processStartInfo;
+                    UseShellExecute = false,
+                    RedirectStandardOutput = false,
+                    FileName = cmd,
+                    Arguments = arguments,
+                    CreateNoWindow = true
+                };
+
+                using (var process = new Process() { StartInfo = processInfo })
+                {
                     process.Start();
                 }
             }
