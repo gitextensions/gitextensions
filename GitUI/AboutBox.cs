@@ -46,7 +46,7 @@ namespace GitUI
         private int thanksCounter = 0;
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            string contributers = "               Steffen Forkmann, Jacob Stanley, Nick Mayer, bleis-tift, dominiqueplante, Chris Meaney, Adrian Codrington, Troels Thomsen, Seth Behunin, Wilbert van Dolleweerd, Kevin Moore, Tobias Bieniek, Stan Angeloff, Grzegorz Pachocki, William Swanson, Emanuel Henrique do Prado, Harald Deischinger, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, X-Coder, mausch";
+            string contributers = "               Steffen Forkmann, Jacob Stanley, Nick Mayer, bleis-tift, dominiqueplante, Chris Meaney, Adrian Codrington, Troels Thomsen, Seth Behunin, Wilbert van Dolleweerd, Kevin Moore, Tobias Bieniek, Stan Angeloff, Grzegorz Pachocki, William Swanson, Emanuel Henrique do Prado, Harald Deischinger, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, X-Coder, Matt McCormick, mausch";
             _NO_TRANSLATE_thanksToTicker.Text = string.Concat(contributers.Substring(thanksCounter), contributers);// "Thanks to: " + contributers[thanksCounter % contributers.Length];
             _NO_TRANSLATE_thanksToTicker.Refresh();
             thanksCounter = (thanksCounter + 1) % contributers.Length;
