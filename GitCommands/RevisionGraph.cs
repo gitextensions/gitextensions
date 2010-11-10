@@ -183,6 +183,10 @@ namespace GitCommands
 
                 Exited(this, new EventArgs());
             }
+            catch (ThreadAbortException ex)
+            {
+                //Silently ignore this exception...
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
