@@ -558,17 +558,20 @@ namespace GitUI
                 }
 
                 // Check to see if the newly added item should be selected
-                IComparable id = graphData[row].Node.Id;
-                if (toBeSelected.Contains(id))
+                if (graphData.Count > row)
                 {
-                    toBeSelected.Remove(id);
-                    Rows[row].Selected = true;
-                    if (CurrentCell == null)
+                    IComparable id = graphData[row].Node.Id;
+                    if (toBeSelected.Contains(id))
                     {
-                        // Set the current cell to the first item. We use cell
-                        // 1 because cell 0 could be hidden if they've chosen to
-                        // not see the graph
-                        CurrentCell = Rows[row].Cells[1];
+                        toBeSelected.Remove(id);
+                        Rows[row].Selected = true;
+                        if (CurrentCell == null)
+                        {
+                            // Set the current cell to the first item. We use cell
+                            // 1 because cell 0 could be hidden if they've chosen to
+                            // not see the graph
+                            CurrentCell = Rows[row].Cells[1];
+                        }
                     }
                 }
 
