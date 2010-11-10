@@ -26,8 +26,10 @@ namespace AutoCheckForUpdates
             Settings.AddSetting("Last check (yyyy/M/dd)",
                                 new DateTime(2000, 1, 1).ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
 
-            //Connect to events
+            //Connect to events -> connect to all main events because in theory the prebrowse
+            //event can be missed since plugins are loaded asynchronous
             gitUiCommands.PreBrowse += GitUiCommandsPreBrowse;
+            gitUiCommands.PreCommit += GitUiCommandsPreBrowse;
         }
 
         public void Execute(GitUIBaseEventArgs e)
@@ -41,21 +43,29 @@ namespace AutoCheckForUpdates
         private void GitUiCommandsPreBrowse(object sender, GitUIBaseEventArgs e)
         {
             //Only check at startup when plugin is enabled
-            if (!Settings.GetSetting("Enabled (true / false)")
-                     .Equals("true", StringComparison.InvariantCultureIgnoreCase))
+            if (!Settings.GetSetting("Enabled (true / false)").Equals("true", StringComparison.InvariantCultureIgnoreCase))
                 return;
 
             int days;
-            int.TryParse(Settings.GetSetting("Check every # days"), out days);
+            if (!int.TryParse(Settings.GetSetting("Check every # days"), out days))
+                days = 7;
 
-            if (DateTime.ParseExact(
-                Settings.GetSetting("Last check (yyyy/M/dd)"),
-                "yyyy/M/dd",
-                CultureInfo.InvariantCulture).AddDays(7) >= DateTime.Now)
-                return;
-
-            Settings.SetSetting("Last check (yyyy/M/dd)",
-                                DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+            try
+            {
+                if (DateTime.ParseExact(
+                    Settings.GetSetting("Last check (yyyy/M/dd)"),
+                    "yyyy/M/dd",
+                    CultureInfo.InvariantCulture).AddDays(days) >= DateTime.Now)
+                    return;
+            }
+            catch (FormatException)
+            {
+            }
+            finally
+            {
+                Settings.SetSetting("Last check (yyyy/M/dd)",
+                                    DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+            }
 
             var updateForm = new Updates(e.GitVersion) {AutoClose = true};
             updateForm.ShowDialog();
