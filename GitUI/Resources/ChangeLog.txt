@@ -9,6 +9,7 @@ Version 2.06
 	Fixed bug: virtual commits showing uncommitted and staged changes are only visible when needed
 	Added checkbox to allow interactive rebase
 	Added support for Windows 7 taskbar progress bar display
+	Added support for cherry pick merge commit
 	The "Format patch" dialog now remembers the last (valid) directory
 	Startup speed improved
 	
