@@ -13,6 +13,15 @@ namespace GitCommands.Repository
         private static RepositoryHistory _repositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
 
+        //This property is used to determine if repository history needs to be saved
+        public static bool RepositoryHistoryLoaded
+        {
+            get
+            {
+                return _repositoryHistory != null;
+            }
+        }
+
         public static RepositoryHistory RepositoryHistory
         {
             get 
@@ -28,6 +37,15 @@ namespace GitCommands.Repository
                 _repositoryHistory = value;
             }
 
+        }
+
+        //This property is used to determine if repository history needs to be saved
+        public static bool RepositoryCategoriesLoaded
+        {
+            get
+            {
+                return _repositoryCategories != null;
+            }
         }
 
         public static BindingList<RepositoryCategory> RepositoryCategories

@@ -1103,8 +1103,10 @@ namespace GitCommands
             try
             {
                 Application.UserAppDataRegistry.SetValue("gitssh", GitCommandHelpers.GetSsh());
-                Application.UserAppDataRegistry.SetValue("history", Repositories.SerializeHistoryIntoXml());
-                Application.UserAppDataRegistry.SetValue("repositories", Repositories.SerializeRepositories());
+                if (Repositories.RepositoryHistoryLoaded)
+                    Application.UserAppDataRegistry.SetValue("history", Repositories.SerializeHistoryIntoXml());
+                if (Repositories.RepositoryCategoriesLoaded)
+                    Application.UserAppDataRegistry.SetValue("repositories", Repositories.SerializeRepositories());
             }
             catch
             { }
