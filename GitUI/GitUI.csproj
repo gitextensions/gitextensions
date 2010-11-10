@@ -636,6 +636,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPickMerge.resx">
       <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
