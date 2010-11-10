@@ -619,7 +619,7 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = GetGitExtensionsFullPath();
+            string fileName = GetGitExtensionsDirectory();
 
             if (File.Exists(fileName))
             {
@@ -632,10 +632,16 @@ namespace GitUI
 
         private static string GetGitExtensionsFullPath()
         {
+            return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
+        }
+
+        private static string GetGitExtensionsDirectory()
+        {
             string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
             fileName = fileName.Substring(0, fileName.LastIndexOfAny(new char[] { '\\', '/' }));
-            return fileName + "\\GitExtensions.exe";
+            return fileName;
         }
+
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
@@ -1790,6 +1796,12 @@ namespace GitUI
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
                 GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                return false;
+            }
+            if (GitCommands.Settings.GetInstallDir() != null && GitCommands.Settings.GetInstallDir().EndsWith(".exe"))
+            {
+                GitExtensionsInstall.BackColor = Color.LightSalmon;
+                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
                 return false;
             }
             GitExtensionsInstall.BackColor = Color.LightGreen;
