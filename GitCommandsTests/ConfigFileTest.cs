@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using GitCommands.Config;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -401,8 +400,8 @@ namespace GitCommandsTests
 
                 IList<string> values = configFile.GetValues("remote.origin.fetch");
 
-                Assert.IsTrue(values.SingleOrDefault(x => x == "+mypath") != null);
-                Assert.IsTrue(values.SingleOrDefault(x => x == "+myotherpath") != null);
+                Assert.IsTrue(values[0] == "+mypath");
+                Assert.IsTrue(values[1] == "+myotherpath");
             }
         }
 
