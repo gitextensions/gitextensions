@@ -55,8 +55,12 @@ namespace GitUI
 
                     if (TaskbarManager.IsPlatformSupported)
                     {
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                        TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        try
+                        {
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException) { }
                     }
                 }
                 this.Text = text;
@@ -82,12 +86,16 @@ namespace GitUI
 
             if (TaskbarManager.IsPlatformSupported)
             {
-                if (isSuccess)
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                else
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+                try
+                {
+                    if (isSuccess)
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                    else
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
 
-                TaskbarManager.Instance.SetProgressValue(100, 100);
+                    TaskbarManager.Instance.SetProgressValue(100, 100);
+                }
+                catch (InvalidOperationException) { }
             }
 
             SuccessImage.Visible = isSuccess;
@@ -140,7 +148,7 @@ namespace GitUI
             {
                 throw new InvalidOperationException("You can't load the form without a ProcessCallback");
             }
-            
+
             if (AbortCallback == null)
             {
                 Abort.Visible = false;
@@ -152,13 +160,25 @@ namespace GitUI
         private void FormStatus_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
-                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                catch (InvalidOperationException) { }
+            }
         }
 
         private void Start()
         {
             if (TaskbarManager.IsPlatformSupported)
-                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
+                }
+                catch (InvalidOperationException) { }
+            }
 
             Reset();
             ProcessCallback(this);
