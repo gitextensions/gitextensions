@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 2.07
+	Fixed bug: application crashes in Windows 7
+	Fixed bug: Git Gui & GitK not started in working dir
+	Fixed bug: Application sometimes closes for no reason
+	
 Version 2.06
 	Fixed issue 218: GitCommandLog now in LIFO order
 	Fixed issue 235, 242 and 248: GitExtensions hangs when loading putty key into pageant
