@@ -24,13 +24,25 @@ namespace GitCommands.Repository
 
         public static RepositoryHistory RepositoryHistory
         {
-            get 
-            { 
+            get
+            {
                 if (_repositoryHistory == null)
-                    Repositories.DeserializeHistoryFromXml(Application.UserAppDataRegistry.GetValue("history").ToString());
+                {
+                    try
+                    {
+                        object setting = Application.UserAppDataRegistry.GetValue("history");
+                        if (setting != null)
+                        {
+                            Repositories.DeserializeHistoryFromXml(setting.ToString());
+                        }
+                    }
+                    catch
+                    { }
+                }
+
                 if (_repositoryHistory == null)
                     _repositoryHistory = new RepositoryHistory();
-                return _repositoryHistory; 
+                return _repositoryHistory;
             }
             private set
             {
@@ -53,14 +65,25 @@ namespace GitCommands.Repository
             get
             {
                 if (_repositoryCategories == null)
-                    Repositories.DeserializeRepositories(Application.UserAppDataRegistry.GetValue("repositories").ToString());
+                {
+                    try
+                    {
+                        object setting = Application.UserAppDataRegistry.GetValue("repositories");
+                        if (setting != null)
+                        {
+                            Repositories.DeserializeRepositories(setting.ToString());
+                        }
+                    }
+                    catch
+                    { }
+                }
                 if (_repositoryCategories == null)
                     _repositoryCategories = new BindingList<RepositoryCategory>();
                 return _repositoryCategories;
             }
-            private set 
-            { 
-                _repositoryCategories = value; 
+            private set
+            {
+                _repositoryCategories = value;
             }
         }
 
@@ -69,7 +92,7 @@ namespace GitCommands.Repository
             try
             {
                 var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof (BindingList<RepositoryCategory>));
+                var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
                 serializer.Serialize(sw, RepositoryCategories);
                 return sw.ToString();
             }
@@ -83,7 +106,7 @@ namespace GitCommands.Repository
         {
             try
             {
-                var serializer = new XmlSerializer(typeof (BindingList<RepositoryCategory>));
+                var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
                 using (var stringReader = new StringReader(xml))
                 using (var xmlReader = new XmlTextReader(stringReader))
                 {
@@ -110,7 +133,7 @@ namespace GitCommands.Repository
             try
             {
                 var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof (RepositoryHistory));
+                var serializer = new XmlSerializer(typeof(RepositoryHistory));
                 serializer.Serialize(sw, RepositoryHistory);
                 return sw.ToString();
             }
@@ -127,7 +150,7 @@ namespace GitCommands.Repository
 
             try
             {
-                var serializer = new XmlSerializer(typeof (RepositoryHistory));
+                var serializer = new XmlSerializer(typeof(RepositoryHistory));
                 using (var stringReader = new StringReader(xml))
                 using (var xmlReader = new XmlTextReader(stringReader))
                 {
@@ -147,7 +170,7 @@ namespace GitCommands.Repository
 
         public static void AddCategory(string title)
         {
-            RepositoryCategories.Add(new RepositoryCategory {Description = title});
+            RepositoryCategories.Add(new RepositoryCategory { Description = title });
         }
     }
 }
