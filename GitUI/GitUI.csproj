@@ -1003,6 +1003,9 @@
     <Content Include="Translation\Japanese.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Translation\Spanish.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
     <None Include="Resources\Cow_sunglass.png" />
     <None Include="Resources\Cow_xmass.png" />
