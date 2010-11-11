@@ -175,7 +175,7 @@ namespace GitCommands
             set
             {
                 _translation = value;
-                Application.UserAppDataRegistry.SetValue("translation", _translation);
+                Application.UserAppDataRegistry.SetValue("translation", _translation != null ? _translation : "");
             }
         }
 
