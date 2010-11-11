@@ -72,7 +72,8 @@ namespace GitExtensions
             if (string.IsNullOrEmpty(Settings.WorkingDir))
                 Settings.WorkingDir = Directory.GetCurrentDirectory();
 
-            FormSplash.SetAction("Starting");
+            FormSplash.Hide();
+
             if (args.Length <= 1)
             {
                 GitUICommands.Instance.StartBrowseDialog();
