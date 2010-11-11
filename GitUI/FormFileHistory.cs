@@ -94,7 +94,7 @@ namespace GitUI
                 string listOfFileNames = "\"" + fileName + "\"";
                 
                 // keep a set of the file names already seen
-                HashSet<string> setOfFileNames = new HashSet<string>();
+                List<string> setOfFileNames = new List<string>();
                 setOfFileNames.Add(fileName);
 
                 string line;

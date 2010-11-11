@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -1826,14 +1825,19 @@ namespace GitUI
         {
             if (GitCommands.Settings.RunningOnWindows())
             {
-                var command = (from cmd in GetWindowsCommandLocations()
-                               let output = GitCommandHelpers.RunCmd(cmd, string.Empty)
-                               where !string.IsNullOrEmpty(output)
-                               select cmd).FirstOrDefault();
-
-                if (command != null)
+                string cmd = null;
+                foreach (string windowsCommandLocation in GetWindowsCommandLocations())
                 {
-                    GitCommands.Settings.GitCommand = command;
+                    if (!string.IsNullOrEmpty(GitCommandHelpers.RunCmd(windowsCommandLocation, string.Empty)))
+                    {
+                        cmd = windowsCommandLocation;
+                        break;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(cmd))
+                {
+                    GitCommands.Settings.GitCommand = cmd;
                     return true;
                 }
                 else
