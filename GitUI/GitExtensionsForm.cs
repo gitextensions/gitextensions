@@ -31,13 +31,6 @@ namespace GitUI
 
             Load += GitExtensionsFormLoad;
             FormClosed += GitExtensionsFormFormClosed;
-            Shown += GitExtensionsForm_Shown;
-        }
-
-        private static void GitExtensionsForm_Shown(object sender, EventArgs e)
-        {
-            //This is not very good practice, but it works and it is fast.
-            FormSplash.Hide();
         }
 
         private void SetFont()

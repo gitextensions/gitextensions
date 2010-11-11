@@ -32,7 +32,6 @@ namespace GitUI
         {
             if (instance != null)
             {
-                instance.TopLevel = false;
                 instance.Dispose();
                 instance = null;
             }
