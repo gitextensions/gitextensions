@@ -11,6 +11,14 @@ namespace GitUI
         {
             this.Revision = revision;
             InitializeComponent();
+
+            Translate();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
             IsMerge = GitCommandHelpers.IsMerge(Revision.Guid);
             if (IsMerge)
             {
@@ -29,12 +37,12 @@ namespace GitUI
                 this.ParentsList.Visible = false;
                 this.ParentsLabel.Visible = false;
                 this.Height = this.Height - (ParentsList.Height + ParentsLabel.Height);
-                this.Pick.Location = new System.Drawing.Point(this.Pick.Location.X, 
+                this.Pick.Location = new System.Drawing.Point(this.Pick.Location.X,
                     this.Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
-                this.AutoCommit.Location = new System.Drawing.Point(this.AutoCommit.Location.X, 
+                this.AutoCommit.Location = new System.Drawing.Point(this.AutoCommit.Location.X,
                     this.AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
             }
-            Translate();
+
         }
 
         public GitRevision Revision { get; set; }
