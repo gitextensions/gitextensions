@@ -1,5 +1,6 @@
 namespace System
 {
+    //TODO: add ifdef to only include these definitions when target framework version is 2.0
     public delegate void Action();
 
     public delegate T Func<T>();
