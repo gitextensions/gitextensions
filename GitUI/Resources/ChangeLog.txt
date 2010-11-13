@@ -2,7 +2,9 @@ Changelog
 =========
 
 Version 2.07
-	Fixed bug: application crashes in Windows 7
+	Fixed issue 263: spanish translation added
+	Fixed issue 262: application crashes on system where only .Net 4.0 is installed
+	Fixed issue 255, 257, 261, 266: application crashes in Windows 7
 	Fixed bug: Git Gui & GitK not started in working dir
 	Fixed bug: Application sometimes closes for no reason
 	
