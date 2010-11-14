@@ -7,6 +7,8 @@ Version 2.07
 	Fixed issue 255, 257, 261, 266: application crashes in Windows 7
 	Fixed bug: Git Gui & GitK not started in working dir
 	Fixed bug: Application sometimes closes for no reason
+	Fixed bug: GitExtensions now uses .gitattributes to determine if a file is binary
+	Added bisect function
 	
 Version 2.06
 	Fixed issue 218: GitCommandLog now in LIFO order
