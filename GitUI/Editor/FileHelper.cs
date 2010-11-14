@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -65,14 +64,15 @@ namespace GitUI.Editor
             {
                 string[] lines = File.ReadAllLines(gitAttributesPath);
                 bool? lastMatchResult = null;
-                foreach (var parts in lines.Select(line => line.Trim().Split(' ')))
+                foreach (var line in lines)
                 {
+                    var parts = line.Trim().Split(' ');
                     if (parts.Length < 2 || parts[0][0] == '#')
                         continue;
-                    if (parts.Contains("binary") || parts.Contains("-text"))
+                    if (Regex.IsMatch(line, @".*\sbinary.*") || Regex.IsMatch(line, @".*\s-text.*"))
                         if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
                             lastMatchResult = true;
-                    if (parts.Contains("text"))
+                    if (Regex.IsMatch(line, @".*\stext.*"))
                         if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
                             lastMatchResult = false;
                 }
