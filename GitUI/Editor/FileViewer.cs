@@ -212,7 +212,21 @@ namespace GitUI.Editor
         public void ViewText(string fileName, string text)
         {
             ResetForText(fileName);
-            _internalFileViewer.SetText(text);
+
+            //Check for binary file.
+            int nullCount = 0;
+            foreach(char c in text)
+            {
+                if (c == '\0')
+                    nullCount++;
+                if (nullCount > 5) break;
+            }
+
+            if (nullCount > 5)
+                _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
+            else
+                _internalFileViewer.SetText(text);
+
             RestoreCurrentScrollPos();
         }
 
