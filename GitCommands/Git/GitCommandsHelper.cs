@@ -1206,6 +1206,14 @@ namespace GitCommands
                 return "bisect bad";
         }
 
+        public static string MarkRevisionBisectCmd(bool good, string revision)
+        {
+            if (good)
+                return "bisect good " + revision;
+            else
+                return "bisect bad " + revision;
+        }
+
         public static string StopBisectCmd()
         {
             return "bisect reset";
