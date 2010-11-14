@@ -38,7 +38,7 @@
             // 
             this.Start.Location = new System.Drawing.Point(12, 12);
             this.Start.Name = "Start";
-            this.Start.Size = new System.Drawing.Size(157, 23);
+            this.Start.Size = new System.Drawing.Size(174, 23);
             this.Start.TabIndex = 0;
             this.Start.Text = "Start bisect";
             this.Start.UseVisualStyleBackColor = true;
@@ -46,21 +46,21 @@
             // 
             // Good
             // 
-            this.Good.Location = new System.Drawing.Point(12, 41);
+            this.Good.Location = new System.Drawing.Point(12, 70);
             this.Good.Name = "Good";
-            this.Good.Size = new System.Drawing.Size(157, 23);
+            this.Good.Size = new System.Drawing.Size(174, 23);
             this.Good.TabIndex = 1;
-            this.Good.Text = "Mark current good";
+            this.Good.Text = "Mark current revision good";
             this.Good.UseVisualStyleBackColor = true;
             this.Good.Click += new System.EventHandler(this.Good_Click);
             // 
             // Bad
             // 
-            this.Bad.Location = new System.Drawing.Point(12, 70);
+            this.Bad.Location = new System.Drawing.Point(12, 41);
             this.Bad.Name = "Bad";
-            this.Bad.Size = new System.Drawing.Size(157, 23);
+            this.Bad.Size = new System.Drawing.Size(174, 23);
             this.Bad.TabIndex = 2;
-            this.Bad.Text = "Mark current bad";
+            this.Bad.Text = "Mark current revision bad";
             this.Bad.UseVisualStyleBackColor = true;
             this.Bad.Click += new System.EventHandler(this.Bad_Click);
             // 
@@ -68,7 +68,7 @@
             // 
             this.Stop.Location = new System.Drawing.Point(12, 99);
             this.Stop.Name = "Stop";
-            this.Stop.Size = new System.Drawing.Size(157, 23);
+            this.Stop.Size = new System.Drawing.Size(174, 23);
             this.Stop.TabIndex = 3;
             this.Stop.Text = "Stop bisect";
             this.Stop.UseVisualStyleBackColor = true;
@@ -78,7 +78,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(182, 134);
+            this.ClientSize = new System.Drawing.Size(198, 134);
             this.Controls.Add(this.Stop);
             this.Controls.Add(this.Bad);
             this.Controls.Add(this.Good);

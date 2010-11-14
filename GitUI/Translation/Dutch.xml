@@ -642,6 +642,9 @@ _ReSharper*/
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Open uitgecheckt bestand  met...</Value>
         </TranslationItem>
+        <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -1034,6 +1037,21 @@ Kies een directory.</Value>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Automatisch een commit maken</Value>
         </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nr.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>Deze revisie is een samenvoeging, selecteer voorganger:</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormFixHome">
@@ -1343,6 +1361,12 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="dateToolStripMenuItem" Property="Text">
           <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>Markeer revisie als slecht</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>Markeer revisie als goed</Value>
         </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
@@ -2862,6 +2886,25 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>Start verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Markeer huidige revisie 'goed'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Markeer huidige revisie 'slecht'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Stop verdeel en heers</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
