@@ -50,12 +50,15 @@ namespace GitUI
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CreateTag = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.branchNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.messageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.branchNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.createTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,7 +99,8 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.stopBisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bisectSeparator = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -162,10 +166,10 @@ namespace GitUI
             this.Revisions.StandardTab = true;
             this.Revisions.TabIndex = 0;
             this.Revisions.VirtualMode = true;
-            this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
-            this.Revisions.DoubleClick += new System.EventHandler(this.RevisionsDoubleClick);
-            this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RevisionsKeyUp);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsMouseClick);
+            this.Revisions.DoubleClick += new System.EventHandler(this.RevisionsDoubleClick);
+            this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
+            this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RevisionsKeyUp);
             // 
             // Message
             // 
@@ -194,6 +198,10 @@ namespace GitUI
             // CreateTag
             // 
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.markRevisionAsBadToolStripMenuItem,
+            this.markRevisionAsGoodToolStripMenuItem,
+            this.stopBisectToolStripMenuItem,
+            this.bisectSeparator,
             this.copyToClipboardToolStripMenuItem,
             this.toolStripSeparator5,
             this.createTagToolStripMenuItem,
@@ -218,8 +226,22 @@ namespace GitUI
             this.toolStripSeparator3,
             this.filterToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(226, 468);
+            this.CreateTag.Size = new System.Drawing.Size(226, 540);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
+            // 
+            // markRevisionAsBadToolStripMenuItem
+            // 
+            this.markRevisionAsBadToolStripMenuItem.Name = "markRevisionAsBadToolStripMenuItem";
+            this.markRevisionAsBadToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.markRevisionAsBadToolStripMenuItem.Text = "Mark revision as bad";
+            this.markRevisionAsBadToolStripMenuItem.Click += new System.EventHandler(this.markRevisionAsBadToolStripMenuItem_Click);
+            // 
+            // markRevisionAsGoodToolStripMenuItem
+            // 
+            this.markRevisionAsGoodToolStripMenuItem.Name = "markRevisionAsGoodToolStripMenuItem";
+            this.markRevisionAsGoodToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.markRevisionAsGoodToolStripMenuItem.Text = "Mark revision as good";
+            this.markRevisionAsGoodToolStripMenuItem.Click += new System.EventHandler(this.markRevisionAsGoodToolStripMenuItem_Click);
             // 
             // copyToClipboardToolStripMenuItem
             // 
@@ -234,38 +256,43 @@ namespace GitUI
             this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
             // 
-            // branchNameToolStripMenuItem
-            // 
-            this.branchNameToolStripMenuItem.Name = "branchNameToolStripMenuItem";
-            this.branchNameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.branchNameToolStripMenuItem.Text = "Branch name";
-            // 
-            // tagToolStripMenuItem
-            // 
-            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.tagToolStripMenuItem.Text = "Tag";
-            // 
             // messageToolStripMenuItem
             // 
             this.messageToolStripMenuItem.Name = "messageToolStripMenuItem";
-            this.messageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.messageToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.messageToolStripMenuItem.Text = "Message";
             this.messageToolStripMenuItem.Click += new System.EventHandler(this.messageToolStripMenuItem_Click);
             // 
             // authorToolStripMenuItem
             // 
             this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            this.authorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.authorToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.authorToolStripMenuItem.Text = "Author";
             this.authorToolStripMenuItem.Click += new System.EventHandler(this.authorToolStripMenuItem_Click);
             // 
             // dateToolStripMenuItem
             // 
             this.dateToolStripMenuItem.Name = "dateToolStripMenuItem";
-            this.dateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dateToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.dateToolStripMenuItem.Text = "Date";
             this.dateToolStripMenuItem.Click += new System.EventHandler(this.dateToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(144, 6);
+            // 
+            // branchNameToolStripMenuItem
+            // 
+            this.branchNameToolStripMenuItem.Name = "branchNameToolStripMenuItem";
+            this.branchNameToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.branchNameToolStripMenuItem.Text = "Branch name";
+            // 
+            // tagToolStripMenuItem
+            // 
+            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
+            this.tagToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.tagToolStripMenuItem.Text = "Tag";
             // 
             // toolStripSeparator5
             // 
@@ -570,10 +597,17 @@ namespace GitUI
             // 
             this.quickSearchTimer.Interval = 500;
             // 
-            // toolStripSeparator6
+            // stopBisectToolStripMenuItem
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
+            this.stopBisectToolStripMenuItem.Name = "stopBisectToolStripMenuItem";
+            this.stopBisectToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.stopBisectToolStripMenuItem.Text = "Stop bisect";
+            this.stopBisectToolStripMenuItem.Click += new System.EventHandler(this.stopBisectToolStripMenuItem_Click);
+            // 
+            // bisectSeparator
+            // 
+            this.bisectSeparator.Name = "bisectSeparator";
+            this.bisectSeparator.Size = new System.Drawing.Size(222, 6);
             // 
             // RevisionGrid
             // 
@@ -639,9 +673,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem showFilteredBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -652,5 +683,12 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem dateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem markRevisionAsBadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem markRevisionAsGoodToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.ToolStripMenuItem stopBisectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator bisectSeparator;
     }
 }
