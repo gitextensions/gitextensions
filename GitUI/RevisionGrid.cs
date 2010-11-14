@@ -880,6 +880,12 @@ namespace GitUI
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
 
+            var inTheMiddleOfBisect = GitCommandHelpers.InTheMiddleOfBisect();
+            markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
+            markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
+            stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
+            bisectSeparator.Visible = inTheMiddleOfBisect;
+
             var revision = GetRevision(LastRow);
 
             var tagDropDown = new ToolStripDropDown();
@@ -1178,6 +1184,32 @@ namespace GitUI
         private void copyToClipBoard(object sender, EventArgs e)
         {
             Clipboard.SetText(sender.ToString());
+        }
+
+        private void markRevisionAsBadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Revisions.RowCount <= LastRow || LastRow < 0)
+                return;
+
+            Settings.CloseProcessDialog = false;
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void markRevisionAsGoodToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Revisions.RowCount <= LastRow || LastRow < 0)
+                return;
+
+            Settings.CloseProcessDialog = false;
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            RefreshRevisions();
         }
     }
 }

@@ -1106,6 +1106,12 @@ namespace GitCommands
             return "";
         }
 
+        public static bool InTheMiddleOfBisect()
+        {
+            return File.Exists(Settings.WorkingDirGitDir() + Settings.PathSeparator + "BISECT_START");
+        }
+
+
         public static bool InTheMiddleOfRebase()
         {
             return !File.Exists(GetRebaseDir() + "applying") &&
@@ -1186,6 +1192,33 @@ namespace GitCommands
 
             return patchFiles;
         }
+
+        public static string StartBisectCmd()
+        {
+            return "bisect start";
+        }
+
+        public static string ContinueBisectCmd(bool good)
+        {
+            if (good)
+                return "bisect good";
+            else
+                return "bisect bad";
+        }
+
+        public static string MarkRevisionBisectCmd(bool good, string revision)
+        {
+            if (good)
+                return "bisect good " + revision;
+            else
+                return "bisect bad " + revision;
+        }
+
+        public static string StopBisectCmd()
+        {
+            return "bisect reset";
+        }
+
 
         public static string Rebase(string branch)
         {
