@@ -20,6 +20,7 @@ namespace GitCommands
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
+            IsBisect = CompleteName.Contains("refs/bisect/");
 
             ParseName();
 
@@ -35,6 +36,8 @@ namespace GitCommands
         public bool IsHead { get; private set; }
 
         public bool IsRemote { get; private set; }
+
+        public bool IsBisect { get; private set; }
 
         public bool IsOther
         {
