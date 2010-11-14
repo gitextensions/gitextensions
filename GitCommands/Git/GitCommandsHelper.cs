@@ -234,6 +234,7 @@ namespace GitCommands
                     UseShellExecute = false,
                     RedirectStandardOutput = false,
                     FileName = cmd,
+                    WorkingDirectory = Settings.WorkingDir,
                     Arguments = arguments,
                     CreateNoWindow = true
                 };
