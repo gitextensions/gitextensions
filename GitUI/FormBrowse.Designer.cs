@@ -181,6 +181,7 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -951,6 +952,7 @@ namespace GitUI
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applyPatchToolStripMenuItem,
             this.archiveToolStripMenuItem,
+            this.bisectToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutToolStripMenuItem,
             this.cherryPickToolStripMenuItem,
@@ -1302,14 +1304,14 @@ namespace GitUI
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItemClick);
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(121, 6);
             // 
             // settingsToolStripMenuItem1
             // 
@@ -1506,6 +1508,13 @@ namespace GitUI
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
+            // bisectToolStripMenuItem
+            // 
+            this.bisectToolStripMenuItem.Name = "bisectToolStripMenuItem";
+            this.bisectToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.bisectToolStripMenuItem.Text = "Bisect";
+            this.bisectToolStripMenuItem.Click += new System.EventHandler(this.bisectToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1700,5 +1709,6 @@ namespace GitUI
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripMenuItem openWithToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator20;
+        private ToolStripMenuItem bisectToolStripMenuItem;
     }
 }

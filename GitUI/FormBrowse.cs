@@ -21,6 +21,7 @@ namespace GitUI
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
+        private ToolStripItem _bisect;
         private ToolStripItem _warning;
 
         public FormBrowse(string filter)
@@ -186,6 +187,28 @@ namespace GitUI
         private void CheckForMergeConflicts()
         {
             bool validWorkingDir = Settings.ValidWorkingDir();
+
+            if (validWorkingDir && GitCommandHelpers.InTheMiddleOfBisect())
+            {
+
+                if (_bisect == null)
+                {
+                    _bisect = new WarningToolStripItem();
+                    _bisect.Text = "Your are in the middle of a bisect";
+                    _bisect.Click += BisectClick;
+                    statusStrip.Items.Add(_bisect);
+                }
+            }
+            else
+            {
+                if (_bisect != null)
+                {
+                    _bisect.Click -= BisectClick;
+                    statusStrip.Items.Remove(_bisect);
+                    _bisect = null;
+                }
+            }
+
             if (validWorkingDir &&
                 (GitCommandHelpers.InTheMiddleOfRebase() || GitCommandHelpers.InTheMiddleOfPatch()))
             {
@@ -196,14 +219,14 @@ namespace GitUI
                                                 ? "You are in the middle of a rebase"
                                                 : "You are in the middle of a patch apply";
                     _rebase.Click += RebaseClick;
-                     ToolStrip.Items.Add(_rebase);
+                    statusStrip.Items.Add(_rebase);
                 }
             }
             else
             {
                 if (_rebase != null)
                 {
-                    _rebase.Click -= WarningClick;
+                    _rebase.Click -= RebaseClick;
                     statusStrip.Items.Remove(_rebase);
                     _rebase = null;
                 }
@@ -1512,6 +1535,18 @@ namespace GitUI
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             LoadPluginsInPluginMenu();
+        }
+
+        private void bisectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormBisect().ShowDialog();
+            Initialize();
+        }
+
+        private void BisectClick(object sender, EventArgs e)
+        {
+            new FormBisect().ShowDialog();
+            Initialize();
         }
     }
 }
