@@ -31,6 +31,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,8 +42,8 @@ namespace GitUI
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new GitUI.Editor.FileViewer();
             this.Blame = new System.Windows.Forms.TabPage();
-            this.eventLog1 = new System.Diagnostics.EventLog();
             this.blameControl1 = new GitUI.Blame.BlameControl();
+            this.eventLog1 = new System.Diagnostics.EventLog();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -74,15 +75,17 @@ namespace GitUI
             // 
             // FileChanges
             // 
+            this.FileChanges.AllowGraphWithFilter = false;
             this.FileChanges.BranchFilter = "";
             this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
-            this.FileChanges.CurrentCheckout = "\r\nDer Befehl \"git.exe\" ist entweder falsch geschrieben oder\r\nkonnte nicht gefunde" +
-                "n werden.\r\n";
+            this.FileChanges.CurrentCheckout = resources.GetString("FileChanges.CurrentCheckout");
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
+            this.FileChanges.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
+            this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FileChanges.Size = new System.Drawing.Size(748, 111);
             this.FileChanges.TabIndex = 2;
             this.FileChanges.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
@@ -92,12 +95,13 @@ namespace GitUI
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(172, 48);
+            this.DiffContextMenu.Size = new System.Drawing.Size(191, 48);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
             // 
@@ -117,10 +121,10 @@ namespace GitUI
             // ViewTab
             // 
             this.ViewTab.Controls.Add(this.View);
-            this.ViewTab.Location = new System.Drawing.Point(4, 24);
+            this.ViewTab.Location = new System.Drawing.Point(4, 22);
             this.ViewTab.Name = "ViewTab";
             this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ViewTab.Size = new System.Drawing.Size(740, 301);
+            this.ViewTab.Size = new System.Drawing.Size(740, 303);
             this.ViewTab.TabIndex = 0;
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
@@ -128,6 +132,7 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.IgnoreWhitespaceChanges = false;
             this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(3, 3);
@@ -135,17 +140,18 @@ namespace GitUI
             this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
             this.View.ShowEntireFile = false;
-            this.View.Size = new System.Drawing.Size(734, 295);
+            this.View.ShowLineNumbers = true;
+            this.View.Size = new System.Drawing.Size(734, 297);
             this.View.TabIndex = 0;
             this.View.TreatAllFilesAsText = false;
             // 
             // DiffTab
             // 
             this.DiffTab.Controls.Add(this.Diff);
-            this.DiffTab.Location = new System.Drawing.Point(4, 24);
+            this.DiffTab.Location = new System.Drawing.Point(4, 22);
             this.DiffTab.Name = "DiffTab";
             this.DiffTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DiffTab.Size = new System.Drawing.Size(740, 301);
+            this.DiffTab.Size = new System.Drawing.Size(740, 303);
             this.DiffTab.TabIndex = 1;
             this.DiffTab.Text = "Diff";
             this.DiffTab.UseVisualStyleBackColor = true;
@@ -153,6 +159,7 @@ namespace GitUI
             // Diff
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Diff.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Diff.IgnoreWhitespaceChanges = false;
             this.Diff.IsReadOnly = true;
             this.Diff.Location = new System.Drawing.Point(3, 3);
@@ -160,6 +167,7 @@ namespace GitUI
             this.Diff.NumberOfVisibleLines = 3;
             this.Diff.ScrollPos = 0;
             this.Diff.ShowEntireFile = false;
+            this.Diff.ShowLineNumbers = true;
             this.Diff.Size = new System.Drawing.Size(734, 297);
             this.Diff.TabIndex = 0;
             this.Diff.TreatAllFilesAsText = false;
@@ -167,16 +175,12 @@ namespace GitUI
             // Blame
             // 
             this.Blame.Controls.Add(this.blameControl1);
-            this.Blame.Location = new System.Drawing.Point(4, 24);
+            this.Blame.Location = new System.Drawing.Point(4, 22);
             this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(740, 301);
+            this.Blame.Size = new System.Drawing.Size(740, 303);
             this.Blame.TabIndex = 2;
             this.Blame.Text = "Blame";
             this.Blame.UseVisualStyleBackColor = true;
-            // 
-            // eventLog1
-            // 
-            this.eventLog1.SynchronizingObject = this;
             // 
             // blameControl1
             // 
@@ -186,9 +190,13 @@ namespace GitUI
             this.blameControl1.Size = new System.Drawing.Size(740, 301);
             this.blameControl1.TabIndex = 0;
             // 
+            // eventLog1
+            // 
+            this.eventLog1.SynchronizingObject = this;
+            // 
             // FormFileHistory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(748, 444);
             this.Controls.Add(this.splitContainer1);
