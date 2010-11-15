@@ -623,7 +623,7 @@ namespace GitCommands
             get
             {
                 if (_gitCommand == null)
-                    SafeSetString("gitdir", "git.cmd", x => _gitCommand = x);
+                    SafeSetString("gitcommand", "git", x => _gitCommand = x);
                 return _gitCommand;
             }
             set
