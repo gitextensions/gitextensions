@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Tag;
 using ResourceManager.Translation;
+using System.Text.RegularExpressions;
 
 namespace GitUI
 {
@@ -61,6 +62,10 @@ namespace GitUI
             BranchFilter = String.Empty;
             SetShowBranches();
             Filter = "";
+            InMemFilterIgnoreCase = false;
+            InMemAuthorFilter = "";
+            InMemCommitterFilter = "";
+            InMemMessageFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
             quickSearchTimer.Tick += QuickSearchTimerTick;
@@ -82,6 +87,11 @@ namespace GitUI
         public IComparable[] LastSelectedRows { get; private set; }
         public Font RefsFont { get; private set; }
         public string Filter { get; set; }
+        public bool InMemFilterIgnoreCase { get; set; }
+        public string InMemAuthorFilter { get; set; }
+        public string InMemCommitterFilter { get; set; }
+        public string InMemMessageFilter { get; set; }
+
         public string BranchFilter { get; set; }
         public Font NormalFont { get; set; }
         public string CurrentCheckout { get; set; }
@@ -317,16 +327,36 @@ namespace GitUI
             _contextMenuEnabled = false;
         }
 
-        public string FormatQuickFilter(string filter, bool[] parameters)
+        public void FormatQuickFilter(string filter,
+                                      bool[] parameters,
+                                      out string revListArgs,
+                                      out string inMemMessageFilter,
+                                      out string inMemCommitterFilter,
+                                      out string inMemAuthorFilter)
         {
-            if (string.IsNullOrEmpty(filter)) return "";
-            else
+            revListArgs = string.Empty;
+            inMemMessageFilter = string.Empty;
+            inMemCommitterFilter = string.Empty;
+            inMemAuthorFilter = string.Empty;
+            if (!string.IsNullOrEmpty(filter))
             {
-                string formattedFilter = " --regexp-ignore-case ";
-                if (parameters[0]) formattedFilter += "--grep=\"" + filter + "\" ";
-                if (parameters[1]) formattedFilter += "--committer=\"" + filter + "\" ";
-                if (parameters[2]) formattedFilter += "--author=\"" + filter + "\" ";
-                return formattedFilter;
+                var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
+                revListArgs = " --regexp-ignore-case ";
+                if (parameters[0])
+                    if (cmdLineSafe) 
+                        revListArgs += "--grep=\"" + filter + "\" ";
+                    else
+                        inMemMessageFilter = filter;
+                if (parameters[1]) 
+                    if (cmdLineSafe)
+                        revListArgs += "--committer=\"" + filter + "\" ";
+                    else
+                        inMemCommitterFilter = filter;
+                if (parameters[2]) 
+                    if (cmdLineSafe)
+                        revListArgs += "--author=\"" + filter + "\" ";
+                    else
+                        inMemAuthorFilter = filter;
             }
         }
 
@@ -423,6 +453,55 @@ namespace GitUI
                 ForceRefreshRevisions();
         }
 
+        private class RevisionGridInMemFilter : RevisionGraphInMemFilter
+        {
+            private bool _IgnoreCase;
+            private string _AuthorFilter;
+            private Regex _AuthorFilterRegex;
+            private string _CommitterFilter;
+            private Regex _CommitterFilterRegex;
+            private string _MessageFilter;
+            private Regex _MessageFilterRegex;
+
+            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
+            {
+                _IgnoreCase = ignoreCase;
+                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
+                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
+                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+            }
+
+            private void SetUpVars(string filterValue,
+                                   ref string filterStr,
+                                   ref Regex filterRegEx)
+            {
+                RegexOptions opts = RegexOptions.None;
+                if (_IgnoreCase) opts = opts | RegexOptions.IgnoreCase;
+                filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
+                try
+                {
+                    filterRegEx = new Regex(filterStr, opts);
+                }
+                catch (ArgumentException)
+                {
+                    filterRegEx = null;
+                }
+            }
+
+            private bool CheckCondition(string filter, Regex regex, string value)
+            {
+                return string.IsNullOrEmpty(filter) ||
+                       ((regex != null) && regex.Match(value).Success);
+            }
+
+            public override bool PassThru(GitRevision rev)
+            {
+                return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
+                       CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
+                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+            }
+        }
+
         public void ForceRefreshRevisions()
         {
             try
@@ -433,7 +512,7 @@ namespace GitUI
 
                 //Hide graph column when there it is disabled OR when a filter is active
                 //allowing for special case when history of a single file is being displayed
-                if (!Settings.ShowRevisionGraph || (!string.IsNullOrEmpty(Filter) && !AllowGraphWithFilter))
+                if (!Settings.ShowRevisionGraph || (FilterIsApplied(false) && !AllowGraphWithFilter))
                 {
                     Revisions.ShowHideRevisionGraph(false);
                 }
@@ -485,6 +564,14 @@ namespace GitUI
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
+                if (!(string.IsNullOrEmpty(InMemAuthorFilter) && 
+                      string.IsNullOrEmpty(InMemCommitterFilter) && 
+                      string.IsNullOrEmpty(InMemMessageFilter)))
+                    _revisionGraphCommand.InMemFilter = new RevisionGridInMemFilter(InMemAuthorFilter, 
+                                                                                    InMemCommitterFilter,
+                                                                                    InMemMessageFilter,
+                                                                                    InMemFilterIgnoreCase);
+
                 _revisionGraphCommand.Execute();
 
                 LoadRevisions();
@@ -502,9 +589,13 @@ namespace GitUI
             UpdateGraph(updatedEvent.Revision);
         }
 
-        private bool FilterIsApplied()
+        private bool FilterIsApplied(bool inclBranchFilter)
         {
-            return Filter != "" || BranchFilter != "";
+            return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
+                   !(string.IsNullOrEmpty(Filter) &&
+                     string.IsNullOrEmpty(InMemAuthorFilter) &&
+                     string.IsNullOrEmpty(InMemCommitterFilter) &&
+                     string.IsNullOrEmpty(InMemMessageFilter));
         }
 
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
@@ -512,7 +603,7 @@ namespace GitUI
             _isLoading = false;
 
             if (_revisionGraphCommand.Revisions.Count == 0 &&
-                !FilterIsApplied())
+                !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
                 _syncContext.Send(o =>
@@ -864,6 +955,10 @@ namespace GitUI
         {
             _revisionFilter.ShowDialog();
             Filter = _revisionFilter.GetFilter();
+            InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
+            InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
+            InMemMessageFilter = _revisionFilter.GetInMemMessageFilter();
+            InMemFilterIgnoreCase = _revisionFilter.GetIgnoreCase();
             BranchFilter = _revisionFilter.GetBranchFilter();
             SetShowBranches();
             ForceRefreshRevisions();

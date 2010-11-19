@@ -131,7 +131,7 @@ namespace GitCommands
                         ? CompleteName.Substring(0, CompleteName.Length - 3)
                         : CompleteName;
 
-                Name = temp.Substring(CompleteName.LastIndexOf("/") + 1);
+                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
                 return;
             }
             if (IsHead)
