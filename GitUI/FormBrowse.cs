@@ -898,12 +898,31 @@ namespace GitUI
 
         private void ApplyFilter()
         {
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
             bool[] filterParams = new bool[4];
             filterParams[0] = commitToolStripMenuItem1.Checked;
             filterParams[1] = committerToolStripMenuItem.Checked;
             filterParams[2] = authorToolStripMenuItem.Checked;
-            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams)) return;
-            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams);
+            RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
+                                           filterParams,
+                                           out revListArgs,
+                                           out inMemMessageFilter,
+                                           out inMemCommitterFilter,
+                                           out inMemAuthorFilter);
+            if ((RevisionGrid.Filter == revListArgs) &&
+                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (RevisionGrid.InMemFilterIgnoreCase))
+                return;
+            RevisionGrid.Filter = revListArgs;
+            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemFilterIgnoreCase = true;
             RevisionGrid.ForceRefreshRevisions();
         }
 

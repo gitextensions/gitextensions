@@ -171,7 +171,7 @@ namespace GitUI
             else
             {
                 string localBranch = GitCommandHelpers.GetSelectedBranch();
-                if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
+                if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
                     localBranch = null;
 
                 if (Merge.Checked)
