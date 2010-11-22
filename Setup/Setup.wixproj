@@ -2,9 +2,9 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-		<Version Condition=" '$(Version)' == '' ">0.00</Version>
-		<NumericVersion Condition=" '$(NumericVersion)' == '' ">$(Version)</NumericVersion>
-		<IncludeRequiredSoftware Condition=" '$(IncludeRequiredSoftware)' == '' ">1</IncludeRequiredSoftware>
+    <Version Condition=" '$(Version)' == '' ">0.00</Version>
+    <NumericVersion Condition=" '$(NumericVersion)' == '' ">$(Version)</NumericVersion>
+    <IncludeRequiredSoftware Condition=" '$(IncludeRequiredSoftware)' == '' ">1</IncludeRequiredSoftware>
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{9380c29c-3c7f-47a8-a4c9-a5ee9d7b386a}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
@@ -38,7 +38,6 @@
     <Compile Include="UI\MaintenanceTypeDlg.wxs" />
     <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
     <Compile Include="UI\ProgressDlg.wxs" />
-    <Compile Include="UI\RequiredSoftwareDlg.wxs" />
     <Compile Include="UI\SSHClientDlg.wxs" />
     <Compile Include="UI\UserExit.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />

@@ -369,6 +369,14 @@
       <ComponentRef Id="GitExtensions.desktop"/>
       <ComponentRef Id="UserManual.startmenu"/>
 
+      <?if $(var.IncludeRequiredSoftware) = 1 ?>
+      <Feature Id="MsysGitFeature" Title="Install MSysGit 1.7.3.1 (git core)" Level="1">
+      </Feature>
+
+      <Feature Id="KDiff3Feature" Title="Install KDiff3 0.9.95 (merge tool)" Level="1">
+      </Feature>
+      <?endif?>
+      
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="CowHeadBlue.ico"/>
         <ComponentRef Id="CowHeadGreen.ico"/>
@@ -376,7 +384,7 @@
         <ComponentRef Id="CowHeadRed.ico"/>
         <ComponentRef Id="CowHeadYellow.ico"/>
       </Feature>
-      
+
       <Feature Id="Dictionaries" Title="Spelling dictionaries" Level="1">
         <Feature Id="deDE" Title="de-DE" Level="1">
           <ComponentRef Id="deDE.dic"/>
@@ -438,11 +446,16 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-      <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
-      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
+    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
+    <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
 
-      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
-      <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
+    <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
+    
+    <InstallExecuteSequence>
+      <Custom Action="KDiff" After="InstallFiles"><![CDATA[&KDiff3Feature=3]]></Custom>
+      <Custom Action="MsysGit" After="InstallFiles"><![CDATA[&MsysGitFeature=3]]></Custom>
+    </InstallExecuteSequence>
     <?endif?>
 
   </Product>
