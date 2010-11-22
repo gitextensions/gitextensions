@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -106,12 +108,29 @@ namespace GitUI
 
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
-                pushCmd = GitCommands.GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
+                pushCmd = GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
                                                           PushAllBranches.Checked, ForcePushBranches.Checked);
-            else
-                pushCmd = GitCommands.GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
+            else if (TabControlTagBranch.SelectedTab == TagTab)
+                pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
                                                              ForcePushBranches.Checked);
-            var form = new FormProcess(pushCmd)
+            else
+            {
+				List<GitPushAction> pushActions = new List<GitPushAction>();
+            	foreach (DataRow row in _branchTable.Rows)
+            	{
+					if ((bool)row["Push"])
+					{
+						// FIXME - Validate remotes and such.  This should be done above if the appropriate tab is selected.
+						if (row["local"].ToString().StartsWith("None "))
+							pushActions.Add(new GitPushAction(row["Remote"].ToString()));
+						else
+							pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), (bool)row["Force"]));
+					}
+            	}
+            	pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
+            }
+
+        	var form = new FormProcess(pushCmd)
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination)
@@ -231,7 +250,10 @@ namespace GitUI
 
         private void RemotesUpdated(object sender, EventArgs e)
         {
-            EnableLoadSshButton();
+			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
+				UpdateMultiBranchView();
+
+			EnableLoadSshButton();
 
             var pushSettingValue = GitCommandHelpers.GetSetting("remote." + Remotes.Text + ".push");
 
@@ -311,5 +333,71 @@ namespace GitUI
             if (PushOnShow)
                 Push.PerformClick();
         }
-    }
+
+		#region Multi-Branch Methods
+
+    	private DataTable _branchTable;
+
+		private void UpdateMultiBranchView()
+		{
+			_branchTable = new DataTable();
+			_branchTable.Columns.Add("Push", typeof (bool));
+			_branchTable.Columns.Add("Local", typeof (string));
+			_branchTable.Columns.Add("Remote", typeof (string));
+			_branchTable.Columns.Add("Force", typeof (bool));
+			BranchGrid.DataSource = _branchTable;
+
+			string remote = Remotes.Text.Trim();
+
+			List<GitHead> localHeads = GitCommandHelpers.GetHeads(false, true);
+			List<GitHead> remoteHeads = GitCommandHelpers.GetRemoteHeads(remote, false, true);
+
+			// Add all the local branches.
+			foreach (var head in localHeads)
+			{
+				DataRow row = _branchTable.NewRow();
+				row["Push"] = true;
+				row["Force"] = false;
+				row["Local"] = head.Name;
+
+				string remoteName;
+				if (head.Remote == remote)
+					remoteName = head.MergeWith ?? head.Name;
+				else
+					remoteName = head.Name;
+
+				if (!remoteHeads.Any(h => h.Name == remoteName))
+					// FIXME - Translation and how to we know this is a special string?
+					remoteName += " (New)";
+
+				row["Remote"] = remoteName;
+
+				_branchTable.Rows.Add(row);
+
+			}
+
+			// Offer to delete all the left over remote branches.
+			foreach (var remoteHead in remoteHeads)
+			{
+				if (!localHeads.Any(h => h.Name == remoteHead.Name))
+				{
+					DataRow row = _branchTable.NewRow();
+					row["Push"] = true;
+					// FIXME - Translation and how do we know this is a special string?
+					row["Local"] = "None (Delete Remote Branch)";
+					row["Remote"] = remoteHead.Name;
+					row["Force"] = false;
+					_branchTable.Rows.Add(row);
+				}
+			}
+		}
+
+		#endregion
+
+		private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
+		{
+			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
+				UpdateMultiBranchView();
+		}
+	}
 }

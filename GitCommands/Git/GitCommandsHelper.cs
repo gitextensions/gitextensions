@@ -991,6 +991,18 @@ namespace GitCommands
             return string.Format("push {0}\"{1}\" {2}", sforce, path.Trim(), fromBranch);
         }
 
+		public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
+		{
+			path = FixPath(path);
+
+			string cmd = string.Format("push \"{0}\"", path.Trim());
+
+			foreach (GitPushAction action in pushActions)
+				cmd += " " + action.Format();
+
+			return cmd;
+		}
+
         public static string PushTagCmd(string path, string tag, bool all)
         {
             return PushTagCmd(path, tag, all, false);
