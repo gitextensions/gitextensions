@@ -1811,6 +1811,7 @@ namespace GitUI
 
         private static IEnumerable<string> GetWindowsCommandLocations()
         {
+            yield return @"C:\cygwin\bin\git.exe";
             yield return @"C:\cygwin\bin\git";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
             yield return @"c:\Program Files (x86)\Git\bin\git.exe";
@@ -1820,6 +1821,8 @@ namespace GitUI
             yield return @"c:\Program Files\Git\cmd\git.cmd";
             yield return "git";
             yield return "git.cmd";
+            yield return @"C:\msysgit\bin\git.exe";
+            yield return @"C:\msysgit\cmd\git.cmd";
         }
 
         private static bool SolveGitCommand()
