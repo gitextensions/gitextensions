@@ -6,11 +6,23 @@ using System.Windows.Forms;
 using GitUI;
 using GitUI.Plugin;
 using GitUIPluginInterfaces;
+using System.Threading;
 
 namespace GitExtensions
 {
     internal static class PluginLoader
     {
+        public static void LoadAsync()
+        {
+            // Create the thread object, passing in the Alpha.Beta method
+            // via a ThreadStart delegate. This does not start the thread.
+            Thread oThread = new Thread(new ThreadStart(Load));
+
+            // Start the thread
+            oThread.Start();
+
+        }
+
         public static void Load()
         {
             try

@@ -28,7 +28,7 @@ namespace Gource
             Settings.AddSetting("Arguments", "--hide filenames");
         }
 
-        public void Execute(IGitUIEventArgs gitUiCommands)
+        public void Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (!gitUiCommands.IsValidGitWorkingDir(gitUiCommands.GitWorkingDir))
             {

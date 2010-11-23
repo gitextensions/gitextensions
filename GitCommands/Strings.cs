@@ -19,7 +19,7 @@ namespace GitCommands
             return new Strings().dateText.Text;
         }
 
-        public static string GetAutorText()
+        public static string GetAuthorText()
         {
             return new Strings().authorText.Text;
         }

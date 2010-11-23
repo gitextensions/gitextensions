@@ -21,7 +21,7 @@ namespace GitUI.Blame
             BlameCommitter.ShowLineNumbers = false;
             BlameFile.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
             BlameFile.IsReadOnly = true;
-            BlameFile.SelectedLineChanged += new SelectedLineChangedHandler(BlameFile_SelectedLineChanged);
+            BlameFile.SelectedLineChanged += new SelectedLineChangedEventHandler(BlameFile_SelectedLineChanged);
 
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
         }
@@ -52,7 +52,7 @@ namespace GitUI.Blame
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
 
-            _blameList = GitCommands.GitCommands.Blame(fileName, guid);
+            _blameList = GitCommandHelpers.Blame(fileName, guid);
 
             foreach (var blame in _blameList)
             {
@@ -65,11 +65,6 @@ namespace GitUI.Blame
             BlameFile.ScrollPos = scrollpos;
 
             BlameFile_SelectedLineChanged(null, 0);
-        }
-
-        private void BlameFileClick(object sender, EventArgs e)
-        {
-            SyncBlameViews();
         }
 
         private void SyncBlameViews()

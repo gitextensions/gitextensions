@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -25,7 +23,7 @@ namespace GitUI
         // Update every 5min, just to make sure something didn't slip through the cracks.
         private const int MAX_UPDATE_PERIOD = 5 * 60 * 1000;
 
-        private GitCommands.GitCommands gitGetUnstagedCommand = new GitCommands.GitCommands();
+        private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
         private FileSystemWatcher watcher = new FileSystemWatcher();
         private int nextUpdate = 0;
@@ -40,7 +38,12 @@ namespace GitUI
 
             InitializeComponent();
 
-            Settings.WorkingDirChanged += new Settings.WorkingDirChangedHandler(Settings_WorkingDirChanged);
+            Settings.WorkingDirChanged += new Settings.WorkingDirChangedEventHandler(Settings_WorkingDirChanged);
+
+            GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
+            GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
+            GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
+            GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
 
             // Setup a file watcher to detect changes to our files, or the .git repo files. When they
             // change, we'll update our status.
@@ -57,6 +60,27 @@ namespace GitUI
             }
             catch { }
             update();
+        }
+
+
+        private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
+        {
+            Pause();
+        }
+
+        private void GitUICommands_PostCheckout(object sender, GitUIBaseEventArgs e)
+        {
+            Resume();
+        }
+
+        private void Pause()
+        {
+            timerRefresh.Stop();
+        }
+
+        private void Resume()
+        {
+            timerRefresh.Start();
         }
 
         void Settings_WorkingDirChanged(string oldDir, string newDir)
@@ -79,17 +103,14 @@ namespace GitUI
             catch { }
         }
 
-        ~ToolStripGitStatus()
+        // destructor shouldn't be used because it's not predictible when
+        // it's going to be called by the GC!
+        private void watcher_Error(object sender, System.IO.ErrorEventArgs e)
         {
-            gitGetUnstagedCommand.Kill();
+            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
         }
 
-        void watcher_Error(object sender, System.IO.ErrorEventArgs e)
-        {
-            nextUpdate = Math.Min( nextUpdate, Environment.TickCount + UPDATE_DELAY );
-        }
-
-        void watcher_Changed(object sender, FileSystemEventArgs e)
+        private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
         }
@@ -103,7 +124,7 @@ namespace GitUI
         {
             if (Environment.TickCount > nextUpdate)
             {
-                string command = GitCommands.GitCommands.GetAllChangedFilesCmd(true, true);
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
                 gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
                 // Always update every 5 min, even if we don't know anything changed
@@ -113,11 +134,11 @@ namespace GitUI
 
         private void onData()
         {
-            List<GitItemStatus> unstaged = GitCommands.GitCommands.GetAllChangedFilesFromString
+            List<GitItemStatus> unstaged = GitCommandHelpers.GetAllChangedFilesFromString
                 (
                 gitGetUnstagedCommand.Output.ToString()
                 );
-            List<GitItemStatus> staged = GitCommands.GitCommands.GetStagedFiles();
+            List<GitItemStatus> staged = GitCommandHelpers.GetStagedFiles();
 
             if (staged.Count == 0 && unstaged.Count == 0)
             {
@@ -125,7 +146,7 @@ namespace GitUI
             }
             else
             {
-                
+
                 if (staged.Count == 0)
                 {
                     Image = ICON_DIRTY;

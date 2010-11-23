@@ -19,18 +19,42 @@ namespace GitCommands
         public string Body{get; private set;}
 
         /// <summary>
-        /// Gets all branches which contain the given commit.
+        /// Gets branches which contain the given commit.
+        /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
+        /// (as returned by git branch -a)
         /// </summary>
         /// <param name="sha1">The sha1.</param>
+        /// <param name="getLocal">Pass true to include local branches</param>
+        /// <param name="getLocal">Pass true to include remote branches</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1)
+        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote) 
         {
-            string info = GitCommands.RunCmd(Settings.GitCommand, "branch --contains " + sha1);
-
-
+            string args = "--contains " + sha1;
+            if (getRemote && getLocal)
+                args = "-a "+args;
+            else if (getRemote)
+                args = "-r "+args;
+            else if (!getLocal)
+                return new string[]{};
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch "+args);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
-            return info.Split(new[] {'\r', '\n', '*', ' '}, StringSplitOptions.RemoveEmptyEntries);
+
+            string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Remove symlink targets as in "origin/HEAD -> origin/master"
+            for (int i = 0; i < result.Length; i++)
+            {
+                string item = result[i].Trim();
+                int idx;
+                if (getRemote && ((idx = item.IndexOf(" ->")) >= 0))
+                {
+                    item = item.Substring(0, idx);
+                }
+                result[i] = item;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -40,7 +64,7 @@ namespace GitCommands
         /// <returns></returns>
         public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
-            string info = GitCommands.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
+            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
@@ -55,11 +79,11 @@ namespace GitCommands
         /// <returns></returns>
         public static CommitInformation GetCommitInfo(string sha1)
         {
-            string info = GitCommands.RunCachableCmd(
+            string info = GitCommandHelpers.RunCachableCmd(
                 Settings.GitCommand,
                 string.Format(
                     "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
-                    Strings.GetAutorText(),
+                    Strings.GetAuthorText(),
                     Strings.GetAuthorDateText(),
                     Strings.GetCommitterText(),
                     Strings.GetCommitterDateText(),
@@ -83,7 +107,7 @@ namespace GitCommands
             //We need to recode the commit message because of a bug in Git.
             //We cannot let git recode the message to Settings.Encoding which is
             //needed to allow the "git log" to print the filename in Settings.Encoding
-            Encoding logoutputEncoding = GitCommands.GetLogoutputEncoding();
+            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
             if (logoutputEncoding != Settings.Encoding)
                 commitMessage = logoutputEncoding.GetString(Settings.Encoding.GetBytes(commitMessage));
 
@@ -93,7 +117,7 @@ namespace GitCommands
 
         private static string RemoveRedundancies(string info)
         {
-            string author = GetField(info, Strings.GetAutorText() + ":");
+            string author = GetField(info, Strings.GetAuthorText() + ":");
             string committer = GetField(info, Strings.GetCommitterText() + ":");
 
             if (String.Equals(author, committer, StringComparison.CurrentCulture))

@@ -1,6 +1,52 @@
 Changelog
 =========
 
+Version 2.08
+	Fixed bug: slashes in tag name not supported
+	Fixed bug: filtering does not work with characters outside ASCII range
+	Fixed bug: bash does not work using Linux or cygwin
+	Fixed bug: "gitk" and "git gui" does not work on linux
+	Fixed bug: file history does not work when started from file tree in browse dialog
+	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
+
+Version 2.07
+	Fixed issue 263: spanish translation added
+	Fixed issue 262: application crashes on system where only .Net 4.0 is installed
+	Fixed issue 255, 257, 261, 266: application crashes in Windows 7
+	Fixed bug: Git Gui & GitK not started in working dir
+	Fixed bug: Application sometimes closes for no reason
+	Fixed bug: GitExtensions now uses .gitattributes to determine if a file is binary
+	Added bisect function
+	
+Version 2.06
+	Fixed issue 218: GitCommandLog now in LIFO order
+	Fixed issue 235, 242 and 248: GitExtensions hangs when loading putty key into pageant
+	Fixed bug: comboboxes affected each other in clone dialog
+	Fixed bug: sporadic crashes during checkout process when status is visible in toolbar
+	Fixed bug: virtual commits showing uncommitted and staged changes are only visible when needed
+	Added checkbox to allow interactive rebase
+	Added support for Windows 7 taskbar progress bar display
+	Added support for cherry pick merge commit
+	The "Format patch" dialog now remembers the last (valid) directory
+	Startup speed improved
+	
+Version 2.05
+	Fixed issue 194: Remote branches combo contained tags also
+	Fixed bug: fixed pre-selecting tracking branch in push dialog
+	Fixed bug: pull form no longer shows default remote branch to pull, this caused unwanted behaviour
+	Fixed bug: file history doesn't work in some cases when casing on disk is different then in git
+	Fixed bug: selecting initial revision on RevisionGrid launched from FileStatusList
+	Fixed bug: characters '.', ',' and '-' do not work in quick filter
+	Fixed bug: pull using rebase didn't work properly when no remote branch is selected
+	Japanese translation improved
+	Improved filter
+	Added current working dir changes and commit index to revision grid, default disabled
+	Added "Push & Commit" button to commit dialog
+	Added branch filter to browse dialog
+	Added "save as" button to diff view in browse dialog
+	Added statusbar for warnings
+	Added option to also show remote branches that contain the selected commit in the commitinfo
+
 Version 2.04
 	Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes
 	Fixed bug: spellings checker allows using Japanese

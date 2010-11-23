@@ -34,7 +34,7 @@ namespace GitUI
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWriteable(
+                    .MakeFileTemporaryWritable(
                         Settings.WorkingDir + ".gitignore",
                         x =>
                             {
@@ -44,7 +44,6 @@ namespace GitUI
                                 using (var tw = new StreamWriter(x, false, Settings.Encoding))
                                 {
                                     tw.Write(GitIgnoreFile);
-                                    tw.Close();
                                 }
                                 Close();
                             });

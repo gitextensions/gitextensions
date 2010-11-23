@@ -19,19 +19,17 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
 
             string[] args = Environment.GetCommandLineArgs();
-            var formSplash = new FormSplash();
-            formSplash.Show();
-            formSplash.SetAction("Load settings");
+            FormSplash.Show("Load settings");
             Settings.LoadSettings();
             if (Settings.RunningOnWindows())
             {
                 //Quick HOME check:
-                formSplash.SetAction("Check home path");
+                FormSplash.SetAction("Check home path");
                 FormFixHome.CheckHomePath();
             }
             //Register plugins
-            formSplash.SetAction("Load plugins");
-            PluginLoader.Load();
+            FormSplash.SetAction("Load plugins");
+            PluginLoader.LoadAsync();
 
             try
             {
@@ -40,21 +38,21 @@ namespace GitExtensions
                     !Application.UserAppDataRegistry.GetValue("checksettings").ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(Settings.GitCommand))
                 {
-                    formSplash.SetAction("Check settings");
-                    var settings = new FormSettings();
-                    if (!settings.CheckSettings())
+                    FormSplash.SetAction("Check settings");
+                    using (var settings = new FormSettings())
                     {
-                        FormSettings.AutoSolveAllSettings();
-                        formSplash.Close();
-                        GitUICommands.Instance.StartSettingsDialog();
+                        if (!settings.CheckSettings())
+                        {
+                            FormSettings.AutoSolveAllSettings();
+                            GitUICommands.Instance.StartSettingsDialog();
+                        }
                     }
                 }
             }
             catch
             {
+                // TODO: remove catch-all
             }
-
-            formSplash.Close();
 
             if (args.Length >= 3)
             {
@@ -63,8 +61,8 @@ namespace GitExtensions
 
                 if (string.IsNullOrEmpty(Settings.WorkingDir))
                 {
-                    if (args[2].Contains(Settings.PathSeperator.ToString()))
-                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeperator));
+                    if (args[2].Contains(Settings.PathSeparator.ToString()))
+                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
                 }
 
                 if (Settings.ValidWorkingDir())
@@ -74,10 +72,16 @@ namespace GitExtensions
             if (string.IsNullOrEmpty(Settings.WorkingDir))
                 Settings.WorkingDir = Directory.GetCurrentDirectory();
 
+            FormSplash.Hide();
+
             if (args.Length <= 1)
+            {
                 GitUICommands.Instance.StartBrowseDialog();
+            }
             else  // if we are here args.Length > 1
+            {
                 RunCommand(args);
+            }
 
             Settings.SaveSettings();
         }
@@ -92,7 +96,7 @@ namespace GitExtensions
                         GitUICommands.Instance.StartResolveConflictsDialog();
                         return;
                     case "gitbash":
-                        GitCommands.GitCommands.RunBash();
+                        GitCommandHelpers.RunBash();
                         return;
                     case "gitignore":
                         GitUICommands.Instance.StartEditGitIgnoreDialog();
@@ -155,15 +159,18 @@ namespace GitExtensions
                             GitUICommands.Instance.StartFileHistoryDialog(fileName);
                         }
                         else
-                            MessageBox.Show("Cannot open hile history, there is no file selected.", "File history");
+                            MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                         return;
                     case "fileeditor":
                         if (args.Length > 2)
                         {
-                            new FormEditor(args[2]).ShowDialog();
+                            using (var formEditor = new FormEditor(args[2]))
+                            {
+                                formEditor.ShowDialog();
+                            }
                         }
                         else
-                            MessageBox.Show("Cannot open hile editor, there is no file selected.", "File editor");
+                            MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                         return;
                     case "formatpatch":
                         GitUICommands.Instance.StartFormatPatchDialog();

@@ -3,25 +3,25 @@ using System.IO;
 
 namespace GitCommands
 {
-    public class FileInfoExtensions
+    public static class FileInfoExtensions
     {
         /// <summary>
         ///   Remove all attributes that could cause the file to be read-only 
         ///   and restores them later
         /// </summary>
-        public static void MakeFileTemporaryWriteable(string fileName, Action<string> writeableAction)
+        public static void MakeFileTemporaryWritable(string fileName, Action<string> writableAction)
         {
             var fileInfo = new FileInfo(fileName);
             if (!fileInfo.Exists)
             {
                 //The file doesn't exist yet, no need to make it writable
-                writeableAction(fileName);
+                writableAction(fileName);
                 return;
             }
 
             var oldAttributes = fileInfo.Attributes;
             fileInfo.Attributes = FileAttributes.Normal;
-            writeableAction(fileName);
+            writableAction(fileName);
 
             fileInfo.Refresh();
             if (fileInfo.Exists)

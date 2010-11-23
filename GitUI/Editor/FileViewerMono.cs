@@ -28,8 +28,6 @@ namespace GitUI.Editor
             TextEditor.MouseMove += new MouseEventHandler(TextArea_MouseLeave);
         }
 
-
-        public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseLeave;
 
         public void Find()
@@ -42,13 +40,7 @@ namespace GitUI.Editor
                 MouseLeave(sender, e);
         }
 
-        void TextArea_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MouseMove != null)
-                MouseMove(sender, e);
-        }
-
-        public event SelectedLineChangedHandler SelectedLineChanged;
+        public event SelectedLineChangedEventHandler SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {

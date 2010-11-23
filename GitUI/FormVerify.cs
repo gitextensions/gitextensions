@@ -58,7 +58,7 @@ namespace GitUI
             if (String.IsNullOrEmpty(sha1))
                 return warning;
 
-            var commitInfo = GitCommands.GitCommands.RunCmd(
+            var commitInfo = GitCommandHelpers.RunCmd(
                 Settings.GitCommand,
                 "log -n1 --pretty=format:\"%aN, %s, %cd\" " +
                 FindSha1(warning));
@@ -98,7 +98,7 @@ namespace GitUI
             var sha1 = FindSha1(Warnings.SelectedValue as string);
             if (!string.IsNullOrEmpty(sha1))
             {
-                new FormEdit(GitCommands.GitCommands.ShowSha1(sha1)).ShowDialog();
+                new FormEdit(GitCommandHelpers.ShowSha1(sha1)).ShowDialog();
             }
         }
 
@@ -166,7 +166,7 @@ namespace GitUI
                     continue;
                 var sha1 = FindSha1(warningString);
                 currentTag++;
-                GitCommands.GitCommands.Tag("LOST_FOUND_" + currentTag, sha1, false);
+                GitCommandHelpers.Tag("LOST_FOUND_" + currentTag, sha1, false);
             }
 
             MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created");
@@ -180,10 +180,10 @@ namespace GitUI
 
         private static void DeleteLostFoundTags()
         {
-            foreach (var head in GitCommands.GitCommands.GetHeads(true, false))
+            foreach (var head in GitCommandHelpers.GetHeads(true, false))
             {
                 if (head.Name.StartsWith("LOST_FOUND_"))
-                    GitCommands.GitCommands.DeleteTag(head.Name);
+                    GitCommandHelpers.DeleteTag(head.Name);
             }
         }
 

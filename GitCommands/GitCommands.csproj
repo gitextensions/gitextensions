@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\FxCop.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -42,7 +43,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,7 +51,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Checkout.cs" />
     <Compile Include="Clone.cs" />
+    <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="CommitInformation.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Diff.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
-    <Compile Include="Git\GitCommands.cs" />
+    <Compile Include="Git\GitCommandsHelper.cs" />
     <Compile Include="Git\GitRevision.cs" />
     <Compile Include="Git\GitHead.cs" />
     <Compile Include="Git\GitItem.cs" />

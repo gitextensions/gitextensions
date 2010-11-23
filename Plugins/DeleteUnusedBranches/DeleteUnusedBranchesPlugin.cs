@@ -19,7 +19,7 @@ namespace DeleteUnusedBranches
             Settings.AddSetting("Delete obsolete branches older than (days)", "30");
         }
 
-        public void Execute(IGitUIEventArgs gitUiCommands)
+        public void Execute(GitUIBaseEventArgs gitUiCommands)
         {
             int days;
             if (!int.TryParse(Settings.GetSetting("Delete obsolete branches older than (days)"), out days))

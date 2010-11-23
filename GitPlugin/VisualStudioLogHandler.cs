@@ -2,7 +2,7 @@ using EnvDTE;
 
 namespace GitPlugin
 {
-    public class VisualStudioLogHandler : Log.Handler
+    public class VisualStudioLogHandler : Log.IHandler
     {
         private readonly OutputWindowPane _outputWindowPane;
 

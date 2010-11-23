@@ -1,14 +1,14 @@
 // Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
 using System;
+using System.Text;
+using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
-using System.Windows.Forms;
 using Microsoft.Win32;
-using System.Text;
 
 namespace GitPlugin.Commands
 {
-	public abstract class CommandBase
+    public abstract class CommandBase
     {
         abstract public void OnCommand(DTE2 application, OutputWindowPane pane);
 

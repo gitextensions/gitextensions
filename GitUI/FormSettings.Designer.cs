@@ -84,6 +84,8 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label26 = new System.Windows.Forms.Label();
+            this.ShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
             this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
             this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.showGitStatusInToolbarLabel = new System.Windows.Forms.Label();
@@ -464,7 +466,7 @@ namespace GitUI
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(396, 137);
+            this.SmtpServer.Location = new System.Drawing.Point(396, 109);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 21);
             this.SmtpServer.TabIndex = 17;
@@ -472,7 +474,7 @@ namespace GitUI
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(8, 140);
+            this.label23.Location = new System.Drawing.Point(8, 112);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(205, 13);
             this.label23.TabIndex = 18;
@@ -844,6 +846,8 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.label26);
+            this.TabPageGitExtensions.Controls.Add(this.ShowCurrentChangesInRevisionGraph);
             this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFilesLabel);
             this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFiles);
             this.TabPageGitExtensions.Controls.Add(this.showGitStatusInToolbarLabel);
@@ -880,6 +884,25 @@ namespace GitUI
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(32, 149);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(287, 13);
+            this.label26.TabIndex = 37;
+            this.label26.Text = "Show current working dir changes in revision graph (slow!)";
+            // 
+            // ShowCurrentChangesInRevisionGraph
+            // 
+            this.ShowCurrentChangesInRevisionGraph.AutoSize = true;
+            this.ShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(11, 150);
+            this.ShowCurrentChangesInRevisionGraph.Name = "ShowCurrentChangesInRevisionGraph";
+            this.ShowCurrentChangesInRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(15, 14);
+            this.ShowCurrentChangesInRevisionGraph.TabIndex = 36;
+            this.ShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 
             // showErrorsWhenStagingFilesLabel
             // 
@@ -959,7 +982,7 @@ namespace GitUI
             // helpTranslate
             // 
             this.helpTranslate.AutoSize = true;
-            this.helpTranslate.Location = new System.Drawing.Point(616, 78);
+            this.helpTranslate.Location = new System.Drawing.Point(616, 50);
             this.helpTranslate.Name = "helpTranslate";
             this.helpTranslate.Size = new System.Drawing.Size(74, 13);
             this.helpTranslate.TabIndex = 30;
@@ -974,7 +997,7 @@ namespace GitUI
             "en-US",
             "ja-JP",
             "nl-NL"});
-            this.Language.Location = new System.Drawing.Point(396, 75);
+            this.Language.Location = new System.Drawing.Point(396, 47);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(214, 21);
             this.Language.TabIndex = 29;
@@ -982,7 +1005,7 @@ namespace GitUI
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(8, 78);
+            this.label49.Location = new System.Drawing.Point(8, 50);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(141, 13);
             this.label49.TabIndex = 28;
@@ -1048,9 +1071,9 @@ namespace GitUI
             this.label34.AutoSize = true;
             this.label34.Location = new System.Drawing.Point(32, 170);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(295, 13);
+            this.label34.Size = new System.Drawing.Size(303, 13);
             this.label34.TabIndex = 21;
-            this.label34.Text = "Close process dialog automaticly when process is succeeded";
+            this.label34.Text = "Close process dialog automatically when process is succeeded";
             // 
             // EncodingLabel
             // 
@@ -1072,7 +1095,7 @@ namespace GitUI
             // Dictionary
             // 
             this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(396, 106);
+            this.Dictionary.Location = new System.Drawing.Point(396, 78);
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(214, 21);
             this.Dictionary.TabIndex = 15;
@@ -1082,7 +1105,7 @@ namespace GitUI
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(8, 109);
+            this.label22.Location = new System.Drawing.Point(8, 81);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(154, 13);
             this.label22.TabIndex = 14;
@@ -1166,11 +1189,9 @@ namespace GitUI
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(8, 16);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(289, 39);
+            this.label12.Size = new System.Drawing.Size(266, 13);
             this.label12.TabIndex = 0;
-            this.label12.Text = "Limit number of commits that will be loaded at startup.\r\nOther commits will be lo" +
-                "aded when needed. Lower number \r\nresult is shorter startup time, but slower scro" +
-                "lling.";
+            this.label12.Text = "Limit number of commits that will be loaded at startup.";
             // 
             // StartPage
             // 
@@ -2560,6 +2581,8 @@ namespace GitUI
         private System.Windows.Forms.RadioButton localAutoCrlfInput;
         private System.Windows.Forms.RadioButton localAutoCrlfTrue;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.CheckBox ShowCurrentChangesInRevisionGraph;
 
     }
 }

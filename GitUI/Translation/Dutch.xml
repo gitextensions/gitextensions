@@ -592,10 +592,10 @@ _ReSharper*/
           <Value>Opslaan als</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
-          <Value>Openen</Value>
+          <Value>Openen (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
-          <Value>Openen met</Value>
+          <Value>Openen met... (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Bestands history</Value>
@@ -614,6 +614,36 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Value>Verwijder index.lock</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
+          <Value>Opslaan als</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel1" Property="Text">
+          <Value>Vertakkingen:</Value>
+        </TranslationItem>
+        <TranslationItem Name="localToolStripMenuItem" Property="Text">
+          <Value>Lokaal</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
+          <Value>Extern</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerToolStripMenuItem" Property="Text">
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripStatusLabel1" Property="Text">
+          <Value>X</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Open uitgecheckt bestand  met...</Value>
+        </TranslationItem>
+        <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
+          <Value>Verdeel en heers</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1007,6 +1037,21 @@ Kies een directory.</Value>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Automatisch een commit maken</Value>
         </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nr.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>Deze revisie is een samenvoeging, selecteer voorganger:</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormFixHome">
@@ -1149,9 +1194,6 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Vertakkingen samenvoegen</Value>
-        </TranslationItem>
-        <TranslationItem Name="_currentBranch" Property="Text">
-          <Value>Huidige vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Voeg huidige vertakking samen met andere vertakking</Value>
@@ -1302,6 +1344,30 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
           <Value>Teken niet gerelateerde vertakkingen grijs</Value>
         </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>Kopiëren naar het klembord</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>Melding</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>Markeer revisie als slecht</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>Markeer revisie als goed</Value>
+        </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
@@ -1313,6 +1379,12 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Value>Huidige wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text">
+          <Value>Commit index</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
@@ -1417,9 +1489,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
-          <Value>Aantal commits dat word opgehaald bij het opstarten.
-Overige commits worden geladen wanneer nodig. Een lager
-nummer resulteert in een kortere start tijd, maar langzamer scrollen.</Value>
+          <Value>Aantal commits dat word opgehaald bij het opstarten.</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseGitPath" Property="Text">
           <Value>Bladeren</Value>
@@ -1723,6 +1793,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>Teken niet gerelateerde vertakkingen grijs</Value>
+        </TranslationItem>
+        <TranslationItem Name="label26" Property="Text">
+          <Value>Toon huidige wijzigingen in revisie grafiek</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2090,6 +2163,9 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Er zijn niet opgeloste conflicten</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkInteractive" Property="Text">
+          <Value>Interactieve rebase</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2632,13 +2708,19 @@ stash
     <TranslationCategory Name="CommitInfo">
       <translationItems>
         <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
-          <Value>Toon vertakkingen waar deze commit in voorkomt</Value>
+          <Value>Toon lokale vertakkingen waar deze commit in voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Value>Toon labels waar deze commit in voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Value>Kopieer commit info</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
+          <Value>Toon externe vertakkingen waar deze commit in voorkomt</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
+          <Value>Toon externe vertakkingen indien deze commit in geen lokale vertakking voorkomt</Value>
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Value>Komt voor in vertakkingen:</Value>
@@ -2804,6 +2886,25 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>Start verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Markeer huidige revisie 'goed'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Markeer huidige revisie 'slecht'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Stop verdeel en heers</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

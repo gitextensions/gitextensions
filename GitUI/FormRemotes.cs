@@ -33,14 +33,14 @@ namespace GitUI
 
         private void Initialize()
         {
-            Remotes.DataSource = GitCommands.GitCommands.GetRemotes();
+            Remotes.DataSource = GitCommandHelpers.GetRemotes();
 
-            var heads = GitCommands.GitCommands.GetHeads(false, true);
+            var heads = GitCommandHelpers.GetHeads(false, true);
             RemoteBranches.DataSource = heads;
 
             RemoteBranches.DataError += RemoteBranchesDataError;
 
-            PuTTYSSH.Visible = GitCommands.GitCommands.Plink();
+            PuTTYSSH.Visible = GitCommandHelpers.Plink();
         }
 
         private void UrlDropDown(object sender, EventArgs e)
@@ -65,11 +65,11 @@ namespace GitUI
                 if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
                     return;
 
-                output = GitCommands.GitCommands.AddRemote(RemoteName.Text, Url.Text);
+                output = GitCommandHelpers.AddRemote(RemoteName.Text, Url.Text);
 
                 if (MessageBox.Show(
                         "You have added a new remote repository." + Environment.NewLine +
-                        "Do you want to automaticly configure the default push and pull behaviour for this remote?",
+                        "Do you want to automatically configure the default push and pull behavior for this remote?",
                         "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var remoteUrl = Url.Text;
@@ -87,11 +87,11 @@ namespace GitUI
             {
                 if (RemoteName.Text != _remote)
                 {
-                    output = GitCommands.GitCommands.RenameRemote(_remote, RemoteName.Text);
+                    output = GitCommandHelpers.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                GitCommands.GitCommands.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
-                GitCommands.GitCommands.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                GitCommandHelpers.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
+                GitCommandHelpers.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -102,18 +102,18 @@ namespace GitUI
 
         private void ConfigureRemotes()
         {
-            foreach (var remoteHead in GitCommands.GitCommands.GetHeads(true, true))
+            foreach (var remoteHead in GitCommandHelpers.GetHeads(true, true))
             {
-                foreach (var localHead in GitCommands.GitCommands.GetHeads(true, true))
+                foreach (var localHead in GitCommandHelpers.GetHeads(true, true))
                 {
-                    if (!remoteHead.IsRemote || 
+                    if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
-                        !string.IsNullOrEmpty(localHead.TrackingRemote) || 
                         !string.IsNullOrEmpty(localHead.TrackingRemote) ||
-                        remoteHead.IsTag || 
+                        !string.IsNullOrEmpty(localHead.TrackingRemote) ||
+                        remoteHead.IsTag ||
                         localHead.IsTag ||
                         !remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) ||
-                        !remoteHead.Name.ToLower().Contains(_remote.ToLower())) 
+                        !remoteHead.Name.ToLower().Contains(_remote.ToLower()))
                         continue;
                     localHead.TrackingRemote = RemoteName.Text;
                     localHead.MergeWith = remoteHead.Name;
@@ -123,7 +123,7 @@ namespace GitUI
 
         private void NewClick(object sender, EventArgs e)
         {
-            var output = GitCommands.GitCommands.AddRemote("<new>", "");
+            var output = GitCommandHelpers.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, "Delete");
             Initialize();
@@ -137,7 +137,7 @@ namespace GitUI
             if (MessageBox.Show("Are you sure you want to delete this remote?", "Delete", MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
-                var output = GitCommands.GitCommands.RemoveRemote(_remote);
+                var output = GitCommandHelpers.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(output, "Delete");
             }
@@ -163,12 +163,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(PuttySshKey.Text))
                 MessageBox.Show("No SSH key file entered");
             else
-                GitCommands.GitCommands.StartPageantWithKey(PuttySshKey.Text);
+                GitCommandHelpers.StartPageantWithKey(PuttySshKey.Text);
         }
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunRealCmdDetatched(
+            GitCommandHelpers.RunRealCmdDetached(
                 "cmd.exe",
                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, Url.Text));
         }
@@ -192,7 +192,7 @@ namespace GitUI
             LocalBranchNameEdit.ReadOnly = true;
             RemoteRepositoryCombo.Items.Clear();
             RemoteRepositoryCombo.Items.Add("");
-            foreach (var remote in GitCommands.GitCommands.GetRemotes())
+            foreach (var remote in GitCommandHelpers.GetRemotes())
                 RemoteRepositoryCombo.Items.Add(remote);
 
             RemoteRepositoryCombo.Text = head.TrackingRemote;
@@ -219,12 +219,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
-            var remoteUrl = GitCommands.GitCommands.GetSetting("remote." + currentSelectedRemote + ".url");
+            var remoteUrl = GitCommandHelpers.GetSetting("remote." + currentSelectedRemote + ".url");
 
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
 
-            foreach (var remoteHead in GitCommands.GitCommands.GetHeads(true, true))
+            foreach (var remoteHead in GitCommandHelpers.GetHeads(true, true))
             {
                 if (remoteHead.IsRemote &&
                     remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) /*&&
@@ -267,11 +267,11 @@ namespace GitUI
             if (!(Remotes.SelectedItem is string))
                 return;
 
-            _remote = (string) Remotes.SelectedItem;
+            _remote = (string)Remotes.SelectedItem;
             RemoteName.Text = _remote;
-            Url.Text = GitCommands.GitCommands.GetSetting(string.Format("remote.{0}.url", _remote));
+            Url.Text = GitCommandHelpers.GetSetting(string.Format("remote.{0}.url", _remote));
             PuttySshKey.Text =
-                GitCommands.GitCommands.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
+                GitCommandHelpers.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
         private void UpdateBranchClick(object sender, EventArgs e)
