@@ -1567,5 +1567,13 @@ namespace GitUI
             new FormBisect().ShowDialog();
             Initialize();
         }
+        private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitItemStatus item = DiffFiles.SelectedItem;
+           
+            if (item.IsTracked)
+                GitUICommands.Instance.StartFileHistoryDialog(item.Name);
+        }
+
     }
 }

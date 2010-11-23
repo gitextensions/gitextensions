@@ -182,6 +182,7 @@ namespace GitUI
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.bisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -1489,9 +1490,17 @@ namespace GitUI
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
+            //
             // statusStrip
+            // fileHistoryDiffToolstripMenuItem
+            //
+            this.DiffContextMenu.Items.Add(fileHistoryDiffToolstripMenuItem);
+            this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
+            this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.fileHistoryDiffToolstripMenuItem.Text = "File history";
+            this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
             // 
+            //
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);
@@ -1710,5 +1719,6 @@ namespace GitUI
         private ToolStripMenuItem openWithToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator20;
         private ToolStripMenuItem bisectToolStripMenuItem;
+        private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
     }
 }
