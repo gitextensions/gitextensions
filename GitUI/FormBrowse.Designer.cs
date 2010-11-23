@@ -1353,14 +1353,17 @@ namespace GitUI
             // gitRevisionBindingSource
             // 
             this.gitRevisionBindingSource.DataSource = typeof(GitCommands.GitRevision);
-            // 
-            // deleteIndexlockToolStripMenuItem
+            //
+            // fileHistoryDiffToolstripMenuItem
             //
             this.DiffContextMenu.Items.Add(fileHistoryDiffToolstripMenuItem);
             this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
             this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
             this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
+            // 
+            // deleteIndexlockToolStripMenuItem
+            //
             this.deleteIndexlockToolStripMenuItem.Name = "deleteIndexlockToolStripMenuItem";
             this.deleteIndexlockToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.deleteIndexlockToolStripMenuItem.Text = "Delete index.lock";
