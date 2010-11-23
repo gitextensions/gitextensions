@@ -6,7 +6,7 @@ namespace GitPlugin
     ///   Aurora.DebugLogHandler
     ///   Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
     /// </summary>
-    public class DebugLogHandler : Log.Handler
+    public class DebugLogHandler : Log.IHandler
     {
         #region Handler Members
 

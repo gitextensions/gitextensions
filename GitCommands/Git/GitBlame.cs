@@ -12,6 +12,6 @@ namespace GitCommands
         public string Text { get; set; }
         public string Author { get; set; }
         public string Message { get; set; }
-        public Color color { get; set; }
+        public Color Color { get; set; }
     }
 }

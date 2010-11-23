@@ -15,7 +15,7 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog {SelectedPath = Directory.Text};
+            var browseDialog = new FolderBrowserDialog { SelectedPath = Directory.Text };
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
                 Directory.Text = browseDialog.SelectedPath;
@@ -30,7 +30,7 @@ namespace GitUI
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            var addSubmoduleCmd = GitCommands.GitCommands.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text);
+            var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text);
             new FormProcess(addSubmoduleCmd).ShowDialog();
 
             Close();
@@ -55,7 +55,7 @@ namespace GitUI
             var realWorkingDir = Settings.WorkingDir;
             Settings.WorkingDir = Directory.Text;
 
-            var heads = GitCommands.GitCommands.GetHeads(false);
+            var heads = GitCommandHelpers.GetHeads(false);
 
             heads.Insert(0, GitHead.NoHead);
 
@@ -68,13 +68,13 @@ namespace GitUI
         private void DirectoryTextUpdate(object sender, EventArgs e)
         {
             var path = Directory.Text;
-            path = path.TrimEnd(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong });
+            path = path.TrimEnd(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong });
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
-            if (path.Contains(Settings.PathSeperator.ToString()) || path.Contains(Settings.PathSeperatorWrong.ToString()))
-                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Settings.PathSeperator, Settings.PathSeperatorWrong }) + 1);
+            if (path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString()))
+                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }) + 1);
         }
     }
 }

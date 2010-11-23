@@ -11,7 +11,7 @@ namespace PatchApply
         public Patch()
         {
             Apply = true;
-            BookMarks = new List<int>();
+            Bookmarks = new List<int>();
             File = FileType.Text;
         }
 
@@ -35,7 +35,7 @@ namespace PatchApply
         public int Rate { get; set; }
         public bool Apply { get; set; }
 
-        public List<int> BookMarks { get; set; }
+        public List<int> Bookmarks { get; set; }
 
         public PatchType Type { get; set; }
 

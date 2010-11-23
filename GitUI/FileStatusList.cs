@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.Specialized;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
-using System.Collections.Specialized;
 
 namespace GitUI
 {
@@ -134,9 +131,7 @@ namespace GitUI
                     obj.SetFileDropList(fileList);
 
                     // Proceed with the drag and drop, passing in the list item.                   
-                    DragDropEffects dropEffect = DoDragDrop(
-                                                     obj,
-                                                     DragDropEffects.Copy);
+                    DoDragDrop(obj, DragDropEffects.Copy);
                     dragBoxFromMouseDown = Rectangle.Empty;
                 }
             }
@@ -230,7 +225,7 @@ namespace GitUI
             }
         }
 
-        public IList<GitItemStatus> GitItemStatusses
+        public IList<GitItemStatus> GitItemStatuses
         {
             get
             {

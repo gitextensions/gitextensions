@@ -47,6 +47,27 @@ namespace GitCommands
             get { return a == 0 && b == 0 && c == 0 && d == 0; }
         }
 
+        // Returns true if it's possible to pass given string as command line
+        // argument to git for searching.
+        // As of msysgit 1.7.3.1 git-rev-list requires its search arguments
+        // (--author, --committer, --regex) to be encoded with the exact encoding
+        // used at commit time.
+        // This causes problems under Windows, where command line arguments are
+        // passed as WideChars. Git uses argv, which contains strings
+        // recoded into 8-bit system codepage, and that means searching for strings
+        // outside ASCII range gets crippled, unless commit messages in git
+        // are encoded according to system codepage.
+        // For versions of git displaying such behaviour, this function should return
+        // false if its argument isn't command-line safe, i.e. it contains chars
+        // outside ASCII (7bit) range.
+        public bool IsRegExStringCmdPassable(string s)
+        {
+            if (s==null) return true;
+            foreach (char ch in s)
+                if ((uint)ch >= 0x80) return false;
+            return true;
+        }
+
         private static string Fix(string version)
         {
             if (version == null)

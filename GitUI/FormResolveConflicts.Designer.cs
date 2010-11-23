@@ -57,7 +57,6 @@
             this.Mergetool = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.guidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.commitGuidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.itemTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -186,7 +185,7 @@
             // 
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
             this.ContextMarkAsSolved.Size = new System.Drawing.Size(218, 22);
-            this.ContextMarkAsSolved.Text = "Mark conlfict as solved";
+            this.ContextMarkAsSolved.Text = "Mark conflict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3
@@ -454,7 +453,6 @@
         private System.Windows.Forms.Button Rescan;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.ContextMenuStrip ConflictedFilesContextMenu;
         private System.Windows.Forms.ToolStripMenuItem ContextChooseBase;

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -13,7 +12,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("Are you sure you want to DELETE all changes?" + Environment.NewLine + Environment.NewLine + "This action cannot be made undone.", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    GitCommands.GitCommands.ResetHard("");
+                    GitCommandHelpers.ResetHard("");
                     return true;
                 }
             }

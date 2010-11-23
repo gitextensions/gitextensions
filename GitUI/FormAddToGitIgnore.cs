@@ -21,19 +21,18 @@ namespace GitUI
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWriteable(Settings.WorkingDir + ".gitignore",
+                    .MakeFileTemporaryWritable(Settings.WorkingDir + ".gitignore",
                                        x =>
-                                           {
-                                               var gitIgnoreFile = new StringBuilder();
-                                               gitIgnoreFile.Append(Environment.NewLine);
-                                               gitIgnoreFile.Append(FilePattern.Text);
+                                       {
+                                           var gitIgnoreFile = new StringBuilder();
+                                           gitIgnoreFile.Append(Environment.NewLine);
+                                           gitIgnoreFile.Append(FilePattern.Text);
 
-                                               using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
-                                               {
-                                                   tw.Write(gitIgnoreFile);
-                                                   tw.Close();
-                                               }
-                                           });
+                                           using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
+                                           {
+                                               tw.Write(gitIgnoreFile);
+                                           }
+                                       });
             }
             catch (Exception ex)
             {
@@ -45,7 +44,7 @@ namespace GitUI
 
         private void ShowPreviewClick(object sender, EventArgs e)
         {
-            Preview.DataSource = GitCommands.GitCommands.GetFiles(FilePattern.Text);
+            Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
 
             if (Height < 110)
                 Height = 300;

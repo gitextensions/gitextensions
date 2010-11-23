@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using System.Diagnostics;
+using GitCommands;
 
 namespace GitUI
 {
@@ -16,7 +17,7 @@ namespace GitUI
         public Process Process { get; set; }
 
         private bool restart = false;
-        private GitCommands.GitCommands gitCommand;
+        private GitCommands.GitCommandsInstance gitCommand;
 
         public FormProcess(string process, string arguments)
         {            
@@ -37,9 +38,9 @@ namespace GitUI
             restart = false;
             AddOutput(ProcessString + " " + ProcessArguments);
 
-            Plink = GitCommands.GitCommands.Plink();
+            Plink = GitCommandHelpers.Plink();
 
-            gitCommand = new GitCommands.GitCommands();
+            gitCommand = new GitCommands.GitCommandsInstance();
             gitCommand.CollectOutput = false;
             Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
 
@@ -61,18 +62,18 @@ namespace GitUI
             SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
             {
 
-            if (restart)
-            {
-                Reset();
-                ProcessCallback(this);
-                return;
-            }
+                if (restart)
+                {
+                    Reset();
+                    ProcessCallback(this);
+                    return;
+                }
 
-            bool isError;
-            try
-            {
-                // An error occurred!
-                if (gitCommand != null && gitCommand.Process != null && gitCommand.Process.ExitCode != 0)
+                bool isError;
+                try
+                {
+                    // An error occurred!
+                if (gitCommand != null && gitCommand.ExitCode != 0)
                 {
                     isError = true;
 
@@ -112,13 +113,13 @@ namespace GitUI
                 {
                     isError = false;
                 }
-            }
-            catch
-            {
-                isError = true;
-            }
+                }
+                catch
+                {
+                    isError = true;
+                }
 
-            Done(!isError);
+                Done(!isError);
 
             });
 
@@ -156,19 +157,19 @@ namespace GitUI
                 {
                     if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = GitCommands.GitCommands.GetSetting("remote." + Remote + ".url");
+                        string remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            GitCommands.GitCommands.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
+                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
                         else
-                            GitCommands.GitCommands.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
+                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }
 
                     try
                     {
-                        gitCommand.Process.Kill();
+                        gitCommand.Kill();
                     }
                     catch
                     {

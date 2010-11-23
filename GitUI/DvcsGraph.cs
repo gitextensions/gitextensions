@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
-using System.Data;
-using System.Text;
+using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.Diagnostics;
 
 namespace GitUI
 {
@@ -41,7 +38,7 @@ namespace GitUI
             backgroundThread.Start();
 
             InitializeComponent();
-            
+
             this.ColumnHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             this.Font = SystemFonts.DefaultFont;
             this.DefaultCellStyle.Font = SystemFonts.DefaultFont;
@@ -50,7 +47,7 @@ namespace GitUI
             this.RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             this.RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
             this.dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-          
+
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += new DataGridViewCellPaintingEventHandler(dataGrid_CellPainting);
             ColumnWidthChanged += new DataGridViewColumnEventHandler(dataGrid_ColumnWidthChanged);
@@ -62,22 +59,30 @@ namespace GitUI
 
         }
 
-        ~DvcsGraph()
+        protected override void Dispose(bool disposing)
         {
-            if (graphBitmap != null)
+            if (backgroundThread != null)
             {
-                graphBitmap.Dispose();
+                backgroundThread.Abort();
+                backgroundThread = null;
             }
-
-            backgroundThread.Abort();
+            if (disposing)
+            {
+                if (graphBitmap != null)
+                {
+                    graphBitmap.Dispose();
+                    graphBitmap = null;
+                }
+            }
+            base.Dispose(disposing);
         }
 
-        public delegate void LoadingHandler(bool isLoading);
+        public delegate void LoadingEventHandler(bool isLoading);
         /// <summary>
         /// Loading Handler. NOTE: This will often happen on a background thread
         /// so UI operations may not be safe!
         /// </summary>
-        public event LoadingHandler Loading;
+        public event LoadingEventHandler Loading;
 
         public void ShowHideRevisionGraph(bool show)
         {
@@ -496,7 +501,7 @@ namespace GitUI
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
                 //Subtract 2 for safe marge (1 for rounding and 1 for whitspace)....
-                if (visibleBottom-2 > graphData.Count)
+                if (visibleBottom - 2 > graphData.Count)
                 {
                     //Currently we are doing some important work; we are recieving
                     //rows that the user is viewing
@@ -553,17 +558,20 @@ namespace GitUI
                 }
 
                 // Check to see if the newly added item should be selected
-                IComparable id = graphData[row].Node.Id;
-                if (toBeSelected.Contains(id))
+                if (graphData.Count > row)
                 {
-                    toBeSelected.Remove(id);
-                    Rows[row].Selected = true;
-                    if (CurrentCell == null)
+                    IComparable id = graphData[row].Node.Id;
+                    if (toBeSelected.Contains(id))
                     {
-                        // Set the current cell to the first item. We use cell
-                        // 1 because cell 0 could be hidden if they've chosen to
-                        // not see the graph
-                        CurrentCell = Rows[row].Cells[1];
+                        toBeSelected.Remove(id);
+                        Rows[row].Selected = true;
+                        if (CurrentCell == null)
+                        {
+                            // Set the current cell to the first item. We use cell
+                            // 1 because cell 0 could be hidden if they've chosen to
+                            // not see the graph
+                            CurrentCell = Rows[row].Cells[1];
+                        }
                     }
                 }
 
@@ -652,7 +660,7 @@ namespace GitUI
                 Color.Gold,
                 Color.Orange
             };
-        
+
         private Color getJunctionColor(Junction aJunction)
         {
             //Draw non-relative branches gray
@@ -693,7 +701,7 @@ namespace GitUI
 
             if (adjacentColors.Count == 0) //This is an end-point. We need to 'pick' a new color
             {
-               colorIndex = 0;
+                colorIndex = 0;
             }
             else //This is a parent branch, calculate new color based on parent branch
             {
@@ -747,7 +755,7 @@ namespace GitUI
                     //The with changes more often, when branches become visible/invisible.
                     //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
                     //but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
-                    graphBitmap.Width < width  || graphBitmap.Height != height)
+                    graphBitmap.Width < width || graphBitmap.Height != height)
                 {
                     if (graphBitmap != null)
                     {
@@ -1364,7 +1372,7 @@ namespace GitUI
                         //and is about to start a new branch. This will also mean that the last
                         //revisions are non-relative. Make sure a new junction is added and this
                         //is the start of a new branch (and color!)
-                        && !((aType & DataType.Active) == DataType.Active) 
+                        && !((aType & DataType.Active) == DataType.Active)
                         )
                     {
                         // The node isn't a junction point. Just the parent to the node's
@@ -1398,7 +1406,7 @@ namespace GitUI
                         Junctions.Add(junction);
                     }
                 }
-                
+
                 bool isRelative = (aType & DataType.Active) == DataType.Active;
                 if (!isRelative)
                 {

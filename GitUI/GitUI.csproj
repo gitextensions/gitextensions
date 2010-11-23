@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\FxCop.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -43,7 +44,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,12 +52,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="SpellChecker, Version=2.1.7.34261, Culture=neutral, PublicKeyToken=318b389f0db66e46, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -112,6 +119,18 @@
       <DependentUpon>FileViewerMono.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\IFileViewer.cs" />
+    <Compile Include="FormBisect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBisect.Designer.cs">
+      <DependentUpon>FormBisect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCherryPickMerge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCherryPickMerge.Designer.cs">
+      <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -591,6 +610,9 @@
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
+    <Compile Include="WarningToolStripItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WindowPositionList.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -616,6 +638,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FileViewerMono.resx">
       <DependentUpon>FileViewerMono.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBisect.resx">
+      <DependentUpon>FormBisect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCherryPickMerge.resx">
+      <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditor.resx">
@@ -965,17 +995,14 @@
     <None Include="Icons\nonprintchar.png" />
     <None Include="Icons\brokendocument.png" />
     <None Include="Icons\22.png" />
-    <None Include="Icons\221.png" />
-    <None Include="Icons\brokendocument1.png" />
     <None Include="Icons\bug.png" />
     <None Include="Icons\loading3.gif" />
     <None Include="Icons\81.png" />
     <None Include="Icons\83.png" />
     <None Include="Icons\84.png" />
-    <None Include="Resources\_81.bmp" />
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
-    <Content Include="Resources\success.png" />
+    <None Include="Icons\arrow_refresh.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
@@ -984,6 +1011,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Translation\Japanese.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Spanish.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
@@ -1024,7 +1054,6 @@
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
     <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
     <None Include="Resources\Donate.jpg" />
-    <None Include="Resources\Cow1.png" />
     <None Include="Resources\Cow.png" />
     <None Include="Icons\77.png" />
     <None Include="Icons\78.png" />
@@ -1074,11 +1103,4 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

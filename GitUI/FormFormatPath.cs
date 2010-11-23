@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
+using System.IO;
+using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
-using System.Net.Mail;
-using System.IO;
 
 namespace GitUI
 {
@@ -28,10 +22,18 @@ namespace GitUI
 
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
-            string selectedHead = GitCommands.GitCommands.GetSelectedBranch();
+            OutputPath.Text = Settings.LastFormatPatchDir;
+            string selectedHead = GitCommandHelpers.GetSelectedBranch();
             SelectedBranch.Text = "Current branch: " + selectedHead;
 
             SaveToDir_CheckedChanged(null, null);
+            OutputPath.TextChanged += OutputPath_TextChanged;
+        }
+
+        private void OutputPath_TextChanged(object sender, EventArgs e)
+        {
+            if (Directory.Exists(OutputPath.Text))
+               Settings.LastFormatPatchDir = OutputPath.Text;
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
@@ -86,14 +88,14 @@ namespace GitUI
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[0].Guid;
-                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count == 2)
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[1].Guid;
-                    result = new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count > 2)
@@ -104,15 +106,16 @@ namespace GitUI
                         n++;
                         rev1 = revision.ParentGuids[0];
                         rev2 = revision.Guid;
-                        result += new GitCommands.GitCommands().FormatPatch(rev1, rev2, savePatchesToDir, n);
+                        result += GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
                 }
-            } else
-            if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
-            {
-                MessageBox.Show("You need to select 2 revisions", "Patch error");
-                return;
             }
+            else
+                if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
+                {
+                    MessageBox.Show("You need to select 2 revisions", "Patch error");
+                    return;
+                }
 
             if (!SaveToDir.Checked)
             {
@@ -121,7 +124,7 @@ namespace GitUI
                 else
                     result += "\n\nFailed to send mail.";
 
-                
+
                 //Clean up
                 if (Directory.Exists(savePatchesToDir))
                 {
@@ -138,14 +141,14 @@ namespace GitUI
         {
             try
             {
-                string from = GitCommands.GitCommands.GetSetting("user.email");
+                string from = GitCommandHelpers.GetSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
-                    from = (new GitCommands.GitCommands()).GetGlobalSetting("user.email");
+                    from = GitCommandHelpers.GetGlobalSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
                     MessageBox.Show("There is no email address configured in the settings dialog.");
-                    
+
                 string to = MailAddress.Text;
 
                 using (MailMessage mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text))
@@ -166,11 +169,6 @@ namespace GitUI
                 return false;
             }
             return true;
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void SaveToDir_CheckedChanged(object sender, EventArgs e)

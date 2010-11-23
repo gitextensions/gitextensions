@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
-using System.Configuration;
-using System.IO;
 
 namespace GitUI
 {
@@ -21,7 +21,7 @@ namespace GitUI
             Icon = ApplicationIcon;
             SetFont();
 
-            ShowInTaskbar = Application.OpenForms.Count <= 0;
+            ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
             AutoScaleMode = AutoScaleMode.None;
 
             var cancelButton = new Button();
@@ -30,6 +30,7 @@ namespace GitUI
             CancelButton = cancelButton;
 
             Load += GitExtensionsFormLoad;
+            FormClosed += GitExtensionsFormFormClosed;
         }
 
         private void SetFont()
@@ -76,7 +77,7 @@ namespace GitUI
 
             if (!_translated && !isComponentInDesignMode)
                 throw new Exception("The control " + GetType().Name +
-                                    " is not transated in the constructor. You need to call Translate() right after InitializeComponent().");
+                                    " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
         protected void Translate()
@@ -90,6 +91,18 @@ namespace GitUI
         public virtual void CancelButtonClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
+        {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                catch (InvalidOperationException) { }
+            }
         }
 
         /// <summary>
@@ -175,7 +188,7 @@ namespace GitUI
                         return position;
                 }
             }
-            catch(ConfigurationException)
+            catch (ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }

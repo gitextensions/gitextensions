@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace ResourceManager.Translation
 {
-    public class TranslationSerializer
+    public static class TranslationSerializer
     {
         public static void Serialize(Translation translation, string path)
         {

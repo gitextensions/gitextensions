@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Windows.Forms;
+using GitCommands;
 using GitUI.Blame;
 using GitUI.Plugin;
 using GitUI.Tag;
-using PatchApply;
-using GitCommands;
-using System.IO;
 using GitUIPluginInterfaces;
-using System.Windows.Forms;
+using PatchApply;
 
 namespace GitUI
 {
@@ -42,7 +40,7 @@ namespace GitUI
         public event GitUIEventHandler PreFileHistory;
         public event GitUIEventHandler PostFileHistory;
 
-        public event GitUIEventHandler PreBlame;        
+        public event GitUIEventHandler PreBlame;
         public event GitUIEventHandler PostBlame;
 
         public event GitUIEventHandler PreCompareRevisions;
@@ -101,7 +99,7 @@ namespace GitUI
 
         public event GitUIEventHandler PreEditGitAttributes;
         public event GitUIEventHandler PostEditGitAttributes;
-        
+
         public event GitUIEventHandler PreSettings;
         public event GitUIEventHandler PostSettings;
 
@@ -131,12 +129,12 @@ namespace GitUI
 
         public string GitCommand(string arguments)
         {
-            return GitCommands.GitCommands.RunCmd(Settings.GitCommand, arguments);
+            return GitCommandHelpers.RunCmd(Settings.GitCommand, arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)
         {
-            return GitCommands.GitCommands.RunCmd(cmd, arguments);
+            return GitCommandHelpers.RunCmd(cmd, arguments);
         }
 
 
@@ -232,8 +230,8 @@ namespace GitUI
         public bool StartCompareRevisionsDialog()
         {
             if (!InvokeEvent(PreCompareRevisions))
-                return false; 
-            
+                return false;
+
             FormDiff form = new FormDiff();
             form.ShowDialog();
 
@@ -245,7 +243,7 @@ namespace GitUI
         public bool StartAddFilesDialog()
         {
             if (!InvokeEvent(PreAddFiles))
-                return false; 
+                return false;
 
             FormAddFiles form = new FormAddFiles();
             form.ShowDialog();
@@ -258,7 +256,7 @@ namespace GitUI
         public bool StartCreateBranchDialog()
         {
             if (!InvokeEvent(PreCreateBranch))
-                return false; 
+                return false;
 
             FormBranch form = new FormBranch();
             form.ShowDialog();
@@ -373,8 +371,8 @@ namespace GitUI
         public bool StartApplyPatchDialog()
         {
             if (!InvokeEvent(PreApplyPatch))
-                return true; 
-            
+                return true;
+
             MergePatch form = new MergePatch();
             form.ShowDialog();
 
@@ -386,7 +384,7 @@ namespace GitUI
         public bool StartFormatPatchDialog()
         {
             if (!InvokeEvent(PreFormatPatch))
-                return true; 
+                return true;
 
             FormFormatPath form = new FormFormatPath();
             form.ShowDialog();
@@ -399,7 +397,7 @@ namespace GitUI
         public bool StartStashDialog()
         {
             if (!InvokeEvent(PreStash))
-                return true; 
+                return true;
 
             FormStash form = new FormStash();
             form.ShowDialog();
@@ -412,8 +410,8 @@ namespace GitUI
         public bool StartResolveConflictsDialog()
         {
             if (!InvokeEvent(PreResolveConflicts))
-                return true; 
-            
+                return true;
+
             FormResolveConflicts form = new FormResolveConflicts();
             form.ShowDialog();
 
@@ -425,7 +423,7 @@ namespace GitUI
         public bool StartCherryPickDialog()
         {
             if (!InvokeEvent(PreCherryPick))
-                return true; 
+                return true;
 
             FormCherryPick form = new FormCherryPick();
             form.ShowDialog();
@@ -438,8 +436,8 @@ namespace GitUI
         public bool StartMergeBranchDialog(string branch)
         {
             if (!InvokeEvent(PreMergeBranch))
-                return true; 
-            
+                return true;
+
             FormMergeBranch form = new FormMergeBranch(branch);
             form.ShowDialog();
 
@@ -451,13 +449,13 @@ namespace GitUI
         public bool StartCreateTagDialog()
         {
             if (!InvokeEvent(PreCreateTag))
-                return true; 
+                return true;
 
             FormTag form = new FormTag();
             form.ShowDialog();
 
             InvokeEvent(PostCreateTag);
-            
+
             return true;
         }
 
@@ -542,8 +540,8 @@ namespace GitUI
         public bool StartVerifyDatabaseDialog()
         {
             if (!InvokeEvent(PreVerifyDatabase))
-                return true; 
-            
+                return true;
+
             FormVerify form = new FormVerify();
             form.ShowDialog();
 
@@ -596,7 +594,7 @@ namespace GitUI
             if (!InvokeEvent(PreUpdateSubmodules))
                 return true;
 
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            FormProcess process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
             process.ShowDialog();
 
             InvokeEvent(PostUpdateSubmodules);
@@ -609,7 +607,7 @@ namespace GitUI
             if (!InvokeEvent(PreUpdateSubmodulesRecursive))
                 return true;
 
-            FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+            FormProcess process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
             process.ShowDialog();
             UpdateSubmodulesRecursive();
 
@@ -623,13 +621,13 @@ namespace GitUI
             new FormPluginSettings().ShowDialog();
             return true;
         }
-        
+
 
         private static void UpdateSubmodulesRecursive()
         {
             string oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
             {
                 if (!string.IsNullOrEmpty(submodule.LocalPath))
                 {
@@ -637,7 +635,7 @@ namespace GitUI
 
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(GitCommands.Settings.WorkingDir + ".gitmodules"))
                     {
-                        FormProcess process = new FormProcess(GitCommands.GitCommands.SubmoduleUpdateCmd(""));
+                        FormProcess process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
                         process.ShowDialog();
 
                         UpdateSubmodulesRecursive();
@@ -650,13 +648,18 @@ namespace GitUI
             Settings.WorkingDir = oldworkingdir;
         }
 
-        internal static bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
+        private bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
+        {
+            return InvokeEvent(this, gitUIEventHandler);
+        }
+
+        internal static bool InvokeEvent(object sender, GitUIEventHandler gitUIEventHandler)
         {
             try
             {
                 GitUIEventArgs e = new GitUIEventArgs(GitUICommands.Instance);
                 if (gitUIEventHandler != null)
-                    gitUIEventHandler.Invoke(e);
+                    gitUIEventHandler(sender, e);
 
                 return !e.Cancel;
             }

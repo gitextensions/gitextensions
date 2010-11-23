@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -10,8 +11,7 @@ using GitUI.Plugin;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using PatchApply;
-using ResourceManager.Translation;
-using System.Text;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI
 {
@@ -21,6 +21,7 @@ namespace GitUI
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
+        private ToolStripItem _bisect;
         private ToolStripItem _warning;
 
         public FormBrowse(string filter)
@@ -88,20 +89,24 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
-            RevisionGrid.ChangedCurrentBranch += RevisionGridChangedCurrentBranch;
+            RevisionGrid.ActionOnRepositoryPerformed += ActionOnRepositoryPerformed;
             _indexWatcher.Reset();
 
-            LoadPluginsInPluginMenu();
             Cursor.Current = Cursors.Default;
         }
 
+        private bool pluginsLoaded = false;
         private void LoadPluginsInPluginMenu()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            if (!pluginsLoaded)
             {
-                var item = new ToolStripMenuItem {Text = plugin.Description, Tag = plugin};
-                item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Add(item);
+                foreach (var plugin in LoadedPlugins.Plugins)
+                {
+                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                    item.Click += ItemClick;
+                    pluginsToolStripMenuItem.DropDownItems.Add(item);
+                }
+                pluginsLoaded = true;
             }
         }
 
@@ -122,7 +127,7 @@ namespace GitUI
             plugin.Execute(eventArgs);
         }
 
-        private void RevisionGridChangedCurrentBranch(object sender, EventArgs e)
+        private void ActionOnRepositoryPerformed(object sender, EventArgs e)
         {
             Initialize();
         }
@@ -146,7 +151,7 @@ namespace GitUI
             var validWorkingDir = Settings.ValidWorkingDir();
 
 
-            _NO_TRANSLATE_CurrentBranch.Text = validWorkingDir ? GitCommands.GitCommands.GetSelectedBranch() : "";
+            _NO_TRANSLATE_CurrentBranch.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
 
             if (validWorkingDir)
                 HideDashboard();
@@ -166,6 +171,7 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
             if (hard)
                 ShowRevisions();
@@ -173,38 +179,68 @@ namespace GitUI
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = Settings.WorkingDir + " - Git Extensions";
 
+            CheckForMergeConflicts();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void CheckForMergeConflicts()
+        {
+            bool validWorkingDir = Settings.ValidWorkingDir();
+
+            if (validWorkingDir && GitCommandHelpers.InTheMiddleOfBisect())
+            {
+
+                if (_bisect == null)
+                {
+                    _bisect = new WarningToolStripItem();
+                    _bisect.Text = "Your are in the middle of a bisect";
+                    _bisect.Click += BisectClick;
+                    statusStrip.Items.Add(_bisect);
+                }
+            }
+            else
+            {
+                if (_bisect != null)
+                {
+                    _bisect.Click -= BisectClick;
+                    statusStrip.Items.Remove(_bisect);
+                    _bisect = null;
+                }
+            }
+
             if (validWorkingDir &&
-                (GitCommands.GitCommands.InTheMiddleOfRebase() || GitCommands.GitCommands.InTheMiddleOfPatch()))
+                (GitCommandHelpers.InTheMiddleOfRebase() || GitCommandHelpers.InTheMiddleOfPatch()))
             {
                 if (_rebase == null)
                 {
-                    _rebase =
-                        ToolStrip.Items.Add(GitCommands.GitCommands.InTheMiddleOfRebase()
+                    _rebase = new WarningToolStripItem();
+                    _rebase.Text = GitCommandHelpers.InTheMiddleOfRebase()
                                                 ? "You are in the middle of a rebase"
-                                                : "You are in the middle of a patch apply");
-
-                    _rebase.BackColor = Color.Salmon;
+                                                : "You are in the middle of a patch apply";
                     _rebase.Click += RebaseClick;
+                    statusStrip.Items.Add(_rebase);
                 }
             }
             else
             {
                 if (_rebase != null)
                 {
-                    _rebase.Click -= WarningClick;
-                    ToolStrip.Items.Remove(_rebase);
+                    _rebase.Click -= RebaseClick;
+                    statusStrip.Items.Remove(_rebase);
                     _rebase = null;
                 }
             }
 
-            if (validWorkingDir && GitCommands.GitCommands.InTheMiddleOfConflictedMerge() &&
+            if (validWorkingDir && GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                 !Directory.Exists(Settings.WorkingDir + ".git\\rebase-apply\\"))
             {
                 if (_warning == null)
                 {
-                    _warning = ToolStrip.Items.Add("There are unresolved merge conflicts!");
-                    _warning.BackColor = Color.Salmon;
+                    _warning = new WarningToolStripItem();
+                    _warning.Text = "There are unresolved merge conflicts!";
                     _warning.Click += WarningClick;
+                    statusStrip.Items.Add(_warning);
                 }
             }
             else
@@ -212,16 +248,56 @@ namespace GitUI
                 if (_warning != null)
                 {
                     _warning.Click -= WarningClick;
-                    ToolStrip.Items.Remove(_warning);
+                    statusStrip.Items.Remove(_warning);
                     _warning = null;
                 }
             }
-            Cursor.Current = Cursors.Default;
+
+            //Only show status strip when there are status items on it.
+            //There is always a close (x) button, do not count first item.
+            if (statusStrip.Items.Count > 1)
+                statusStrip.Show();
+            else
+                statusStrip.Hide();
+        }
+
+        private void InitToolStripBranchFilter(bool local, bool remote)
+        {
+            toolStripBranches.Items.Clear();
+            List<string> branches = GetBranchHeads(local, remote);
+            foreach (var branch in branches)
+                toolStripBranches.Items.Add(branch);
+        }
+
+        private static List<string> GetBranchHeads(bool local, bool remote)
+        {
+            List<string> list = new List<string>();
+            if (local && remote)
+            {
+                var branches = GitCommands.GitCommandHelpers.GetHeads(true, true);
+                foreach (var branch in branches)
+                    if (!branch.IsTag)
+                        list.Add(branch.Name);
+            }
+            else if (local)
+            {
+                var branches = GitCommands.GitCommandHelpers.GetHeads(false);
+                foreach (var branch in branches)
+                    list.Add(branch.Name);
+            }
+            else if (remote)
+            {
+                var branches = GitCommands.GitCommandHelpers.GetHeads(true, true);
+                foreach (var branch in branches)
+                    if (branch.IsRemote && !branch.IsTag)
+                        list.Add(branch.Name);
+            }
+            return list;
         }
 
         private void RebaseClick(object sender, EventArgs e)
         {
-            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+            if (GitCommandHelpers.InTheMiddleOfRebase())
                 GitUICommands.Instance.StartRebaseDialog(null);
             else
                 GitUICommands.Instance.StartApplyPatchDialog();
@@ -285,15 +361,15 @@ namespace GitUI
                 GitTree.ResumeLayout();
             }
         }
-        
-        
+
+
 
         private void FillDiff()
         {
             if (tabControl1.SelectedTab != Diff)
                 return;
 
-            DiffFiles.GitItemStatusses = null;
+            DiffFiles.GitItemStatuses = null;
             var revisions = RevisionGrid.GetRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -301,8 +377,8 @@ namespace GitUI
             switch (revisions.Count)
             {
                 case 2:
-                    DiffFiles.GitItemStatusses =
-                        GitCommands.GitCommands.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    DiffFiles.GitItemStatuses =
+                        GitCommandHelpers.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
                     return;
@@ -313,12 +389,17 @@ namespace GitUI
                         revision.ParentGuids != null &&
                         revision.ParentGuids.Length > 0)
                     {
-                        DiffFiles.GitItemStatusses =
-                            GitCommands.GitCommands.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetAllChangedFiles();
+                        else
+                            if (revision.Guid == GitRevision.IndexGuid) //index
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetStagedFiles();
+                        else
+                            DiffFiles.GitItemStatuses = GitCommandHelpers.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         DiffFiles.Revision = revision;
                     }
                     else
-                        DiffFiles.GitItemStatusses = null;
+                        DiffFiles.GitItemStatuses = null;
                     break;
             }
         }
@@ -362,31 +443,31 @@ namespace GitUI
                 return;
             }
 
-            string[] items = selectedItem.Split(new char[]{'/'});
+            string[] items = selectedItem.Split(new char[] { '/' });
             TreeNodeCollection nodes = GitTree.Nodes;
-            
+
             TreeNode selectedNode = null;
             for (int i = 0; i < items.Length - 1; i++)
             {
                 selectedNode = Find(nodes, items[i]);
-                
+
                 if (selectedNode == null)
                 {
                     return; //Item does not exist in the tree
                 }
-                
+
                 selectedNode.Expand();
                 nodes = selectedNode.Nodes;
             }
-            
+
             var lastItem = Find(nodes, items[items.Length - 1]);
             if (lastItem != null)
             {
                 GitTree.SelectedNode = lastItem;
             }
         }
-        
-        private TreeNode Find(TreeNodeCollection nodes, string label)
+
+        private static TreeNode Find(TreeNodeCollection nodes, string label)
         {
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -400,7 +481,7 @@ namespace GitUI
 
         private IList<string> FindFileMatches(string name)
         {
-            var candidates = GitCommands.GitCommands.GetFullTree(RevisionGrid.GetRevisions()[0].TreeGuid);
+            var candidates = GitCommandHelpers.GetFullTree(RevisionGrid.GetRevisions()[0].TreeGuid);
 
             var fullPaths = new List<string>();
             string nameAsLower = name.ToLower();
@@ -412,31 +493,31 @@ namespace GitUI
                     fullPaths.Add(fileName);
                 }
             }
-            
+
             return fullPaths;
         }
 
 
 
-            
+
 
         public void OpenWithOnClick(object sender, EventArgs e)
         {
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem) item).ItemType == "blob")
+                if (((GitItem)item).ItemType == "blob")
                 {
-                    var fileName = ((GitItem) item).FileName;
+                    var fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
                     if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-                    fileName = Path.GetTempPath() + fileName;
+                    fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
                     File.WriteAllText(fileName,
-                                                GitCommands.GitCommands.RunCmd(Settings.GitCommand,
-                                                                               "cat-file blob \"" + ((GitItem) item).Guid + "\""));
+                                                GitCommandHelpers.RunCmd(Settings.GitCommand,
+                                                                               "cat-file blob \"" + ((GitItem)item).Guid + "\""));
                     OpenWith.OpenAs(fileName);
                 }
         }
@@ -449,11 +530,12 @@ namespace GitUI
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                     enableItems = true;
-                
+
             saveAsToolStripMenuItem.Enabled = enableItems;
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
             fileHistoryToolStripMenuItem.Enabled = enableItems;
+            openWithToolStripMenuItem.Enabled = enableItems;
         }
 
         public void OpenOnClick(object sender, EventArgs e)
@@ -461,17 +543,17 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem) item).ItemType == "blob")
+                if (((GitItem)item).ItemType == "blob")
                 {
-                    var fileName = ((GitItem) item).FileName;
+                    var fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
                     if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-                    fileName = Path.GetTempPath() + fileName;
-                    
-                    File.WriteAllText(fileName, GitCommands.GitCommands.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem) item).Guid + "\""));
+                    fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+
+                    File.WriteAllText(fileName, GitCommandHelpers.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\""));
 
                     Process.Start(fileName);
                 }
@@ -501,6 +583,25 @@ namespace GitUI
         {
             try
             {
+                if (RevisionGrid.GetRevisions().Count > 0 &&
+                    (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                     RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid))
+                {
+                    if (tabControl1.TabPages.Contains(CommitInfo))
+                        tabControl1.TabPages.Remove(CommitInfo); 
+                    if (tabControl1.TabPages.Contains(Tree)) 
+                        tabControl1.TabPages.Remove(Tree);
+                }
+                else
+                {
+                    if (!tabControl1.TabPages.Contains(CommitInfo))
+                        tabControl1.TabPages.Insert(0, CommitInfo); 
+                    if (!tabControl1.TabPages.Contains(Tree))
+                         tabControl1.TabPages.Insert(1, Tree);
+                }
+                
+
+
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
@@ -608,12 +709,12 @@ namespace GitUI
 
         private void GitBashToolStripMenuItemClick1(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunBash();
+            GitCommandHelpers.RunBash();
         }
 
         private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunGui();
+            GitCommandHelpers.RunGui();
         }
 
         private void FormatPatchToolStripMenuItemClick(object sender, EventArgs e)
@@ -708,7 +809,7 @@ namespace GitUI
 
         private void KGitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.RunGitK();
+            GitCommandHelpers.RunGitK();
         }
 
         private void DonateToolStripMenuItemClick(object sender, EventArgs e)
@@ -740,7 +841,7 @@ namespace GitUI
 
             Translate();
 
-            RevisionGrid.Refresh();
+            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
@@ -780,12 +881,12 @@ namespace GitUI
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.Run(Settings.Pageant, "");
+            GitCommandHelpers.StartExternalCommand(Settings.Pageant, "");
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommands.GitCommands.Run(Settings.Puttygen, "");
+            GitCommandHelpers.StartExternalCommand(Settings.Puttygen, "");
         }
 
         private void SetFilter(string filter)
@@ -797,9 +898,50 @@ namespace GitUI
 
         private void ApplyFilter()
         {
-            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text)) return;
-            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text);
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
+            bool[] filterParams = new bool[4];
+            filterParams[0] = commitToolStripMenuItem1.Checked;
+            filterParams[1] = committerToolStripMenuItem.Checked;
+            filterParams[2] = authorToolStripMenuItem.Checked;
+            RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
+                                           filterParams,
+                                           out revListArgs,
+                                           out inMemMessageFilter,
+                                           out inMemCommitterFilter,
+                                           out inMemAuthorFilter);
+            if ((RevisionGrid.Filter == revListArgs) &&
+                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (RevisionGrid.InMemFilterIgnoreCase))
+                return;
+            RevisionGrid.Filter = revListArgs;
+            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemFilterIgnoreCase = true;
             RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void ApplyBranchFilter()
+        {
+            bool success = RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
+            if (success) RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void UpdateBranchFilterItems()
+        {
+            string filter = toolStripBranches.Text;
+            toolStripBranches.Items.Clear();
+            var index = toolStripBranches.Text.Length;
+            var branches = GetBranchHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            foreach (var branch in branches)
+                if (branch.Contains(filter))
+                    toolStripBranches.Items.Add(branch);
+            toolStripBranches.SelectionStart = index;
         }
 
         private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
@@ -827,7 +969,7 @@ namespace GitUI
                 return;
             }
 
-            var selectedItem = (DiffFiles.SelectedItem).Name;
+            GitItemStatus selectedItem = DiffFiles.SelectedItem;
             var revisions = RevisionGrid.GetRevisions();
 
             if (revisions.Count == 0)
@@ -835,18 +977,33 @@ namespace GitUI
 
             DiffText.ViewPatch(() =>
                                    {
-                                       var selectedPatch = GetSelectedPatch(revisions, selectedItem);
-
-                                       return selectedPatch == null ? String.Empty : selectedPatch.Text;
+                                       string selectedPatch = GetSelectedPatch(revisions, selectedItem);
+                                       
+                                       return selectedPatch == null ? String.Empty : selectedPatch;
                                    });
         }
 
-        private Patch GetSelectedPatch(IList<GitRevision> revisions, string fileName)
+        private string GetSelectedPatch(IList<GitRevision> revisions, GitItemStatus file)
         {
-            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
+            if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                if (file.IsTracked)
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, false, DiffText.GetExtraDiffArguments());
+                else
+                    return FileReader.ReadFileContent(GitCommands.Settings.WorkingDir + file.Name, GitCommands.Settings.Encoding);
+            }
+            else
+                if (revisions[0].Guid == GitRevision.IndexGuid) //index
+                {
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, true, DiffText.GetExtraDiffArguments());
+                }
+                else
+                {
+                    var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
-            return GitCommands.GitCommands.GetSingleDiff(revisions[0].Guid, secondRevision, fileName,
-                                                         DiffText.GetExtraDiffArguments());
+                    return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name,
+                                                                 DiffText.GetExtraDiffArguments()).Text;
+                }
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
@@ -870,7 +1027,7 @@ namespace GitUI
 
         private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
                 ToolStripLabel2Click(null, null);
         }
 
@@ -897,7 +1054,7 @@ namespace GitUI
 
         private void InitializeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
             process.ShowDialog();
             Initialize();
         }
@@ -905,7 +1062,7 @@ namespace GitUI
         private void InitializeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
             process.ShowDialog();
             InitSubmodulesRecursive();
             Initialize();
@@ -916,7 +1073,7 @@ namespace GitUI
         {
             var oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
             {
                 if (string.IsNullOrEmpty(submodule.LocalPath))
                     continue;
@@ -925,7 +1082,7 @@ namespace GitUI
 
                 if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
                 {
-                    var process = new FormProcess(GitCommands.GitCommands.SubmoduleInitCmd(""));
+                    var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
                     process.ShowDialog();
 
                     InitSubmodulesRecursive();
@@ -939,7 +1096,7 @@ namespace GitUI
 
         private void SyncronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
             process.ShowDialog();
             Initialize();
         }
@@ -947,7 +1104,7 @@ namespace GitUI
         private void SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
             process.ShowDialog();
             SyncSubmodulesRecursive();
             Initialize();
@@ -958,7 +1115,7 @@ namespace GitUI
         {
             var oldworkingdir = Settings.WorkingDir;
 
-            foreach (GitSubmodule submodule in (new GitCommands.GitCommands()).GetSubmodules())
+            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
             {
                 if (string.IsNullOrEmpty(submodule.LocalPath))
                     continue;
@@ -967,7 +1124,7 @@ namespace GitUI
 
                 if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
                 {
-                    var process = new FormProcess(GitCommands.GitCommands.SubmoduleSyncCmd(""));
+                    var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
                     process.ShowDialog();
 
                     SyncSubmodulesRecursive();
@@ -1015,7 +1172,7 @@ namespace GitUI
 
             RemoveSubmoduleButtons();
 
-            var submodules = (new GitCommands.GitCommands()).GetSubmodulesNames();// GetSubmodules();
+            var submodules = GitCommandHelpers.GetSubmodulesNames();
 
             foreach (var submodule in submodules)
             {
@@ -1035,7 +1192,7 @@ namespace GitUI
             foreach (var item in openSubmoduleToolStripMenuItem.DropDownItems)
             {
                 var toolStripButton = item as ToolStripButton;
-                if(toolStripButton != null)
+                if (toolStripButton != null)
                     toolStripButton.Click -= SubmoduleToolStripButtonClick;
             }
             openSubmoduleToolStripMenuItem.DropDownItems.Clear();
@@ -1048,7 +1205,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            Settings.WorkingDir += GitCommands.GitCommands.GetSubmoduleLocalPath(button.Text);
+            Settings.WorkingDir += GitCommandHelpers.GetSubmoduleLocalPath(button.Text);
 
             if (Settings.ValidWorkingDir())
                 Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
@@ -1151,7 +1308,7 @@ namespace GitUI
                 return;
 
 
-            var output = GitCommands.GitCommands.OpenWithDifftool(selectedItem, revisions[0].Guid,
+            var output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid,
                                                                   revisions[0].ParentGuids[0]);
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
@@ -1169,7 +1326,7 @@ namespace GitUI
 
         private void ToolStripItemClick(object sender, EventArgs e)
         {
-            var toolStripItem = (ToolStripItem) sender;
+            var toolStripItem = (ToolStripItem)sender;
             if (toolStripItem == null)
                 return;
 
@@ -1209,17 +1366,17 @@ namespace GitUI
                         FileName = Settings.WorkingDir + item.FileName,
                         AddExtension = true
                     };
-            fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
+            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter =
                 "Current format (*." +
-                GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." +
-                GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
                 "|All files (*.*)|*.*";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(fileDialog.FileName, 
-                                GitCommands.GitCommands.RunCmd(
+                File.WriteAllText(fileDialog.FileName,
+                                GitCommandHelpers.RunCmd(
                                     Settings.GitCommand,
                                     string.Format("cat-file blob \"{0}\"", item.Guid)));
             }
@@ -1230,7 +1387,7 @@ namespace GitUI
             if (e.Node.IsExpanded)
                 return;
 
-            var item = (IGitItem) e.Node.Tag;
+            var item = (IGitItem)e.Node.Tag;
 
             e.Node.Nodes.Clear();
             LoadInTree(item.SubItems, e.Node.Nodes);
@@ -1293,7 +1450,7 @@ namespace GitUI
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeperatorWrong, Settings.PathSeperator));
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -1311,6 +1468,105 @@ namespace GitUI
                 MessageBox.Show("index.lock not found at: " + fileName);
         }
 
+        private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+
+            if (DiffFiles.SelectedItem == null)
+                return;
+           
+            GitItemStatus item = DiffFiles.SelectedItem;
+
+            if (item == null)
+                return;
+
+            var fileDialog =
+                new SaveFileDialog
+                {
+                    InitialDirectory = Settings.WorkingDir,
+                    FileName = item.Name.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator),
+                    AddExtension = true
+                };
+            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+            fileDialog.Filter =
+                "Current format (*." +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
+                GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
+                "|All files (*.*)|*.*";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(fileDialog.FileName,
+                                GitCommandHelpers.RunCmd(
+                                    Settings.GitCommand,
+                                    string.Format("cat-file blob {0}:\"{1}\"", revisions[0].Guid, item.Name)));
+            }
+        }
+
+        private void toolStripBranches_TextUpdate(object sender, EventArgs e)
+        {
+            UpdateBranchFilterItems();
+        }
+
+        private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.Enter)
+            {
+                ApplyBranchFilter();
+            }
+        }
+
+        private void toolStripBranches_DropDown(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            UpdateBranchFilterItems();
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            statusStrip.Hide();
+        }
+
+        private void toolStripBranches_Leave(object sender, EventArgs e)
+        {
+            ApplyBranchFilter();
+        }
+
+        private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag;
+
+            if (item is GitItem)
+                if (((GitItem)item).ItemType == "blob")
+                {
+                    string fileName = ((GitItem)item).FileName;
+                    fileName = Settings.WorkingDir + fileName;
+
+                    OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                }
+
+        }
+
+        private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            LoadPluginsInPluginMenu();
+        }
+
+        private void bisectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormBisect().ShowDialog();
+            Initialize();
+        }
+
+        private void BisectClick(object sender, EventArgs e)
+        {
+            new FormBisect().ShowDialog();
+            Initialize();
+        }
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus item = DiffFiles.SelectedItem;

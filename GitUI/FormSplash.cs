@@ -14,8 +14,33 @@ namespace GitUI
     {
         private readonly TranslationString _version = new TranslationString("Version {0}");
 
-        public FormSplash()
+        private static FormSplash instance = null;
+
+        public static void Show(string action)
         {
+            instance = new FormSplash();
+            instance.Show();
+        }
+
+        public static void SetAction(string action)
+        {
+            if (instance != null)
+                instance.SetActionText(action);
+        }
+
+        public static void Hide()
+        {
+            if (instance != null)
+            {
+                instance.Dispose();
+                instance = null;
+            }
+        }
+
+        private FormSplash()
+        {
+            ShowInTaskbar = false;
+
             InitializeComponent();
 
             SetFont();
@@ -32,7 +57,7 @@ namespace GitUI
             Font = SystemFonts.MessageBoxFont;
         }
 
-        public void SetAction(string action)
+        private void SetActionText(string action)
         {
             _NO_TRANSLATE_actionLabel.Text = action;
             Refresh();

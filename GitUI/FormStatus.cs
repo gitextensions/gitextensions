@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -31,12 +32,12 @@ namespace GitUI
         public StringBuilder OutputString = new StringBuilder();
         public ProcessStart ProcessCallback = null;
         public ProcessAbort AbortCallback = null;
-        private bool errorOccured = false;
+        private bool errorOccurred = false;
         private bool showOnError = false;
 
-        public bool ErrorOccured()
+        public bool ErrorOccurred()
         {
-            return errorOccured;
+            return errorOccurred;
         }
 
         public void SetProgress(string text)
@@ -51,6 +52,16 @@ namespace GitUI
                     if (ProgressBar.Style != ProgressBarStyle.Blocks)
                         ProgressBar.Style = ProgressBarStyle.Blocks;
                     ProgressBar.Value = Math.Min(100, progressValue);
+
+                    if (TaskbarManager.IsPlatformSupported)
+                    {
+                        try
+                        {
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException) { }
+                    }
                 }
                 this.Text = text;
             });
@@ -73,9 +84,23 @@ namespace GitUI
             AcceptButton = Ok;
             Abort.Enabled = false;
 
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                try
+                {
+                    if (isSuccess)
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                    else
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+
+                    TaskbarManager.Instance.SetProgressValue(100, 100);
+                }
+                catch (InvalidOperationException) { }
+            }
+
             SuccessImage.Visible = isSuccess;
             ErrorImage.Visible = !isSuccess;
-            errorOccured = !isSuccess;
+            errorOccurred = !isSuccess;
             splitContainer5.Panel2Collapsed = false;
 
             if (showOnError && !isSuccess)
@@ -132,8 +157,29 @@ namespace GitUI
             Start();
         }
 
+        private void FormStatus_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                catch (InvalidOperationException) { }
+            }
+        }
+
         private void Start()
         {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
+                }
+                catch (InvalidOperationException) { }
+            }
+
             Reset();
             ProcessCallback(this);
         }
@@ -152,11 +198,6 @@ namespace GitUI
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
         {
             GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
-        }
-
-        private void FormStatus_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("process");
         }
     }
 }

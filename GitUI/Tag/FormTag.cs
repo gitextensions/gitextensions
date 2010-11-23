@@ -56,7 +56,7 @@ namespace GitUI.Tag
                 }
 
 
-                var s = GitCommands.GitCommands.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
+                var s = GitCommandHelpers.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
                                                     annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))

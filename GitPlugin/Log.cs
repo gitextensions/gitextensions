@@ -22,12 +22,12 @@ namespace GitPlugin
 
         #endregion
 
-        private static readonly List<Handler> Handlers;
+        private static readonly List<IHandler> Handlers;
         private static int _indent;
 
         static Log()
         {
-            Handlers = new List<Handler>();
+            Handlers = new List<IHandler>();
             Prefix = "";
             _indent = 0;
         }
@@ -43,7 +43,7 @@ namespace GitPlugin
             get { return Handlers.Count; }
         }
 
-        public static void AddHandler(Handler handler)
+        public static void AddHandler(IHandler handler)
         {
             if (null == handler)
                 return;
@@ -54,7 +54,7 @@ namespace GitPlugin
             }
         }
 
-        public static void RemoveHandler(Handler handler)
+        public static void RemoveHandler(IHandler handler)
         {
             lock (Handlers)
             {
@@ -134,7 +134,7 @@ namespace GitPlugin
 
         #region Nested type: Handler
 
-        public interface Handler
+        public interface IHandler
         {
             void OnMessage(Level level, string message, string formattedLine);
         }
