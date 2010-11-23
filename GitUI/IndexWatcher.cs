@@ -21,7 +21,7 @@ namespace GitUI
             RefsWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
         }
 
-        private void SetFileSystemWatcher()
+        private static void SetFileSystemWatcher()
         {
             if (!string.IsNullOrEmpty(GitCommands.Settings.WorkingDirGitDir()))
             {

@@ -11,7 +11,7 @@ namespace GitUI
     {
         private TranslationString trackRemoteBranch = new TranslationString("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '{0}'" + Environment.NewLine + "that track's this remote branch?");
         private TranslationString trackRemoteBranchCaption = new TranslationString("Checkout branch");
-        
+
         public FormCheckoutBranch()
         {
             InitializeComponent();
@@ -26,11 +26,11 @@ namespace GitUI
 
             if (LocalBranch.Checked)
             {
-                Branches.DataSource = GitCommands.GitCommands.GetHeads(false);
+                Branches.DataSource = GitCommandHelpers.GetHeads(false);
             }
             else
             {
-                var heads = GitCommands.GitCommands.GetHeads(true, true);
+                var heads = GitCommandHelpers.GetHeads(true, true);
                 var remoteHeads = new List<GitHead>();
 
                 foreach (var head in heads)
@@ -53,7 +53,7 @@ namespace GitUI
                 if (Remotebranch.Checked)
                 {
                     //Get a localbranch name
-                    var remoteName = GitCommands.GitCommands.GetRemoteName(Branches.Text, GitCommands.GitCommands.GetRemotes());
+                    var remoteName = GitCommandHelpers.GetRemoteName(Branches.Text, GitCommandHelpers.GetRemotes());
                     var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
 
                     //try to determine the 'best' name for a local branch, check if the local
@@ -75,7 +75,7 @@ namespace GitUI
                 command += " \"" + Branches.Text + "\"";
                 var form = new FormProcess(command);
                 form.ShowDialog();
-                if (!form.ErrorOccured())
+                if (!form.ErrorOccurred())
                     Close();
             }
             catch (Exception ex)
@@ -84,9 +84,9 @@ namespace GitUI
             }
         }
 
-        private bool LocalBranchExists(string name)
+        private static bool LocalBranchExists(string name)
         {
-            foreach (GitHead head in GitCommands.GitCommands.GetHeads(false))
+            foreach (GitHead head in GitCommandHelpers.GetHeads(false))
             {
                 if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     return true;

@@ -58,14 +58,14 @@ namespace GitUI
                 filter += string.Format(" --since=\"{0}\"", Since.Value);
             if (CheckUntil.Checked)
                 filter += string.Format(" --until=\"{0}\"", Until.Value);
-            if (AuthorCheck.Checked)
+            if (AuthorCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
                 filter += string.Format(" --author=\"{0}\"", Author.Text);
-            if (CommitterCheck.Checked)
+            if (CommitterCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
                 filter += string.Format(" --committer=\"{0}\"", Committer.Text);
-            if (MessageCheck.Checked)
+            if (MessageCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
                 filter += string.Format(" --grep=\"{0}\"", Message.Text);
             if (LimitCheck.Checked)
-                filter += string.Format(" --max-count=\"{0}\"", _NO_TRANSLATE_Limit.Value.ToString("N"));
+                filter += string.Format(" --max-count=\"{0}\"", ((int)_NO_TRANSLATE_Limit.Value).ToString());
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)
@@ -74,12 +74,46 @@ namespace GitUI
             return filter;
         }
 
+        public string GetInMemAuthorFilter()
+        {
+            if (AuthorCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
+                return Author.Text;
+            else
+                return string.Empty;
+        }
+
+        public string GetInMemCommitterFilter()
+        {
+            if (CommitterCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
+                return Committer.Text;
+            else
+                return string.Empty;
+        }
+
+        public string GetInMemMessageFilter()
+        {
+            if (MessageCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
+                return Message.Text;
+            else
+                return string.Empty;
+        }
+
+        public bool GetIgnoreCase()
+        {
+            return IgnoreCase.Checked;
+        }
+
         public string GetBranchFilter()
         {
             if (!Settings.BranchFilterEnabled || Settings.ShowCurrentBranchOnly)
                 return String.Empty;
 
             return BranchFilter.Text;
+        }
+
+        public void SetBranchFilter(string filter)
+        {
+            BranchFilter.Text = filter;
         }
 
         private void OkClick(object sender, EventArgs e)

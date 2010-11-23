@@ -37,6 +37,8 @@
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showContainedInBranchesRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
@@ -60,7 +62,7 @@
             this.tableLayout.Name = "tableLayout";
             this.tableLayout.RowCount = 1;
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.Size = new System.Drawing.Size(894, 411);
+            this.tableLayout.Size = new System.Drawing.Size(766, 334);
             this.tableLayout.TabIndex = 3;
             this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayout_Paint);
             // 
@@ -72,7 +74,7 @@
             this.gravatar1.Location = new System.Drawing.Point(0, 0);
             this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
             this.gravatar1.Name = "gravatar1";
-            this.gravatar1.Size = new System.Drawing.Size(105, 411);
+            this.gravatar1.Size = new System.Drawing.Size(90, 334);
             this.gravatar1.TabIndex = 1;
             // 
             // splitContainer1
@@ -80,7 +82,8 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(108, 3);
+            this.splitContainer1.Location = new System.Drawing.Point(93, 2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -91,7 +94,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.RevisionInfo);
-            this.splitContainer1.Size = new System.Drawing.Size(783, 405);
+            this.splitContainer1.Size = new System.Drawing.Size(670, 330);
             this.splitContainer1.SplitterDistance = 115;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 2;
@@ -104,8 +107,10 @@
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this._RevisionHeader.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
+            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._RevisionHeader.Name = "_RevisionHeader";
-            this._RevisionHeader.Size = new System.Drawing.Size(783, 115);
+            this._RevisionHeader.ReadOnly = true;
+            this._RevisionHeader.Size = new System.Drawing.Size(670, 115);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             // 
@@ -115,34 +120,50 @@
             this.copyCommitInfoToolStripMenuItem,
             this.toolStripSeparator1,
             this.showContainedInBranchesToolStripMenuItem,
+            this.showContainedInBranchesRemoteToolStripMenuItem,
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
             this.showContainedInTagsToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(251, 98);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(422, 142);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
-            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
             this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(247, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(418, 6);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
             this.showContainedInBranchesToolStripMenuItem.Name = "showContainedInBranchesToolStripMenuItem";
-            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
-            this.showContainedInBranchesToolStripMenuItem.Text = "Show contained in branches";
+            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesToolStripMenuItem.Text = "Show local branches containing this commit";
             this.showContainedInBranchesToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesToolStripMenuItem_Click);
+            // 
+            // showContainedInBranchesRemoteToolStripMenuItem
+            // 
+            this.showContainedInBranchesRemoteToolStripMenuItem.Name = "showContainedInBranchesRemoteToolStripMenuItem";
+            this.showContainedInBranchesRemoteToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesRemoteToolStripMenuItem.Text = "Show remote branches containing this commit";
+            this.showContainedInBranchesRemoteToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteToolStripMenuItem_Click);
+            // 
+            // showContainedInBranchesRemoteIfNoLocalToolStripMenuItem
+            // 
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Name = "showContainedInBranchesRemoteIfNoLocalToolStripMenuItem";
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text = "Show remote branches only when no local branch contains this commit";
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click);
             // 
             // showContainedInTagsToolStripMenuItem
             // 
             this.showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
-            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
-            this.showContainedInTagsToolStripMenuItem.Text = "Show contained in tags";
+            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInTagsToolStripMenuItem.Text = "Show tags containing this commit";
             this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
             // 
             // RevisionInfo
@@ -152,21 +173,20 @@
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(6);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(783, 289);
+            this.RevisionInfo.Size = new System.Drawing.Size(670, 214);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             // 
             // CommitInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayout);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CommitInfo";
-            this.Size = new System.Drawing.Size(894, 411);
+            this.Size = new System.Drawing.Size(766, 334);
             this.tableLayout.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -188,5 +208,7 @@
         private System.Windows.Forms.RichTextBox _RevisionHeader;
         private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
     }
 }

@@ -20,6 +20,7 @@ namespace GitCommands
             IsTag = CompleteName.Contains("refs/tags/");
             IsHead = CompleteName.Contains("refs/heads/");
             IsRemote = CompleteName.Contains("refs/remotes/");
+            IsBisect = CompleteName.Contains("refs/bisect/");
 
             ParseName();
 
@@ -36,6 +37,8 @@ namespace GitCommands
 
         public bool IsRemote { get; private set; }
 
+        public bool IsBisect { get; private set; }
+
         public bool IsOther
         {
             get { return !IsHead && !IsRemote && !IsTag; }
@@ -50,14 +53,14 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get { return GitCommands.GetSetting(_remoteSettingName); }
+            get { return GitCommandHelpers.GetSetting(_remoteSettingName); }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommands.UnSetSetting(_remoteSettingName);
+                    GitCommandHelpers.UnsetSetting(_remoteSettingName);
                 else
                 {
-                    GitCommands.SetSetting(_remoteSettingName, value);
+                    GitCommandHelpers.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -69,15 +72,15 @@ namespace GitCommands
         {
             get
             {
-                var merge = GitCommands.GetSetting(_mergeSettingName);
+                var merge = GitCommandHelpers.GetSetting(_mergeSettingName);
                 return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitCommands.UnSetSetting(_mergeSettingName);
+                    GitCommandHelpers.UnsetSetting(_mergeSettingName);
                 else
-                    GitCommands.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    GitCommandHelpers.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
@@ -98,7 +101,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = GitCommands.GetTree(Guid)); }
+            get { return _subItems ?? (_subItems = GitCommandHelpers.GetTree(Guid)); }
         }
 
         #endregion
@@ -128,7 +131,7 @@ namespace GitCommands
                         ? CompleteName.Substring(0, CompleteName.Length - 3)
                         : CompleteName;
 
-                Name = temp.Substring(CompleteName.LastIndexOf("/") + 1);
+                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
                 return;
             }
             if (IsHead)

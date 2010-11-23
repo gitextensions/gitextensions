@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
+using GitCommands;
 
 namespace GitUI
 {
@@ -25,12 +20,12 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (GitCommands.GitCommands.InTheMiddleOfPatch())
+            if (GitCommandHelpers.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !GitCommandHelpers.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = GitCommandHelpers.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
 
@@ -60,18 +55,18 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = "Conflicts resolved";
             Mergetool.Text = "Solve conflicts";
 
-            if (GitCommands.GitCommands.InTheMiddleOfConflictedMerge())
+            if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = ">Solve conflicts<";
                 AcceptButton = Mergetool;
             }
             else
-                if (GitCommands.GitCommands.InTheMiddleOfPatch())
+                if (GitCommandHelpers.InTheMiddleOfPatch())
                 {
                     Resolved.Text = ">Conflicts resolved<";
                     AcceptButton = Resolved;
@@ -111,13 +106,13 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
-                new FormProcess(GitCommands.GitCommands.PatchCmd(PatchFile.Text)).ShowDialog();
+                new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
             else
-                new FormProcess(GitCommands.GitCommands.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
 
             EnableButtons();
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfPatch())
+            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }
@@ -131,7 +126,7 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.SkipCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog();
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -139,7 +134,7 @@ namespace GitUI
         private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.ResolvedCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog();
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -147,7 +142,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommands.GitCommands.AbortCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog();
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }

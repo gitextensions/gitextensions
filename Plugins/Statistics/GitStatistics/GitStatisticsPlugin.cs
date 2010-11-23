@@ -23,7 +23,7 @@ namespace GitStatistics
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
 
-        public void Execute(IGitUIEventArgs gitUiCommands)
+        public void Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
                 return;

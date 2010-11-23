@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using System.Diagnostics;
 using System.Threading;
-using System.IO;
 using System.Windows.Forms;
 
 namespace GitCommands
 {
-    public class RevisionGraph
+    public abstract class RevisionGraphInMemFilter
+    {
+        public abstract bool PassThru(GitRevision rev);
+    }
+
+    public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
         public event EventHandler Updated;
@@ -24,9 +28,9 @@ namespace GitCommands
             }
         }
 
-        public class RevisionGraphUpdatedEvent : EventArgs
+        public class RevisionGraphUpdatedEventArgs : EventArgs
         {
-            public RevisionGraphUpdatedEvent(GitRevision revision)
+            public RevisionGraphUpdatedEventArgs(GitRevision revision)
             {
                 Revision = revision;
             }
@@ -45,7 +49,7 @@ namespace GitCommands
 
         private List<GitHead> heads;
 
-        private GitCommands gitGetGraphCommand;
+        private GitCommandsInstance gitGetGraphCommand;
 
         private Encoding logoutputEncoding = null;
 
@@ -79,23 +83,26 @@ namespace GitCommands
 
         ~RevisionGraph()
         {
-            Kill();
+            Dispose();
         }
 
-        public void Kill()
+        public void Dispose()
         {
             if (backgroundThread != null)
             {
                 backgroundThread.Abort();
+                backgroundThread = null;
             }
             if (gitGetGraphCommand != null)
             {
                 gitGetGraphCommand.Kill();
+                gitGetGraphCommand = null;
             }
         }
 
         public string LogParam = "HEAD --all";
         public string BranchFilter = String.Empty;
+        public RevisionGraphInMemFilter InMemFilter = null;
 
         public void Execute()
         {
@@ -124,7 +131,7 @@ namespace GitCommands
                     revisions.Clear();
                 }
 
-                heads = GitCommands.GetHeads(true);
+                heads = GitCommandHelpers.GetHeads(true);
 
                 string formatString =
                     /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -160,7 +167,7 @@ namespace GitCommands
                     formatString,
                     BranchFilter);
 
-                gitGetGraphCommand = new GitCommands();
+                gitGetGraphCommand = new GitCommandsInstance();
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
@@ -182,9 +189,13 @@ namespace GitCommands
 
                 Exited(this, new EventArgs());
             }
+            catch (ThreadAbortException ex)
+            {
+                //Silently ignore this exception...
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
             }
         }
 
@@ -194,8 +205,12 @@ namespace GitCommands
             {
                 if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
-                    revisions.Add(revision);
-                    Updated(this, new RevisionGraphUpdatedEvent(revision));
+                    if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
+                    {
+                        if (revision != null)
+                            revisions.Add(revision);
+                        Updated(this, new RevisionGraphUpdatedEventArgs(revision));
+                    }
                 }
                 nextStep = ReadStep.Commit;
             }
@@ -233,7 +248,7 @@ namespace GitCommands
 
                 case ReadStep.Hash:
                     revision.Guid = line;
-                    for (int i = heads.Count-1; i >=0; i--)
+                    for (int i = heads.Count - 1; i >= 0; i--)
                     {
                         if (heads[i].Guid == revision.Guid)
                         {
@@ -282,11 +297,11 @@ namespace GitCommands
                     //We cannot let git recode the message to Settings.Encoding which is
                     //needed to allow the "git log" to print the filename in Settings.Encoding
                     if (logoutputEncoding == null)
-                        logoutputEncoding = GitCommands.GetLogoutputEncoding();
+                        logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
 
                     if (logoutputEncoding != Settings.Encoding)
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
-                    else 
+                    else
                         revision.Message = line;
                     break;
 

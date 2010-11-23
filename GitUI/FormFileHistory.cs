@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
+using System.Globalization;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -27,7 +29,8 @@ namespace GitUI
             FileChanges.DisableContextMenu();
         }
 
-        public FormFileHistory(string fileName) : this(fileName, null)
+        public FormFileHistory(string fileName)
+            : this(fileName, null)
         {
         }
 
@@ -37,6 +40,11 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(fileName))
                 return;
+
+            //Replace windows path seperator to linux path seperator. 
+            //This is needed to keep the file history working when started from file tree in
+            //browse dialog.
+            fileName = fileName.Replace('\\', '/');
 
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
@@ -49,22 +57,70 @@ namespace GitUI
                 if (!fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
                     fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
 
-                // grab the 8.3 file path
-                StringBuilder shortPath = new StringBuilder(4096);
-                NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
+                if (File.Exists(fullFilePath))
+                {
+                    // grab the 8.3 file path
+                    StringBuilder shortPath = new StringBuilder(4096);
+                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
-                // use 8.3 file path to get properly cased full file path
-                StringBuilder longPath = new StringBuilder(4096);
-                NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
+                    // use 8.3 file path to get properly cased full file path
+                    StringBuilder longPath = new StringBuilder(4096);
+                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                // remove the working dir and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
+                    // remove the working dir and now we have a properly cased file name.
+                    fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
+                }
             }
+
+            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Settings.WorkingDir.Length);
 
             FileName = fileName;
 
             if (Settings.FollowRenamesInFileHistory)
-                FileChanges.Filter = " --name-only --follow -- \"" + fileName + "\"";
+            {
+                // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
+                //
+                // But we can take a more complicated path to get reasonable results:
+                //  1. use git log --follow to get all previous filenames of the file we are interested in
+                //  2. use git log "list of filesnames" to get the histroy graph 
+                //
+                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
+                // 
+
+                GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance();
+                gitGetGraphCommand.StreamOutput = true;
+                gitGetGraphCommand.CollectOutput = false;
+
+                string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
+                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
+
+                // the sequence of (quoted) file names - start with the initial filename for the search.
+                string listOfFileNames = "\"" + fileName + "\"";
+                
+                // keep a set of the file names already seen
+                HashSet<string> setOfFileNames = new HashSet<string>();
+                setOfFileNames.Add(fileName);
+
+                string line;
+                do
+                {
+                    line = p.StandardOutput.ReadLine();
+
+                    if ( (line != null) && (line != "") )
+                    {
+                        if (!setOfFileNames.Contains(line))
+                        {
+                            listOfFileNames = listOfFileNames + " \"" + line + "\"";
+                            setOfFileNames.Add(line);
+                        }
+                    }
+                } while (line != null);
+
+                // here we need --name-only to get the previous filenames in the revision graph
+                FileChanges.Filter = " --name-only --parents -- " + listOfFileNames;
+                FileChanges.AllowGraphWithFilter = true;
+            }
             else
             {
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
@@ -72,7 +128,7 @@ namespace GitUI
                 FileChanges.AllowGraphWithFilter = true;
             }
         }
- 
+
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             UpdateSelectedFileViewers();
@@ -132,7 +188,7 @@ namespace GitUI
                             Diff.ViewPatch(
                                 () =>
                                 {
-                                    Patch diff = GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
+                                    Patch diff = GitCommandHelpers.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
                                                                           Diff.GetExtraDiffArguments());
                                     if (diff == null)
                                         return string.Empty;
@@ -151,7 +207,7 @@ namespace GitUI
                         {
                             Diff.ViewPatch(
                                 () =>
-                                GitCommands.GitCommands.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
+                                GitCommandHelpers.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
                                                                       Diff.GetExtraDiffArguments()).Text);
                         }
                     }
@@ -212,7 +268,7 @@ namespace GitUI
                     break;
             }
 
-            var output = GitCommands.GitCommands.OpenWithDifftool(FileName, rev1, rev2);
+            var output = GitCommandHelpers.OpenWithDifftool(FileName, rev1, rev2);
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
         }

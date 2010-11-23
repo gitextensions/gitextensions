@@ -30,7 +30,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            Dto.Result = GitCommands.RunCmd(Settings.GitCommand, "diff -z \"" + Dto.From + "\"..\"" + Dto.To + "\" -- \"" + Dto.FileName + "\"");
+            Dto.Result = GitCommandHelpers.RunCmd(Settings.GitCommand, "diff -z \"" + Dto.From + "\"..\"" + Dto.To + "\" -- \"" + Dto.FileName + "\"");
         }
     }
 }

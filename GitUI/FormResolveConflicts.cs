@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 using GitCommands;
-using GitUI.Editor;
-using GitUIPluginInterfaces;
-using ResourceManager.Translation;
 using GitCommands.Config;
+using GitUI.Editor;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -29,7 +27,7 @@ namespace GitUI
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
-            ThereWhereMergeConflicts = GitCommands.GitCommands.InTheMiddleOfConflictedMerge();
+            ThereWhereMergeConflicts = GitCommandHelpers.InTheMiddleOfConflictedMerge();
 
         }
 
@@ -38,7 +36,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-            GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
+            GitCommandHelpers.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -61,14 +59,14 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             button1.Focus();
 
-            ConflictedFiles.DataSource = GitCommands.GitCommands.GetConflictedFiles();
+            ConflictedFiles.DataSource = GitCommandHelpers.GetConflictedFiles();
             InitMergetool();
 
             ConflictedFilesContextMenu.Text = "Solve";
             OpenMergetool.Text = "Open in " + mergetool;
             button1.Text = "Open in " + mergetool;
 
-            if (GitCommands.GitCommands.InTheMiddleOfRebase())
+            if (GitCommandHelpers.InTheMiddleOfRebase())
             {
                 Reset.Text = "Abort rebase";
                 ContextChooseLocal.Text = "Choose local (theirs)";
@@ -81,7 +79,7 @@ namespace GitUI
                 ContextChooseRemote.Text = "Choose remote (theirs)";
             }
 
-            if (!GitCommands.GitCommands.InTheMiddleOfPatch() && !GitCommands.GitCommands.InTheMiddleOfRebase() && !GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!GitCommandHelpers.InTheMiddleOfPatch() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
                 if (MessageBox.Show(allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -90,7 +88,7 @@ namespace GitUI
 
             }
 
-            if (!GitCommands.GitCommands.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
                 Close();
             }
@@ -122,7 +120,7 @@ namespace GitUI
                 return;
 
             string filename = GetFileName();
-            string[] filenames = GitCommands.GitCommands.GetConflictedFiles(filename);
+            string[] filenames = GitCommandHelpers.GetConflictedFiles(filename);
 
             if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
             {
@@ -175,7 +173,7 @@ namespace GitUI
                 arguments = arguments.Replace("$REMOTE", filenames[2]);
                 arguments = arguments.Replace("$MERGED", filename + "");
 
-                GitCommands.GitCommands.RunCmd(mergetoolPath, "" + arguments + "");
+                GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "");
 
                 if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -206,7 +204,7 @@ namespace GitUI
                             File.Delete(filenames[2]);
 
                         Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-                        GitCommands.GitCommands.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
+                        GitCommandHelpers.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
                         Initialize();
                         return;
                     }
@@ -225,7 +223,7 @@ namespace GitUI
                 }
                 else
                     if (frm.Delete)
-                        GitCommands.GitCommands.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                        GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
                     else
                         if (!frm.Delete)
                             stageFile(filename);
@@ -244,12 +242,9 @@ namespace GitUI
 
         private void InitMergetool()
         {
-            
-            GitCommands.GitCommands gitCommands = new GitCommands.GitCommands();
-
-            mergetool = GitCommands.GitCommands.GetSetting("merge.tool");
+            mergetool = GitCommandHelpers.GetSetting("merge.tool");
             if (string.IsNullOrEmpty(mergetool))
-                mergetool = gitCommands.GetGlobalSetting("merge.tool");
+                mergetool = GitCommandHelpers.GetGlobalSetting("merge.tool");
 
             if (string.IsNullOrEmpty(mergetool))
             {
@@ -257,14 +252,14 @@ namespace GitUI
                 return;
             }
             Cursor.Current = Cursors.WaitCursor;
-            
-            mergetoolCmd = GitCommands.GitCommands.GetSetting("mergetool." + mergetool + ".cmd");
-            if (string.IsNullOrEmpty(mergetoolCmd))
-                mergetoolCmd = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".cmd");
 
-            mergetoolPath = GitCommands.GitCommands.GetSetting("mergetool." + mergetool + ".path");
+            mergetoolCmd = GitCommandHelpers.GetSetting("mergetool." + mergetool + ".cmd");
+            if (string.IsNullOrEmpty(mergetoolCmd))
+                mergetoolCmd = GitCommandHelpers.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+
+            mergetoolPath = GitCommandHelpers.GetSetting("mergetool." + mergetool + ".path");
             if (string.IsNullOrEmpty(mergetoolPath))
-                mergetoolPath = gitCommands.GetGlobalSetting("mergetool." + mergetool + ".path");
+                mergetoolPath = GitCommandHelpers.GetGlobalSetting("mergetool." + mergetool + ".path");
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
@@ -297,7 +292,7 @@ namespace GitUI
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflictSelectBase(GetFileName());
+            GitCommandHelpers.HandleConflictSelectBase(GetFileName());
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -305,7 +300,7 @@ namespace GitUI
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflictSelectLocal(GetFileName());
+            GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -313,7 +308,7 @@ namespace GitUI
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommands.GitCommands.HandleConflictSelectRemote(GetFileName());
+            GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -333,7 +328,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
+            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -347,7 +342,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
+            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -355,10 +350,10 @@ namespace GitUI
 
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeperator.ToString()) && fileName.LastIndexOf(Settings.PathSeperator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperator) + 1);
-            if (fileName.Contains(Settings.PathSeperatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeperatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeperatorWrong) + 1);
+            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparator) + 1);
+            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparatorWrong) + 1);
             return fileName;
         }
 
@@ -370,7 +365,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
+            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -398,12 +393,12 @@ namespace GitUI
             SaveFileDialog fileDialog = new SaveFileDialog();
             fileDialog.FileName = Settings.WorkingDir + fileName;
             fileDialog.AddExtension = true;
-            fileDialog.DefaultExt = GitCommands.GitCommands.GetFileExtension(fileDialog.FileName);
-            fileDialog.Filter = "Current format (*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommands.GitCommands.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
+            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+            fileDialog.Filter = "Current format (*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                GitCommands.GitCommands.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
             }
             Cursor.Current = Cursors.Default;
         }
@@ -458,7 +453,7 @@ namespace GitUI
                     delegate(FormStatus form)
                     {
                         form.AddOutput(string.Format(stageFilename.Text, filename));
-                        string output = GitCommands.GitCommands.RunCmd
+                        string output = GitCommandHelpers.RunCmd
                             (
                             Settings.GitCommand, "add -- \"" + filename + "\""
                             );

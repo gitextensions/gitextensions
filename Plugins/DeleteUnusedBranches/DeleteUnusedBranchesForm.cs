@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
@@ -20,11 +16,11 @@ namespace DeleteUnusedBranches
             Branches = new List<Branch>();
         }
 
-        public int Days { get; set; }
+        public int Days { get; private set; }
 
-        public IGitCommands GitCommands { get; set; }
+        public IGitCommands GitCommands { get; private set; }
 
-        public IList<Branch> Branches { get; set; }
+        public IList<Branch> Branches { get; private set; }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -43,7 +39,7 @@ namespace DeleteUnusedBranches
                     if (DateTime.TryParse(dateString, out singleDate))
                         if (singleDate > date)
                             date = singleDate;
-                        
+
                 }
                 Branches.Add(new Branch(branchName, date, date < (DateTime.Now.AddDays(-Days))));
             }

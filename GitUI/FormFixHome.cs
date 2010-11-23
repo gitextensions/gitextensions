@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using System.IO;
 
 namespace GitUI
 {
@@ -15,7 +10,7 @@ namespace GitUI
         public static void CheckHomePath()
         {
             bool fixHome = false;
-            GitCommands.GitCommands.SetEnvironmentVariable();
+            GitCommandHelpers.SetEnvironmentVariable();
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) ||
                 string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
@@ -113,7 +108,7 @@ namespace GitUI
 
             Settings.UserProfileHomeDir = userprofileHome.Checked;
 
-            GitCommands.GitCommands.SetEnvironmentVariable(true);
+            GitCommandHelpers.SetEnvironmentVariable(true);
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
                 MessageBox.Show("The environment variable HOME point to a directory that is not accessible:" + Environment.NewLine +
