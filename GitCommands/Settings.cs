@@ -489,6 +489,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _showStashCount;
+        public static bool ShowStashCount
+        {
+            get
+            {
+                if (_showStashCount == null)
+                    SafeSetBool("showstashcount", false, x => _showStashCount = x);
+                return _showStashCount.Value;
+            }
+            set
+            {
+                _showGitCommandLine = value;
+                Application.UserAppDataRegistry.SetValue("showstashcount", _showStashCount);
+            }
+        }
+
         private static bool? _relativeDate;
         public static bool RelativeDate
         {
