@@ -189,7 +189,7 @@ namespace GitUI
         {
             if (Settings.ShowStashCount)
             {
-                int stashCount = GitCommands.GitCommandHelpers.GetStashes().Count;
+                int stashCount = GitCommandHelpers.GetStashes().Count;
                 toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
                                                          stashCount != 1 ? "stashes" : "stash");
             }
