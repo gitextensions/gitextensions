@@ -202,7 +202,7 @@ namespace GitCommands
                 ErrorDialog = false,
                 RedirectStandardOutput = false,
                 RedirectStandardInput = false,
-                CreateNoWindow = false,
+                CreateNoWindow = Settings.ShowGitCommandLine,
                 FileName = cmd,
                 Arguments = arguments,
                 WorkingDirectory = Settings.WorkingDir,
@@ -364,7 +364,7 @@ namespace GitCommands
                 RedirectStandardError = false,
 
                 LoadUserProfile = true,
-                CreateNoWindow = false,
+                CreateNoWindow = Settings.ShowGitCommandLine,
                 FileName = cmd,
                 Arguments = arguments,
                 WorkingDirectory = Settings.WorkingDir,
