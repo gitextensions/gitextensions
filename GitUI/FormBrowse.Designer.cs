@@ -303,7 +303,7 @@ namespace GitUI
             // 
             // toolStripSplitStash
             // 
-            this.toolStripSplitStash.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitStash.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
             this.toolStripSplitStash.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stashChangesToolStripMenuItem,
             this.stashPopToolStripMenuItem,
@@ -313,7 +313,7 @@ namespace GitUI
             this.toolStripSplitStash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitStash.Name = "toolStripSplitStash";
             this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
-            this.toolStripSplitStash.Text = "toolStripSplitButton1";
+            this.toolStripSplitStash.Text = string.Empty;
             this.toolStripSplitStash.ToolTipText = "Stash changes";
             this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.ToolStripSplitStashButtonClick);
             // 
