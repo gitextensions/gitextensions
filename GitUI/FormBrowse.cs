@@ -441,7 +441,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.ItemType == "blob")
+            if (item.ItemType == "blob" || item.ItemType == "tree")
                 GitUICommands.Instance.StartFileHistoryDialog(item.FileName);
         }
 
@@ -549,7 +549,6 @@ namespace GitUI
             saveAsToolStripMenuItem.Enabled = enableItems;
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
-            fileHistoryToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
         }
 
