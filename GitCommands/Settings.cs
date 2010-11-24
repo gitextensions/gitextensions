@@ -495,7 +495,7 @@ namespace GitCommands
             get
             {
                 if (_showStashCount == null)
-                    SafeSetBool("showstashcount", false, x => _showStashCount = x);
+                    SafeSetBool("showstashcount", true, x => _showStashCount = x);
                 return _showStashCount.Value;
             }
             set
