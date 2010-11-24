@@ -180,8 +180,23 @@ namespace GitUI
             Text = Settings.WorkingDir + " - Git Extensions";
 
             CheckForMergeConflicts();
+            UpdateStashCount();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void UpdateStashCount()
+        {
+            if (Settings.ShowStashCount)
+            {
+                int stashCount = GitCommands.GitCommandHelpers.GetStashes().Count;
+                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
+                                                         stashCount != 1 ? "stashes" : "stash");
+            }
+            else
+            {
+                toolStripSplitStash.Text = string.Empty;
+            }
         }
 
         private void CheckForMergeConflicts()
@@ -251,17 +266,6 @@ namespace GitUI
                     statusStrip.Items.Remove(_warning);
                     _warning = null;
                 }
-            }
-
-            if (Settings.ShowStashCount)
-            {
-                int stashCount = GitCommands.GitCommandHelpers.GetStashes().Count;
-                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
-                                                         stashCount != 1 ? "stashes" : "stash");
-            }
-            else
-            {
-                toolStripSplitStash.Text = string.Empty;
             }
 
             //Only show status strip when there are status items on it.
