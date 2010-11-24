@@ -180,8 +180,23 @@ namespace GitUI
             Text = Settings.WorkingDir + " - Git Extensions";
 
             CheckForMergeConflicts();
+            UpdateStashCount();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void UpdateStashCount()
+        {
+            if (Settings.ShowStashCount)
+            {
+                int stashCount = GitCommandHelpers.GetStashes().Count;
+                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
+                                                         stashCount != 1 ? "stashes" : "stash");
+            }
+            else
+            {
+                toolStripSplitStash.Text = string.Empty;
+            }
         }
 
         private void CheckForMergeConflicts()
