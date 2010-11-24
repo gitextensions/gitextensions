@@ -516,9 +516,6 @@ _ReSharper*/
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>Synchoniseer alle submodulen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSplitStash" Property="Text">
-          <Value>toolstripslipbutton1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>Wijzigingen wegzetten</Value>
         </TranslationItem>
@@ -1821,6 +1818,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text">
           <Value>Toon huidige wijzigingen in revisie grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="label52" Property="Text">
+          <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
