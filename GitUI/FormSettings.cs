@@ -150,6 +150,7 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 ShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
+                ShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
@@ -413,6 +414,7 @@ namespace GitUI
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphShowWorkingDirChanges = ShowCurrentChangesInRevisionGraph.Checked;
+            Settings.ShowStashCount = ShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
@@ -1857,6 +1859,5 @@ namespace GitUI
         }
 
         private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
-
     }
 }
