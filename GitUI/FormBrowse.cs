@@ -253,9 +253,17 @@ namespace GitUI
                 }
             }
 
+            if (Settings.ShowStashCount)
+            {
+                int stashCount = GitCommands.GitCommandHelpers.GetStashes().Count;
+                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
+                                                         stashCount != 1 ? "stashes" : "stash");
+            }
+            else
+            {
+                toolStripSplitStash.Text = string.Empty;
+            }
 
-            int stashCount = GitCommands.GitCommandHelpers.GetStashes().Count;
-            toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount, stashCount != 1 ? "stashes" : "stash");
             //Only show status strip when there are status items on it.
             //There is always a close (x) button, do not count first item.
             if (statusStrip.Items.Count > 1)
