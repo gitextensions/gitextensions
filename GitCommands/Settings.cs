@@ -500,7 +500,7 @@ namespace GitCommands
             }
             set
             {
-                _showGitCommandLine = value;
+                _showStashCount = value;
                 Application.UserAppDataRegistry.SetValue("showstashcount", _showStashCount);
             }
         }
