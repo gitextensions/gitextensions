@@ -18,7 +18,7 @@
         <Control Id="MsysGitCheckBox" Type="CheckBox" Height="20" Width="78" X="274" Y="87" Text="Install MsysGit" Property="INSTALLMSYSGIT" CheckBoxValue="1"/>
         <Control Id="KDiffTitle" Type="Text" Height="15" Width="200" X="15" Y="136" Text="{\WixUI_Font_Title}KDiff3 0.9.95"/>
         <Control Id="KDiffDescription" Type="Text" Height="46" Width="238" X="25" Y="152" Text="KDiff is a diff/merge tool that Git Extensions calls upon when it encounters a merge conflict. If you already have a diff/merge tool that works with Git then you don't need to install this."/>
-        <Control Id="KDiffCheckBox" Type="CheckBox" Height="20" Width="78" X="274" Y="154" Text="Install KDiff" Property="INSTALLKDIFF3" CheckBoxValue="1" />
+        <Control Id="KDiffCheckBox" Type="CheckBox" Height="20" Width="78" X="274" Y="154" Text="Install KDiff"  Property="INSTALLKDIFF3" CheckBoxValue="1" />
       </Dialog>
     </UI>
   </Fragment>
