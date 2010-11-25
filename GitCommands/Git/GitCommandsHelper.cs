@@ -526,19 +526,43 @@ namespace GitCommands
 
         public static void RunGitK()
         {
-            StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
-                                                          .Replace("bin\\git.exe", "cmd\\gitk.cmd")
-                                                          .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
+            if (Settings.RunningOnUnix())
+            {
+                RunRealCmdDetached("gitk", "");
+            }
+            else
+            {
+                StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
+                                                              .Replace("bin\\git.exe", "cmd\\gitk.cmd")
+                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
+            }
         }
 
         public static void RunGui()
         {
-            StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
+            if (Settings.RunningOnUnix())
+            {
+                RunRealCmdDetached("git", "gui");
+            }
+            else
+            {
+                StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
+            }
         }
 
         public static void RunBash()
         {
-            RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
+            if (Settings.RunningOnUnix())
+            {
+                RunRealCmdDetached("bash", "--login -i");
+            }
+            else
+            {
+                if (File.Exists(Settings.GitBinDir + "bash.exe"))
+                    RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\" --login -i\"");
+                else
+                    RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
+            }
         }
 
         public static string Init(bool bare, bool shared)

@@ -13,8 +13,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.07";
-        public static readonly int GitExtensionsVersionInt = 207;
+        public static readonly string GitExtensionsVersionString = "2.08";
+        public static readonly int GitExtensionsVersionInt = 208;
 
         //semi-constants
         public static char PathSeparator = '\\';
@@ -486,6 +486,22 @@ namespace GitCommands
             {
                 _showGitCommandLine = value;
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", _showGitCommandLine);
+            }
+        }
+
+        private static bool? _showStashCount;
+        public static bool ShowStashCount
+        {
+            get
+            {
+                if (_showStashCount == null)
+                    SafeSetBool("showstashcount", false, x => _showStashCount = x);
+                return _showStashCount.Value;
+            }
+            set
+            {
+                _showStashCount = value;
+                Application.UserAppDataRegistry.SetValue("showstashcount", _showStashCount);
             }
         }
 

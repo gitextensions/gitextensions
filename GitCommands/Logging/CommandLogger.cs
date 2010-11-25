@@ -6,14 +6,21 @@ namespace GitCommands.Logging
     public class CommandLogger
     {
         private const int LogLimit = 100;
-        private readonly Queue<string> _logQueue = new Queue<string>(LogLimit);
+        private Queue<string> _logQueue = new Queue<string>(LogLimit);
 
         public void Log(string command)
         {
-            if (_logQueue.Count >= LogLimit)
-                _logQueue.Dequeue();
+            try
+            {
+                if (_logQueue.Count >= LogLimit)
+                    _logQueue.Dequeue();
 
-            _logQueue.Enqueue(command);
+                _logQueue.Enqueue(command);
+            }
+            catch //This should NEVER happen... but it did happen (issue 271)
+            {
+                _logQueue = new Queue<string>(LogLimit);
+            }
         }
 
         public override string ToString()

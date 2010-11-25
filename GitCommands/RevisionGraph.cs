@@ -8,6 +8,11 @@ using System.Windows.Forms;
 
 namespace GitCommands
 {
+    public abstract class RevisionGraphInMemFilter
+    {
+        public abstract bool PassThru(GitRevision rev);
+    }
+
     public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
@@ -97,6 +102,7 @@ namespace GitCommands
 
         public string LogParam = "HEAD --all";
         public string BranchFilter = String.Empty;
+        public RevisionGraphInMemFilter InMemFilter = null;
 
         public void Execute()
         {
@@ -189,7 +195,7 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
             }
         }
 
@@ -199,9 +205,12 @@ namespace GitCommands
             {
                 if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
                 {
-                    if (revision != null)
-                        revisions.Add(revision);
-                    Updated(this, new RevisionGraphUpdatedEventArgs(revision));
+                    if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
+                    {
+                        if (revision != null)
+                            revisions.Add(revision);
+                        Updated(this, new RevisionGraphUpdatedEventArgs(revision));
+                    }
                 }
                 nextStep = ReadStep.Commit;
             }

@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Version 2.08
+	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
+	Fixed bug: slashes in tag name not supported
+	Fixed bug: filtering does not work with characters outside ASCII range
+	Fixed bug: bash does not work using Linux or cygwin
+	Fixed bug: "gitk" and "git gui" does not work on linux
+	Fixed bug: file history does not work when started from file tree in browse dialog
+	Added shortcut key F3 to open diff tool op file
+	Added stash count to toolbar (is turned off by default)
+
 Version 2.07
 	Fixed issue 263: spanish translation added
 	Fixed issue 262: application crashes on system where only .Net 4.0 is installed

@@ -17,6 +17,9 @@
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
 
+    <Property Id="INSTALLMSYSGIT" Value="1"/>
+    <Property Id="INSTALLKDIFF3" Value="1"/>
+    
     <PropertyRef Id="NETFRAMEWORK20"/>
     <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
       Installed OR NETFRAMEWORK20
@@ -438,11 +441,15 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-      <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
-      <CustomAction Id="KDiff" BinaryKey="KDiff" ExeCommand="" Return="ignore"/>
+    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
+    <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-      <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
-      <CustomAction Id="MsysGit" BinaryKey="MsysGit" ExeCommand="" Return="ignore"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
+    <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
+    <InstallExecuteSequence>
+      <Custom Action="MsysGit" Before="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+      <Custom Action="KDiff" Before="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
+    </InstallExecuteSequence>
     <?endif?>
 
   </Product>

@@ -516,9 +516,6 @@ _ReSharper*/
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>Synchoniseer alle submodulen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSplitStash" Property="Text">
-          <Value>toolstripslipbutton1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>Wijzigingen wegzetten</Value>
         </TranslationItem>
@@ -644,6 +641,9 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
           <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
+          <Value>Bestands geschiedenis</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1083,6 +1083,25 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>Start verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Markeer huidige revisie 'goed'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Markeer huidige revisie 'slecht'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GravatarControl">
       <translationItems>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
@@ -1367,6 +1386,9 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Markeer revisie als goed</Value>
+        </TranslationItem>
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
+          <Value>Stop verdeel en heers</Value>
         </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
@@ -1796,6 +1818,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text">
           <Value>Toon huidige wijzigingen in revisie grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="label52" Property="Text">
+          <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2886,25 +2911,6 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBisect">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Verdeel en heers</Value>
-        </TranslationItem>
-        <TranslationItem Name="Start" Property="Text">
-          <Value>Start verdeel en heers</Value>
-        </TranslationItem>
-        <TranslationItem Name="Good" Property="Text">
-          <Value>Markeer huidige revisie 'goed'</Value>
-        </TranslationItem>
-        <TranslationItem Name="Bad" Property="Text">
-          <Value>Markeer huidige revisie 'slecht'</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stop" Property="Text">
-          <Value>Stop verdeel en heers</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

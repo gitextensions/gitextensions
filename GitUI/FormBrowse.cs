@@ -180,8 +180,23 @@ namespace GitUI
             Text = Settings.WorkingDir + " - Git Extensions";
 
             CheckForMergeConflicts();
+            UpdateStashCount();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void UpdateStashCount()
+        {
+            if (Settings.ShowStashCount)
+            {
+                int stashCount = GitCommandHelpers.GetStashes().Count;
+                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
+                                                         stashCount != 1 ? "stashes" : "stash");
+            }
+            else
+            {
+                toolStripSplitStash.Text = string.Empty;
+            }
         }
 
         private void CheckForMergeConflicts()
@@ -426,7 +441,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.ItemType == "blob")
+            if (item.ItemType == "blob" || item.ItemType == "tree")
                 GitUICommands.Instance.StartFileHistoryDialog(item.FileName);
         }
 
@@ -534,7 +549,6 @@ namespace GitUI
             saveAsToolStripMenuItem.Enabled = enableItems;
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
-            fileHistoryToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
         }
 
@@ -898,12 +912,31 @@ namespace GitUI
 
         private void ApplyFilter()
         {
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
             bool[] filterParams = new bool[4];
             filterParams[0] = commitToolStripMenuItem1.Checked;
             filterParams[1] = committerToolStripMenuItem.Checked;
             filterParams[2] = authorToolStripMenuItem.Checked;
-            if (RevisionGrid.Filter == RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams)) return;
-            RevisionGrid.Filter = RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text, filterParams);
+            RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
+                                           filterParams,
+                                           out revListArgs,
+                                           out inMemMessageFilter,
+                                           out inMemCommitterFilter,
+                                           out inMemAuthorFilter);
+            if ((RevisionGrid.Filter == revListArgs) &&
+                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (RevisionGrid.InMemFilterIgnoreCase))
+                return;
+            RevisionGrid.Filter = revListArgs;
+            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemFilterIgnoreCase = true;
             RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -1548,5 +1581,13 @@ namespace GitUI
             new FormBisect().ShowDialog();
             Initialize();
         }
+        private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitItemStatus item = DiffFiles.SelectedItem;
+           
+            if (item.IsTracked)
+                GitUICommands.Instance.StartFileHistoryDialog(item.Name);
+        }
+
     }
 }

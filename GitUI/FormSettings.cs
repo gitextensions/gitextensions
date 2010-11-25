@@ -149,6 +149,7 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 ShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
+                ShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
@@ -412,6 +413,7 @@ namespace GitUI
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphShowWorkingDirChanges = ShowCurrentChangesInRevisionGraph.Checked;
+            Settings.ShowStashCount = ShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
@@ -1810,6 +1812,7 @@ namespace GitUI
 
         private static IEnumerable<string> GetWindowsCommandLocations()
         {
+            yield return @"C:\cygwin\bin\git.exe";
             yield return @"C:\cygwin\bin\git";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
             yield return @"c:\Program Files (x86)\Git\bin\git.exe";
@@ -1819,6 +1822,8 @@ namespace GitUI
             yield return @"c:\Program Files\Git\cmd\git.cmd";
             yield return "git";
             yield return "git.cmd";
+            yield return @"C:\msysgit\bin\git.exe";
+            yield return @"C:\msysgit\cmd\git.cmd";
         }
 
         private static bool SolveGitCommand()
@@ -1858,6 +1863,5 @@ namespace GitUI
         }
 
         private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
-
     }
 }
