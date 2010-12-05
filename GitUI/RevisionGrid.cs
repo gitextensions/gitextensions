@@ -217,11 +217,20 @@ namespace GitUI
                 //The code below is ment to fix the wierd keyvalues when pressing keys e.g. ".".
                 switch (key)
                 {
+                    case 51:
+                        if (e.Shift)
+                            _quickSearchString = string.Concat(_quickSearchString, "#").ToLower();
+                        else
+                            _quickSearchString = string.Concat(_quickSearchString, "3").ToLower();
+                        break;
                     case 188:
                         _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
                         break;
                     case 189:
-                        _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
+                        if (e.Shift)
+                            _quickSearchString = string.Concat(_quickSearchString, "_").ToLower();
+                        else
+                            _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
                         break;
                     case 190:
                         _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
