@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.Editor;
 using ResourceManager.Translation;
+using System.Text;
 
 namespace GitUI
 {
@@ -286,13 +287,31 @@ namespace GitUI
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            if (ConflictedFiles.SelectedRows.Count != 1)
+            {
+                baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
+                return;
+            }
 
+            string filename = GetFileName();
+            string[] filenames = GitCommandHelpers.GetConflictedFileNames(filename);
+
+            baseFileName.Text = (!string.IsNullOrEmpty(filenames[0]) ? filenames[0] : "no file");
+            localFileName.Text = (!string.IsNullOrEmpty(filenames[1]) ? filenames[1] : "no file");
+            remoteFileName.Text = (!string.IsNullOrEmpty(filenames[2]) ? filenames[2] : "no file");
+
+
+            chooseBase.Enabled = !string.IsNullOrEmpty(filenames[0]);
+            chooseLocal.Enabled = !string.IsNullOrEmpty(filenames[1]);
+            chooseRemote.Enabled = !string.IsNullOrEmpty(filenames[2]);
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+            if (!GitCommandHelpers.HandleConflictSelectBase(GetFileName()))
+                MessageBox.Show("Choose base file failed.");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -300,7 +319,8 @@ namespace GitUI
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+            if (!GitCommandHelpers.HandleConflictSelectLocal(GetFileName()))
+                MessageBox.Show("Choose local file failed.");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -308,7 +328,8 @@ namespace GitUI
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+            if (!GitCommandHelpers.HandleConflictSelectRemote(GetFileName()))
+                MessageBox.Show("Choose remote file failed.");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -464,6 +485,21 @@ namespace GitUI
             FormStatus process = new FormStatus(processStart, null);
             process.Text = string.Format(stageFilename.Text, filename);
             process.ShowDialogOnError();
+        }
+
+        private void chooseLocal_Click(object sender, EventArgs e)
+        {
+            ContextChooseLocal_Click(sender, e);
+        }
+
+        private void chooseBase_Click(object sender, EventArgs e)
+        {
+            ContextChooseBase_Click(sender, e);
+        }
+
+        private void chooseRemote_Click(object sender, EventArgs e)
+        {
+            ContextChooseRemote_Click(sender, e);
         }
     }
 }
