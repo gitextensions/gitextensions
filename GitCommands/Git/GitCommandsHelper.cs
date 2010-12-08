@@ -445,11 +445,21 @@ namespace GitCommands
 
             foreach (var file in unmerged)
             {
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                if (string.IsNullOrEmpty(fileStage))
+                    continue;
+                if (fileStage.Trim()[0] != side[0])
+                    continue;
+
+
                 var fileline = file.Split(new[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
-                if (fileline[2].Trim() != side)
-                    continue;
+                Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
                 File.WriteAllText(saveAs, RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\""));
                 return true;
             }
@@ -482,12 +492,17 @@ namespace GitCommands
 
             foreach (var file in unmerged)
             {
-                var fileline = file.Split(new[] { ' ', '\t' });
-                if (fileline.Length < 3)
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                if (string.IsNullOrEmpty(fileStage))
                     continue;
 
                 int stage;
-                Int32.TryParse(fileline[2].Trim(), out stage);
+                if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
+                    continue;
 
                 var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + filename);
                 tempFile = tempFile.Split('\t')[0];
@@ -508,6 +523,39 @@ namespace GitCommands
                 catch (Exception ex)
                 {
                     Trace.WriteLine(ex);
+                }
+            }
+
+            return fileNames;
+        }
+
+        public static string[] GetConflictedFileNames(string filename)
+        {
+            filename = FixPath(filename);
+
+            string[] fileNames = new string[3];
+
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var file in unmerged)
+            {
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                else
+                    fileStage = "";
+
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+
+                if (findSecondWhitespace >= 0)
+                    fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                else
+                    fileStage = "";
+
+                int stage;
+                if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                {
+                    fileNames[stage-1] = fileStage.Substring(2);
                 }
             }
 
