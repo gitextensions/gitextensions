@@ -297,9 +297,26 @@ namespace GitUI
             string filename = GetFileName();
             string[] filenames = GitCommandHelpers.GetConflictedFileNames(filename);
 
-            baseFileName.Text = (!string.IsNullOrEmpty(filenames[0]) ? filenames[0] : "no file");
-            localFileName.Text = (!string.IsNullOrEmpty(filenames[1]) ? filenames[1] : "no file");
-            remoteFileName.Text = (!string.IsNullOrEmpty(filenames[2]) ? filenames[2] : "no file");
+            bool baseFileExists = !string.IsNullOrEmpty(filenames[0]);
+            bool localFileExists = !string.IsNullOrEmpty(filenames[1]);
+            bool remoteFileExists = !string.IsNullOrEmpty(filenames[2]);
+
+            bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
+            string remoteSide = inTheMiddleOfRebase ? "ours" : "theirs";
+            string localSide = inTheMiddleOfRebase ? "theirs" : "ours";
+
+            if (baseFileExists && localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("The file has been changed locally({0}) and remotely({1}). Merge the changes.", localSide, remoteSide);
+            if (!baseFileExists && localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.", localSide, remoteSide);
+            if (baseFileExists && !localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("File deleted locally({0}) but modified remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+            if (baseFileExists && localFileExists && !remoteFileExists)
+                conflictDescription.Text = string.Format("File modified locally({0}) but deleted remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+
+            baseFileName.Text = (baseFileExists ? filenames[0] : "no file");
+            localFileName.Text = (localFileExists ? filenames[1] : "no file");
+            remoteFileName.Text = (remoteFileExists ? filenames[2] : "no file");
 
 
             chooseBase.Enabled = !string.IsNullOrEmpty(filenames[0]);
@@ -500,6 +517,11 @@ namespace GitUI
         private void chooseRemote_Click(object sender, EventArgs e)
         {
             ContextChooseRemote_Click(sender, e);
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
         }
     }
 }
