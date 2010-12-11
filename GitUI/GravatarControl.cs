@@ -50,6 +50,16 @@ namespace GitUI
                 return;
             }
 
+            GravatarService.FallBackService gravatarFallBack = GravatarService.FallBackService.Identicon;
+            try
+            {
+                gravatarFallBack = (GravatarService.FallBackService)Enum.Parse(typeof(GravatarService.FallBackService), Settings.GravatarFallbackService);
+            }
+            catch
+            {
+                Settings.GravatarFallbackService = gravatarFallBack.ToString();
+            }
+
             ThreadPool.QueueUserWorkItem(o =>
                                          GravatarService.LoadCachedImage(
                                              ImageFileName,
@@ -58,7 +68,8 @@ namespace GitUI
                                              Settings.AuthorImageCacheDays,
                                              Settings.AuthorImageSize,
                                              Settings.ApplicationDataPath + "Images\\",
-                                             RefreshImage));
+                                             RefreshImage,
+                                             gravatarFallBack));
         }
 
         private void RefreshImage(Image image)
@@ -72,7 +83,7 @@ namespace GitUI
             UpdateGravatar();
         }
 
-        private static void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
+        private void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
         {
             try
             {
@@ -95,6 +106,27 @@ namespace GitUI
             var toolStripItem = (ToolStripItem) sender;
 
             Settings.AuthorImageSize = int.Parse(toolStripItem.Text);
+            GravatarService.ClearImageCache();
+            UpdateGravatar();
+        }
+
+        private void identiconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.GravatarFallbackService = GravatarService.FallBackService.Identicon.ToString();
+            GravatarService.ClearImageCache();
+            UpdateGravatar();
+        }
+
+        private void monsterIdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.GravatarFallbackService = GravatarService.FallBackService.MonsterId.ToString();
+            GravatarService.ClearImageCache();
+            UpdateGravatar();
+        }
+
+        private void wavatarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.GravatarFallbackService = GravatarService.FallBackService.Wavatar.ToString();
             GravatarService.ClearImageCache();
             UpdateGravatar();
         }
