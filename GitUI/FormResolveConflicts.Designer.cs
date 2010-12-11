@@ -486,7 +486,7 @@
             // 
             // conflictDescription
             // 
-            this.conflictDescription.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.conflictDescription.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.conflictDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conflictDescription.Location = new System.Drawing.Point(19, 0);
             this.conflictDescription.Name = "conflictDescription";
