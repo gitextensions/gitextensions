@@ -1835,9 +1835,6 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="$this" Property="Text">
           <Value>Samenvoeg conflicten oplossen</Value>
         </TranslationItem>
-        <TranslationItem Name="Deleted" Property="Text">
-          <Value>Verwijderd</Value>
-        </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Afbreken</Value>
         </TranslationItem>
@@ -2614,14 +2611,8 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
           <Value>Conflict opgelost?</Value>
         </TranslationItem>
-        <TranslationItem Name="useModifiedOrDeletedFile" Property="Text">
-          <Value>Gebruik gewijzigd of verwijderd bestand?</Value>
-        </TranslationItem>
         <TranslationItem Name="modifiedButton" Property="Text">
           <Value>Gewijzigd</Value>
-        </TranslationItem>
-        <TranslationItem Name="useCreatedOrDeletedFile" Property="Text">
-          <Value>Gebruik nieuw of verwijderd bestand?</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Value>Er is geen mergetool geconfigureerd. Ga eerst naar settings en stel een mergetool in.</Value>
@@ -2629,20 +2620,70 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         <TranslationItem Name="stageFilename" Property="Text">
           <Value>Klaarzetten {0}</Value>
         </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text">
+          <Value>Er is geen basis revisie voor {0}.
+Terugvallen op 2-weg samenvoeging?</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>onze</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>hun</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
+          <Value>Het bestand is zowel lokaal({0}) als extern({1}) gewijzigd. Voeg de wijzigingen samen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
+          <Value>Een bestand met dezelfde naam is zowel locaal({0}) als extern({1}) aangemaakt. Kies het bestand dat u wilt bewaren of voeg de bestanden samen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+          <Value>Bestand {0} heeft geen basis revisie.
+Een bestand met dezelfde naam is zowel lokaal({1})  als extern({2}) aangemaakt.
+
+Kies het bestand dat u wilt bewaren, voeg de bestanden samen of verwijder het bestand.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
+          <Value>Het bestand is lokaal({0}) verwijderd maar is extern ({1}) aangepast. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+          <Value>Het bestand {0} heeft geen lokale revisie.
+Het bestand is lokaal({1}) verwijderd maar is extern({2}) aangepast.
+
+Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
+          <Value>Het bestand is lokaal aangepast({0}) en extern({1}) verwijderd. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+          <Value>het bestand {0} heeft geen externe revisie.
+Het bestand is lokaal({1}) aangepast maar is extern({2}) verwijderd.
+
+Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>geen basis bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>verwijderd</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Kies lokaal</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Kier extern</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Verwijder bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Beweer wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Bewaar basis bestand</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Niet opgeloste samenvoeg conflicten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Samenvoeg tool starten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
-          <Value>Samenvoeg conflicten scannen</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Openen in samenvoeg tool</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>Stoppen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
           <Value>Kies basis versie</Value>
@@ -2682,6 +2723,51 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Openen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Lokaal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Basis</Value>
+        </TranslationItem>
+        <TranslationItem Name="localFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="baseFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Extern</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocal" Property="Text">
+          <Value>Kies</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseBase" Property="Text">
+          <Value>Kies</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemote" Property="Text">
+          <Value>Kies</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Selecteer bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Openen in samenvoeg tool</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Samenvoeg conflicten scannen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Stoppen</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Start samenvoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Samenvoegen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
