@@ -185,8 +185,8 @@
             this.ConflictedFiles.Size = new System.Drawing.Size(430, 249);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
+            this.ConflictedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
-            this.ConflictedFiles.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyUp);
             // 
             // ConflictedFilesContextMenu
             // 
