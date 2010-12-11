@@ -1116,6 +1116,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
           <Value>Formaat afbeelding</Value>
         </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Geen afbeelding</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
@@ -1821,6 +1824,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="label52" Property="Text">
           <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
+        </TranslationItem>
+        <TranslationItem Name="label53" Property="Text">
+          <Value>Geen afbeelding</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
