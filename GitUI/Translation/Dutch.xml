@@ -2764,7 +2764,7 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
           <Value>Stoppen</Value>
         </TranslationItem>
         <TranslationItem Name="startMergetool" Property="Text">
-          <Value>Start samenvoegen</Value>
+          <Value>Samenvoeg tool</Value>
         </TranslationItem>
         <TranslationItem Name="merge" Property="Text">
           <Value>Samenvoegen</Value>

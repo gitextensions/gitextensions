@@ -332,7 +332,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.localFileName, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.chooseLocal, 2, 0);
@@ -376,10 +376,10 @@
             this.chooseLocal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chooseLocal.Image = global::GitUI.Properties.Resources._46;
             this.chooseLocal.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseLocal.Location = new System.Drawing.Point(336, 0);
+            this.chooseLocal.Location = new System.Drawing.Point(316, 0);
             this.chooseLocal.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseLocal.Name = "chooseLocal";
-            this.chooseLocal.Size = new System.Drawing.Size(100, 23);
+            this.chooseLocal.Size = new System.Drawing.Size(120, 23);
             this.chooseLocal.TabIndex = 7;
             this.chooseLocal.TabStop = false;
             this.chooseLocal.Text = "Choose";
@@ -391,10 +391,10 @@
             this.chooseBase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chooseBase.Image = global::GitUI.Properties.Resources._46;
             this.chooseBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseBase.Location = new System.Drawing.Point(336, 25);
+            this.chooseBase.Location = new System.Drawing.Point(316, 25);
             this.chooseBase.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseBase.Name = "chooseBase";
-            this.chooseBase.Size = new System.Drawing.Size(100, 23);
+            this.chooseBase.Size = new System.Drawing.Size(120, 23);
             this.chooseBase.TabIndex = 8;
             this.chooseBase.TabStop = false;
             this.chooseBase.Text = "Choose";
@@ -406,10 +406,10 @@
             this.chooseRemote.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chooseRemote.Image = global::GitUI.Properties.Resources._46;
             this.chooseRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseRemote.Location = new System.Drawing.Point(336, 50);
+            this.chooseRemote.Location = new System.Drawing.Point(316, 50);
             this.chooseRemote.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseRemote.Name = "chooseRemote";
-            this.chooseRemote.Size = new System.Drawing.Size(100, 23);
+            this.chooseRemote.Size = new System.Drawing.Size(120, 23);
             this.chooseRemote.TabIndex = 9;
             this.chooseRemote.TabStop = false;
             this.chooseRemote.Text = "Choose";
@@ -457,7 +457,7 @@
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel3.Controls.Add(this.merge, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
@@ -474,10 +474,10 @@
             // 
             this.merge.Image = global::GitUI.Properties.Resources._90;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.merge.Location = new System.Drawing.Point(336, 0);
+            this.merge.Location = new System.Drawing.Point(316, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.merge.Name = "merge";
-            this.merge.Size = new System.Drawing.Size(98, 23);
+            this.merge.Size = new System.Drawing.Size(120, 23);
             this.merge.TabIndex = 8;
             this.merge.TabStop = false;
             this.merge.Text = "Merge";
@@ -490,7 +490,7 @@
             this.conflictDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conflictDescription.Location = new System.Drawing.Point(19, 0);
             this.conflictDescription.Name = "conflictDescription";
-            this.conflictDescription.Size = new System.Drawing.Size(314, 37);
+            this.conflictDescription.Size = new System.Drawing.Size(294, 37);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
             this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
