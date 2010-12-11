@@ -526,6 +526,10 @@ namespace GitCommands
                 }
             }
 
+            if (!File.Exists(fileNames[0])) fileNames[0] = null;
+            if (!File.Exists(fileNames[1])) fileNames[1] = null;
+            if (!File.Exists(fileNames[2])) fileNames[2] = null;
+
             return fileNames;
         }
 
