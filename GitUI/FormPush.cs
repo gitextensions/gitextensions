@@ -190,6 +190,7 @@ namespace GitUI
 
         private void FormPushLoad(object sender, EventArgs e)
         {
+            Remotes.Select();
             Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
             RemotesUpdated(null, null);
 
