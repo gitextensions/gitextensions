@@ -300,6 +300,13 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
+            int exitCode;
+            return RunCmd(cmd, arguments, out exitCode);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, out int exitCode)
+        {
             try
             {
                 SetEnvironmentVariable();
@@ -307,7 +314,7 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                CreateAndStartProcess(arguments, cmd, out output, out error);
+                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -317,17 +324,18 @@ namespace GitCommands
             }
             catch (Win32Exception)
             {
+                exitCode = 1;
                 return string.Empty;
             }
         }
 
-        private static void CreateAndStartProcess(string argument, string cmd)
+        private static int CreateAndStartProcess(string argument, string cmd)
         {
             string stdOutput, stdError;
-            CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
+            return CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
         }
 
-        private static void CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
+        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
@@ -344,6 +352,7 @@ namespace GitCommands
                 stdOutput = process.StandardOutput.ReadToEnd();
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
+                return process.ExitCode;
             }
         }
 
