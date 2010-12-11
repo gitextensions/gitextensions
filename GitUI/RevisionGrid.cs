@@ -456,6 +456,40 @@ namespace GitUI
             return Revisions.GetRowData(aRow) as GitRevision;
         }
 
+        private GitRevision GetCurrentRevision()
+        {
+            string formatString =
+                /* Tree           */ "%T%n" +
+                /* Author Name    */ "%aN%n" +
+                /* Author Date    */ "%ai%n" +
+                /* Committer Name */ "%cN%n" +
+                /* Committer Date */ "%ci%n" +
+                /* Commit Message */ "%s";
+            string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
+            var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
+            string[] Infos = RevInfo.Split('\n');
+            GitRevision Revision = new GitRevision
+            {
+                Guid = CurrentCheckout,
+                TreeGuid = Infos[0],
+                Author = Infos[1],
+                Committer = Infos[3],
+                Message = Infos[5]
+            };
+            DateTime Date;
+            DateTime.TryParse(Infos[2], out Date);
+            Revision.AuthorDate = Date;
+            DateTime.TryParse(Infos[4], out Date);
+            Revision.CommitDate = Date;
+            List<GitHead> heads = GitCommandHelpers.GetHeads(true, true);
+            foreach (GitHead head in heads)
+            {
+                if (head.Guid.Equals(Revision.Guid))
+                    Revision.Heads.Add(head);
+            }
+            return Revision;
+        }
+
         public void RefreshRevisions()
         {
             if (_indexWatcher.IndexChanged)
@@ -1061,6 +1095,8 @@ namespace GitUI
             tagToolStripMenuItem.Visible = tagNameCopy.Items.Count > 0;
 
             toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
+
+            RefreshOwnScripts();
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
@@ -1314,6 +1350,263 @@ namespace GitUI
         {
             new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
             RefreshRevisions();
+        }
+
+        private void RefreshOwnScripts()
+        {
+            RemoveOwnScripts();
+            AddOwnScripts();
+        }
+
+        private void AddOwnScripts()
+        {            
+            string[][] scripts = Settings.GetScripts();
+            foreach (string[] parameters in scripts)
+            {
+                ToolStripItem item = new ToolStripMenuItem(parameters[0]);
+                item.Name = item.Text + "_ownScript";
+                item.Click += runScript;
+                if (parameters[3].Equals("yes"))
+                    CreateTag.Items.Add(item);
+                else
+                    runScriptToolStripMenuItem.DropDown.Items.Add(item);
+            }
+            toolStripSeparator7.Visible = scripts.Length > 1;
+            runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+        }
+
+        private void RemoveOwnScripts()
+        {
+            runScriptToolStripMenuItem.DropDown.Items.Clear();
+            List<ToolStripItem> list = new List<ToolStripItem>();
+            foreach (ToolStripItem item in CreateTag.Items)
+                list.Add(item);
+            foreach (ToolStripItem item in list)
+                if (item.Name.Contains("_ownScript"))
+                    CreateTag.Items.RemoveByKey(item.Name);
+        }
+
+        private bool settingsLoaded = false;
+
+        private void runScript(object sender, EventArgs e)
+        {
+            if (settingsLoaded == false)
+            {
+                new FormSettings().LoadSettings();
+                settingsLoaded = true;
+            }
+            
+            string[] scriptInfo = Settings.GetScript(sender.ToString());
+            string command;
+            string argument;
+
+            if (scriptInfo == null)
+            {
+                command = "cmd";
+                argument = "echo \'Cannot find script: " + sender.ToString() + "\'";
+            }
+            else
+            {
+                command = scriptInfo[1];
+                argument = scriptInfo[2];
+            }
+
+            string[] options = 
+           {
+               "{sTag}",
+               "{sBranch}",
+               "{sLocalBranch}",
+               "{sRemoteBranch}",
+               "{sHash}",
+               "{sMessage}",
+               "{sAuthor}",
+               "{sCommitter}",
+               "{sAuthorDate}",
+               "{sCommitDate}",
+               "{cTag}",
+               "{cBranch}",
+               "{cLocalBranch}",
+               "{cRemoteBranch}",
+               "{cHash}",
+               "{cMessage}",
+               "{cAuthor}",
+               "{cCommitter}",
+               "{cAuthorDate}",
+               "{cCommitDate}"
+           };
+
+            GitRevision selectedRevision = null;
+            GitRevision currentRevision = null;
+
+            List<GitHead> selectedLocalBranches = new List<GitHead>();
+            List<GitHead> selectedRemoteBranches = new List<GitHead>();
+            List<GitHead> selectedBranches = new List<GitHead>();
+            List<GitHead> selectedTags = new List<GitHead>();
+            List<GitHead> currentLocalBranches = new List<GitHead>();
+            List<GitHead> currentRemoteBranches = new List<GitHead>();
+            List<GitHead> currentBranches = new List<GitHead>();
+            List<GitHead> currentTags = new List<GitHead>();
+
+            foreach (string option in options)
+            {
+                if (argument.Contains(option))
+                {
+                    if (option.StartsWith("{s") && selectedRevision == null)
+                    {
+                        selectedRevision = GetRevision(LastRow);
+                        foreach (var head in selectedRevision.Heads)
+                        {
+                            if (head.IsTag)
+                                selectedTags.Add(head);
+
+                            else if (head.IsHead || head.IsRemote)
+                            {
+                                selectedBranches.Add(head);
+                                if (head.IsRemote)
+                                    selectedRemoteBranches.Add(head);
+
+                                else
+                                    selectedLocalBranches.Add(head);
+
+                            }
+                        }
+                    }
+                    else if (option.StartsWith("{c") && currentRevision == null)
+                    {
+                        currentRevision = GetCurrentRevision();
+
+                        foreach (var head in currentRevision.Heads)
+                        {
+                            if (head.IsTag)
+                                currentTags.Add(head);
+                            else if (head.IsHead || head.IsRemote)
+                            {
+                                currentBranches.Add(head);
+                                if (head.IsRemote)
+                                    currentRemoteBranches.Add(head);
+                                else
+                                    currentLocalBranches.Add(head);
+                            }
+                        }
+                    }
+
+                    switch (option)
+                    {
+                        case "{sTag}":
+                            if (selectedTags.Count == 1)
+                                argument = argument.Replace(option, selectedTags[0].Name);
+                            else if (selectedTags.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(selectedTags, "Selected Revision Tag"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{sBranch}":
+                            if (selectedBranches.Count == 1)
+                                argument = argument.Replace(option, selectedBranches[0].Name);
+                            else if (selectedBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(selectedBranches, "Selected Revision Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{sLocalBranch}":
+                            if (selectedLocalBranches.Count == 1)
+                                argument = argument.Replace(option, selectedLocalBranches[0].Name);
+                            else if (selectedLocalBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(selectedLocalBranches, "Selected Revision Local Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{sRemoteBranch}":
+                            if (selectedRemoteBranches.Count == 1)
+                                argument = argument.Replace(option, selectedRemoteBranches[0].Name);
+                            else if (selectedRemoteBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(selectedRemoteBranches, "Selected Revision Remote Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{sHash}":
+                            argument = argument.Replace(option, selectedRevision.Guid);
+                            break;
+                        case "{sMessage}":
+                            argument = argument.Replace(option, selectedRevision.Message);
+                            break;
+                        case "{sAuthor}":
+                            argument = argument.Replace(option, selectedRevision.Author);
+                            break;
+                        case "{sCommitter}":
+                            argument = argument.Replace(option, selectedRevision.Committer);
+                            break;
+                        case "{sAuthorDate}":
+                            argument = argument.Replace(option, selectedRevision.AuthorDate.ToString());
+                            break;
+                        case "{sCommitDate}":
+                            argument = argument.Replace(option, selectedRevision.CommitDate.ToString());
+                            break;
+                        case "{cTag}":
+                            if (currentTags.Count == 1)
+                                argument = argument.Replace(option, currentTags[0].Name);
+                            else if (currentTags.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(currentTags, "Current Revision Tag"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{cBranch}":
+                            if (currentBranches.Count == 1)
+                                argument = argument.Replace(option, currentBranches[0].Name);
+                            else if (currentBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(currentBranches, "Current Revision Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{cLocalBranch}":
+                            if (currentLocalBranches.Count == 1)
+                                argument = argument.Replace(option, currentLocalBranches[0].Name);
+                            else if (currentLocalBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(currentLocalBranches, "Current Revision Local Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{cRemoteBranch}":
+                            if (currentRemoteBranches.Count == 1)
+                                argument = argument.Replace(option, currentRemoteBranches[0].Name);
+                            else if (currentRemoteBranches.Count != 0)
+                                argument = argument.Replace(option, askToSpecify(currentRemoteBranches, "Current Revision Remote Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{cHash}":
+                            argument = argument.Replace(option, currentRevision.Guid);
+                            break;
+                        case "{cMessage}":
+                            argument = argument.Replace(option, currentRevision.Message);
+                            break;
+                        case "{cAuthor}":
+                            argument = argument.Replace(option, currentRevision.Author);
+                            break;
+                        case "{cCommitter}":
+                            argument = argument.Replace(option, currentRevision.Committer);
+                            break;
+                        case "{cAuthorDate}":
+                            argument = argument.Replace(option, currentRevision.AuthorDate.ToString());
+                            break;
+                        case "{cCommitDate}":
+                            argument = argument.Replace(option, currentRevision.CommitDate.ToString());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            new FormProcess(command, argument).ShowDialog();
+            RefreshRevisions();
+        }
+
+        private string askToSpecify(List<GitHead> options, string title)
+        {
+            FormRunScriptSpecify f = new FormRunScriptSpecify(options, title);
+            f.ShowDialog();
+            return f.ret;
         }
     }
 }
