@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.Editor;
 using ResourceManager.Translation;
+using System.Text;
 
 namespace GitUI
 {
@@ -18,9 +19,7 @@ namespace GitUI
         TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         TranslationString askMergeConflictSolved = new TranslationString("Is the mergeconflict solved?");
         TranslationString askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
-        TranslationString useModifiedOrDeletedFile = new TranslationString("Use modified or deleted file?");
         TranslationString modifiedButton = new TranslationString("Modified");
-        TranslationString useCreatedOrDeletedFile = new TranslationString("Use created or deleted file?");
         TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
         TranslationString stageFilename = new TranslationString("Stage {0}");
 
@@ -57,8 +56,7 @@ namespace GitUI
         private void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
-            button1.Focus();
-
+            
             ConflictedFiles.DataSource = GitCommandHelpers.GetConflictedFiles();
             InitMergetool();
 
@@ -85,7 +83,6 @@ namespace GitUI
                 {
                     GitUICommands.Instance.StartCommitDialog();
                 }
-
             }
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
@@ -154,18 +151,41 @@ namespace GitUI
                 //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
             }
 
-            bool file1 = File.Exists(filenames[0]);
-            bool file2 = File.Exists(filenames[1]);
-            bool file3 = File.Exists(filenames[2]);
-
             string arguments = mergetoolCmd;
 
-            if (file1 && file2 && file3)
+            if (CheckForLocalRevision(filename) &&
+                CheckForRemoteRevision(filename))
             {
                 if (FileHelper.IsBinaryFile(filename))
                 {
-                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool)) == DialogResult.No)
+                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                         return;
+                }
+
+                //Check if there is a base file. If not, ask user to fall back to 2-way merge.
+                //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
+                //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
+                //filenames are quoted, this takes a little extra effort. We need to remove these 
+                //quotes also. For tortoise and araxis a little bit more magic is needed.
+                if (filenames[0] == null)
+                {
+                    DialogResult result = MessageBox.Show(string.Format("There is no base revision for {0}.\nFall back to 2-way merge?", filename), "Merge",MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        arguments = arguments.Replace("-merge -3", "-merge");
+                        arguments = arguments.Replace("/base:\"$BASE\"", "");
+                        arguments = arguments.Replace("\"$BASE\"", "");
+                    }
+
+                    if (result == DialogResult.Cancel)
+                    {
+                        Initialize();
+                        if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
+                        if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
+                        if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+                        Cursor.Current = Cursors.Default;
+                        return;
+                    }
                 }
 
                 arguments = arguments.Replace("$BASE", filenames[0]);
@@ -181,62 +201,11 @@ namespace GitUI
                     Initialize();
                 }
             }
-            else
-            {
-                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated();
-                if ((file1 && file2 && !file3) || (file1 && !file2 && file3))
-                {
-                    frm.Label.Text = useModifiedOrDeletedFile.Text;
-                    frm.Created.Text = modifiedButton.Text;
-                }
-                else
-                    if (!file1)
-                    {
-                        frm.Label.Text = useCreatedOrDeletedFile.Text;
-                    }
-                    else
-                    {
-                        if (File.Exists(filenames[0]))
-                            File.Delete(filenames[0]);
-                        if (File.Exists(filenames[1]))
-                            File.Delete(filenames[1]);
-                        if (File.Exists(filenames[2]))
-                            File.Delete(filenames[2]);
+            Initialize();
 
-                        Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-                        GitCommandHelpers.RunRealCmd(GitCommands.Settings.GitCommand, "mergetool \"" + filename + "\"");
-                        Initialize();
-                        return;
-                    }
-
-                frm.ShowDialog();
-
-                if (frm.Aborted)
-                {
-                    if (File.Exists(filenames[0]))
-                        File.Delete(filenames[0]);
-                    if (File.Exists(filenames[1]))
-                        File.Delete(filenames[1]);
-                    if (File.Exists(filenames[2]))
-                        File.Delete(filenames[2]);
-                    return;
-                }
-                else
-                    if (frm.Delete)
-                        GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
-                    else
-                        if (!frm.Delete)
-                            stageFile(filename);
-
-                Initialize();
-            }
-
-            if (File.Exists(filenames[0]))
-                File.Delete(filenames[0]);
-            if (File.Exists(filenames[1]))
-                File.Delete(filenames[1]);
-            if (File.Exists(filenames[2]))
-                File.Delete(filenames[2]);
+            if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
+            if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
+            if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
             Cursor.Current = Cursors.Default;
         }
 
@@ -284,15 +253,61 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private string GetRemoteSideString()
+        {
+            bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
+            return inTheMiddleOfRebase ? "ours" : "theirs";
+        }
+        private string GetLocalSideString()
+        {
+            bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
+            return inTheMiddleOfRebase ? "theirs" : "ours";
+        }
+
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            if (ConflictedFiles.SelectedRows.Count != 1)
+            {
+                baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
+                return;
+            }
 
+            string filename = GetFileName();
+            string[] filenames = GitCommandHelpers.GetConflictedFileNames(filename);
+
+            bool baseFileExists = !string.IsNullOrEmpty(filenames[0]);
+            bool localFileExists = !string.IsNullOrEmpty(filenames[1]);
+            bool remoteFileExists = !string.IsNullOrEmpty(filenames[2]);
+
+            string remoteSide = GetRemoteSideString();
+            string localSide = GetLocalSideString();
+
+            if (baseFileExists && localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("The file has been changed both locally({0}) and remotely({1}). Merge the changes.", localSide, remoteSide);
+            if (!baseFileExists && localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.", localSide, remoteSide);
+            if (baseFileExists && !localFileExists && remoteFileExists)
+                conflictDescription.Text = string.Format("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+            if (baseFileExists && localFileExists && !remoteFileExists)
+                conflictDescription.Text = string.Format("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+
+            baseFileName.Text = (baseFileExists ? filenames[0] : "no base");
+            localFileName.Text = (localFileExists ? filenames[1] : "deleted");
+            remoteFileName.Text = (remoteFileExists ? filenames[2] : "deleted");
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+
+            string filename = GetFileName();
+
+            if (CheckForBaseRevision(filename))
+            {
+                if (!GitCommandHelpers.HandleConflictSelectBase(filename))
+                    MessageBox.Show("Choose base file failed.");
+            }
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -300,7 +315,13 @@ namespace GitUI
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+
+            string filename = GetFileName();
+            if (CheckForLocalRevision(filename))
+            {
+                if (!GitCommandHelpers.HandleConflictSelectLocal(GetFileName()))
+                    MessageBox.Show("Choose local file failed.");
+            }
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -308,9 +329,91 @@ namespace GitUI
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+            string filename = GetFileName();
+            if (CheckForRemoteRevision(filename))
+            {
+                if (!GitCommandHelpers.HandleConflictSelectRemote(GetFileName()))
+                    MessageBox.Show("Choose remote file failed.");
+            }
             Initialize();
+
             Cursor.Current = Cursors.Default;
+        }
+
+
+        private bool CheckForBaseRevision(string filename)
+        {
+            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[0]))
+            {
+                string caption = string.Format("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?",
+                                                filename,
+                                                GetLocalSideString(),
+                                                GetRemoteSideString());
+
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Choose local ({0})", GetLocalSideString()),
+                                                                                string.Format("Choose remote ({0})", GetRemoteSideString()),
+                                                                                "Delete file",
+                                                                                caption);
+                frm.ShowDialog();
+                if (frm.KeepBase) //delete
+                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                if (frm.KeepLocal) //local
+                    GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+                if (frm.KeepRemote) //remote
+                    GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckForLocalRevision(string filename)
+        {
+            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[1]))
+            {
+                string caption = string.Format("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.",
+                                                filename,
+                                                GetLocalSideString(),
+                                                GetRemoteSideString());
+
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Delete file ({0})", GetLocalSideString()),
+                                                                                string.Format("Keep modified ({0})", GetRemoteSideString()),
+                                                                                "Keep base file",
+                                                                                caption);
+                frm.ShowDialog();
+                if (frm.KeepBase) //base
+                    GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+                if (frm.KeepLocal) //delete
+                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                if (frm.KeepRemote) //remote
+                    GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckForRemoteRevision(string filename)
+        {
+            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[2]))
+            {
+                string caption = string.Format("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.",
+                                                filename,
+                                                GetLocalSideString(),
+                                                GetRemoteSideString());
+
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Keep modified ({0})", GetLocalSideString()),
+                                                                                string.Format("Delete file ({0})", GetRemoteSideString()),
+                                                                                "Keep base file",
+                                                                                caption);
+                frm.ShowDialog();
+                if (frm.KeepBase) //base
+                    GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+                if (frm.KeepLocal) //delete
+                    GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+                if (frm.KeepRemote) //remote
+                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                return false;
+            }
+            return true;
         }
 
         private void OpenMergetool_Click(object sender, EventArgs e)
@@ -465,5 +568,40 @@ namespace GitUI
             process.Text = string.Format(stageFilename.Text, filename);
             process.ShowDialogOnError();
         }
+
+        private void chooseLocal_Click(object sender, EventArgs e)
+        {
+            ContextChooseLocal_Click(sender, e);
+        }
+
+        private void chooseBase_Click(object sender, EventArgs e)
+        {
+            ContextChooseBase_Click(sender, e);
+        }
+
+        private void chooseRemote_Click(object sender, EventArgs e)
+        {
+            ContextChooseRemote_Click(sender, e);
+        }
+
+        private void conflictDescription_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void merge_Click(object sender, EventArgs e)
+        {
+            OpenMergetool_Click(sender, e);
+        }
+
+        private void ConflictedFiles_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                OpenMergetool_Click(sender, e);
+                e.Handled = true;
+            }
+        }
+
     }
 }
