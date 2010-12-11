@@ -113,7 +113,7 @@ namespace GitUI
             configFile.SetValue("diff.tool", diffTool);
         }
 
-        private void LoadSettings()
+        public void LoadSettings()
         {
             try
             {
@@ -305,6 +305,7 @@ namespace GitUI
                     }
 
                 EnableSshOptions();
+                LoadScripts();
             }
             catch (Exception ex)
             {
@@ -1861,6 +1862,217 @@ namespace GitUI
         }
 
         private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
+
+        private void SaveScripts()
+        {
+            string[][] scripts_params = new string[ScriptList.Items.Count][];
+            for (int i=0; i<ScriptList.Items.Count; i++)
+            {
+                ListViewItem item = ScriptList.Items[i];
+                string[] parameters = new string[item.SubItems.Count-1];
+                for (int j = 1; j < item.SubItems.Count; j++)
+                    parameters[j - 1] = item.SubItems[j].Text;
+                scripts_params[i] = parameters;
+            }
+            Settings.SaveScripts(scripts_params);
+        }
+
+        private void LoadScripts()
+        {
+            ScriptList.Items.Clear();
+            string[][] scripts = Settings.GetScripts();
+            foreach (string[] parameters in scripts)
+            {
+                ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
+                foreach (string param in parameters)
+                    ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(param);
+            }
+        }
+
+        private void ClearScriptDetails()
+        {
+            nameTextBox.Clear();
+            commandTextBox.Clear();
+            argumentsTextBox.Clear();
+            inMenuCheckBox.Checked = false;
+        }
+
+        private void DisableScriptDetails()
+        {
+            nameTextBox.Enabled = false;
+            commandTextBox.Enabled = false;
+            argumentsTextBox.Enabled = false;
+            inMenuCheckBox.Enabled = false;
+            saveScriptButton.Enabled = false;
+            cancelScriptButton.Enabled = false;
+            browseScriptButton.Enabled = false;
+        }
+
+        private void EnableScriptDetails()
+        {
+            nameTextBox.Enabled = true;
+            commandTextBox.Enabled = true;
+            argumentsTextBox.Enabled = true;
+            inMenuCheckBox.Enabled = true;
+            saveScriptButton.Enabled = true;
+            cancelScriptButton.Enabled = true;
+            browseScriptButton.Enabled = true;
+        }
+
+        private void RefreshScriptDetails()
+        {
+            nameTextBox.Text = ScriptList.SelectedItems[0].SubItems[1].Text;
+            commandTextBox.Text = ScriptList.SelectedItems[0].SubItems[2].Text;
+            argumentsTextBox.Text = ScriptList.SelectedItems[0].SubItems[3].Text;
+            if (ScriptList.Items[ScriptList.SelectedIndices[0]].SubItems[4].Text.Equals("yes"))
+                inMenuCheckBox.Checked = true;
+        }
+
+        private int selectedScriptItem { get; set; }
+
+        private void addScriptButton_Click(object sender, EventArgs e)
+        {
+            ScriptList.SelectedItems.Clear();
+            ListViewItem lv = ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
+            for (int i = 0; i < 4; i++)
+                ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(string.Empty);
+            lv.Selected = true;
+            editScriptButton_Click(sender, e);
+        }
+
+        private void removeScriptButton_Click(object sender, EventArgs e)
+        {
+            if (ScriptList.SelectedItems.Count > 0)
+            {
+                ScriptList.Items.RemoveAt(ScriptList.SelectedItems[0].Index);
+                ClearScriptDetails();
+                DisableScriptDetails();
+                SaveScripts();
+            }
+        }
+
+        private void editScriptButton_Click(object sender, EventArgs e)
+        {
+            if (ScriptList.SelectedItems.Count > 0)
+            {
+                selectedScriptItem = ScriptList.SelectedIndices[0];
+                RefreshScriptDetails();
+                EnableScriptDetails();
+                nameTextBox.Focus();
+            }
+        }
+
+        private void saveScriptButton_Click(object sender, EventArgs e)
+        {
+            ScriptList.Items[selectedScriptItem].SubItems[1].Text = nameTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[2].Text = commandTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[3].Text = argumentsTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[4].Text = inMenuCheckBox.Checked ? "yes" : "no";
+            DisableScriptDetails();
+            ScriptList.Focus();
+            SaveScripts();
+        }
+
+        private void ScriptList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (ScriptList.SelectedIndices.Count > 0)
+            {
+                RefreshScriptDetails();
+                selectedScriptItem = ScriptList.SelectedIndices[0];
+                editScriptButton.Enabled = true;
+                removeScriptButton.Enabled = true;
+                moveDownButton.Enabled = moveUpButton.Enabled = false;
+                if (ScriptList.SelectedIndices[0] > 0)
+                    moveUpButton.Enabled = true;
+                if (ScriptList.SelectedIndices[0] < ScriptList.Items.Count - 1)
+                    moveDownButton.Enabled = true;
+            }
+            else
+            {
+                editScriptButton.Enabled = false;
+                removeScriptButton.Enabled = false;
+                moveUpButton.Enabled = false;
+                moveDownButton.Enabled = false;
+                ClearScriptDetails();
+            }
+        }
+
+        private void cancelScriptButton_Click(object sender, EventArgs e)
+        {
+            DisableScriptDetails();
+            ClearScriptDetails();
+            ScriptList.Focus();
+            ScriptList_ItemSelectionChanged(sender, null);
+        }
+
+        private void moveUpButton_Click(object sender, EventArgs e)
+        {
+            int no;
+            ListView lv = new ListView();
+            foreach (ListViewItem lvi in ScriptList.Items)
+                lv.Items.Add((ListViewItem)lvi.Clone());
+            ScriptList.Items.Clear();
+            for (int i = 0; i < selectedScriptItem - 1; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            ListViewItem currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
+            ListViewItem aboveItem = (ListViewItem)lv.Items[selectedScriptItem - 1].Clone();
+            int.TryParse(currentItem.SubItems[0].Text, out no);
+            currentItem.SubItems[0].Text = (no - 1).ToString();
+            aboveItem.SubItems[0].Text = (no).ToString();
+            ScriptList.Items.Add(currentItem);
+            ScriptList.Items.Add(aboveItem);
+            for (int i = selectedScriptItem + 1; i < lv.Items.Count; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            SaveScripts();
+            selectedScriptItem--;
+            ScriptList.Items[selectedScriptItem].Selected = true;
+            ScriptList.Focus();
+        }
+
+        private void moveDownButton_Click(object sender, EventArgs e)
+        {
+            int no;
+            ListView lv = new ListView();
+            foreach (ListViewItem lvi in ScriptList.Items)
+                lv.Items.Add((ListViewItem)lvi.Clone());
+            ScriptList.Items.Clear();
+            for (int i = 0; i < selectedScriptItem; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            ListViewItem currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
+            ListViewItem underItem = (ListViewItem)lv.Items[selectedScriptItem + 1].Clone();
+            int.TryParse(currentItem.SubItems[0].Text, out no);
+            currentItem.SubItems[0].Text = (no + 1).ToString();
+            underItem.SubItems[0].Text = (no).ToString();
+            ScriptList.Items.Add(underItem);
+            ScriptList.Items.Add(currentItem);
+            for (int i = selectedScriptItem + 2; i < lv.Items.Count; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            SaveScripts();
+            selectedScriptItem++;
+            ScriptList.Items[selectedScriptItem].Selected = true;
+            ScriptList.Focus();
+        }
+
+        private void browseScriptButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
+            ofd.RestoreDirectory = true;
+            if (ofd.ShowDialog() == DialogResult.OK)
+                commandTextBox.Text = ofd.FileName;
+        }
+
+        private void argumentsTextBox_Enter(object sender, EventArgs e)
+        {
+            helpLabel.Visible = true;
+        }
+
+        private void argumentsTextBox_Leave(object sender, EventArgs e)
+        {
+            helpLabel.Visible = false;
+        }
+
 
     }
 }
