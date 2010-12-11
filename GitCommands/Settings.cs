@@ -633,6 +633,22 @@ namespace GitCommands
             }
         }
 
+        private static string _gravatarFallbackService;
+        public static string GravatarFallbackService
+        {
+            get
+            {
+                if (_gravatarFallbackService == null)
+                    SafeSetString("gravatarfallbackservice", "Identicon", x => _gravatarFallbackService = x);
+                return _gravatarFallbackService;
+            }
+            set
+            {
+                _gravatarFallbackService = value;
+                Application.UserAppDataRegistry.SetValue("gravatarfallbackservice", _gravatarFallbackService);
+            }
+        }
+
         private static string _gitCommand;
         public static string GitCommand
         {
