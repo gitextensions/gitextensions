@@ -19,9 +19,7 @@ namespace GitUI
         TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         TranslationString askMergeConflictSolved = new TranslationString("Is the mergeconflict solved?");
         TranslationString askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
-        TranslationString useModifiedOrDeletedFile = new TranslationString("Use modified or deleted file?");
         TranslationString modifiedButton = new TranslationString("Modified");
-        TranslationString useCreatedOrDeletedFile = new TranslationString("Use created or deleted file?");
         TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
         TranslationString stageFilename = new TranslationString("Stage {0}");
 
@@ -58,8 +56,7 @@ namespace GitUI
         private void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
-            button1.Focus();
-
+            
             ConflictedFiles.DataSource = GitCommandHelpers.GetConflictedFiles();
             InitMergetool();
 
@@ -86,7 +83,6 @@ namespace GitUI
                 {
                     GitUICommands.Instance.StartCommitDialog();
                 }
-
             }
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
@@ -162,7 +158,7 @@ namespace GitUI
             {
                 if (FileHelper.IsBinaryFile(filename))
                 {
-                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool)) == DialogResult.No)
+                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                         return;
                 }
 
@@ -288,17 +284,17 @@ namespace GitUI
             string localSide = GetLocalSideString();
 
             if (baseFileExists && localFileExists && remoteFileExists)
-                conflictDescription.Text = string.Format("The file has been changed locally({0}) and remotely({1}). Merge the changes.", localSide, remoteSide);
+                conflictDescription.Text = string.Format("The file has been changed both locally({0}) and remotely({1}). Merge the changes.", localSide, remoteSide);
             if (!baseFileExists && localFileExists && remoteFileExists)
                 conflictDescription.Text = string.Format("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.", localSide, remoteSide);
             if (baseFileExists && !localFileExists && remoteFileExists)
-                conflictDescription.Text = string.Format("File deleted locally({0}) but modified remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+                conflictDescription.Text = string.Format("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
             if (baseFileExists && localFileExists && !remoteFileExists)
-                conflictDescription.Text = string.Format("File modified locally({0}) but deleted remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+                conflictDescription.Text = string.Format("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
 
-            baseFileName.Text = (baseFileExists ? filenames[0] : "no file");
-            localFileName.Text = (localFileExists ? filenames[1] : "no file");
-            remoteFileName.Text = (remoteFileExists ? filenames[2] : "no file");
+            baseFileName.Text = (baseFileExists ? filenames[0] : "no base");
+            localFileName.Text = (localFileExists ? filenames[1] : "deleted");
+            remoteFileName.Text = (remoteFileExists ? filenames[2] : "deleted");
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
@@ -349,7 +345,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[0]))
             {
-                string caption = string.Format("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\nChoose the file you want to keep, merge the files or delete the file?",
+                string caption = string.Format("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?",
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
@@ -374,7 +370,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[1]))
             {
-                string caption = string.Format("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\nChoose to delete the file or keep the modified version.",
+                string caption = string.Format("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.",
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
@@ -399,7 +395,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[2]))
             {
-                string caption = string.Format("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\nChoose to delete the file or keep the modified version.",
+                string caption = string.Format("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.",
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
@@ -588,9 +584,24 @@ namespace GitUI
             ContextChooseRemote_Click(sender, e);
         }
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        private void conflictDescription_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void merge_Click(object sender, EventArgs e)
+        {
+            OpenMergetool_Click(sender, e);
+        }
+
+        private void ConflictedFiles_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                OpenMergetool_Click(sender, e);
+                e.Handled = true;
+            }
+        }
+
     }
 }
