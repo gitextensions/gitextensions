@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 2.09
+	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
+	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
+	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
+	Fixed the following keys in quicksearch: #, _
+	Improved merge conflict handling
+	
 Version 2.08
 	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
 	Fixed bug: slashes in tag name not supported
