@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace GitUI
 {
@@ -17,6 +18,8 @@ namespace GitUI
             Remote.Text = remoteText;
             Base.Text = baseText;
             Label.Text = description;
+
+            questionImage.BackgroundImage = SystemIcons.Warning.ToBitmap(); 
         }
 
         public bool Aborted { get; set; }

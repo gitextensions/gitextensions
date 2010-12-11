@@ -63,7 +63,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.remoteFileName = new System.Windows.Forms.Label();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.merge = new System.Windows.Forms.Button();
             this.conflictDescription = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.startMergetool = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
@@ -76,6 +79,7 @@
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -88,6 +92,9 @@
             this.ConflictedFilesContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -108,10 +115,9 @@
             this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.Rescan);
             this.splitContainer1.Panel2.Controls.Add(this.Reset);
-            this.splitContainer1.Size = new System.Drawing.Size(496, 396);
-            this.splitContainer1.SplitterDistance = 362;
+            this.splitContainer1.Size = new System.Drawing.Size(570, 396);
+            this.splitContainer1.SplitterDistance = 436;
             this.splitContainer1.TabIndex = 1;
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // splitContainer2
             // 
@@ -128,7 +134,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
-            this.splitContainer2.Size = new System.Drawing.Size(362, 396);
+            this.splitContainer2.Size = new System.Drawing.Size(436, 396);
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -147,15 +153,15 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.ConflictedFiles, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.conflictDescription, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(362, 367);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(436, 367);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // ConflictedFiles
@@ -176,10 +182,11 @@
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(356, 241);
+            this.ConflictedFiles.Size = new System.Drawing.Size(430, 249);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
+            this.ConflictedFiles.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyUp);
             // 
             // ConflictedFilesContextMenu
             // 
@@ -325,7 +332,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.localFileName, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.chooseLocal, 2, 0);
@@ -336,13 +343,14 @@
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.remoteFileName, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 290);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 292);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(356, 74);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(436, 75);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label7
@@ -350,9 +358,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(3, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 13);
+            this.label7.Size = new System.Drawing.Size(31, 13);
             this.label7.TabIndex = 1;
-            this.label7.Text = "Local:";
+            this.label7.Text = "Local";
             // 
             // localFileName
             // 
@@ -366,10 +374,14 @@
             // chooseLocal
             // 
             this.chooseLocal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseLocal.Location = new System.Drawing.Point(284, 3);
+            this.chooseLocal.Image = global::GitUI.Properties.Resources._46;
+            this.chooseLocal.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.chooseLocal.Location = new System.Drawing.Point(336, 0);
+            this.chooseLocal.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseLocal.Name = "chooseLocal";
-            this.chooseLocal.Size = new System.Drawing.Size(69, 19);
+            this.chooseLocal.Size = new System.Drawing.Size(100, 23);
             this.chooseLocal.TabIndex = 7;
+            this.chooseLocal.TabStop = false;
             this.chooseLocal.Text = "Choose";
             this.chooseLocal.UseVisualStyleBackColor = true;
             this.chooseLocal.Click += new System.EventHandler(this.chooseLocal_Click);
@@ -377,10 +389,14 @@
             // chooseBase
             // 
             this.chooseBase.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseBase.Location = new System.Drawing.Point(284, 28);
+            this.chooseBase.Image = global::GitUI.Properties.Resources._46;
+            this.chooseBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.chooseBase.Location = new System.Drawing.Point(336, 25);
+            this.chooseBase.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseBase.Name = "chooseBase";
-            this.chooseBase.Size = new System.Drawing.Size(69, 19);
+            this.chooseBase.Size = new System.Drawing.Size(100, 23);
             this.chooseBase.TabIndex = 8;
+            this.chooseBase.TabStop = false;
             this.chooseBase.Text = "Choose";
             this.chooseBase.UseVisualStyleBackColor = true;
             this.chooseBase.Click += new System.EventHandler(this.chooseBase_Click);
@@ -388,10 +404,14 @@
             // chooseRemote
             // 
             this.chooseRemote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseRemote.Location = new System.Drawing.Point(284, 53);
+            this.chooseRemote.Image = global::GitUI.Properties.Resources._46;
+            this.chooseRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.chooseRemote.Location = new System.Drawing.Point(336, 50);
+            this.chooseRemote.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.chooseRemote.Name = "chooseRemote";
-            this.chooseRemote.Size = new System.Drawing.Size(69, 19);
+            this.chooseRemote.Size = new System.Drawing.Size(100, 23);
             this.chooseRemote.TabIndex = 9;
+            this.chooseRemote.TabStop = false;
             this.chooseRemote.Text = "Choose";
             this.chooseRemote.UseVisualStyleBackColor = true;
             this.chooseRemote.Click += new System.EventHandler(this.chooseRemote_Click);
@@ -410,18 +430,18 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.Size = new System.Drawing.Size(30, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Base:";
+            this.label2.Text = "Base";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(48, 13);
+            this.label5.Size = new System.Drawing.Size(44, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Remote:";
+            this.label5.Text = "Remote";
             // 
             // remoteFileName
             // 
@@ -432,14 +452,60 @@
             this.remoteFileName.TabIndex = 6;
             this.remoteFileName.Text = "...";
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 16F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.merge, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 255);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(436, 37);
+            this.tableLayoutPanel3.TabIndex = 6;
+            // 
+            // merge
+            // 
+            this.merge.Image = global::GitUI.Properties.Resources._90;
+            this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.merge.Location = new System.Drawing.Point(336, 0);
+            this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.merge.Name = "merge";
+            this.merge.Size = new System.Drawing.Size(98, 23);
+            this.merge.TabIndex = 8;
+            this.merge.TabStop = false;
+            this.merge.Text = "Merge";
+            this.merge.UseVisualStyleBackColor = true;
+            this.merge.Click += new System.EventHandler(this.merge_Click);
+            // 
             // conflictDescription
             // 
+            this.conflictDescription.Cursor = System.Windows.Forms.Cursors.Hand;
             this.conflictDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.conflictDescription.Location = new System.Drawing.Point(3, 247);
+            this.conflictDescription.Location = new System.Drawing.Point(19, 0);
             this.conflictDescription.Name = "conflictDescription";
-            this.conflictDescription.Size = new System.Drawing.Size(356, 40);
+            this.conflictDescription.Size = new System.Drawing.Size(314, 37);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
+            this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources._49;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(16, 37);
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
             // 
             // startMergetool
             // 
@@ -456,15 +522,14 @@
             this.button1.Location = new System.Drawing.Point(2, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(125, 23);
-            this.button1.TabIndex = 8;
+            this.button1.TabIndex = 1;
             this.button1.Text = "Open in mergetool";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OpenMergetool_Click);
             // 
             // Rescan
             // 
-            this.Rescan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Rescan.Location = new System.Drawing.Point(3, 345);
+            this.Rescan.Location = new System.Drawing.Point(2, 62);
             this.Rescan.Name = "Rescan";
             this.Rescan.Size = new System.Drawing.Size(125, 23);
             this.Rescan.TabIndex = 7;
@@ -474,8 +539,7 @@
             // 
             // Reset
             // 
-            this.Reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Reset.Location = new System.Drawing.Point(3, 373);
+            this.Reset.Location = new System.Drawing.Point(2, 92);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(125, 23);
             this.Reset.TabIndex = 9;
@@ -539,6 +603,11 @@
             this.modeDataGridViewTextBoxColumn.Name = "modeDataGridViewTextBoxColumn";
             this.modeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
+            // subItemsBindingSource
+            // 
+            this.subItemsBindingSource.DataMember = "SubItems";
+            this.subItemsBindingSource.DataSource = this.gitItemBindingSource;
+            // 
             // Namex
             // 
             this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -549,9 +618,10 @@
             // 
             // FormResolveConflicts
             // 
+            this.AcceptButton = this.merge;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 396);
+            this.ClientSize = new System.Drawing.Size(570, 396);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormResolveConflicts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -571,6 +641,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -624,6 +697,10 @@
         private System.Windows.Forms.Button Rescan;
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.Button startMergetool;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Button merge;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
     }
 }
