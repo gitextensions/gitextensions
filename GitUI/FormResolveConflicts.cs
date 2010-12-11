@@ -23,6 +23,26 @@ namespace GitUI
         TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
         TranslationString stageFilename = new TranslationString("Stage {0}");
 
+        TranslationString noBaseRevision = new TranslationString("There is no base revision for {0}.\nFall back to 2-way merge?");
+        TranslationString ours = new TranslationString("ours");
+        TranslationString theirs = new TranslationString("theirs");
+        TranslationString fileChangeLocallyAndRemotely = new TranslationString("The file has been changed both locally({0}) and remotely({1}). Merge the changes.");
+        TranslationString fileCreatedLocallyAndRemotely = new TranslationString("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.");
+        TranslationString fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?");
+        TranslationString fileDeletedLocallyAndModifiedRemotely = new TranslationString("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.");
+        TranslationString fileDeletedLocallyAndModifiedRemotelyLong = new TranslationString("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.");
+        TranslationString fileModifiedLocallyAndDelededRemotely = new TranslationString("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.");
+        TranslationString fileModifiedLocallyAndDelededRemotelyLong = new TranslationString("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.");
+        TranslationString noBase = new TranslationString("no base");
+        TranslationString deleted = new TranslationString("deleted");
+        TranslationString chooseLocalButtonText = new TranslationString("Choose local");
+        TranslationString chooseRemoteButtonText = new TranslationString("Choose remote");
+        TranslationString deleteFileButtonText = new TranslationString("Delete file");
+        TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
+        TranslationString keepBaseButtonText = new TranslationString("Keep base file");
+        
+
+
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
@@ -169,7 +189,7 @@ namespace GitUI
                 //quotes also. For tortoise and araxis a little bit more magic is needed.
                 if (filenames[0] == null)
                 {
-                    DialogResult result = MessageBox.Show(string.Format("There is no base revision for {0}.\nFall back to 2-way merge?", filename), "Merge",MessageBoxButtons.YesNoCancel);
+                    DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), "Merge", MessageBoxButtons.YesNoCancel);
                     if (result == DialogResult.Yes)
                     {
                         arguments = arguments.Replace("-merge -3", "-merge");
@@ -256,12 +276,12 @@ namespace GitUI
         private string GetRemoteSideString()
         {
             bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
-            return inTheMiddleOfRebase ? "ours" : "theirs";
+            return inTheMiddleOfRebase ? ours.Text : theirs.Text;
         }
         private string GetLocalSideString()
         {
             bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
-            return inTheMiddleOfRebase ? "theirs" : "ours";
+            return inTheMiddleOfRebase ? theirs.Text : ours.Text;
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
@@ -284,17 +304,17 @@ namespace GitUI
             string localSide = GetLocalSideString();
 
             if (baseFileExists && localFileExists && remoteFileExists)
-                conflictDescription.Text = string.Format("The file has been changed both locally({0}) and remotely({1}). Merge the changes.", localSide, remoteSide);
+                conflictDescription.Text = string.Format(fileChangeLocallyAndRemotely.Text, localSide, remoteSide);
             if (!baseFileExists && localFileExists && remoteFileExists)
-                conflictDescription.Text = string.Format("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.", localSide, remoteSide);
+                conflictDescription.Text = string.Format(fileCreatedLocallyAndRemotely.Text, localSide, remoteSide);
             if (baseFileExists && !localFileExists && remoteFileExists)
-                conflictDescription.Text = string.Format("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+                conflictDescription.Text = string.Format(fileDeletedLocallyAndModifiedRemotely.Text, localSide, remoteSide);
             if (baseFileExists && localFileExists && !remoteFileExists)
-                conflictDescription.Text = string.Format("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.", localSide, remoteSide);
+                conflictDescription.Text = string.Format(fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
 
-            baseFileName.Text = (baseFileExists ? filenames[0] : "no base");
-            localFileName.Text = (localFileExists ? filenames[1] : "deleted");
-            remoteFileName.Text = (remoteFileExists ? filenames[2] : "deleted");
+            baseFileName.Text = (baseFileExists ? filenames[0] : noBase.Text);
+            localFileName.Text = (localFileExists ? filenames[1] : deleted.Text);
+            remoteFileName.Text = (remoteFileExists ? filenames[2] : deleted.Text);
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
@@ -345,14 +365,14 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[0]))
             {
-                string caption = string.Format("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?",
+                string caption = string.Format(fileCreatedLocallyAndRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Choose local ({0})", GetLocalSideString()),
-                                                                                string.Format("Choose remote ({0})", GetRemoteSideString()),
-                                                                                "Delete file",
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+                                                                                string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
+                                                                                deleteFileButtonText.Text,
                                                                                 caption);
                 frm.ShowDialog();
                 if (frm.KeepBase) //delete
@@ -370,14 +390,14 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[1]))
             {
-                string caption = string.Format("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.",
+                string caption = string.Format(fileDeletedLocallyAndModifiedRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Delete file ({0})", GetLocalSideString()),
-                                                                                string.Format("Keep modified ({0})", GetRemoteSideString()),
-                                                                                "Keep base file",
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format(deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
+                                                                                string.Format(keepModifiedButtonText.Text + " ({0})", GetRemoteSideString()),
+                                                                                keepBaseButtonText.Text,
                                                                                 caption);
                 frm.ShowDialog();
                 if (frm.KeepBase) //base
@@ -395,14 +415,14 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[2]))
             {
-                string caption = string.Format("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.",
+                string caption = string.Format(fileModifiedLocallyAndDelededRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format("Keep modified ({0})", GetLocalSideString()),
-                                                                                string.Format("Delete file ({0})", GetRemoteSideString()),
-                                                                                "Keep base file",
+                FormModifiedDeletedCreated frm = new FormModifiedDeletedCreated(string.Format(keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
+                                                                                string.Format(deleteFileButtonText.Text + " ({0})", GetRemoteSideString()),
+                                                                                keepBaseButtonText.Text,
                                                                                 caption);
                 frm.ShowDialog();
                 if (frm.KeepBase) //base
@@ -594,7 +614,8 @@ namespace GitUI
             OpenMergetool_Click(sender, e);
         }
 
-        private void ConflictedFiles_KeyUp(object sender, KeyEventArgs e)
+
+        private void ConflictedFiles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
