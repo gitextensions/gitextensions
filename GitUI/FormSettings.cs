@@ -137,6 +137,7 @@ namespace GitUI
 
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
+                noImageService.Text = GitCommands.Settings.GravatarFallbackService;
 
                 showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
 
@@ -371,6 +372,7 @@ namespace GitUI
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
             GitCommands.Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
+            GitCommands.Settings.GravatarFallbackService = noImageService.Text;
 
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
@@ -1863,5 +1865,6 @@ namespace GitUI
         }
 
         private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
+
     }
 }

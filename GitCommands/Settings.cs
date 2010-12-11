@@ -13,8 +13,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.08";
-        public static readonly int GitExtensionsVersionInt = 208;
+        public static readonly string GitExtensionsVersionString = "2.09";
+        public static readonly int GitExtensionsVersionInt = 209;
 
         //semi-constants
         public static char PathSeparator = '\\';
@@ -630,6 +630,22 @@ namespace GitCommands
             {
                 _revisionGridQuickSearchTimeout = value;
                 Application.UserAppDataRegistry.SetValue("revisiongridquicksearchtimeout", _revisionGridQuickSearchTimeout);
+            }
+        }
+
+        private static string _gravatarFallbackService;
+        public static string GravatarFallbackService
+        {
+            get
+            {
+                if (_gravatarFallbackService == null)
+                    SafeSetString("gravatarfallbackservice", "Identicon", x => _gravatarFallbackService = x);
+                return _gravatarFallbackService;
+            }
+            set
+            {
+                _gravatarFallbackService = value;
+                Application.UserAppDataRegistry.SetValue("gravatarfallbackservice", _gravatarFallbackService);
             }
         }
 

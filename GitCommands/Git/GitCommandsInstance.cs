@@ -144,6 +144,7 @@ namespace GitCommands
         public bool CollectOutput = true;
         public bool StreamOutput;
         public int ExitCode { get; set; }
+        public bool IsRunning { get { return myProcess != null && !myProcess.HasExited; } }
         public StringBuilder Output { get; private set; }
         public StringBuilder ErrorOutput { get; private set; }
 
