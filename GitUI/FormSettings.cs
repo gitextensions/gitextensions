@@ -24,6 +24,9 @@ namespace GitUI
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
             GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad" });
+
+            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
+            userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})", Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         public static bool AutoSolveAllSettings()
