@@ -217,6 +217,9 @@
       <Component Id="Japanese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Japanese.xml"/>
       </Component>
+      <Component Id="Italiano.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Italiano.xml"/>
+      </Component>
       <Component Id="Spanish.xml" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xml"/>
       </Component>
@@ -416,6 +419,9 @@
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
+        </Feature>
+        <Feature Id="Italiano" Title="Italiano" Level="1">
+          <ComponentRef Id="Italiano.xml"/>
         </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xml"/>

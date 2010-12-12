@@ -19,7 +19,7 @@ namespace GitUI
         private bool restart = false;
         private GitCommands.GitCommandsInstance gitCommand;
 
-        public FormProcess(string process, string arguments)
+        public FormProcess(string process, string arguments) : base()
         {            
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
