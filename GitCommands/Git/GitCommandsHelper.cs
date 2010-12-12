@@ -142,8 +142,13 @@ namespace GitCommands
             }
 
             //Default!
+            Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
+        }
+
+        public static string GetDefaultHomeDir()
+        {
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
-                return;
+                return Environment.GetEnvironmentVariable("HOME");
 
             string homePath;
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
@@ -155,7 +160,8 @@ namespace GitCommands
             {
                 homePath = Environment.GetEnvironmentVariable("USERPROFILE");
             }
-            Environment.SetEnvironmentVariable("HOME", homePath);
+
+            return homePath;
         }
 
         public static void RunRealCmd(string cmd, string arguments)
