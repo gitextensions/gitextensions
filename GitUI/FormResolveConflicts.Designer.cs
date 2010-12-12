@@ -34,6 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.ConflictedFiles = new System.Windows.Forms.DataGridView();
+            this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConflictedFilesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenMergetool = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMarkAsSolved = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,7 +81,15 @@
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.guidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commitGuidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemTypeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fileNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.modeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.openInCustomMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -172,7 +181,15 @@
             this.ConflictedFiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.ConflictedFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ConflictedFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Namex});
+            this.Namex,
+            this.guidDataGridViewTextBoxColumn1,
+            this.commitGuidDataGridViewTextBoxColumn1,
+            this.itemTypeDataGridViewTextBoxColumn1,
+            this.nameDataGridViewTextBoxColumn1,
+            this.authorDataGridViewTextBoxColumn1,
+            this.dateDataGridViewTextBoxColumn1,
+            this.fileNameDataGridViewTextBoxColumn1,
+            this.modeDataGridViewTextBoxColumn1});
             this.ConflictedFiles.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -188,10 +205,19 @@
             this.ConflictedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
             // 
+            // Namex
+            // 
+            this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Namex.DataPropertyName = "FileName";
+            this.Namex.HeaderText = "Filename";
+            this.Namex.Name = "Namex";
+            this.Namex.ReadOnly = true;
+            // 
             // ConflictedFilesContextMenu
             // 
             this.ConflictedFilesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenMergetool,
+            this.openInCustomMergetoolToolStripMenuItem,
             this.ContextMarkAsSolved,
             this.toolStripSeparator3,
             this.ContextChooseBase,
@@ -209,117 +235,117 @@
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
-            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(194, 314);
+            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(211, 358);
             this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
             // 
             this.OpenMergetool.Name = "OpenMergetool";
-            this.OpenMergetool.Size = new System.Drawing.Size(193, 22);
+            this.OpenMergetool.Size = new System.Drawing.Size(210, 22);
             this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
             // 
             // ContextMarkAsSolved
             // 
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
-            this.ContextMarkAsSolved.Size = new System.Drawing.Size(193, 22);
+            this.ContextMarkAsSolved.Size = new System.Drawing.Size(210, 22);
             this.ContextMarkAsSolved.Text = "Mark conflict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(207, 6);
             // 
             // ContextChooseBase
             // 
             this.ContextChooseBase.Name = "ContextChooseBase";
-            this.ContextChooseBase.Size = new System.Drawing.Size(193, 22);
+            this.ContextChooseBase.Size = new System.Drawing.Size(210, 22);
             this.ContextChooseBase.Text = "Choose base";
             this.ContextChooseBase.Click += new System.EventHandler(this.ContextChooseBase_Click);
             // 
             // ContextChooseLocal
             // 
             this.ContextChooseLocal.Name = "ContextChooseLocal";
-            this.ContextChooseLocal.Size = new System.Drawing.Size(193, 22);
+            this.ContextChooseLocal.Size = new System.Drawing.Size(210, 22);
             this.ContextChooseLocal.Text = "Choose local";
             this.ContextChooseLocal.Click += new System.EventHandler(this.ContextChooseLocal_Click);
             // 
             // ContextChooseRemote
             // 
             this.ContextChooseRemote.Name = "ContextChooseRemote";
-            this.ContextChooseRemote.Size = new System.Drawing.Size(193, 22);
+            this.ContextChooseRemote.Size = new System.Drawing.Size(210, 22);
             this.ContextChooseRemote.Text = "Choose remote";
             this.ContextChooseRemote.Click += new System.EventHandler(this.ContextChooseRemote_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(207, 6);
             // 
             // ContextOpenBaseWith
             // 
             this.ContextOpenBaseWith.Name = "ContextOpenBaseWith";
-            this.ContextOpenBaseWith.Size = new System.Drawing.Size(193, 22);
+            this.ContextOpenBaseWith.Size = new System.Drawing.Size(210, 22);
             this.ContextOpenBaseWith.Text = "Open base with";
             this.ContextOpenBaseWith.Click += new System.EventHandler(this.ContextOpenBaseWith_Click);
             // 
             // ContextOpenLocalWith
             // 
             this.ContextOpenLocalWith.Name = "ContextOpenLocalWith";
-            this.ContextOpenLocalWith.Size = new System.Drawing.Size(193, 22);
+            this.ContextOpenLocalWith.Size = new System.Drawing.Size(210, 22);
             this.ContextOpenLocalWith.Text = "Open local with";
             this.ContextOpenLocalWith.Click += new System.EventHandler(this.ContextOpenLocalWith_Click);
             // 
             // ContextOpenRemoteWith
             // 
             this.ContextOpenRemoteWith.Name = "ContextOpenRemoteWith";
-            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(193, 22);
+            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(210, 22);
             this.ContextOpenRemoteWith.Text = "Open remote with";
             this.ContextOpenRemoteWith.Click += new System.EventHandler(this.ContextOpenRemoteWith_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
             // 
             // ContextSaveBaseAs
             // 
             this.ContextSaveBaseAs.Name = "ContextSaveBaseAs";
-            this.ContextSaveBaseAs.Size = new System.Drawing.Size(193, 22);
+            this.ContextSaveBaseAs.Size = new System.Drawing.Size(210, 22);
             this.ContextSaveBaseAs.Text = "Save base as";
             this.ContextSaveBaseAs.Click += new System.EventHandler(this.ContextSaveBaseAs_Click);
             // 
             // ContextSaveLocalAs
             // 
             this.ContextSaveLocalAs.Name = "ContextSaveLocalAs";
-            this.ContextSaveLocalAs.Size = new System.Drawing.Size(193, 22);
+            this.ContextSaveLocalAs.Size = new System.Drawing.Size(210, 22);
             this.ContextSaveLocalAs.Text = "Save local as";
             this.ContextSaveLocalAs.Click += new System.EventHandler(this.ContextSaveLocalAs_Click);
             // 
             // ContextSaveRemoteAs
             // 
             this.ContextSaveRemoteAs.Name = "ContextSaveRemoteAs";
-            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(193, 22);
+            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(210, 22);
             this.ContextSaveRemoteAs.Text = "Save remote as";
             this.ContextSaveRemoteAs.Click += new System.EventHandler(this.ContextSaveRemoteAs_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(207, 6);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openWithToolStripMenuItem
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
@@ -608,13 +634,68 @@
             this.subItemsBindingSource.DataMember = "SubItems";
             this.subItemsBindingSource.DataSource = this.gitItemBindingSource;
             // 
-            // Namex
+            // guidDataGridViewTextBoxColumn1
             // 
-            this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Namex.DataPropertyName = "FileName";
-            this.Namex.HeaderText = "Filename";
-            this.Namex.Name = "Namex";
-            this.Namex.ReadOnly = true;
+            this.guidDataGridViewTextBoxColumn1.DataPropertyName = "Guid";
+            this.guidDataGridViewTextBoxColumn1.HeaderText = "Guid";
+            this.guidDataGridViewTextBoxColumn1.Name = "guidDataGridViewTextBoxColumn1";
+            this.guidDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // commitGuidDataGridViewTextBoxColumn1
+            // 
+            this.commitGuidDataGridViewTextBoxColumn1.DataPropertyName = "CommitGuid";
+            this.commitGuidDataGridViewTextBoxColumn1.HeaderText = "CommitGuid";
+            this.commitGuidDataGridViewTextBoxColumn1.Name = "commitGuidDataGridViewTextBoxColumn1";
+            this.commitGuidDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // itemTypeDataGridViewTextBoxColumn1
+            // 
+            this.itemTypeDataGridViewTextBoxColumn1.DataPropertyName = "ItemType";
+            this.itemTypeDataGridViewTextBoxColumn1.HeaderText = "ItemType";
+            this.itemTypeDataGridViewTextBoxColumn1.Name = "itemTypeDataGridViewTextBoxColumn1";
+            this.itemTypeDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // authorDataGridViewTextBoxColumn1
+            // 
+            this.authorDataGridViewTextBoxColumn1.DataPropertyName = "Author";
+            this.authorDataGridViewTextBoxColumn1.HeaderText = "Author";
+            this.authorDataGridViewTextBoxColumn1.Name = "authorDataGridViewTextBoxColumn1";
+            this.authorDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dateDataGridViewTextBoxColumn1
+            // 
+            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
+            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
+            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
+            this.dateDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // fileNameDataGridViewTextBoxColumn1
+            // 
+            this.fileNameDataGridViewTextBoxColumn1.DataPropertyName = "FileName";
+            this.fileNameDataGridViewTextBoxColumn1.HeaderText = "FileName";
+            this.fileNameDataGridViewTextBoxColumn1.Name = "fileNameDataGridViewTextBoxColumn1";
+            this.fileNameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // modeDataGridViewTextBoxColumn1
+            // 
+            this.modeDataGridViewTextBoxColumn1.DataPropertyName = "Mode";
+            this.modeDataGridViewTextBoxColumn1.HeaderText = "Mode";
+            this.modeDataGridViewTextBoxColumn1.Name = "modeDataGridViewTextBoxColumn1";
+            this.modeDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // openInCustomMergetoolToolStripMenuItem
+            // 
+            this.openInCustomMergetoolToolStripMenuItem.Name = "openInCustomMergetoolToolStripMenuItem";
+            this.openInCustomMergetoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.openInCustomMergetoolToolStripMenuItem.Text = "Open in custom mergetool";
+            this.openInCustomMergetoolToolStripMenuItem.Click += new System.EventHandler(this.openInCustomMergetoolToolStripMenuItem_Click);
             // 
             // FormResolveConflicts
             // 
@@ -702,5 +783,14 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
+        private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commitGuidDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn itemTypeDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fileNameDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn modeDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.ToolStripMenuItem openInCustomMergetoolToolStripMenuItem;
     }
 }
