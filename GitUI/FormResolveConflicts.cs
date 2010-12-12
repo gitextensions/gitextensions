@@ -655,5 +655,17 @@ namespace GitUI
             }
         }
 
+        private void openInCustomMergetoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormOpenInCustomMergeTool(GetFileName()).ShowDialog();
+
+            if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                stageFile(GetFileName());
+            }
+
+            Initialize();
+        }
+
     }
 }
