@@ -2643,7 +2643,7 @@ Een bestand met dezelfde naam is zowel lokaal({1})  als extern({2}) aangemaakt.
 Kies het bestand dat u wilt bewaren, voeg de bestanden samen of verwijder het bestand.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
-          <Value>Het bestand is lokaal({0}) verwijderd maar is extern ({1}) aangepast. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+          <Value>Het bestand is lokaal({0}) verwijderd maar is extern({1}) aangepast. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
           <Value>Het bestand {0} heeft geen lokale revisie.
@@ -2677,7 +2677,7 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
           <Value>Verwijder bestand</Value>
         </TranslationItem>
         <TranslationItem Name="keepModifiedButtonText" Property="Text">
-          <Value>Beweer wijzigingen</Value>
+          <Value>Bewaar wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="keepBaseButtonText" Property="Text">
           <Value>Bewaar basis bestand</Value>
