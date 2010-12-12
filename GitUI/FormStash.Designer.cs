@@ -146,7 +146,7 @@ namespace GitUI
             // RefreshButton
             // 
             this.RefreshButton.Location = new System.Drawing.Point(173, 0);
-            this.RefreshButton.Name = "Refresh";
+            this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(75, 23);
             this.RefreshButton.TabIndex = 1;
             this.RefreshButton.Text = "Refresh";
@@ -158,7 +158,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(172, 15);
+            this.label1.Size = new System.Drawing.Size(154, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tracked changes in working dir";
             // 
@@ -166,10 +166,9 @@ namespace GitUI
             // 
             this.Changes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Changes.FormattingEnabled = true;
-            this.Changes.ItemHeight = 15;
             this.Changes.Location = new System.Drawing.Point(0, 0);
             this.Changes.Name = "Changes";
-            this.Changes.Size = new System.Drawing.Size(251, 177);
+            this.Changes.Size = new System.Drawing.Size(251, 173);
             this.Changes.TabIndex = 0;
             this.Changes.SelectedIndexChanged += new System.EventHandler(this.ChangesSelectedIndexChanged);
             // 
@@ -198,10 +197,10 @@ namespace GitUI
             // StashMessage
             // 
             this.StashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.StashMessage.Location = new System.Drawing.Point(63, 29);
+            this.StashMessage.Location = new System.Drawing.Point(80, 29);
             this.StashMessage.Name = "StashMessage";
             this.StashMessage.ReadOnly = true;
-            this.StashMessage.Size = new System.Drawing.Size(185, 49);
+            this.StashMessage.Size = new System.Drawing.Size(168, 49);
             this.StashMessage.TabIndex = 3;
             this.StashMessage.Text = "";
             // 
@@ -210,7 +209,7 @@ namespace GitUI
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(1, 29);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 15);
+            this.label3.Size = new System.Drawing.Size(53, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Message:";
             // 
@@ -219,9 +218,9 @@ namespace GitUI
             this.Stashes.DataSource = this.gitStashBindingSource;
             this.Stashes.DisplayMember = "Name";
             this.Stashes.FormattingEnabled = true;
-            this.Stashes.Location = new System.Drawing.Point(63, 3);
+            this.Stashes.Location = new System.Drawing.Point(80, 3);
             this.Stashes.Name = "Stashes";
-            this.Stashes.Size = new System.Drawing.Size(185, 23);
+            this.Stashes.Size = new System.Drawing.Size(168, 21);
             this.Stashes.TabIndex = 1;
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
             // 
@@ -234,7 +233,7 @@ namespace GitUI
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(1, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 15);
+            this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 0;
             this.label2.Text = "Stash:";
             // 
@@ -242,16 +241,16 @@ namespace GitUI
             // 
             this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Stashed.FormattingEnabled = true;
-            this.Stashed.ItemHeight = 15;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(251, 190);
+            this.Stashed.Size = new System.Drawing.Size(251, 186);
             this.Stashed.TabIndex = 0;
             this.Stashed.SelectedIndexChanged += new System.EventHandler(this.StashedSelectedIndexChanged);
             // 
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.IgnoreWhitespaceChanges = false;
             this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(0, 0);
@@ -260,6 +259,7 @@ namespace GitUI
             this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
             this.View.ShowEntireFile = false;
+            this.View.ShowLineNumbers = true;
             this.View.Size = new System.Drawing.Size(453, 485);
             this.View.TabIndex = 0;
             this.View.TreatAllFilesAsText = false;
@@ -296,16 +296,16 @@ namespace GitUI
             // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormStash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stash";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStashFormClosing);
             this.Load += new System.EventHandler(this.FormStashLoad);
             this.Shown += new System.EventHandler(this.FormStashShown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStashFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);

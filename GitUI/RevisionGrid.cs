@@ -21,6 +21,15 @@ namespace GitUI
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
+        private readonly TranslationString _secondsAgo = new TranslationString("seconds ago");
+        private readonly TranslationString _minutesAgo = new TranslationString("minutes ago");
+        private readonly TranslationString _hourAgo = new TranslationString("hour ago");
+        private readonly TranslationString _hoursAgo = new TranslationString("hours ago");
+        private readonly TranslationString _daysAgo = new TranslationString("days ago");
+        private readonly TranslationString _monthAgo = new TranslationString("month ago");
+        private readonly TranslationString _monthsAgo = new TranslationString("months ago");
+        private readonly TranslationString _yearsAgo = new TranslationString("years ago");
+
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
@@ -1229,7 +1238,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private static string TimeToString(DateTime time)
+        private string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
                 return "";
@@ -1240,27 +1249,27 @@ namespace GitUI
             var span = DateTime.Now - time;
 
             if (span.Minutes < 0)
-                return string.Format("{0} seconds ago", span.Seconds);
+                return string.Concat(span.Seconds, " ", _secondsAgo.Text);
 
             if (span.TotalHours < 1)
-                return string.Format("{0} minutes ago", span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+                return string.Concat(span.Minutes + Math.Round(span.Seconds / 60.0, 0), " ", _minutesAgo.Text);
 
             if (span.TotalHours < 2)
-                return "1 hour ago";
+                return string.Concat("1 ", _hourAgo.Text);
 
             if (span.TotalHours < 24)
-                return string.Format("{0} hours ago", (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+                return string.Concat((int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0), " ", _hoursAgo.Text);
 
             if (span.TotalDays < 30)
-                return string.Format("{0} days ago", (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+                return string.Concat((int)span.TotalDays + Math.Round(span.Hours / 24.0, 0), " ", _daysAgo.Text);
 
             if (span.TotalDays < 45)
-                return "1 month ago";
+                return string.Concat("1 ", _monthAgo.Text);
 
             if (span.TotalDays < 365)
-                return string.Format("{0} months ago", (int)Math.Round(span.TotalDays / 30, 0));
+                return string.Concat((int)Math.Round(span.TotalDays / 30, 0), " ", _monthsAgo.Text);
 
-            return string.Format("{0:#.#} years ago", Math.Round(span.TotalDays / 365));
+            return string.Concat(string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)), _yearsAgo.Text);
         }
 
         private void UpdateGraph(GitRevision rev)

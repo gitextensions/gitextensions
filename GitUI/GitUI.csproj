@@ -709,6 +709,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRunScriptSpecify.resx">
       <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
@@ -1018,6 +1019,9 @@
     <None Include="Resources\whitespace.bmp" />
     <None Include="Resources\whitespace.png" />
     <Content Include="Translation\Dutch.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Italiano.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Translation\Japanese.xml">
