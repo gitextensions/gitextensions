@@ -12,43 +12,50 @@ namespace GitCommands
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
-            GitCommandHelpers.SetEnvironmentVariable();
-
-            var ssh = GitCommandHelpers.UseSsh(arguments);
-
-            Kill();
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-
-            //process used to execute external commands
-            Process process = new Process() { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
-            process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
-            process.EnableRaisingEvents = true;
-
-            if (!StreamOutput)
+            try
             {
-                process.OutputDataReceived += ProcessOutputDataReceived;
-                process.ErrorDataReceived += ProcessErrorDataReceived;
+                GitCommandHelpers.SetEnvironmentVariable();
+
+                var ssh = GitCommandHelpers.UseSsh(arguments);
+
+                Kill();
+
+                Settings.GitLog.Log(cmd + " " + arguments);
+
+                //process used to execute external commands
+                Process process = new Process() { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
+                process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+                process.EnableRaisingEvents = true;
+
+                if (!StreamOutput)
+                {
+                    process.OutputDataReceived += ProcessOutputDataReceived;
+                    process.ErrorDataReceived += ProcessErrorDataReceived;
+                }
+                Output = new StringBuilder();
+                ErrorOutput = new StringBuilder();
+
+                process.Exited += ProcessExited;
+                process.Start();
+                myProcess = process;
+
+                if (!StreamOutput)
+                {
+                    process.BeginErrorReadLine();
+                    process.BeginOutputReadLine();
+                }
+
+                return process;
             }
-            Output = new StringBuilder();
-            ErrorOutput = new StringBuilder();
-
-            process.Exited += ProcessExited;
-            process.Start();
-            myProcess = process;
-
-            if (!StreamOutput)
+            catch (Exception ex)
             {
-                process.BeginErrorReadLine();
-                process.BeginOutputReadLine();
+                throw new ApplicationException("Error running command: '" + cmd + " " + arguments, ex);
             }
-
-            return process;
         }
 
         public void Kill()
