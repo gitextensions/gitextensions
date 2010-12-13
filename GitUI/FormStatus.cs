@@ -18,7 +18,8 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
         }
 

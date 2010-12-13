@@ -1031,6 +1031,9 @@
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Translation\Italiano.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\Japanese.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
