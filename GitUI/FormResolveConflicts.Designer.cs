@@ -52,13 +52,12 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label7 = new System.Windows.Forms.Label();
             this.localFileName = new System.Windows.Forms.Label();
-            this.chooseLocal = new System.Windows.Forms.Button();
-            this.chooseBase = new System.Windows.Forms.Button();
-            this.chooseRemote = new System.Windows.Forms.Button();
             this.baseFileName = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -115,8 +114,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.Rescan);
             this.splitContainer1.Panel2.Controls.Add(this.Reset);
-            this.splitContainer1.Size = new System.Drawing.Size(570, 396);
-            this.splitContainer1.SplitterDistance = 436;
+            this.splitContainer1.Size = new System.Drawing.Size(652, 396);
+            this.splitContainer1.SplitterDistance = 518;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -134,7 +133,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
-            this.splitContainer2.Size = new System.Drawing.Size(436, 396);
+            this.splitContainer2.Size = new System.Drawing.Size(518, 396);
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -159,9 +158,9 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(436, 367);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(518, 367);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // ConflictedFiles
@@ -182,7 +181,7 @@
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(430, 249);
+            this.ConflictedFiles.Size = new System.Drawing.Size(512, 233);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
             this.ConflictedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyDown);
@@ -207,9 +206,11 @@
             this.ContextSaveRemoteAs,
             this.toolStripMenuItem1,
             this.openToolStripMenuItem,
-            this.openWithToolStripMenuItem});
+            this.openWithToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.fileHistoryToolStripMenuItem});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
-            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(194, 314);
+            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(194, 342);
             this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
@@ -323,21 +324,29 @@
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(190, 6);
+            // 
+            // fileHistoryToolStripMenuItem
+            // 
+            this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
+            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.fileHistoryToolStripMenuItem.Text = "File history";
+            this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
+            // 
             // gitItemBindingSource
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.localFileName, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.chooseLocal, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.chooseBase, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.chooseRemote, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.baseFileName, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
@@ -350,7 +359,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(436, 75);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(518, 75);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label7
@@ -370,51 +379,6 @@
             this.localFileName.Size = new System.Drawing.Size(19, 13);
             this.localFileName.TabIndex = 3;
             this.localFileName.Text = "...";
-            // 
-            // chooseLocal
-            // 
-            this.chooseLocal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseLocal.Image = global::GitUI.Properties.Resources._46;
-            this.chooseLocal.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseLocal.Location = new System.Drawing.Point(316, 0);
-            this.chooseLocal.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.chooseLocal.Name = "chooseLocal";
-            this.chooseLocal.Size = new System.Drawing.Size(120, 23);
-            this.chooseLocal.TabIndex = 7;
-            this.chooseLocal.TabStop = false;
-            this.chooseLocal.Text = "Choose";
-            this.chooseLocal.UseVisualStyleBackColor = true;
-            this.chooseLocal.Click += new System.EventHandler(this.chooseLocal_Click);
-            // 
-            // chooseBase
-            // 
-            this.chooseBase.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseBase.Image = global::GitUI.Properties.Resources._46;
-            this.chooseBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseBase.Location = new System.Drawing.Point(316, 25);
-            this.chooseBase.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.chooseBase.Name = "chooseBase";
-            this.chooseBase.Size = new System.Drawing.Size(120, 23);
-            this.chooseBase.TabIndex = 8;
-            this.chooseBase.TabStop = false;
-            this.chooseBase.Text = "Choose";
-            this.chooseBase.UseVisualStyleBackColor = true;
-            this.chooseBase.Click += new System.EventHandler(this.chooseBase_Click);
-            // 
-            // chooseRemote
-            // 
-            this.chooseRemote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chooseRemote.Image = global::GitUI.Properties.Resources._46;
-            this.chooseRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chooseRemote.Location = new System.Drawing.Point(316, 50);
-            this.chooseRemote.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.chooseRemote.Name = "chooseRemote";
-            this.chooseRemote.Size = new System.Drawing.Size(120, 23);
-            this.chooseRemote.TabIndex = 9;
-            this.chooseRemote.TabStop = false;
-            this.chooseRemote.Text = "Choose";
-            this.chooseRemote.UseVisualStyleBackColor = true;
-            this.chooseRemote.Click += new System.EventHandler(this.chooseRemote_Click);
             // 
             // baseFileName
             // 
@@ -457,27 +421,28 @@
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             this.tableLayoutPanel3.Controls.Add(this.merge, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 255);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 239);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(436, 37);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(518, 53);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // merge
             // 
+            this.merge.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.merge.Image = global::GitUI.Properties.Resources._90;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.merge.Location = new System.Drawing.Point(316, 0);
+            this.merge.Location = new System.Drawing.Point(388, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.merge.Name = "merge";
-            this.merge.Size = new System.Drawing.Size(120, 23);
+            this.merge.Size = new System.Drawing.Size(130, 23);
             this.merge.TabIndex = 8;
             this.merge.TabStop = false;
             this.merge.Text = "Merge";
@@ -490,7 +455,7 @@
             this.conflictDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conflictDescription.Location = new System.Drawing.Point(19, 0);
             this.conflictDescription.Name = "conflictDescription";
-            this.conflictDescription.Size = new System.Drawing.Size(294, 37);
+            this.conflictDescription.Size = new System.Drawing.Size(366, 53);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
             this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
@@ -503,7 +468,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 37);
+            this.pictureBox1.Size = new System.Drawing.Size(16, 53);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
@@ -621,7 +586,7 @@
             this.AcceptButton = this.merge;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(570, 396);
+            this.ClientSize = new System.Drawing.Size(652, 396);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormResolveConflicts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -687,9 +652,6 @@
         private System.Windows.Forms.Label baseFileName;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label remoteFileName;
-        private System.Windows.Forms.Button chooseLocal;
-        private System.Windows.Forms.Button chooseBase;
-        private System.Windows.Forms.Button chooseRemote;
         private System.Windows.Forms.Label conflictDescription;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.DataGridView ConflictedFiles;
@@ -701,6 +663,8 @@
         private System.Windows.Forms.Button merge;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.BindingSource subItemsBindingSource;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
     }
 }
