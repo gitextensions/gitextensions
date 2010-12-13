@@ -3,11 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormGitAttributes : GitExtensionsForm
     {
+        TranslationString noWorkingDir = new TranslationString(".gitattributes is only supported when there is a working dir.");
+
         public string GitAttributesFile;
 
         public FormGitAttributes()
@@ -55,7 +58,7 @@ namespace GitUI
         {
             RestorePosition("edit-gitattributes");
             if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(".gitattributes is only supported when there is a working dir.");
+            MessageBox.Show(noWorkingDir.Text);
             Close();
         }
     }
