@@ -213,9 +213,9 @@ namespace GitUI
                     if (result == DialogResult.Cancel)
                     {
                         Initialize();
-                        if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-                        if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-                        if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+                        if (filenames[0] != null && File.Exists(Settings.WorkingDir + filenames[0])) File.Delete(Settings.WorkingDir + filenames[0]);
+                        if (filenames[1] != null && File.Exists(Settings.WorkingDir + filenames[1])) File.Delete(Settings.WorkingDir + filenames[1]);
+                        if (filenames[2] != null && File.Exists(Settings.WorkingDir + filenames[2])) File.Delete(Settings.WorkingDir + filenames[2]);
                         Cursor.Current = Cursors.Default;
                         return;
                     }
@@ -227,12 +227,16 @@ namespace GitUI
                 arguments = arguments.Replace("$MERGED", filename + "");
 
                 //get timestamp of file before merge. This is an extra check to verify if merge was successfull
-                DateTime lastWriteTimeBeforeMerge = File.GetLastWriteTime(filename);
+                DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+                if (File.Exists(Settings.WorkingDir + filename))
+                    lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
                 int exitCode;
                 GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
-                DateTime lastWriteTimeAfterMerge = File.GetLastWriteTime(filename);
+                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                if (File.Exists(Settings.WorkingDir + filename))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
                 //Check exitcode AND timestamp of the file. If exitcode is success and
                 //time timestamp is changed, we are pretty sure the merge was done.
@@ -254,9 +258,9 @@ namespace GitUI
             }
             Initialize();
 
-            if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-            if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-            if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+            if (filenames[0] != null && File.Exists(Settings.WorkingDir + filenames[0])) File.Delete(Settings.WorkingDir + filenames[0]);
+            if (filenames[1] != null && File.Exists(Settings.WorkingDir + filenames[1])) File.Delete(Settings.WorkingDir + filenames[1]);
+            if (filenames[2] != null && File.Exists(Settings.WorkingDir + filenames[2])) File.Delete(Settings.WorkingDir + filenames[2]);
             Cursor.Current = Cursors.Default;
         }
 
@@ -620,20 +624,6 @@ namespace GitUI
             process.ShowDialogOnError();
         }
 
-        private void chooseLocal_Click(object sender, EventArgs e)
-        {
-            ContextChooseLocal_Click(sender, e);
-        }
-
-        private void chooseBase_Click(object sender, EventArgs e)
-        {
-            ContextChooseBase_Click(sender, e);
-        }
-
-        private void chooseRemote_Click(object sender, EventArgs e)
-        {
-            ContextChooseRemote_Click(sender, e);
-        }
 
         private void conflictDescription_Click(object sender, EventArgs e)
         {
@@ -653,6 +643,11 @@ namespace GitUI
                 OpenMergetool_Click(sender, e);
                 e.Handled = true;
             }
+        }
+
+        private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormFileHistory(GetFileName()).ShowDialog();
         }
 
     }
