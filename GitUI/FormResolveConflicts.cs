@@ -213,9 +213,9 @@ namespace GitUI
                     if (result == DialogResult.Cancel)
                     {
                         Initialize();
-                        if (filenames[0] != null && File.Exists(Settings.WorkingDir + filenames[0])) File.Delete(Settings.WorkingDir + filenames[0]);
-                        if (filenames[1] != null && File.Exists(Settings.WorkingDir + filenames[1])) File.Delete(Settings.WorkingDir + filenames[1]);
-                        if (filenames[2] != null && File.Exists(Settings.WorkingDir + filenames[2])) File.Delete(Settings.WorkingDir + filenames[2]);
+                        if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
+                        if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
+                        if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
                         Cursor.Current = Cursors.Default;
                         return;
                     }
@@ -258,9 +258,9 @@ namespace GitUI
             }
             Initialize();
 
-            if (filenames[0] != null && File.Exists(Settings.WorkingDir + filenames[0])) File.Delete(Settings.WorkingDir + filenames[0]);
-            if (filenames[1] != null && File.Exists(Settings.WorkingDir + filenames[1])) File.Delete(Settings.WorkingDir + filenames[1]);
-            if (filenames[2] != null && File.Exists(Settings.WorkingDir + filenames[2])) File.Delete(Settings.WorkingDir + filenames[2]);
+            if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
+            if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
+            if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
             Cursor.Current = Cursors.Default;
         }
 
@@ -515,6 +515,15 @@ namespace GitUI
             return fileName;
         }
 
+        private static string GetDirectoryFromFileName(string fileName)
+        {
+            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparator));
+            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparatorWrong));
+            return fileName;
+        }
+
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -549,7 +558,8 @@ namespace GitUI
             fileName = GetShortFileName(fileName);
 
             SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.FileName = Settings.WorkingDir + fileName;
+            fileDialog.FileName = fileName;
+            fileDialog.InitialDirectory = Settings.WorkingDir + GetDirectoryFromFileName(GetFileName());
             fileDialog.AddExtension = true;
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter = "Current format (*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
