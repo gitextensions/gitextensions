@@ -14,7 +14,7 @@ namespace GitUI
 {
     public partial class FormOpenInCustomMergeTool : GitExtensionsForm
     {
-        TranslationString descriptionText = new TranslationString("Choose a custom mergetool and enter arguments to merge '{0}'.");
+        TranslationString descriptionText = new TranslationString("Choose a custom mergetool and enter arguments to merge:\n{0}");
 
 
         public FormOpenInCustomMergeTool()

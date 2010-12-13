@@ -34,9 +34,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.ConflictedFiles = new System.Windows.Forms.DataGridView();
-            this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConflictedFilesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenMergetool = new System.Windows.Forms.ToolStripMenuItem();
+            this.openInCustomMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMarkAsSolved = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.ContextChooseBase = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,15 +80,7 @@
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.guidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.commitGuidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.itemTypeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.fileNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.modeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.openInCustomMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -180,15 +172,7 @@
             this.ConflictedFiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.ConflictedFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ConflictedFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Namex,
-            this.guidDataGridViewTextBoxColumn1,
-            this.commitGuidDataGridViewTextBoxColumn1,
-            this.itemTypeDataGridViewTextBoxColumn1,
-            this.nameDataGridViewTextBoxColumn1,
-            this.authorDataGridViewTextBoxColumn1,
-            this.dateDataGridViewTextBoxColumn1,
-            this.fileNameDataGridViewTextBoxColumn1,
-            this.modeDataGridViewTextBoxColumn1});
+            this.Namex});
             this.ConflictedFiles.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -201,16 +185,9 @@
             this.ConflictedFiles.Size = new System.Drawing.Size(512, 233);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
+            this.ConflictedFiles.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ConflictedFiles_CellMouseDown);
             this.ConflictedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
-            // 
-            // Namex
-            // 
-            this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Namex.DataPropertyName = "FileName";
-            this.Namex.HeaderText = "Filename";
-            this.Namex.Name = "Namex";
-            this.Namex.ReadOnly = true;
             // 
             // ConflictedFilesContextMenu
             // 
@@ -236,7 +213,7 @@
             this.toolStripSeparator4,
             this.fileHistoryToolStripMenuItem});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
-            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(194, 342);
+            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(211, 364);
             this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
@@ -245,6 +222,13 @@
             this.OpenMergetool.Size = new System.Drawing.Size(210, 22);
             this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
+            // 
+            // openInCustomMergetoolToolStripMenuItem
+            // 
+            this.openInCustomMergetoolToolStripMenuItem.Name = "openInCustomMergetoolToolStripMenuItem";
+            this.openInCustomMergetoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.openInCustomMergetoolToolStripMenuItem.Text = "Open in custom mergetool";
+            this.openInCustomMergetoolToolStripMenuItem.Click += new System.EventHandler(this.openInCustomMergetoolToolStripMenuItem_Click);
             // 
             // ContextMarkAsSolved
             // 
@@ -353,12 +337,12 @@
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(207, 6);
             // 
             // fileHistoryToolStripMenuItem
             // 
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
-            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.fileHistoryToolStripMenuItem.Text = "File history";
             this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
             // 
@@ -599,68 +583,13 @@
             this.subItemsBindingSource.DataMember = "SubItems";
             this.subItemsBindingSource.DataSource = this.gitItemBindingSource;
             // 
-            // guidDataGridViewTextBoxColumn1
+            // Namex
             // 
-            this.guidDataGridViewTextBoxColumn1.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn1.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn1.Name = "guidDataGridViewTextBoxColumn1";
-            this.guidDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // commitGuidDataGridViewTextBoxColumn1
-            // 
-            this.commitGuidDataGridViewTextBoxColumn1.DataPropertyName = "CommitGuid";
-            this.commitGuidDataGridViewTextBoxColumn1.HeaderText = "CommitGuid";
-            this.commitGuidDataGridViewTextBoxColumn1.Name = "commitGuidDataGridViewTextBoxColumn1";
-            this.commitGuidDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // itemTypeDataGridViewTextBoxColumn1
-            // 
-            this.itemTypeDataGridViewTextBoxColumn1.DataPropertyName = "ItemType";
-            this.itemTypeDataGridViewTextBoxColumn1.HeaderText = "ItemType";
-            this.itemTypeDataGridViewTextBoxColumn1.Name = "itemTypeDataGridViewTextBoxColumn1";
-            this.itemTypeDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // authorDataGridViewTextBoxColumn1
-            // 
-            this.authorDataGridViewTextBoxColumn1.DataPropertyName = "Author";
-            this.authorDataGridViewTextBoxColumn1.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn1.Name = "authorDataGridViewTextBoxColumn1";
-            this.authorDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dateDataGridViewTextBoxColumn1
-            // 
-            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
-            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
-            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
-            this.dateDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // fileNameDataGridViewTextBoxColumn1
-            // 
-            this.fileNameDataGridViewTextBoxColumn1.DataPropertyName = "FileName";
-            this.fileNameDataGridViewTextBoxColumn1.HeaderText = "FileName";
-            this.fileNameDataGridViewTextBoxColumn1.Name = "fileNameDataGridViewTextBoxColumn1";
-            this.fileNameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // modeDataGridViewTextBoxColumn1
-            // 
-            this.modeDataGridViewTextBoxColumn1.DataPropertyName = "Mode";
-            this.modeDataGridViewTextBoxColumn1.HeaderText = "Mode";
-            this.modeDataGridViewTextBoxColumn1.Name = "modeDataGridViewTextBoxColumn1";
-            this.modeDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // openInCustomMergetoolToolStripMenuItem
-            // 
-            this.openInCustomMergetoolToolStripMenuItem.Name = "openInCustomMergetoolToolStripMenuItem";
-            this.openInCustomMergetoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.openInCustomMergetoolToolStripMenuItem.Text = "Open in custom mergetool";
-            this.openInCustomMergetoolToolStripMenuItem.Click += new System.EventHandler(this.openInCustomMergetoolToolStripMenuItem_Click);
+            this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Namex.DataPropertyName = "FileName";
+            this.Namex.HeaderText = "Filename";
+            this.Namex.Name = "Namex";
+            this.Namex.ReadOnly = true;
             // 
             // FormResolveConflicts
             // 
@@ -746,15 +675,7 @@
         private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
-        private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commitGuidDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn itemTypeDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn fileNameDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn modeDataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem openInCustomMergetoolToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
     }
 }
