@@ -887,5 +887,10 @@ namespace GitUI
         {
             CheckForStagedAndCommit(false, true);
         }
+
+        private void FormCommitActivated(object sender, EventArgs e)
+        {
+            ScanClick(null, null);
+        }
     }
 }
