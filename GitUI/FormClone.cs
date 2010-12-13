@@ -149,7 +149,7 @@ namespace GitUI
         }
 
 
-        private static void LoadSshKeyClick(object sender, EventArgs e)
+        private void LoadSshKeyClick(object sender, EventArgs e)
         {
             new FormLoadPuttySshKey().ShowDialog();
         }

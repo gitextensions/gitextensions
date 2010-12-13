@@ -214,7 +214,7 @@
             this.KeepDialogOpen.AutoSize = true;
             this.KeepDialogOpen.Location = new System.Drawing.Point(3, 5);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(118, 19);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(108, 17);
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseVisualStyleBackColor = true;
@@ -232,7 +232,7 @@
             // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 261);
             this.ControlBox = false;
@@ -267,7 +267,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ProgressBar ProgressBar;
@@ -275,9 +274,10 @@
         private System.Windows.Forms.PictureBox ErrorImage;
         private System.Windows.Forms.PictureBox SuccessImage;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.CheckBox KeepDialogOpen;
-        private System.Windows.Forms.Button Abort;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
+        protected System.Windows.Forms.Button Ok;
+        protected System.Windows.Forms.CheckBox KeepDialogOpen;
+        protected System.Windows.Forms.Button Abort;
     }
 }
