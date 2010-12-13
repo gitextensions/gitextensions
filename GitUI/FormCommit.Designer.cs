@@ -869,6 +869,7 @@ namespace GitUI
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
+            this.Activated += new System.EventHandler(this.FormCommitActivated);
             this.Load += new System.EventHandler(this.FormCommitLoad);
             this.Shown += new System.EventHandler(this.FormCommitShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
