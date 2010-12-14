@@ -160,7 +160,7 @@ namespace GitUI
                     if (MessageBox.Show(uskUseCustomMergeScript.Text, uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         int exitCode;
-                        GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + baseFileName + "\" \"" + remoteFileName + "\" \"" + localFileName + "\" \"" + baseFileName + "\"", out exitCode);
+                        GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
 
                         if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             stageFile(fileName);

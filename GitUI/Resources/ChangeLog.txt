@@ -6,7 +6,12 @@ Version 2.09
 	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
 	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
 	Fixed the following keys in quicksearch: #, _
+	Fixed error page in browse dialog when git is not configured properly
 	Improved merge conflict handling
+	Added resolved directories to FormFixHome to make it easier to choose the correct option.
+	Added support for merging office documents (doc, docx, odt, ods, sxw)
+	Added Italian translation
+	Various bugfixes
 	
 Version 2.08
 	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
