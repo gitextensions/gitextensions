@@ -12,6 +12,8 @@ namespace GitUI
 {
     public partial class FormResolveConflicts : GitExtensionsForm
     {
+        TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script for this file type." + Environment.NewLine + "Do you want to use this custom merge script?");
+        TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
         TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
@@ -40,7 +42,7 @@ namespace GitUI
         TranslationString deleteFileButtonText = new TranslationString("Delete file");
         TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
         TranslationString keepBaseButtonText = new TranslationString("Keep base file");
-        
+
 
 
         public FormResolveConflicts()
@@ -85,7 +87,7 @@ namespace GitUI
             if (ConflictedFiles.Rows.Count > oldSelectedRow)
             {
                 ConflictedFiles.Rows[oldSelectedRow].Selected = true;
-                
+
                 if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
                     oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
                     ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
@@ -143,6 +145,42 @@ namespace GitUI
             return ((GitItem)row.DataBoundItem).FileName;
         }
 
+        private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
+        {
+            try
+            {
+                int extensionsSeperator = fileName.LastIndexOf('.');
+                if (!(extensionsSeperator > 0) || extensionsSeperator+1 >= fileName.Length)
+                    return false;
+
+                string[] mergeScripts = Directory.GetFiles(Settings.GetInstallDir() + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator+1) + ".*");
+
+                if (mergeScripts.Length > 0)
+                {
+                    if (MessageBox.Show(uskUseCustomMergeScript.Text, uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        int exitCode;
+                        GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + baseFileName + "\" \"" + remoteFileName + "\" \"" + localFileName + "\" \"" + baseFileName + "\"", out exitCode);
+
+                        if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            stageFile(fileName);
+
+                        Initialize();
+                        if (baseFileName != null && File.Exists(baseFileName)) File.Delete(baseFileName);
+                        if (remoteFileName != null && File.Exists(remoteFileName)) File.Delete(remoteFileName);
+                        if (localFileName != null && File.Exists(localFileName)) File.Delete(localFileName);
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Merge using script failed.\n" + ex.ToString());
+            }
+            return false;
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -189,6 +227,12 @@ namespace GitUI
             if (CheckForLocalRevision(filename) &&
                 CheckForRemoteRevision(filename))
             {
+                if (TryMergeWithScript(filename, filenames[0], filenames[2], filenames[1]))
+                {
+                    Cursor.Current = Cursors.Default;
+                    return;
+                }
+
                 if (FileHelper.IsBinaryFile(filename))
                 {
                     if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -659,18 +703,5 @@ namespace GitUI
         {
             new FormFileHistory(GetFileName()).ShowDialog();
         }
-
-        private void openInCustomMergetoolToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormOpenInCustomMergeTool(GetFileName()).ShowDialog();
-
-            if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                stageFile(GetFileName());
-            }
-
-            Initialize();
-        }
-
     }
 }
