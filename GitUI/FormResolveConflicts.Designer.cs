@@ -36,7 +36,6 @@
             this.ConflictedFiles = new System.Windows.Forms.DataGridView();
             this.ConflictedFilesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenMergetool = new System.Windows.Forms.ToolStripMenuItem();
-            this.openInCustomMergetoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMarkAsSolved = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.ContextChooseBase = new System.Windows.Forms.ToolStripMenuItem();
@@ -193,7 +192,6 @@
             // 
             this.ConflictedFilesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenMergetool,
-            this.openInCustomMergetoolToolStripMenuItem,
             this.ContextMarkAsSolved,
             this.toolStripSeparator3,
             this.ContextChooseBase,
@@ -213,136 +211,129 @@
             this.toolStripSeparator4,
             this.fileHistoryToolStripMenuItem});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
-            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(211, 364);
+            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(194, 342);
             this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
             // 
             this.OpenMergetool.Name = "OpenMergetool";
-            this.OpenMergetool.Size = new System.Drawing.Size(210, 22);
+            this.OpenMergetool.Size = new System.Drawing.Size(193, 22);
             this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
-            // 
-            // openInCustomMergetoolToolStripMenuItem
-            // 
-            this.openInCustomMergetoolToolStripMenuItem.Name = "openInCustomMergetoolToolStripMenuItem";
-            this.openInCustomMergetoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.openInCustomMergetoolToolStripMenuItem.Text = "Open in custom mergetool";
-            this.openInCustomMergetoolToolStripMenuItem.Click += new System.EventHandler(this.openInCustomMergetoolToolStripMenuItem_Click);
             // 
             // ContextMarkAsSolved
             // 
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
-            this.ContextMarkAsSolved.Size = new System.Drawing.Size(210, 22);
+            this.ContextMarkAsSolved.Size = new System.Drawing.Size(193, 22);
             this.ContextMarkAsSolved.Text = "Mark conflict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(207, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(190, 6);
             // 
             // ContextChooseBase
             // 
             this.ContextChooseBase.Name = "ContextChooseBase";
-            this.ContextChooseBase.Size = new System.Drawing.Size(210, 22);
+            this.ContextChooseBase.Size = new System.Drawing.Size(193, 22);
             this.ContextChooseBase.Text = "Choose base";
             this.ContextChooseBase.Click += new System.EventHandler(this.ContextChooseBase_Click);
             // 
             // ContextChooseLocal
             // 
             this.ContextChooseLocal.Name = "ContextChooseLocal";
-            this.ContextChooseLocal.Size = new System.Drawing.Size(210, 22);
+            this.ContextChooseLocal.Size = new System.Drawing.Size(193, 22);
             this.ContextChooseLocal.Text = "Choose local";
             this.ContextChooseLocal.Click += new System.EventHandler(this.ContextChooseLocal_Click);
             // 
             // ContextChooseRemote
             // 
             this.ContextChooseRemote.Name = "ContextChooseRemote";
-            this.ContextChooseRemote.Size = new System.Drawing.Size(210, 22);
+            this.ContextChooseRemote.Size = new System.Drawing.Size(193, 22);
             this.ContextChooseRemote.Text = "Choose remote";
             this.ContextChooseRemote.Click += new System.EventHandler(this.ContextChooseRemote_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(207, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
             // 
             // ContextOpenBaseWith
             // 
             this.ContextOpenBaseWith.Name = "ContextOpenBaseWith";
-            this.ContextOpenBaseWith.Size = new System.Drawing.Size(210, 22);
+            this.ContextOpenBaseWith.Size = new System.Drawing.Size(193, 22);
             this.ContextOpenBaseWith.Text = "Open base with";
             this.ContextOpenBaseWith.Click += new System.EventHandler(this.ContextOpenBaseWith_Click);
             // 
             // ContextOpenLocalWith
             // 
             this.ContextOpenLocalWith.Name = "ContextOpenLocalWith";
-            this.ContextOpenLocalWith.Size = new System.Drawing.Size(210, 22);
+            this.ContextOpenLocalWith.Size = new System.Drawing.Size(193, 22);
             this.ContextOpenLocalWith.Text = "Open local with";
             this.ContextOpenLocalWith.Click += new System.EventHandler(this.ContextOpenLocalWith_Click);
             // 
             // ContextOpenRemoteWith
             // 
             this.ContextOpenRemoteWith.Name = "ContextOpenRemoteWith";
-            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(210, 22);
+            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(193, 22);
             this.ContextOpenRemoteWith.Text = "Open remote with";
             this.ContextOpenRemoteWith.Click += new System.EventHandler(this.ContextOpenRemoteWith_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(190, 6);
             // 
             // ContextSaveBaseAs
             // 
             this.ContextSaveBaseAs.Name = "ContextSaveBaseAs";
-            this.ContextSaveBaseAs.Size = new System.Drawing.Size(210, 22);
+            this.ContextSaveBaseAs.Size = new System.Drawing.Size(193, 22);
             this.ContextSaveBaseAs.Text = "Save base as";
             this.ContextSaveBaseAs.Click += new System.EventHandler(this.ContextSaveBaseAs_Click);
             // 
             // ContextSaveLocalAs
             // 
             this.ContextSaveLocalAs.Name = "ContextSaveLocalAs";
-            this.ContextSaveLocalAs.Size = new System.Drawing.Size(210, 22);
+            this.ContextSaveLocalAs.Size = new System.Drawing.Size(193, 22);
             this.ContextSaveLocalAs.Text = "Save local as";
             this.ContextSaveLocalAs.Click += new System.EventHandler(this.ContextSaveLocalAs_Click);
             // 
             // ContextSaveRemoteAs
             // 
             this.ContextSaveRemoteAs.Name = "ContextSaveRemoteAs";
-            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(210, 22);
+            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(193, 22);
             this.ContextSaveRemoteAs.Text = "Save remote as";
             this.ContextSaveRemoteAs.Click += new System.EventHandler(this.ContextSaveRemoteAs_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(207, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openWithToolStripMenuItem
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(207, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(190, 6);
             // 
             // fileHistoryToolStripMenuItem
             // 
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
-            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.fileHistoryToolStripMenuItem.Text = "File history";
             this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
             // 
@@ -675,7 +666,6 @@
         private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openInCustomMergetoolToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
     }
 }
