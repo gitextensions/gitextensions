@@ -453,6 +453,8 @@ namespace GitCommands
 
         public static bool HandleConflictsSaveSide(string fileName, string saveAs, string side)
         {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
             side = GetSide(side);
 
             fileName = FixPath(fileName);
@@ -494,6 +496,8 @@ namespace GitCommands
 
         public static string[] GetConflictedFiles(string filename)
         {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
             filename = FixPath(filename);
 
             string[] fileNames =

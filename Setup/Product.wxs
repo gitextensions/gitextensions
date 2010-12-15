@@ -42,6 +42,7 @@
           <Directory Id="DictionariesDir" Name="Dictionaries"/>
           <Directory Id="TranslationsDir" Name="Translation"/>          
           <Directory Id="IconsDir" Name="Icons"/>
+          <Directory Id="DiffScriptsDir" Name="Diff-Scripts"/>
         </Directory>
       </Directory>
       <Directory Id="PersonalFolder">
@@ -174,6 +175,27 @@
       </Component>
       <Component Id="CowHeadYellow.ico" Guid="*">
         <File Source="..\GitUI\Icons\cow-head-yellow.ico"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DiffScriptsDir">
+      <Component Id="mergedoc.js" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\merge-doc.js"/>
+      </Component>
+      <Component Id="mergedocx.js" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\merge-docx.js"/>
+      </Component>
+      <Component Id="mergeods.vbs" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\merge-ods.vbs"/>
+      </Component>
+      <Component Id="mergeodt.vbs" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\merge-odt.vbs"/>
+      </Component>
+      <Component Id="mergesxw.vbs" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\merge-sxw.vbs"/>
+      </Component>
+      <Component Id="License.txt" Guid="*">
+        <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt"/>
       </Component>
     </DirectoryRef>
     
@@ -378,6 +400,15 @@
         <ComponentRef Id="CowHeadPurple.ico"/>
         <ComponentRef Id="CowHeadRed.ico"/>
         <ComponentRef Id="CowHeadYellow.ico"/>
+      </Feature>
+
+      <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
+        <ComponentRef Id="mergedoc.js"/>
+        <ComponentRef Id="mergedocx.js"/>
+        <ComponentRef Id="mergeods.vbs"/>
+        <ComponentRef Id="mergeodt.vbs"/>
+        <ComponentRef Id="mergesxw.vbs"/>
+        <ComponentRef Id="License.txt"/>
       </Feature>
       
       <Feature Id="Dictionaries" Title="Spelling dictionaries" Level="1">
