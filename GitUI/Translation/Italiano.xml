@@ -1114,6 +1114,18 @@ caso di problemi.</Value>
         <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
           <Value>Dimensioni immagine</Value>
         </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Servizio immagine non disponibile</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>Identicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>Monster ID</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>Wavatar</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
@@ -1853,15 +1865,15 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="label52" Property="Text">
           <Value>Visualizza il contatore delle modifiche nascoste nella finestra 'sfoglia'</Value>
         </TranslationItem>
+        <TranslationItem Name="label53" Property="Text">
+          <Value>Servizio immagine non disponibile</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Risolvi conflitti di merge</Value>
-        </TranslationItem>
-        <TranslationItem Name="Deleted" Property="Text">
-          <Value>Cancellato</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Annulla</Value>
@@ -2640,14 +2652,8 @@ Sei sicuro di volerlo aprire in {0}?</Value>
         <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
           <Value>E' stato risolto il conflitto?</Value>
         </TranslationItem>
-        <TranslationItem Name="useModifiedOrDeletedFile" Property="Text">
-          <Value>Uso il file modificato o quello cancellato?</Value>
-        </TranslationItem>
         <TranslationItem Name="modifiedButton" Property="Text">
           <Value>Modificato</Value>
-        </TranslationItem>
-        <TranslationItem Name="useCreatedOrDeletedFile" Property="Text">
-          <Value>Uso il file creato o quello cancellato?</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Value>Non c'è uno strumento di merge configurato. Per favore andare nelle impostazioni e configurarne uno!</Value>
@@ -2655,20 +2661,68 @@ Sei sicuro di volerlo aprire in {0}?</Value>
         <TranslationItem Name="stageFilename" Property="Text">
           <Value>Inserisci nello stage {0}</Value>
         </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text">
+          <Value>Non c'è una revisione base per {0}. Utilizzare merge 2-way?</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>Nostro</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>Loro</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
+          <Value>Il file è stato modificato sia in locale ({0}) e sia in remoto ({1}). Effettuare il merge delle modifiche.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
+          <Value>Un file con lo stesso nome è stato creato sia in locale ({0}) e sia in remoto ({1}). Scegliere il file da mantenere oppure effettuare il merge delle modifiche.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+          <Value>Il file {0} non ha una versione base.
+Un file con lo stesso nome è stato creato sia in locale ({1}) e sia in remoto ({2}), generando un conflitto.
+
+Scegliere se mantenere il file, effettuarne il merge o cancellarlo.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
+          <Value>Il file è stato cancellato localmente ({0}) e modificato in remoto ({1}). Scegliere se cancellare il file o tenere la versione modificata.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+          <Value>Il file {0} non ha una versione locale.
+Il file è stato cancellato localmente ({1}) ma modificato in remoto ({2}).
+
+Scegliere se cancellare il file o tenere quello modificato.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
+          <Value>Il file è stato modificato in locale ({0}) e cancellato in remoto ({1}). Scegliere se cancellare il file o tenere quello modificato.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+          <Value>Il file {0} non ha una versione remota.
+Il file è stato modificato localmente ({1}) ma cancellato in remoto ({2}).
+
+Scegliere se cancellare il file o tenere quello modificato.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>nessuna base</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>cancellato</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Scegli il file locale</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Scegli il file remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Cancella il file</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Tieni il file modificato</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Tieni il file base</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Conflitti di merge non risolti</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Avvia strumento di merge</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
-          <Value>Ricontrolla conflitti di merge</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Apri nello strumento di merge</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>Annulla</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
           <Value>Scegli versione base</Value>
@@ -2708,6 +2762,51 @@ Sei sicuro di volerlo aprire in {0}?</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Apri</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Locale</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Base</Value>
+        </TranslationItem>
+        <TranslationItem Name="localFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="baseFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocal" Property="Text">
+          <Value>Scegli</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseBase" Property="Text">
+          <Value>Scegli</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemote" Property="Text">
+          <Value>Scegli</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Seleziona file</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Apri nello strumento di merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Ricontrolla conflitti di merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Annulla</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Avvia strumento di merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Merge</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
