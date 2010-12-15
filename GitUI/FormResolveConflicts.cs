@@ -12,6 +12,8 @@ namespace GitUI
 {
     public partial class FormResolveConflicts : GitExtensionsForm
     {
+        TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script for this file type." + Environment.NewLine + "Do you want to use this custom merge script?");
+        TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
         TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
@@ -40,7 +42,7 @@ namespace GitUI
         TranslationString deleteFileButtonText = new TranslationString("Delete file");
         TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
         TranslationString keepBaseButtonText = new TranslationString("Keep base file");
-        
+
 
 
         public FormResolveConflicts()
@@ -85,7 +87,7 @@ namespace GitUI
             if (ConflictedFiles.Rows.Count > oldSelectedRow)
             {
                 ConflictedFiles.Rows[oldSelectedRow].Selected = true;
-                
+
                 if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
                     oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
                     ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
@@ -143,6 +145,42 @@ namespace GitUI
             return ((GitItem)row.DataBoundItem).FileName;
         }
 
+        private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
+        {
+            try
+            {
+                int extensionsSeperator = fileName.LastIndexOf('.');
+                if (!(extensionsSeperator > 0) || extensionsSeperator+1 >= fileName.Length)
+                    return false;
+
+                string[] mergeScripts = Directory.GetFiles(Settings.GetInstallDir() + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator+1) + ".*");
+
+                if (mergeScripts.Length > 0)
+                {
+                    if (MessageBox.Show(uskUseCustomMergeScript.Text, uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        int exitCode;
+                        GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
+
+                        if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            stageFile(fileName);
+
+                        Initialize();
+                        if (baseFileName != null && File.Exists(baseFileName)) File.Delete(baseFileName);
+                        if (remoteFileName != null && File.Exists(remoteFileName)) File.Delete(remoteFileName);
+                        if (localFileName != null && File.Exists(localFileName)) File.Delete(localFileName);
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Merge using script failed.\n" + ex.ToString());
+            }
+            return false;
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -189,6 +227,12 @@ namespace GitUI
             if (CheckForLocalRevision(filename) &&
                 CheckForRemoteRevision(filename))
             {
+                if (TryMergeWithScript(filename, filenames[0], filenames[2], filenames[1]))
+                {
+                    Cursor.Current = Cursors.Default;
+                    return;
+                }
+
                 if (FileHelper.IsBinaryFile(filename))
                 {
                     if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -227,12 +271,16 @@ namespace GitUI
                 arguments = arguments.Replace("$MERGED", filename + "");
 
                 //get timestamp of file before merge. This is an extra check to verify if merge was successfull
-                DateTime lastWriteTimeBeforeMerge = File.GetLastWriteTime(filename);
+                DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+                if (File.Exists(Settings.WorkingDir + filename))
+                    lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
                 int exitCode;
                 GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
-                DateTime lastWriteTimeAfterMerge = File.GetLastWriteTime(filename);
+                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                if (File.Exists(Settings.WorkingDir + filename))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
                 //Check exitcode AND timestamp of the file. If exitcode is success and
                 //time timestamp is changed, we are pretty sure the merge was done.
@@ -511,6 +559,15 @@ namespace GitUI
             return fileName;
         }
 
+        private static string GetDirectoryFromFileName(string fileName)
+        {
+            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparator));
+            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparatorWrong));
+            return fileName;
+        }
+
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -545,7 +602,8 @@ namespace GitUI
             fileName = GetShortFileName(fileName);
 
             SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.FileName = Settings.WorkingDir + fileName;
+            fileDialog.FileName = fileName;
+            fileDialog.InitialDirectory = Settings.WorkingDir + GetDirectoryFromFileName(GetFileName());
             fileDialog.AddExtension = true;
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter = "Current format (*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
@@ -620,20 +678,6 @@ namespace GitUI
             process.ShowDialogOnError();
         }
 
-        private void chooseLocal_Click(object sender, EventArgs e)
-        {
-            ContextChooseLocal_Click(sender, e);
-        }
-
-        private void chooseBase_Click(object sender, EventArgs e)
-        {
-            ContextChooseBase_Click(sender, e);
-        }
-
-        private void chooseRemote_Click(object sender, EventArgs e)
-        {
-            ContextChooseRemote_Click(sender, e);
-        }
 
         private void conflictDescription_Click(object sender, EventArgs e)
         {
@@ -655,5 +699,9 @@ namespace GitUI
             }
         }
 
+        private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormFileHistory(GetFileName()).ShowDialog();
+        }
     }
 }
