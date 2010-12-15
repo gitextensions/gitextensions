@@ -375,6 +375,11 @@ namespace GitUI
                         revListArgs += "--author=\"" + filter + "\" ";
                     else
                         inMemAuthorFilter = filter;
+                if (parameters[3])
+                    if (cmdLineSafe)
+                        revListArgs += "\"-S" + filter + "\" ";
+                    else
+                        throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
             }
         }
 
