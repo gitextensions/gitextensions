@@ -4,14 +4,17 @@ Changelog
 Version 2.09
 	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
 	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
+	Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
 	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
-	Fixed the following keys in quicksearch: #, _
+	Fixed the following keys in quicksearch: '#', '_'
 	Fixed error page in browse dialog when git is not configured properly
 	Improved merge conflict handling
-	Added resolved directories to FormFixHome to make it easier to choose the correct option.
+	Added resolved directories to FormFixHome to make it easier to choose the correct option
 	Added support for merging office documents (doc, docx, odt, ods, sxw)
 	Added Italian translation
-	Various bugfixes
+	Added "Diff contains" filter to search for commits containing text
+	Added combobox to branch in browse dialog to allow quick switching between local branches
+	Various bugfixes and minor changes
 	
 Version 2.08
 	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
