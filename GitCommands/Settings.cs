@@ -462,7 +462,7 @@ namespace GitCommands
         {
             get
             {
-                if (_dictionary == null)
+                if (string.IsNullOrEmpty(_dictionary))
                     SafeSetString("dictionary", "en-US", x => _dictionary = x);
                 return _dictionary;
             }
