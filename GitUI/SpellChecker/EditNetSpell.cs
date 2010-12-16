@@ -7,11 +7,21 @@ using System.Windows.Forms;
 using GitCommands;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
+using System.Globalization;
+using ResourceManager.Translation;
 
 namespace GitUI.SpellChecker
 {
     public partial class EditNetSpell : GitExtensionsControl
     {
+        TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
+        TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
+        TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
+        TranslationString ignoreWordText = new TranslationString("Ignore word");
+        TranslationString removeWordText = new TranslationString("Remove word");
+        TranslationString dictionaryText = new TranslationString("Dictionary");
+        TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
+       
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private WordDictionary _wordDictionary;
@@ -206,30 +216,48 @@ namespace GitUI.SpellChecker
                 //generate suggestions
                 _spelling.Suggest();
 
-                var addToDictionary = SpellCheckContextMenu.Items.Add("Add to dictionary");
+                var addToDictionary = SpellCheckContextMenu.Items.Add(addToDictionaryText.Text);
                 addToDictionary.Click += AddToDictionaryClick;
-                var ignoreWord = SpellCheckContextMenu.Items.Add("Ignore word");
+                var ignoreWord = SpellCheckContextMenu.Items.Add(ignoreWordText.Text);
                 ignoreWord.Click += IgnoreWordClick;
-                var removeWord = SpellCheckContextMenu.Items.Add("Remove word");
+                var removeWord = SpellCheckContextMenu.Items.Add(removeWordText.Text);
                 removeWord.Click += RemoveWordClick;
 
                 SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
-                foreach (var suggestion in (string[]) _spelling.Suggestions.ToArray(typeof (string)))
+                bool suggestionsFound = false;
+                foreach (var suggestion in (string[])_spelling.Suggestions.ToArray(typeof(string)))
                 {
                     var suggestionToolStripItem = SpellCheckContextMenu.Items.Add(suggestion);
                     suggestionToolStripItem.Click += SuggestionToolStripItemClick;
+
+                    suggestionsFound = true;
                 }
+
+                if (suggestionsFound)
+                    SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex);
             }
 
+            if (!string.IsNullOrEmpty(_spelling.CurrentWord))
+            {
+                var translate = new ToolStripMenuItem(string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary)));
+                translate.Click += new EventHandler(translate_Click);
+                SpellCheckContextMenu.Items.Add(translate);
+            }
+
+            var translateText = new ToolStripMenuItem(string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary)));
+            translateText.Click += new EventHandler(translateText_Click);
+            SpellCheckContextMenu.Items.Add(translateText);
+
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+
             try
             {
-                SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-                var dictionaryToolStripMenuItem = new ToolStripMenuItem("Dictionary");
+                var dictionaryToolStripMenuItem = new ToolStripMenuItem(dictionaryText.Text);
                 SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
 
                 var toolStripDropDown = new ContextMenuStrip();
@@ -265,13 +293,52 @@ namespace GitUI.SpellChecker
             {
                 Trace.WriteLine(ex);
             }
+
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+
             var mi =
-                new ToolStripMenuItem("Mark ill formed lines")
+                new ToolStripMenuItem(markIllFormedLinesText.Text)
                     {
                         Checked = Settings.MarkIllFormedLinesInCommitMsg
                     };
             mi.Click += MarkIllFormedLinesInCommitMsgClick;
             SpellCheckContextMenu.Items.Add(mi);
+        }
+
+        private string CultureCodeToString(string cultureCode)
+        {
+            try
+            {
+                return new CultureInfo(new CultureInfo(cultureCode).TwoLetterISOLanguageName).NativeName;
+            }
+            catch
+            {
+                return cultureCode;
+            }
+        }
+
+        void translateText_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        void translate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void RemoveWordClick(object sender, EventArgs e)
@@ -300,13 +367,13 @@ namespace GitUI.SpellChecker
 
         private void SuggestionToolStripItemClick(object sender, EventArgs e)
         {
-            _spelling.ReplaceWord(((ToolStripItem) sender).Text);
+            _spelling.ReplaceWord(((ToolStripItem)sender).Text);
             CheckSpelling();
         }
 
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.Dictionary = ((ToolStripItem) sender).Text;
+            Settings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();
             CheckSpelling();
         }
