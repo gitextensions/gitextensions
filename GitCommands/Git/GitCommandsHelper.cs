@@ -523,7 +523,7 @@ namespace GitCommands
                 if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
                     continue;
 
-                var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + filename);
+                var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(Settings.WorkingDir, tempFile);
 
