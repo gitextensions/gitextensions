@@ -4,14 +4,11 @@
 // Copyright (C) 2004-2008 the TortoiseSVN team
 // This file is distributed under the same license as TortoiseSVN
 //
-// Last commit by:
-// $Author: tortoisesvn $
-// $Date: 2008-12-05 17:38:43 +0100 (Fr, 05 Dez 2008) $
-// $Rev: 14781 $
-//
 // Authors:
 // Dan Sheridan, 2008
 // Davide Orlandi and Hans-Emil Skogh, 2005
+//
+// Modified by Henk Westhuis for Git Extensions (2010)
 //
 
 var objArgs,num,sTheirDoc,sMyDoc,sBaseDoc,sMergedDoc,objScript,word,baseDoc,WSHShell;
@@ -94,7 +91,7 @@ if (parseInt(word.Version) >= 10)
 
 // Show usage hint message
 WSHShell = WScript.CreateObject("WScript.Shell");
-if(WSHShell.Popup("You have to accept or reject the changes before\nsaving the document to prevent future problems.\n\nWould you like to see a help page on how to do this?", 0, "TSVN Word Merge", 4 + 64) == 6)
+if(WSHShell.Popup("You have to accept or reject the changes before\nsaving the document to prevent future problems.\n\nWould you like to see a help page on how to do this?", 0, "Word Merge", 4 + 64) == 6)
 {
     WSHShell.Run("http://office.microsoft.com/en-us/assistance/HP030823691033.aspx");
 }
