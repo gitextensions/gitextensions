@@ -14,6 +14,7 @@ namespace GitUI
     {
         TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
+        TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
         TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
@@ -148,6 +149,9 @@ namespace GitUI
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
+            if (!Settings.RunningOnWindows())
+                return false;
+
             try
             {
                 int extensionsSeperator = fileName.LastIndexOf('.');
@@ -160,11 +164,27 @@ namespace GitUI
                 {
                     if (MessageBox.Show(string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator.ToString() + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
+                        //get timestamp of file before merge. This is an extra check to verify if merge was successfull
+                        DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+                        if (File.Exists(Settings.WorkingDir + fileName))
+                            lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
                         int exitCode;
                         GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
 
-                        if (MessageBox.Show(string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.GetInstallDir() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            stageFile(fileName);
+                        if (MessageBox.Show(string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+
+                            DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                            if (File.Exists(Settings.WorkingDir + fileName))
+                                lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
+                            //The file is not modified, do not stage file and present warning
+                            if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
+                                MessageBox.Show(fileUnchangedAfterMerge.Text);
+                            else
+                                stageFile(fileName);
+                        }
 
                         Initialize();
                         if (baseFileName != null && File.Exists(baseFileName)) File.Delete(baseFileName);
