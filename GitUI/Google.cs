@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Web;
+using GitCommands;
 
 namespace GitUI
 {
@@ -22,16 +23,15 @@ namespace GitUI
             string translateFrom,
             string translateTo)
         {
-
-            //Remove some unssuported characters
-            input = input.Replace("&&", "and");
-            input = input.Replace("&", "");
-
-            string url = String.Format("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q={0}&langpair={1}|{2}&key=ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg", input, translateFrom, translateTo);
+            string url = "http://ajax.googleapis.com/ajax/services/language/translate";
             WebClient webClient = new WebClient();
             webClient.Proxy = WebRequest.DefaultWebProxy;
             webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
             webClient.Encoding = System.Text.Encoding.UTF8;
+            webClient.QueryString.Add("v", "1.0");
+            webClient.QueryString.Add("q", HttpUtility.UrlEncode(input));
+            webClient.QueryString.Add("langpair", string.Format("{0}|{1}", translateFrom, translateTo));
+            webClient.QueryString.Add("key", "ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg");
             string result = webClient.DownloadString(url);
 
             string startString = "{\"translatedText\":\"";
