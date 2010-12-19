@@ -654,6 +654,15 @@ _ReSharper*/
         <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
           <Value>Bestands geschiedenis</Value>
         </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Wissel vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
+          <Value>Wijziging bevat (traag)</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -1128,6 +1137,15 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
           <Value>Geen afbeelding</Value>
         </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>Identicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>Monster Id</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>Wavatar</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
@@ -1401,6 +1419,9 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
           <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Draai script</Value>
         </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
@@ -1858,8 +1879,59 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label52" Property="Text">
           <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
         </TranslationItem>
+        <TranslationItem Name="scriptsTab" Property="Text">
+          <Value>Scripts</Value>
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text">
+          <Value>Voeg toe aan revisie grid context menu</Value>
+        </TranslationItem>
         <TranslationItem Name="label53" Property="Text">
           <Value>Geen afbeelding</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text">
+          <Value>Argumenten</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Commando</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="cancelScriptButton" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveScriptButton" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Verwijderen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editScriptButton" Property="Text">
+          <Value>Wijzigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Toevoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nr.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Commando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Argumenten</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader5" Property="Text">
+          <Value>Context menu</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Toets F1 voor beschikbare opties</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2184,6 +2256,27 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
       <translationItems>
         <TranslationItem Name="EmptyLabel" Property="Text">
           <Value>Bericht invoeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Vertaal volledige tekst naar {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Vertaal '{0}' naar {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Toevoegen aan woordenboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Negeer woord</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Verwijder woord</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Woordenboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Markeer slecht geformateerde regels</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2621,6 +2714,14 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Samenvoeg conflicten oplossen</Value>
         </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text">
+          <Value>Er is een aangepaste samenvoeg script ({0}) voor dit type bestand. 
+
+Wilt u dit script gebruiken om samen te voegen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Aangepast samenvoeg script</Value>
+        </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Alle samenvoeg conflicten zijn opgelost, u kunt nu committen.
 Wilt u nu committen?</Value>
@@ -2637,6 +2738,12 @@ Wilt u nu committen?</Value>
         <TranslationItem Name="fileIsBinary" Property="Text">
           <Value>Het geselecteerde bestand is een binair bestand.
 Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
+          <Value>Het samenvoeg conflict moet worden opgelost en het resultaat moet worden opgeslagen als: 
+{0} 
+
+Is het samenvoeg conflict opgelost?</Value>
         </TranslationItem>
         <TranslationItem Name="askMergeConflictSolved" Property="Text">
           <Value>Is het samenvoeg conflict opgelost?</Value>
@@ -2775,15 +2882,6 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
         <TranslationItem Name="remoteFileName" Property="Text">
           <Value>...</Value>
         </TranslationItem>
-        <TranslationItem Name="chooseLocal" Property="Text">
-          <Value>Kies</Value>
-        </TranslationItem>
-        <TranslationItem Name="chooseBase" Property="Text">
-          <Value>Kies</Value>
-        </TranslationItem>
-        <TranslationItem Name="chooseRemote" Property="Text">
-          <Value>Kies</Value>
-        </TranslationItem>
         <TranslationItem Name="conflictDescription" Property="Text">
           <Value>Selecteer bestand</Value>
         </TranslationItem>
@@ -2801,6 +2899,9 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
         </TranslationItem>
         <TranslationItem Name="merge" Property="Text">
           <Value>Samenvoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Bestands geschiedenis</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
