@@ -13,6 +13,7 @@ namespace GitUI
 {
     public partial class FormCommit : GitExtensionsForm
     {
+        #region Translation strings
         private readonly TranslationString _alsoDeleteUntrackedFiles =
             new TranslationString("Do you also want to delete the new files that are in the selection?" +
                                   Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.");
@@ -82,6 +83,8 @@ namespace GitUI
         private readonly TranslationString _stageChunkOfFileCaption = new TranslationString("Stage chunk of file");
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
+        private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+        #endregion
 
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
@@ -109,8 +112,14 @@ namespace GitUI
 
             Unstaged.SelectedIndexChanged += UntrackedSelectionChanged;
             Staged.SelectedIndexChanged += TrackedSelectionChanged;
-        }
 
+            Unstaged.KeyDown += Unstaged_KeyDown;
+            Unstaged.DoubleClick += Unstaged_DoubleClick;
+            Staged.KeyDown += Staged_KeyDown;
+            Staged.DoubleClick += Staged_DoubleClick;
+
+            Unstaged.Focus();
+        }
 
         private void Initialize()
         {
@@ -886,6 +895,60 @@ namespace GitUI
         private void CommitAndPush_Click(object sender, EventArgs e)
         {
             CheckForStagedAndCommit(false, true);
+        }
+
+        private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItems.Count == 1)
+            {
+                GitUICommands.Instance.StartFileHistoryDialog(Unstaged.SelectedItem.Name, null);
+            }
+            else
+                MessageBox.Show(this, _selectOnlyOneFile.Text, "Error");
+        }
+
+        void Unstaged_DoubleClick(object sender, EventArgs e)
+        {
+            StageClick(sender, e);
+        }
+
+        void Staged_DoubleClick(object sender, EventArgs e)
+        {
+            UnstageFilesClick(sender, e);
+        }
+
+        void Unstaged_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.None)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.S:
+                        StageClick(sender, e);
+                        Unstaged.Focus();
+                        e.Handled = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        void Staged_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.None)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.U:
+                        UnstageFilesClick(sender, e);
+                        Staged.Focus();
+                        e.Handled = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
