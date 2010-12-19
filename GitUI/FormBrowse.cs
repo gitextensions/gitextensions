@@ -40,6 +40,11 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
+
+            GitTree.ImageList = new ImageList();
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._21); //File
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._40); //Folder
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._39); //Submodule
         }
 
         private void ShowDashboard()
@@ -339,11 +344,6 @@ namespace GitUI
             try
             {
                 GitTree.SuspendLayout();
-
-                GitTree.ImageList = new ImageList();
-                GitTree.ImageList.Images.Add(GitUI.Properties.Resources._21); //File
-                GitTree.ImageList.Images.Add(GitUI.Properties.Resources._40); //Folder
-                GitTree.ImageList.Images.Add(GitUI.Properties.Resources._39); //Submodule
 
                 // Save state
                 var lastSelectedNodes = new Stack<TreeNode>();
