@@ -595,6 +595,7 @@ namespace GitUI
                 bValid = CheckGlobalUserSettingsValid() && bValid;
                 bValid = CheckMergeTool() && bValid;
                 bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckTranslationConfigSettings() && bValid;
 
                 if (Settings.RunningOnWindows())
                 {
@@ -1629,6 +1630,20 @@ namespace GitUI
             return retValue;
         }
 
+        private bool CheckTranslationConfigSettings()
+        {
+            translationConfig.Visible = true;
+            if (string.IsNullOrEmpty(Settings.Translation))
+            {
+                translationConfig.BackColor = Color.LightSalmon;
+                translationConfig.Text = "There is no language configured for Git Extensions.";
+                return false;
+            }
+            translationConfig.BackColor = Color.LightGreen;
+            translationConfig.Text = "The configured language is " + Settings.Translation;
+            return true;
+        }
+
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
@@ -2074,6 +2089,14 @@ namespace GitUI
         private void argumentsTextBox_Leave(object sender, EventArgs e)
         {
             helpLabel.Visible = false;
+        }
+
+        private void translationConfig_Click(object sender, EventArgs e)
+        {
+            new FormChooseTranslation().ShowDialog();
+            Translate();
+            Language.Text = Settings.Translation;
+            Rescan_Click(null, null);
         }
 
 
