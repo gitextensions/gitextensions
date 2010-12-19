@@ -26,8 +26,8 @@ namespace GitUI
 
             int x = 0;
             int y = 0;
-            int imageHeight = 43;
-            int imageWidth = 94;
+            int imageHeight = 50;
+            int imageWidth = 100;
             List<string> translations = new List<string>(Translator.GetAllTranslations());
             translations.Add("English");
             translations.Sort();
