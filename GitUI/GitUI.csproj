@@ -245,6 +245,7 @@
     <Compile Include="FormCherryPickCommitSmall.Designer.cs">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitFileTreeComparer.cs" />
     <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
@@ -1027,6 +1028,7 @@
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
     <None Include="Icons\arrow_refresh.png" />
+    <None Include="Icons\39.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
