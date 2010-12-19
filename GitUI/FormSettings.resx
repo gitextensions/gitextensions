@@ -136,6 +136,7 @@ When OpenSSH is used, command line dialogs are shown!
 {sBranch}
 {sLocalBranch}
 {sRemoteBranch}
+{sRemote}
 {sHash}
 {sMessage}
 {sAuthor}
