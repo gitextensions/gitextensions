@@ -150,8 +150,7 @@ namespace GitUI
 
             var validWorkingDir = Settings.ValidWorkingDir();
 
-
-            _NO_TRANSLATE_CurrentBranch.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
+            branchSelect.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
 
             if (validWorkingDir)
                 HideDashboard();
@@ -161,7 +160,7 @@ namespace GitUI
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
-            _NO_TRANSLATE_CurrentBranch.Enabled = validWorkingDir;
+            branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
@@ -920,12 +919,23 @@ namespace GitUI
             filterParams[0] = commitToolStripMenuItem1.Checked;
             filterParams[1] = committerToolStripMenuItem.Checked;
             filterParams[2] = authorToolStripMenuItem.Checked;
-            RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
-                                           filterParams,
-                                           out revListArgs,
-                                           out inMemMessageFilter,
-                                           out inMemCommitterFilter,
-                                           out inMemAuthorFilter);
+            filterParams[3] = diffContainsToolStripMenuItem.Checked;
+            try
+            {
+                RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
+                                               filterParams,
+                                               out revListArgs,
+                                               out inMemMessageFilter,
+                                               out inMemCommitterFilter,
+                                               out inMemAuthorFilter);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Filter error");
+                toolStripTextBoxFilter.Text = "";
+                return;
+            }
+
             if ((RevisionGrid.Filter == revListArgs) &&
                 (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
@@ -1589,5 +1599,36 @@ namespace GitUI
                 GitUICommands.Instance.StartFileHistoryDialog(item.Name);
         }
 
+        private void CurrentBranchDropDownOpening(object sender, EventArgs e)
+        {
+            branchSelect.DropDownItems.Clear();
+            foreach (var branch in GitCommandHelpers.GetHeads(false))
+            {
+                var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
+                toolStripItem.Click += BranchSelectToolStripItem_Click;
+            }
+        }
+
+        void BranchSelectToolStripItem_Click(object sender, EventArgs e)
+        {
+            var toolStripItem = (ToolStripItem)sender;
+
+            var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
+            var form = new FormProcess(command);
+            form.ShowDialog(this);
+            Initialize();
+        }
+
+        private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (diffContainsToolStripMenuItem.Checked)
+            {
+                commitToolStripMenuItem1.Checked = false;
+                committerToolStripMenuItem.Checked = false;
+                authorToolStripMenuItem.Checked = false;
+            }
+            else
+                commitToolStripMenuItem1.Checked = true;
+        }
     }
 }

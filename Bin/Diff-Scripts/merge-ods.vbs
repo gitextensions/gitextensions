@@ -4,15 +4,13 @@
 ' Copyright (C) 2004-2009 the TortoiseSVN team
 ' This file is distributed under the same license as TortoiseSVN
 '
-' Last commit by:
-' $Author: tortoisesvn $
-' $Date: 2009-04-01 20:54:32 +0200 (Mi, 01 Apr 2009) $
-' $Rev: 16007 $
-'
 ' Authors:
 ' Jonathan Ashley, 2007
 ' Stefan Küng, 2006, 2009
 '
+' Modified by Henk Westhuis for Git Extensions (2010)
+'
+
 dim objArgs,num,sBaseDoc,sMergedDoc,sTheirDoc,sMyDoc,objScript,word,destination
 
 Set objArgs = WScript.Arguments
@@ -28,8 +26,8 @@ sMyDoc=objArgs(2)
 sBaseDoc=objArgs(3)
 
 Set objScript = CreateObject("Scripting.FileSystemObject")
-If objScript.FileExists(sMyDoc) = False Then
-    MsgBox "File " + sMyDoc +" does not exist.  Cannot compare the documents.", vbExclamation, "File not found"
+If objScript.FileExists(sMergedDoc) = False Then
+    MsgBox "File " + sMergedDoc +" does not exist.  Cannot compare the documents.", vbExclamation, "File not found"
     Wscript.Quit 1
 End If
 If objScript.FileExists(sTheirDoc) = False Then
@@ -37,7 +35,7 @@ If objScript.FileExists(sTheirDoc) = False Then
     Wscript.Quit 1
 End If
 'remove the file write protection
-objScript.GetFile(sMyDoc).Attributes = objScript.GetFile(sMyDoc).Attributes And Not 1
+objScript.GetFile(sMergedDoc).Attributes = objScript.GetFile(sMergedDoc).Attributes And Not 1
 objScript.GetFile(sTheirDoc).Attributes = objScript.GetFile(sTheirDoc).Attributes And Not 1
 
 Set objScript = Nothing
@@ -55,11 +53,11 @@ On Error Goto 0
 'Create the DesktopSet 
 Set objDesktop = objServiceManager.createInstance("com.sun.star.frame.Desktop")
 'Adjust the paths for OO
-sMyDoc=Replace(sMyDoc, "\", "/")
-sMyDoc=Replace(sMyDoc, ":", "|")
-sMyDoc=Replace(sMyDoc, "%", "%25")
-sMyDoc=Replace(sMyDoc, " ", "%20")
-sMyDoc="file:///"&sMyDoc
+sMergedDoc=Replace(sMergedDoc, "\", "/")
+sMergedDoc=Replace(sMergedDoc, ":", "|")
+sMergedDoc=Replace(sMergedDoc, "%", "%25")
+sMergedDoc=Replace(sMergedDoc, " ", "%20")
+sMergedDoc="file:///"&sMergedDoc
 sTheirDoc=Replace(sTheirDoc, "\", "/")
 sTheirDoc=Replace(sTheirDoc, ":", "|")
 sTheirDoc=Replace(sTheirDoc, "%", "%25")
@@ -71,7 +69,7 @@ Dim oPropertyValue(0)
 Set oPropertyValue(0) = objServiceManager.Bridge_GetStruct("com.sun.star.beans.PropertyValue")
 oPropertyValue(0).Name = "ShowTrackedChanges"
 oPropertyValue(0).Value = true
-Set objDocument=objDesktop.loadComponentFromURL(sMyDoc,"_blank", 0, oPropertyValue)
+Set objDocument=objDesktop.loadComponentFromURL(sMergedDoc,"_blank", 0, oPropertyValue)
 
 'Set the frame
 Set Frame = objDesktop.getCurrentFrame
