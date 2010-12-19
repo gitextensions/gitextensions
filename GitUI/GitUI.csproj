@@ -132,6 +132,12 @@
     <Compile Include="FormCherryPickMerge.Designer.cs">
       <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormChooseTranslation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormChooseTranslation.Designer.cs">
+      <DependentUpon>FormChooseTranslation.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -658,6 +664,10 @@
       <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormChooseTranslation.resx">
+      <DependentUpon>FormChooseTranslation.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1021,15 +1031,22 @@
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
     <None Include="Resources\whitespace.png" />
+    <None Include="Translation\Brittish.jpg" />
+    <None Include="Translation\Dutch.jpg" />
+    <None Include="Translation\Brittish.gif" />
+    <None Include="Translation\Dutch.gif" />
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Translation\Italiano.gif" />
     <Content Include="Translation\Italiano.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Translation\Japanese.gif" />
     <Content Include="Translation\Japanese.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Translation\Spanish.gif" />
     <Content Include="Translation\Spanish.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
