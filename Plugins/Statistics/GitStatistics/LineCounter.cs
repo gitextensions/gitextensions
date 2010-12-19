@@ -6,6 +6,8 @@ namespace GitStatistics
 {
     public class LineCounter
     {
+        public event EventHandler LinesOfCodeUpdated;
+
         private readonly DirectoryInfo _directory;
 
         public LineCounter(DirectoryInfo directory)
@@ -34,8 +36,17 @@ namespace GitStatistics
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
         {
+            NumberLines = 0;
+            NumberBlankLines = 0;
+            NumberLinesInDesignerFiles = 0;
+            NumberCommentsLines = 0;
+            NumberCodeLines = 0;
+            NumberTestCodeLines = 0;
+
             var filters = filePattern.Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
+            var lastUpdate = DateTime.Now;
+            var timer = new TimeSpan(0,0,0,0,500);
 
             var codeFiles = new List<CodeFile>();
             foreach (var filter in filters)
@@ -48,47 +59,49 @@ namespace GitStatistics
                     var codeFile = new CodeFile(file.FullName);
                     codeFile.CountLines();
                     codeFiles.Add(codeFile);
+
+                    CalculateSums(codeFile);
+
+                    if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
+                    {
+                        lastUpdate = DateTime.Now;
+                        LinesOfCodeUpdated(this, EventArgs.Empty);
+                    }
                 }
             }
 
-            CalculateSums(codeFiles);
+            //Send 'changed' event when done
+            if (LinesOfCodeUpdated != null)
+                LinesOfCodeUpdated(this, EventArgs.Empty);
         }
 
-        private void CalculateSums(IEnumerable<CodeFile> codeFiles)
+        private void CalculateSums(CodeFile codeFile)
         {
-            NumberLines = 0;
-            NumberBlankLines = 0;
-            NumberLinesInDesignerFiles = 0;
-            NumberCommentsLines = 0;
-            NumberCodeLines = 0;
-            NumberTestCodeLines = 0;
+            NumberLines += codeFile.NumberLines;
+            NumberBlankLines += codeFile.NumberBlankLines;
+            NumberCommentsLines += codeFile.NumberCommentsLines;
+            NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
 
-            foreach (var codeFile in codeFiles)
+            var codeLines =
+                codeFile.NumberLines -
+                codeFile.NumberBlankLines -
+                codeFile.NumberCommentsLines -
+                codeFile.NumberLinesInDesignerFiles;
+
+            var extension = codeFile.File.Extension.ToLower();
+
+            if (!LinesOfCodePerExtension.ContainsKey(extension))
+                LinesOfCodePerExtension.Add(extension, 0);
+
+            LinesOfCodePerExtension[extension] += codeLines;
+            NumberCodeLines += codeLines;
+
+            if (codeFile.IsTestFile)
             {
-                NumberLines += codeFile.NumberLines;
-                NumberBlankLines += codeFile.NumberBlankLines;
-                NumberCommentsLines += codeFile.NumberCommentsLines;
-                NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
-
-                var codeLines =
-                    codeFile.NumberLines -
-                    codeFile.NumberBlankLines -
-                    codeFile.NumberCommentsLines -
-                    codeFile.NumberLinesInDesignerFiles;
-
-                var extension = codeFile.File.Extension.ToLower();
-
-                if (!LinesOfCodePerExtension.ContainsKey(extension))
-                    LinesOfCodePerExtension.Add(extension, 0);
-
-                LinesOfCodePerExtension[extension] += codeLines;
-                NumberCodeLines += codeLines;
-
-                if (codeFile.IsTestFile)
-                {
-                    NumberTestCodeLines += codeLines;
-                }
+                NumberTestCodeLines += codeLines;
             }
+
+
         }
     }
 }

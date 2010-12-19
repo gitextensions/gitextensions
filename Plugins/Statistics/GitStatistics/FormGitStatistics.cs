@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
+using System.Threading;
 
 namespace GitStatistics
 {
@@ -32,6 +33,9 @@ namespace GitStatistics
 
         public string DirectoriesToIgnore;
         public DirectoryInfo WorkingDir;
+        private SynchronizationContext syncContext;
+        private LineCounter lineCounter;
+        private Thread loadThread;
 
         public FormGitStatistics(string codeFilePattern)
         {
@@ -43,6 +47,8 @@ namespace GitStatistics
             TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
             TotalCommits.Font = TotalLinesOfCode.Font;
             LoadingLabel.Font = TotalLinesOfCode.Font;
+
+            syncContext = SynchronizationContext.Current;
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)
@@ -61,32 +67,35 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
-            var totalCommits = allCommitsByUser.Item2;
-            var commitsPerUser = allCommitsByUser.Item1;
-
-            TotalCommits.Text = totalCommits + " Commits";
-
-            var builder = new StringBuilder();
-
-            var commitCountValues = new Decimal[commitsPerUser.Count];
-            var commitCountLabels = new string[commitsPerUser.Count];
-            var n = 0;
-            foreach (var keyValuePair in commitsPerUser)
+            syncContext.Post(new SendOrPostCallback(delegate(object o)
             {
-                var user = keyValuePair.Key;
-                var commits = keyValuePair.Value;
+                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
+                var totalCommits = allCommitsByUser.Item2;
+                var commitsPerUser = allCommitsByUser.Item1;
 
-                builder.AppendLine(commits + " " + user);
+                TotalCommits.Text = totalCommits + " Commits";
 
-                commitCountValues[n] = commits;
-                commitCountLabels[n] = commits + " Commits by " + user;
-                n++;
-            }
-            CommitCountPie.SetValues(commitCountValues);
-            CommitCountPie.ToolTips = commitCountLabels;
+                var builder = new StringBuilder();
 
-            CommitStatistics.Text = builder.ToString();
+                var commitCountValues = new Decimal[commitsPerUser.Count];
+                var commitCountLabels = new string[commitsPerUser.Count];
+                var n = 0;
+                foreach (var keyValuePair in commitsPerUser)
+                {
+                    var user = keyValuePair.Key;
+                    var commits = keyValuePair.Value;
+
+                    builder.AppendLine(commits + " " + user);
+
+                    commitCountValues[n] = commits;
+                    commitCountLabels[n] = commits + " Commits by " + user;
+                    n++;
+                }
+                CommitCountPie.SetValues(commitCountValues);
+                CommitCountPie.ToolTips = commitCountLabels;
+
+                CommitStatistics.Text = builder.ToString();
+            }), this);
         }
 
         private void SetPieStyle(PieChartControl pie)
@@ -110,40 +119,61 @@ namespace GitStatistics
                 pie.Height = pie.Width;
         }
 
+        bool initializeLinesOfCodeDone = false;
         private void InitializeLinesOfCode()
         {
-            var lineCounter = new LineCounter(WorkingDir);
+            if (initializeLinesOfCodeDone)
+                return;
+            
+            initializeLinesOfCodeDone = true;
 
+            lineCounter = new LineCounter(WorkingDir);
+            lineCounter.LinesOfCodeUpdated += new EventHandler(lineCounter_LinesOfCodeUpdated);
+
+            loadThread = new Thread(new ThreadStart(LoadLinesOfCode));
+
+            loadThread.Start();
+        }
+        
+        public void LoadLinesOfCode()
+        {
             lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore);
+        }
 
-            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+        void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
+        {
+            LineCounter lineCounter = (LineCounter)sender;
 
-            TestCodePie.SetValues(new Decimal[]
+            syncContext.Post(new SendOrPostCallback(delegate(object o)
+            {
+                TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+
+                TestCodePie.SetValues(new Decimal[]
                                       {
                                           lineCounter.NumberTestCodeLines,
                                           lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
                                       });
-            TestCodePie.ToolTips =
-                new[]
+                TestCodePie.ToolTips =
+                    new[]
                     {
                         lineCounter.NumberTestCodeLines + " Lines of testcode",
                         lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines +
                         " Lines of production code"
                     };
 
-            TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode" + Environment.NewLine +
-                                (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
-                                " Lines of production code";
+                TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode" + Environment.NewLine +
+                                    (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
+                                    " Lines of production code";
 
-            LinesOfCodePie.SetValues(new Decimal[]
+                LinesOfCodePie.SetValues(new Decimal[]
                                          {
                                              lineCounter.NumberBlankLines,
                                              lineCounter.NumberCommentsLines,
                                              lineCounter.NumberLines,
                                              lineCounter.NumberLinesInDesignerFiles
                                          });
-            LinesOfCodePie.ToolTips =
-                new[]
+                LinesOfCodePie.ToolTips =
+                    new[]
                     {
                         lineCounter.NumberBlankLines + " Blank lines",
                         lineCounter.NumberCommentsLines + " Comment lines",
@@ -151,28 +181,29 @@ namespace GitStatistics
                         lineCounter.NumberLinesInDesignerFiles + " Lines in designer files"
                     };
 
-            LinesOfCodePerTypeText.Text = LinesOfCodePie.ToolTips[0] + Environment.NewLine;
-            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[1] + Environment.NewLine;
-            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[2] + Environment.NewLine;
-            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[3] + Environment.NewLine;
+                LinesOfCodePerTypeText.Text = LinesOfCodePie.ToolTips[0] + Environment.NewLine;
+                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[1] + Environment.NewLine;
+                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[2] + Environment.NewLine;
+                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[3] + Environment.NewLine;
 
-            var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
-            var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
-            var n = 0;
-            LinesOfCodePerLanguageText.Text = "";
-            foreach (var keyValuePair in lineCounter.LinesOfCodePerExtension)
-            {
-                LinesOfCodePerLanguageText.Text += keyValuePair.Value + " Lines of code in " + keyValuePair.Key +
-                                                   " files" + Environment.NewLine;
-                extensionValues[n] = keyValuePair.Value;
-                extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files";
-                n++;
-            }
+                var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
+                var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
+                var n = 0;
+                LinesOfCodePerLanguageText.Text = "";
+                foreach (var keyValuePair in lineCounter.LinesOfCodePerExtension)
+                {
+                    LinesOfCodePerLanguageText.Text += keyValuePair.Value + " Lines of code in " + keyValuePair.Key +
+                                                       " files" + Environment.NewLine;
+                    extensionValues[n] = keyValuePair.Value;
+                    extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files";
+                    n++;
+                }
 
-            LinesOfCodeExtensionPie.SetValues(extensionValues);
-            LinesOfCodeExtensionPie.ToolTips = extensionLabels;
+                LinesOfCodeExtensionPie.SetValues(extensionValues);
+                LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
-            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
+                TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
+            }), this);
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)
@@ -191,6 +222,19 @@ namespace GitStatistics
         private void TabsSelectedIndexChanged(object sender, EventArgs e)
         {
             FormGitStatisticsSizeChanged(null, null);
+        }
+
+        private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                if (loadThread != null)
+                    loadThread.Abort();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }
