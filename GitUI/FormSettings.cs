@@ -1640,7 +1640,7 @@ namespace GitUI
                 return false;
             }
             translationConfig.BackColor = Color.LightGreen;
-            translationConfig.Text = "The configured language is " + Settings.Translation;
+            translationConfig.Text = "The configured language is " + Settings.Translation + ".";
             return true;
         }
 
@@ -1656,14 +1656,14 @@ namespace GitUI
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
-                SshConfig.Text = "SSH client PuTTY is configured properly";
+                SshConfig.Text = "SSH client PuTTY is configured properly.";
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
             else
-                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh();
+                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh() + ".";
             return true;
         }
 
@@ -1688,11 +1688,11 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "git not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
                 return false;
             }
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "git is found on your computer.";
+            GitFound.Text = "Git is found on your computer.";
             return true;
         }
 
@@ -1780,11 +1780,11 @@ namespace GitUI
                 string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
-                UserNameSet.Text = "You need to configure a user name and an email address.";
+                UserNameSet.Text = "You need to configure a username and an email address.";
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
-            UserNameSet.Text = "There is a user name and an email address configured.";
+            UserNameSet.Text = "A username and an email address are configured.";
             return true;
         }
 
