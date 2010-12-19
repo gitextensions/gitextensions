@@ -233,17 +233,32 @@
     </DirectoryRef>
 
     <DirectoryRef Id="TranslationsDir">
+      <Component Id="English.gif" Guid="*">
+        <File Source="..\GitUI\Translation\English.gif"/>
+      </Component>
       <Component Id="Dutch.xml" Guid="*">
         <File Source="..\GitUI\Translation\Dutch.xml"/>
+      </Component>
+      <Component Id="Dutch.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Dutch.gif"/>
       </Component>
       <Component Id="Japanese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Japanese.xml"/>
       </Component>
+      <Component Id="Japanese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.gif"/>
+      </Component>
       <Component Id="Italiano.xml" Guid="*">
         <File Source="..\GitUI\Translation\Italiano.xml"/>
       </Component>
+      <Component Id="Italiano.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Italiano.gif"/>
+      </Component>
       <Component Id="Spanish.xml" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xml"/>
+      </Component>
+      <Component Id="Spanish.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Spanish.gif"/>
       </Component>
     </DirectoryRef>
 
@@ -394,6 +409,8 @@
       <ComponentRef Id="GitExtensions.desktop"/>
       <ComponentRef Id="UserManual.startmenu"/>
 
+      <ComponentRef Id="English.gif"/>
+      
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="CowHeadBlue.ico"/>
         <ComponentRef Id="CowHeadGreen.ico"/>
@@ -447,15 +464,19 @@
       <Feature Id="Translation" Title="Translations" Level="1">
         <Feature Id="Dutch" Title="Dutch" Level="1">
           <ComponentRef Id="Dutch.xml"/>
+          <ComponentRef Id="Dutch.gif"/>
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
+          <ComponentRef Id="Japanese.gif"/>
         </Feature>
         <Feature Id="Italiano" Title="Italiano" Level="1">
           <ComponentRef Id="Italiano.xml"/>
+          <ComponentRef Id="Italiano.gif"/>
         </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xml"/>
+          <ComponentRef Id="Spanish.gif"/>
         </Feature>
       </Feature>
 
