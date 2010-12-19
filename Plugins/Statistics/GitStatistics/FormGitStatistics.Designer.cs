@@ -53,10 +53,10 @@ namespace GitStatistics
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.CommitStatistics = new System.Windows.Forms.Label();
             this.LoadingLabel = new System.Windows.Forms.Label();
-            this.LinesOfCodeExtensionPie = new PieChartControl();
-            this.LinesOfCodePie = new PieChartControl();
-            this.TestCodePie = new PieChartControl();
-            this.CommitCountPie = new PieChartControl();
+            this.CommitCountPie = new GitStatistics.PieChart.PieChartControl();
+            this.LinesOfCodeExtensionPie = new GitStatistics.PieChart.PieChartControl();
+            this.LinesOfCodePie = new GitStatistics.PieChart.PieChartControl();
+            this.TestCodePie = new GitStatistics.PieChart.PieChartControl();
             this.Tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -90,10 +90,10 @@ namespace GitStatistics
             // 
             // Tabs
             // 
+            this.Tabs.Controls.Add(this.tabPage2);
             this.Tabs.Controls.Add(this.tabPage1);
             this.Tabs.Controls.Add(this.tabPage3);
             this.Tabs.Controls.Add(this.tabPage4);
-            this.Tabs.Controls.Add(this.tabPage2);
             this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Tabs.Location = new System.Drawing.Point(0, 0);
             this.Tabs.Name = "Tabs";
@@ -138,7 +138,7 @@ namespace GitStatistics
             this.TotalLinesOfCode.AutoSize = true;
             this.TotalLinesOfCode.Location = new System.Drawing.Point(5, 2);
             this.TotalLinesOfCode.Name = "TotalLinesOfCode";
-            this.TotalLinesOfCode.Size = new System.Drawing.Size(137, 16);
+            this.TotalLinesOfCode.Size = new System.Drawing.Size(94, 13);
             this.TotalLinesOfCode.TabIndex = 0;
             this.TotalLinesOfCode.Text = "Total lines of code";
             // 
@@ -164,9 +164,9 @@ namespace GitStatistics
             this.LinesOfCodePerLanguageText.AutoSize = true;
             this.LinesOfCodePerLanguageText.Location = new System.Drawing.Point(6, 3);
             this.LinesOfCodePerLanguageText.Name = "LinesOfCodePerLanguageText";
-            this.LinesOfCodePerLanguageText.Size = new System.Drawing.Size(35, 13);
+            this.LinesOfCodePerLanguageText.Size = new System.Drawing.Size(54, 13);
             this.LinesOfCodePerLanguageText.TabIndex = 1;
-            this.LinesOfCodePerLanguageText.Text = "label1";
+            this.LinesOfCodePerLanguageText.Text = "Loading...";
             // 
             // tabPage3
             // 
@@ -202,7 +202,7 @@ namespace GitStatistics
             this.TotalLinesOfCode2.AutoSize = true;
             this.TotalLinesOfCode2.Location = new System.Drawing.Point(8, 5);
             this.TotalLinesOfCode2.Name = "TotalLinesOfCode2";
-            this.TotalLinesOfCode2.Size = new System.Drawing.Size(137, 16);
+            this.TotalLinesOfCode2.Size = new System.Drawing.Size(94, 13);
             this.TotalLinesOfCode2.TabIndex = 1;
             this.TotalLinesOfCode2.Text = "Total lines of code";
             // 
@@ -228,9 +228,9 @@ namespace GitStatistics
             this.LinesOfCodePerTypeText.AutoSize = true;
             this.LinesOfCodePerTypeText.Location = new System.Drawing.Point(9, 4);
             this.LinesOfCodePerTypeText.Name = "LinesOfCodePerTypeText";
-            this.LinesOfCodePerTypeText.Size = new System.Drawing.Size(129, 13);
+            this.LinesOfCodePerTypeText.Size = new System.Drawing.Size(54, 13);
             this.LinesOfCodePerTypeText.TabIndex = 0;
-            this.LinesOfCodePerTypeText.Text = "LinesOfCodePerTypeText";
+            this.LinesOfCodePerTypeText.Text = "Loading...";
             // 
             // tabPage4
             // 
@@ -266,7 +266,7 @@ namespace GitStatistics
             this.TotalLinesOfTestCode.AutoSize = true;
             this.TotalLinesOfTestCode.Location = new System.Drawing.Point(8, 5);
             this.TotalLinesOfTestCode.Name = "TotalLinesOfTestCode";
-            this.TotalLinesOfTestCode.Size = new System.Drawing.Size(137, 16);
+            this.TotalLinesOfTestCode.Size = new System.Drawing.Size(94, 13);
             this.TotalLinesOfTestCode.TabIndex = 2;
             this.TotalLinesOfTestCode.Text = "Total lines of code";
             // 
@@ -292,9 +292,9 @@ namespace GitStatistics
             this.TestCodeText.AutoSize = true;
             this.TestCodeText.Location = new System.Drawing.Point(8, 4);
             this.TestCodeText.Name = "TestCodeText";
-            this.TestCodeText.Size = new System.Drawing.Size(35, 13);
+            this.TestCodeText.Size = new System.Drawing.Size(54, 13);
             this.TestCodeText.TabIndex = 0;
-            this.TestCodeText.Text = "label1";
+            this.TestCodeText.Text = "Loading...";
             // 
             // tabPage2
             // 
@@ -331,7 +331,7 @@ namespace GitStatistics
             this.TotalCommits.AutoSize = true;
             this.TotalCommits.Location = new System.Drawing.Point(5, 2);
             this.TotalCommits.Name = "TotalCommits";
-            this.TotalCommits.Size = new System.Drawing.Size(105, 16);
+            this.TotalCommits.Size = new System.Drawing.Size(72, 13);
             this.TotalCommits.TabIndex = 1;
             this.TotalCommits.Text = "Total commits";
             // 
@@ -357,18 +357,28 @@ namespace GitStatistics
             this.CommitStatistics.AutoSize = true;
             this.CommitStatistics.Location = new System.Drawing.Point(5, 0);
             this.CommitStatistics.Name = "CommitStatistics";
-            this.CommitStatistics.Size = new System.Drawing.Size(35, 13);
+            this.CommitStatistics.Size = new System.Drawing.Size(51, 13);
             this.CommitStatistics.TabIndex = 0;
-            this.CommitStatistics.Text = "label1";
+            this.CommitStatistics.Text = "Loading..";
             // 
             // LoadingLabel
             // 
             this.LoadingLabel.AutoSize = true;
             this.LoadingLabel.Location = new System.Drawing.Point(315, 26);
             this.LoadingLabel.Name = "LoadingLabel";
-            this.LoadingLabel.Size = new System.Drawing.Size(103, 24);
+            this.LoadingLabel.Size = new System.Drawing.Size(54, 13);
             this.LoadingLabel.TabIndex = 1;
             this.LoadingLabel.Text = "Loading...";
+            // 
+            // CommitCountPie
+            // 
+            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommitCountPie.InitialAngle = 0F;
+            this.CommitCountPie.Location = new System.Drawing.Point(0, 0);
+            this.CommitCountPie.Name = "CommitCountPie";
+            this.CommitCountPie.Size = new System.Drawing.Size(447, 400);
+            this.CommitCountPie.TabIndex = 0;
+            this.CommitCountPie.ToolTips = null;
             // 
             // LinesOfCodeExtensionPie
             // 
@@ -400,16 +410,6 @@ namespace GitStatistics
             this.TestCodePie.TabIndex = 0;
             this.TestCodePie.ToolTips = null;
             // 
-            // CommitCountPie
-            // 
-            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitCountPie.InitialAngle = 0F;
-            this.CommitCountPie.Location = new System.Drawing.Point(0, 0);
-            this.CommitCountPie.Name = "CommitCountPie";
-            this.CommitCountPie.Size = new System.Drawing.Size(447, 400);
-            this.CommitCountPie.TabIndex = 0;
-            this.CommitCountPie.ToolTips = null;
-            // 
             // FormGitStatistics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,6 +422,7 @@ namespace GitStatistics
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Statistics";
             this.Shown += new System.EventHandler(this.FormGitStatisticsShown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitStatistics_FormClosing);
             this.Tabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
