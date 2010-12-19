@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
+using System.IO;
 
 namespace GitUI
 {
@@ -18,33 +20,54 @@ namespace GitUI
             Translate();
         }
 
-        private void dutch_Click(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            Settings.Translation = "Dutch";
-            Close();
+            base.OnLoad(e);
+
+            int x = 0;
+            int y = 0;
+            int imageHeight = 43;
+            int imageWidth = 94;
+            List<string> translations = new List<string>(Translator.GetAllTranslations());
+            translations.Add("English");
+            translations.Sort();
+
+            foreach (string translation in translations)
+            {
+                PictureBox translationImage = new PictureBox();
+                translationImage.Top = y + 34;
+                translationImage.Left = x + 15;
+                translationImage.Height = imageHeight;
+                translationImage.Width = imageWidth;
+                translationImage.BackgroundImageLayout = ImageLayout.Stretch;
+                if (File.Exists(Translator.GetTranslationDir() + Settings.PathSeparator + translation + ".gif"))
+                    translationImage.BackgroundImage = Bitmap.FromFile(Translator.GetTranslationDir() + Settings.PathSeparator + translation + ".gif");
+                else
+                    translationImage.BackColor = Color.Black;
+
+                translationImage.Cursor = Cursors.Hand;
+                translationImage.Tag = translation;
+                translationImage.Click += new EventHandler(translationImage_Click);
+                
+                new ToolTip().SetToolTip(translationImage, translation);
+
+                this.Controls.Add(translationImage);
+
+                x += imageWidth + 6;
+                if (x > imageWidth * 4)
+                {
+                    x = 0;
+                    y += imageHeight + 6;
+                }
+            }
+
+            this.Height = x + imageHeight + SystemInformation.CaptionHeight + 25;
+            label2.Top = this.Height - SystemInformation.CaptionHeight - 25;
         }
 
-        private void brittish_Click(object sender, EventArgs e)
+        void translationImage_Click(object sender, EventArgs e)
         {
-            Settings.Translation = "English";
-            Close();
-        }
-
-        private void italian_Click(object sender, EventArgs e)
-        {
-            Settings.Translation = "Italiano";
-            Close();
-        }
-
-        private void japanese_Click(object sender, EventArgs e)
-        {
-            Settings.Translation = "Japanese";
-            Close();
-        }
-
-        private void spanish_Click(object sender, EventArgs e)
-        {
-            Settings.Translation = "Spanish";
+            Settings.Translation = ((PictureBox)sender).Tag.ToString();
             Close();
         }
 
