@@ -121,8 +121,8 @@
   <data name="8" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\8.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Italiano" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Translation\Italiano.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="46" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\46.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_refresh_dirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_refresh_dirty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,11 +136,14 @@
   <data name="33" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="35" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Modified" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Modified.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="352" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="14" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\14.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="cow_head_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\cow-head-purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -175,9 +178,6 @@
   <data name="putty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\putty.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Spanish" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Translation\Spanish.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Donate.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -201,9 +201,6 @@
   </data>
   <data name="User" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\User.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Modified" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Modified.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="stash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\stash.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -250,14 +247,11 @@
   <data name="develop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\develop.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="491" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\49.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="14" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\14.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ChangeLog.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -265,8 +259,8 @@
   <data name="4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Japanese" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Translation\Japanese.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="_39" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\39.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\bug.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -274,8 +268,8 @@
   <data name="puttygen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\puttygen.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="26" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\26.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="witespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\witespace.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -298,9 +292,6 @@
   <data name="nonprintchar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\nonprintchar.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Brittish1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Translation\Brittish.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="cow_head_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\cow-head-blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -321,9 +312,6 @@
   </data>
   <data name="9" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\9.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="46" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\46.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\_81.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -346,6 +334,9 @@
   <data name="pageant" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pageant.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\26.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Cow_sunglass" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cow_sunglass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -363,11 +354,5 @@
   </data>
   <data name="_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\24.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Dutch1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Translation\Dutch.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_39" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\39.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

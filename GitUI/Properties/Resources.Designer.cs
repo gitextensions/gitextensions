@@ -354,13 +354,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap Brittish1 {
-            get {
-                object obj = ResourceManager.GetObject("Brittish1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap brokendocument {
             get {
                 object obj = ResourceManager.GetObject("brokendocument", resourceCulture);
@@ -477,13 +470,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap Dutch1 {
-            get {
-                object obj = ResourceManager.GetObject("Dutch1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap entirefile {
             get {
                 object obj = ResourceManager.GetObject("entirefile", resourceCulture);
@@ -516,20 +502,6 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("history", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Italiano {
-            get {
-                object obj = ResourceManager.GetObject("Italiano", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Japanese {
-            get {
-                object obj = ResourceManager.GetObject("Japanese", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -607,13 +579,6 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("rss", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Spanish {
-            get {
-                object obj = ResourceManager.GetObject("Spanish", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
