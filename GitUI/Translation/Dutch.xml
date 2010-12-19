@@ -2056,6 +2056,9 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         <TranslationItem Name="$this" Property="Text">
           <Value>Wijzig .gitattributes</Value>
         </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes wordt alleen ondersteund wanneer er een werkdirecorie is.</Value>
+        </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Opslaan</Value>
         </TranslationItem>
@@ -2722,6 +2725,11 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
           <Value>Aangepast samenvoeg script</Value>
         </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Het bestand is niet gewijzigd door de samenvoegen. Meestal betekent dit dat het bestand is opgeslagen op de verkeerde locatie. 
+
+Het samenvoegen conflict zal niet worden gemarkeerd als opgelost. Probeer het opnieuw.</Value>
+        </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Alle samenvoeg conflicten zijn opgelost, u kunt nu committen.
 Wilt u nu committen?</Value>
@@ -3137,6 +3145,19 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kies taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Kies uw taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>U kunt de taal op elk gewenst moment wijzigen in het instellingenvenster</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
