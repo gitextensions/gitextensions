@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace GitStatistics
 {
@@ -67,35 +68,42 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            syncContext.Post(new SendOrPostCallback(delegate(object o)
+            Action a = () =>
             {
                 var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
-                var totalCommits = allCommitsByUser.Item2;
-                var commitsPerUser = allCommitsByUser.Item1;
-
-                TotalCommits.Text = totalCommits + " Commits";
-
-                var builder = new StringBuilder();
-
-                var commitCountValues = new Decimal[commitsPerUser.Count];
-                var commitCountLabels = new string[commitsPerUser.Count];
-                var n = 0;
-                foreach (var keyValuePair in commitsPerUser)
+                syncContext.Post(o =>
                 {
-                    var user = keyValuePair.Key;
-                    var commits = keyValuePair.Value;
+                    if (this.IsDisposed)
+                        return;
+                    var totalCommits = allCommitsByUser.Item2;
+                    var commitsPerUser = allCommitsByUser.Item1;
 
-                    builder.AppendLine(commits + " " + user);
+                    TotalCommits.Text = totalCommits + " Commits";
 
-                    commitCountValues[n] = commits;
-                    commitCountLabels[n] = commits + " Commits by " + user;
-                    n++;
-                }
-                CommitCountPie.SetValues(commitCountValues);
-                CommitCountPie.ToolTips = commitCountLabels;
+                    var builder = new StringBuilder();
 
-                CommitStatistics.Text = builder.ToString();
-            }), this);
+                    var commitCountValues = new Decimal[commitsPerUser.Count];
+                    var commitCountLabels = new string[commitsPerUser.Count];
+                    var n = 0;
+                    foreach (var keyValuePair in commitsPerUser)
+                    {
+                        var user = keyValuePair.Key;
+                        var commits = keyValuePair.Value;
+
+                        builder.AppendLine(commits + " " + user);
+
+                        commitCountValues[n] = commits;
+                        commitCountLabels[n] = commits + " Commits by " + user;
+                        n++;
+                    }
+                    CommitCountPie.SetValues(commitCountValues);
+                    CommitCountPie.ToolTips = commitCountLabels;
+
+                    CommitStatistics.Text = builder.ToString();
+
+                }, null);
+            };
+            a.BeginInvoke(null, null);
         }
 
         private void SetPieStyle(PieChartControl pie)
@@ -144,7 +152,21 @@ namespace GitStatistics
         {
             LineCounter lineCounter = (LineCounter)sender;
 
-            syncContext.Post(new SendOrPostCallback(delegate(object o)
+            //Must do this synchronously becuase lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
+            var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
+            var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
+            var n = 0;
+            string linesOfCodePerLanguageText = "";
+            foreach (var keyValuePair in lineCounter.LinesOfCodePerExtension)
+            {
+                linesOfCodePerLanguageText += keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files" + Environment.NewLine;
+                extensionValues[n] = keyValuePair.Value;
+                extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files";
+                n++;
+            }
+
+            //Sync rest to UI thread
+            syncContext.Post((o) =>
             {
                 TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 
@@ -186,24 +208,13 @@ namespace GitStatistics
                 LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[2] + Environment.NewLine;
                 LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[3] + Environment.NewLine;
 
-                var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
-                var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
-                var n = 0;
-                LinesOfCodePerLanguageText.Text = "";
-                foreach (var keyValuePair in lineCounter.LinesOfCodePerExtension)
-                {
-                    LinesOfCodePerLanguageText.Text += keyValuePair.Value + " Lines of code in " + keyValuePair.Key +
-                                                       " files" + Environment.NewLine;
-                    extensionValues[n] = keyValuePair.Value;
-                    extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files";
-                    n++;
-                }
+                LinesOfCodePerLanguageText.Text = linesOfCodePerLanguageText;
 
                 LinesOfCodeExtensionPie.SetValues(extensionValues);
                 LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
                 TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
-            }), this);
+            }, null);
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)
