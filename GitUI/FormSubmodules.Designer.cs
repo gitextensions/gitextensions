@@ -154,7 +154,7 @@
             // 
             this.AddSubmodule.Location = new System.Drawing.Point(3, 3);
             this.AddSubmodule.Name = "AddSubmodule";
-            this.AddSubmodule.Size = new System.Drawing.Size(100, 23);
+            this.AddSubmodule.Size = new System.Drawing.Size(162, 23);
             this.AddSubmodule.TabIndex = 0;
             this.AddSubmodule.Text = "Add submodule";
             this.AddSubmodule.UseVisualStyleBackColor = true;
@@ -208,7 +208,7 @@
             this.tableLayoutPanel1.Controls.Add(this.SubModuleCommit, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.SubModuleBranch, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -217,7 +217,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(349, 209);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(349, 208);
             this.tableLayoutPanel1.TabIndex = 12;
             // 
             // SubModuleStatus
@@ -225,7 +225,7 @@
             this.SubModuleStatus.Location = new System.Drawing.Point(104, 128);
             this.SubModuleStatus.Name = "SubModuleStatus";
             this.SubModuleStatus.ReadOnly = true;
-            this.SubModuleStatus.Size = new System.Drawing.Size(172, 23);
+            this.SubModuleStatus.Size = new System.Drawing.Size(172, 21);
             this.SubModuleStatus.TabIndex = 13;
             // 
             // label6
@@ -233,7 +233,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(3, 125);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(39, 15);
+            this.label6.Size = new System.Drawing.Size(38, 13);
             this.label6.TabIndex = 11;
             this.label6.Text = "Status";
             // 
@@ -242,7 +242,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 15);
+            this.label1.Size = new System.Drawing.Size(34, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Name";
             // 
@@ -251,7 +251,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 15);
+            this.label2.Size = new System.Drawing.Size(69, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Remote path";
             // 
@@ -260,7 +260,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 100);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 15);
+            this.label5.Size = new System.Drawing.Size(40, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "Branch";
             // 
@@ -269,7 +269,7 @@
             this.SubModuleName.Location = new System.Drawing.Point(104, 3);
             this.SubModuleName.Name = "SubModuleName";
             this.SubModuleName.ReadOnly = true;
-            this.SubModuleName.Size = new System.Drawing.Size(172, 23);
+            this.SubModuleName.Size = new System.Drawing.Size(172, 21);
             this.SubModuleName.TabIndex = 8;
             // 
             // label4
@@ -277,7 +277,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 75);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 15);
+            this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "Commit";
             // 
@@ -286,7 +286,7 @@
             this.SubModuleRemotePath.Location = new System.Drawing.Point(104, 28);
             this.SubModuleRemotePath.Name = "SubModuleRemotePath";
             this.SubModuleRemotePath.ReadOnly = true;
-            this.SubModuleRemotePath.Size = new System.Drawing.Size(238, 23);
+            this.SubModuleRemotePath.Size = new System.Drawing.Size(238, 21);
             this.SubModuleRemotePath.TabIndex = 9;
             // 
             // label3
@@ -294,7 +294,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 50);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 15);
+            this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Local path";
             // 
@@ -303,7 +303,7 @@
             this.SubModuleLocalPath.Location = new System.Drawing.Point(104, 53);
             this.SubModuleLocalPath.Name = "SubModuleLocalPath";
             this.SubModuleLocalPath.ReadOnly = true;
-            this.SubModuleLocalPath.Size = new System.Drawing.Size(238, 23);
+            this.SubModuleLocalPath.Size = new System.Drawing.Size(238, 21);
             this.SubModuleLocalPath.TabIndex = 10;
             // 
             // SubModuleCommit
@@ -311,7 +311,7 @@
             this.SubModuleCommit.Location = new System.Drawing.Point(104, 78);
             this.SubModuleCommit.Name = "SubModuleCommit";
             this.SubModuleCommit.ReadOnly = true;
-            this.SubModuleCommit.Size = new System.Drawing.Size(238, 23);
+            this.SubModuleCommit.Size = new System.Drawing.Size(238, 21);
             this.SubModuleCommit.TabIndex = 11;
             // 
             // SubModuleBranch
@@ -319,7 +319,7 @@
             this.SubModuleBranch.Location = new System.Drawing.Point(104, 103);
             this.SubModuleBranch.Name = "SubModuleBranch";
             this.SubModuleBranch.ReadOnly = true;
-            this.SubModuleBranch.Size = new System.Drawing.Size(238, 23);
+            this.SubModuleBranch.Size = new System.Drawing.Size(238, 21);
             this.SubModuleBranch.TabIndex = 12;
             // 
             // splitContainer4
@@ -370,16 +370,16 @@
             // 
             // FormSubmodules
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(581, 263);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormSubmodules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Submodules";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubmodulesFormClosing);
             this.Load += new System.EventHandler(this.FormSubmodulesLoad);
             this.Shown += new System.EventHandler(this.FormSubmodulesShown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubmodulesFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
