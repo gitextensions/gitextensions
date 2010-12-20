@@ -1101,6 +1101,19 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kies taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Kies uw taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>U kunt de taal op elk gewenst moment wijzigen in het instellingenvenster</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1463,7 +1476,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>maanden geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>jaren geleden</Value>
+          <Value>jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
@@ -2616,6 +2629,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Value>Commit &amp;&amp; &amp;verzend</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Bekijk bestands geschiedenis</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2709,6 +2725,9 @@ Weet u zeker dat u wilt doorgaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_stageFiles" Property="Text">
           <Value>{0} Bestanden klaargezet</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Selecteer 1 bestand</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3145,19 +3164,6 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormChooseTranslation">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Kies taal</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Kies uw taal</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>U kunt de taal op elk gewenst moment wijzigen in het instellingenvenster</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
