@@ -68,45 +68,42 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            Thread commitCountThread = new Thread(new ThreadStart(CountCommits));
-            commitCountThread.Start();
-
-        }
-
-        private void CountCommits()
-        {
-            var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
-            syncContext.Post(o =>
+            Action<FormGitStatistics> a = (FormGitStatistics sender) =>
             {
-                if (this.IsDisposed)
-                    return;
-                var totalCommits = allCommitsByUser.Item2;
-                var commitsPerUser = allCommitsByUser.Item1;
-
-                TotalCommits.Text = totalCommits + " Commits";
-
-                var builder = new StringBuilder();
-
-                var commitCountValues = new Decimal[commitsPerUser.Count];
-                var commitCountLabels = new string[commitsPerUser.Count];
-                var n = 0;
-                foreach (var keyValuePair in commitsPerUser)
+                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
+                syncContext.Post(o =>
                 {
-                    var user = keyValuePair.Key;
-                    var commits = keyValuePair.Value;
+                    if (this.IsDisposed)
+                        return;
+                    var totalCommits = allCommitsByUser.Item2;
+                    var commitsPerUser = allCommitsByUser.Item1;
 
-                    builder.AppendLine(commits + " " + user);
+                    TotalCommits.Text = totalCommits + " Commits";
 
-                    commitCountValues[n] = commits;
-                    commitCountLabels[n] = commits + " Commits by " + user;
-                    n++;
-                }
-                CommitCountPie.SetValues(commitCountValues);
-                CommitCountPie.ToolTips = commitCountLabels;
+                    var builder = new StringBuilder();
 
-                CommitStatistics.Text = builder.ToString();
+                    var commitCountValues = new Decimal[commitsPerUser.Count];
+                    var commitCountLabels = new string[commitsPerUser.Count];
+                    var n = 0;
+                    foreach (var keyValuePair in commitsPerUser)
+                    {
+                        var user = keyValuePair.Key;
+                        var commits = keyValuePair.Value;
 
-            }, null);
+                        builder.AppendLine(commits + " " + user);
+
+                        commitCountValues[n] = commits;
+                        commitCountLabels[n] = commits + " Commits by " + user;
+                        n++;
+                    }
+                    CommitCountPie.SetValues(commitCountValues);
+                    CommitCountPie.ToolTips = commitCountLabels;
+
+                    CommitStatistics.Text = builder.ToString();
+
+                }, null);
+            };
+            a.BeginInvoke(null, null, this);
         }
 
         private void SetPieStyle(PieChartControl pie)
