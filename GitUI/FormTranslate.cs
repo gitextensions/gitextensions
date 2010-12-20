@@ -22,13 +22,25 @@ namespace GitUI
         TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         TranslationString saveAsText = new TranslationString("Save as");
 
-        public class TranslateItem
+        public class TranslateItem : INotifyPropertyChanged
         {
             public string Category { get; set; }
             public string Name { get; set; }
             public string Property { get; set; }
             public string NeutralValue { get; set; }
-            public string TranslatedValue { get; set; }
+            private string _translatedValue;
+            public string TranslatedValue
+            {
+                get { return _translatedValue; }
+                set
+                {
+                    var pc = PropertyChanged;
+                    if (pc != null) pc(this, new PropertyChangedEventArgs("TranslatedValue"));
+                    _translatedValue = value;
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
         }
 
         private List<TranslateItem> translate;
@@ -74,8 +86,13 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translatedCount++;
             }
-            translateProgress.Text = string.Format(translateProgressText.Text, translatedCount, translate.Count);
-            toolStrip1.Refresh();
+            var progresMsg = string.Format(translateProgressText.Text, translatedCount, translate.Count);
+            if (translateProgress.Text != progresMsg)
+            {
+                translateProgress.Text = progresMsg;
+                toolStrip1.Refresh();    
+            }
+            
         }
 
         private void LoadTranslation()
@@ -124,7 +141,7 @@ namespace GitUI
                 filterTranslate.Add(translateItem);
             }
 
-            translateGrid.DataSource = filterTranslate;
+            translateItemBindingSource.DataSource = filterTranslate;
 
             UpdateProgress();
         }
@@ -362,13 +379,12 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                TranslateItem translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+                var translateItem = (TranslateItem)translateItemBindingSource.Current;
                 translateItem.TranslatedValue = translatedText.Text;
 
                 changesMade = true;
 
                 UpdateProgress();
-                translateGrid.Refresh();
             }
         }
 
