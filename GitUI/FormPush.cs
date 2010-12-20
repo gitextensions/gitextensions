@@ -83,6 +83,7 @@ namespace GitUI
             }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
+            Settings.PushAllTags = PushAllTags.Checked;
 
             var remote = "";
             string destination;
@@ -195,6 +196,8 @@ namespace GitUI
             RemotesUpdated(null, null);
 
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
+
+            PushAllTags.Checked = Settings.PushAllTags;
         }
 
         private static void AddRemoteClick(object sender, EventArgs e)
