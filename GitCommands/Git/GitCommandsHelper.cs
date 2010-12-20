@@ -343,6 +343,12 @@ namespace GitCommands
 
         private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = "";
+                return -1;
+            }
+
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 

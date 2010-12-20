@@ -968,24 +968,27 @@ namespace GitUI
                 return true;
             }
 
-            GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
             {
-                GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
+                GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
                 if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                 {
-                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
+                    GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                     if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                     {
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
+                        GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
                         if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                         {
-                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
                             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                             {
-                                GitCommands.Settings.GitBinDir = "";
-                                return false;
+                                GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                                if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
+                                {
+                                    GitCommands.Settings.GitBinDir = "";
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -1834,11 +1837,16 @@ namespace GitUI
 
         private static IEnumerable<string> GetWindowsCommandLocations()
         {
+            if (!string.IsNullOrEmpty(Settings.GitCommand))
+                yield return Settings.GitCommand;
+
             yield return @"C:\cygwin\bin\git.exe";
             yield return @"C:\cygwin\bin\git";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
             yield return @"c:\Program Files (x86)\Git\bin\git.exe";
             yield return @"c:\Program Files\Git\bin\git.exe";
+            yield return @"c:\Program Files (x86)\msysgit\bin\git.exe";
+            yield return @"c:\Program Files\msysgit\bin\git.exe";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
             yield return @"c:\Program Files (x86)\Git\cmd\git.cmd";
             yield return @"c:\Program Files\Git\cmd\git.cmd";
