@@ -304,7 +304,7 @@ namespace GitCommands
                     if (logoutputEncoding == null)
                         logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
 
-                    if (logoutputEncoding != Settings.Encoding)
+                    if (logoutputEncoding.Equals(Settings.Encoding))
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     else
                         revision.Message = line;
