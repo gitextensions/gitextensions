@@ -558,8 +558,172 @@
     </TranslationCategory>
     <TranslationCategory Name="ViewPatch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Просмотреть патч файл</Value>
+        </TranslationItem>
         <TranslationItem Name="BrowsePatch" Property="Text">
           <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Value>Патч</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResolveConflicts">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Разрешение конфликтов слияния</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text">
+          <Value>Существует пользовательский скрипт({0}) слияния для этого типа файлов.
+
+Хотите использовать пользовательский скрипт?</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Пользовательский скрипт слияния</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Файл был изменен при слиянии. Обычно это означает, что файл был сохранен в неправильное место.
+
+Конфликт слияния не будет отмечен как разрешенный. Пожалуйста попробуйте еще.</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolved" Property="Text">
+          <Value>Все конфликты были разрешены, вы можете коммитить.
+Хотите коммитить сейчас ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
+          <Value>Коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
+          <Value>Выбранный конфликт - субмодуль. Отметить конфликт как разрешенный?</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
+          <Value>Сумбодуль</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileIsBinary" Property="Text">
+          <Value>Выбранный файл является двоичным.
+Вы точно хотите открыть его с помощью {0}?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
+          <Value>Конфликт должен быть разрешен и результат должен быть сохранен как:
+{0}
+
+Конфликт разрешен ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolved" Property="Text">
+          <Value>Конфликт разрешен?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
+          <Value>Конфликт разрешен ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="modifiedButton" Property="Text">
+          <Value>Измененые</Value>
+        </TranslationItem>
+        <TranslationItem Name="noMergeTool" Property="Text">
+          <Value>Утилита слияния не сконфигурирована. Пожалуйста перейдите к настройкам и задайте утилиту слияния!</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text">
+          <Value>Базы слияния для не  {0} существует.
+Использовать 2-way слияние ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>наши</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>их</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>нет базы</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>удален</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Выбрать локальный</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Выбрать удаленный</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Удалить файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Оставить модифицированный</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Оставить базовый файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Нерешенные конфликты</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseBase" Property="Text">
+          <Value>Выбрать базовую</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseLocal" Property="Text">
+          <Value>Выбрать локальную</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseRemote" Property="Text">
+          <Value>Выбрать удаленную</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenBaseWith" Property="Text">
+          <Value>Открыть базовую с помощью</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenLocalWith" Property="Text">
+          <Value>Открыть локальную с помщью</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
+          <Value>Открыть удаленную с помощью</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenMergetool" Property="Text">
+          <Value>Открыть в mergetool</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveBaseAs" Property="Text">
+          <Value>Сохранить базовую как</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveLocalAs" Property="Text">
+          <Value>Сохранить локальную как</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
+          <Value>Сохранить удаленную как</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextMarkAsSolved" Property="Text">
+          <Value>Отметить конфликты как разрешенные</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Открыть с помощью</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Открыть</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Локальный</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Базовый</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Удаленный</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Выберите файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Открыть в mergetool</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Пересканировать конфликты</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Запустить mergetool</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Слияние</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>История файла</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
