@@ -677,17 +677,17 @@ namespace GitCommands
             set
             {
                 _gitBinDir = value;
-                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
                 if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeparator)
                     _gitBinDir += PathSeparator;
+                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
 
-                if (string.IsNullOrEmpty(_gitBinDir))
-                    return;
+                //if (string.IsNullOrEmpty(_gitBinDir))
+                //    return;
 
-                var path =
-                    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                    _gitBinDir;
-                Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                //var path =
+                //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
+                //    _gitBinDir;
+                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
