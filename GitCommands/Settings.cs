@@ -1244,5 +1244,24 @@ namespace GitCommands
                     return parameters;
             return null;
         }
+
+        private static bool? _pushAllTags;
+        public static bool PushAllTags
+        {
+            get
+            {
+                if (_pushAllTags == null)
+                    SafeSetBool("pushalltags", false, x => _pushAllTags = x);
+                return _pushAllTags.Value;
+            }
+            set
+            {
+                if (!_pushAllTags.HasValue || _pushAllTags.Value != value)
+                {
+                    _pushAllTags = value;
+                    Application.UserAppDataRegistry.SetValue("pushalltags", _pushAllTags);
+                }
+            }
+        }
     }
 }
