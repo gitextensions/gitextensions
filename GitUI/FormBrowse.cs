@@ -1415,10 +1415,14 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(fileDialog.FileName,
-                                GitCommandHelpers.RunCmd(
-                                    Settings.GitCommand,
-                                    string.Format("cat-file blob \"{0}\"", item.Guid)));
+                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(item.Guid)) //Ugly, has implementation info.
+                {
+                    using (FileStream fileOut = File.Create(fileDialog.FileName))
+                    {
+                        byte[] buf = ms.GetBuffer();
+                        fileOut.Write(buf, 0, buf.Length);
+                    }
+                }
             }
         }
 
