@@ -865,11 +865,10 @@ namespace GitUI
 
         private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartSettingsDialog())
-                Initialize();
+            GitUICommands.Instance.StartSettingsDialog();
 
             Translate();
-
+            Initialize();
             RevisionGrid.ForceRefreshRevisions();
         }
 
