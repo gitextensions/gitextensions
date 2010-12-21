@@ -105,7 +105,7 @@ namespace GitUI.SpellChecker
                     {
                         DictionaryFile = Settings.GetDictionaryDir() + Settings.Dictionary + ".dic"
                     };
-
+            
             _spelling.Dictionary = _wordDictionary;
         }
 
@@ -333,7 +333,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName));
+                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
             }
             catch (Exception ex)
             {
