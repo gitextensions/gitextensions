@@ -35,7 +35,16 @@ namespace GitUI
                 set
                 {
                     var pc = PropertyChanged;
-                    if (pc != null) pc(this, new PropertyChangedEventArgs("TranslatedValue"));
+                    if (pc != null)
+                    {
+                        try
+                        {
+                            pc(this, new PropertyChangedEventArgs("TranslatedValue"));
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
                     _translatedValue = value;
                 }
             }
@@ -398,6 +407,8 @@ namespace GitUI
                 }
 
                 TranslateItem translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+
+                if (translateItem == null) return;
 
                 neutralTekst.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
