@@ -290,6 +290,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _closeCommitDialogAfterLastCommit;
+        public static bool CloseCommitDialogAfterLastCommit
+        {
+            get
+            {
+                if (_closeCommitDialogAfterLastCommit == null)
+                    SafeSetBool("closecommitdialogafterlastcommit", true, x => _closeCommitDialogAfterLastCommit = x);
+                return _closeCommitDialogAfterLastCommit.Value;
+            }
+            set
+            {
+                _closeCommitDialogAfterLastCommit = value;
+                Application.UserAppDataRegistry.SetValue("closecommitdialogafterlastcommit", _closeCommitDialogAfterLastCommit);
+            }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {

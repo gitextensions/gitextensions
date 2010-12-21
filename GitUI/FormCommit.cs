@@ -105,6 +105,7 @@ namespace GitUI
             CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, _closeDialogAfterCommitTooltip.Text);
 
             CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
+            CloseDialogAfterLastCommit.Checked = Settings.CloseCommitDialogAfterLastCommit;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
@@ -305,7 +306,8 @@ namespace GitUI
                     }
                 }
 
-                Close();
+                if (Settings.CloseCommitDialogAfterLastCommit)
+                    Close();
             }
             catch (Exception e)
             {
@@ -966,6 +968,11 @@ namespace GitUI
             // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
                 e.Handled = true;
+        }
+
+        private void CloseDialogAfterLastCommit_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.CloseCommitDialogAfterLastCommit = CloseDialogAfterLastCommit.Checked;
         }
     }
 }
