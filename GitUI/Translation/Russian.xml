@@ -119,6 +119,9 @@
         <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
           <Value>Сбросить выбранные файлы</Value>
         </TranslationItem>
+        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
+          <Value>Отменить все (tracked) изменения</Value>
+        </TranslationItem>
         <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
           <Value>Редактировать игнорируемые файлы</Value>
         </TranslationItem>
@@ -155,6 +158,9 @@
         <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
           <Value>Редактировать файл</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Посмотреть историю файла</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Хотите также удалить созданные файлы, которые находятся в выделении ?
 
@@ -163,11 +169,32 @@
         <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
           <Value>Удалить</Value>
         </TranslationItem>
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>Вы собираетесь переписать историю.
+Используйте эту возможность если коммит еще не опубликован!
+Хотите продолжить?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>Дописать коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
+          <Value>Если отмечено, диалого будет закрыт после каждого коммита.
+Иначе диалог будет закрыт только в том случае, если не осталось измененных файлов.</Value>
+        </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Удаление файла не удалось</Value>
         </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
+          <Value>Вы точно хотите удалить выбранные файл(ы)?</Value>
+        </TranslationItem>
         <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
           <Value>Удалить</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>Вы точно хотите удалить все untracked  файлы?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>Удалить untracked файлы.</Value>
         </TranslationItem>
         <TranslationItem Name="_enterCommitMessage" Property="Text">
           <Value>Пожалуйста, введите сообщение для коммита</Value>
@@ -178,14 +205,23 @@
         <TranslationItem Name="_enterCommitMessageHint" Property="Text">
           <Value>Редактировать сообщение для коммита</Value>
         </TranslationItem>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>Есть конфликты слияния, решите их перед коммитом.</Value>
+        </TranslationItem>
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Конфликты слияния</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Value>Не на ветке.</Value>
         </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>Эта опция доступна только когда выбран один файл</Value>
+        </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Отменить изменения</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+          <Value>Вы точно хотите отменить изменения во всех отмеченных файлах?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
