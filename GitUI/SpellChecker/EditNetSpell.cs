@@ -321,7 +321,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName);
+                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
             }
             catch (Exception ex)
             {
