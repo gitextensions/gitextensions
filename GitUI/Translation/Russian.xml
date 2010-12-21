@@ -699,6 +699,21 @@
         <TranslationItem Name="theirs" Property="Text">
           <Value>их</Value>
         </TranslationItem>
+        <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
+          <Value>Файл был изменен локально({0}) и удаленно({1}). Слейте изменения.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
+          <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл который Вы хотите оставить, или слейте их.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
+          <Value>Файл был изменен локально и удален удаленно. Можно оставить локальную версию или удалить файл.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+          <Value>У файла {0} не существует удаленой ревизии.
+Файл был изменен  локально({1}) и удален удаленно({2}).
+
+Можно оставить локальную версию или удалить файл.</Value>
+        </TranslationItem>
         <TranslationItem Name="noBase" Property="Text">
           <Value>нет базы</Value>
         </TranslationItem>
