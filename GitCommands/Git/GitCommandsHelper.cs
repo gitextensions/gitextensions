@@ -483,7 +483,14 @@ namespace GitCommands
                 if (fileline.Length < 3)
                     continue;
                 Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
-                File.WriteAllText(saveAs, RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\""));
+                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(fileline[1])) //Ugly, has implementation info.
+                {
+                  using (FileStream fileOut = File.Create(saveAs))
+                  {
+                    byte[] buf = ms.GetBuffer();
+                    fileOut.Write(buf, 0, buf.Length);
+                  }
+                }
                 return true;
             }
             return false;
