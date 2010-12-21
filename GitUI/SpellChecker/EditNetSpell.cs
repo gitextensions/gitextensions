@@ -421,5 +421,15 @@ namespace GitUI.SpellChecker
         {
             UpdateEmptyLabel();
         }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            OnKeyUp(e);
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            OnKeyDown(e);
+        }
     }
 }
