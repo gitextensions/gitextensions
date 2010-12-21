@@ -845,6 +845,8 @@ namespace GitUI
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(330, 157);
             this.Message.TabIndex = 0;
+            this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
+            this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
             // 
             // CloseCommitDialogTooltip
             // 
