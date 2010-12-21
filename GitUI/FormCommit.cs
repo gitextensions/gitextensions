@@ -950,5 +950,22 @@ namespace GitUI
                 }
             }
         }
+
+        private void Message_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Ctrl + Enter = Commit
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                CheckForStagedAndCommit(false, false);
+                e.Handled = true;
+            }
+        }
+
+        private void Message_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Prevent adding a line break when all we want is to commit
+            if (e.Control && e.KeyCode == Keys.Enter)
+                e.Handled = true;
+        }
     }
 }
