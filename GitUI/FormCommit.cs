@@ -290,7 +290,7 @@ namespace GitUI
                     GitUICommands.Instance.StartPushDialog(true);
                 }
 
-                if (CloseDialogAfterCommit.Checked)
+                if (Settings.CloseCommitDialogAfterCommit)
                 {
                     Close();
                     return;
