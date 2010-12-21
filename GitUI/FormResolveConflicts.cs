@@ -52,6 +52,7 @@ namespace GitUI
             InitializeComponent(); Translate();
             ThereWhereMergeConflicts = GitCommandHelpers.InTheMiddleOfConflictedMerge();
             merge.Focus();
+            merge.Select();
         }
 
 

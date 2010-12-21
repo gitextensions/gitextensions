@@ -1946,6 +1946,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="helpLabel" Property="Text">
           <Value>Toets F1 voor beschikbare opties</Value>
         </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Download woordenboek</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
