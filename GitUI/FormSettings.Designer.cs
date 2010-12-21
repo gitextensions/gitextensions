@@ -85,6 +85,7 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.downloadDictionary = new System.Windows.Forms.LinkLabel();
             this.label52 = new System.Windows.Forms.Label();
             this.ShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
             this.label26 = new System.Windows.Forms.Label();
@@ -895,6 +896,7 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.downloadDictionary);
             this.TabPageGitExtensions.Controls.Add(this.label52);
             this.TabPageGitExtensions.Controls.Add(this.ShowStashCountInBrowseWindow);
             this.TabPageGitExtensions.Controls.Add(this.label26);
@@ -935,6 +937,17 @@ namespace GitUI
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // downloadDictionary
+            // 
+            this.downloadDictionary.AutoSize = true;
+            this.downloadDictionary.Location = new System.Drawing.Point(571, 81);
+            this.downloadDictionary.Name = "downloadDictionary";
+            this.downloadDictionary.Size = new System.Drawing.Size(104, 13);
+            this.downloadDictionary.TabIndex = 40;
+            this.downloadDictionary.TabStop = true;
+            this.downloadDictionary.Text = "Download dictionary";
+            this.downloadDictionary.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadDictionary_LinkClicked);
             // 
             // label52
             // 
@@ -1051,7 +1064,7 @@ namespace GitUI
             // helpTranslate
             // 
             this.helpTranslate.AutoSize = true;
-            this.helpTranslate.Location = new System.Drawing.Point(616, 50);
+            this.helpTranslate.Location = new System.Drawing.Point(571, 50);
             this.helpTranslate.Name = "helpTranslate";
             this.helpTranslate.Size = new System.Drawing.Size(74, 13);
             this.helpTranslate.TabIndex = 30;
@@ -1068,7 +1081,7 @@ namespace GitUI
             "nl-NL"});
             this.Language.Location = new System.Drawing.Point(396, 47);
             this.Language.Name = "Language";
-            this.Language.Size = new System.Drawing.Size(214, 21);
+            this.Language.Size = new System.Drawing.Size(169, 21);
             this.Language.TabIndex = 29;
             // 
             // label49
@@ -1166,7 +1179,7 @@ namespace GitUI
             this.Dictionary.FormattingEnabled = true;
             this.Dictionary.Location = new System.Drawing.Point(396, 78);
             this.Dictionary.Name = "Dictionary";
-            this.Dictionary.Size = new System.Drawing.Size(214, 21);
+            this.Dictionary.Size = new System.Drawing.Size(169, 21);
             this.Dictionary.TabIndex = 15;
             this.Dictionary.SelectedIndexChanged += new System.EventHandler(this.Dictionary_SelectedIndexChanged);
             this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
@@ -2942,6 +2955,7 @@ namespace GitUI
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.Label helpLabel;
         private System.Windows.Forms.Button translationConfig;
+        private System.Windows.Forms.LinkLabel downloadDictionary;
 
     }
 }
