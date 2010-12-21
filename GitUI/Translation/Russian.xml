@@ -1113,6 +1113,17 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Проверить базу</Value>
         </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>Удалить</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
+          <Value>Вы точно хотите удалить все висящие объекты?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>Было создано {0} тэгов.
+
+Не забудьте удалить их, когда закончите.</Value>
+        </TranslationItem>
         <TranslationItem Name="SaveObjects" Property="Text">
           <Value>Сохранить обьекты в .git/lost-found</Value>
         </TranslationItem>
@@ -1133,6 +1144,12 @@
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Удалить все метки LOST_AND_FOUND</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagAllCommits" Property="Text">
+          <Value>Пометить все потерянные коммиты</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOnlyCommits" Property="Text">
+          <Value>Показать только коммиты</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1298,6 +1315,69 @@
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Выбор метки</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickCommitSmall">
+      <translationItems>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>Дата коммита:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Сообщение:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Автор:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Коммит:</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>Cherry pick этот коммит:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text">
+          <Value>Выбрать этот коммит:</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Автоматически создавать коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Номер.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Сообщение</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Автор</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Дата</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>Этот коммит является мержем, выберите родителя:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>История файла</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranchSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Создать ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Имя ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Создать ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Переключится после создания</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
