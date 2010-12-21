@@ -2403,7 +2403,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.AutoSize = true;
             this.inMenuCheckBox.Enabled = false;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(342, 245);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(280, 245);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2496,7 +2496,7 @@ namespace GitUI
             this.nameTextBox.Enabled = false;
             this.nameTextBox.Location = new System.Drawing.Point(84, 243);
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(252, 21);
+            this.nameTextBox.Size = new System.Drawing.Size(190, 21);
             this.nameTextBox.TabIndex = 6;
             // 
             // moveDownButton

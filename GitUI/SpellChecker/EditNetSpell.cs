@@ -309,7 +309,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                return new CultureInfo(new CultureInfo(cultureCode).TwoLetterISOLanguageName).NativeName;
+                return new CultureInfo(new CultureInfo(cultureCode.Replace('_', '-').TwoLetterISOLanguageName).NativeName;
             }
             catch
             {
