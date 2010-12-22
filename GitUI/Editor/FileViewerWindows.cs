@@ -129,6 +129,22 @@ namespace GitUI.Editor
             return TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
         }
 
+        public int GetSelectionPosition()
+        {
+            if (TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection.Count > 0)
+                return TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0].Offset;
+
+            return TextEditor.ActiveTextAreaControl.Caret.Offset;
+        }
+
+        public int GetSelectionLength()
+        {
+            if (TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection.Count > 0)
+                return TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0].Length;
+
+            return 0;
+        }
+
         private void AddExtraPatchHighlighting()
         {
             var document = TextEditor.Document;
