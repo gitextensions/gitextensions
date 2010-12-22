@@ -22,6 +22,8 @@ namespace GitUI.Editor
         void SetText(string text);
         void SetHighlighting(string syntax);
         string GetSelectedText();
+        int GetSelectionPosition();
+        int GetSelectionLength();
         void AddPatchHighlighting();
         int ScrollPos { get; set; }
 
