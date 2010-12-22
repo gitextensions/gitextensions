@@ -76,6 +76,9 @@
     </TranslationCategory>
     <TranslationCategory Name="CommitInfo">
       <translationItems>
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
+          <Value>Показать локальные ветки, содержащие этот коммит</Value>
+        </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Value>Показать метки, содержащие этот коммит</Value>
         </TranslationItem>
@@ -155,6 +158,9 @@
         <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
           <Value>Имя файла в буфер обмена</Value>
         </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Открыть с помощью Difftool</Value>
+        </TranslationItem>
         <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
           <Value>Редактировать файл</Value>
         </TranslationItem>
@@ -211,17 +217,32 @@
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Конфликты слияния</Value>
         </TranslationItem>
+        <TranslationItem Name="_noFilesStaged" Property="Text">
+          <Value>Нет сохраненных файлов для этого коммита. Вы точно хотите коммитить?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noStagedChanges" Property="Text">
+          <Value>Сохраненных изменений нет</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>Не сохраненных изменений нет</Value>
+        </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Value>Не на ветке.</Value>
         </TranslationItem>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>Эта опция доступна только когда выбран один файл</Value>
         </TranslationItem>
+        <TranslationItem Name="_resetChanges" Property="Text">
+          <Value>Вы точно хоттите отменить изменения выделенного файла?</Value>
+        </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_resetSelectedChanges" Property="Text">
           <Value>Вы точно хотите отменить изменения во всех отмеченных файлах?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Возможно выбрать только один файл.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -268,6 +289,12 @@
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Value>Применить патч</Value>
+        </TranslationItem>
+        <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
+          <Value>Сформировать патч</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
+          <Value>Протокол команд</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Value>Получить ветку</Value>
@@ -343,6 +370,9 @@
         </TranslationItem>
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>Синхронизировать все субмодули</Value>
+        </TranslationItem>
+        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text">
+          <Value>Обзор субмодуля</Value>
         </TranslationItem>
         <TranslationItem Name="exitToolStripMenuItem" Property="Text">
           <Value>Выход</Value>
@@ -439,6 +469,9 @@
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="ToolTipText">
           <Value>Сменить текущую ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
+          <Value>Diff содержит (МЕДЛЕННО)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -898,6 +931,9 @@
         <TranslationItem Name="BrowseSource" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Внешняя ветка</Value>
+        </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Value>Решить конфликты</Value>
         </TranslationItem>
@@ -1111,6 +1147,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="BrowseDiffTool" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="label42" Property="Text">
+          <Value>Путь к difftool</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox5" Property="Text">
           <Value>Иконка приложения</Value>
         </TranslationItem>
@@ -1186,6 +1225,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="BranchBorders" Property="Text">
           <Value>Рисовать границы веток</Value>
         </TranslationItem>
+        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+          <Value>Показывать ошибки при stage файлов</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
           <Value>Окончания строк</Value>
         </TranslationItem>
@@ -1247,6 +1289,21 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
     </TranslationCategory>
     <TranslationCategory Name="FormFormatPath">
       <translationItems>
+        <TranslationItem Name="SelectedBranch" Property="Text">
+          <Value>Ветка</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>Создать патч(и)</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>Отправить патчи по почте</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>Сохранить патчи</Value>
+        </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Тело</Value>
         </TranslationItem>
@@ -1263,12 +1320,36 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="Bad" Property="Text">
           <Value>Отметить текущую ревизию как плохую</Value>
         </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Остановить bisect</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResetCurrentBranch">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Сбросить текущую папку</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Тип reset</Value>
+        </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitInfo" Property="Text">
+          <Value>Коммит: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorInfo" Property="Text">
+          <Value>Автор: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateInfo" Property="Text">
+          <Value>Дата коммита: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessage" Property="Text">
+          <Value>Сообщение: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetHardWarning" Property="Text">
+          <Value>Сейчас буду отменены все локальные изменения. Вы уверены?</Value>
         </TranslationItem>
         <TranslationItem Name="resetCaption" Property="Text">
           <Value>Сбросить ветку</Value>
@@ -1335,6 +1416,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>Нет изменений</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="DashboardEditor">
       <translationItems>
         <TranslationItem Name="Remove" Property="Text">
@@ -1354,6 +1442,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Value>RSS лента</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>RSS feed</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Репозитории</Value>
@@ -1578,6 +1669,12 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="EditNetSpell">
       <translationItems>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Перевести весь текст на {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Перевести '{0}' на {1}</Value>
+        </TranslationItem>
         <TranslationItem Name="addToDictionaryText" Property="Text">
           <Value>Добавить в словарь</Value>
         </TranslationItem>
@@ -1835,8 +1932,14 @@ _ReSharper*/
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Автор</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitDateCaption" Property="Text">
+          <Value>Дата коммита</Value>
+        </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Value>Сообщение</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Value>Текущие незкомиченные изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
           <Value>секунд назад</Value>
@@ -1898,6 +2001,15 @@ _ReSharper*/
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Value>Удалить ветку</Value>
         </TranslationItem>
+        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
+          <Value>Сортировать ревизии по дате</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>Показывать только текущую ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>Показывать отфильтрованные ветки</Value>
+        </TranslationItem>
         <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Value>Копировать в буфер</Value>
         </TranslationItem>
@@ -1910,6 +2022,9 @@ _ReSharper*/
         <TranslationItem Name="messageToolStripMenuItem" Property="Text">
           <Value>Сообщение</Value>
         </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Автор</Value>
+        </TranslationItem>
         <TranslationItem Name="dateToolStripMenuItem" Property="Text">
           <Value>Дата</Value>
         </TranslationItem>
@@ -1918,6 +2033,12 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Отметить ревизию как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
+          <Value>Остановить bisect</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Запустить скрипт</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2045,6 +2166,9 @@ _ReSharper*/
           <Value>Размер картинки</Value>
         </TranslationItem>
         <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Нет сервиса картинок</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
           <Value>Нет сервиса картинок</Value>
         </TranslationItem>
       </translationItems>
@@ -2207,8 +2331,14 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="FormFixHome">
       <translationItems>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Окружение</Value>
+        </TranslationItem>
         <TranslationItem Name="otherHomeBrowse" Property="Text">
           <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Другое</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
