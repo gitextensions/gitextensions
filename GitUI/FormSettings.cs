@@ -2111,5 +2111,10 @@ namespace GitUI
         {
             System.Diagnostics.Process.Start(@"http://wiki.services.openoffice.org/wiki/Dictionaries");
         }
+
+        private void argumentsLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
