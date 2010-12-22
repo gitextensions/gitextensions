@@ -311,6 +311,9 @@
         <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
           <Value>Сжать базу git</Value>
         </TranslationItem>
+        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
+          <Value>Удаленные</Value>
+        </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Value>Управление удаленными репозиториями</Value>
         </TranslationItem>
@@ -347,6 +350,21 @@
         <TranslationItem Name="recentToolStripMenuItem" Property="Text">
           <Value>Недавние репозитории</Value>
         </TranslationItem>
+        <TranslationItem Name="updateAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Обновить все субмодули рекурсивно</Value>
+        </TranslationItem>
+        <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Инициализировать все субмодули рекукрсивно</Value>
+        </TranslationItem>
+        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Синхронизировать все субмодули рекурсивно</Value>
+        </TranslationItem>
+        <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
+          <Value>Модули</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
+          <Value>Настройки</Value>
+        </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Value>Закрыть</Value>
         </TranslationItem>
@@ -358,6 +376,9 @@
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Value>Очистить</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Открыть с помощью difftool</Value>
         </TranslationItem>
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Value>Перевести</Value>
@@ -406,6 +427,9 @@
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Value>Автор</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Открыть полученный файл с помощью...</Value>
         </TranslationItem>
         <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
           <Value>История файла</Value>
@@ -557,6 +581,19 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCherryPick">
+      <translationItems>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Выберите коммит для cherry pick. Коммит будет скопирован на вершину текущей ветки.</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Автоматически создавать коммит, если нет конфликтов</Value>
+        </TranslationItem>
+        <TranslationItem Name="autoParent" Property="Text">
+          <Value>Автоматически устанавливать родителя в 1 если коммит слияния</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FindAndReplaceForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -705,6 +742,21 @@
         <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
           <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл который Вы хотите оставить, или слейте их.</Value>
         </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+          <Value>Файл {0} не имеет базовой ревизии.
+Файл с одним и тем же именем был создан локально({1}) и удаленно({2}), что вызвало конфликт.
+
+Удалите файл, слейте файлы или удалите файл.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
+          <Value>Файл был удален локально и изменен удаленно. Удалите или оставьте измененную версию.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+          <Value>Файл {0} не имеет локальной версии.
+Файл был удален локально({1}) но изменен удаленно({2}).
+
+Удалите файл, или оставьте измененную версию.</Value>
+        </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
           <Value>Файл был изменен локально и удален удаленно. Можно оставить локальную версию или удалить файл.</Value>
         </TranslationItem>
@@ -826,6 +878,13 @@
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>Метка</Value>
         </TranslationItem>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>Ветка, которую вы собираетесь push является новой для удаленного репозитория.
+Вы уверены, что хотите push эту ветку?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Не могу загрузить SSH ключ. PuTTY сконфигурирован неправильно.</Value>
+        </TranslationItem>
         <TranslationItem Name="_selectDestinationDirectory" Property="Text">
           <Value>Пожалуйста, выберите директорию</Value>
         </TranslationItem>
@@ -839,11 +898,26 @@
         <TranslationItem Name="BrowseSource" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Решить конфликты</Value>
+        </TranslationItem>
+        <TranslationItem Name="Merge" Property="Text">
+          <Value>Слиять удаленную и локальную ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Опции слияния</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>Ветка</Value>
         </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Загрузить SSH ключ</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Локальная ветка</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>Решены все конфликты ? Хотите коммитить?</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>Конфликты разрешены</Value>
@@ -863,6 +937,28 @@
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Сохранить</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Редактировать mailmap.
+Этот файл необходим для коррекции имен.
+
+Пример:
+Henk Westhuis &lt;Henk@.(none)&gt;
+Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
+</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Добавить файл(ы) в .gitIgnore</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowPreview" Property="Text">
+          <Value>Предварительный просмотр</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>Добавить в .gitignore</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -925,17 +1021,38 @@
         <TranslationItem Name="PlinkBrowse" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="label15" Property="Text">
+          <Value>Путь к plink.exe</Value>
+        </TranslationItem>
         <TranslationItem Name="PageantBrowse" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
         <TranslationItem Name="PuttygenBrowse" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="label16" Property="Text">
+          <Value>Путь к puttygen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label18" Property="Text">
+          <Value>OpenSSH - утилита командной строки. PuTTY более удобная для пользователей Windows, но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме. Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
+        </TranslationItem>
         <TranslationItem Name="OtherSshBrowse" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="Other" Property="Text">
+          <Value>Другой клиент ssh</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text">
+          <Value>Автоматический запускать клиент аутентификации, когда для удаленного репозитория сконфигурирован секретный ключ.</Value>
+        </TranslationItem>
+        <TranslationItem Name="PathToKDiff3" Property="Text">
+          <Value>Путь к mergetool</Value>
+        </TranslationItem>
         <TranslationItem Name="BrowseMergeTool" Property="Text">
           <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoGitRepo" Property="Text">
+          <Value>Это не репозиторий git </Value>
         </TranslationItem>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Кодировка</Value>
@@ -1018,6 +1135,21 @@
         <TranslationItem Name="RandomIcon" Property="Text">
           <Value>Случайно</Value>
         </TranslationItem>
+        <TranslationItem Name="label43" Property="Text">
+          <Value>Подсветка удаления строки</Value>
+        </TranslationItem>
+        <TranslationItem Name="label45" Property="Text">
+          <Value>Подсветка добавления строки</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text">
+          <Value>Картинки авторов</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowAuthorGravatar" Property="Text">
+          <Value>Получить картинки с gravatar.com</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text">
+          <Value>Очистить кеш картинок</Value>
+        </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Value>Размер картинки</Value>
         </TranslationItem>
@@ -1029,6 +1161,9 @@
         </TranslationItem>
         <TranslationItem Name="label46" Property="Text">
           <Value>Кешировать картинки</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
+          <Value>Предложить команду</Value>
         </TranslationItem>
         <TranslationItem Name="label49" Property="Text">
           <Value>Язык (необходим перезапуск)</Value>
@@ -1110,6 +1245,36 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormFormatPath">
+      <translationItems>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Тело</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Тема</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Отметить текущую ревизию как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Отметить текущую ревизию как плохую</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResetCurrentBranch">
+      <translationItems>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCaption" Property="Text">
+          <Value>Сбросить ветку</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormMergeBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1167,6 +1332,65 @@
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Value>Создать ветку</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Удалить</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Добавить</Value>
+        </TranslationItem>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>Категории</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Заголовок</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Тип</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>RSS лента</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>Репозитории</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>Недавние репозитории</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>Общие действия</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>Участвовать</Value>
+        </TranslationItem>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>Открыть репозиторий</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>Клонировать репозиторий</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>Создать новый репозиторий</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>Разрабатывать</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>Пожертвовать</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>Перевести</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>Проблемы</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1352,6 +1576,28 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Добавить в словарь</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Игнорировать слово</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Удалить слово</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Словарь</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Отметить плохо форматированные строки</Value>
+        </TranslationItem>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>Введите сообщение</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1392,6 +1638,65 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Найти</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>Игнорировать изменения в пробелах</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Увеличить количество видимых строк</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Уменьшить количество видимых строк</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>Показвать весь файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>Считать все файлы текстовыми</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>Копировать</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
+          <Value>Копировать патч</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>Следующее изменение</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>Предыдущее изменение</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>Увеличить количество видимых строк</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>Уменьшить количество видимых строк</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>Показвать весь файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>Показывать непечатные символы</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>Показывать непечатные символы</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>Игнорировать пробелы</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>Поиск и замена</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="MergePatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1429,6 +1734,16 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Неразрешенные конфликты</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardCategoryTitle">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Введите заголовок</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Введите заголовок</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1486,6 +1801,9 @@ _ReSharper*/
         <TranslationItem Name="nextButton" Property="Text">
           <Value>Следующий</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>Текущий перевод:</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
           <Value>Код языка:</Value>
         </TranslationItem>
@@ -1509,6 +1827,97 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="saveAsText" Property="Text">
           <Value>Сохранить как</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="RevisionGrid">
+      <translationItems>
+        <TranslationItem Name="_authorCaption" Property="Text">
+          <Value>Автор</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Сообщение</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>секунд назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>минут назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>час назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>часа(ов) назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>дня(ей) назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>месяц назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>месяцев назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>лет назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
+          <Value>Фильтр</Value>
+        </TranslationItem>
+        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
+          <Value>Создать новую метку</Value>
+        </TranslationItem>
+        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
+          <Value>Создать новую ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
+          <Value>Сбросить текущую ветку сюда</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitIgnore" Property="Text">
+          <Value>Редактировать .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Value>Показывать удаленные ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>Показывать ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>Отменить коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
+          <Value>Показать граф ревизий</Value>
+        </TranslationItem>
+        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
+          <Value>Настроить расширенный фильтр</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Удалить метку</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Удалить ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>Копировать в буфер</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>Имя ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Метка</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>Сообщение</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>Дата</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>Отметить ревизию как плохую</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>Отметить ревизию как хорошую</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1566,6 +1975,22 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>Вверх</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>Вниз</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>Удалить</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>Редактировать</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1602,6 +2027,57 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Выбор метки</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Обновить картинку</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>Зарегестрироваться на gravatar.com</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>Очистить кеш картинок</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>Размер картинки</Value>
+        </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Нет сервиса картинок</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevertCommitSmall">
+      <translationItems>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>Дата коммита:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Сообщение:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Автор:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Коммит:</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>Отменить этот коммит:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>Отменить этот коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Автоматически создать коммит</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Начальная страница</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1771,6 +2247,22 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="chkInteractive" Property="Text">
           <Value>Интерактивный rebase</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Strings">
+      <translationItems>
+        <TranslationItem Name="dateText" Property="Text">
+          <Value>Дата</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorText" Property="Text">
+          <Value>Автор</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerDateText" Property="Text">
+          <Value>Дата коммита</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitHashText" Property="Text">
+          <Value>Хеш коммита</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
