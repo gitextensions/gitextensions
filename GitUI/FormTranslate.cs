@@ -37,13 +37,7 @@ namespace GitUI
                     var pc = PropertyChanged;
                     if (pc != null)
                     {
-                        try
-                        {
-                            pc(this, new PropertyChangedEventArgs("TranslatedValue"));
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        pc(this, new PropertyChangedEventArgs("TranslatedValue"));
                     }
                     _translatedValue = value;
                 }
@@ -135,6 +129,8 @@ namespace GitUI
                 return;
 
             List<TranslateItem> filterTranslate = new List<TranslateItem>();
+
+            translateItemBindingSource.DataSource = null;
 
             foreach (TranslateItem translateItem in translate)
             {
