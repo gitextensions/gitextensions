@@ -306,12 +306,24 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
+            return RunCmd(cmd, arguments, null);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, string stdInput)
+        {
             int exitCode;
-            return RunCmd(cmd, arguments, out exitCode);
+            return RunCmd(cmd, arguments, out exitCode, stdInput);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments, out int exitCode)
+        {
+            return RunCmd(cmd, arguments, out exitCode, null);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
             try
             {
@@ -320,7 +332,7 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error);
+                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -343,6 +355,11 @@ namespace GitCommands
 
         private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
+            return  CreateAndStartProcess(arguments, cmd, out stdOutput, out stdError, null);
+        }
+
+        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError, string stdInput)
+        {
             if (string.IsNullOrEmpty(cmd))
             {
                 stdOutput = stdError = "";
@@ -361,6 +378,12 @@ namespace GitCommands
 
             using (var process = Process.Start(startInfo))
             {
+                if (!string.IsNullOrEmpty(stdInput))
+                {
+                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.Close();
+                }
+
                 stdOutput = process.StandardOutput.ReadToEnd();
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
