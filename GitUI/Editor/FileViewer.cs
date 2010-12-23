@@ -14,6 +14,8 @@ namespace GitUI.Editor
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
+        private bool _currentViewIsStagingPatch;
+        private bool _currentViewIsStagedPatch;
         private IFileViewer _internalFileViewer;
 
         public FileViewer()
@@ -125,6 +127,18 @@ namespace GitUI.Editor
             descreaseNumberOfLinesToolStripMenuItem.Enabled = enable;
             showEntireFileToolStripMenuItem.Enabled = enable;
             treatAllFilesAsTextToolStripMenuItem.Enabled = enable;
+        }
+
+        public void EnableStagingContextMenu(bool enable)
+        {
+            _currentViewIsStagingPatch = enable;
+            stageSelectedLines.Enabled = enable;
+        }
+
+        public void UpdateStagingContextMenu(bool staged)
+        {
+            _currentViewIsStagedPatch = staged;
+            stageSelectedLines.Text = staged ? "Unstage selected lines" : "Stage selected lines";
         }
 
         private void OnExtraDiffArgumentsChanged()
@@ -420,7 +434,14 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, bool staged)
         {
-            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
+            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            UpdateStagingContextMenu(staged);
+        }
+
+        public void ViewStagingPatch(string text)
+        {
+            ViewPatch(text);
+            Reset(true, true, true);
         }
 
         public void ViewPatch(string text)
@@ -428,6 +449,12 @@ namespace GitUI.Editor
             ResetForDiff();
             _internalFileViewer.SetText(text);
             RestoreCurrentScrollPos();
+        }
+
+        public void ViewStagingPatch(Func<string> loadPatchText)
+        {
+            ViewPatch(loadPatchText);
+            Reset(true, true, true);
         }
 
         public void ViewPatch(Func<string> loadPatchText)
@@ -618,8 +645,14 @@ namespace GitUI.Editor
 
         private void Reset(bool diff, bool text)
         {
+            Reset(diff, text, false);
+        }
+
+        private void Reset(bool diff, bool text, bool staging_diff)
+        {
             patchHighlighting = diff;
             EnableDiffContextMenu(diff);
+            EnableStagingContextMenu(staging_diff);
             ClearImage();
             PictureBox.Visible = !text;
             _internalFileViewer.Visible = text;
@@ -704,6 +737,21 @@ namespace GitUI.Editor
             {
                 Clipboard.SetText(_internalFileViewer.GetText());
             }
+        }
+
+        private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!_currentViewIsStagingPatch)
+                return;
+            // Prepare git command
+            string args = "apply  --cached --whitespace=nowarn";
+            if (_currentViewIsStagedPatch)
+                args += " --reverse";
+
+            string patch = GetSelectedLinesAsPatch(_currentViewIsStagedPatch);
+
+            if (!string.IsNullOrEmpty(patch))
+                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
         }
 
         private void NextChangeButtonClick(object sender, EventArgs e)
