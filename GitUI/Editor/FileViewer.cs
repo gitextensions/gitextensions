@@ -16,6 +16,7 @@ namespace GitUI.Editor
         private bool _currentViewIsPatch;
         private bool _currentViewIsStagingPatch;
         private bool _currentViewIsStagedPatch;
+        private string _currentFileName;
         private IFileViewer _internalFileViewer;
 
         public FileViewer()
@@ -435,6 +436,7 @@ namespace GitUI.Editor
         public void ViewCurrentChanges(string fileName, bool staged)
         {
             _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _currentFileName = fileName;
             UpdateStagingContextMenu(staged);
         }
 
@@ -751,7 +753,10 @@ namespace GitUI.Editor
             string patch = GetSelectedLinesAsPatch(_currentViewIsStagedPatch);
 
             if (!string.IsNullOrEmpty(patch))
+            {
                 GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                ViewCurrentChanges(_currentFileName, _currentViewIsStagedPatch);                
+            }
         }
 
         private void NextChangeButtonClick(object sender, EventArgs e)
