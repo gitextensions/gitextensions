@@ -19,6 +19,9 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,10 +34,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -76,6 +77,7 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -131,6 +133,12 @@
     <Compile Include="FormCherryPickMerge.Designer.cs">
       <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormChooseTranslation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormChooseTranslation.Designer.cs">
+      <DependentUpon>FormChooseTranslation.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +154,12 @@
     <Compile Include="Editor\AsyncLoader.cs" />
     <Compile Include="FormFixHome.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRunScriptSpecify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRunScriptSpecify.Designer.cs">
+      <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStatus.cs">
       <SubType>Form</SubType>
@@ -232,7 +246,11 @@
     <Compile Include="FormCherryPickCommitSmall.Designer.cs">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitFileTreeComparer.cs" />
+    <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
+    <Compile Include="ProcessOutputTimer.cs" />
+    <Compile Include="RunScript.cs" />
     <Compile Include="SpellChecker\EditNetSpell.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -648,6 +666,10 @@
       <DependentUpon>FormCherryPickMerge.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormChooseTranslation.resx">
+      <DependentUpon>FormChooseTranslation.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -698,6 +720,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
       <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRunScriptSpecify.resx">
+      <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
@@ -1003,14 +1029,36 @@
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
     <None Include="Icons\arrow_refresh.png" />
+    <None Include="Icons\39.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
     <None Include="Resources\whitespace.png" />
+    <Content Include="Translation\Dutch.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Translation\English.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Italiano.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Italiano.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Japanese.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\Japanese.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Spanish.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Russian.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Translation\Spanish.xml">

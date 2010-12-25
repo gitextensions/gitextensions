@@ -31,6 +31,11 @@ namespace GitExtensions
             FormSplash.SetAction("Load plugins");
             PluginLoader.LoadAsync();
 
+            if (string.IsNullOrEmpty(Settings.Translation))
+            {
+                new FormChooseTranslation().ShowDialog();
+            }
+
             try
             {
                 if (Application.UserAppDataRegistry == null ||

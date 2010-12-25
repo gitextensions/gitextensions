@@ -51,6 +51,9 @@ namespace GitUI
         protected override void OnLoad(EventArgs e)
         {
             LoadSettings();
+
+            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
+            userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})", Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         private void LoadSettings()

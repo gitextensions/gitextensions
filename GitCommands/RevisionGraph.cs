@@ -16,6 +16,7 @@ namespace GitCommands
     public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
+        public event EventHandler Error;
         public event EventHandler Updated;
         public List<GitRevision> Revisions
         {
@@ -186,17 +187,21 @@ namespace GitCommands
                     }
                 } while (line != null);
                 finishRevision();
-
-                Exited(this, new EventArgs());
             }
-            catch (ThreadAbortException ex)
+            catch (ThreadAbortException)
             {
                 //Silently ignore this exception...
             }
             catch (Exception ex)
             {
+                if (Error != null)
+                    Error(this, EventArgs.Empty);
                 MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
+                return;
             }
+
+            if (Exited != null)
+                Exited(this, EventArgs.Empty);
         }
 
         void finishRevision()
@@ -299,7 +304,7 @@ namespace GitCommands
                     if (logoutputEncoding == null)
                         logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
 
-                    if (logoutputEncoding != Settings.Encoding)
+                    if (!logoutputEncoding.Equals(Settings.Encoding))
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     else
                         revision.Message = line;

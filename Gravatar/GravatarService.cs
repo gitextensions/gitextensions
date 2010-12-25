@@ -11,6 +11,13 @@ namespace Gravatar
     {
         static IImageCache cache;
 
+        public enum FallBackService
+        {
+            MonsterId,
+            Wavatar,
+            Identicon
+        }
+
         public static void ClearImageCache()
         {
             cache.ClearCache();
@@ -22,7 +29,8 @@ namespace Gravatar
         }
 
         public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,
-                                             int imageSize, string imageCachePath, Action<Image> onChangedImage)
+                                             int imageSize, string imageCachePath, Action<Image> onChangedImage,
+                                             FallBackService fallBack)
         {
             try
             {
@@ -35,7 +43,7 @@ namespace Gravatar
                 {
                     onChangedImage(defaultBitmap);
 
-                    GetImageFromGravatar(imageFileName, email, imageSize);
+                    GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
                 }
                 if (cache.FileIsCached(imageFileName))
                 {
@@ -54,12 +62,19 @@ namespace Gravatar
             }
         }
 
-        public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize)
+        public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize, FallBackService fallBack)
         {
             try
             {
                 var baseUrl = String.Concat("http://www.gravatar.com/avatar/{0}?d=identicon&s=",
                                             authorImageSize, "&r=g");
+
+                if (fallBack == FallBackService.Identicon)
+                    baseUrl += "&d=identicon";
+                if (fallBack == FallBackService.MonsterId)
+                    baseUrl += "&d=monsterid";
+                if (fallBack == FallBackService.Wavatar)
+                    baseUrl += "&d=wavatar";
 
                 //hash the email address
                 var emailHash = MD5.CalcMD5(email.ToLower());

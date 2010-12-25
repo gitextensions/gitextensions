@@ -28,7 +28,6 @@ namespace GitUI
                 return;
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PrivateKeypath.Text);
             if (string.IsNullOrEmpty(PrivateKeypath.Text))
             {
                 MessageBox.Show("Could not load key.", "PuTTY");

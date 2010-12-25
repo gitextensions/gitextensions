@@ -21,6 +21,15 @@ namespace GitUI
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
+        private readonly TranslationString _secondsAgo = new TranslationString("seconds ago");
+        private readonly TranslationString _minutesAgo = new TranslationString("minutes ago");
+        private readonly TranslationString _hourAgo = new TranslationString("hour ago");
+        private readonly TranslationString _hoursAgo = new TranslationString("hours ago");
+        private readonly TranslationString _daysAgo = new TranslationString("days ago");
+        private readonly TranslationString _monthAgo = new TranslationString("month ago");
+        private readonly TranslationString _monthsAgo = new TranslationString("months ago");
+        private readonly TranslationString _yearsAgo = new TranslationString("years ago");
+
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
@@ -195,7 +204,7 @@ namespace GitUI
                 quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
                 quickSearchTimer.Start();
 
-                _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length-1);
+                _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
 
                 var oldIndex = 0;
                 if (Revisions.SelectedRows.Count > 0)
@@ -208,49 +217,58 @@ namespace GitUI
                 ShowQuickSearchString();
             }
             else
-            if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
-            {
-                quickSearchTimer.Stop();
-                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
-                quickSearchTimer.Start();
-
-                //The code below is ment to fix the wierd keyvalues when pressing keys e.g. ".".
-                switch (key)
+                if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
                 {
-                    case 188:
-                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
-                        break;
-                    case 189:
-                        _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
-                        break;
-                    case 190:
-                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
-                        break;
-                    case 191:
-                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
-                        break;
-                    default:
-                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
-                        break;
+                    quickSearchTimer.Stop();
+                    quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+                    quickSearchTimer.Start();
+
+                    //The code below is ment to fix the wierd keyvalues when pressing keys e.g. ".".
+                    switch (key)
+                    {
+                        case 51:
+                            if (e.Shift)
+                                _quickSearchString = string.Concat(_quickSearchString, "#").ToLower();
+                            else
+                                _quickSearchString = string.Concat(_quickSearchString, "3").ToLower();
+                            break;
+                        case 188:
+                            _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
+                            break;
+                        case 189:
+                            if (e.Shift)
+                                _quickSearchString = string.Concat(_quickSearchString, "_").ToLower();
+                            else
+                                _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
+                            break;
+                        case 190:
+                            _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
+                            break;
+                        case 191:
+                            _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
+                            break;
+                        default:
+                            _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
+                            break;
+                    }
+
+                    var oldIndex = 0;
+                    if (Revisions.SelectedRows.Count > 0)
+                        oldIndex = Revisions.SelectedRows[0].Index;
+
+                    FindNextMatch(oldIndex, _quickSearchString, false);
+                    _lastQuickSearchString = _quickSearchString;
+
+                    e.Handled = true;
+                    ShowQuickSearchString();
                 }
-
-                var oldIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    oldIndex = Revisions.SelectedRows[0].Index;
-
-                FindNextMatch(oldIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
-            }
-            else
-            {
-                _quickSearchString = "";
-                HideQuickSearchString();
-                e.Handled = false;
-                return;
-            }
+                else
+                {
+                    _quickSearchString = "";
+                    HideQuickSearchString();
+                    e.Handled = false;
+                    return;
+                }
         }
 
         private void FindNextMatch(int startIndex, string searchString, bool reverse)
@@ -343,20 +361,25 @@ namespace GitUI
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
-                    if (cmdLineSafe) 
+                    if (cmdLineSafe)
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
-                if (parameters[1]) 
+                if (parameters[1])
                     if (cmdLineSafe)
                         revListArgs += "--committer=\"" + filter + "\" ";
                     else
                         inMemCommitterFilter = filter;
-                if (parameters[2]) 
+                if (parameters[2])
                     if (cmdLineSafe)
                         revListArgs += "--author=\"" + filter + "\" ";
                     else
                         inMemAuthorFilter = filter;
+                if (parameters[3])
+                    if (cmdLineSafe)
+                        revListArgs += "\"-S" + filter + "\" ";
+                    else
+                        throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
             }
         }
 
@@ -442,9 +465,43 @@ namespace GitUI
             return retval;
         }
 
-        private GitRevision GetRevision(int aRow)
+        public GitRevision GetRevision(int aRow)
         {
             return Revisions.GetRowData(aRow) as GitRevision;
+        }
+
+        public GitRevision GetCurrentRevision()
+        {
+            string formatString =
+                /* Tree           */ "%T%n" +
+                /* Author Name    */ "%aN%n" +
+                /* Author Date    */ "%ai%n" +
+                /* Committer Name */ "%cN%n" +
+                /* Committer Date */ "%ci%n" +
+                /* Commit Message */ "%s";
+            string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
+            var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
+            string[] Infos = RevInfo.Split('\n');
+            GitRevision Revision = new GitRevision
+            {
+                Guid = CurrentCheckout,
+                TreeGuid = Infos[0],
+                Author = Infos[1],
+                Committer = Infos[3],
+                Message = Infos[5]
+            };
+            DateTime Date;
+            DateTime.TryParse(Infos[2], out Date);
+            Revision.AuthorDate = Date;
+            DateTime.TryParse(Infos[4], out Date);
+            Revision.CommitDate = Date;
+            List<GitHead> heads = GitCommandHelpers.GetHeads(true, true);
+            foreach (GitHead head in heads)
+            {
+                if (head.Guid.Equals(Revision.Guid))
+                    Revision.Heads.Add(head);
+            }
+            return Revision;
         }
 
         public void RefreshRevisions()
@@ -564,10 +621,11 @@ namespace GitUI
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
-                if (!(string.IsNullOrEmpty(InMemAuthorFilter) && 
-                      string.IsNullOrEmpty(InMemCommitterFilter) && 
+                _revisionGraphCommand.Error += _revisionGraphCommand_Error;
+                if (!(string.IsNullOrEmpty(InMemAuthorFilter) &&
+                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                       string.IsNullOrEmpty(InMemMessageFilter)))
-                    _revisionGraphCommand.InMemFilter = new RevisionGridInMemFilter(InMemAuthorFilter, 
+                    _revisionGraphCommand.InMemFilter = new RevisionGridInMemFilter(InMemAuthorFilter,
                                                                                     InMemCommitterFilter,
                                                                                     InMemMessageFilter,
                                                                                     InMemFilterIgnoreCase);
@@ -581,6 +639,19 @@ namespace GitUI
                 Error.Visible = true;
                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void _revisionGraphCommand_Error(object sender, EventArgs e)
+        {
+            // This has to happen on the UI thread
+            _syncContext.Send(o =>
+                                  {
+                                      Error.Visible = true;
+                                      NoGit.Visible = false;
+                                      NoCommits.Visible = false;
+                                      Revisions.Visible = false;
+                                      Loading.Visible = false;
+                                  }, this);
         }
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
@@ -1052,6 +1123,8 @@ namespace GitUI
             tagToolStripMenuItem.Visible = tagNameCopy.Items.Count > 0;
 
             toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
+
+            RefreshOwnScripts();
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
@@ -1170,7 +1243,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private static string TimeToString(DateTime time)
+        private string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
                 return "";
@@ -1181,27 +1254,27 @@ namespace GitUI
             var span = DateTime.Now - time;
 
             if (span.Minutes < 0)
-                return string.Format("{0} seconds ago", span.Seconds);
+                return string.Concat(span.Seconds, " ", _secondsAgo.Text);
 
             if (span.TotalHours < 1)
-                return string.Format("{0} minutes ago", span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+                return string.Concat(span.Minutes + Math.Round(span.Seconds / 60.0, 0), " ", _minutesAgo.Text);
 
             if (span.TotalHours < 2)
-                return "1 hour ago";
+                return string.Concat("1 ", _hourAgo.Text);
 
             if (span.TotalHours < 24)
-                return string.Format("{0} hours ago", (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+                return string.Concat((int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0), " ", _hoursAgo.Text);
 
             if (span.TotalDays < 30)
-                return string.Format("{0} days ago", (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+                return string.Concat((int)span.TotalDays + Math.Round(span.Hours / 24.0, 0), " ", _daysAgo.Text);
 
             if (span.TotalDays < 45)
-                return "1 month ago";
+                return string.Concat("1 ", _monthAgo.Text);
 
             if (span.TotalDays < 365)
-                return string.Format("{0} months ago", (int)Math.Round(span.TotalDays / 30, 0));
+                return string.Concat((int)Math.Round(span.TotalDays / 30, 0), " ", _monthsAgo.Text);
 
-            return string.Format("{0:#.#} years ago", Math.Round(span.TotalDays / 365));
+            return string.Concat(string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)), _yearsAgo.Text);
         }
 
         private void UpdateGraph(GitRevision rev)
@@ -1217,7 +1290,7 @@ namespace GitUI
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
                     //better then checking for untrackd files.
-                    if (GitCommandHelpers.GetTrackedChangedFiles().Count > 0) 
+                    if (GitCommandHelpers.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
                     if (GitCommandHelpers.GetStagedFiles().Count > 0)
                         stagedChanges = true;
@@ -1304,6 +1377,53 @@ namespace GitUI
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            RefreshRevisions();
+        }
+
+        private void RefreshOwnScripts()
+        {
+            RemoveOwnScripts();
+            AddOwnScripts();
+        }
+
+        private void AddOwnScripts()
+        {
+            string[][] scripts = Settings.GetScripts();
+            foreach (string[] parameters in scripts)
+            {
+                ToolStripItem item = new ToolStripMenuItem(parameters[0]);
+                item.Name = item.Text + "_ownScript";
+                item.Click += runScript;
+                if (parameters[3].Equals("yes"))
+                    CreateTag.Items.Add(item);
+                else
+                    runScriptToolStripMenuItem.DropDown.Items.Add(item);
+            }
+            toolStripSeparator7.Visible = scripts.Length > 1;
+            runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+        }
+
+        private void RemoveOwnScripts()
+        {
+            runScriptToolStripMenuItem.DropDown.Items.Clear();
+            List<ToolStripItem> list = new List<ToolStripItem>();
+            foreach (ToolStripItem item in CreateTag.Items)
+                list.Add(item);
+            foreach (ToolStripItem item in list)
+                if (item.Name.Contains("_ownScript"))
+                    CreateTag.Items.RemoveByKey(item.Name);
+        }
+
+        private bool settingsLoaded = false;
+
+        private void runScript(object sender, EventArgs e)
+        {
+            if (settingsLoaded == false)
+            {
+                new FormSettings().LoadSettings();
+                settingsLoaded = true;
+            }
+            new RunScript(sender.ToString(), this);
             RefreshRevisions();
         }
     }

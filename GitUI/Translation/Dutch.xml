@@ -248,6 +248,15 @@ Vergeet niet deze labels weet te verwijderen wanneer u klaar bent.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Proces</Value>
         </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialoog openlaten</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGitIgnore">
@@ -516,9 +525,6 @@ _ReSharper*/
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>Synchoniseer alle submodulen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSplitStash" Property="Text">
-          <Value>toolstripslipbutton1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>Wijzigingen wegzetten</Value>
         </TranslationItem>
@@ -644,6 +650,18 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
           <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
+          <Value>Bestands geschiedenis</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Wissel vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
+          <Value>Wijziging bevat (traag)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1083,6 +1101,38 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kies taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Kies uw taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>U kunt de taal op elk gewenst moment wijzigen in het instellingenvenster</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>Start verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Markeer huidige revisie 'goed'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Markeer huidige revisie 'slecht'</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GravatarControl">
       <translationItems>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
@@ -1096,6 +1146,18 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
           <Value>Formaat afbeelding</Value>
+        </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Geen afbeelding</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>Identicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>Monster Id</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>Wavatar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1368,6 +1430,12 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Markeer revisie als goed</Value>
         </TranslationItem>
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
+          <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Draai script</Value>
+        </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Auteur</Value>
         </TranslationItem>
@@ -1385,6 +1453,30 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="_currentIndex" Property="Text">
           <Value>Commit index</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>seconden geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>minuten geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>uur geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>uren geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>dagen geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>maand geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>maanden geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
@@ -1797,15 +1889,72 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label26" Property="Text">
           <Value>Toon huidige wijzigingen in revisie grafiek</Value>
         </TranslationItem>
+        <TranslationItem Name="label52" Property="Text">
+          <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptsTab" Property="Text">
+          <Value>Scripts</Value>
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text">
+          <Value>Voeg toe aan revisie grid context menu</Value>
+        </TranslationItem>
+        <TranslationItem Name="label53" Property="Text">
+          <Value>Geen afbeelding</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text">
+          <Value>Argumenten</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Commando</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="cancelScriptButton" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveScriptButton" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Verwijderen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editScriptButton" Property="Text">
+          <Value>Wijzigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Toevoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nr.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Commando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Argumenten</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader5" Property="Text">
+          <Value>Context menu</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Toets F1 voor beschikbare opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Download woordenboek</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Samenvoeg conflicten oplossen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Deleted" Property="Text">
-          <Value>Verwijderd</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Afbreken</Value>
@@ -1922,6 +2071,9 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Wijzig .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes wordt alleen ondersteund wanneer er een werkdirecorie is.</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Opslaan</Value>
@@ -2123,6 +2275,27 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
       <translationItems>
         <TranslationItem Name="EmptyLabel" Property="Text">
           <Value>Bericht invoeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Vertaal volledige tekst naar {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Vertaal '{0}' naar {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Toevoegen aan woordenboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Negeer woord</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Verwijder woord</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Woordenboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Markeer slecht geformateerde regels</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2459,6 +2632,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Value>Commit &amp;&amp; &amp;verzend</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Bekijk bestands geschiedenis</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2553,12 +2729,28 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="_stageFiles" Property="Text">
           <Value>{0} Bestanden klaargezet</Value>
         </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Selecteer 1 bestand</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Samenvoeg conflicten oplossen</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text">
+          <Value>Er is een aangepaste samenvoeg script ({0}) voor dit type bestand. 
+
+Wilt u dit script gebruiken om samen te voegen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Aangepast samenvoeg script</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Het bestand is niet gewijzigd door de samenvoegen. Meestal betekent dit dat het bestand is opgeslagen op de verkeerde locatie. 
+
+Het samenvoegen conflict zal niet worden gemarkeerd als opgelost. Probeer het opnieuw.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Alle samenvoeg conflicten zijn opgelost, u kunt nu committen.
@@ -2577,20 +2769,20 @@ Wilt u nu committen?</Value>
           <Value>Het geselecteerde bestand is een binair bestand.
 Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
+          <Value>Het samenvoeg conflict moet worden opgelost en het resultaat moet worden opgeslagen als: 
+{0} 
+
+Is het samenvoeg conflict opgelost?</Value>
+        </TranslationItem>
         <TranslationItem Name="askMergeConflictSolved" Property="Text">
           <Value>Is het samenvoeg conflict opgelost?</Value>
         </TranslationItem>
         <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
           <Value>Conflict opgelost?</Value>
         </TranslationItem>
-        <TranslationItem Name="useModifiedOrDeletedFile" Property="Text">
-          <Value>Gebruik gewijzigd of verwijderd bestand?</Value>
-        </TranslationItem>
         <TranslationItem Name="modifiedButton" Property="Text">
           <Value>Gewijzigd</Value>
-        </TranslationItem>
-        <TranslationItem Name="useCreatedOrDeletedFile" Property="Text">
-          <Value>Gebruik nieuw of verwijderd bestand?</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Value>Er is geen mergetool geconfigureerd. Ga eerst naar settings en stel een mergetool in.</Value>
@@ -2598,20 +2790,70 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         <TranslationItem Name="stageFilename" Property="Text">
           <Value>Klaarzetten {0}</Value>
         </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text">
+          <Value>Er is geen basis revisie voor {0}.
+Terugvallen op 2-weg samenvoeging?</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>onze</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>hun</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
+          <Value>Het bestand is zowel lokaal({0}) als extern({1}) gewijzigd. Voeg de wijzigingen samen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
+          <Value>Een bestand met dezelfde naam is zowel locaal({0}) als extern({1}) aangemaakt. Kies het bestand dat u wilt bewaren of voeg de bestanden samen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+          <Value>Bestand {0} heeft geen basis revisie.
+Een bestand met dezelfde naam is zowel lokaal({1})  als extern({2}) aangemaakt.
+
+Kies het bestand dat u wilt bewaren, voeg de bestanden samen of verwijder het bestand.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
+          <Value>Het bestand is lokaal({0}) verwijderd maar is extern({1}) aangepast. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+          <Value>Het bestand {0} heeft geen lokale revisie.
+Het bestand is lokaal({1}) verwijderd maar is extern({2}) aangepast.
+
+Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
+          <Value>Het bestand is lokaal aangepast({0}) en extern({1}) verwijderd. Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+          <Value>het bestand {0} heeft geen externe revisie.
+Het bestand is lokaal({1}) aangepast maar is extern({2}) verwijderd.
+
+Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>geen basis bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>verwijderd</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Kies lokaal</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Kier extern</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Verwijder bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Bewaar wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Bewaar basis bestand</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Niet opgeloste samenvoeg conflicten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Samenvoeg tool starten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
-          <Value>Samenvoeg conflicten scannen</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Openen in samenvoeg tool</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>Stoppen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
           <Value>Kies basis versie</Value>
@@ -2651,6 +2893,45 @@ Weet u zeker dat u dit bestand wilt openen met {0}?</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Openen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Lokaal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Basis</Value>
+        </TranslationItem>
+        <TranslationItem Name="localFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="baseFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Extern</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Selecteer bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Openen in samenvoeg tool</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Samenvoeg conflicten scannen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Stoppen</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Samenvoeg tool</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Samenvoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Bestands geschiedenis</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2886,25 +3167,6 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBisect">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Verdeel en heers</Value>
-        </TranslationItem>
-        <TranslationItem Name="Start" Property="Text">
-          <Value>Start verdeel en heers</Value>
-        </TranslationItem>
-        <TranslationItem Name="Good" Property="Text">
-          <Value>Markeer huidige revisie 'goed'</Value>
-        </TranslationItem>
-        <TranslationItem Name="Bad" Property="Text">
-          <Value>Markeer huidige revisie 'slecht'</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stop" Property="Text">
-          <Value>Stop verdeel en heers</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

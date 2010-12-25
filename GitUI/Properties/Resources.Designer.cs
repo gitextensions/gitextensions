@@ -165,6 +165,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap _39 {
+            get {
+                object obj = ResourceManager.GetObject("_39", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap _4 {
             get {
                 object obj = ResourceManager.GetObject("4", resourceCulture);
@@ -365,16 +372,13 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 2.04
-        ///	Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes
-        ///	Fixed bug: spellings checker allows using Japanese
-        ///	Added possibility to pull non-default remote branch into current branch
-        ///	Added contributors to about box
-        ///	Added option to choose merge strategy for merge
-        ///	Improved startup speed
-        ///	Non-relative branches are drawn gray
-        ///	Pull dialog shows default remote branch if one is configured for local branch
-        ///	Removed ctr-c key f [rest of string was truncated]&quot;;.
+        ///Version 2.09
+        ///	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
+        ///	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
+        ///	Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
+        ///	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
+        ///	Fixed the following keys in quicksearch: &apos;#&apos;, &apos;_&apos;
+        ///	Fixed error page in browse dialog when  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {

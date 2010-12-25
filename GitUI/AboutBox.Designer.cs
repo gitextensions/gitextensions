@@ -191,11 +191,13 @@
             // _NO_TRANSLATE_thanksToTicker
             // 
             this._NO_TRANSLATE_thanksToTicker.AutoEllipsis = true;
+            this._NO_TRANSLATE_thanksToTicker.Cursor = System.Windows.Forms.Cursors.Hand;
             this._NO_TRANSLATE_thanksToTicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_thanksToTicker.Location = new System.Drawing.Point(78, 0);
             this._NO_TRANSLATE_thanksToTicker.Name = "_NO_TRANSLATE_thanksToTicker";
             this._NO_TRANSLATE_thanksToTicker.Size = new System.Drawing.Size(303, 22);
             this._NO_TRANSLATE_thanksToTicker.TabIndex = 28;
+            this._NO_TRANSLATE_thanksToTicker.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);
             // 
             // thanksTimer
             // 

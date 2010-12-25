@@ -86,7 +86,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
             this.splitContainer1.Size = new System.Drawing.Size(639, 312);
             this.splitContainer1.SplitterDistance = 80;
-            this.splitContainer1.TabIndex = 25;
+            this.splitContainer1.TabIndex = 15;
             // 
             // PullImage
             // 
@@ -120,7 +120,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(42, 20);
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 3;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -133,8 +133,8 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(70, 20);
-            this.PullFromRemote.TabIndex = 2;
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
             this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
@@ -146,7 +146,7 @@
             this.AddRemote.Location = new System.Drawing.Point(431, 18);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 23);
-            this.AddRemote.TabIndex = 1;
+            this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
@@ -156,12 +156,12 @@
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(148, 19);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(279, 24);
-            this.Remotes.TabIndex = 0;
-            this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
-            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
+            this.Remotes.Size = new System.Drawing.Size(279, 23);
+            this.Remotes.TabIndex = 1;
             this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
+            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
+            this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
+            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
             // 
             // BrowseSource
             // 
@@ -180,10 +180,10 @@
             this.PullSource.FormattingEnabled = true;
             this.PullSource.Location = new System.Drawing.Point(148, 46);
             this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(279, 24);
+            this.PullSource.Size = new System.Drawing.Size(279, 23);
             this.PullSource.TabIndex = 4;
-            this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
+            this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
             // LoadSSHKey
             // 
@@ -192,7 +192,7 @@
             this.LoadSSHKey.Location = new System.Drawing.Point(320, 282);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
-            this.LoadSSHKey.TabIndex = 16;
+            this.LoadSSHKey.TabIndex = 13;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -204,7 +204,7 @@
             this.Pull.Location = new System.Drawing.Point(447, 282);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(102, 23);
-            this.Pull.TabIndex = 17;
+            this.Pull.TabIndex = 14;
             this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
@@ -214,8 +214,8 @@
             this.AutoStash.AutoSize = true;
             this.AutoStash.Location = new System.Drawing.Point(219, 286);
             this.AutoStash.Name = "AutoStash";
-            this.AutoStash.Size = new System.Drawing.Size(87, 20);
-            this.AutoStash.TabIndex = 15;
+            this.AutoStash.Size = new System.Drawing.Size(82, 19);
+            this.AutoStash.TabIndex = 12;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
@@ -236,7 +236,7 @@
             this.Fetch.AutoSize = true;
             this.Fetch.Location = new System.Drawing.Point(7, 75);
             this.Fetch.Name = "Fetch";
-            this.Fetch.Size = new System.Drawing.Size(255, 20);
+            this.Fetch.Size = new System.Drawing.Size(212, 17);
             this.Fetch.TabIndex = 9;
             this.Fetch.TabStop = true;
             this.Fetch.Text = "Do not merge, only &fetch remote branch";
@@ -248,8 +248,8 @@
             this.Rebase.AutoSize = true;
             this.Rebase.Location = new System.Drawing.Point(7, 41);
             this.Rebase.Name = "Rebase";
-            this.Rebase.Size = new System.Drawing.Size(502, 36);
-            this.Rebase.TabIndex = 10;
+            this.Rebase.Size = new System.Drawing.Size(411, 30);
+            this.Rebase.TabIndex = 8;
             this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
                 "d\r\nto choose a remote branch when using rebase. (use with caution)";
             this.Rebase.UseVisualStyleBackColor = true;
@@ -261,8 +261,8 @@
             this.Merge.Checked = true;
             this.Merge.Location = new System.Drawing.Point(7, 20);
             this.Merge.Name = "Merge";
-            this.Merge.Size = new System.Drawing.Size(253, 20);
-            this.Merge.TabIndex = 11;
+            this.Merge.Size = new System.Drawing.Size(210, 17);
+            this.Merge.TabIndex = 7;
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
@@ -287,7 +287,7 @@
             this._NO_TRANSLATE_localBranch.Location = new System.Drawing.Point(148, 22);
             this._NO_TRANSLATE_localBranch.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_localBranch.Name = "_NO_TRANSLATE_localBranch";
-            this._NO_TRANSLATE_localBranch.Size = new System.Drawing.Size(75, 16);
+            this._NO_TRANSLATE_localBranch.Size = new System.Drawing.Size(69, 15);
             this._NO_TRANSLATE_localBranch.TabIndex = 9;
             this._NO_TRANSLATE_localBranch.Text = "(no branch)";
             this.Tooltip.SetToolTip(this._NO_TRANSLATE_localBranch, "Remote branch to pull. Leave empty to pull all branches.");
@@ -297,7 +297,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 16);
+            this.label1.Size = new System.Drawing.Size(75, 15);
             this.label1.TabIndex = 8;
             this.label1.Text = "Local branch";
             this.Tooltip.SetToolTip(this.label1, "Remote branch to pull. Leave empty to pull all branches.");
@@ -307,7 +307,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(148, 46);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(279, 24);
+            this.Branches.Size = new System.Drawing.Size(279, 23);
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
@@ -316,7 +316,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 49);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 16);
+            this.label2.Size = new System.Drawing.Size(88, 15);
             this.label2.TabIndex = 7;
             this.label2.Text = "Remote branch";
             this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
@@ -326,7 +326,7 @@
             this.Stash.Location = new System.Drawing.Point(111, 282);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(104, 23);
-            this.Stash.TabIndex = 14;
+            this.Stash.TabIndex = 11;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
@@ -336,7 +336,7 @@
             this.Mergetool.Location = new System.Drawing.Point(3, 282);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(104, 23);
-            this.Mergetool.TabIndex = 13;
+            this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
@@ -344,7 +344,7 @@
             // FormPull
             // 
             this.AcceptButton = this.Pull;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(639, 312);
             this.Controls.Add(this.splitContainer1);
