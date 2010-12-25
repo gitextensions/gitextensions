@@ -170,7 +170,7 @@ namespace GitUI
             Branch.Text = curBranch;
         }
 
-        private static void PullClick(object sender, EventArgs e)
+        private void PullClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartPullDialog();
         }
@@ -215,7 +215,7 @@ namespace GitUI
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
         }
 
-        private static void AddRemoteClick(object sender, EventArgs e)
+        private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
         }
@@ -348,6 +348,8 @@ namespace GitUI
 			BranchGrid.DataSource = _branchTable;
 
 			string remote = Remotes.Text.Trim();
+			if (remote == "")
+				return;
 
 			List<GitHead> localHeads = GitCommandHelpers.GetHeads(false, true);
 			List<GitHead> remoteHeads = GitCommandHelpers.GetRemoteHeads(remote, false, true);
