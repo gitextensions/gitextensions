@@ -308,6 +308,8 @@ namespace GitUI
 
                 if (Settings.CloseCommitDialogAfterLastCommit)
                     Close();
+                else
+                    InitializedStaged();
             }
             catch (Exception e)
             {
