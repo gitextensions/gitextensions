@@ -40,8 +40,6 @@
         <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>
 
         <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg">1</Publish>
-        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="MsysGit" Event="DoAction" Value="MsysGit">1</Publish>
-        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="KDiff" Event="DoAction" Value="KDiff">1</Publish>
         <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg">1</Publish>
 
         <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>

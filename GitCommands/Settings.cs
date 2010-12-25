@@ -13,8 +13,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.07";
-        public static readonly int GitExtensionsVersionInt = 207;
+        public static readonly string GitExtensionsVersionString = "2.09";
+        public static readonly int GitExtensionsVersionInt = 209;
 
         //semi-constants
         public static char PathSeparator = '\\';
@@ -462,7 +462,7 @@ namespace GitCommands
         {
             get
             {
-                if (_dictionary == null)
+                if (string.IsNullOrEmpty(_dictionary))
                     SafeSetString("dictionary", "en-US", x => _dictionary = x);
                 return _dictionary;
             }
@@ -486,6 +486,22 @@ namespace GitCommands
             {
                 _showGitCommandLine = value;
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", _showGitCommandLine);
+            }
+        }
+
+        private static bool? _showStashCount;
+        public static bool ShowStashCount
+        {
+            get
+            {
+                if (_showStashCount == null)
+                    SafeSetBool("showstashcount", false, x => _showStashCount = x);
+                return _showStashCount.Value;
+            }
+            set
+            {
+                _showStashCount = value;
+                Application.UserAppDataRegistry.SetValue("showstashcount", _showStashCount);
             }
         }
 
@@ -617,6 +633,22 @@ namespace GitCommands
             }
         }
 
+        private static string _gravatarFallbackService;
+        public static string GravatarFallbackService
+        {
+            get
+            {
+                if (_gravatarFallbackService == null)
+                    SafeSetString("gravatarfallbackservice", "Identicon", x => _gravatarFallbackService = x);
+                return _gravatarFallbackService;
+            }
+            set
+            {
+                _gravatarFallbackService = value;
+                Application.UserAppDataRegistry.SetValue("gravatarfallbackservice", _gravatarFallbackService);
+            }
+        }
+
         private static string _gitCommand;
         public static string GitCommand
         {
@@ -645,17 +677,17 @@ namespace GitCommands
             set
             {
                 _gitBinDir = value;
-                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
                 if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeparator)
                     _gitBinDir += PathSeparator;
+                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
 
-                if (string.IsNullOrEmpty(_gitBinDir))
-                    return;
+                //if (string.IsNullOrEmpty(_gitBinDir))
+                //    return;
 
-                var path =
-                    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                    _gitBinDir;
-                Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                //var path =
+                //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
+                //    _gitBinDir;
+                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -1160,6 +1192,76 @@ namespace GitCommands
                 actionToPerformIfValueExists(defaultValue);
             else
                 actionToPerformIfValueExists(value.ToString());
+        }
+        private static string _ownScripts;
+        private static string ownScripts
+        {
+            get
+            {
+                if (_ownScripts == null)
+                    SafeSetString("ownScripts", "", x => _ownScripts = x);
+                return _ownScripts;
+            }
+            set
+            {
+                _ownScripts = value;
+                Application.UserAppDataRegistry.SetValue("ownScripts", _ownScripts);
+            }
+        }
+
+        private const string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
+        private const string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
+
+        public static void SaveScripts(string[][] scripts)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < scripts.Length; i++)
+            {
+                for (int j = 0; j < scripts[i].Length; j++)
+                    sb.Append(scripts[i][j] + PARAM_SEPARATOR);
+                sb.Append(SCRIPT_SEPARATOR);
+            }
+            ownScripts = sb.ToString();
+        }
+
+        public static string[][] GetScripts()
+        {
+            string[] scripts = Settings.ownScripts.Split(new string[] { Settings.SCRIPT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+            string[][] scripts_params = new string[scripts.Length][];
+            for (int i = 0; i < scripts.Length; i++)
+            {
+                string[] parameters = scripts[i].Split(new string[] { Settings.PARAM_SEPARATOR }, StringSplitOptions.None);
+                scripts_params[i] = parameters;
+            }
+            return scripts_params;
+        }
+
+        public static string[] GetScript(string key)
+        {
+            string[][] scripts = GetScripts();
+            foreach (string[] parameters in scripts)
+                if (parameters[0].Equals(key))
+                    return parameters;
+            return null;
+        }
+
+        private static bool? _pushAllTags;
+        public static bool PushAllTags
+        {
+            get
+            {
+                if (_pushAllTags == null)
+                    SafeSetBool("pushalltags", false, x => _pushAllTags = x);
+                return _pushAllTags.Value;
+            }
+            set
+            {
+                if (!_pushAllTags.HasValue || _pushAllTags.Value != value)
+                {
+                    _pushAllTags = value;
+                    Application.UserAppDataRegistry.SetValue("pushalltags", _pushAllTags);
+                }
+            }
         }
     }
 }

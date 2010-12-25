@@ -12,43 +12,50 @@ namespace GitCommands
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
-            GitCommandHelpers.SetEnvironmentVariable();
-
-            var ssh = GitCommandHelpers.UseSsh(arguments);
-
-            Kill();
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-
-            //process used to execute external commands
-            Process process = new Process() { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
-            process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-            process.StartInfo.FileName = cmd;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.StartInfo.LoadUserProfile = true;
-            process.EnableRaisingEvents = true;
-
-            if (!StreamOutput)
+            try
             {
-                process.OutputDataReceived += ProcessOutputDataReceived;
-                process.ErrorDataReceived += ProcessErrorDataReceived;
+                GitCommandHelpers.SetEnvironmentVariable();
+
+                var ssh = GitCommandHelpers.UseSsh(arguments);
+
+                Kill();
+
+                Settings.GitLog.Log(cmd + " " + arguments);
+
+                //process used to execute external commands
+                Process process = new Process() { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
+                process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = Settings.WorkingDir;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+                process.EnableRaisingEvents = true;
+
+                if (!StreamOutput)
+                {
+                    process.OutputDataReceived += ProcessOutputDataReceived;
+                    process.ErrorDataReceived += ProcessErrorDataReceived;
+                }
+                Output = new StringBuilder();
+                ErrorOutput = new StringBuilder();
+
+                process.Exited += ProcessExited;
+                process.Start();
+                myProcess = process;
+
+                if (!StreamOutput)
+                {
+                    process.BeginErrorReadLine();
+                    process.BeginOutputReadLine();
+                }
+
+                return process;
             }
-            Output = new StringBuilder();
-            ErrorOutput = new StringBuilder();
-
-            process.Exited += ProcessExited;
-            process.Start();
-            myProcess = process;
-
-            if (!StreamOutput)
+            catch (Exception ex)
             {
-                process.BeginErrorReadLine();
-                process.BeginOutputReadLine();
+                throw new ApplicationException("Error running command: '" + cmd + " " + arguments, ex);
             }
-
-            return process;
         }
 
         public void Kill()
@@ -85,20 +92,22 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
-            ExitCode = myProcess.ExitCode;
-            if (Exited != null)
+            if (myProcess != null)
             {
-                //The process is exited already, but this command waits also until all output is recieved.
-                //Only WaitForExit when someone is conntected to the exited event. For some reason a
-                //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                //we wait for exit, probably a timing issue... 
-                myProcess.WaitForExit();
+                ExitCode = myProcess.ExitCode;
+                if (Exited != null)
+                {
+                    //The process is exited already, but this command waits also until all output is recieved.
+                    //Only WaitForExit when someone is conntected to the exited event. For some reason a
+                    //null reference is thrown sometimes when staging/unstaging in the commit dialog when
+                    //we wait for exit, probably a timing issue... 
+                    myProcess.WaitForExit();
 
-                Exited(this, e);
+                    Exited(this, e);
+                }
+
+                myProcess = null;
             }
-
-            myProcess = null;
-
         }
 
         private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -144,6 +153,7 @@ namespace GitCommands
         public bool CollectOutput = true;
         public bool StreamOutput;
         public int ExitCode { get; set; }
+        public bool IsRunning { get { return myProcess != null && !myProcess.HasExited; } }
         public StringBuilder Output { get; private set; }
         public StringBuilder ErrorOutput { get; private set; }
 

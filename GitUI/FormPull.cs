@@ -230,7 +230,7 @@ namespace GitUI
 
         private void FormPullLoad(object sender, EventArgs e)
         {
-            Pull.Select();
+            Remotes.Select();
 
             string branch = GitCommandHelpers.GetSelectedBranch();
             Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));

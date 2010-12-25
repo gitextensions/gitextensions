@@ -16,5 +16,10 @@ namespace GitPlugin.Commands
         {
             RunGitEx("clone", fileName);
         }
+
+        public override bool IsEnabled(EnvDTE80.DTE2 application)
+        {
+            return true;
+        }
     }
 }

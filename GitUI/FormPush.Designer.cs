@@ -81,7 +81,7 @@
 			this.BrowseSource.Location = new System.Drawing.Point(431, 45);
 			this.BrowseSource.Name = "BrowseSource";
 			this.BrowseSource.Size = new System.Drawing.Size(101, 23);
-			this.BrowseSource.TabIndex = 13;
+            this.BrowseSource.TabIndex = 5;
 			this.BrowseSource.Text = "Browse";
 			this.BrowseSource.UseVisualStyleBackColor = true;
 			this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
@@ -94,7 +94,7 @@
 			this.Push.Location = new System.Drawing.Point(447, 347);
 			this.Push.Name = "Push";
 			this.Push.Size = new System.Drawing.Size(101, 23);
-			this.Push.TabIndex = 15;
+            this.Push.TabIndex = 9;
 			this.Push.Text = "&Push";
 			this.Push.UseVisualStyleBackColor = true;
 			this.Push.Click += new System.EventHandler(this.PushClick);
@@ -107,8 +107,8 @@
 			this.PushDestination.FormattingEnabled = true;
 			this.PushDestination.Location = new System.Drawing.Point(128, 46);
 			this.PushDestination.Name = "PushDestination";
-			this.PushDestination.Size = new System.Drawing.Size(297, 23);
-			this.PushDestination.TabIndex = 16;
+            this.PushDestination.Size = new System.Drawing.Size(297, 23);
+            this.PushDestination.TabIndex = 4;
 			this.PushDestination.DropDown += new System.EventHandler(this.PushDestinationDropDown);
 			// 
 			// label2
@@ -116,7 +116,7 @@
 			this.label2.AutoSize = true;
 			this.label2.Location = new System.Drawing.Point(6, 22);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(87, 15);
+            this.label2.Size = new System.Drawing.Size(87, 15);
 			this.label2.TabIndex = 17;
 			this.label2.Text = "Branch to push";
 			// 
@@ -125,7 +125,7 @@
 			this.Branch.FormattingEnabled = true;
 			this.Branch.Location = new System.Drawing.Point(127, 19);
 			this.Branch.Name = "Branch";
-			this.Branch.Size = new System.Drawing.Size(173, 23);
+            this.Branch.Size = new System.Drawing.Size(173, 23);
 			this.Branch.TabIndex = 0;
 			this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
 			this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
@@ -169,7 +169,7 @@
 			this.Pull.Location = new System.Drawing.Point(12, 347);
 			this.Pull.Name = "Pull";
 			this.Pull.Size = new System.Drawing.Size(101, 23);
-			this.Pull.TabIndex = 20;
+            this.Pull.TabIndex = 7;
 			this.Pull.Text = "Pull";
 			this.Pull.UseVisualStyleBackColor = true;
 			this.Pull.Click += new System.EventHandler(this.PullClick);
@@ -197,7 +197,7 @@
 			this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
 			this.PullFromUrl.Name = "PullFromUrl";
 			this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
-			this.PullFromUrl.TabIndex = 19;
+            this.PullFromUrl.TabIndex = 1;
 			this.PullFromUrl.Text = "Url";
 			this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
 			this.PullFromUrl.UseVisualStyleBackColor = true;
@@ -210,7 +210,7 @@
 			this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
 			this.PullFromRemote.Name = "PullFromRemote";
 			this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
-			this.PullFromRemote.TabIndex = 18;
+            this.PullFromRemote.TabIndex = 0;
 			this.PullFromRemote.TabStop = true;
 			this.PullFromRemote.Text = "Remote";
 			this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
@@ -223,7 +223,7 @@
 			this.AddRemote.Location = new System.Drawing.Point(431, 18);
 			this.AddRemote.Name = "AddRemote";
 			this.AddRemote.Size = new System.Drawing.Size(101, 23);
-			this.AddRemote.TabIndex = 17;
+            this.AddRemote.TabIndex = 3;
 			this.AddRemote.Text = "Manage remotes";
 			this.AddRemote.UseVisualStyleBackColor = true;
 			this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
@@ -235,8 +235,8 @@
 			this.Remotes.FormattingEnabled = true;
 			this.Remotes.Location = new System.Drawing.Point(128, 19);
 			this.Remotes.Name = "Remotes";
-			this.Remotes.Size = new System.Drawing.Size(297, 23);
-			this.Remotes.TabIndex = 16;
+            this.Remotes.Size = new System.Drawing.Size(297, 23);
+            this.Remotes.TabIndex = 2;
 			this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
 			this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
 			this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
@@ -264,7 +264,7 @@
 			this.labelTo.Location = new System.Drawing.Point(306, 21);
 			this.labelTo.Name = "labelTo";
 			this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.labelTo.Size = new System.Drawing.Size(18, 15);
+            this.labelTo.Size = new System.Drawing.Size(18, 15);
 			this.labelTo.TabIndex = 21;
 			this.labelTo.Text = "to";
 			this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -274,7 +274,7 @@
 			this.RemoteBranch.FormattingEnabled = true;
 			this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
 			this.RemoteBranch.Name = "RemoteBranch";
-			this.RemoteBranch.Size = new System.Drawing.Size(162, 23);
+            this.RemoteBranch.Size = new System.Drawing.Size(162, 23);
 			this.RemoteBranch.TabIndex = 1;
 			this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranchDropDown);
 			// 
@@ -286,7 +286,7 @@
 			this.LoadSSHKey.Location = new System.Drawing.Point(313, 347);
 			this.LoadSSHKey.Name = "LoadSSHKey";
 			this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
-			this.LoadSSHKey.TabIndex = 23;
+            this.LoadSSHKey.TabIndex = 8;
 			this.LoadSSHKey.Text = "Load SSH key";
 			this.LoadSSHKey.UseVisualStyleBackColor = true;
 			this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -296,7 +296,7 @@
 			this.TagComboBox.FormattingEnabled = true;
 			this.TagComboBox.Location = new System.Drawing.Point(127, 19);
 			this.TagComboBox.Name = "TagComboBox";
-			this.TagComboBox.Size = new System.Drawing.Size(297, 23);
+            this.TagComboBox.Size = new System.Drawing.Size(297, 23);
 			this.TagComboBox.TabIndex = 18;
 			this.TagComboBox.DropDown += new System.EventHandler(this.TagDropDown);
 			// 
@@ -329,7 +329,7 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(6, 22);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(70, 15);
+            this.label1.Size = new System.Drawing.Size(70, 15);
 			this.label1.TabIndex = 17;
 			this.label1.Text = "Tag to push";
 			// 
@@ -349,7 +349,7 @@
 			this.TabControlTagBranch.SelectedIndex = 0;
 			this.TabControlTagBranch.ShowToolTips = true;
 			this.TabControlTagBranch.Size = new System.Drawing.Size(541, 243);
-			this.TabControlTagBranch.TabIndex = 24;
+            this.TabControlTagBranch.TabIndex = 6;
 			this.TabControlTagBranch.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControlTagBranch_Selected);
 			// 
 			// BranchTab
@@ -457,7 +457,8 @@
 			// 
 			// FormPush
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AcceptButton = this.Push;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(559, 382);
 			this.Controls.Add(this.TabControlTagBranch);

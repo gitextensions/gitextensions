@@ -19,7 +19,7 @@ namespace GitUI
         private bool restart = false;
         private GitCommands.GitCommandsInstance gitCommand;
 
-        public FormProcess(string process, string arguments)
+        public FormProcess(string process, string arguments) : base()
         {            
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
@@ -42,10 +42,20 @@ namespace GitUI
 
             gitCommand = new GitCommands.GitCommandsInstance();
             gitCommand.CollectOutput = false;
-            Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+            try
+            {
+                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
 
-            gitCommand.Exited += new EventHandler(gitCommand_Exited);
-            gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+                gitCommand.Exited += new EventHandler(gitCommand_Exited);
+                gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+            }
+            catch (Exception e)
+            {
+                AddOutput(e.Message);
+                gitCommand.ExitCode = 1;
+                gitCommand_Exited(null, null);
+            }
+            
         }
 
         private void processAbort(FormStatus form)
@@ -146,8 +156,8 @@ namespace GitUI
                 //{
                 //    AddOutput(e.Data);
                 //}
-                OutputString.Append(e.Data);
-                OutputString.Append(Environment.NewLine);
+                AddToTimer(e.Data);
+                AddToTimer(Environment.NewLine);
             }
 
 

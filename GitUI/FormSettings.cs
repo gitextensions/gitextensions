@@ -24,6 +24,9 @@ namespace GitUI
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[] { "Default (" + Encoding.Default.HeaderName + ")", "ASCII", "Unicode", "UTF7", "UTF8", "UTF32" });
             GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad" });
+
+            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
+            userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})", Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         public static bool AutoSolveAllSettings()
@@ -113,7 +116,7 @@ namespace GitUI
             configFile.SetValue("diff.tool", diffTool);
         }
 
-        private void LoadSettings()
+        public void LoadSettings()
         {
             try
             {
@@ -138,6 +141,7 @@ namespace GitUI
 
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
+                noImageService.Text = GitCommands.Settings.GravatarFallbackService;
 
                 showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
 
@@ -150,6 +154,7 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 ShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
+                ShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
@@ -303,6 +308,7 @@ namespace GitUI
                     }
 
                 EnableSshOptions();
+                LoadScripts();
             }
             catch (Exception ex)
             {
@@ -371,6 +377,7 @@ namespace GitUI
             GitCommands.Settings.GitBinDir = GitBinPath.Text;
 
             GitCommands.Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
+            GitCommands.Settings.GravatarFallbackService = noImageService.Text;
 
             GitCommands.Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             GitCommands.Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
@@ -413,6 +420,7 @@ namespace GitUI
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphShowWorkingDirChanges = ShowCurrentChangesInRevisionGraph.Checked;
+            Settings.ShowStashCount = ShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
@@ -587,6 +595,7 @@ namespace GitUI
                 bValid = CheckGlobalUserSettingsValid() && bValid;
                 bValid = CheckMergeTool() && bValid;
                 bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckTranslationConfigSettings() && bValid;
 
                 if (Settings.RunningOnWindows())
                 {
@@ -959,24 +968,27 @@ namespace GitUI
                 return true;
             }
 
-            GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
             {
-                GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
+                GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
                 if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                 {
-                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
+                    GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                     if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                     {
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
+                        GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
                         if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                         {
-                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
                             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                             {
-                                GitCommands.Settings.GitBinDir = "";
-                                return false;
+                                GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                                if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
+                                {
+                                    GitCommands.Settings.GitBinDir = "";
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -1621,6 +1633,20 @@ namespace GitUI
             return retValue;
         }
 
+        private bool CheckTranslationConfigSettings()
+        {
+            translationConfig.Visible = true;
+            if (string.IsNullOrEmpty(Settings.Translation))
+            {
+                translationConfig.BackColor = Color.LightSalmon;
+                translationConfig.Text = "There is no language configured for Git Extensions.";
+                return false;
+            }
+            translationConfig.BackColor = Color.LightGreen;
+            translationConfig.Text = "The configured language is " + Settings.Translation + ".";
+            return true;
+        }
+
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
@@ -1633,14 +1659,14 @@ namespace GitUI
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
-                SshConfig.Text = "SSH client PuTTY is configured properly";
+                SshConfig.Text = "SSH client PuTTY is configured properly.";
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
             else
-                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh();
+                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh() + ".";
             return true;
         }
 
@@ -1665,11 +1691,11 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "git not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
                 return false;
             }
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "git is found on your computer.";
+            GitFound.Text = "Git is found on your computer.";
             return true;
         }
 
@@ -1757,11 +1783,11 @@ namespace GitUI
                 string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
-                UserNameSet.Text = "You need to configure a user name and an email address.";
+                UserNameSet.Text = "You need to configure a username and an email address.";
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
-            UserNameSet.Text = "There is a user name and an email address configured.";
+            UserNameSet.Text = "A username and an email address are configured.";
             return true;
         }
 
@@ -1811,15 +1837,23 @@ namespace GitUI
 
         private static IEnumerable<string> GetWindowsCommandLocations()
         {
+            if (!string.IsNullOrEmpty(Settings.GitCommand))
+                yield return Settings.GitCommand;
+
+            yield return @"C:\cygwin\bin\git.exe";
             yield return @"C:\cygwin\bin\git";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
             yield return @"c:\Program Files (x86)\Git\bin\git.exe";
             yield return @"c:\Program Files\Git\bin\git.exe";
+            yield return @"c:\Program Files (x86)\msysgit\bin\git.exe";
+            yield return @"c:\Program Files\msysgit\bin\git.exe";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
             yield return @"c:\Program Files (x86)\Git\cmd\git.cmd";
             yield return @"c:\Program Files\Git\cmd\git.cmd";
             yield return "git";
             yield return "git.cmd";
+            yield return @"C:\msysgit\bin\git.exe";
+            yield return @"C:\msysgit\cmd\git.cmd";
         }
 
         private static bool SolveGitCommand()
@@ -1855,5 +1889,232 @@ namespace GitUI
 
         private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
 
+        private void SaveScripts()
+        {
+            string[][] scripts_params = new string[ScriptList.Items.Count][];
+            for (int i=0; i<ScriptList.Items.Count; i++)
+            {
+                ListViewItem item = ScriptList.Items[i];
+                string[] parameters = new string[item.SubItems.Count-1];
+                for (int j = 1; j < item.SubItems.Count; j++)
+                    parameters[j - 1] = item.SubItems[j].Text;
+                scripts_params[i] = parameters;
+            }
+            Settings.SaveScripts(scripts_params);
+        }
+
+        private void LoadScripts()
+        {
+            ScriptList.Items.Clear();
+            string[][] scripts = Settings.GetScripts();
+            foreach (string[] parameters in scripts)
+            {
+                ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
+                foreach (string param in parameters)
+                    ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(param);
+            }
+        }
+
+        private void ClearScriptDetails()
+        {
+            nameTextBox.Clear();
+            commandTextBox.Clear();
+            argumentsTextBox.Clear();
+            inMenuCheckBox.Checked = false;
+        }
+
+        private void DisableScriptDetails()
+        {
+            nameTextBox.Enabled = false;
+            commandTextBox.Enabled = false;
+            argumentsTextBox.Enabled = false;
+            inMenuCheckBox.Enabled = false;
+            saveScriptButton.Enabled = false;
+            cancelScriptButton.Enabled = false;
+            browseScriptButton.Enabled = false;
+        }
+
+        private void EnableScriptDetails()
+        {
+            nameTextBox.Enabled = true;
+            commandTextBox.Enabled = true;
+            argumentsTextBox.Enabled = true;
+            inMenuCheckBox.Enabled = true;
+            saveScriptButton.Enabled = true;
+            cancelScriptButton.Enabled = true;
+            browseScriptButton.Enabled = true;
+        }
+
+        private void RefreshScriptDetails()
+        {
+            nameTextBox.Text = ScriptList.SelectedItems[0].SubItems[1].Text;
+            commandTextBox.Text = ScriptList.SelectedItems[0].SubItems[2].Text;
+            argumentsTextBox.Text = ScriptList.SelectedItems[0].SubItems[3].Text;
+            if (ScriptList.Items[ScriptList.SelectedIndices[0]].SubItems[4].Text.Equals("yes"))
+                inMenuCheckBox.Checked = true;
+        }
+
+        private int selectedScriptItem { get; set; }
+
+        private void addScriptButton_Click(object sender, EventArgs e)
+        {
+            ScriptList.SelectedItems.Clear();
+            ListViewItem lv = ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
+            for (int i = 0; i < 4; i++)
+                ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(string.Empty);
+            lv.Selected = true;
+            editScriptButton_Click(sender, e);
+        }
+
+        private void removeScriptButton_Click(object sender, EventArgs e)
+        {
+            if (ScriptList.SelectedItems.Count > 0)
+            {
+                ScriptList.Items.RemoveAt(ScriptList.SelectedItems[0].Index);
+                ClearScriptDetails();
+                DisableScriptDetails();
+                SaveScripts();
+            }
+        }
+
+        private void editScriptButton_Click(object sender, EventArgs e)
+        {
+            if (ScriptList.SelectedItems.Count > 0)
+            {
+                selectedScriptItem = ScriptList.SelectedIndices[0];
+                RefreshScriptDetails();
+                EnableScriptDetails();
+                nameTextBox.Focus();
+            }
+        }
+
+        private void saveScriptButton_Click(object sender, EventArgs e)
+        {
+            ScriptList.Items[selectedScriptItem].SubItems[1].Text = nameTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[2].Text = commandTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[3].Text = argumentsTextBox.Text;
+            ScriptList.Items[selectedScriptItem].SubItems[4].Text = inMenuCheckBox.Checked ? "yes" : "no";
+            DisableScriptDetails();
+            ScriptList.Focus();
+            SaveScripts();
+        }
+
+        private void ScriptList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (ScriptList.SelectedIndices.Count > 0)
+            {
+                RefreshScriptDetails();
+                selectedScriptItem = ScriptList.SelectedIndices[0];
+                editScriptButton.Enabled = true;
+                removeScriptButton.Enabled = true;
+                moveDownButton.Enabled = moveUpButton.Enabled = false;
+                if (ScriptList.SelectedIndices[0] > 0)
+                    moveUpButton.Enabled = true;
+                if (ScriptList.SelectedIndices[0] < ScriptList.Items.Count - 1)
+                    moveDownButton.Enabled = true;
+            }
+            else
+            {
+                editScriptButton.Enabled = false;
+                removeScriptButton.Enabled = false;
+                moveUpButton.Enabled = false;
+                moveDownButton.Enabled = false;
+                ClearScriptDetails();
+            }
+        }
+
+        private void cancelScriptButton_Click(object sender, EventArgs e)
+        {
+            DisableScriptDetails();
+            ClearScriptDetails();
+            ScriptList.Focus();
+            ScriptList_ItemSelectionChanged(sender, null);
+        }
+
+        private void moveUpButton_Click(object sender, EventArgs e)
+        {
+            int no;
+            ListView lv = new ListView();
+            foreach (ListViewItem lvi in ScriptList.Items)
+                lv.Items.Add((ListViewItem)lvi.Clone());
+            ScriptList.Items.Clear();
+            for (int i = 0; i < selectedScriptItem - 1; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            ListViewItem currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
+            ListViewItem aboveItem = (ListViewItem)lv.Items[selectedScriptItem - 1].Clone();
+            int.TryParse(currentItem.SubItems[0].Text, out no);
+            currentItem.SubItems[0].Text = (no - 1).ToString();
+            aboveItem.SubItems[0].Text = (no).ToString();
+            ScriptList.Items.Add(currentItem);
+            ScriptList.Items.Add(aboveItem);
+            for (int i = selectedScriptItem + 1; i < lv.Items.Count; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            SaveScripts();
+            selectedScriptItem--;
+            ScriptList.Items[selectedScriptItem].Selected = true;
+            ScriptList.Focus();
+        }
+
+        private void moveDownButton_Click(object sender, EventArgs e)
+        {
+            int no;
+            ListView lv = new ListView();
+            foreach (ListViewItem lvi in ScriptList.Items)
+                lv.Items.Add((ListViewItem)lvi.Clone());
+            ScriptList.Items.Clear();
+            for (int i = 0; i < selectedScriptItem; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            ListViewItem currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
+            ListViewItem underItem = (ListViewItem)lv.Items[selectedScriptItem + 1].Clone();
+            int.TryParse(currentItem.SubItems[0].Text, out no);
+            currentItem.SubItems[0].Text = (no + 1).ToString();
+            underItem.SubItems[0].Text = (no).ToString();
+            ScriptList.Items.Add(underItem);
+            ScriptList.Items.Add(currentItem);
+            for (int i = selectedScriptItem + 2; i < lv.Items.Count; i++)
+                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
+            SaveScripts();
+            selectedScriptItem++;
+            ScriptList.Items[selectedScriptItem].Selected = true;
+            ScriptList.Focus();
+        }
+
+        private void browseScriptButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
+            ofd.RestoreDirectory = true;
+            if (ofd.ShowDialog() == DialogResult.OK)
+                commandTextBox.Text = ofd.FileName;
+        }
+
+        private void argumentsTextBox_Enter(object sender, EventArgs e)
+        {
+            helpLabel.Visible = true;
+        }
+
+        private void argumentsTextBox_Leave(object sender, EventArgs e)
+        {
+            helpLabel.Visible = false;
+        }
+
+        private void translationConfig_Click(object sender, EventArgs e)
+        {
+            new FormChooseTranslation().ShowDialog();
+            Translate();
+            Language.Text = Settings.Translation;
+            Rescan_Click(null, null);
+        }
+
+        private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://wiki.services.openoffice.org/wiki/Dictionaries");
+        }
+
+        private void argumentsLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

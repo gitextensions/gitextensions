@@ -22,13 +22,28 @@ namespace GitUI
         TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         TranslationString saveAsText = new TranslationString("Save as");
 
-        public class TranslateItem
+        public class TranslateItem : INotifyPropertyChanged
         {
             public string Category { get; set; }
             public string Name { get; set; }
             public string Property { get; set; }
             public string NeutralValue { get; set; }
-            public string TranslatedValue { get; set; }
+            private string _translatedValue;
+            public string TranslatedValue
+            {
+                get { return _translatedValue; }
+                set
+                {
+                    var pc = PropertyChanged;
+                    if (pc != null)
+                    {
+                        pc(this, new PropertyChangedEventArgs("TranslatedValue"));
+                    }
+                    _translatedValue = value;
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
         }
 
         private List<TranslateItem> translate;
@@ -74,8 +89,13 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translatedCount++;
             }
-            translateProgress.Text = string.Format(translateProgressText.Text, translatedCount, translate.Count);
-            toolStrip1.Refresh();
+            var progresMsg = string.Format(translateProgressText.Text, translatedCount, translate.Count);
+            if (translateProgress.Text != progresMsg)
+            {
+                translateProgress.Text = progresMsg;
+                toolStrip1.Refresh();    
+            }
+            
         }
 
         private void LoadTranslation()
@@ -110,6 +130,8 @@ namespace GitUI
 
             List<TranslateItem> filterTranslate = new List<TranslateItem>();
 
+            translateItemBindingSource.DataSource = null;
+
             foreach (TranslateItem translateItem in translate)
             {
                 if (!string.IsNullOrEmpty(filter) &&
@@ -124,7 +146,7 @@ namespace GitUI
                 filterTranslate.Add(translateItem);
             }
 
-            translateGrid.DataSource = filterTranslate;
+            translateItemBindingSource.DataSource = filterTranslate;
 
             UpdateProgress();
         }
@@ -362,13 +384,12 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                TranslateItem translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+                var translateItem = (TranslateItem)translateItemBindingSource.Current;
                 translateItem.TranslatedValue = translatedText.Text;
 
                 changesMade = true;
 
                 UpdateProgress();
-                translateGrid.Refresh();
             }
         }
 
@@ -382,6 +403,8 @@ namespace GitUI
                 }
 
                 TranslateItem translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+
+                if (translateItem == null) return;
 
                 neutralTekst.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
@@ -445,47 +468,11 @@ namespace GitUI
             {
                 TranslateItem translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
 
-                translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
+                translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
                 
                 translateGrid_Click(null, null);
                 translateGrid.Refresh();
             }
-        }
-
-        /// <summary>
-        /// Translate Text using Google Translate API's
-        /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
-        /// </summary>
-        /// <param name="input">Input string</param>
-        /// <param name="languagePair">2 letter Language Pair, delimited by "|".
-        /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
-        /// <returns>Translated to String</returns>
-        public string TranslateText(
-            string input,
-            string languagePair)
-        {
-            //Remove some unssuported characters
-            input = input.Replace("&&", "and");
-            input = input.Replace("&", "");
-
-            string url = String.Format("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q={0}&langpair=en|{1}&key=ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg", input, languagePair);
-            WebClient webClient = new WebClient();
-            webClient.Proxy = WebRequest.DefaultWebProxy;
-            webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            webClient.Encoding = System.Text.Encoding.UTF8;
-            string result = webClient.DownloadString(url);
-
-            string startString = "{\"translatedText\":\"";
-            string endString = "\"}";
-
-            int startOffset = result.IndexOf(startString) + startString.Length;
-            int length = result.IndexOf(endString, startOffset) - startOffset;
-
-            if (length <= 0)
-                return "";
-
-            result = result.Substring(startOffset, length);
-            return result;
         }
 
         private void googleAll_Click(object sender, EventArgs e)
@@ -499,7 +486,7 @@ namespace GitUI
             foreach (TranslateItem translateItem in translate)
             {
                 if (string.IsNullOrEmpty(translateItem.TranslatedValue))
-                    translateItem.TranslatedValue = TranslateText(translateItem.NeutralValue, GetSelectedLanguageCode());
+                    translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
 
                 UpdateProgress();
                 translateGrid.Refresh();

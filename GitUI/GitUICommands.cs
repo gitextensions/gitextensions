@@ -404,7 +404,7 @@ namespace GitUI
 
             InvokeEvent(PostStash);
 
-            return false;
+            return true;
         }
 
         public bool StartResolveConflictsDialog()
