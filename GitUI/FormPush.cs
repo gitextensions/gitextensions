@@ -119,14 +119,15 @@ namespace GitUI
 				List<GitPushAction> pushActions = new List<GitPushAction>();
             	foreach (DataRow row in _branchTable.Rows)
             	{
-					if ((bool)row["Push"])
-					{
-						// FIXME - Validate remotes and such.  This should be done above if the appropriate tab is selected.
-						if (row["local"].ToString().StartsWith("None "))
-							pushActions.Add(new GitPushAction(row["Remote"].ToString()));
-						else
-							pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), (bool)row["Force"]));
-					}
+            		bool push = (bool) row["Push"];
+            		bool force = (bool) row["Force"];
+            		bool delete = (bool) row["Delete"];
+
+					// FIXME - Validate remotes and such.  This should be done above if the appropriate tab is selected.
+					if (push || force)
+						pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
+					else if (delete)
+						pushActions.Add(new GitPushAction(row["Remote"].ToString()));
             	}
             	pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
@@ -345,11 +346,15 @@ namespace GitUI
 		private void UpdateMultiBranchView()
 		{
 			_branchTable = new DataTable();
-			_branchTable.Columns.Add("Push", typeof (bool));
 			_branchTable.Columns.Add("Local", typeof (string));
 			_branchTable.Columns.Add("Remote", typeof (string));
-			_branchTable.Columns.Add("Force", typeof (bool));
-			BranchGrid.DataSource = _branchTable;
+			_branchTable.Columns.Add("Push", typeof(bool));
+			_branchTable.Columns.Add("Force", typeof(bool));
+			_branchTable.Columns.Add("Delete", typeof(bool));
+			_branchTable.ColumnChanged += BranchTable_ColumnChanged;
+			BindingSource bs = new BindingSource();
+			bs.DataSource = _branchTable;
+			BranchGrid.DataSource = bs;
 
 			string remote = Remotes.Text.Trim();
 			if (remote == "")
@@ -364,6 +369,7 @@ namespace GitUI
 				DataRow row = _branchTable.NewRow();
 				row["Push"] = true;
 				row["Force"] = false;
+				row["Delete"] = false;
 				row["Local"] = head.Name;
 
 				string remoteName;
@@ -388,13 +394,33 @@ namespace GitUI
 				if (!localHeads.Any(h => h.Name == remoteHead.Name))
 				{
 					DataRow row = _branchTable.NewRow();
-					row["Push"] = true;
 					// FIXME - Translation and how do we know this is a special string?
-					row["Local"] = "None (Delete Remote Branch)";
+					row["Local"] = null;
 					row["Remote"] = remoteHead.Name;
+					row["Push"] = false;
 					row["Force"] = false;
+					row["Delete"] = false;
 					_branchTable.Rows.Add(row);
 				}
+			}
+		}
+
+		void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+		{
+			if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
+			{
+				e.Row["Force"] = false;
+				e.Row["Delete"] = false;
+			}
+			if (e.Column.ColumnName == "Force" && (bool)e.ProposedValue)
+			{
+				e.Row["Push"] = false;
+				e.Row["Delete"] = false;
+			}
+			if (e.Column.ColumnName == "Delete" && (bool)e.ProposedValue)
+			{
+				e.Row["Push"] = false;
+				e.Row["Force"] = false;
 			}
 		}
 
@@ -405,5 +431,14 @@ namespace GitUI
 			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
 				UpdateMultiBranchView();
 		}
-	}
+
+		private void BranchGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+		{
+			if (BranchGrid.CurrentCell is DataGridViewCheckBoxCell)
+			{
+				BranchGrid.EndEdit();
+				((BindingSource)BranchGrid.DataSource).EndEdit();
+			}
+		}
+    }
 }
