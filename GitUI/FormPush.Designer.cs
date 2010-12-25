@@ -57,11 +57,12 @@
 			this.MultipleBranchTab = new System.Windows.Forms.TabPage();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.BranchGrid = new System.Windows.Forms.DataGridView();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.PushColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.ForceColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.LocalColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.RemoteColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.ForceColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.DeleteColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -406,9 +407,10 @@
 			this.BranchGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.BranchGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PushColumn,
+            this.ForceColumn,
             this.LocalColumn,
             this.RemoteColumn,
-            this.ForceColumn});
+            this.DeleteColumn});
 			this.BranchGrid.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BranchGrid.Location = new System.Drawing.Point(3, 19);
 			this.BranchGrid.Name = "BranchGrid";
@@ -424,6 +426,14 @@
 			this.PushColumn.Name = "PushColumn";
 			this.PushColumn.Width = 39;
 			// 
+			// ForceColumn
+			// 
+			this.ForceColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+			this.ForceColumn.DataPropertyName = "Force";
+			this.ForceColumn.HeaderText = "Force";
+			this.ForceColumn.Name = "ForceColumn";
+			this.ForceColumn.Width = 42;
+			// 
 			// LocalColumn
 			// 
 			this.LocalColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -438,13 +448,12 @@
 			this.RemoteColumn.HeaderText = "Remote Branch";
 			this.RemoteColumn.Name = "RemoteColumn";
 			// 
-			// ForceColumn
+			// DeleteColumn
 			// 
-			this.ForceColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-			this.ForceColumn.DataPropertyName = "Force";
-			this.ForceColumn.HeaderText = "Force";
-			this.ForceColumn.Name = "ForceColumn";
-			this.ForceColumn.Width = 42;
+			this.DeleteColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+			this.DeleteColumn.HeaderText = "Delete Remote Branch";
+			this.DeleteColumn.Name = "DeleteColumn";
+			this.DeleteColumn.Width = 117;
 			// 
 			// FormPush
 			// 
@@ -510,8 +519,9 @@
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.DataGridView BranchGrid;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn PushColumn;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn ForceColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn LocalColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn RemoteColumn;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn ForceColumn;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn DeleteColumn;
     }
 }
