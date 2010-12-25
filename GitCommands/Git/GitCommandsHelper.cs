@@ -1067,12 +1067,12 @@ namespace GitCommands
                 sforce = "-f ";
 
             if (all)
-                return string.Format("push {0}--all \"{1}\"", sforce, path.Trim());
+                return string.Format("push {0}--all -u \"{1}\"", sforce, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", sforce, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}-u \"{1}\" {2}:{3}", sforce, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", sforce, path.Trim(), fromBranch);
+            return string.Format("push {0}-u \"{1}\" {2}", sforce, path.Trim(), fromBranch);
         }
 
         public static string PushTagCmd(string path, string tag, bool all)
