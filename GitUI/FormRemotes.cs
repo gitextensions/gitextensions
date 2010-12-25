@@ -116,7 +116,7 @@ namespace GitUI
                         !remoteHead.Name.ToLower().Contains(_remote.ToLower()))
                         continue;
                     localHead.TrackingRemote = RemoteName.Text;
-                    localHead.MergeWith = remoteHead.Name;
+                    localHead.MergeWith = localHead.Name;
                 }
             }
         }
