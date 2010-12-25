@@ -18,7 +18,8 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
         }
 
@@ -68,22 +69,45 @@ namespace GitUI
             syncContext.Send(method, this);
         }
 
+        public void AddToTimer(string text)
+        {
+            lock (ProcessOutputTimer.linesToAdd)
+            {
+                ProcessOutputTimer.addLine(text);
+            } 
+        }
+
+        public void AddOutputCrossThread(string text)
+        {         
+            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+            {
+                Output.Text += text;            
+                Output.SelectionStart = Output.Text.Length;
+                Output.ScrollToCaret();
+                Output.Visible = true;
+            });
+            syncContext.Send(method, this);
+        }
+
         public void AddOutput(string text)
         {
             Output.Text += text + Environment.NewLine;
             Output.Visible = true;
+            Output.SelectionStart = Output.Text.Length;
+            Output.ScrollToCaret();
         }
 
         public void Done(bool isSuccess)
         {
-            AddOutput(OutputString.ToString());
+            if (OutputString.Length > 0)
+                AddOutput(OutputString.ToString());
+            ProcessOutputTimer.Stop();
             AddOutput("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
             Ok.Focus();
             AcceptButton = Ok;
             Abort.Enabled = false;
-
             if (TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -179,7 +203,7 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
-
+            ProcessOutputTimer.Start(this);
             Reset();
             ProcessCallback(this);
         }

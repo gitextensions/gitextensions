@@ -142,8 +142,13 @@ namespace GitCommands
             }
 
             //Default!
+            Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
+        }
+
+        public static string GetDefaultHomeDir()
+        {
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
-                return;
+                return Environment.GetEnvironmentVariable("HOME");
 
             string homePath;
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
@@ -155,7 +160,8 @@ namespace GitCommands
             {
                 homePath = Environment.GetEnvironmentVariable("USERPROFILE");
             }
-            Environment.SetEnvironmentVariable("HOME", homePath);
+
+            return homePath;
         }
 
         public static void RunRealCmd(string cmd, string arguments)
@@ -300,6 +306,13 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
+            int exitCode;
+            return RunCmd(cmd, arguments, out exitCode);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, out int exitCode)
+        {
             try
             {
                 SetEnvironmentVariable();
@@ -307,7 +320,7 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                CreateAndStartProcess(arguments, cmd, out output, out error);
+                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -317,18 +330,25 @@ namespace GitCommands
             }
             catch (Win32Exception)
             {
+                exitCode = 1;
                 return string.Empty;
             }
         }
 
-        private static void CreateAndStartProcess(string argument, string cmd)
+        private static int CreateAndStartProcess(string argument, string cmd)
         {
             string stdOutput, stdError;
-            CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
+            return CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
         }
 
-        private static void CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
+        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = "";
+                return -1;
+            }
+
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
@@ -344,6 +364,7 @@ namespace GitCommands
                 stdOutput = process.StandardOutput.ReadToEnd();
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
+                return process.ExitCode;
             }
         }
 
@@ -438,6 +459,8 @@ namespace GitCommands
 
         public static bool HandleConflictsSaveSide(string fileName, string saveAs, string side)
         {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
             side = GetSide(side);
 
             fileName = FixPath(fileName);
@@ -445,12 +468,29 @@ namespace GitCommands
 
             foreach (var file in unmerged)
             {
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                if (string.IsNullOrEmpty(fileStage))
+                    continue;
+                if (fileStage.Trim()[0] != side[0])
+                    continue;
+
+
                 var fileline = file.Split(new[] { ' ', '\t' });
                 if (fileline.Length < 3)
                     continue;
-                if (fileline[2].Trim() != side)
-                    continue;
-                File.WriteAllText(saveAs, RunCmd(Settings.GitCommand, "cat-file blob \"" + fileline[1] + "\""));
+                Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
+                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(fileline[1])) //Ugly, has implementation info.
+                {
+                  using (FileStream fileOut = File.Create(saveAs))
+                  {
+                    byte[] buf = ms.GetBuffer();
+                    fileOut.Write(buf, 0, buf.Length);
+                  }
+                }
                 return true;
             }
             return false;
@@ -469,6 +509,8 @@ namespace GitCommands
 
         public static string[] GetConflictedFiles(string filename)
         {
+            Directory.SetCurrentDirectory(Settings.WorkingDir);
+
             filename = FixPath(filename);
 
             string[] fileNames =
@@ -482,14 +524,19 @@ namespace GitCommands
 
             foreach (var file in unmerged)
             {
-                var fileline = file.Split(new[] { ' ', '\t' });
-                if (fileline.Length < 3)
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                if (string.IsNullOrEmpty(fileStage))
                     continue;
 
                 int stage;
-                Int32.TryParse(fileline[2].Trim(), out stage);
+                if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
+                    continue;
 
-                var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + filename);
+                var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(Settings.WorkingDir, tempFile);
 
@@ -508,6 +555,43 @@ namespace GitCommands
                 catch (Exception ex)
                 {
                     Trace.WriteLine(ex);
+                }
+            }
+
+            if (!File.Exists(fileNames[0])) fileNames[0] = null;
+            if (!File.Exists(fileNames[1])) fileNames[1] = null;
+            if (!File.Exists(fileNames[2])) fileNames[2] = null;
+
+            return fileNames;
+        }
+
+        public static string[] GetConflictedFileNames(string filename)
+        {
+            filename = FixPath(filename);
+
+            string[] fileNames = new string[3];
+
+            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var file in unmerged)
+            {
+                string fileStage = null;
+                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+                else
+                    fileStage = "";
+
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+
+                if (findSecondWhitespace >= 0)
+                    fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+                else
+                    fileStage = "";
+
+                int stage;
+                if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                {
+                    fileNames[stage-1] = fileStage.Substring(2);
                 }
             }
 

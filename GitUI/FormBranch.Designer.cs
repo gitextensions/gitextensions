@@ -59,38 +59,48 @@
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
             this.splitContainer1.Panel2.Controls.Add(this.BName);
-            this.splitContainer1.Size = new System.Drawing.Size(712, 484);
+            this.splitContainer1.Size = new System.Drawing.Size(746, 484);
             this.splitContainer1.SplitterDistance = 445;
             this.splitContainer1.TabIndex = 0;
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.CurrentCheckout = null;
+            this.RevisionGrid.AllowGraphWithFilter = false;
+            this.RevisionGrid.BranchFilter = "";
+            this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.RevisionGrid.InMemAuthorFilter = "";
+            this.RevisionGrid.InMemCommitterFilter = "";
+            this.RevisionGrid.InMemFilterIgnoreCase = false;
+            this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(712, 445);
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RevisionGrid.Size = new System.Drawing.Size(746, 445);
             this.RevisionGrid.TabIndex = 0;
             // 
             // CheckoutAfterCreate
             // 
+            this.CheckoutAfterCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(322, 8);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(244, 8);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(129, 17);
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(132, 17);
             this.CheckoutAfterCreate.TabIndex = 4;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // Checkout
             // 
-            this.Checkout.Location = new System.Drawing.Point(483, 5);
+            this.Checkout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Checkout.Location = new System.Drawing.Point(494, 5);
             this.Checkout.Name = "Checkout";
-            this.Checkout.Size = new System.Drawing.Size(103, 23);
+            this.Checkout.Size = new System.Drawing.Size(119, 23);
             this.Checkout.TabIndex = 3;
             this.Checkout.Text = "Checkout branch";
             this.Checkout.UseVisualStyleBackColor = true;
@@ -98,18 +108,20 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 8);
+            this.label1.Location = new System.Drawing.Point(3, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Branch name";
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(592, 5);
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.Location = new System.Drawing.Point(620, 5);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
+            this.Ok.Size = new System.Drawing.Size(124, 23);
             this.Ok.TabIndex = 1;
             this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
@@ -117,9 +129,10 @@
             // 
             // BName
             // 
+            this.BName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BName.Location = new System.Drawing.Point(88, 5);
             this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(227, 20);
+            this.BName.Size = new System.Drawing.Size(150, 21);
             this.BName.TabIndex = 0;
             // 
             // FormBranch
@@ -127,7 +140,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 484);
+            this.ClientSize = new System.Drawing.Size(746, 484);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormBranch";
             this.Text = "Create Branch";

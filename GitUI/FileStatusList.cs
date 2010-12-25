@@ -192,9 +192,15 @@ namespace GitUI
 
         public event EventHandler SelectedIndexChanged;
 
+        public new event EventHandler DoubleClick;
+        public new event KeyEventHandler KeyDown;
+
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name, Revision);
+            if (this.DoubleClick == null)
+                GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name, Revision);
+            else
+                this.DoubleClick(sender, e);
         }
 
         void FileStatusListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -257,31 +263,35 @@ namespace GitUI
 
         private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            if (this.KeyDown == null)
             {
-                case Keys.A:
-                    {
-                        if (e.Control)
+                switch (e.KeyCode)
+                {
+                    case Keys.A:
                         {
-                            try
+                            if (e.Control)
                             {
-                                FileStatusListBox.SuspendLayout();
-                                FileStatusListBox.ClearSelected();
-                                for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
+                                try
                                 {
-                                    FileStatusListBox.SetSelected(n, true);
+                                    FileStatusListBox.SuspendLayout();
+                                    FileStatusListBox.ClearSelected();
+                                    for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
+                                    {
+                                        FileStatusListBox.SetSelected(n, true);
+                                    }
+                                    e.Handled = true;
                                 }
-                                e.Handled = true;
+                                finally
+                                {
+                                    FileStatusListBox.ResumeLayout();
+                                }
                             }
-                            finally
-                            {
-                                FileStatusListBox.ResumeLayout();
-                            }
+                            break;
                         }
-                        break;
-                    }
+                }
             }
-
+            else
+                this.KeyDown(sender, e);
         }
 
 
