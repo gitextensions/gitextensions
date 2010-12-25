@@ -1050,10 +1050,10 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, null, branch, all, false);
+            return PushCmd(path, null, branch, all, false, true);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force)
+        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force, bool track)
         {
             path = FixPath(path);
 
@@ -1066,13 +1066,17 @@ namespace GitCommands
             if (force)
                 sforce = "-f ";
 
+            var strack = "";
+            if (track)
+                strack = "-u ";
+
             if (all)
-                return string.Format("push {0}--all -u \"{1}\"", sforce, path.Trim());
+                return string.Format("push {0}{1}--all \"{2}\"", sforce, strack, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}-u \"{1}\" {2}:{3}", sforce, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}{1}\"{2}\" {3}:{4}", sforce, strack, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}-u \"{1}\" {2}", sforce, path.Trim(), fromBranch);
+            return string.Format("push {0}{1}\"{2}\" {3}", sforce, strack, path.Trim(), fromBranch);
         }
 
         public static string PushTagCmd(string path, string tag, bool all)
