@@ -147,8 +147,8 @@ namespace GitCommands
 
         public static string GetDefaultHomeDir()
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
-                return Environment.GetEnvironmentVariable("HOME");
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
+                return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
 
             string homePath;
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
