@@ -28,10 +28,6 @@ namespace GitUI
 
         private readonly TranslationString _amendCommitCaption = new TranslationString("Amend commit");
 
-        private readonly TranslationString _closeDialogAfterCommitTooltip =
-            new TranslationString(
-                "When checked the commit dialog is closed after each commit.\nOtherwise the dialog will only close when there are no modified files left.");
-
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
 
         private readonly TranslationString _deleteSelectedFiles =
@@ -107,10 +103,8 @@ namespace GitUI
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 
-            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, _closeDialogAfterCommitTooltip.Text);
-
-            CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
-            CloseDialogAfterLastCommit.Checked = Settings.CloseCommitDialogAfterLastCommit;
+            closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
+            closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
@@ -818,11 +812,6 @@ namespace GitUI
             OpenWith.OpenAs(Settings.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
-        private void CloseDialogAfterCommitCheckedChanged(object sender, EventArgs e)
-        {
-            Settings.CloseCommitDialogAfterCommit = CloseDialogAfterCommit.Checked;
-        }
-
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItems.Count == 0)
@@ -1002,9 +991,18 @@ namespace GitUI
                 e.Handled = true;
         }
 
-        private void CloseDialogAfterLastCommit_CheckedChanged(object sender, EventArgs e)
+
+        private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CloseCommitDialogAfterLastCommit = CloseDialogAfterLastCommit.Checked;
+            closeDialogAfterEachCommitToolStripMenuItem.Checked = !closeDialogAfterEachCommitToolStripMenuItem.Checked;
+            Settings.CloseCommitDialogAfterCommit = closeDialogAfterEachCommitToolStripMenuItem.Checked;
+        }
+
+        private void closeDialogAfterAllFilesCommittedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
+            Settings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
+
         }
     }
 }
