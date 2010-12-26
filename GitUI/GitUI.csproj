@@ -989,9 +989,9 @@
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
       <Name>Gravatar</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetSpell.SpellChecker\NetSpell.SpellChecker.csproj">
+    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
       <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>
-      <Name>NetSpell.SpellChecker</Name>
+      <Name>SpellChecker</Name>
     </ProjectReference>
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
