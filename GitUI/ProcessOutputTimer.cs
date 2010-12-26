@@ -22,7 +22,10 @@ namespace GitUI
 
         public static void addLine(string line)
         {
-            linesToAdd.Append(line);
+            lock(linesToAdd)
+            {
+                linesToAdd.Append(line);
+            }
         }
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -30,7 +33,8 @@ namespace GitUI
             {
                 if (linesToAdd.ToString().Length > 0)
                     _form.AddOutputCrossThread(linesToAdd.ToString());
-                linesToAdd = new StringBuilder();
+                linesToAdd.Remove(0, linesToAdd.Length);
+                //linesToAdd = new StringBuilder();
             }
         }
         public static void Stop()
