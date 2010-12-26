@@ -1649,5 +1649,11 @@ namespace GitUI
             else
                 commitToolStripMenuItem1.Checked = true;
         }
+
+        private void _gitRepoMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0)
+                GitUICommands.Instance.StartCloneForkFromHoster(GitUI.RepoHosting.RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
+        }
     }
 }

@@ -88,6 +88,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Github\Github.csproj">
+      <Project>{5D0F8E21-48A2-4350-BB14-F8B64F24B948}</Project>
+      <Name>Github</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
