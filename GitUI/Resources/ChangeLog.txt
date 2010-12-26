@@ -5,18 +5,24 @@ Version 2.09
 	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
 	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
 	Fixed issue 304: cannot load commit log
+	Fixed issue 305: binary files are not saved properly when using "save as..."
+	Fixed issue 318: when pushing new branch, track it automaticall
 	Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
+	Fixed "automatically configure the default push..." feature when adding remote
 	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
 	Fixed the following keys in quicksearch: '#', '_'
 	Fixed error page in browse dialog when git is not configured properly
-	Added resolved directories to FormFixHome to make it easier to choose the correct option
-	Added support for merging office documents (doc, docx, odt, ods, sxw)
+	Added "stage selected lines" option to commit dialog
+	Added Russian spelling dictionary
 	Added Italian translation
+	Added dialog to choose language at startup when no language is set
+	Added resolved directories to FormFixHome to make it easier to choose the correct option
+	Added support for merging office documents (doc, docx, odt, ods, sxw)	
 	Added "Diff contains" filter to search for commits containing text
 	Added combobox to branch in browse dialog to allow quick switching between local branches
 	Added shortcuts 's' and 'u' to stage/unstage files in commit dialog
-	Added dialog to choose language at startup when no language is set
 	Added images to file tree
+	Added Ctrl + Enter shortcut to commit quickly
 	The statistics plugin does its calculates in background thread
 	Doubleclick on file in commit dialog (un)stages the file
 	Improved merge conflict handling
