@@ -230,6 +230,9 @@
       <Component Id="nlNL.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\nl-NL.dic"/>
       </Component>
+      <Component Id="ruRU.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\ru-RU.dic"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="TranslationsDir">
@@ -458,6 +461,9 @@
         </Feature>
         <Feature Id="nlNL" Title="nl-NL" Level="1">
           <ComponentRef Id="nlNL.dic"/>
+        </Feature>
+        <Feature Id="ruRU" Title="ru-RU" Level="1">
+          <ComponentRef Id="ruRU.dic"/>
         </Feature>
       </Feature>
 

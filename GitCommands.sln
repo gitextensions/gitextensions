@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gravatar", "Gravatar\Gravat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSpell.SpellChecker", "NetSpell.SpellChecker\NetSpell.SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
