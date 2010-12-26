@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using PatchApply;
 
 namespace GitUI
 {
@@ -84,12 +85,16 @@ namespace GitUI
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+
+        private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
+        private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
+        private ToolStripItem _StageSelectedLinesToolStripMenuItem;
 
         public FormCommit()
         {
@@ -120,6 +125,26 @@ namespace GitUI
             Staged.DoubleClick += Staged_DoubleClick;
 
             Unstaged.Focus();
+
+            SelectedDiff.AddContextMenuEntry(null, null);
+            _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, new EventHandler(StageSelectedLinesToolStripMenuItemClick));
+        }
+
+        private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            // Prepare git command
+            string args = "apply  --cached --whitespace=nowarn";
+
+            if (_currentItemStaged) //staged
+                args += " --reverse";
+
+            string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged);
+
+            if (!string.IsNullOrEmpty(patch))
+            {
+                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                ScanClick(null, null);
+            }
         }
 
         private void Initialize()
@@ -218,6 +243,11 @@ namespace GitUI
             {
                 SelectedDiff.ViewFile(item.Name);
             }
+
+            if (staged)
+                _StageSelectedLinesToolStripMenuItem.Text = _unstageSelectedLines.Text;
+            else
+                _StageSelectedLinesToolStripMenuItem.Text = _stageSelectedLines.Text;
         }
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
