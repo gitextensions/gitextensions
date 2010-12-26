@@ -113,6 +113,9 @@
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Удалить файл</Value>
         </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Есть неразрешенные конфликты</Value>
+        </TranslationItem>
         <TranslationItem Name="workingToolStripMenuItem" Property="Text">
           <Value>Изменения в рабочей директориии</Value>
         </TranslationItem>
@@ -128,6 +131,12 @@
         <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
           <Value>Редактировать игнорируемые файлы</Value>
         </TranslationItem>
+        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Удалить все untracked файлы</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Отмена</Value>
+        </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Отмена</Value>
         </TranslationItem>
@@ -140,6 +149,10 @@
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Value>Добавить файлы в .gitignore</Value>
         </TranslationItem>
+
+        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Показывать untracked файлы</Value>
+        </TranslationItem>
         <TranslationItem Name="rescanChangesToolStripMenuItem" Property="Text">
           <Value>Сканировать изменения</Value>
         </TranslationItem>
@@ -148,6 +161,9 @@
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>Отменить изменения</Value>
+        </TranslationItem>
+        <TranslationItem Name="Amend" Property="Text">
+          <Value>Присоединить к послднему коммиты</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Открыть</Value>
@@ -166,6 +182,15 @@
         </TranslationItem>
         <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
           <Value>Посмотреть историю файла</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+          <Value>Настройки</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Закрывать диалог после каждого коммита</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Закрыть диалог после того, как будут все изменения будут commited</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Хотите также удалить созданные файлы, которые находятся в выделении ?
@@ -225,6 +250,12 @@
         </TranslationItem>
         <TranslationItem Name="_noUnstagedChanges" Property="Text">
           <Value>Не сохраненных изменений нет</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>Вы работаете не в ветке.
+На этот коммит не будет ссылок, и когда вы переключетесь на другую ветку он может быть потерян.
+
+Хотите продолжить?</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Value>Не на ветке.</Value>
@@ -302,6 +333,9 @@
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
           <Value>Сохранить изменения</Value>
         </TranslationItem>
+        <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
+          <Value>Решить конфликты</Value>
+        </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Value>Удалить ветку</Value>
         </TranslationItem>
@@ -337,6 +371,9 @@
         </TranslationItem>
         <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
           <Value>Сжать базу git</Value>
+        </TranslationItem>
+        <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Восстановить потерянные объекты</Value>
         </TranslationItem>
         <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
           <Value>Удаленные</Value>
@@ -911,6 +948,12 @@
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>Метка</Value>
         </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text">
+          <Value>Push все метки</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>в</Value>
+        </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>Ветка, которую вы собираетесь push является новой для удаленного репозитория.
 Вы уверены, что хотите push эту ветку?</Value>
@@ -923,6 +966,9 @@
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text">
           <Value>Пожалуйста, выберите удаленный репозиторий</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Необходимо выбрать метку для push, или выбрать "Push все метки".</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -958,6 +1004,9 @@
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>Конфликты разрешены</Value>
         </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Не могу загрузить ключ SSH. PuTTY неправильно сконфигурирован.</Value>
+        </TranslationItem>
         <TranslationItem Name="_selectRemoteRepository" Property="Text">
           <Value>Пожалуйста, выберите удаленный репозиторий</Value>
         </TranslationItem>
@@ -989,6 +1038,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Добавить файл(ы) в .gitIgnore</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Редактировать строки игнорирования</Value>
         </TranslationItem>
         <TranslationItem Name="ShowPreview" Property="Text">
           <Value>Предварительный просмотр</Value>
@@ -1042,6 +1094,15 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="label6" Property="Text">
           <Value>Редактор</Value>
         </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text">
+          <Value>Проверять настройки при старте (автоматически становится недоступным, если все настройки правильные)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Сохранить и пересканировать</Value>
+        </TranslationItem>
+        <TranslationItem Name="label12" Property="Text">
+          <Value>Ограничить количество коммитов, которые будут загружены при запуске.</Value>
+        </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Сохранить и пересканировать</Value>
         </TranslationItem>
@@ -1054,6 +1115,15 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="BrowseGitBinPath" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Укажите ssh клиент</Value>
+        </TranslationItem>
+        <TranslationItem Name="PlinkBrowse" Property="Text">
+          <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Конфигурировать PuTTY</Value>
+        </TranslationItem>
         <TranslationItem Name="PlinkBrowse" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
@@ -1062,6 +1132,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="PageantBrowse" Property="Text">
           <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="label17" Property="Text">
+          <Value>Путь к pageant</Value>
         </TranslationItem>
         <TranslationItem Name="PuttygenBrowse" Property="Text">
           <Value>Обзор</Value>
@@ -1089,6 +1162,24 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="NoGitRepo" Property="Text">
           <Value>Это не репозиторий git </Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>Перед тем как менять глобавльные настройки,
+необходимо установить коректный путь к git.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label21" Property="Text">
+          <Value>Перед тем как менять локальные настройки,
+необходимо установить коректный путь к git.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label10" Property="Text">
+          <Value>Перед тем как менять какие либо глобальные настройки,
+необходимо установить коректный путь к git.cmd.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label22" Property="Text">
+          <Value>Словарь для проверки орфографии.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text">
+          <Value>Smtp сервер для отправки патчей почтой</Value>
         </TranslationItem>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Кодировка</Value>
@@ -1213,6 +1304,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="MulticolorBranches" Property="Text">
           <Value>Многоцветные ветки</Value>
         </TranslationItem>
+        <TranslationItem Name="label50" Property="Text">
+          <Value>Для доступа к git репозиториям в Git Extensions возможно использовать как msysgit так и cygwin . Установите коректный путь ниже.</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox8" Property="Text">
           <Value>Окружение</Value>
         </TranslationItem>
@@ -1225,6 +1319,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="BranchBorders" Property="Text">
           <Value>Рисовать границы веток</Value>
         </TranslationItem>
+        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+          <Value>Отображать статус репозитория в диалоге обзора (количество изменений на панели инструментов. необходим перезапуск)</Value>
+        </TranslationItem>
         <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
           <Value>Показывать ошибки при stage файлов</Value>
         </TranslationItem>
@@ -1236,6 +1333,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
           <Value>Скрипты</Value>
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text">
+          <Value>Добавить ревизию к контекстному меню таблицы</Value>
         </TranslationItem>
         <TranslationItem Name="label53" Property="Text">
           <Value>Нет сервиса картинок</Value>
@@ -1267,6 +1367,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="addScriptButton" Property="Text">
           <Value>Добавить</Value>
         </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Номер</Value>
+        </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text">
           <Value>Название</Value>
         </TranslationItem>
@@ -1289,6 +1392,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
     </TranslationCategory>
     <TranslationCategory Name="FormFormatPath">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Формировать патч</Value>
+        </TranslationItem>
         <TranslationItem Name="SelectedBranch" Property="Text">
           <Value>Ветка</Value>
         </TranslationItem>
@@ -1332,6 +1438,15 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Тип reset</Value>
+        </TranslationItem>
+        <TranslationItem Name="Hard" Property="Text">
+          <Value>Hard: отменить измененияв рабочей копии и в индексе (отменить ВСЕ локальные изменения, даже те что commited)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mixed" Property="Text">
+          <Value>Mixed: рабочую копию не трогать, сбросить только индекс</Value>
+        </TranslationItem>
+        <TranslationItem Name="Soft" Property="Text">
+          <Value>Soft: рабочую копию и индекс оставить без изменений</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Отмена</Value>
@@ -1633,6 +1748,12 @@ _ReSharper*/
         <TranslationItem Name="Force" Property="Text">
           <Value>Принудительно</Value>
         </TranslationItem>
+        <TranslationItem Name="trackRemoteBranch" Property="Text">
+          <Value>Вы выбрали checkout внешней ветки.
+
+Хотите создать локальную ветку с именем '{0}',
+которая будет следить за внешней веткой?</Value>
+        </TranslationItem>
         <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
           <Value>Checkout ветки</Value>
         </TranslationItem>
@@ -1882,6 +2003,10 @@ _ReSharper*/
         <TranslationItem Name="label3" Property="Text">
           <Value>Поддиректория для создания</Value>
         </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>Репозиторий будет клонирован в новую директорию:
+     [destination]\</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
@@ -1898,11 +2023,17 @@ _ReSharper*/
         <TranslationItem Name="nextButton" Property="Text">
           <Value>Следующий</Value>
         </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Google перевод</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStripTranslationLabel" Property="Text">
           <Value>Текущий перевод:</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
           <Value>Код языка:</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>Google все пустые</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonNew" Property="Text">
           <Value>Новый</Value>
@@ -2004,11 +2135,20 @@ _ReSharper*/
         <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
           <Value>Сортировать ревизии по дате</Value>
         </TranslationItem>
+        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
+          <Value>Показывать относительную дату</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>Показывать все ветки</Value>
+        </TranslationItem>
         <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
           <Value>Показывать только текущую ветку</Value>
         </TranslationItem>
         <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
           <Value>Показывать отфильтрованные ветки</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>Рисовать не родственные ветки серыми</Value>
         </TranslationItem>
         <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Value>Копировать в буфер</Value>
@@ -2175,6 +2315,9 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="FormRevertCommitSmall">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Отменить коммит</Value>
+        </TranslationItem>
         <TranslationItem Name="Date" Property="Text">
           <Value>Дата коммита:</Value>
         </TranslationItem>
@@ -2354,6 +2497,9 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="FormRebase">
       <translationItems>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Перебазировать текущую ветку на верхушке другой</Value>
+        </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
           <Value>Текущая</Value>
         </TranslationItem>
