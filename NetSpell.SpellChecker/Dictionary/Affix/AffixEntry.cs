@@ -10,7 +10,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	{
 		private int _ConditionCount;
 		private string _AddCharacters = "";
-		private int[] _Condition = new int[256] ;
+		private int[] _Condition = new int[0x10000] ;
 		private string _StripCharacters = "";
 
 		/// <summary>
