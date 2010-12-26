@@ -15,6 +15,7 @@ namespace GitUI
         TranslationString openRepository = new TranslationString("Open repository");
         TranslationString cloneRepository = new TranslationString("Clone repository");
         TranslationString createRepository = new TranslationString("Create new repository");
+        TranslationString cloneFork = new TranslationString("Clone/fork {0} repository");
         TranslationString develop = new TranslationString("Develop");
         TranslationString donate = new TranslationString("Donate");
         TranslationString translate = new TranslationString("Translate");
@@ -183,6 +184,16 @@ namespace GitUI
                     DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
                     createItem.Click += new EventHandler(createItem_Click);
                     CommonActions.AddItem(createItem);
+
+                    foreach (var el in GitUI.RepoHosting.RepoHosts.GitHosters)
+                    {
+                        var gitHoster = el;
+                        DashboardItem di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
+                        di.Click += (sender, e) => { GitUICommands.Instance.StartCloneForkFromHoster(gitHoster); };
+                        CommonActions.AddItem(di);
+                    }
+                
+
                     DonateCategory.DisableContextMenu();
                     DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
                     GitHubItem.Click += new EventHandler(GitHubItem_Click);
@@ -215,6 +226,13 @@ namespace GitUI
         void TranslateItem_Click(object sender, EventArgs e)
         {
             new FormTranslate().ShowDialog();
+        }
+
+
+        void cloneForkGithubItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, "Heyyooo");
+            System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
         }
 
         void GitHubItem_Click(object sender, EventArgs e)
