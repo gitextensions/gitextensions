@@ -102,6 +102,16 @@ namespace GitUI.Editor
             TextEditor.Text = text;
         }
 
+        public int GetSelectionPosition()
+        {
+            return TextEditor.SelectionStart;
+        }
+
+        public int GetSelectionLength() 
+        {
+            return TextEditor.SelectionLength;
+        }
+
         public string GetSelectedText()
         {
             return TextEditor.SelectedText;

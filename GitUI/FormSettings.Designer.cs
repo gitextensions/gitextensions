@@ -2416,7 +2416,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.AutoSize = true;
             this.inMenuCheckBox.Enabled = false;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(280, 245);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(280, 246);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2426,16 +2426,17 @@ namespace GitUI
             // argumentsLabel
             // 
             this.argumentsLabel.AutoSize = true;
-            this.argumentsLabel.Location = new System.Drawing.Point(15, 299);
+            this.argumentsLabel.Location = new System.Drawing.Point(8, 302);
             this.argumentsLabel.Name = "argumentsLabel";
             this.argumentsLabel.Size = new System.Drawing.Size(63, 13);
             this.argumentsLabel.TabIndex = 14;
             this.argumentsLabel.Text = "Arguments:";
+            this.argumentsLabel.Click += new System.EventHandler(this.argumentsLabel_Click);
             // 
             // commandLabel
             // 
             this.commandLabel.AutoSize = true;
-            this.commandLabel.Location = new System.Drawing.Point(20, 271);
+            this.commandLabel.Location = new System.Drawing.Point(8, 274);
             this.commandLabel.Name = "commandLabel";
             this.commandLabel.Size = new System.Drawing.Size(58, 13);
             this.commandLabel.TabIndex = 13;
@@ -2444,7 +2445,7 @@ namespace GitUI
             // nameLabel
             // 
             this.nameLabel.AutoSize = true;
-            this.nameLabel.Location = new System.Drawing.Point(40, 241);
+            this.nameLabel.Location = new System.Drawing.Point(8, 246);
             this.nameLabel.Name = "nameLabel";
             this.nameLabel.Size = new System.Drawing.Size(38, 13);
             this.nameLabel.TabIndex = 12;

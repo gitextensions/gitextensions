@@ -61,7 +61,7 @@ namespace GitUI
                 }
             }
 
-            this.Height = x + imageHeight + SystemInformation.CaptionHeight + 25;
+            this.Height = 34 + y + imageHeight + SystemInformation.CaptionHeight + 37;
             label2.Top = this.Height - SystemInformation.CaptionHeight - 25;
         }
 
