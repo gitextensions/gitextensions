@@ -121,6 +121,7 @@ namespace GitUI
             this.cherryPickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._gitRepoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -982,6 +983,7 @@ namespace GitUI
             this.cherryPickToolStripMenuItem,
             this.cleanupToolStripMenuItem,
             this.cloneToolStripMenuItem,
+            this._gitRepoMenuItem,
             this.commitToolStripMenuItem,
             this.branchToolStripMenuItem,
             this.tagToolStripMenuItem,
@@ -1061,6 +1063,13 @@ namespace GitUI
             this.cloneToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.cloneToolStripMenuItem.Text = "Clone repository";
             this.cloneToolStripMenuItem.Click += new System.EventHandler(this.CloneToolStripMenuItemClick);
+            // 
+            // _gitRepoMenuItem
+            // 
+            this._gitRepoMenuItem.Name = "_gitRepoMenuItem";
+            this._gitRepoMenuItem.Size = new System.Drawing.Size(248, 22);
+            this._gitRepoMenuItem.Text = "Fork/Clone from Git Repo Hoster";
+            this._gitRepoMenuItem.Click += new System.EventHandler(this._gitRepoMenuItem_Click);
             // 
             // commitToolStripMenuItem
             // 
@@ -1736,5 +1745,6 @@ namespace GitUI
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripMenuItem diffContainsToolStripMenuItem;
+        private ToolStripMenuItem _gitRepoMenuItem;
     }
 }

@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IGitCommands.cs" />
+    <Compile Include="IGitHostingPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />
     <Compile Include="IGitSubmodule.cs" />

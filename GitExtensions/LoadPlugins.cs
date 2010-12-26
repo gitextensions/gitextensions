@@ -7,6 +7,7 @@ using GitUI;
 using GitUI.Plugin;
 using GitUIPluginInterfaces;
 using System.Threading;
+using GitUI.RepoHosting;
 
 namespace GitExtensions
 {
@@ -25,6 +26,8 @@ namespace GitExtensions
 
         public static void Load()
         {
+            //Github.GithubPlugin ghp = new Github.GithubPlugin();
+
             try
             {
                 var file = new FileInfo(Application.ExecutablePath);
@@ -57,11 +60,15 @@ namespace GitExtensions
                             gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
                             gitPlugin.Register(GitUICommands.Instance);
 
+                            if (gitPlugin is IGitHostingPlugin)
+                                RepoHosts.GitHosters.Add(gitPlugin as IGitHostingPlugin);
+                          
                             LoadedPlugins.Plugins.Add(gitPlugin);
                         }
                     }
                     catch (Exception ex)
                     {
+                        MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, ex.Message));
                         Trace.WriteLine(ex.Message);
                     }
                 }

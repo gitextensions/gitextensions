@@ -686,5 +686,11 @@ namespace GitUI
 
             return false;
         }
+
+        public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
+        {
+            var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
+            fac.ShowDialog();
+        }
     }
 }
