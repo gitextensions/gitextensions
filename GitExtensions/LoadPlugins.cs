@@ -66,7 +66,22 @@ namespace GitExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, ex.Message));
+                    string exInfo = "Exception info:\r\n";
+
+                    var rtle = ex as ReflectionTypeLoadException;
+                    if (rtle != null)
+                    {
+                        foreach (var el in rtle.LoaderExceptions)
+                            exInfo += el.Message + "\r\n";
+                    }
+                    else
+                    {
+                        Action<Exception> getEx = null;
+                        getEx = (arg) => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
+                        getEx(ex);
+                    }
+
+                    MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));
                     Trace.WriteLine(ex.Message);
                 }
             }
