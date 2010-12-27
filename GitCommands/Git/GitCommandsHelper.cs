@@ -179,8 +179,7 @@ namespace GitCommands
         private static string FixPath(string path)
         {
             path = path.Trim();
-
-            return path.StartsWith("\\\\") ? path : path.Replace('\\', '/');
+            return path.Replace('\\', '/');
         }
 
         public static void RunRealCmdDetached(string cmd, string arguments)
