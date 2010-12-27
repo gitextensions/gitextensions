@@ -244,8 +244,6 @@ namespace GitUI
         {
             base.OnShown(e);
 
-            EnableLoadSshButton();
-
             Merge.Checked = Settings.PullMerge == "merge";
             Rebase.Checked = Settings.PullMerge == "rebase";
             Fetch.Checked = Settings.PullMerge == "fetch";
@@ -296,29 +294,6 @@ namespace GitUI
         private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
-        }
-
-        private void EnableLoadSshButton()
-        {
-            LoadSSHKey.Visible = !string.IsNullOrEmpty(GitCommandHelpers.GetPuttyKeyFileForRemote(Remotes.Text));
-        }
-
-        private void LoadSshKeyClick(object sender, EventArgs e)
-        {
-            if (File.Exists(Settings.Pageant))
-                GitCommandHelpers.StartPageantForRemote(Remotes.Text);
-            else
-                MessageBox.Show(_cannotLoadPutty.Text, PuttyCaption);
-        }
-
-        private void RemotesSelectedIndexChanged(object sender, EventArgs e)
-        {
-            EnableLoadSshButton();
-        }
-
-        private void RemotesValidated(object sender, EventArgs e)
-        {
-            EnableLoadSshButton();
         }
 
         private void MergeCheckedChanged(object sender, EventArgs e)
