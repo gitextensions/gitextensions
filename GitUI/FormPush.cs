@@ -221,6 +221,8 @@ namespace GitUI
 
         private void FormPushLoad(object sender, EventArgs e)
         {
+            RestorePosition("push");
+
             Remotes.Select();
             Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
             RemotesUpdated(null, null);
@@ -449,5 +451,10 @@ namespace GitUI
 		}
 
 		#endregion
+
+        private void FormPush_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("push");
+        }
     }
 }
