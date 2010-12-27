@@ -36,6 +36,9 @@ namespace GitUI
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");
 
+		private readonly TranslationString _yes = new TranslationString("Yes");
+		private readonly TranslationString _no = new TranslationString("No");
+
         public Boolean PushOnShow { get; set; }
 
         public FormPush()
@@ -123,7 +126,6 @@ namespace GitUI
             		bool force = (bool) row["Force"];
             		bool delete = (bool) row["Delete"];
 
-					// FIXME - Validate remotes and such.  This should be done above if the appropriate tab is selected.
 					if (push || force)
 						pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
 					else if (delete)
@@ -348,6 +350,7 @@ namespace GitUI
 			_branchTable = new DataTable();
 			_branchTable.Columns.Add("Local", typeof (string));
 			_branchTable.Columns.Add("Remote", typeof (string));
+			_branchTable.Columns.Add("New", typeof (string));
 			_branchTable.Columns.Add("Push", typeof(bool));
 			_branchTable.Columns.Add("Force", typeof(bool));
 			_branchTable.Columns.Add("Delete", typeof(bool));
@@ -367,7 +370,6 @@ namespace GitUI
 			foreach (var head in localHeads)
 			{
 				DataRow row = _branchTable.NewRow();
-				row["Push"] = true;
 				row["Force"] = false;
 				row["Delete"] = false;
 				row["Local"] = head.Name;
@@ -378,14 +380,12 @@ namespace GitUI
 				else
 					remoteName = head.Name;
 
-				if (!remoteHeads.Any(h => h.Name == remoteName))
-					// FIXME - Translation and how to we know this is a special string?
-					remoteName += " (New)";
-
 				row["Remote"] = remoteName;
+				bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
+				row["New"] =  newAtRemote ? _no.Text : _yes.Text;
+				row["Push"] = newAtRemote;
 
 				_branchTable.Rows.Add(row);
-
 			}
 
 			// Offer to delete all the left over remote branches.
@@ -394,9 +394,9 @@ namespace GitUI
 				if (!localHeads.Any(h => h.Name == remoteHead.Name))
 				{
 					DataRow row = _branchTable.NewRow();
-					// FIXME - Translation and how do we know this is a special string?
 					row["Local"] = null;
 					row["Remote"] = remoteHead.Name;
+					row["New"] = _no.Text;
 					row["Push"] = false;
 					row["Force"] = false;
 					row["Delete"] = false;
@@ -424,8 +424,6 @@ namespace GitUI
 			}
 		}
 
-		#endregion
-
 		private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
 		{
 			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
@@ -434,11 +432,14 @@ namespace GitUI
 
 		private void BranchGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
 		{
+			// Push grid checkbox changes immediately into the underlying data table.
 			if (BranchGrid.CurrentCell is DataGridViewCheckBoxCell)
 			{
 				BranchGrid.EndEdit();
 				((BindingSource)BranchGrid.DataSource).EndEdit();
 			}
 		}
+
+		#endregion
     }
 }
