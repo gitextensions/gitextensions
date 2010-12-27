@@ -17,6 +17,7 @@ namespace GitUI
 
         private void FormRemotesLoad(object sender, EventArgs e)
         {
+            RestorePosition("remotes");
             Initialize();
         }
 
@@ -278,5 +279,11 @@ namespace GitUI
         {
             new FormProcess("remote update").ShowDialog();
         }
+
+        private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("remotes");
+        }
+
     }
 }
