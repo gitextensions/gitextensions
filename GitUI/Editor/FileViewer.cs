@@ -15,9 +15,6 @@ namespace GitUI.Editor
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
-        private bool _currentViewIsStagingPatch;
-        private bool _currentViewIsStagedPatch;
-        private string _currentFileName;
         private IFileViewer _internalFileViewer;
 
         public FileViewer()
@@ -216,7 +213,6 @@ namespace GitUI.Editor
         public void ViewCurrentChanges(string fileName, bool staged)
         {
             _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
-            _currentFileName = fileName;
         }
 
         public void ViewStagingPatch(string text)
