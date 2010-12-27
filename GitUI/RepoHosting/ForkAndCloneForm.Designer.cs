@@ -41,25 +41,31 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._searchResultsLV = new System.Windows.Forms.ListView();
             this._cloneBtn = new System.Windows.Forms.Button();
-            this._cloneToTB = new System.Windows.Forms.TextBox();
+            this._destinationTB = new System.Windows.Forms.TextBox();
             this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
-            this._cloneForeignBtn = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this._descriptionLbl = new System.Windows.Forms.Label();
-            this._searchResultItemDescription = new System.Windows.Forms.TextBox();
+            this._createDirTB = new System.Windows.Forms.TextBox();
+            this._createDirectoryLbl = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this._openGitupPageBtn = new System.Windows.Forms.Button();
+            this._descriptionLbl = new System.Windows.Forms.Label();
+            this._closeBtn = new System.Windows.Forms.Button();
+            this._tabControl = new System.Windows.Forms.TabControl();
+            this._myReposPage = new System.Windows.Forms.TabPage();
+            this._helpTextLbl = new System.Windows.Forms.Label();
+            this._searchReposPage = new System.Windows.Forms.TabPage();
+            this._cloneSetupGB = new System.Windows.Forms.GroupBox();
+            this._cloneInfoText = new System.Windows.Forms.Label();
+            this._searchResultItemDescription = new System.Windows.Forms.TextBox();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this._tabControl.SuspendLayout();
+            this._myReposPage.SuspendLayout();
+            this._searchReposPage.SuspendLayout();
+            this._cloneSetupGB.SuspendLayout();
             this.SuspendLayout();
             // 
             // columnHeader1
@@ -94,7 +100,7 @@
             // 
             // _searchBtn
             // 
-            this._searchBtn.Location = new System.Drawing.Point(210, 17);
+            this._searchBtn.Location = new System.Drawing.Point(219, 9);
             this._searchBtn.Name = "_searchBtn";
             this._searchBtn.Size = new System.Drawing.Size(75, 23);
             this._searchBtn.TabIndex = 1;
@@ -104,7 +110,7 @@
             // 
             // _searchTB
             // 
-            this._searchTB.Location = new System.Drawing.Point(6, 19);
+            this._searchTB.Location = new System.Drawing.Point(15, 11);
             this._searchTB.Name = "_searchTB";
             this._searchTB.Size = new System.Drawing.Size(198, 20);
             this._searchTB.TabIndex = 2;
@@ -113,11 +119,11 @@
             // 
             // _forkBtn
             // 
-            this._forkBtn.Location = new System.Drawing.Point(6, 239);
+            this._forkBtn.Location = new System.Drawing.Point(15, 231);
             this._forkBtn.Name = "_forkBtn";
-            this._forkBtn.Size = new System.Drawing.Size(75, 23);
+            this._forkBtn.Size = new System.Drawing.Size(150, 23);
             this._forkBtn.TabIndex = 6;
-            this._forkBtn.Text = "Fork";
+            this._forkBtn.Text = "Fork!";
             this._forkBtn.UseVisualStyleBackColor = true;
             this._forkBtn.Click += new System.EventHandler(this._forkBtn_Click);
             // 
@@ -132,14 +138,15 @@
             columnHeader4,
             this.columnHeader2});
             this._myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this._myReposLV.Location = new System.Drawing.Point(6, 19);
+            this._myReposLV.Location = new System.Drawing.Point(6, 6);
             this._myReposLV.MultiSelect = false;
             this._myReposLV.Name = "_myReposLV";
             this._myReposLV.ShowGroups = false;
-            this._myReposLV.Size = new System.Drawing.Size(391, 129);
+            this._myReposLV.Size = new System.Drawing.Size(330, 252);
             this._myReposLV.TabIndex = 7;
             this._myReposLV.UseCompatibleStateImageBehavior = false;
             this._myReposLV.View = System.Windows.Forms.View.Details;
+            this._myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
             // 
             // columnHeader2
             // 
@@ -153,7 +160,7 @@
             columnHeader8,
             columnHeader7});
             this._searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this._searchResultsLV.Location = new System.Drawing.Point(6, 46);
+            this._searchResultsLV.Location = new System.Drawing.Point(15, 38);
             this._searchResultsLV.MultiSelect = false;
             this._searchResultsLV.Name = "_searchResultsLV";
             this._searchResultsLV.ShowGroups = false;
@@ -166,24 +173,25 @@
             // _cloneBtn
             // 
             this._cloneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._cloneBtn.Location = new System.Drawing.Point(6, 154);
+            this._cloneBtn.Location = new System.Drawing.Point(7, 132);
             this._cloneBtn.Name = "_cloneBtn";
-            this._cloneBtn.Size = new System.Drawing.Size(75, 23);
+            this._cloneBtn.Size = new System.Drawing.Size(158, 30);
             this._cloneBtn.TabIndex = 9;
             this._cloneBtn.Text = "Clone";
             this._cloneBtn.UseVisualStyleBackColor = true;
             this._cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
             // 
-            // _cloneToTB
+            // _destinationTB
             // 
-            this._cloneToTB.Location = new System.Drawing.Point(5, 105);
-            this._cloneToTB.Name = "_cloneToTB";
-            this._cloneToTB.Size = new System.Drawing.Size(304, 20);
-            this._cloneToTB.TabIndex = 10;
+            this._destinationTB.Location = new System.Drawing.Point(10, 32);
+            this._destinationTB.Name = "_destinationTB";
+            this._destinationTB.Size = new System.Drawing.Size(294, 20);
+            this._destinationTB.TabIndex = 10;
+            this._destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
             // 
             // _browseForCloneToDirbtn
             // 
-            this._browseForCloneToDirbtn.Location = new System.Drawing.Point(5, 131);
+            this._browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 31);
             this._browseForCloneToDirbtn.Name = "_browseForCloneToDirbtn";
             this._browseForCloneToDirbtn.Size = new System.Drawing.Size(75, 23);
             this._browseForCloneToDirbtn.TabIndex = 11;
@@ -191,81 +199,27 @@
             this._browseForCloneToDirbtn.UseVisualStyleBackColor = true;
             this._browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
             // 
-            // _cloneForeignBtn
+            // _createDirTB
             // 
-            this._cloneForeignBtn.Location = new System.Drawing.Point(87, 239);
-            this._cloneForeignBtn.Name = "_cloneForeignBtn";
-            this._cloneForeignBtn.Size = new System.Drawing.Size(117, 23);
-            this._cloneForeignBtn.TabIndex = 13;
-            this._cloneForeignBtn.Text = "Clone without fork";
-            this._cloneForeignBtn.UseVisualStyleBackColor = true;
-            this._cloneForeignBtn.Click += new System.EventHandler(this._cloneForeignBtn_Click);
+            this._createDirTB.Location = new System.Drawing.Point(11, 71);
+            this._createDirTB.Name = "_createDirTB";
+            this._createDirTB.Size = new System.Drawing.Size(183, 20);
+            this._createDirTB.TabIndex = 14;
+            this._createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
             // 
-            // groupBox1
+            // _createDirectoryLbl
             // 
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this._browseForCloneToDirbtn);
-            this.groupBox1.Controls.Add(this._cloneToTB);
-            this.groupBox1.Location = new System.Drawing.Point(431, 305);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(316, 164);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Clone setup";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this._myReposLV);
-            this.groupBox2.Controls.Add(this._cloneBtn);
-            this.groupBox2.Location = new System.Drawing.Point(12, 286);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(403, 183);
-            this.groupBox2.TabIndex = 18;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Your repositories:";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this._openGitupPageBtn);
-            this.groupBox3.Controls.Add(this._searchResultItemDescription);
-            this.groupBox3.Controls.Add(this._descriptionLbl);
-            this.groupBox3.Controls.Add(this._searchTB);
-            this.groupBox3.Controls.Add(this._searchBtn);
-            this.groupBox3.Controls.Add(this._cloneForeignBtn);
-            this.groupBox3.Controls.Add(this._forkBtn);
-            this.groupBox3.Controls.Add(this._searchResultsLV);
-            this.groupBox3.Location = new System.Drawing.Point(12, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(728, 268);
-            this.groupBox3.TabIndex = 19;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Search for repository:";
-            // 
-            // _descriptionLbl
-            // 
-            this._descriptionLbl.AutoSize = true;
-            this._descriptionLbl.Location = new System.Drawing.Point(409, 46);
-            this._descriptionLbl.Name = "_descriptionLbl";
-            this._descriptionLbl.Size = new System.Drawing.Size(63, 13);
-            this._descriptionLbl.TabIndex = 17;
-            this._descriptionLbl.Text = "Description:";
-            // 
-            // _searchResultItemDescription
-            // 
-            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._searchResultItemDescription.Enabled = false;
-            this._searchResultItemDescription.Location = new System.Drawing.Point(412, 71);
-            this._searchResultItemDescription.Multiline = true;
-            this._searchResultItemDescription.Name = "_searchResultItemDescription";
-            this._searchResultItemDescription.Size = new System.Drawing.Size(310, 162);
-            this._searchResultItemDescription.TabIndex = 18;
+            this._createDirectoryLbl.AutoSize = true;
+            this._createDirectoryLbl.Location = new System.Drawing.Point(9, 55);
+            this._createDirectoryLbl.Name = "_createDirectoryLbl";
+            this._createDirectoryLbl.Size = new System.Drawing.Size(84, 13);
+            this._createDirectoryLbl.TabIndex = 13;
+            this._createDirectoryLbl.Text = "Create directory:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 89);
+            this.label1.Location = new System.Drawing.Point(7, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 12;
@@ -273,7 +227,7 @@
             // 
             // _openGitupPageBtn
             // 
-            this._openGitupPageBtn.Location = new System.Drawing.Point(606, 239);
+            this._openGitupPageBtn.Location = new System.Drawing.Point(418, 203);
             this._openGitupPageBtn.Name = "_openGitupPageBtn";
             this._openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
             this._openGitupPageBtn.TabIndex = 19;
@@ -281,23 +235,128 @@
             this._openGitupPageBtn.UseVisualStyleBackColor = true;
             this._openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
             // 
+            // _descriptionLbl
+            // 
+            this._descriptionLbl.AutoSize = true;
+            this._descriptionLbl.Location = new System.Drawing.Point(418, 45);
+            this._descriptionLbl.Name = "_descriptionLbl";
+            this._descriptionLbl.Size = new System.Drawing.Size(63, 13);
+            this._descriptionLbl.TabIndex = 17;
+            this._descriptionLbl.Text = "Description:";
+            // 
+            // _closeBtn
+            // 
+            this._closeBtn.Location = new System.Drawing.Point(554, 133);
+            this._closeBtn.Name = "_closeBtn";
+            this._closeBtn.Size = new System.Drawing.Size(91, 30);
+            this._closeBtn.TabIndex = 20;
+            this._closeBtn.Text = "Close";
+            this._closeBtn.UseVisualStyleBackColor = true;
+            this._closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
+            // 
+            // _tabControl
+            // 
+            this._tabControl.Controls.Add(this._myReposPage);
+            this._tabControl.Controls.Add(this._searchReposPage);
+            this._tabControl.Location = new System.Drawing.Point(1, 2);
+            this._tabControl.Name = "_tabControl";
+            this._tabControl.SelectedIndex = 0;
+            this._tabControl.Size = new System.Drawing.Size(656, 290);
+            this._tabControl.TabIndex = 21;
+            this._tabControl.SelectedIndexChanged += new System.EventHandler(this._tabControl_SelectedIndexChanged);
+            // 
+            // _myReposPage
+            // 
+            this._myReposPage.Controls.Add(this._helpTextLbl);
+            this._myReposPage.Controls.Add(this._myReposLV);
+            this._myReposPage.Location = new System.Drawing.Point(4, 22);
+            this._myReposPage.Name = "_myReposPage";
+            this._myReposPage.Padding = new System.Windows.Forms.Padding(3);
+            this._myReposPage.Size = new System.Drawing.Size(648, 264);
+            this._myReposPage.TabIndex = 0;
+            this._myReposPage.Text = "My repositories";
+            this._myReposPage.UseVisualStyleBackColor = true;
+            // 
+            // _helpTextLbl
+            // 
+            this._helpTextLbl.Location = new System.Drawing.Point(360, 103);
+            this._helpTextLbl.Name = "_helpTextLbl";
+            this._helpTextLbl.Size = new System.Drawing.Size(266, 35);
+            this._helpTextLbl.TabIndex = 10;
+            this._helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
+                "ositories tab.";
+            // 
+            // _searchReposPage
+            // 
+            this._searchReposPage.Controls.Add(this._searchTB);
+            this._searchReposPage.Controls.Add(this._searchResultItemDescription);
+            this._searchReposPage.Controls.Add(this._searchBtn);
+            this._searchReposPage.Controls.Add(this._openGitupPageBtn);
+            this._searchReposPage.Controls.Add(this._descriptionLbl);
+            this._searchReposPage.Controls.Add(this._forkBtn);
+            this._searchReposPage.Controls.Add(this._searchResultsLV);
+            this._searchReposPage.Location = new System.Drawing.Point(4, 22);
+            this._searchReposPage.Name = "_searchReposPage";
+            this._searchReposPage.Padding = new System.Windows.Forms.Padding(3);
+            this._searchReposPage.Size = new System.Drawing.Size(648, 264);
+            this._searchReposPage.TabIndex = 1;
+            this._searchReposPage.Text = "Search for repositories";
+            this._searchReposPage.UseVisualStyleBackColor = true;
+            // 
+            // _cloneSetupGB
+            // 
+            this._cloneSetupGB.Controls.Add(this._cloneInfoText);
+            this._cloneSetupGB.Controls.Add(this._createDirTB);
+            this._cloneSetupGB.Controls.Add(this._closeBtn);
+            this._cloneSetupGB.Controls.Add(this._createDirectoryLbl);
+            this._cloneSetupGB.Controls.Add(this._cloneBtn);
+            this._cloneSetupGB.Controls.Add(this.label1);
+            this._cloneSetupGB.Controls.Add(this._browseForCloneToDirbtn);
+            this._cloneSetupGB.Controls.Add(this._destinationTB);
+            this._cloneSetupGB.Location = new System.Drawing.Point(5, 298);
+            this._cloneSetupGB.Name = "_cloneSetupGB";
+            this._cloneSetupGB.Size = new System.Drawing.Size(652, 172);
+            this._cloneSetupGB.TabIndex = 14;
+            this._cloneSetupGB.TabStop = false;
+            this._cloneSetupGB.Text = "Clone";
+            // 
+            // _cloneInfoText
+            // 
+            this._cloneInfoText.Location = new System.Drawing.Point(10, 96);
+            this._cloneInfoText.Name = "_cloneInfoText";
+            this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
+            this._cloneInfoText.TabIndex = 21;
+            // 
+            // _searchResultItemDescription
+            // 
+            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this._searchResultItemDescription.Location = new System.Drawing.Point(418, 63);
+            this._searchResultItemDescription.Multiline = true;
+            this._searchResultItemDescription.Name = "_searchResultItemDescription";
+            this._searchResultItemDescription.ReadOnly = true;
+            this._searchResultItemDescription.Size = new System.Drawing.Size(224, 134);
+            this._searchResultItemDescription.TabIndex = 18;
+            // 
             // ForkAndCloneForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(759, 482);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(663, 475);
+            this.Controls.Add(this._tabControl);
+            this.Controls.Add(this._cloneSetupGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ForkAndCloneForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote repository fork and clone";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this._tabControl.ResumeLayout(false);
+            this._myReposPage.ResumeLayout(false);
+            this._searchReposPage.ResumeLayout(false);
+            this._searchReposPage.PerformLayout();
+            this._cloneSetupGB.ResumeLayout(false);
+            this._cloneSetupGB.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -311,15 +370,20 @@
         private System.Windows.Forms.ListView _searchResultsLV;
         private System.Windows.Forms.Button _cloneBtn;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.TextBox _cloneToTB;
+        private System.Windows.Forms.TextBox _destinationTB;
         private System.Windows.Forms.Button _browseForCloneToDirbtn;
-        private System.Windows.Forms.Button _cloneForeignBtn;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label _descriptionLbl;
-        private System.Windows.Forms.TextBox _searchResultItemDescription;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button _openGitupPageBtn;
+        private System.Windows.Forms.Button _closeBtn;
+        private System.Windows.Forms.TextBox _createDirTB;
+        private System.Windows.Forms.Label _createDirectoryLbl;
+        private System.Windows.Forms.TabControl _tabControl;
+        private System.Windows.Forms.TabPage _myReposPage;
+        private System.Windows.Forms.TabPage _searchReposPage;
+        private System.Windows.Forms.GroupBox _cloneSetupGB;
+        private System.Windows.Forms.Label _helpTextLbl;
+        private System.Windows.Forms.Label _cloneInfoText;
+        private System.Windows.Forms.TextBox _searchResultItemDescription;
     }
 }
