@@ -758,27 +758,6 @@ _ReSharper*/
         <TranslationItem Name="$this" Property="Text">
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Opslaan</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>Nieuw</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>Verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Details</Value>
-        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
@@ -788,35 +767,56 @@ _ReSharper*/
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Alle vertakkings informatie ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Bestand met geheime sleutel</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>Test SSH verbinding</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Laad SSH sleutel</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text">
-          <Value>PuTTY SSH</Value>
-        </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Value>Externe vertakkingen opschonen</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
-          <Value>Standaard samenvoegen met</Value>
+          <Value>Samenvoegen met</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
-          <Value>Externe repoositorie</Value>
+          <Value>Externe repositorie</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Value>Lokale vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Details</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Laad SSH sleutel</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Test SSH verbinding</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Geheime sleutel</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Verwijderen</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Nieuw</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Bladeren</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1243,9 +1243,6 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Value>Automatisch wegzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Laad SSH sleutel</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Lokale vertakking</Value>
@@ -2487,6 +2484,12 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         <TranslationItem Name="labelTo" Property="Text">
           <Value>naar</Value>
         </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Verzend meerdere vertakkingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Selecteer vertakkingen om te verzenden</Value>
+        </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
 Weet u zeker dat u deze vertakking wilt verzenden?</Value>
@@ -2508,6 +2511,12 @@ Weet u zeker dat u deze vertakking wilt verzenden?</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Value>Selecteer een label om te verzenden of selecteer "alle labels".</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Ja</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>Nee</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
