@@ -51,7 +51,9 @@
     <Compile Include="ConfigureGithub.Designer.cs">
       <DependentUpon>ConfigureGithub.cs</DependentUpon>
     </Compile>
+    <Compile Include="GithubHostedRepo.cs" />
     <Compile Include="GithubPlugin.cs" />
+    <Compile Include="MiscHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

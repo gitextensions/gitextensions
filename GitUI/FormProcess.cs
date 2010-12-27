@@ -14,10 +14,18 @@ namespace GitUI
         public bool Plink { get; set; }
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
+        public string ProcessInput { get; set; }
         public Process Process { get; set; }
 
         private bool restart = false;
         private GitCommands.GitCommandsInstance gitCommand;
+
+        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
+        //For other inputs, it is not tested.
+        public FormProcess(string process, string arguments, string input) : this(process, arguments)
+        {
+            ProcessInput = input;
+        }
 
         public FormProcess(string process, string arguments) : base()
         {            
@@ -26,6 +34,7 @@ namespace GitUI
             ProcessString = process ?? GitCommands.Settings.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
+            ProcessInput = null;
         }
 
         public FormProcess(string arguments)
@@ -48,6 +57,12 @@ namespace GitUI
 
                 gitCommand.Exited += new EventHandler(gitCommand_Exited);
                 gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+                if (!string.IsNullOrEmpty(ProcessInput))
+                {
+                    Thread.Sleep(500);
+                    Process.StandardInput.Write(ProcessInput);
+                    AddOutput(string.Format(":: Wrote [{0}] to process!\r\n", ProcessInput));
+                }
             }
             catch (Exception e)
             {
@@ -55,7 +70,6 @@ namespace GitUI
                 gitCommand.ExitCode = 1;
                 gitCommand_Exited(null, null);
             }
-            
         }
 
         private void processAbort(FormStatus form)

@@ -10,6 +10,8 @@ namespace GitUIPluginInterfaces
         IList<IHostedGitRepo> GetReposOfUser(string user);
 
         IList<IHostedGitRepo> GetMyRepos();
+
+        bool ConfigurationOk { get; }
     }
 
     public interface IHostedGitRepo
@@ -21,6 +23,8 @@ namespace GitUIPluginInterfaces
         bool IsMine { get; }
         bool IsPrivate { get; }
         int Forks { get; }
+
+        string Homepage { get; }
 
         string ParentReadOnlyUrl { get; }
         string ParentOwner { get; }
