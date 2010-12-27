@@ -94,6 +94,7 @@
     <Compile Include="ApplyPatch.designer.cs">
       <DependentUpon>ApplyPatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="AsyncHelpers.cs" />
     <Compile Include="Blame\BlameControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
