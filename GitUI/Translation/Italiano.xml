@@ -242,6 +242,15 @@ quando si esegue "Cancella tutti gli oggetti vaganti".</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Processo</Value>
         </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>OK</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Mantieni aperta la finestra</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Interrompi</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGitIgnore">
@@ -286,7 +295,7 @@ _ReSharper*/
           <Value>Salva</Value>
         </TranslationItem>
         <TranslationItem Name="AddDefault" Property="Text">
-          <Value>Aggiunti gli elementi da ignorare di default</Value>
+          <Value>Aggiungi gli elementi da ignorare di default</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -325,7 +334,7 @@ _ReSharper*/
           <Value>Comandi</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Value>Checkout revisione</Value>
+          <Value>Checkout versione</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Value>Visualizza differenze</Value>
@@ -418,7 +427,7 @@ _ReSharper*/
           <Value>Aggiorna</Value>
         </TranslationItem>
         <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
-          <Value>Contatore commit</Value>
+          <Value>Contatore commit/utente</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Value>GitK</Value>
@@ -583,10 +592,10 @@ _ReSharper*/
           <Value>Salva come...</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
-          <Value>Apri questa revisione (file temp)</Value>
+          <Value>Apri questa versione (file temp)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
-          <Value>Apri questa revisione con... (file temp)</Value>
+          <Value>Apri questa versione con... (file temp)</Value>
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Storia del file</Value>
@@ -641,6 +650,15 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
           <Value>Storia file</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Cambia branch corrente</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
+          <Value>Diff contiene... (LENTO)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -762,7 +780,7 @@ _ReSharper*/
           <Value>Repository remoti</Value>
         </TranslationItem>
         <TranslationItem Name="tabPage2" Property="Text">
-          <Value>Comportamento pull di default (recupera e merge)</Value>
+          <Value>Comportamento pull di default</Value>
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Aggiorna tutte le informazioni del branch remoto</Value>
@@ -998,7 +1016,7 @@ Per favore scegliere una cartella.</Value>
     <TranslationCategory Name="FormCheckout">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Checkout revisione</Value>
+          <Value>Checkout versione</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Checkout</Value>
@@ -1078,6 +1096,19 @@ caso di problemi.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Value>OK</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Scegli lingua</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Scegli la tua lingua</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>E' possibile cambiare la lingua in qualunque momento, tramite la finestra delle Impostazioni</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1182,7 +1213,7 @@ Se vuoi recuperare ed effettuare il merge di un branch, scegli un branch specifi
           <Value>Effettua il &amp;merge del branch remoto con il branch corrente</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
-          <Value>&amp;Ri-basa il branch remoto con il branch corrente, creando una storia lineare.
+          <Value>&amp;Ri-basa il branch remoto sul branch corrente, creando una storia lineare.
 E' meglio scegliere un branch remoto quando si usa ri-basa (usare con cautela!)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -1312,7 +1343,7 @@ stesso livello. Queste modifiche sono apportate anche all'albero antenato comune
     <TranslationCategory Name="FormCommitCount">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Contatore commit</Value>
+          <Value>Contatore commit/utente</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1368,7 +1399,7 @@ Se è un repository centrale (repository senza cartella di lavoro):
           <Value>Cancella branch</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
-          <Value>Checkout revisione</Value>
+          <Value>Checkout versione</Value>
         </TranslationItem>
         <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
           <Value>Ordina revisioni per data</Value>
@@ -1422,13 +1453,16 @@ Se è un repository centrale (repository senza cartella di lavoro):
           <Value>Data</Value>
         </TranslationItem>
         <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
-          <Value>Marca revisione come cattiva</Value>
+          <Value>Marca versione come cattiva</Value>
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
-          <Value>Marca revisione come buona</Value>
+          <Value>Marca versione come buona</Value>
         </TranslationItem>
         <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
           <Value>Ferma taglio</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Esegui script</Value>
         </TranslationItem>
         <TranslationItem Name="_authorCaption" Property="Text">
           <Value>Autore</Value>
@@ -1447,6 +1481,30 @@ Se è un repository centrale (repository senza cartella di lavoro):
         </TranslationItem>
         <TranslationItem Name="_currentIndex" Property="Text">
           <Value>Indice commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>secondi fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>minuti fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>ora fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>ore fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>giorni fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>mese fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>mesi fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>anni fa</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filtro</Value>
@@ -1478,7 +1536,7 @@ Se è un repository centrale (repository senza cartella di lavoro):
           <Value>Tag</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>Seleziona una revisione su cui creare il tag</Value>
+          <Value>Seleziona una versione su cui creare il tag</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMessage" Property="Text">
           <Value>Per favore inserisci un messaggio per il tag</Value>
@@ -1865,8 +1923,62 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="label52" Property="Text">
           <Value>Visualizza il contatore delle modifiche nascoste nella finestra 'sfoglia'</Value>
         </TranslationItem>
+        <TranslationItem Name="scriptsTab" Property="Text">
+          <Value>Script</Value>
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text">
+          <Value>Aggiungi al menu contestuale</Value>
+        </TranslationItem>
         <TranslationItem Name="label53" Property="Text">
           <Value>Servizio immagine non disponibile</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text">
+          <Value>Parametri:</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Comando:</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Nome:</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Sfoglia</Value>
+        </TranslationItem>
+        <TranslationItem Name="cancelScriptButton" Property="Text">
+          <Value>Annulla</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveScriptButton" Property="Text">
+          <Value>Salva</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Rimuovi</Value>
+        </TranslationItem>
+        <TranslationItem Name="editScriptButton" Property="Text">
+          <Value>Modifica</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Aggiungi</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>N.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Nome</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Comando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Parametri</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader5" Property="Text">
+          <Value>Menu contestuale</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Premere F1 per vedere le opzioni disponibili</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Scarica dizionario</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1886,7 +1998,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
           <Value>Archivia</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Seleziona una revisione da archiviare (zip)</Value>
+          <Value>Seleziona una versione da archiviare (zip)</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Salva</Value>
@@ -1907,6 +2019,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         </TranslationItem>
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Value>GitExstensions - Estensioni Git per Visual Studio ed Esplora Risorse
+
 
 Questo programma è rilasciato nella speranza che possa essere utile, ma SENZA NESSUNA GARANZIA; esclusa anche l'implicita garanzia di VENDIBILITA' o ADEGUATEZZA PER UN PARTICOLARE UTILIZZO.</Value>
         </TranslationItem>
@@ -1994,6 +2107,9 @@ Questo programma è rilasciato nella speranza che possa essere utile, ma SENZA N
         <TranslationItem Name="$this" Property="Text">
           <Value>Modifica .gitattributes</Value>
         </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes è disponibile solo quando c'è una cartella di lavoro.</Value>
+        </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Salva</Value>
         </TranslationItem>
@@ -2038,7 +2154,7 @@ git help
           <Value>Tag</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>Seleziona una revisione su cui creare il tag</Value>
+          <Value>Seleziona una versione su cui creare il tag</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>Per favore inserire un messaggio per il tag</Value>
@@ -2195,6 +2311,27 @@ Cancellando il branch, possono venire persi anche i commit!</Value>
       <translationItems>
         <TranslationItem Name="EmptyLabel" Property="Text">
           <Value>Inserisci messaggio</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Traduci tutto il testo con {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Traduci '{0}' con {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Aggiungi al dizionario</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Ignora parola</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Rimuovi parola</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Dizionario</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Segna righe malformate</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2366,7 +2503,7 @@ Quando la chiave è stata caricata, si può riprovare.</Value>
           <Value>Tag</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Tag di cui effettuare il push</Value>
+          <Value>Tag</Value>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="Text">
           <Value>Effettua il push dei branch</Value>
@@ -2434,10 +2571,10 @@ Puoi aiutare il progetto con un contributo finanziario. Le donazioni saranno usa
           <Value>&amp;Commit</Value>
         </TranslationItem>
         <TranslationItem Name="AddFiles" Property="Text">
-          <Value>Inserisci nello stage</Value>
+          <Value>Inserisci</Value>
         </TranslationItem>
         <TranslationItem Name="UnstageFiles" Property="Text">
-          <Value>Rimuovi dallo stage</Value>
+          <Value>Rimuovi</Value>
         </TranslationItem>
         <TranslationItem Name="ResetChanges" Property="Text">
           <Value>Annulla le modifiche ai file</Value>
@@ -2480,9 +2617,6 @@ Puoi aiutare il progetto con un contributo finanziario. Le donazioni saranno usa
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Annulla</Value>
-        </TranslationItem>
-        <TranslationItem Name="CloseDialogAfterCommit" Property="Text">
-          <Value>Chiudi la finestra dopo il commit</Value>
         </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Value>Visualizza file ignorati</Value>
@@ -2529,6 +2663,18 @@ Puoi aiutare il progetto con un contributo finanziario. Le donazioni saranno usa
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Value>C&amp;ommit e push</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Visualizza storia file</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+          <Value>Opzioni</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Chiudi finestra dopo ogni commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Chiudi finestra solo dopo tutti i commit</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Vuoi anche cancellare i nuovi file che sono nella selezione?
 
@@ -2545,10 +2691,6 @@ Vuoi continuare?</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Value>Ripeti commit (Amend)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Quando selezionato, la finestra di commit viene chiusa dopo ogni operazione.
-Altrimenti la finestra sarà chiusa solo quando non ci saranno più file modificati.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Cancellazione file fallita</Value>
@@ -2622,12 +2764,35 @@ Vuoi continuare?</Value>
         <TranslationItem Name="_stageFiles" Property="Text">
           <Value>Inserisci nello stage {0} file</Value>
         </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Solo un file può essere selezionato.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>Inserisci nello stage le righe selezionate</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>Rimuovi dallo stage le righe selezionate</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Inserisci nello stage le righe selezionate</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Risolvi conflitti di merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text">
+          <Value>C'è uno script di merge personalizzato ({0}) per questo tipo di file. Vuoi utilizzarlo?</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Script di merge personalizzato</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Questo file non è stato modificato dal merge. Di solito questo significa che il file è stato salvato in una posizione sbagliata.
+
+Il conflitto di merge non sarà segnato come risolto. Riprovare.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Tutti i conflitti di merge sono stati risolti, si può farne il commit.
@@ -2646,6 +2811,12 @@ Vuoi farlo ora?</Value>
           <Value>Il file selezionato sembra essere un file binario.
 Sei sicuro di volerlo aprire in {0}?</Value>
         </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
+          <Value>Il conflitto di merge deve essere risolto e il risultato sarà salvato come:
+{0}
+
+E' stato risolto il conflitto?</Value>
+        </TranslationItem>
         <TranslationItem Name="askMergeConflictSolved" Property="Text">
           <Value>E' stato risolto il conflitto?</Value>
         </TranslationItem>
@@ -2662,7 +2833,7 @@ Sei sicuro di volerlo aprire in {0}?</Value>
           <Value>Inserisci nello stage {0}</Value>
         </TranslationItem>
         <TranslationItem Name="noBaseRevision" Property="Text">
-          <Value>Non c'è una revisione base per {0}. Utilizzare merge 2-way?</Value>
+          <Value>Non c'è una versione base per {0}. Utilizzare merge 2-way?</Value>
         </TranslationItem>
         <TranslationItem Name="ours" Property="Text">
           <Value>Nostro</Value>
@@ -2781,15 +2952,6 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="remoteFileName" Property="Text">
           <Value>...</Value>
         </TranslationItem>
-        <TranslationItem Name="chooseLocal" Property="Text">
-          <Value>Scegli</Value>
-        </TranslationItem>
-        <TranslationItem Name="chooseBase" Property="Text">
-          <Value>Scegli</Value>
-        </TranslationItem>
-        <TranslationItem Name="chooseRemote" Property="Text">
-          <Value>Scegli</Value>
-        </TranslationItem>
         <TranslationItem Name="conflictDescription" Property="Text">
           <Value>Seleziona file</Value>
         </TranslationItem>
@@ -2807,6 +2969,9 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         </TranslationItem>
         <TranslationItem Name="merge" Property="Text">
           <Value>Merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Storia file</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
