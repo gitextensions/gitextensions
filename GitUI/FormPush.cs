@@ -74,6 +74,8 @@ namespace GitUI
                 return;
             }
 
+            bool newBranch = false;
+
             //Extra check if the branch is already known to the remote, give a warning when not.
             //This is not possible when the remote is an URL, but this is ok since most users push to
             //known remotes anyway.
@@ -84,7 +86,13 @@ namespace GitUI
                     //Ask if this is what the user wants
                     if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
+                    {
                         return;
+                    }
+                    else
+                    {
+                        newBranch = true;
+                    }
             }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
@@ -113,7 +121,7 @@ namespace GitUI
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
                 pushCmd = GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
-                                                          PushAllBranches.Checked, ForcePushBranches.Checked);
+                                                          PushAllBranches.Checked, ForcePushBranches.Checked, newBranch);
             else if (TabControlTagBranch.SelectedTab == TagTab)
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
                                                              ForcePushBranches.Checked);

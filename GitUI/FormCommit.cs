@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using PatchApply;
 
 namespace GitUI
 {
@@ -26,10 +27,6 @@ namespace GitUI
                                   Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _amendCommitCaption = new TranslationString("Amend commit");
-
-        private readonly TranslationString _closeDialogAfterCommitTooltip =
-            new TranslationString(
-                "When checked the commit dialog is closed after each commit.\nOtherwise the dialog will only close when there are no modified files left.");
 
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
 
@@ -84,12 +81,16 @@ namespace GitUI
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+
+        private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
+        private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
+        private ToolStripItem _StageSelectedLinesToolStripMenuItem;
 
         public FormCommit()
         {
@@ -102,9 +103,8 @@ namespace GitUI
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 
-            CloseCommitDialogTooltip.SetToolTip(CloseDialogAfterCommit, _closeDialogAfterCommitTooltip.Text);
-
-            CloseDialogAfterCommit.Checked = Settings.CloseCommitDialogAfterCommit;
+            closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
+            closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
@@ -119,6 +119,26 @@ namespace GitUI
             Staged.DoubleClick += Staged_DoubleClick;
 
             Unstaged.Focus();
+
+            SelectedDiff.AddContextMenuEntry(null, null);
+            _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, new EventHandler(StageSelectedLinesToolStripMenuItemClick));
+        }
+
+        private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            // Prepare git command
+            string args = "apply  --cached --whitespace=nowarn";
+
+            if (_currentItemStaged) //staged
+                args += " --reverse";
+
+            string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged);
+
+            if (!string.IsNullOrEmpty(patch))
+            {
+                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                ScanClick(null, null);
+            }
         }
 
         private void Initialize()
@@ -217,6 +237,11 @@ namespace GitUI
             {
                 SelectedDiff.ViewFile(item.Name);
             }
+
+            if (staged)
+                _StageSelectedLinesToolStripMenuItem.Text = _unstageSelectedLines.Text;
+            else
+                _StageSelectedLinesToolStripMenuItem.Text = _stageSelectedLines.Text;
         }
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
@@ -290,7 +315,7 @@ namespace GitUI
                     GitUICommands.Instance.StartPushDialog(true);
                 }
 
-                if (CloseDialogAfterCommit.Checked)
+                if (Settings.CloseCommitDialogAfterCommit)
                 {
                     Close();
                     return;
@@ -305,7 +330,10 @@ namespace GitUI
                     }
                 }
 
-                Close();
+                if (Settings.CloseCommitDialogAfterLastCommit)
+                    Close();
+                else
+                    InitializedStaged();
             }
             catch (Exception e)
             {
@@ -784,11 +812,6 @@ namespace GitUI
             OpenWith.OpenAs(Settings.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
-        private void CloseDialogAfterCommitCheckedChanged(object sender, EventArgs e)
-        {
-            Settings.CloseCommitDialogAfterCommit = CloseDialogAfterCommit.Checked;
-        }
-
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItems.Count == 0)
@@ -966,6 +989,20 @@ namespace GitUI
             // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
                 e.Handled = true;
+        }
+
+
+        private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            closeDialogAfterEachCommitToolStripMenuItem.Checked = !closeDialogAfterEachCommitToolStripMenuItem.Checked;
+            Settings.CloseCommitDialogAfterCommit = closeDialogAfterEachCommitToolStripMenuItem.Checked;
+        }
+
+        private void closeDialogAfterAllFilesCommittedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
+            Settings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
+
         }
     }
 }
