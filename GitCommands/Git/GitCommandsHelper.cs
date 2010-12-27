@@ -147,8 +147,8 @@ namespace GitCommands
 
         public static string GetDefaultHomeDir()
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
-                return Environment.GetEnvironmentVariable("HOME");
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
+                return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
 
             string homePath;
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
@@ -306,12 +306,24 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments)
         {
+            return RunCmd(cmd, arguments, null);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, string stdInput)
+        {
             int exitCode;
-            return RunCmd(cmd, arguments, out exitCode);
+            return RunCmd(cmd, arguments, out exitCode, stdInput);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static string RunCmd(string cmd, string arguments, out int exitCode)
+        {
+            return RunCmd(cmd, arguments, out exitCode, null);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public static string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
             try
             {
@@ -320,7 +332,7 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error);
+                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -343,6 +355,11 @@ namespace GitCommands
 
         private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
         {
+            return  CreateAndStartProcess(arguments, cmd, out stdOutput, out stdError, null);
+        }
+
+        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError, string stdInput)
+        {
             if (string.IsNullOrEmpty(cmd))
             {
                 stdOutput = stdError = "";
@@ -361,6 +378,12 @@ namespace GitCommands
 
             using (var process = Process.Start(startInfo))
             {
+                if (!string.IsNullOrEmpty(stdInput))
+                {
+                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.Close();
+                }
+
                 stdOutput = process.StandardOutput.ReadToEnd();
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
@@ -1050,10 +1073,10 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, null, branch, all, false);
+            return PushCmd(path, null, branch, all, false, true);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force)
+        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force, bool track)
         {
             path = FixPath(path);
 
@@ -1066,13 +1089,17 @@ namespace GitCommands
             if (force)
                 sforce = "-f ";
 
+            var strack = "";
+            if (track)
+                strack = "-u ";
+
             if (all)
-                return string.Format("push {0}--all \"{1}\"", sforce, path.Trim());
+                return string.Format("push {0}{1}--all \"{2}\"", sforce, strack, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", sforce, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}{1}\"{2}\" {3}:{4}", sforce, strack, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", sforce, path.Trim(), fromBranch);
+            return string.Format("push {0}{1}\"{2}\" {3}", sforce, strack, path.Trim(), fromBranch);
         }
 
 		public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)

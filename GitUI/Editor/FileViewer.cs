@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor.Util;
+using PatchApply;
 
 namespace GitUI.Editor
 {
@@ -14,6 +15,9 @@ namespace GitUI.Editor
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
+        private bool _currentViewIsStagingPatch;
+        private bool _currentViewIsStagedPatch;
+        private string _currentFileName;
         private IFileViewer _internalFileViewer;
 
         public FileViewer()
@@ -64,6 +68,20 @@ namespace GitUI.Editor
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
+
+        public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                ToolStripSeparator separator =new ToolStripSeparator();
+                ContextMenu.Items.Add(separator);
+                return separator;
+            }
+
+            ToolStripItem toolStripItem = ContextMenu.Items.Add(text);
+            toolStripItem.Click += toolStripItem_Click;
+            return toolStripItem;
+        }
 
         protected virtual void OnRequestDiffView(EventArgs args)
         {
@@ -126,6 +144,7 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Enabled = enable;
             treatAllFilesAsTextToolStripMenuItem.Enabled = enable;
         }
+
 
         private void OnExtraDiffArgumentsChanged()
         {
@@ -192,9 +211,18 @@ namespace GitUI.Editor
             return _internalFileViewer.GetText();
         }
 
+
+
         public void ViewCurrentChanges(string fileName, bool staged)
         {
-            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewPatch);
+            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _currentFileName = fileName;
+        }
+
+        public void ViewStagingPatch(string text)
+        {
+            ViewPatch(text);
+            Reset(true, true, true);
         }
 
         public void ViewPatch(string text)
@@ -202,6 +230,12 @@ namespace GitUI.Editor
             ResetForDiff();
             _internalFileViewer.SetText(text);
             RestoreCurrentScrollPos();
+        }
+
+        public void ViewStagingPatch(Func<string> loadPatchText)
+        {
+            ViewPatch(loadPatchText);
+            Reset(true, true, true);
         }
 
         public void ViewPatch(Func<string> loadPatchText)
@@ -392,6 +426,11 @@ namespace GitUI.Editor
 
         private void Reset(bool diff, bool text)
         {
+            Reset(diff, text, false);
+        }
+
+        private void Reset(bool diff, bool text, bool staging_diff)
+        {
             patchHighlighting = diff;
             EnableDiffContextMenu(diff);
             ClearImage();
@@ -478,6 +517,16 @@ namespace GitUI.Editor
             {
                 Clipboard.SetText(_internalFileViewer.GetText());
             }
+        }
+
+        public int GetSelectionPosition()
+        {
+            return _internalFileViewer.GetSelectionPosition();
+        }
+
+        public int GetSelectionLength()
+        {
+            return _internalFileViewer.GetSelectionLength();
         }
 
         private void NextChangeButtonClick(object sender, EventArgs e)
