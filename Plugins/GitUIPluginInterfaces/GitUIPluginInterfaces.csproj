@@ -62,6 +62,7 @@
     <Compile Include="IGitSubmodule.cs" />
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="GitUIBaseEventArgs.cs" />
+    <Compile Include="IPasswordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -689,8 +689,25 @@ namespace GitUI
 
         public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
         {
-            var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
-            fac.ShowDialog();
+            if (!gitHoster.ConfigurationOk)
+            {
+                var eventArgs = new GitUIEventArgs(GitUICommands.Instance); 
+                gitHoster.Execute(eventArgs);
+            }
+
+            if (gitHoster.ConfigurationOk)
+            {
+
+                try
+                {
+                    var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
+                    fac.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("ERROR: The ForkAndClone form failed. Message: {0}\r\n\r\n{1}", ex.Message, ex.StackTrace), "Error! :(");
+                }
+            }
         }
     }
 }
