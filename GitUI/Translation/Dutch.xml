@@ -2584,9 +2584,6 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="CloseDialogAfterCommit" Property="Text">
-          <Value>Sluit dialoog na commit</Value>
-        </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Value>Toon genegeerde bestanden</Value>
         </TranslationItem>
@@ -2635,6 +2632,15 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
           <Value>Bekijk bestands geschiedenis</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+          <Value>Opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Sluit dialoog na iedere commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Sluit dialoog wanneer alle wijzigingen zijn gecommit</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2651,11 +2657,6 @@ Weet u zeker dat u door wilt gaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Value>Commit uitbreiden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Dit dialoog zal worden afgesloten na iedere commit wanneer deze optie aan staat.
-Anders zal dit dialoog alleen sluiten wanneer er geen gewijzigde bestanden meer zijn.
-</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Het verwijderen van het bestand is mislukt</Value>
@@ -2731,6 +2732,15 @@ Weet u zeker dat u wilt doorgaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOnlyOneFile" Property="Text">
           <Value>Selecteer 1 bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>Geselecteerde regel(s) klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>Geselecteerde regel(s) terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Geselecteerde regel(s) klaarzetten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

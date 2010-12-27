@@ -2109,7 +2109,7 @@ namespace GitUI
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://wiki.services.openoffice.org/wiki/Dictionaries");
+            System.Diagnostics.Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
         }
 
         private void argumentsLabel_Click(object sender, EventArgs e)
