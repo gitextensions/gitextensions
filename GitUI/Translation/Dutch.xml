@@ -2929,7 +2929,7 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
           <Value>Openen in samenvoeg tool</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
-          <Value>Samenvoeg conflicten scannen</Value>
+          <Value>Verversen</Value>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>Stoppen</Value>
