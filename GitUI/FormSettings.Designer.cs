@@ -1968,7 +1968,7 @@ namespace GitUI
             "diffuse",
             "opendiff",
             "araxis",
-            "beyondcompare",
+            "beyondcompare3",
             "winmerge"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(153, 205);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
@@ -2077,7 +2077,7 @@ namespace GitUI
             this.GlobalMergeTool.FormattingEnabled = true;
             this.GlobalMergeTool.Items.AddRange(new object[] {
             "Araxis",
-            "BeyondCompare",
+            "BeyondCompare3",
             "DiffMerge",
             "kdiff3",
             "p4merge",
