@@ -1195,7 +1195,7 @@ namespace GitUI
 
         private void AutoConfigMergeToolcmd()
         {
-            if (GlobalMergeTool.Text.Equals("BeyondCompare", StringComparison.CurrentCultureIgnoreCase))
+            if (GlobalMergeTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
             {
                 if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
                     MergetoolPath.Text = "";
@@ -1567,9 +1567,9 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
-            if (GlobalDiffTool.Text.Equals("BeyondCompare", StringComparison.CurrentCultureIgnoreCase))
+            if (GlobalDiffTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
             {
-                string bcomppath = GitCommandHelpers.GetGlobalSetting("difftool.beyondcompare.path");
+                string bcomppath = GitCommandHelpers.GetGlobalSetting("difftool.beyondcompare3.path");
 
                 DifftoolPath.Text = FindFileInFolders("bcomp.exe",
                    bcomppath,
