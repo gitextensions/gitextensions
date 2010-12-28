@@ -1910,7 +1910,8 @@ namespace GitUI
             "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
                 "LOCAL\" \"$REMOTE\" \"$MERGED\"",
             "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\""});
+                "BASE\" \"$REMOTE\"",
+            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""});
             this.DifftoolCmd.Location = new System.Drawing.Point(153, 259);
             this.DifftoolCmd.Name = "DifftoolCmd";
             this.DifftoolCmd.Size = new System.Drawing.Size(347, 21);
@@ -1967,6 +1968,7 @@ namespace GitUI
             "diffuse",
             "opendiff",
             "araxis",
+            "beyondcompare",
             "winmerge"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(153, 205);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
@@ -2044,7 +2046,8 @@ namespace GitUI
             "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
                 "LOCAL\" \"$REMOTE\" \"$MERGED\"",
             "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\""});
+                "BASE\" \"$REMOTE\"",
+            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\""});
             this.MergeToolCmd.Location = new System.Drawing.Point(153, 147);
             this.MergeToolCmd.Name = "MergeToolCmd";
             this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
@@ -2074,6 +2077,7 @@ namespace GitUI
             this.GlobalMergeTool.FormattingEnabled = true;
             this.GlobalMergeTool.Items.AddRange(new object[] {
             "Araxis",
+            "BeyondCompare",
             "DiffMerge",
             "kdiff3",
             "p4merge",
