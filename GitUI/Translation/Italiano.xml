@@ -755,27 +755,6 @@ _ReSharper*/
         <TranslationItem Name="$this" Property="Text">
           <Value>Repository remoti</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Nome</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Sfoglia</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Salva</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>Nuovo</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>Cancella</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Dettagli</Value>
-        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Repository remoti</Value>
         </TranslationItem>
@@ -784,21 +763,6 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Aggiorna tutte le informazioni del branch remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>Sfoglia</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>File chiave privata</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>Verifica connessione</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Carica chiave SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text">
-          <Value>PuTTY SSH</Value>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Value>Cancella branch remoti</Value>
@@ -814,6 +778,42 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Salva</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Dettagli</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Carica chiave SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Verifica connessione</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>File chiave privata</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Sfoglia</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Cancella</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Nuovo</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Salva</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nome</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Sfoglia</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1242,9 +1242,6 @@ E' meglio scegliere un branch remoto quando si usa ri-basa (usare con cautela!)<
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Value>Nascondi automaticamente</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Carica chiave SSH</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Locale</Value>
@@ -2523,6 +2520,12 @@ Quando la chiave è stata caricata, si può riprovare.</Value>
         <TranslationItem Name="labelTo" Property="Text">
           <Value>a</Value>
         </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Effettua il push di più branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Seleziona i branch</Value>
+        </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>Il branch di cui stai per effettuarne il push sembra essere un nuovo branch per il repository remoto.
 Sei sicuro di volerne effettuare il push?</Value>
@@ -2544,6 +2547,12 @@ Sei sicuro di volerne effettuare il push?</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Value>Bisogna selezionare un tag per effettuarne il push oppure selezionare "Push di tutti i tag"</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Sì</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>No</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
