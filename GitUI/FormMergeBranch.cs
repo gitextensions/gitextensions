@@ -32,7 +32,17 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            GitCommandHelpers.AllowMerge merge = GitCommandHelpers.AllowMerge.Empty;
+            //if ((fastForward.Checked) || (NonDefaultMergeStrategy.Checked))
+              //  merge = GitCommandHelpers.AllowMerge.Empty;
+            if (noFastForward.Checked)
+                merge = GitCommandHelpers.AllowMerge.NoFastForward;
+            if (mergeSquash.Checked)
+                merge = GitCommandHelpers.AllowMerge.Squash;
+            if (mergeNoCommit.Checked)
+                merge = GitCommandHelpers.AllowMerge.NoCommit;
+            
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, merge, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
