@@ -92,8 +92,8 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
-      <Component Id="SpellChecker.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
+      <Component Id="NetSpell.SpellChecker.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\ResourceManager.dll"/>
@@ -386,7 +386,7 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
-      <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
       <ComponentRef Id="checksettings.reg"/>
