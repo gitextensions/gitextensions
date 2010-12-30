@@ -105,7 +105,7 @@ namespace GitUI.SpellChecker
                     {
                         DictionaryFile = Settings.GetDictionaryDir() + Settings.Dictionary + ".dic"
                     };
-
+            
             _spelling.Dictionary = _wordDictionary;
         }
 
@@ -309,7 +309,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                return new CultureInfo(new CultureInfo(cultureCode).TwoLetterISOLanguageName).NativeName;
+                return new CultureInfo(new CultureInfo(cultureCode.Replace('_', '-')).TwoLetterISOLanguageName).NativeName;
             }
             catch
             {
@@ -321,7 +321,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName);
+                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
             }
             catch (Exception ex)
             {
@@ -333,7 +333,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary).TwoLetterISOLanguageName));
+                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
             }
             catch (Exception ex)
             {
@@ -420,6 +420,16 @@ namespace GitUI.SpellChecker
         private void TextBoxLeave(object sender, EventArgs e)
         {
             UpdateEmptyLabel();
+        }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            OnKeyUp(e);
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            OnKeyDown(e);
         }
     }
 }

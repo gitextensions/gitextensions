@@ -165,6 +165,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap _39 {
+            get {
+                object obj = ResourceManager.GetObject("_39", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap _4 {
             get {
                 object obj = ResourceManager.GetObject("4", resourceCulture);
@@ -365,15 +372,13 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 2.08
-        ///	Fixed bug: installing MSysGit or KDiff3 using complete settup doesn&apos;t work when UAC is enabled
-        ///	Fixed bug: slashes in tag name not supported
-        ///	Fixed bug: filtering does not work with characters outside ASCII range
-        ///	Fixed bug: bash does not work using Linux or cygwin
-        ///	Fixed bug: &quot;gitk&quot; and &quot;git gui&quot; does not work on linux
-        ///	Fixed bug: file history does not work when started from file tree in browse dialog
-        ///	Added shortcut key F3 to open diff tool op file
-        ///	Added stas [rest of string was truncated]&quot;;.
+        ///Version 2.09
+        ///	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
+        ///	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
+        ///	Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
+        ///	Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
+        ///	Fixed the following keys in quicksearch: &apos;#&apos;, &apos;_&apos;
+        ///	Fixed error page in browse dialog when  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
