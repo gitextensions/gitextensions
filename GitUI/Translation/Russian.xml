@@ -1521,6 +1521,12 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Value>Создать ветку</Value>
         </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>Выберите одну ревизию чтобы создать из неё ветку.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>Ветка</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FileStatusList">
