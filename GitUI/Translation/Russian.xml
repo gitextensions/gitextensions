@@ -137,12 +137,6 @@
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Отмена</Value>
         </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>Отмена</Value>
-        </TranslationItem>
-        <TranslationItem Name="CloseDialogAfterCommit" Property="Text">
-          <Value>Закрыть окно после коммита</Value>
-        </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Value>Показать игнорируемые файлы</Value>
         </TranslationItem>
@@ -206,10 +200,6 @@
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Value>Дописать коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Если отмечено, диалого будет закрыт после каждого коммита.
-Иначе диалог будет закрыт только в том случае, если не осталось измененных файлов.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Удаление файла не удалось</Value>
@@ -548,24 +538,6 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Удаленные репозитории</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Название</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Обзор</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Сохранить</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>Новый</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>Удалить</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Подробно</Value>
-        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Удаленные репозитории</Value>
         </TranslationItem>
@@ -574,18 +546,6 @@
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Обновить информацию о всех удаленных ветках</Value>
-        </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>Обзор</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Ключ с секретным ключом</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>Проверить соединение</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Загрузить SSH ключ</Value>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Value>Удаление удаленных веток</Value>
@@ -1033,9 +993,6 @@
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>Ветка</Value>
         </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Загрузить SSH ключ</Value>
-        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Локальная ветка</Value>
         </TranslationItem>
@@ -1144,9 +1101,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="label12" Property="Text">
           <Value>Ограничить количество коммитов, которые будут загружены при запуске.</Value>
         </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
-          <Value>Сохранить и пересканировать</Value>
-        </TranslationItem>
         <TranslationItem Name="BrowseGitPath" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>
@@ -1164,9 +1118,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="groupBox2" Property="Text">
           <Value>Конфигурировать PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="PlinkBrowse" Property="Text">
-          <Value>Обзор</Value>
         </TranslationItem>
         <TranslationItem Name="label15" Property="Text">
           <Value>Путь к plink.exe</Value>
@@ -2277,6 +2228,12 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="button1" Property="Text">
           <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>Отменить изменения</Value>
+        </TranslationItem>
+        <TranslationItem Name="_undoChangesIn" Property="Text">
+          <Value>Отменить изменения в файле {0} ?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

@@ -535,7 +535,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(output.ToString()))
-                MessageBox.Show(output.ToString(), "Reset changes");
+                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
 
             Initialize();
         }
