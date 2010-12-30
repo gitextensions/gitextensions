@@ -149,7 +149,6 @@
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Value>Добавить файлы в .gitignore</Value>
         </TranslationItem>
-
         <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
           <Value>Показывать untracked файлы</Value>
         </TranslationItem>
@@ -368,6 +367,9 @@
         </TranslationItem>
         <TranslationItem Name="editmailmapToolStripMenuItem" Property="Text">
           <Value>Редактировать .mailmap</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
+          <Value>Обслуживание Git</Value>
         </TranslationItem>
         <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
           <Value>Сжать базу git</Value>
@@ -596,6 +598,36 @@
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Сохранить</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Подробно</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Загрузить SSH ключ</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Проверить соединение</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Ключ с секретным ключом</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Удалить</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Новый</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Сохранить</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Название</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Обзор</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -948,6 +980,9 @@
         <TranslationItem Name="groupBox3" Property="Text">
           <Value>Метка</Value>
         </TranslationItem>
+        <TranslationItem Name="TagTab" Property="ToolTipText">
+          <Value>Отправить метки в удаленный репозиторий</Value>
+        </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
           <Value>Push все метки</Value>
         </TranslationItem>
@@ -969,6 +1004,12 @@
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Value>Необходимо выбрать метку для push, или выбрать "Push все метки".</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Да</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>Нет</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1955,6 +1996,16 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormStash">
+      <translationItems>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Сообщение:</Value>
+        </TranslationItem>
+        <TranslationItem Name="RefreshButton" Property="Text">
+          <Value>Обновить</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2459,6 +2510,11 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Выберите ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Удалять можно только полностью слитую в HEAD.
+Если Вы удалите ветку, то коммиты могут быть потеряны, потому что на них ничего не ссылается.
+Если же Вы хотите удалить такую ветку, то следует указать опцию `force delete´.</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Принудительное удаление</Value>
