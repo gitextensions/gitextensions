@@ -13,12 +13,14 @@ Version 2.09
 	Fixed the following keys in quicksearch: '#', '_'
 	Fixed error page in browse dialog when git is not configured properly
 	Added "stage selected lines" option to commit dialog
-	Added Russian spelling dictionary
 	Added Italian translation
+	Added Russian translation
+	Added Russian spelling dictionary
 	Added dialog to choose language at startup when no language is set
 	Added resolved directories to FormFixHome to make it easier to choose the correct option
 	Added support for merging office documents (doc, docx, odt, ods, sxw)	
 	Added "Diff contains" filter to search for commits containing text
+	Added support for Beyond Compare 3
 	Added combobox to branch in browse dialog to allow quick switching between local branches
 	Added shortcuts 's' and 'u' to stage/unstage files in commit dialog
 	Added images to file tree
