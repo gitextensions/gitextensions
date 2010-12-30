@@ -33,7 +33,9 @@ namespace GitUI
 
         private void AboutBox_Load(object sender, EventArgs e)
         {
-            logoPictureBox.Image = Lemmings.GetPictureBoxImage(DateTime.Now);
+            Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
+            if (image != null)
+                logoPictureBox.Image = image;
         }
 
         protected override void OnLoad(EventArgs e)
