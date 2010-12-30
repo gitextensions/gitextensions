@@ -31,6 +31,7 @@ namespace GitUI
                "{sBranch}",
                "{sLocalBranch}",
                "{sRemoteBranch}",
+               "{sRemote}",
                "{sHash}",
                "{sMessage}",
                "{sAuthor}",
@@ -54,6 +55,7 @@ namespace GitUI
 
             List<GitHead> selectedLocalBranches = new List<GitHead>();
             List<GitHead> selectedRemoteBranches = new List<GitHead>();
+            List<string> selectedRemotes = new List<string>();
             List<GitHead> selectedBranches = new List<GitHead>();
             List<GitHead> selectedTags = new List<GitHead>();
             List<GitHead> currentLocalBranches = new List<GitHead>();
@@ -77,8 +79,11 @@ namespace GitUI
                             {
                                 selectedBranches.Add(head);
                                 if (head.IsRemote)
+                                {
                                     selectedRemoteBranches.Add(head);
-
+                                    if (!selectedRemotes.Contains(head.Remote))
+                                        selectedRemotes.Add(head.Remote);
+                                }
                                 else
                                     selectedLocalBranches.Add(head);
 
@@ -135,6 +140,16 @@ namespace GitUI
                                 argument = argument.Replace(option, selectedRemoteBranches[0].Name);
                             else if (selectedRemoteBranches.Count != 0)
                                 argument = argument.Replace(option, askToSpecify(selectedRemoteBranches, "Selected Revision Remote Branch"));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{sRemote}":
+                            if (selectedRemotes.Count == 1)
+                                argument = argument.Replace(option, selectedRemotes[0]);
+                            else if (selectedRemotes.Count != 0)
+                            {
+                                argument = argument.Replace(option, askToSpecify(selectedRemotes, "Selected Revision Remote"));
+                            }
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -216,6 +231,13 @@ namespace GitUI
         }
 
         private string askToSpecify(List<GitHead> options, string title)
+        {
+            FormRunScriptSpecify f = new FormRunScriptSpecify(options, title);
+            f.ShowDialog();
+            return f.ret;
+        }
+
+        private string askToSpecify(List<string> options, string title)
         {
             FormRunScriptSpecify f = new FormRunScriptSpecify(options, title);
             f.ShowDialog();

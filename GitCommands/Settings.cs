@@ -290,6 +290,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _closeCommitDialogAfterLastCommit;
+        public static bool CloseCommitDialogAfterLastCommit
+        {
+            get
+            {
+                if (_closeCommitDialogAfterLastCommit == null)
+                    SafeSetBool("closecommitdialogafterlastcommit", true, x => _closeCommitDialogAfterLastCommit = x);
+                return _closeCommitDialogAfterLastCommit.Value;
+            }
+            set
+            {
+                _closeCommitDialogAfterLastCommit = value;
+                Application.UserAppDataRegistry.SetValue("closecommitdialogafterlastcommit", _closeCommitDialogAfterLastCommit);
+            }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
@@ -677,17 +693,17 @@ namespace GitCommands
             set
             {
                 _gitBinDir = value;
-                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
                 if (_gitBinDir.Length > 0 && _gitBinDir[_gitBinDir.Length - 1] != PathSeparator)
                     _gitBinDir += PathSeparator;
+                Application.UserAppDataRegistry.SetValue("gitbindir", _gitBinDir);
 
-                if (string.IsNullOrEmpty(_gitBinDir))
-                    return;
+                //if (string.IsNullOrEmpty(_gitBinDir))
+                //    return;
 
-                var path =
-                    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                    _gitBinDir;
-                Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                //var path =
+                //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
+                //    _gitBinDir;
+                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -1243,6 +1259,25 @@ namespace GitCommands
                 if (parameters[0].Equals(key))
                     return parameters;
             return null;
+        }
+
+        private static bool? _pushAllTags;
+        public static bool PushAllTags
+        {
+            get
+            {
+                if (_pushAllTags == null)
+                    SafeSetBool("pushalltags", false, x => _pushAllTags = x);
+                return _pushAllTags.Value;
+            }
+            set
+            {
+                if (!_pushAllTags.HasValue || _pushAllTags.Value != value)
+                {
+                    _pushAllTags = value;
+                    Application.UserAppDataRegistry.SetValue("pushalltags", _pushAllTags);
+                }
+            }
         }
     }
 }

@@ -595,6 +595,7 @@ namespace GitUI
                 bValid = CheckGlobalUserSettingsValid() && bValid;
                 bValid = CheckMergeTool() && bValid;
                 bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckTranslationConfigSettings() && bValid;
 
                 if (Settings.RunningOnWindows())
                 {
@@ -967,24 +968,27 @@ namespace GitUI
                 return true;
             }
 
-            GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
             {
-                GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
+                GitCommands.Settings.GitBinDir = @"c:\Program Files\Git\bin\";
                 if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                 {
-                    GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
+                    GitCommands.Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
                     if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                     {
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
-                        GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
+                        GitCommands.Settings.GitBinDir = "C:\\cygwin\\bin\\";
                         if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                         {
-                            GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitCommand;
+                            GitCommands.Settings.GitBinDir = GitCommands.Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe", "\\bin\\");
                             if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
                             {
-                                GitCommands.Settings.GitBinDir = "";
-                                return false;
+                                GitCommands.Settings.GitBinDir = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "\\bin\\";
+                                if (!File.Exists(GitCommands.Settings.GitBinDir + "sh.exe") && !File.Exists(GitCommands.Settings.GitBinDir + "sh"))
+                                {
+                                    GitCommands.Settings.GitBinDir = "";
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -1191,6 +1195,30 @@ namespace GitUI
 
         private void AutoConfigMergeToolcmd()
         {
+            if (GlobalMergeTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = @"C:\Program Files\Beyond Compare 3\bcomp.exe";
+
+                    MergetoolPath.Text = FindFileInFolders("bcomp.exe",
+                                       @"C:\Program Files\Beyond Compare 3 (x86)\",
+                                       @"C:\Program Files\Beyond Compare 3\");
+
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to bcomp.exe and press suggest.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"";
+                return;
+            }
+
             if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
             {
                 if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
@@ -1258,7 +1286,7 @@ namespace GitUI
                     }
                 }
 
-                MergeToolCmd.Text = "\"TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                 return;
             }
 
@@ -1342,10 +1370,10 @@ namespace GitUI
             DifftoolPath.Text = GitCommandHelpers.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
             DifftoolCmd.Text = GitCommandHelpers.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
 
-            if (GlobalDiffTool.Text.Trim().Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
-                DiffToolCmdSuggest_Click(null, null);
-
-            ResolveDiffToolPath();
+            if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                ResolveDiffToolPath();
+                
+            DiffToolCmdSuggest_Click(null, null);
         }
 
         private void ResolveDiffToolPath()
@@ -1539,6 +1567,20 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
+            if (GlobalDiffTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string bcomppath = GitCommandHelpers.GetGlobalSetting("difftool.beyondcompare3.path");
+
+                DifftoolPath.Text = FindFileInFolders("bcomp.exe",
+                   bcomppath,
+                   @"C:\Program Files\Beyond Compare 3 (x86)\",
+                   @"C:\Program Files\Beyond Compare 3\");
+
+                if (File.Exists(DifftoolPath.Text))
+                    DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
+
+            }
+
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 string kdiff3path = GitCommandHelpers.GetGlobalSetting("difftool.kdiff3.path");
@@ -1629,6 +1671,20 @@ namespace GitUI
             return retValue;
         }
 
+        private bool CheckTranslationConfigSettings()
+        {
+            translationConfig.Visible = true;
+            if (string.IsNullOrEmpty(Settings.Translation))
+            {
+                translationConfig.BackColor = Color.LightSalmon;
+                translationConfig.Text = "There is no language configured for Git Extensions.";
+                return false;
+            }
+            translationConfig.BackColor = Color.LightGreen;
+            translationConfig.Text = "The configured language is " + Settings.Translation + ".";
+            return true;
+        }
+
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
@@ -1641,14 +1697,14 @@ namespace GitUI
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
-                SshConfig.Text = "SSH client PuTTY is configured properly";
+                SshConfig.Text = "SSH client PuTTY is configured properly.";
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 SshConfig.Text = "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
             else
-                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh();
+                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh() + ".";
             return true;
         }
 
@@ -1673,11 +1729,11 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "git not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
                 return false;
             }
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "git is found on your computer.";
+            GitFound.Text = "Git is found on your computer.";
             return true;
         }
 
@@ -1765,11 +1821,11 @@ namespace GitUI
                 string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
-                UserNameSet.Text = "You need to configure a user name and an email address.";
+                UserNameSet.Text = "You need to configure a username and an email address.";
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
-            UserNameSet.Text = "There is a user name and an email address configured.";
+            UserNameSet.Text = "A username and an email address are configured.";
             return true;
         }
 
@@ -1819,11 +1875,16 @@ namespace GitUI
 
         private static IEnumerable<string> GetWindowsCommandLocations()
         {
+            if (!string.IsNullOrEmpty(Settings.GitCommand))
+                yield return Settings.GitCommand;
+
             yield return @"C:\cygwin\bin\git.exe";
             yield return @"C:\cygwin\bin\git";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "bin\\git.exe";
             yield return @"c:\Program Files (x86)\Git\bin\git.exe";
             yield return @"c:\Program Files\Git\bin\git.exe";
+            yield return @"c:\Program Files (x86)\msysgit\bin\git.exe";
+            yield return @"c:\Program Files\msysgit\bin\git.exe";
             yield return GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") + "cmd\\git.cmd";
             yield return @"c:\Program Files (x86)\Git\cmd\git.cmd";
             yield return @"c:\Program Files\Git\cmd\git.cmd";
@@ -2076,6 +2137,22 @@ namespace GitUI
             helpLabel.Visible = false;
         }
 
+        private void translationConfig_Click(object sender, EventArgs e)
+        {
+            new FormChooseTranslation().ShowDialog();
+            Translate();
+            Language.Text = Settings.Translation;
+            Rescan_Click(null, null);
+        }
 
+        private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
+        }
+
+        private void argumentsLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

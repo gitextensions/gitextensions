@@ -20,6 +20,15 @@ namespace GitUI
                 branchesListView.Items.Add(head.Name);
             }
         }
+        public FormRunScriptSpecify(List<string> options, string label)
+        {
+            InitializeComponent();
+            specifyLabel.Text = "Specify '" + label + "':";
+            foreach (string head in options)
+            {
+                branchesListView.Items.Add(head);
+            }
+        }
         public string ret { get; private set; }
 
         private void button1_Click(object sender, EventArgs e)

@@ -31,6 +31,7 @@ namespace GitUI
             webClient.QueryString.Add("v", "1.0");
             webClient.QueryString.Add("q", HttpUtility.UrlEncode(input));
             webClient.QueryString.Add("langpair", string.Format("{0}|{1}", translateFrom, translateTo));
+            webClient.QueryString.Add("ie", "UTF8");
             webClient.QueryString.Add("key", "ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg");
             string result = webClient.DownloadString(url);
 
@@ -47,6 +48,17 @@ namespace GitUI
                 return input;
 
             result = result.Substring(startOffset, length);
+
+            //Hack to decode '&' from unicode...
+            result = result.Replace("\\u0022", "\u0022")
+                           .Replace("\\u0023", "\u0023")
+                           .Replace("\\u0024", "\u0024")
+                           .Replace("\\u0025", "\u0025")
+                           .Replace("\\u0026", "\u0026")
+                           .Replace("\\u0027", "\u0027")
+                           .Replace("\\u0028", "\u0028")
+                           .Replace("\\u0029", "\u0029");
+
             return result;
         }
     }

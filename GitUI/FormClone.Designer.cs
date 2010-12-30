@@ -75,8 +75,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(504, 238);
-            this.splitContainer1.SplitterDistance = 207;
+            this.splitContainer1.Size = new System.Drawing.Size(525, 263);
+            this.splitContainer1.SplitterDistance = 228;
             this.splitContainer1.TabIndex = 0;
             // 
             // Info
@@ -112,7 +112,7 @@
             // 
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(15, 135);
+            this.groupBox1.Location = new System.Drawing.Point(15, 153);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(352, 68);
             this.groupBox1.TabIndex = 4;
@@ -124,9 +124,9 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(230, 17);
+            this.CentralRepository.Size = new System.Drawing.Size(222, 17);
             this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "Central repository, no working dir  (--bare)";
+            this.CentralRepository.Text = "Public repository, no working dir  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository
@@ -249,7 +249,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 238);
+            this.ClientSize = new System.Drawing.Size(525, 263);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

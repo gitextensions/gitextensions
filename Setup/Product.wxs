@@ -92,8 +92,8 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
-      <Component Id="SpellChecker.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
+      <Component Id="NetSpell.SpellChecker.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\ResourceManager.dll"/>
@@ -230,20 +230,38 @@
       <Component Id="nlNL.dic" Guid="*">
         <File Source="..\Bin\Dictionaries\nl-NL.dic"/>
       </Component>
+      <Component Id="ruRU.dic" Guid="*">
+        <File Source="..\Bin\Dictionaries\ru-RU.dic"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="TranslationsDir">
+      <Component Id="English.gif" Guid="*">
+        <File Source="..\GitUI\Translation\English.gif"/>
+      </Component>
       <Component Id="Dutch.xml" Guid="*">
         <File Source="..\GitUI\Translation\Dutch.xml"/>
+      </Component>
+      <Component Id="Dutch.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Dutch.gif"/>
       </Component>
       <Component Id="Japanese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Japanese.xml"/>
       </Component>
+      <Component Id="Japanese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.gif"/>
+      </Component>
       <Component Id="Italiano.xml" Guid="*">
         <File Source="..\GitUI\Translation\Italiano.xml"/>
       </Component>
+      <Component Id="Italiano.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Italiano.gif"/>
+      </Component>
       <Component Id="Spanish.xml" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xml"/>
+      </Component>
+      <Component Id="Spanish.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Spanish.gif"/>
       </Component>
     </DirectoryRef>
 
@@ -368,7 +386,7 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
-      <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
       <ComponentRef Id="checksettings.reg"/>
@@ -394,6 +412,8 @@
       <ComponentRef Id="GitExtensions.desktop"/>
       <ComponentRef Id="UserManual.startmenu"/>
 
+      <ComponentRef Id="English.gif"/>
+      
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="CowHeadBlue.ico"/>
         <ComponentRef Id="CowHeadGreen.ico"/>
@@ -442,20 +462,27 @@
         <Feature Id="nlNL" Title="nl-NL" Level="1">
           <ComponentRef Id="nlNL.dic"/>
         </Feature>
+        <Feature Id="ruRU" Title="ru-RU" Level="1">
+          <ComponentRef Id="ruRU.dic"/>
+        </Feature>
       </Feature>
 
       <Feature Id="Translation" Title="Translations" Level="1">
         <Feature Id="Dutch" Title="Dutch" Level="1">
           <ComponentRef Id="Dutch.xml"/>
+          <ComponentRef Id="Dutch.gif"/>
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
+          <ComponentRef Id="Japanese.gif"/>
         </Feature>
         <Feature Id="Italiano" Title="Italiano" Level="1">
           <ComponentRef Id="Italiano.xml"/>
+          <ComponentRef Id="Italiano.gif"/>
         </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xml"/>
+          <ComponentRef Id="Spanish.gif"/>
         </Feature>
       </Feature>
 
