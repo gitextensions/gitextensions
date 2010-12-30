@@ -25,6 +25,7 @@ Version 2.09
 	Added shortcuts 's' and 'u' to stage/unstage files in commit dialog
 	Added images to file tree
 	Added Ctrl + Enter shortcut to commit quickly
+	Added "Reset file changes" to the explorer context menu
 	The statistics plugin does its calculates in background thread
 	Doubleclick on file in commit dialog (un)stages the file
 	Improved merge conflict handling
