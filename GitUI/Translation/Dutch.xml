@@ -758,27 +758,6 @@ _ReSharper*/
         <TranslationItem Name="$this" Property="Text">
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Opslaan</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>Nieuw</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>Verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Details</Value>
-        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
@@ -788,35 +767,56 @@ _ReSharper*/
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Alle vertakkings informatie ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Bestand met geheime sleutel</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>Test SSH verbinding</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Laad SSH sleutel</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text">
-          <Value>PuTTY SSH</Value>
-        </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Value>Externe vertakkingen opschonen</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
-          <Value>Standaard samenvoegen met</Value>
+          <Value>Samenvoegen met</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
-          <Value>Externe repoositorie</Value>
+          <Value>Externe repositorie</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Value>Lokale vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Details</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Laad SSH sleutel</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Test SSH verbinding</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Geheime sleutel</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Verwijderen</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Nieuw</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Bladeren</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1101,6 +1101,19 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kies taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Kies uw taal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>U kunt de taal op elk gewenst moment wijzigen in het instellingenvenster</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1230,9 +1243,6 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Value>Automatisch wegzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Laad SSH sleutel</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Lokale vertakking</Value>
@@ -1463,7 +1473,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>maanden geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>jaren geleden</Value>
+          <Value>jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
@@ -1933,6 +1943,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="helpLabel" Property="Text">
           <Value>Toets F1 voor beschikbare opties</Value>
         </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Download woordenboek</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -2055,6 +2068,9 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Wijzig .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes wordt alleen ondersteund wanneer er een werkdirecorie is.</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Opslaan</Value>
@@ -2468,6 +2484,12 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         <TranslationItem Name="labelTo" Property="Text">
           <Value>naar</Value>
         </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Verzend meerdere vertakkingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Selecteer vertakkingen om te verzenden</Value>
+        </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
 Weet u zeker dat u deze vertakking wilt verzenden?</Value>
@@ -2489,6 +2511,12 @@ Weet u zeker dat u deze vertakking wilt verzenden?</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Value>Selecteer een label om te verzenden of selecteer "alle labels".</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Ja</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>Nee</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2565,9 +2593,6 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="CloseDialogAfterCommit" Property="Text">
-          <Value>Sluit dialoog na commit</Value>
-        </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Value>Toon genegeerde bestanden</Value>
         </TranslationItem>
@@ -2613,6 +2638,18 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Value>Commit &amp;&amp; &amp;verzend</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Bekijk bestands geschiedenis</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+          <Value>Opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Sluit dialoog na iedere commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Sluit dialoog wanneer alle wijzigingen zijn gecommit</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2629,11 +2666,6 @@ Weet u zeker dat u door wilt gaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Value>Commit uitbreiden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Dit dialoog zal worden afgesloten na iedere commit wanneer deze optie aan staat.
-Anders zal dit dialoog alleen sluiten wanneer er geen gewijzigde bestanden meer zijn.
-</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Het verwijderen van het bestand is mislukt</Value>
@@ -2707,6 +2739,18 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="_stageFiles" Property="Text">
           <Value>{0} Bestanden klaargezet</Value>
         </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Selecteer 1 bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>Geselecteerde regel(s) klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>Geselecteerde regel(s) terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Geselecteerde regel(s) klaarzetten</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
@@ -2721,6 +2765,11 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
         </TranslationItem>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
           <Value>Aangepast samenvoeg script</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Het bestand is niet gewijzigd door de samenvoegen. Meestal betekent dit dat het bestand is opgeslagen op de verkeerde locatie. 
+
+Het samenvoegen conflict zal niet worden gemarkeerd als opgelost. Probeer het opnieuw.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Alle samenvoeg conflicten zijn opgelost, u kunt nu committen.
@@ -2889,7 +2938,7 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
           <Value>Openen in samenvoeg tool</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
-          <Value>Samenvoeg conflicten scannen</Value>
+          <Value>Verversen</Value>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>Stoppen</Value>

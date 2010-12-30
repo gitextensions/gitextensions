@@ -17,6 +17,7 @@ namespace GitUI
 
         private void FormRemotesLoad(object sender, EventArgs e)
         {
+            RestorePosition("remotes");
             Initialize();
         }
 
@@ -116,7 +117,7 @@ namespace GitUI
                         !remoteHead.Name.ToLower().Contains(_remote.ToLower()))
                         continue;
                     localHead.TrackingRemote = RemoteName.Text;
-                    localHead.MergeWith = remoteHead.Name;
+                    localHead.MergeWith = localHead.Name;
                 }
             }
         }
@@ -278,5 +279,11 @@ namespace GitUI
         {
             new FormProcess("remote update").ShowDialog();
         }
+
+        private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("remotes");
+        }
+
     }
 }

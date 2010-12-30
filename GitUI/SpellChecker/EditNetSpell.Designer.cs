@@ -62,12 +62,14 @@
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextBox.Location = new System.Drawing.Point(0, 0);
             this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(331, 291);
+            this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
             this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
-            this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
             this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
+            this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
+            this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
             // 
             // EmptyLabel
             // 
@@ -76,19 +78,19 @@
             this.EmptyLabel.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.EmptyLabel.Location = new System.Drawing.Point(3, 3);
             this.EmptyLabel.Name = "EmptyLabel";
-            this.EmptyLabel.Size = new System.Drawing.Size(100, 23);
+            this.EmptyLabel.Size = new System.Drawing.Size(117, 27);
             this.EmptyLabel.TabIndex = 2;
             this.EmptyLabel.Text = "Enter message";
             this.EmptyLabel.Click += new System.EventHandler(this.EmptyLabelClick);
             // 
             // EditNetSpell
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.EmptyLabel);
             this.Controls.Add(this.TextBox);
             this.Name = "EditNetSpell";
-            this.Size = new System.Drawing.Size(331, 291);
+            this.Size = new System.Drawing.Size(386, 336);
             this.Load += new System.EventHandler(this.EditNetSpellLoad);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);

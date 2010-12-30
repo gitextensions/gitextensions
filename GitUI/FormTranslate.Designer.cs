@@ -119,7 +119,7 @@
             this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(53, 27);
+            this.toolStripButtonNew.Size = new System.Drawing.Size(48, 27);
             this.toolStripButtonNew.Text = "New";
             this.toolStripButtonNew.ToolTipText = "Create new translation";
             this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
@@ -142,7 +142,7 @@
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(120, 27);
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(102, 27);
             this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
@@ -157,10 +157,10 @@
             // toolStripTranslationLanguageCode
             // 
             this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
-            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(99, 27);
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(84, 27);
             this.toolStripTranslationLanguageCode.Text = "Language code:";
             // 
-            // _languageCode
+            // _NO_TRANSLATE_languageCode
             // 
             this._NO_TRANSLATE_languageCode.Name = "_NO_TRANSLATE_languageCode";
             this._NO_TRANSLATE_languageCode.Size = new System.Drawing.Size(121, 30);
@@ -196,7 +196,6 @@
             this._toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._toolStripButton1.Name = "_toolStripButton1";
             this._toolStripButton1.Size = new System.Drawing.Size(23, 27);
-            this._toolStripButton1.Text = "";
             this._toolStripButton1.CheckedChanged += new System.EventHandler(this.toolStripButton1_CheckedChanged);
             // 
             // splitContainer1
@@ -332,7 +331,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
             this.splitContainer3.Size = new System.Drawing.Size(595, 153);
-            this.splitContainer3.SplitterDistance = 466;
+            this.splitContainer3.SplitterDistance = 431;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -349,7 +348,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(466, 153);
+            this.splitContainer4.Size = new System.Drawing.Size(431, 153);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.TabIndex = 0;
             // 
@@ -359,7 +358,7 @@
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(466, 72);
+            this.neutralTekst.Size = new System.Drawing.Size(431, 72);
             this.neutralTekst.TabIndex = 0;
             this.neutralTekst.Text = "";
             // 
@@ -368,7 +367,7 @@
             this.translatedText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(466, 77);
+            this.translatedText.Size = new System.Drawing.Size(431, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
@@ -377,7 +376,7 @@
             // 
             this.googleAll.Location = new System.Drawing.Point(3, 123);
             this.googleAll.Name = "googleAll";
-            this.googleAll.Size = new System.Drawing.Size(119, 23);
+            this.googleAll.Size = new System.Drawing.Size(154, 23);
             this.googleAll.TabIndex = 3;
             this.googleAll.Text = "Google all empty";
             this.googleAll.UseVisualStyleBackColor = true;
@@ -387,7 +386,7 @@
             // 
             this.googleTranslate.Location = new System.Drawing.Point(2, 95);
             this.googleTranslate.Name = "googleTranslate";
-            this.googleTranslate.Size = new System.Drawing.Size(120, 23);
+            this.googleTranslate.Size = new System.Drawing.Size(155, 23);
             this.googleTranslate.TabIndex = 2;
             this.googleTranslate.Text = "Google translate";
             this.googleTranslate.UseVisualStyleBackColor = true;
@@ -397,7 +396,7 @@
             // 
             this.previousButton.Location = new System.Drawing.Point(3, 32);
             this.previousButton.Name = "previousButton";
-            this.previousButton.Size = new System.Drawing.Size(119, 23);
+            this.previousButton.Size = new System.Drawing.Size(154, 23);
             this.previousButton.TabIndex = 1;
             this.previousButton.Text = "&Previous";
             this.previousButton.UseVisualStyleBackColor = true;
@@ -407,7 +406,7 @@
             // 
             this.nextButton.Location = new System.Drawing.Point(2, 3);
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(120, 23);
+            this.nextButton.Size = new System.Drawing.Size(155, 23);
             this.nextButton.TabIndex = 0;
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;

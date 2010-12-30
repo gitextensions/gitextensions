@@ -40,6 +40,11 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
+
+            GitTree.ImageList = new ImageList();
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._21); //File
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._40); //Folder
+            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._39); //Submodule
         }
 
         private void ShowDashboard()
@@ -352,7 +357,7 @@ namespace GitUI
                 GitTree.Nodes.Clear();
                 if (RevisionGrid.GetRevisions().Count > 0)
                     LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
-                GitTree.Sort();
+                //GitTree.Sort();
 
                 // Load state
                 var currenNodes = GitTree.Nodes;
@@ -554,7 +559,6 @@ namespace GitUI
         public void OpenOnClick(object sender, EventArgs e)
         {
             var item = GitTree.SelectedNode.Tag;
-
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
                 {
@@ -574,10 +578,13 @@ namespace GitUI
 
         protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
         {
+            items.Sort(new GitFileTreeComparer());
+
             foreach (var item in items)
             {
                 var subNode = node.Add(item.Name);
                 subNode.Tag = item;
+
                 var gitItem = item as GitItem;
 
                 if (gitItem == null)
@@ -585,9 +592,18 @@ namespace GitUI
                 else
                 {
                     if (gitItem.ItemType == "tree")
+                    {
+                        subNode.ImageIndex = 1;
+                        subNode.SelectedImageIndex = 1;
                         subNode.Nodes.Add(new TreeNode());
-                    if (gitItem.ItemType == "commit")
-                        subNode.Text = item.Name + " (Submodule)";
+                    }
+                    else
+                        if (gitItem.ItemType == "commit")
+                        {
+                            subNode.ImageIndex = 2;
+                            subNode.SelectedImageIndex = 2;
+                            subNode.Text = item.Name + " (Submodule)";
+                        }
                 }
             }
         }
@@ -849,11 +865,10 @@ namespace GitUI
 
         private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartSettingsDialog())
-                Initialize();
+            GitUICommands.Instance.StartSettingsDialog();
 
             Translate();
-
+            Initialize();
             RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -1399,10 +1414,14 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(fileDialog.FileName,
-                                GitCommandHelpers.RunCmd(
-                                    Settings.GitCommand,
-                                    string.Format("cat-file blob \"{0}\"", item.Guid)));
+                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(item.Guid)) //Ugly, has implementation info.
+                {
+                    using (FileStream fileOut = File.Create(fileDialog.FileName))
+                    {
+                        byte[] buf = ms.GetBuffer();
+                        fileOut.Write(buf, 0, buf.Length);
+                    }
+                }
             }
         }
 
