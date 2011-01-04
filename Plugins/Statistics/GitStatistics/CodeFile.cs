@@ -101,6 +101,8 @@ namespace GitStatistics
                 NumberCommentsLines++;
             else if (File.Extension.ToLower() == ".py" && line.StartsWith("#"))
                 NumberCommentsLines++;
+            else if (File.Extension.ToLower() == ".rb" && line.StartsWith("#"))
+                NumberCommentsLines++;
 
             if (!_skipResetFlag)
                 ResetCodeBlockFlags(line);
@@ -133,6 +135,9 @@ namespace GitStatistics
                     _inCommentBlock = true;
             }
 
+            if (File.Extension.ToLower() == ".rb" && line.StartsWith("=begin"))
+                _inCommentBlock = true;
+
             if (File.Extension.ToLower() == ".py" && !_inCommentBlock)
             {
                 if (line.StartsWith("'''") || line.StartsWith("\"\"\""))
@@ -161,6 +166,9 @@ namespace GitStatistics
                 if (line.Contains("*)") || line.Contains("}"))
                     _inCommentBlock = false;
             }
+
+            if (File.Extension.ToLower() == ".rb" && line.Contains("=end"))
+                _inCommentBlock = false;
 
             if (File.Extension.ToLower() == ".py")
             {
