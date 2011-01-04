@@ -18,7 +18,7 @@ namespace GitStatistics
         public void Register(IGitUICommands gitUiCommands)
         {
             Settings.AddSetting("Code files",
-                                "*.c;*.cpp;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav");
+                                "*.c;*.cpp;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas");
             Settings.AddSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
