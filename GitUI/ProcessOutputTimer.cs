@@ -33,7 +33,7 @@ namespace GitUI
             {
                 if (linesToAdd.ToString().Length > 0)
                     _form.AddOutputCrossThread(linesToAdd.ToString());
-                linesToAdd = new StringBuilder();
+                linesToAdd.Remove(0, linesToAdd.Length);
             }
         }
         public static void Stop()
