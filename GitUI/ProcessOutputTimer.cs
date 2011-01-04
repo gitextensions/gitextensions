@@ -22,7 +22,10 @@ namespace GitUI
 
         public static void addLine(string line)
         {
-            linesToAdd.Append(line);
+            lock (linesToAdd)
+            {
+                linesToAdd.Append(line);
+            }
         }
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
