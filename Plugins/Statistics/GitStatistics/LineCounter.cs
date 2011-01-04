@@ -48,7 +48,6 @@ namespace GitStatistics
             var lastUpdate = DateTime.Now;
             var timer = new TimeSpan(0,0,0,0,500);
 
-            var codeFiles = new List<CodeFile>();
             foreach (var filter in filters)
             {
                 foreach (var file in _directory.GetFiles(filter.Trim(), SearchOption.AllDirectories))
@@ -58,7 +57,6 @@ namespace GitStatistics
 
                     var codeFile = new CodeFile(file.FullName);
                     codeFile.CountLines();
-                    codeFiles.Add(codeFile);
 
                     CalculateSums(codeFile);
 
