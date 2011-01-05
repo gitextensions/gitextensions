@@ -1,149 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
-    <TranslationCategory Name="FindAndReplaceForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Buscar y reemplazar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Qué b&amp;uscar:</Value>
-        </TranslationItem>
-        <TranslationItem Name="lblReplaceWith" Property="Text">
-          <Value>Reem&amp;plazar con:</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnFindNext" Property="Text">
-          <Value>Buscar siguiente
-</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnReplace" Property="Text">
-          <Value>&amp;Reemplazar</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnReplaceAll" Property="Text">
-          <Value>Reemplazar &amp;Todos</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkMatchWholeWord" Property="Text">
-          <Value>Sólo palabras &amp;completas</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkMatchCase" Property="Text">
-          <Value>&amp;Coincidir mayúsculas y minúsculas</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnHighlightAll" Property="Text">
-          <Value>Busc&amp;ar y resaltar todas</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnCancel" Property="Text">
-          <Value>Cancelar</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnFindPrevious" Property="Text">
-          <Value>Buscar a&amp;nterior</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Dashboard">
-      <translationItems>
-        <TranslationItem Name="openRepository" Property="Text">
-          <Value>Abrir repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="cloneRepository" Property="Text">
-          <Value>Clonar repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="createRepository" Property="Text">
-          <Value>Crear nuevo repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="develop" Property="Text">
-          <Value>Desarrollar</Value>
-        </TranslationItem>
-        <TranslationItem Name="donate" Property="Text">
-          <Value>Donar</Value>
-        </TranslationItem>
-        <TranslationItem Name="translate" Property="Text">
-          <Value>Traducir</Value>
-        </TranslationItem>
-        <TranslationItem Name="issues" Property="Text">
-          <Value>Problemas</Value>
-        </TranslationItem>
-        <TranslationItem Name="RecentRepositories" Property="Title">
-          <Value>Repositorios recientes</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommonActions" Property="Title">
-          <Value>Acciones comunes</Value>
-        </TranslationItem>
-        <TranslationItem Name="DonateCategory" Property="Title">
-          <Value>Contribuir</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileViewerWindows">
-      <translationItems>
-        <TranslationItem Name="_findAndReplaceForm" Property="Text">
-          <Value>Buscar y reemplazar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormVerify">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Verificar base de datos</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveObjects" Property="Text">
-          <Value>Guardar objetos en .git/lost-found</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Haga doble clic en una fila que contiene un sha1 para ver objeto.</Value>
-        </TranslationItem>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>Eliminar todos los objetos colgados</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
-          <Value>Etiquetar objeto seleccionado</Value>
-        </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
-          <Value>Ver el objeto seleccionado</Value>
-        </TranslationItem>
-        <TranslationItem Name="Unreachable" Property="Text">
-          <Value>Imprimir objetos que existen pero que no son leibles desde ninguno de los
-nodos de referencia.</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Etiquetar todos los objetos perdidos</Value>
-        </TranslationItem>
-        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
-          <Value>Eliminar todas las etiquetas LOST_AND_FOUND</Value>
-        </TranslationItem>
-        <TranslationItem Name="FullCheck" Property="Text">
-          <Value>Verifique no sólo los objetos en GIT_OBJECT_DIRECTORY ($GIT_DIR/objetos), 
-sino también los que se encuentran en las piscinas de objetos alternativas.</Value>
-        </TranslationItem>
-        <TranslationItem Name="NoReflogs" Property="Text">
-          <Value>No considerar los commits que son referenciados sólo por una
-entrada en un reflog a ser alcanzado.</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
-          <Value>Etiquetar todos los commits perdidos</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowOnlyCommits" Property="Text">
-          <Value>Mostrar sólo commits</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Por defecto sólo los objetos sin referencia que tienen 
-más de dos semanas se quitan cuando se limpia la
-base de datos. Todos los otros objetos sólo se 
-eliminan cuando se ejecuta "Eliminar todos los 
-objetos colgados".</Value>
-        </TranslationItem>
-        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
-          <Value>Quitar</Value>
-        </TranslationItem>
-        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
-          <Value>¿Está seguro que desea eliminar todos los objetos colgantes?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_xTagsCreated" Property="Text">
-          <Value>{0}  Etiquetas creadas. 
-
-No te olvides de eliminar estas etiquetas cuando haya terminado.</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -184,128 +41,141 @@ No te olvides de eliminar estas etiquetas cuando haya terminado.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormResetCurrentBranch">
+    <TranslationCategory Name="FormMergeBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Restablecer la ramaa</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Restablecer tipo</Value>
-        </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text">
-          <Value>Duro: restablecer directorio de trabajo y el índice (descartar TODOS los cambios locales, incluso los sin commit)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mixed" Property="Text">
-          <Value>Mixta: dejar directorio de trabajo intacto, restablecer el índice</Value>
-        </TranslationItem>
-        <TranslationItem Name="Soft" Property="Text">
-          <Value>Suave: dejar el directorio de trabajo y el índice intactos</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>Cancelar</Value>
-        </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text">
-          <Value>Restablecer {0} a:</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitInfo" Property="Text">
-          <Value>Commit: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="authorInfo" Property="Text">
-          <Value>Autor: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="dateInfo" Property="Text">
-          <Value>Fecha commit: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessage" Property="Text">
-          <Value>Mensaje: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetHardWarning" Property="Text">
-          <Value>Estás a punto de descartar TODOS los cambios locales, ¿estás seguro?</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetCaption" Property="Text">
-          <Value>Restablecer rama</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormStatus">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proceso</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Mantener la ventana abierta</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proceso</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGitIgnore">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Editar .gitignore</Value>
+          <Value>Combinar las ramas</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Especificar patrones de archivo que git debe ignorar.
+          <Value>Combinar la rama actual con otra rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>Rama actual</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Mezclar con</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>&amp;Mezclar</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Mezclar</Value>
+        </TranslationItem>
+        <TranslationItem Name="noFastForward" Property="Text">
+          <Value>Siempre crear un nuevo commit de mezcla</Value>
+        </TranslationItem>
+        <TranslationItem Name="fastForward" Property="Text">
+          <Value>Mantener una sola rama si es posible (fast forward)</Value>
+        </TranslationItem>
+        <TranslationItem Name="currentBranchLabel" Property="Text">
+          <Value>?</Value>
+        </TranslationItem>
+        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
+          <Value>Usar una estrategia de mezcla no por defecto</Value>
+        </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>Ayuda</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strategyTooltipText" Property="Text">
+          <Value>resolver
+Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un pull) usando algoritmos de mezcla
+3-way.
+Trata de detectar cuidadosamente mezclas ambigüas y es considerado generalmente rápido y seguro.
 
-Ejemplo:
-#ignorar miniaturas creadas por windows
-Thumbs.db
-#Ignorar archivos construidos por Visual Studio
-*.obj
-*.exe
-*.pdb
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.lib
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/
+recursivo
+Este sólo puede resolver dos cabezas usando un algoritmo de mezcla 3-way. Cuando hay más de un ancestro común que
+puede ser usado para una mezcla 3-way, crea un árbol mezclado de los ancestros comunes y usa este como el árbol de
+referencia para la mezcla 3-way. Adicionalmente éste puede detectar y manejar mezclas que involucran renombramientos.
+Ésta es la mezcla por defecto cuando se realiza un Pull o cuando se mezcla una rama.
+
+octopus 
+Éste resuelve casos con más de dos cabezas, pero se niega a hacer mezclas complejas que necesitan una resolución
+manual. Es principalmente usado para juntar cabezas de ramas similares juntas. Esta es la estrategia de mezcla por
+defecto al hacer un Pull o una mezcla con más de una rama.
+
+nuestro 
+Éste resuelve cualquier número de cabezas, pero el árbol resultado de la mezcla es siempre el de la cabeza de la rama actual,
+efectivamente ignorando todos los cambios de todas las otras ramas. Está pensado para ser usado para reemplazar
+el historial de desarrollo viejo de ramas laterales.
+
+subárbol 
+Ésta es una estrategia recursiva modificada. Al mezclar los árboles A y B, si B corresponde a un subárbol de A, B es primero
+ajustado para coincidir la estructura del árbol A, en vez de leer los árboles en el mismo nivel. Este ajuste es también realizado
+al árbol ancestro común.
 </Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Checkout revisión</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Checkout</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>Forzar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Crear Rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nombre de rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Crear rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Checkout" Property="Text">
+          <Value>Checkout rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Checkout después de crear</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>Seleccione una revisión para crear la rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>Rama</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormArchive">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Archivar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccione una revisión a comprimir</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Guardar</Value>
         </TranslationItem>
-        <TranslationItem Name="AddDefault" Property="Text">
-          <Value>Añadir reglas de ignorar por defecto</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
+    <TranslationCategory Name="FormAddFiles">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Dif.</Value>
+          <Value>Añadir archivos</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileStatusList">
-      <translationItems>
-        <TranslationItem Name="NoFiles" Property="Text">
-          <Value>No hubo cambios</Value>
+        <TranslationItem Name="Filter" Property="Text">
+          <Value>.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Filtro</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Añadir archivos</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFiles" Property="Text">
+          <Value>Mostrar todos los archivos</Value>
+        </TranslationItem>
+        <TranslationItem Name="force" Property="Text">
+          <Value>Forzar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -515,9 +385,6 @@ _ReSharper*/
         <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Value>Sincronizar todos los submódulos</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSplitStash" Property="Text">
-          <Value>toolStripSplitButton1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>Apilar cambios</Value>
         </TranslationItem>
@@ -644,743 +511,14 @@ _ReSharper*/
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Abrir archivo checked out con ...</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBlame">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Archivo de Historia</Value>
+        <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
+          <Value>Historial del archivo</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Aplicar parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text">
-          <Value>Aplicar parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>&gt; Solucionar conflictos &lt;</Value>
-        </TranslationItem>
-        <TranslationItem Name="Skip" Property="Text">
-          <Value>Saltar parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abortar parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="Resolved" Property="Text">
-          <Value>Conflictos resueltos</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>Añadir archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseDir" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="PatchDirMode" Property="Text">
-          <Value>Directorio de parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="PatchFileMode" Property="Text">
-          <Value>Archivo de parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>Hay conflictos de mezcla sin resolver</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRevertCommitSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Revertir commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Value>Fecha de commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Value>Mensaje:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Value>Autor:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>Commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Revertir este commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text">
-          <Value>Revertir este commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Value>Crea automáticamente un commit</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRevert">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Revertir cambios en los archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text">
-          <Value>Revertir los cambios</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Cancelar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRemotes">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Repositorios remotos</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Nombre</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Guardar</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>Nuevo</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>Eliminar</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Detalles</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPage1" Property="Text">
-          <Value>Repositorios remotos</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPage2" Property="Text">
-          <Value>Comportamiento predeterminado del pull (buscar y fusionar)</Value>
-        </TranslationItem>
-        <TranslationItem Name="UpdateBranch" Property="Text">
-          <Value>Actualizar toda la información de rama remota</Value>
-        </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Archivo de clave privada</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>Probar conexión</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Carga clave SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text">
-          <Value>PuTTY SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="Prune" Property="Text">
-          <Value>Podar las ramas remotas</Value>
-        </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
-          <Value>Por defecto se funde con</Value>
-        </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>Repositorio remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>Nombre de rama local</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
-          <Value>Guardar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginSettings">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Plugin de configuración</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormInit">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Inicializar nuevo repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Directorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Tipo de repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="Central" Property="Text">
-          <Value>Repositorio central, sin directorio de trabajo (--bare --shared=all)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Personal" Property="Text">
-          <Value>Repositorio personal</Value>
-        </TranslationItem>
-        <TranslationItem Name="Init" Property="Text">
-          <Value>Inicializar</Value>
-        </TranslationItem>
-        <TranslationItem Name="_chooseDirectory" Property="Text">
-          <Value>Por favor, elija un directorio.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
-          <Value>No se puede iniciar un nuevo repositorio en un archivo. 
-Por favor, elija un directorio.</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDeleteTag">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Eliminar etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Eliminar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Seleccionar etiqueta</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="DashboardCategory">
-      <translationItems>
-        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
-          <Value>Subir</Value>
-        </TranslationItem>
-        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
-          <Value>Bajar</Value>
-        </TranslationItem>
-        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
-          <Value>Quitar</Value>
-        </TranslationItem>
-        <TranslationItem Name="editToolStripMenuItem" Property="Text">
-          <Value>Editar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Ver archivo de parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text">
-          <Value>Parche</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDashboardCategoryTitle">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Introduzca leyenda</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Introduzca leyenda</Value>
-        </TranslationItem>
-        <TranslationItem Name="OkButton" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormChangeLog">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Registro de cambios</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Crear rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Nombre de rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Crear rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>Checkout después de crear</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddSubmodule">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Añadir submódulo</Value>
-        </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>Añadir</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Ruta del submódulo</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Ruta local</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
+        <TranslationItem Name="branchSelect" Property="Text">
           <Value>Rama</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddFiles">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Añadir archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="Filter" Property="Text">
-          <Value>.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Filtro</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>Añadir archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowFiles" Property="Text">
-          <Value>Mostrar todos los archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="force" Property="Text">
-          <Value>Forzar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Formato de parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="SelectedBranch" Property="Text">
-          <Value>Rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="FormatPatch" Property="Text">
-          <Value>Crear parche(es)</Value>
-        </TranslationItem>
-        <TranslationItem Name="SendToMail" Property="Text">
-          <Value>Enviar parches a</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveToDir" Property="Text">
-          <Value>Guarde parches en el directorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Cuerpo</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Asunto</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormEdit">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Ver</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckout">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Checkout revisión</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Checkout</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Value>Forzar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickCommitSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Seleccionar manualmente commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Value>Fecha de commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Value>Mensaje:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Value>Autor:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>Commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Seleccionar manualmente este commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pick" Property="Text">
-          <Value>Elejir este commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Value>Crea automáticamente un commit</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFixHome">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Inicio</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox8" Property="Text">
-          <Value>Ambiente</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHomeBrowse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHome" Property="Text">
-          <Value>Otros</Value>
-        </TranslationItem>
-        <TranslationItem Name="userprofileHome" Property="Text">
-          <Value>Establecer HOME a USERPROFILE</Value>
-        </TranslationItem>
-        <TranslationItem Name="defaultHome" Property="Text">
-          <Value>Usar HOME por defecto</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
-          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. De
-forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. Cambiar el comportamiento 
-predeterminado sólo si tiene problemas.</Value>
-        </TranslationItem>
-        <TranslationItem Name="ok" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GravatarControl">
-      <translationItems>
-        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
-          <Value>Actualizar la imagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
-          <Value>Regístrese en gravatar.com</Value>
-        </TranslationItem>
-        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
-          <Value>Borrar la caché de imágenes</Value>
-        </TranslationItem>
-        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
-          <Value>Tamaño de la imagen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GitLogForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Registro</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPull">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Pull</Value>
-        </TranslationItem>
-        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
-          <Value>¿Están solucionados todos los conflictos de fusión? ¿Quieres hacer un commit?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
-          <Value>Conflictos resueltos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
-          <Value>¿Aplicar objetos apilados al directorio de trabajo nuevamente?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
-          <Value>Auto apilar</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
-          <Value>Sólo se puede buscar todas las ramas remotas (*) sin fusionar o rebase. 
-Si desea obtener todas las ramas remotas, elija buscar. 
-Si desea obtener y combinar una rama, elija una rama específica.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectRemoteRepository" Property="Text">
-          <Value>Por favor, seleccione un repositorio remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectSourceDirectory" Property="Text">
-          <Value>Por favor, seleccione un directorio de origen</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Ramas remotas</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pull" Property="Text">
-          <Value>&amp;Pull</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Resolver conflictos</Value>
-        </TranslationItem>
-        <TranslationItem Name="Merge" Property="Text">
-          <Value>&amp;Combinar rama remota con la rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rebase" Property="Text">
-          <Value>Rebase rama remota a rama actual, crea un historial lineal. Se recomienda elegir 
-una rama remota utilizando rebase. (Uso con precaución)</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Opciones de fusión</Value>
-        </TranslationItem>
-        <TranslationItem Name="Fetch" Property="Text">
-          <Value>No fusionar, sólo &amp;buscar rama remota</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text">
-          <Value>Apilar cambios</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Value>Gestionar remotos</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text">
-          <Value>Pull desde</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text">
-          <Value>Remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text">
-          <Value>Rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoStash" Property="Text">
-          <Value>Auto apilar</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Carga clave SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Rama local</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormMergeBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Combinar las ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strategyTooltipText" Property="Text">
-          <Value>resolver
-Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un pull) usando algoritmos de mezcla
-3-way.
-Trata de detectar cuidadosamente mezclas ambigüas y es considerado generalmente rápido y seguro.
-
-recursivo
-Este sólo puede resolver dos cabezas usando un algoritmo de mezcla 3-way. Cuando hay más de un ancestro común que
-puede ser usado para una mezcla 3-way, crea un árbol mezclado de los ancestros comunes y usa este como el árbol de
-referencia para la mezcla 3-way. Adicionalmente éste puede detectar y manejar mezclas que involucran renombramientos.
-Ésta es la mezcla por defecto cuando se realiza un Pull o cuando se mezcla una rama.
-
-octopus 
-Éste resuelve casos con más de dos cabezas, pero se niega a hacer mezclas complejas que necesitan una resolución
-manual. Es principalmente usado para juntar cabezas de ramas similares juntas. Esta es la estrategia de mezcla por
-defecto al hacer un Pull o una mezcla con más de una rama.
-
-nuestro 
-Éste resuelve cualquier número de cabezas, pero el árbol resultado de la mezcla es siempre el de la cabeza de la rama actual,
-efectivamente ignorando todos los cambios de todas las otras ramas. Está pensado para ser usado para reemplazar
-el historial de desarrollo viejo de ramas laterales.
-
-subárbol 
-Ésta es una estrategia recursiva modificada. Al mezclar los árboles A y B, si B corresponde a un subárbol de A, B es primero
-ajustado para coincidir la estructura del árbol A, en vez de leer los árboles en el mismo nivel. Este ajuste es también realizado
-al árbol ancestro común.
-</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Combinar la rama actual con otra rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="Currentbranch" Property="Text">
-          <Value>Rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Mezclar con</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>&amp;Mezclar</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Mezclar</Value>
-        </TranslationItem>
-        <TranslationItem Name="noFastForward" Property="Text">
-          <Value>Siempre crear un nuevo commit de mezcla</Value>
-        </TranslationItem>
-        <TranslationItem Name="fastForward" Property="Text">
-          <Value>Mantener una sola rama si es posible (fast forward)</Value>
-        </TranslationItem>
-        <TranslationItem Name="currentBranchLabel" Property="Text">
-          <Value>?</Value>
-        </TranslationItem>
-        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
-          <Value>Usar una estrategia de mezcla no por defecto</Value>
-        </TranslationItem>
-        <TranslationItem Name="strategyHelp" Property="Text">
-          <Value>Ayuda</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFileHistory">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Historial de Archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="ViewTab" Property="Text">
-          <Value>Ver</Value>
-        </TranslationItem>
-        <TranslationItem Name="DiffTab" Property="Text">
-          <Value>Diff</Value>
-        </TranslationItem>
-        <TranslationItem Name="Blame" Property="Text">
-          <Value>Culpa</Value>
-        </TranslationItem>
-        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
-          <Value>Abrir con difftool</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDashboardEditor">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Página de inicio</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCommitCount">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Número de commits</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="RevisionGrid">
-      <translationItems>
-        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
-          <Value>Crear nueva etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
-          <Value>Crear nueva rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
-          <Value>Restablecer la rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>No hay commits hechos a este repositorio aún. 
-
-Si se trata de un repositorio normal, estos pasos son recomendados: 
-- Asegúrese de tener un adecuado .gitignore en su repositorio
-- Hago un commit
-
-Si se trata de un repositorio central (repositorio sin un directorio de trabajo): 
-- Haga push los cambios desede otro repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="GitIgnore" Property="Text">
-          <Value>Editar .gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowRemoteBranches" Property="Text">
-          <Value>Mostrar las ramas remotas</Value>
-        </TranslationItem>
-        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
-          <Value>Mostrar ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
-          <Value>Revertir commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
-          <Value>Mostrar el gráfico de revisiones</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>El directorio de trabajo actual no es un repositorio git.</Value>
-        </TranslationItem>
-        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
-          <Value>Establecer filtro avanzado</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Value>Eliminar etiquetas</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Value>Borrar rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
-          <Value>Checkout revisión</Value>
-        </TranslationItem>
-        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
-          <Value>Orden revisiones por fecha</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Value>Checkout rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Value>Combinar con la rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
-          <Value>Selección manual de commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
-          <Value>Mostrar fecha de autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
-          <Value>Mostrar la fecha relativa</Value>
-        </TranslationItem>
-        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
-          <Value>Rebase en</Value>
-        </TranslationItem>
-        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
-          <Value>Mostrar todas las ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
-          <Value>Mostrar sólo rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
-          <Value>Mostrar ramas filtradas</Value>
-        </TranslationItem>
-        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>Dibujar no parientes en gris</Value>
-        </TranslationItem>
-        <TranslationItem Name="_authorCaption" Property="Text">
-          <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="_authorDateCaption" Property="Text">
-          <Value>Fecha Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitDateCaption" Property="Text">
-          <Value>Fecha commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Mensaje</Value>
-        </TranslationItem>
-        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
-          <Value>Actuales cambios no confirmados</Value>
-        </TranslationItem>
-        <TranslationItem Name="_currentIndex" Property="Text">
-          <Value>Comprometerse en el indice</Value>
-        </TranslationItem>
-        <TranslationItem Name="_revisionFilter" Property="Text">
-          <Value>Filtro</Value>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Cambio rama actual</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1400,31 +538,550 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormTag">
+    <TranslationCategory Name="FormPush">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Etiqueta</Value>
+          <Value>Push</Value>
         </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Etiqueta</Value>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>La rama que está a punto de hacer push parece ser una nueva rama para 
+el remoto. ¿Estás seguro de que desea hacer push con esta rama?</Value>
         </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>Seleccione una revisión para crear la etiqueta.</Value>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noTagMessage" Property="Text">
-          <Value>Por favor, introduzca un mensaje de etiqueta</Value>
+        <TranslationItem Name="_pushCaption" Property="Text">
+          <Value>Push</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Nombre de etiqueta</Value>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Pulsar para {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
-          <Value>Crear etiqueta</Value>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>Por favor, seleccione un directorio de destino</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>Por favor, seleccione un repositorio remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Tienes que seleccionar una etiqueta para hacer push o seleccione "Push todas las etiquetas";.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Si</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>No</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Push" Property="Text">
+          <Value>&amp;Push</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Mensaje</Value>
+          <Value>Rama para push</Value>
         </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>Crear etiqueta con nota</Value>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>Push &amp;todas las ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushBranches" Property="Text">
+          <Value>&amp;Forzar push</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushTags" Property="Text">
+          <Value>&amp;Forzar push</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Push a</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>Remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>Gestionar remotos</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Cargar clave SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Etiqueta para hacer push</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="Text">
+          <Value>Push ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="ToolTipText">
+          <Value>Push ramas y commits a repositorio remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="Text">
+          <Value>Push etiquetas</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="ToolTipText">
+          <Value>Push etiquetas a repositorio remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text">
+          <Value>Push &amp;todas las etiquetas</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>a</Value>
+        </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Push de multiples ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Seleccione ramas para hacer Push</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEdit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Ver</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Quitar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Agregar</Value>
+        </TranslationItem>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>Categorías</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Título</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Tipo</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>RSS</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>RSS Feed</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>Repositorios</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Ver archivo de parche</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Value>Parche</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Plugin de configuración</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormMailMap">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editar .mailmap</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Guardar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Edite el mailmap 
+Este archivo está destinado para corregir
+nombres de usuario. 
+
+Ejemplo:
+Henk Westhuis &lt;Henk@.(none)&gt;
+Henk Westhuis &lt;chenk_westhuis@hotmail.com&gt;</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardCategoryTitle">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Introduzca leyenda</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Introduzca leyenda</Value>
+        </TranslationItem>
+        <TranslationItem Name="OkButton" Property="Text">
+          <Value>Aceptar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPick">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Seleccionar manualmente</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccione un commit para seleccionar manualmente. Los commits seran recommitted a la parte superior de la cabeza actual.</Value>
+        </TranslationItem>
+        <TranslationItem Name="CherryPick" Property="Text">
+          <Value>Seleccionar manualmente</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Creación automática de un commit cuando no hay conflictos de mezcla</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckoutBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Checkout rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranch" Property="Text">
+          <Value>Elijes hacer un checkout de una rama remota. 
+
+¿Quieres crear una rama local con el nombre "{0}"
+que hace seguimiento de esta rama remota?</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
+          <Value>Checkout rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccione rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Checkout</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalBranch" Property="Text">
+          <Value>Rama local</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remotebranch" Property="Text">
+          <Value>Rama remota</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>Forzar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>No hubo cambios</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormVerify">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Verificar base de datos</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveObjects" Property="Text">
+          <Value>Guardar objetos en .git/lost-found</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Haga doble clic en una fila que contiene un sha1 para ver objeto.</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Eliminar todos los objetos colgados</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagSelectedObject" Property="Text">
+          <Value>Etiquetar objeto seleccionado</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewObject" Property="Text">
+          <Value>Ver el objeto seleccionado</Value>
+        </TranslationItem>
+        <TranslationItem Name="Unreachable" Property="Text">
+          <Value>Imprimir objetos que existen pero que no son leibles desde ninguno de los
+nodos de referencia.</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagAllObjects" Property="Text">
+          <Value>Etiquetar todos los objetos perdidos</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
+          <Value>Eliminar todas las etiquetas LOST_AND_FOUND</Value>
+        </TranslationItem>
+        <TranslationItem Name="FullCheck" Property="Text">
+          <Value>Verifique no sólo los objetos en GIT_OBJECT_DIRECTORY ($GIT_DIR/objetos), 
+sino también los que se encuentran en las piscinas de objetos alternativas.</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoReflogs" Property="Text">
+          <Value>No considerar los commits que son referenciados sólo por una
+entrada en un reflog a ser alcanzado.</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagAllCommits" Property="Text">
+          <Value>Etiquetar todos los commits perdidos</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOnlyCommits" Property="Text">
+          <Value>Mostrar sólo commits</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Por defecto sólo los objetos sin referencia que tienen 
+más de dos semanas se quitan cuando se limpia la
+base de datos. Todos los otros objetos sólo se 
+eliminan cuando se ejecuta "Eliminar todos los 
+objetos colgados".</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>Quitar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
+          <Value>¿Está seguro que desea eliminar todos los objetos colgantes?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>{0}  Etiquetas creadas. 
+
+No te olvides de eliminar estas etiquetas cuando haya terminado.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResolveConflicts">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Resolver los conflictos de mezcla</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Script de fusión personalizado</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolved" Property="Text">
+          <Value>Todos los mergeconflicts se resuelven, puede hacer commit. 
+¿Quiere hacer commit ahora?</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
+          <Value>El mergeconflict seleccionado es un submódulo. ¿Marcar conflicto como resuelto?</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
+          <Value>Submódulo</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileIsBinary" Property="Text">
+          <Value>El archivo seleccionado parece ser un archivo binario. 
+¿Está seguro que desea abrir este archivo en {0}?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolved" Property="Text">
+          <Value>¿Está el conflicto resuelto?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
+          <Value>¿Conflicto resuelto?</Value>
+        </TranslationItem>
+        <TranslationItem Name="modifiedButton" Property="Text">
+          <Value>Modificado</Value>
+        </TranslationItem>
+        <TranslationItem Name="noMergeTool" Property="Text">
+          <Value>No hay mergetool configurado. Por favor, vaya a la configuración y elija un mergetool!</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageFilename" Property="Text">
+          <Value>Plan {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>nuestro</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>su</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>sin base</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>eliminado</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Elijar local</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Elegir remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Eliminar archivo</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Mantener el modificado</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Mantener el archivo base</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Conflictos de mezcla sin resolver</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseBase" Property="Text">
+          <Value>Elegir base</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseLocal" Property="Text">
+          <Value>Elegir local</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseRemote" Property="Text">
+          <Value>Elegir remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenBaseWith" Property="Text">
+          <Value>Abrir base con</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenLocalWith" Property="Text">
+          <Value>Abrir local con</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
+          <Value>Abrir remoto con</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenMergetool" Property="Text">
+          <Value>Abrir en mergetool</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveBaseAs" Property="Text">
+          <Value>Guardar base como</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveLocalAs" Property="Text">
+          <Value>Guardar locale como</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
+          <Value>Guardar remoto como</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextMarkAsSolved" Property="Text">
+          <Value>Marca el conflicto como resuelto</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Abrir con</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Abrir</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Local</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Base</Value>
+        </TranslationItem>
+        <TranslationItem Name="localFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="baseFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Seleccione el archivo</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Abrir en mergetool</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Volver a examinar conflictos</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Abortar</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Iniciar herramienta de fusión</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Fusionar</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Historial del archivo</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiffSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Dif.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitCount">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Número de commits</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>Subir</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>Bajar</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>Quitar</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>Editar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormStatus">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Proceso</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Aceptar</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Mantener la ventana abierta</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abortar</Value>
+        </TranslationItem>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Proceso</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Aceptar</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Mantener la ventana abierta</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abortar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitAttributes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editar .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes sólo se admite cuando hay un directorio de trabajo.</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Guardar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Edite git attributes
+Definir atributos por ruta
+
+Ejemplos
+Marcar todos los archivos jpg como binarios: 
+*. jpg binary
+
+Marque los archivos binarios sln como binario: 
+*.sln binary
+
+Marcar un archivo como texto: 
+weirdchars.txt text
+
+Para obtener más información, 
+consulte la ayuda git</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1794,6 +1451,85 @@ predeterminado sólo si tiene problemas.</Value>
         <TranslationItem Name="label26" Property="Text">
           <Value>Mostrar cambios del directorio de trabajo actual en el gráfico de revisiones</Value>
         </TranslationItem>
+        <TranslationItem Name="label53" Property="Text">
+          <Value>No hay servicio de imágenes</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text">
+          <Value>Argumentos:</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Comando:</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Nombre:</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="cancelScriptButton" Property="Text">
+          <Value>Cancelar</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveScriptButton" Property="Text">
+          <Value>Guardar</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Eliminar</Value>
+        </TranslationItem>
+        <TranslationItem Name="editScriptButton" Property="Text">
+          <Value>Editar</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Agregar</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nº</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Nombre</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Comando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Argumentos</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader5" Property="Text">
+          <Value>Menú contextual</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Pulse F1 para ver las opciones disponibles</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Descargar diccionario</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevertCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Revertir commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>Fecha de commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Mensaje:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Autor:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>Revertir este commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>Revertir este commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Crea automáticamente un commit</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -1801,31 +1537,106 @@ predeterminado sólo si tiene problemas.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Resolver mergeconflict</Value>
         </TranslationItem>
-        <TranslationItem Name="Deleted" Property="Text">
-          <Value>Eliminado</Value>
-        </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Abortar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormArchive">
+    <TranslationCategory Name="FindAndReplaceForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Archivar</Value>
+          <Value>Buscar y reemplazar</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Seleccione una revisión a comprimir</Value>
+          <Value>Qué b&amp;uscar:</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Guardar</Value>
+        <TranslationItem Name="lblReplaceWith" Property="Text">
+          <Value>Reem&amp;plazar con:</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindNext" Property="Text">
+          <Value>Buscar siguiente
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplace" Property="Text">
+          <Value>&amp;Reemplazar</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplaceAll" Property="Text">
+          <Value>Reemplazar &amp;Todos</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchWholeWord" Property="Text">
+          <Value>Sólo palabras &amp;completas</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchCase" Property="Text">
+          <Value>&amp;Coincidir mayúsculas y minúsculas</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnHighlightAll" Property="Text">
+          <Value>Busc&amp;ar y resaltar todas</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>Cancelar</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindPrevious" Property="Text">
+          <Value>Buscar a&amp;nterior</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormEditor">
+    <TranslationCategory Name="FormCherryPickCommitSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Editor</Value>
+          <Value>Seleccionar manualmente commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>Fecha de commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Mensaje:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Autor:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>Seleccionar manualmente este commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text">
+          <Value>Elejir este commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Crea automáticamente un commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nº</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Fecha</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>Este commit es una fusión, seleccione el padre:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Marcar la revisión actual como válida</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Marcar la revisión actual como inválida</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>Buscar y reemplazar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1846,220 +1657,335 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormCherryPick">
+    <TranslationCategory Name="MergePatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Seleccionar manualmente</Value>
+          <Value>Aplicar parche</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Seleccione un commit para seleccionar manualmente. Los commits seran recommitted a la parte superior de la cabeza actual.</Value>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>Examinar</Value>
         </TranslationItem>
-        <TranslationItem Name="CherryPick" Property="Text">
-          <Value>Seleccionar manualmente</Value>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Aplicar parche</Value>
         </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Value>Creación automática de un commit cuando no hay conflictos de mezcla</Value>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>&gt; Solucionar conflictos &lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>Saltar parche</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abortar parche</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>Conflictos resueltos</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Añadir archivos</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDir" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchDirMode" Property="Text">
+          <Value>Directorio de parche</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchFileMode" Property="Text">
+          <Value>Archivo de parche</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Hay conflictos de mezcla sin resolver</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormTranslate">
+    <TranslationCategory Name="FormTag">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Traducir</Value>
-        </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text">
-          <Value>Traducido {0} de {1}</Value>
-        </TranslationItem>
-        <TranslationItem Name="allText" Property="Text">
-          <Value>Todos los</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text">
-          <Value>¿Desea guardar los cambios actuales?</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
-          <Value>Guardar los cambios</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text">
-          <Value>Guardar como</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStrip1" Property="Text">
-          <Value>ToolStrip1</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText">
-          <Value>Guardar traducción</Value>
-        </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text">
-          <Value>Anterior</Value>
-        </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text">
-          <Value>Siguiente</Value>
-        </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text">
-          <Value>Traductor Google</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
-          <Value>Traducción actual:</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
-          <Value>Código del lenguaje:</Value>
-        </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text">
-          <Value>Googlear vacíos</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text">
-          <Value>Nuevo</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
-          <Value>Crear nueva traducción</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGitAttributes">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Editar .gitattributes</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>Guardar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Edite git attributes
-Definir atributos por ruta
-
-Ejemplos
-Marcar todos los archivos jpg como binarios: 
-*. jpg binary
-
-Marque los archivos binarios sln como binario: 
-*.sln binary
-
-Marcar un archivo como texto: 
-weirdchars.txt text
-
-Para obtener más información, 
-consulte la ayuda git</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormTagSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Crear etiqueta</Value>
+          <Value>Etiqueta</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Nombre de etiqueta</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="CreateTag" Property="Text">
           <Value>Crear etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>Crear etiqueta con anotación</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Crear etiqueta con nota</Value>
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Value>Etiqueta</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>Seleccione una revisión en la que crear etiqueta.</Value>
+          <Value>Seleccione una revisión para crear la etiqueta.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text">
-          <Value>Introduzca un mensaje para la etiqueta</Value>
+        <TranslationItem Name="_noTagMessage" Property="Text">
+          <Value>Por favor, introduzca un mensaje de etiqueta</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormRevisionFilter">
+    <TranslationCategory Name="FormStash">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Filtro</Value>
+          <Value>Pila</Value>
+        </TranslationItem>
+        <TranslationItem Name="Clear" Property="Text">
+          <Value>Botar seleccionados de la pila</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>Apilar todos los cambios</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Aplicar pila seleccionada al directorio de trabajo</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Cambios realizados en el directorio de trabajo</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Pila:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Mensaje:</Value>
+        </TranslationItem>
+        <TranslationItem Name="RefreshButton" Property="Text">
+          <Value>Actualizar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevert">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Revertir cambios en los archivos</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>Revertir los cambios</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Cancelar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_undoChangesIn" Property="Text">
+          <Value>¿Deshacer los cambios realizados en: {0}?</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPuttyError">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Error de autentificación</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>El comando resultó con un error que por lo general significa que 
+el agente de autenticación PuTTY no se está ejecutnado, o que la 
+clave privada correcta no ha sido (todavía) cargada. 
+
+Cuando la clave se haya cargado, puede pulsar reintentar.</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Cargar clave SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="Retry" Property="Text">
+          <Value>Reintentar</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Abortar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Clonar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Destino</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Repositorio a clonar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Clonar</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToBrowse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="FromBrowse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Tipo de repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="CentralRepository" Property="Text">
+          <Value>Repositorio central, sin directorio de trabajo (--bare)</Value>
+        </TranslationItem>
+        <TranslationItem Name="PersonalRepository" Property="Text">
+          <Value>Repositorio personal</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Repositorio central, sin directorio de trabajo (--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>Repositorio personal</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Cargar clave SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Subdirectorio a crear</Value>
+        </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>El repositorio se clonará a un nuevo directorio que se encuentran en: 
+     C:\Program Files\GitExtensions\[directorio]</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Añadir archivos(s) a .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Patron de archivos a ignorar</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowPreview" Property="Text">
+          <Value>Mostrar vista previa</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>Añadir a .gitignore</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Archivo de Historia</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResetCurrentBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Restablecer la ramaa</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Restablecer tipo</Value>
+        </TranslationItem>
+        <TranslationItem Name="Hard" Property="Text">
+          <Value>Duro: restablecer directorio de trabajo y el índice (descartar TODOS los cambios locales, incluso los sin commit)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mixed" Property="Text">
+          <Value>Mixta: dejar directorio de trabajo intacto, restablecer el índice</Value>
+        </TranslationItem>
+        <TranslationItem Name="Soft" Property="Text">
+          <Value>Suave: dejar el directorio de trabajo y el índice intactos</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Aceptar</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Desde</Value>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Cancelar</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Hasta</Value>
+        <TranslationItem Name="branchInfo" Property="Text">
+          <Value>Restablecer {0} a:</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Autor</Value>
+        <TranslationItem Name="commitInfo" Property="Text">
+          <Value>Commit: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>Committer</Value>
+        <TranslationItem Name="authorInfo" Property="Text">
+          <Value>Autor: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>Mensaje</Value>
+        <TranslationItem Name="dateInfo" Property="Text">
+          <Value>Fecha commit: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="label7" Property="Text">
-          <Value>Límite</Value>
+        <TranslationItem Name="commitMessage" Property="Text">
+          <Value>Mensaje: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
-          <Value>Ignorar mayúsculas</Value>
+        <TranslationItem Name="resetHardWarning" Property="Text">
+          <Value>Estás a punto de descartar TODOS los cambios locales, ¿estás seguro?</Value>
         </TranslationItem>
-        <TranslationItem Name="label8" Property="Text">
-          <Value>Filtro de archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="label9" Property="Text">
-          <Value>Ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
-          <Value>Mostrar sólo rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchFilterCheck" Property="Text">
-          <Value>CheckBox1</Value>
+        <TranslationItem Name="resetCaption" Property="Text">
+          <Value>Restablecer rama</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormMailMap">
+    <TranslationCategory Name="FormGitIgnore">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Editar .mailmap</Value>
+          <Value>Editar .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Especificar patrones de archivo que git debe ignorar.
+
+Ejemplo:
+#ignorar miniaturas creadas por windows
+Thumbs.db
+#Ignorar archivos construidos por Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Guardar</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Edite el mailmap 
-Este archivo está destinado para corregir
-nombres de usuario. 
-
-Ejemplo:
-Henk Westhuis &lt;Henk@.(none)&gt;
-Henk Westhuis &lt;chenk_westhuis@hotmail.com&gt;</Value>
+        <TranslationItem Name="AddDefault" Property="Text">
+          <Value>Añadir reglas de ignorar por defecto</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormDeleteBranch">
+    <TranslationCategory Name="FormFormatPath">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Borrar rama</Value>
+          <Value>Formato de parche</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Eliminar</Value>
+        <TranslationItem Name="SelectedBranch" Property="Text">
+          <Value>Rama</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Seleccionar rama</Value>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>Crear parche(es)</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>Enviar parches a</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>Guarde parches en el directorio</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Sólo puede eliminar las ramas cuando están completamente fusionadas en el HEAD. 
-Cuando se elimina una rama los commits se puede perder debido a que nada los apunta. 
-Si desea eliminar una rama no totalmente mezclada, puede usar "forzar eliminar" para 
-realizarlo de todas formas.</Value>
+          <Value>Cuerpo</Value>
         </TranslationItem>
-        <TranslationItem Name="ForceDelete" Property="Text">
-          <Value>Forzar eliminar</Value>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Asunto</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchDeleted" Property="Text">
-          <Value>Comando ejecutado</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteBranchCaption" Property="Text">
-          <Value>Borrar rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
-          <Value>¿Está seguro que desea eliminar esta rama? 
-¡Eliminar una rama puede causar que commits sean eliminados también! </Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChangeLog">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Registro de cambios</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2115,10 +2041,752 @@ realizarlo de todas formas.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="EditNetSpell">
+    <TranslationCategory Name="FormEditor">
       <translationItems>
-        <TranslationItem Name="EmptyLabel" Property="Text">
-          <Value>Introduzca mensaje</Value>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editor</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Actualizar la imagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>Regístrese en gravatar.com</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>Borrar la caché de imágenes</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>Tamaño de la imagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>No hay servicio de imágenes</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>Identicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>Monster Id</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>Wavatar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPull">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Ramas remotas</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>&amp;Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Resolver conflictos</Value>
+        </TranslationItem>
+        <TranslationItem Name="Merge" Property="Text">
+          <Value>&amp;Combinar rama remota con la rama actual</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rebase" Property="Text">
+          <Value>Rebase rama remota a rama actual, crea un historial lineal. Se recomienda elegir 
+una rama remota utilizando rebase. (Uso con precaución)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Opciones de fusión</Value>
+        </TranslationItem>
+        <TranslationItem Name="Fetch" Property="Text">
+          <Value>No fusionar, sólo &amp;buscar rama remota</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>Apilar cambios</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>Gestionar remotos</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Pull desde</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>Remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoStash" Property="Text">
+          <Value>Auto apilar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Rama local</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>¿Están solucionados todos los conflictos de fusión? ¿Quieres hacer un commit?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
+          <Value>Conflictos resueltos</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Value>¿Aplicar objetos apilados al directorio de trabajo nuevamente?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
+          <Value>Auto apilar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
+          <Value>Sólo se puede buscar todas las ramas remotas (*) sin fusionar o rebase. 
+Si desea obtener todas las ramas remotas, elija buscar. 
+Si desea obtener y combinar una rama, elija una rama específica.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemoteRepository" Property="Text">
+          <Value>Por favor, seleccione un repositorio remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectSourceDirectory" Property="Text">
+          <Value>Por favor, seleccione un directorio de origen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFileHistory">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Historial de Archivo</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewTab" Property="Text">
+          <Value>Ver</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTab" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+        <TranslationItem Name="Blame" Property="Text">
+          <Value>Culpa</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Abrir con difftool</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Diff</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Página de inicio</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCleanupRepository">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Limpiar repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="Preview" Property="Text">
+          <Value>Previsualización</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cleanup" Property="Text">
+          <Value>Limpiar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Cancelar</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Limpiar repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveIngnored" Property="Text">
+          <Value>Quitar sólo archivos sin seguimiento ignorados</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveNonIgnored" Property="Text">
+          <Value>Quitar sólo archivos sin seguimiento no ignorados</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveAll" Property="Text">
+          <Value>Quitar todos los archivos sin seguimiento ignorados</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveDirectories" Property="Text">
+          <Value>Quitar todos los directorios sin seguimiento</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranchSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Crear rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nombre de rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Crear rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Checkout después de crear</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="RevisionGrid">
+      <translationItems>
+        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
+          <Value>Crear nueva etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
+          <Value>Crear nueva rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
+          <Value>Restablecer la rama actual</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>No hay commits hechos a este repositorio aún. 
+
+Si se trata de un repositorio normal, estos pasos son recomendados: 
+- Asegúrese de tener un adecuado .gitignore en su repositorio
+- Hago un commit
+
+Si se trata de un repositorio central (repositorio sin un directorio de trabajo): 
+- Haga push los cambios desede otro repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitIgnore" Property="Text">
+          <Value>Editar .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Value>Mostrar las ramas remotas</Value>
+        </TranslationItem>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>Mostrar ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>Revertir commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
+          <Value>Mostrar el gráfico de revisiones</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>El directorio de trabajo actual no es un repositorio git.</Value>
+        </TranslationItem>
+        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
+          <Value>Establecer filtro avanzado</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Eliminar etiquetas</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Borrar rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
+          <Value>Checkout revisión</Value>
+        </TranslationItem>
+        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
+          <Value>Orden revisiones por fecha</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>Checkout rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>Combinar con la rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
+          <Value>Selección manual de commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
+          <Value>Mostrar fecha de autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
+          <Value>Mostrar la fecha relativa</Value>
+        </TranslationItem>
+        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
+          <Value>Rebase en</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>Mostrar todas las ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>Mostrar sólo rama actual</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>Mostrar ramas filtradas</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>Dibujar no parientes en gris</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>Copiar al portapapeles</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>Nombre de rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>Fecha</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>Marcar revisión como mala</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>Marcar revisión como buena</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Ejectuar script</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorCaption" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorDateCaption" Property="Text">
+          <Value>Fecha Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitDateCaption" Property="Text">
+          <Value>Fecha commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Value>Actuales cambios no confirmados</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text">
+          <Value>Comprometerse en el indice</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>hace unos segundos</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>hace unos minutos</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>la ultima hora</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>hace horas</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>hace dias</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>el mes pasado</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>hace meses</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>hace años</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
+          <Value>Filtro</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GitLogForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Registro</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTagSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Crear etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nombre de etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Crear etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Crear etiqueta con anotación</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>Seleccione una revisión en la que crear etiqueta.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text">
+          <Value>Introduzca un mensaje para la etiqueta</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDeleteTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Eliminar etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Eliminar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccionar etiqueta</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDeleteBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Borrar rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Eliminar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccionar rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Sólo puede eliminar las ramas cuando están completamente fusionadas en el HEAD. 
+Cuando se elimina una rama los commits se puede perder debido a que nada los apunta. 
+Si desea eliminar una rama no totalmente mezclada, puede usar "forzar eliminar" para 
+realizarlo de todas formas.</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceDelete" Property="Text">
+          <Value>Forzar eliminar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchDeleted" Property="Text">
+          <Value>Comando ejecutado</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchCaption" Property="Text">
+          <Value>Borrar rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
+          <Value>¿Está seguro que desea eliminar esta rama? 
+¡Eliminar una rama puede causar que commits sean eliminados también! </Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTranslate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Traducir</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStrip1" Property="Text">
+          <Value>ToolStrip1</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>Guardar traducción</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousButton" Property="Text">
+          <Value>Anterior</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextButton" Property="Text">
+          <Value>Siguiente</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Traductor Google</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>Traducción actual:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>Código del lenguaje:</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>Googlear vacíos</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>Nuevo</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>Crear nueva traducción</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateProgressText" Property="Text">
+          <Value>Traducido {0} de {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="allText" Property="Text">
+          <Value>Todos los</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+          <Value>¿Desea guardar los cambios actuales?</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+          <Value>Guardar los cambios</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsText" Property="Text">
+          <Value>Guardar como</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Añadir submódulo</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Añadir</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Ruta del submódulo</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Ruta local</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Rama</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Inicio</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Ambiente</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Otros</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Establecer HOME a USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Usar HOME por defecto</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. De
+forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. Cambiar el comportamiento 
+predeterminado sólo si tiene problemas.</Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>Aceptar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemotes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Repositorios remotos</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Value>Repositorios remotos</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Value>Comportamiento predeterminado del pull (buscar y fusionar)</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateBranch" Property="Text">
+          <Value>Actualizar toda la información de rama remota</Value>
+        </TranslationItem>
+        <TranslationItem Name="Prune" Property="Text">
+          <Value>Podar las ramas remotas</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Por defecto se funde con</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Repositorio remoto</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Nombre de rama local</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
+          <Value>Guardar</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Detalles</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Carga clave SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Probar conexión</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Archivo de clave privada</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Eliminar</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Nuevo</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Guardar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nombre</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormLoadPuttySshKey">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Carga llave PuTTY SSH en agente de autenticación</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Cargar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Archivo de clave privada</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Examinar</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommandlineHelp">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Uso de línea de comandos</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Argumentos de línea de comandos soportados:
+
+browse
+add
+addfiles
+apply
+applypatch
+branch
+checkout
+checkoutbranch
+checkoutrevision
+init
+clone [path]
+commit
+filehistory [file]
+formatpatch
+pull
+push
+settings
+viewdiff
+rebase
+merge
+cherry
+tag
+stash</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>Abrir repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>Clonar repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>Crear nuevo repositorio</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>Desarrollar</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>Donar</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>Traducir</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>Problemas</Value>
+        </TranslationItem>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>Repositorios recientes</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>Acciones comunes</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>Contribuir</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Seleccionar idioma</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Seleccione su idioma</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Puede cambiar el idioma en cualquier momento en el diálogo de configuración</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevisionFilter">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Filtro</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Aceptar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Desde</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Hasta</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Mensaje</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Límite</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Ignorar mayúsculas</Value>
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Value>Filtro de archivos</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>Ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
+          <Value>Mostrar sólo rama actual</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchFilterCheck" Property="Text">
+          <Value>CheckBox1</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2160,174 +2828,8 @@ realizarlo de todas formas.</Value>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Hay conflictos sin resolver</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormLoadPuttySshKey">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Carga llave PuTTY SSH en agente de autenticación</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Cargar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Archivo de clave privada</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Diff</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCleanupRepository">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Limpiar repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="Preview" Property="Text">
-          <Value>Previsualización</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cleanup" Property="Text">
-          <Value>Limpiar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>Cancelar</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Limpiar repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Value>Quitar sólo archivos sin seguimiento ignorados</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveNonIgnored" Property="Text">
-          <Value>Quitar sólo archivos sin seguimiento no ignorados</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveAll" Property="Text">
-          <Value>Quitar todos los archivos sin seguimiento ignorados</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveDirectories" Property="Text">
-          <Value>Quitar todos los directorios sin seguimiento</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPuttyError">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Error de autentificación</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>El comando resultó con un error que por lo general significa que 
-el agente de autenticación PuTTY no se está ejecutnado, o que la 
-clave privada correcta no ha sido (todavía) cargada. 
-
-Cuando la clave se haya cargado, puede pulsar reintentar.</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Cargar clave SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="Retry" Property="Text">
-          <Value>Reintentar</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPush">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Push</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Push" Property="Text">
-          <Value>&amp;Push</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Rama para push</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text">
-          <Value>Push &amp;todas las ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>&amp;Forzar push</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushTags" Property="Text">
-          <Value>&amp;Forzar push</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pull" Property="Text">
-          <Value>Pull</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text">
-          <Value>Push a</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text">
-          <Value>Url</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text">
-          <Value>Remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Value>Gestionar remotos</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Cargar clave SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text">
-          <Value>Etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Etiqueta para hacer push</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchTab" Property="Text">
-          <Value>Push ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchTab" Property="ToolTipText">
-          <Value>Push ramas y commits a repositorio remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagTab" Property="Text">
-          <Value>Push etiquetas</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagTab" Property="ToolTipText">
-          <Value>Push etiquetas a repositorio remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllTags" Property="Text">
-          <Value>Push &amp;todas las etiquetas</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelTo" Property="Text">
-          <Value>a</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNewForRemote" Property="Text">
-          <Value>La rama que está a punto de hacer push parece ser una nueva rama para 
-el remoto. ¿Estás seguro de que desea hacer push con esta rama?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushCaption" Property="Text">
-          <Value>Push</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Value>Pulsar para {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
-          <Value>Por favor, seleccione un directorio de destino</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Value>Por favor, seleccione un repositorio remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectTag" Property="Text">
-          <Value>Tienes que seleccionar una etiqueta para hacer push o seleccione "Push todas las etiquetas";.</Value>
+        <TranslationItem Name="chkInteractive" Property="Text">
+          <Value>Rebase interactivo</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2405,9 +2907,6 @@ Haga clic en el botón "Support this project" para obtener más información sob
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Cancelar</Value>
         </TranslationItem>
-        <TranslationItem Name="CloseDialogAfterCommit" Property="Text">
-          <Value>Cerrar ventana después de commit</Value>
-        </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Value>Mostrar archivos ignorados</Value>
         </TranslationItem>
@@ -2453,6 +2952,18 @@ Haga clic en el botón "Support this project" para obtener más información sob
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Value>C&amp;ommit y push</Value>
         </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Ver historial del archivo</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+          <Value>Opciones</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Cerrar el diálogo después de cada commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Cerrar el diálogo cuando se haga commit de todos los cambios</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>¿Deseas eliminar también los archivos nuevos que están en la selección? 
 
@@ -2469,10 +2980,6 @@ Utilice sólo modificar si el commit no está publicado todavía!
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Value>Modificar commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeDialogAfterCommitTooltip" Property="Text">
-          <Value>Al seleccionarlo, la ventana de commit es cerrada después de cada commit.
-De otra forma, la ventana sólo se cerrará cuando no queden archivos modificados.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Value>Eliminar archivo fallado</Value>
@@ -2546,154 +3053,8 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         <TranslationItem Name="_stageFiles" Property="Text">
           <Value>Planear {0} archivos</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormResolveConflicts">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Resolver los conflictos de mezcla</Value>
-        </TranslationItem>
-        <TranslationItem Name="allConflictsResolved" Property="Text">
-          <Value>Todos los mergeconflicts se resuelven, puede hacer commit. 
-¿Quiere hacer commit ahora?</Value>
-        </TranslationItem>
-        <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
-          <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
-          <Value>El mergeconflict seleccionado es un submódulo. ¿Marcar conflicto como resuelto?</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
-          <Value>Submódulo</Value>
-        </TranslationItem>
-        <TranslationItem Name="fileIsBinary" Property="Text">
-          <Value>El archivo seleccionado parece ser un archivo binario. 
-¿Está seguro que desea abrir este archivo en {0}?</Value>
-        </TranslationItem>
-        <TranslationItem Name="askMergeConflictSolved" Property="Text">
-          <Value>¿Está el conflicto resuelto?</Value>
-        </TranslationItem>
-        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
-          <Value>¿Conflicto resuelto?</Value>
-        </TranslationItem>
-        <TranslationItem Name="useModifiedOrDeletedFile" Property="Text">
-          <Value>¿Usar archivo modificado o eliminado?</Value>
-        </TranslationItem>
-        <TranslationItem Name="modifiedButton" Property="Text">
-          <Value>Modificado</Value>
-        </TranslationItem>
-        <TranslationItem Name="useCreatedOrDeletedFile" Property="Text">
-          <Value>¿Usar archivo creado o borrado?</Value>
-        </TranslationItem>
-        <TranslationItem Name="noMergeTool" Property="Text">
-          <Value>No hay mergetool configurado. Por favor, vaya a la configuración y elija un mergetool!</Value>
-        </TranslationItem>
-        <TranslationItem Name="stageFilename" Property="Text">
-          <Value>Plan {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Conflictos de mezcla sin resolver</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Ejecutar mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
-          <Value>Volver a examinar conflictos</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Abrir en mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextChooseBase" Property="Text">
-          <Value>Elegir base</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextChooseLocal" Property="Text">
-          <Value>Elegir local</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextChooseRemote" Property="Text">
-          <Value>Elegir remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextOpenBaseWith" Property="Text">
-          <Value>Abrir base con</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextOpenLocalWith" Property="Text">
-          <Value>Abrir local con</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
-          <Value>Abrir remoto con</Value>
-        </TranslationItem>
-        <TranslationItem Name="OpenMergetool" Property="Text">
-          <Value>Abrir en mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextSaveBaseAs" Property="Text">
-          <Value>Guardar base como</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextSaveLocalAs" Property="Text">
-          <Value>Guardar locale como</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
-          <Value>Guardar remoto como</Value>
-        </TranslationItem>
-        <TranslationItem Name="ContextMarkAsSolved" Property="Text">
-          <Value>Marca el conflicto como resuelto</Value>
-        </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
-          <Value>Abrir con</Value>
-        </TranslationItem>
-        <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Value>Abrir</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCommandlineHelp">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Uso de línea de comandos</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Argumentos de línea de comandos soportados:
-
-browse
-add
-addfiles
-apply
-applypatch
-branch
-checkout
-checkoutbranch
-checkoutrevision
-init
-clone [path]
-commit
-filehistory [file]
-formatpatch
-pull
-push
-settings
-viewdiff
-rebase
-merge
-cherry
-tag
-stash</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddToGitIgnore">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Añadir archivos(s) a .gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Patron de archivos a ignorar</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowPreview" Property="Text">
-          <Value>Mostrar vista previa</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddToIngore" Property="Text">
-          <Value>Añadir a .gitignore</Value>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Sólo debe tener un archivo seleccionado.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2728,93 +3089,19 @@ stash</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormCheckoutBranch">
+    <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Checkout rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Elijes hacer un checkout de una rama remota. 
-
-¿Quieres crear una rama local con el nombre "{0}"
-que hace seguimiento de esta rama remota?</Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
-          <Value>Checkout rama</Value>
+          <Value>Inicializar nuevo repositorio</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Seleccione rama</Value>
+          <Value>Directorio</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Checkout</Value>
-        </TranslationItem>
-        <TranslationItem Name="LocalBranch" Property="Text">
-          <Value>Rama local</Value>
-        </TranslationItem>
-        <TranslationItem Name="Remotebranch" Property="Text">
-          <Value>Rama remota</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Value>Forzar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormStash">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Pila</Value>
-        </TranslationItem>
-        <TranslationItem Name="Clear" Property="Text">
-          <Value>Botar seleccionados de la pila</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text">
-          <Value>Apilar todos los cambios</Value>
-        </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text">
-          <Value>Aplicar pila seleccionada al directorio de trabajo</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Cambios realizados en el directorio de trabajo</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Pila:</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Mensaje:</Value>
-        </TranslationItem>
-        <TranslationItem Name="RefreshButton" Property="Text">
-          <Value>Actualizar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormClone">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Clonar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Destino</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Repositorio a clonar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Clonar</Value>
-        </TranslationItem>
-        <TranslationItem Name="ToBrowse" Property="Text">
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="FromBrowse" Property="Text">
+        <TranslationItem Name="Browse" Property="Text">
           <Value>Examinar</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Tipo de repositorio</Value>
-        </TranslationItem>
-        <TranslationItem Name="CentralRepository" Property="Text">
-          <Value>Repositorio central, sin directorio de trabajo (--bare)</Value>
-        </TranslationItem>
-        <TranslationItem Name="PersonalRepository" Property="Text">
-          <Value>Repositorio personal</Value>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Value>Repositorio central, sin directorio de trabajo (--bare --shared=all)</Value>
@@ -2822,62 +3109,43 @@ que hace seguimiento de esta rama remota?</Value>
         <TranslationItem Name="Personal" Property="Text">
           <Value>Repositorio personal</Value>
         </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>Cargar clave SSH</Value>
+        <TranslationItem Name="Init" Property="Text">
+          <Value>Inicializar</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Subdirectorio a crear</Value>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>Por favor, elija un directorio.</Value>
         </TranslationItem>
-        <TranslationItem Name="Info" Property="Text">
-          <Value>El repositorio se clonará a un nuevo directorio que se encuentran en: 
-     C:\Program Files\GitExtensions\[directorio]</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Crear Rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Nombre de rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Crear rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="Checkout" Property="Text">
-          <Value>Checkout rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>Checkout después de crear</Value>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>No se puede iniciar un nuevo repositorio en un archivo. 
+Por favor, elija un directorio.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="DashboardEditor">
+    <TranslationCategory Name="EditNetSpell">
       <translationItems>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>Quitar</Value>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>Introduzca mensaje</Value>
         </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>Agregar</Value>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Traducir todo el texto a {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="CategoriesLabel" Property="Text">
-          <Value>Categorías</Value>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Traducir '{0}' a {1}</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Título</Value>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Añadir al diccionario</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Tipo</Value>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Ignorar palabra</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>RSS</Value>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Eliminar palabra</Value>
         </TranslationItem>
-        <TranslationItem Name="RssFeedType" Property="Text">
-          <Value>RSS Feed</Value>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Diccionario</Value>
         </TranslationItem>
-        <TranslationItem Name="RepositoriesType" Property="Text">
-          <Value>Repositorios</Value>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Marcar lineas mal formadas</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
