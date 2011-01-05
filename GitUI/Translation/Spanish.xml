@@ -2371,28 +2371,28 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Value>Comprometerse en el indice</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>hace unos segundos</Value>
+          <Value>hace {0} segundos</Value>
         </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>hace unos minutos</Value>
+          <Value>hace {0} minutos</Value>
         </TranslationItem>
         <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>la ultima hora</Value>
+          <Value>hace {0} hora</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>hace horas</Value>
+          <Value>hace {0} horas</Value>
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>hace dias</Value>
+          <Value>hace {0} dias</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
-          <Value>el mes pasado</Value>
+          <Value>hace {0} mes</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>hace meses</Value>
+          <Value>hace {0} meses</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>hace años</Value>
+          <Value>hace {0} años</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filtro</Value>
