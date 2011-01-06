@@ -33,11 +33,11 @@ public:
 	int CloneId;
 	int CommitId;
 	int FileHistoryId;
-	int FormatPatchId;
 	int PullId;
 	int PushId;
 	int SettingsId;
 	int ViewDiffId;
+	int ResetFileChangesId;
 
 public:
     // IShellExtInit
