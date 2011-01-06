@@ -1925,7 +1925,7 @@ namespace GitUI
             return true;
         }
 
-        private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
+        private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
         private void SaveScripts()
         {
