@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormBranch : GitExtensionsForm
     {
+        private readonly TranslationString _selectOneRevision = new TranslationString("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchCaption = new TranslationString("Branch");
+
         public FormBranch()
         {
             InitializeComponent(); Translate();
@@ -18,7 +22,7 @@ namespace GitUI
 
                 if (RevisionGrid.GetRevisions().Count != 1)
                 {
-                    MessageBox.Show("Select 1 revision to create the branch on.", "Branch");
+                    MessageBox.Show(_selectOneRevision.Text, _branchCaption.Text);
                     return;
                 }
 

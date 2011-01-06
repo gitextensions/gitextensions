@@ -60,7 +60,7 @@ namespace GitUI
 
         private readonly TranslationString _notOnBranch =
             new TranslationString("You are not working on a branch." + Environment.NewLine +
-                                  "This commit will be unreferenced when switching to another brach and can be lost." +
+                                  "This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch.");
@@ -535,7 +535,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(output.ToString()))
-                MessageBox.Show(output.ToString(), "Reset changes");
+                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
 
             Initialize();
         }
