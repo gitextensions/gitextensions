@@ -100,6 +100,7 @@
             this._passwordTB.Name = "_passwordTB";
             this._passwordTB.Size = new System.Drawing.Size(100, 20);
             this._passwordTB.TabIndex = 1;
+            this._passwordTB.UseSystemPasswordChar = true;
             this._passwordTB.TextChanged += new System.EventHandler(this._passwordTB_TextChanged);
             // 
             // _getApiTokenBtn
