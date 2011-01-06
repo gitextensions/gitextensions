@@ -22,6 +22,7 @@ namespace GitStatistics
         public int NumberTestCodeLines { get; private set; }
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
+
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
@@ -94,7 +95,7 @@ namespace GitStatistics
             LinesOfCodePerExtension[extension] += codeLines;
             NumberCodeLines += codeLines;
 
-            if (codeFile.IsTestFile)
+            if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 NumberTestCodeLines += codeLines;
             }
