@@ -155,9 +155,18 @@ namespace GitStatistics
             //Must do this synchronously becuase lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
             var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
             var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
+
+            List<KeyValuePair<string, int>> LinesOfCodePerExtension = new List<KeyValuePair<string, int>>(lineCounter.LinesOfCodePerExtension);
+            LinesOfCodePerExtension.Sort(
+                delegate(KeyValuePair<string, int> first, KeyValuePair<string, int> next)
+                {
+                    return -first.Value.CompareTo(next.Value);
+                }
+            );
+
             var n = 0;
             string linesOfCodePerLanguageText = "";
-            foreach (var keyValuePair in lineCounter.LinesOfCodePerExtension)
+            foreach (var keyValuePair in LinesOfCodePerExtension)
             {
                 linesOfCodePerLanguageText += keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files" + Environment.NewLine;
                 extensionValues[n] = keyValuePair.Value;
