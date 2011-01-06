@@ -92,8 +92,8 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
-      <Component Id="SpellChecker.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\SpellChecker.dll"/>
+      <Component Id="NetSpell.SpellChecker.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\ResourceManager.dll"/>
@@ -263,6 +263,12 @@
       <Component Id="Spanish.gif" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.gif"/>
       </Component>
+      <Component Id="Russian.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Russian.xml"/>
+      </Component>
+      <Component Id="Russian.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Russian.gif"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="PuttyDir">
@@ -386,7 +392,7 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
-      <ComponentRef Id="SpellChecker.dll"/>
+      <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
       <ComponentRef Id="checksettings.reg"/>
@@ -484,6 +490,10 @@
           <ComponentRef Id="Spanish.xml"/>
           <ComponentRef Id="Spanish.gif"/>
         </Feature>
+        <Feature Id="Russian" Title="Russian" Level="1">
+          <ComponentRef Id="Russian.xml"/>
+          <ComponentRef Id="Russian.gif"/>
+        </Feature>        
       </Feature>
 
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">

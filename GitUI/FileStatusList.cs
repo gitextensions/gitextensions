@@ -263,35 +263,35 @@ namespace GitUI
 
         private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (this.KeyDown == null)
+            switch (e.KeyCode)
             {
-                switch (e.KeyCode)
-                {
-                    case Keys.A:
+                case Keys.A:
+                    {
+                        if (e.Control)
                         {
-                            if (e.Control)
+                            try
                             {
-                                try
+                                FileStatusListBox.SuspendLayout();
+                                FileStatusListBox.ClearSelected();
+                                for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
                                 {
-                                    FileStatusListBox.SuspendLayout();
-                                    FileStatusListBox.ClearSelected();
-                                    for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
-                                    {
-                                        FileStatusListBox.SetSelected(n, true);
-                                    }
-                                    e.Handled = true;
+                                    FileStatusListBox.SetSelected(n, true);
                                 }
-                                finally
-                                {
-                                    FileStatusListBox.ResumeLayout();
-                                }
+                                e.Handled = true;
                             }
-                            break;
+                            finally
+                            {
+                                FileStatusListBox.ResumeLayout();
+                            }
                         }
-                }
+                        break;
+                    }
+                default:
+                    if (this.KeyDown != null)
+                        this.KeyDown(sender, e);
+                    break;
             }
-            else
-                this.KeyDown(sender, e);
+                
         }
 
 
