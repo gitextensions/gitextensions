@@ -260,7 +260,12 @@ namespace GitUI.RepoHosting
             }
         }
 
-        private void UpdateCloneInfo(bool updateCreateDirTB = true)
+        private void UpdateCloneInfo()
+        {
+            UpdateCloneInfo(true);
+        }
+
+        private void UpdateCloneInfo(bool updateCreateDirTB)
         {
             var repo = CurrentySelectedGitRepo;
 
