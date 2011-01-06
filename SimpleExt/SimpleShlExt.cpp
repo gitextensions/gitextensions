@@ -102,7 +102,7 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
     AddMenuItem(hMenu, "Clone", ++id, CloneId=6);
     AddMenuItem(hMenu, "Commit", ++id, CommitId=7);
 	AddMenuItem(hMenu, "File history", ++id, FileHistoryId=8);
-    AddMenuItem(hMenu, "Format patch", ++id, FormatPatchId=9);
+   	AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=9);
     AddMenuItem(hMenu, "Pull", ++id, PullId=10);
     AddMenuItem(hMenu, "Push", ++id, PushId=11);
     AddMenuItem(hMenu, "Settings", ++id, SettingsId=12);
@@ -223,11 +223,6 @@ STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
 		RunGitEx(_T("filehistory"));
         return S_OK;
     } else
-	if (invokeId == FormatPatchId)
-    {
-		RunGitEx(_T("formatpatch"));
-        return S_OK;
-    } else
 	if (invokeId == PullId)
     {
 		RunGitEx(_T("pull"));
@@ -247,8 +242,11 @@ STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
     {
 		RunGitEx(_T("viewdiff"));
         return S_OK;
+    } else
+	if (invokeId == ResetFileChangesId)
+    {
+		RunGitEx(_T("revert"));
+        return S_OK;
     }
-
-
     return E_INVALIDARG;
 }
