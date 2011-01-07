@@ -12,6 +12,7 @@ using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using PatchApply;
 using ICSharpCode.TextEditor.Util;
+using GitUI.RepoHosting;
 
 namespace GitUI
 {
@@ -1657,6 +1658,18 @@ namespace GitUI
                 GitUICommands.Instance.StartCloneForkFromHoster(GitUI.RepoHosting.RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
                 Initialize();
             }
+        }
+
+        private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
+            if (repoHost == null)
+            {
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                return;
+            }
+
+            GitUICommands.Instance.StartPullRequestsDialog(repoHost);
         }
     }
 }
