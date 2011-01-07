@@ -256,6 +256,12 @@
       <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RepoHosting\RepoHosts.cs" />
+    <Compile Include="RepoHosting\ViewPullRequestsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RepoHosting\ViewPullRequestsForm.Designer.cs">
+      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RunScript.cs" />
     <Compile Include="SpellChecker\EditNetSpell.cs">
       <SubType>UserControl</SubType>
@@ -734,6 +740,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RepoHosting\ForkAndCloneForm.resx">
       <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RepoHosting\ViewPullRequestsForm.resx">
+      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
