@@ -25,6 +25,7 @@ namespace GitUI
         private readonly TranslationString _minutesAgo = new TranslationString("{0} minutes ago");
         private readonly TranslationString _hourAgo = new TranslationString("{0} hour ago");
         private readonly TranslationString _hoursAgo = new TranslationString("{0} hours ago");
+        private readonly TranslationString _dayAgo = new TranslationString("{0} day ago");
         private readonly TranslationString _daysAgo = new TranslationString("{0} days ago");
         private readonly TranslationString _monthAgo = new TranslationString("{0} month ago");
         private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
@@ -1264,6 +1265,9 @@ namespace GitUI
 
             if (span.TotalHours < 24)
                 return string.Format(_hoursAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+
+            if (span.TotalDays + Math.Round(span.Hours / 24.0, 0) < 2)
+                return string.Format(_dayAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 30)
                 return string.Format(_daysAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));

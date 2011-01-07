@@ -2382,6 +2382,9 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         <TranslationItem Name="_hoursAgo" Property="Text">
           <Value>hace {0} horas</Value>
         </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>hace {0} dia</Value>
+        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
           <Value>hace {0} dias</Value>
         </TranslationItem>
