@@ -53,9 +53,9 @@
             this._myReposPage = new System.Windows.Forms.TabPage();
             this._helpTextLbl = new System.Windows.Forms.Label();
             this._searchReposPage = new System.Windows.Forms.TabPage();
+            this._searchResultItemDescription = new System.Windows.Forms.TextBox();
             this._cloneSetupGB = new System.Windows.Forms.GroupBox();
             this._cloneInfoText = new System.Windows.Forms.Label();
-            this._searchResultItemDescription = new System.Windows.Forms.TextBox();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -138,6 +138,7 @@
             columnHeader4,
             this.columnHeader2});
             this._myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this._myReposLV.HideSelection = false;
             this._myReposLV.Location = new System.Drawing.Point(6, 6);
             this._myReposLV.MultiSelect = false;
             this._myReposLV.Name = "_myReposLV";
@@ -160,6 +161,7 @@
             columnHeader8,
             columnHeader7});
             this._searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this._searchResultsLV.HideSelection = false;
             this._searchResultsLV.Location = new System.Drawing.Point(15, 38);
             this._searchResultsLV.MultiSelect = false;
             this._searchResultsLV.Name = "_searchResultsLV";
@@ -303,6 +305,19 @@
             this._searchReposPage.Text = "Search for repositories";
             this._searchReposPage.UseVisualStyleBackColor = true;
             // 
+            // _searchResultItemDescription
+            // 
+            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this._searchResultItemDescription.Location = new System.Drawing.Point(418, 63);
+            this._searchResultItemDescription.Multiline = true;
+            this._searchResultItemDescription.Name = "_searchResultItemDescription";
+            this._searchResultItemDescription.ReadOnly = true;
+            this._searchResultItemDescription.Size = new System.Drawing.Size(224, 134);
+            this._searchResultItemDescription.TabIndex = 18;
+            // 
             // _cloneSetupGB
             // 
             this._cloneSetupGB.Controls.Add(this._cloneInfoText);
@@ -326,19 +341,6 @@
             this._cloneInfoText.Name = "_cloneInfoText";
             this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
             this._cloneInfoText.TabIndex = 21;
-            // 
-            // _searchResultItemDescription
-            // 
-            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this._searchResultItemDescription.Location = new System.Drawing.Point(418, 63);
-            this._searchResultItemDescription.Multiline = true;
-            this._searchResultItemDescription.Name = "_searchResultItemDescription";
-            this._searchResultItemDescription.ReadOnly = true;
-            this._searchResultItemDescription.Size = new System.Drawing.Size(224, 134);
-            this._searchResultItemDescription.TabIndex = 18;
             // 
             // ForkAndCloneForm
             // 
