@@ -44,9 +44,11 @@ namespace Github
         }
 
         public IGitPluginSettingsContainer Settings { get; set; }
+        private IGitUICommands _gitUiCommands;
 
         public void Register(IGitUICommands gitUiCommands)
         {
+            _gitUiCommands = gitUiCommands;
             Settings.AddSetting("username", "");
             Settings.AddSetting("password", "");
             Settings.AddSetting("apitoken", "");
@@ -228,6 +230,35 @@ namespace Github
                 return null;
 
             return Auth.Password;
+        }
+
+        public class GithubRepositoryInformation
+        {
+            public string Owner { get; set; }
+            public string Name { get; set; }
+        }
+
+
+        public bool CurrentWorkingDirRepoIsRelevantToMe
+        {
+            get
+            {
+                var remoteNames = GitCommands.GitCommandHelpers.GetRemotes();
+                foreach (var remote in remoteNames)
+                {
+                    var remoteUrl = GitCommands.GitCommandHelpers.GetSetting("remote." + remote + ".url");
+                    if (string.IsNullOrEmpty(remoteUrl))
+                        continue;
+
+                    var m = Regex.Match(remoteUrl, @"git@github.com:([^/]+)/(\w+)\.git");
+                    if (!m.Success)
+                        m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)(?::[^/@]+)?@github.com/([^/]+)/([\w_\.]+).git");
+                    if (m.Success)
+                        return true;
+                }
+
+                return false;
+            }
         }
     }
 }
