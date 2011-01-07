@@ -12,6 +12,8 @@ namespace GitUIPluginInterfaces
         IList<IHostedGitRepo> GetMyRepos();
 
         bool ConfigurationOk { get; }
+
+        bool CurrentWorkingDirRepoIsRelevantToMe { get; }
     }
 
     public interface IHostedGitRepo
