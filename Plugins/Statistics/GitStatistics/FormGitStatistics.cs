@@ -168,9 +168,10 @@ namespace GitStatistics
             string linesOfCodePerLanguageText = "";
             foreach (var keyValuePair in LinesOfCodePerExtension)
             {
-                linesOfCodePerLanguageText += keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files" + Environment.NewLine;
+                string percent = ((double)keyValuePair.Value / lineCounter.NumberCodeLines).ToString("P1");
+                linesOfCodePerLanguageText += keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files (" + percent + ")" + Environment.NewLine;
                 extensionValues[n] = keyValuePair.Value;
-                extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files";
+                extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files (" + percent + ")";
                 n++;
             }
 
@@ -184,18 +185,26 @@ namespace GitStatistics
                                           lineCounter.NumberTestCodeLines,
                                           lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
                                       });
+ 
+                string percent_t = ((double)lineCounter.NumberTestCodeLines / lineCounter.NumberCodeLines).ToString("P1");
+                string percent_p = ((double)(lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) / lineCounter.NumberCodeLines).ToString("P1");
                 TestCodePie.ToolTips =
                     new[]
                     {
-                        lineCounter.NumberTestCodeLines + " Lines of testcode",
+                        lineCounter.NumberTestCodeLines + " Lines of testcode (" + percent_t + ")",
                         lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines +
-                        " Lines of production code"
+                        " Lines of production code (" + percent_p + ")"
                     };
 
-                TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode" + Environment.NewLine +
+                TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode (" + percent_t + ")" + Environment.NewLine +
                                     (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
-                                    " Lines of production code";
+                                    " Lines of production code (" + percent_p + ")";
 
+
+                string percent_blank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
+                string percent_comments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");
+                string percent_code = ((double)lineCounter.NumberCodeLines / lineCounter.NumberLines).ToString("P1");
+                string percent_designer = ((double)lineCounter.NumberLinesInDesignerFiles / lineCounter.NumberLines).ToString("P1");
                 LinesOfCodePie.SetValues(new Decimal[]
                                          {
                                              lineCounter.NumberBlankLines,
@@ -206,10 +215,10 @@ namespace GitStatistics
                 LinesOfCodePie.ToolTips =
                     new[]
                     {
-                        lineCounter.NumberBlankLines + " Blank lines",
-                        lineCounter.NumberCommentsLines + " Comment lines",
-                        lineCounter.NumberCodeLines + " Lines of code",
-                        lineCounter.NumberLinesInDesignerFiles + " Lines in designer files"
+                        lineCounter.NumberBlankLines + " Blank lines (" + percent_blank + ")",
+                        lineCounter.NumberCommentsLines + " Comment lines (" + percent_comments + ")",
+                        lineCounter.NumberCodeLines + " Lines of code (" + percent_code + ")",
+                        lineCounter.NumberLinesInDesignerFiles + " Lines in designer files (" + percent_designer + ")"
                     };
 
                 LinesOfCodePerTypeText.Text = LinesOfCodePie.ToolTips[0] + Environment.NewLine;
