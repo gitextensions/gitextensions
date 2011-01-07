@@ -697,7 +697,6 @@ namespace GitUI
 
             if (gitHoster.ConfigurationOk)
             {
-
                 try
                 {
                     var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
@@ -706,6 +705,28 @@ namespace GitUI
                 catch (Exception ex)
                 {
                     MessageBox.Show(string.Format("ERROR: The ForkAndClone form failed. Message: {0}\r\n\r\n{1}", ex.Message, ex.StackTrace), "Error! :(");
+                }
+            }
+        }
+
+        internal void StartPullRequestsDialog(IGitHostingPlugin gitHoster)
+        {
+            if (!gitHoster.ConfigurationOk)
+            {
+                var eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+                gitHoster.Execute(eventArgs);
+            }
+
+            if (gitHoster.ConfigurationOk)
+            {
+                try
+                {
+                    var dlg = new RepoHosting.ViewPullRequestsForm(gitHoster);
+                    dlg.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("ERROR: The ViewPullRequests form failed. Message: {0}\r\n\r\n{1}", ex.Message, ex.StackTrace), "Error! :(");
                 }
             }
         }
