@@ -99,8 +99,6 @@ namespace GitUI
 
         public void Done(bool isSuccess)
         {
-            if (OutputString.Length > 0)
-                AddOutput(OutputString.ToString());
             ProcessOutputTimer.Stop();
             AddOutput("Done");
             ProgressBar.Visible = false;
