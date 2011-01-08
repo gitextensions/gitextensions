@@ -63,7 +63,9 @@
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="GitUIBaseEventArgs.cs" />
     <Compile Include="IPasswordHelper.cs" />
+    <Compile Include="IPullRequestFetcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IPullRequestInformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
