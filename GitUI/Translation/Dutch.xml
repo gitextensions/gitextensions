@@ -1452,28 +1452,31 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Value>Commit index</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>seconden geleden</Value>
+          <Value>{0} seconden geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>minuten geleden</Value>
+          <Value>{0} minuten geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>uur geleden</Value>
+          <Value>{0} uur geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>uren geleden</Value>
+          <Value>{0} uren geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>dagen geleden</Value>
+          <Value>{0} dagen geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>{0} dag geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
-          <Value>maand geleden</Value>
+          <Value>{0} maand geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>maanden geleden</Value>
+          <Value>{0} maanden geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>jaar geleden</Value>
+          <Value>{0} jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>

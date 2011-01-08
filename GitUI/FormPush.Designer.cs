@@ -79,7 +79,7 @@
             // 
             this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(434, 45);
+            this.BrowseSource.Location = new System.Drawing.Point(434, 47);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(101, 23);
             this.BrowseSource.TabIndex = 5;
@@ -106,7 +106,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.PushDestination.Enabled = false;
             this.PushDestination.FormattingEnabled = true;
-            this.PushDestination.Location = new System.Drawing.Point(128, 46);
+            this.PushDestination.Location = new System.Drawing.Point(128, 48);
             this.PushDestination.Name = "PushDestination";
             this.PushDestination.Size = new System.Drawing.Size(300, 21);
             this.PushDestination.TabIndex = 4;
@@ -156,7 +156,7 @@
             // ForcePushTags
             // 
             this.ForcePushTags.AutoSize = true;
-            this.ForcePushTags.Location = new System.Drawing.Point(127, 74);
+            this.ForcePushTags.Location = new System.Drawing.Point(160, 74);
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(79, 17);
             this.ForcePushTags.TabIndex = 19;
@@ -195,7 +195,7 @@
             // PullFromUrl
             // 
             this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 1;
@@ -295,7 +295,7 @@
             // TagComboBox
             // 
             this.TagComboBox.FormattingEnabled = true;
-            this.TagComboBox.Location = new System.Drawing.Point(127, 19);
+            this.TagComboBox.Location = new System.Drawing.Point(160, 19);
             this.TagComboBox.Name = "TagComboBox";
             this.TagComboBox.Size = new System.Drawing.Size(297, 21);
             this.TagComboBox.TabIndex = 18;
@@ -318,7 +318,7 @@
             // PushAllTags
             // 
             this.PushAllTags.AutoSize = true;
-            this.PushAllTags.Location = new System.Drawing.Point(127, 51);
+            this.PushAllTags.Location = new System.Drawing.Point(160, 51);
             this.PushAllTags.Name = "PushAllTags";
             this.PushAllTags.Size = new System.Drawing.Size(86, 17);
             this.PushAllTags.TabIndex = 22;

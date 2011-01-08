@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>SpellChecker</name>
+        <name>NetSpell.SpellChecker</name>
     </assembly>
     <members>
         <member name="T:NetSpell.SpellChecker.Dictionary.Affix.AffixRuleEnumerator">

@@ -116,7 +116,7 @@
             // PullFromUrl
             // 
             this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 3;
@@ -162,7 +162,7 @@
             // BrowseSource
             // 
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(422, 44);
+            this.BrowseSource.Location = new System.Drawing.Point(422, 46);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(111, 23);
             this.BrowseSource.TabIndex = 5;
@@ -174,7 +174,7 @@
             // 
             this.PullSource.Enabled = false;
             this.PullSource.FormattingEnabled = true;
-            this.PullSource.Location = new System.Drawing.Point(148, 46);
+            this.PullSource.Location = new System.Drawing.Point(148, 48);
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(268, 21);
             this.PullSource.TabIndex = 4;
