@@ -38,6 +38,11 @@
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
             this._diffViewer = new GitUI.Editor.FileViewer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._fileStatusList = new GitUI.FileStatusList();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // _selectedOwner
@@ -64,7 +69,7 @@
             this._pullRequestsList.Location = new System.Drawing.Point(12, 36);
             this._pullRequestsList.MultiSelect = false;
             this._pullRequestsList.Name = "_pullRequestsList";
-            this._pullRequestsList.Size = new System.Drawing.Size(725, 116);
+            this._pullRequestsList.Size = new System.Drawing.Size(723, 116);
             this._pullRequestsList.TabIndex = 1;
             this._pullRequestsList.UseCompatibleStateImageBehavior = false;
             this._pullRequestsList.View = System.Windows.Forms.View.Details;
@@ -93,7 +98,7 @@
             // 
             this._pullRequestBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._pullRequestBody.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this._pullRequestBody.Location = new System.Drawing.Point(743, 36);
+            this._pullRequestBody.Location = new System.Drawing.Point(741, 36);
             this._pullRequestBody.Multiline = true;
             this._pullRequestBody.Name = "_pullRequestBody";
             this._pullRequestBody.ReadOnly = true;
@@ -111,6 +116,7 @@
             // 
             // _fetchBtn
             // 
+            this._fetchBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._fetchBtn.Location = new System.Drawing.Point(603, 158);
             this._fetchBtn.Name = "_fetchBtn";
             this._fetchBtn.Size = new System.Drawing.Size(134, 29);
@@ -127,23 +133,56 @@
             this._diffViewer.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._diffViewer.IgnoreWhitespaceChanges = false;
             this._diffViewer.IsReadOnly = true;
-            this._diffViewer.Location = new System.Drawing.Point(12, 193);
+            this._diffViewer.Location = new System.Drawing.Point(3, 0);
             this._diffViewer.Name = "_diffViewer";
             this._diffViewer.NumberOfVisibleLines = 3;
             this._diffViewer.ScrollPos = 0;
             this._diffViewer.ShowEntireFile = false;
             this._diffViewer.ShowLineNumbers = true;
-            this._diffViewer.Size = new System.Drawing.Size(1177, 402);
+            this._diffViewer.Size = new System.Drawing.Size(777, 403);
             this._diffViewer.TabIndex = 0;
             this._diffViewer.TreatAllFilesAsText = false;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(12, 193);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this._fileStatusList);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this._diffViewer);
+            this.splitContainer1.Size = new System.Drawing.Size(1174, 406);
+            this.splitContainer1.SplitterDistance = 391;
+            this.splitContainer1.TabIndex = 6;
+            // 
+            // _fileStatusList
+            // 
+            this._fileStatusList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._fileStatusList.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._fileStatusList.GitItemStatuses = null;
+            this._fileStatusList.Location = new System.Drawing.Point(0, 0);
+            this._fileStatusList.Name = "_fileStatusList";
+            this._fileStatusList.Revision = null;
+            this._fileStatusList.SelectedItem = null;
+            this._fileStatusList.Size = new System.Drawing.Size(392, 406);
+            this._fileStatusList.TabIndex = 0;
             // 
             // ViewPullRequestsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1199, 607);
+            this.ClientSize = new System.Drawing.Size(1197, 606);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this._fetchBtn);
-            this.Controls.Add(this._diffViewer);
             this.Controls.Add(this._chooseRepo);
             this.Controls.Add(this._pullRequestBody);
             this.Controls.Add(this._pullRequestsList);
@@ -152,6 +191,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "View Pull Requests";
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -169,5 +211,7 @@
         private Editor.FileViewer _diffViewer;
         private System.Windows.Forms.Label _chooseRepo;
         private System.Windows.Forms.Button _fetchBtn;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private FileStatusList _fileStatusList;
     }
 }

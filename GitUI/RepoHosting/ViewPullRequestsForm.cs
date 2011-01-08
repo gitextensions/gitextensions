@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using GitCommands;
+using System.Text.RegularExpressions;
 
 namespace GitUI.RepoHosting
 {
@@ -31,6 +32,7 @@ namespace GitUI.RepoHosting
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
         {
+            _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
             _fetchers = _gitHoster.GetPullRequestTargetsForCurrentWorkingDirRepo();
 
             _selectedOwner.Items.Clear();
@@ -81,24 +83,79 @@ namespace GitUI.RepoHosting
             if (_pullRequestsList.Items.Count > 0)
                 _pullRequestsList.Items[0].Selected = true;
 
-            _pullRequestsList_SelectedIndexChanged(null, null);
+            //_pullRequestsList_SelectedIndexChanged(null, null);
         }
 
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currentPullRequestInfo = null;
+            var prevPRI = _currentPullRequestInfo;
+            
             if (_pullRequestsList.SelectedItems.Count != 1)
             {
+                _currentPullRequestInfo = null;
                 _pullRequestBody.Text = "";
                 _diffViewer.ViewText("", "");
                 return;
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
+            if (prevPRI == _currentPullRequestInfo)
+                return;
+
             if (_currentPullRequestInfo == null)
                 return;
             _pullRequestBody.Text = _currentPullRequestInfo.Body;
-            _diffViewer.ViewPatch(_currentPullRequestInfo.DiffData);
+            _diffViewer.ViewPatch("");
+            _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
+
+            LoadDiffPatch();
+        }
+
+        private void LoadDiffPatch()
+        {
+            AsyncHelpers.DoAsync(
+                () => _currentPullRequestInfo.DiffData,
+                (data) => SplitAndLoadDiff(data),
+                (ex) => MessageBox.Show(this, "Failed to load diff stuff! " + ex.Message, "Error"));
+        }
+
+
+        Dictionary<string, string> _diffCache;
+        private void SplitAndLoadDiff(string diffData)
+        {
+            _diffCache = new Dictionary<string, string>();
+
+            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
+            if (fileParts.Count <= 1)
+                _diffViewer.ViewPatch(diffData);
+            else
+            {
+                List<GitItemStatus> giss = new List<GitItemStatus>();
+
+                foreach (var part in fileParts)
+                {
+                    var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
+                    if (!match.Success)
+                    {
+                        MessageBox.Show(this, "Error: Unable to understand patch", "Error");
+                        return;
+                    }
+
+                    var gis = new GitItemStatus()
+                    {
+                        IsChanged = true,
+                        IsNew = false,
+                        IsDeleted = false,
+                        IsTracked = true,
+                        Name = match.Groups[2].Value.Trim()
+                    };
+
+                    giss.Add(gis);
+                    _diffCache.Add(gis.Name, match.Groups[3].Value);
+                }
+
+                _fileStatusList.GitItemStatuses = giss;
+            }
         }
 
         private void _fetchBtn_Click(object sender, EventArgs e)
@@ -115,6 +172,16 @@ namespace GitUI.RepoHosting
             if (formProcess.ErrorOccurred())
                 return;
             Close();
+        }
+
+        void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var gis = _fileStatusList.SelectedItem as GitItemStatus;
+            if (gis == null)
+                return;
+
+            var data = _diffCache[gis.Name];
+            _diffViewer.ViewPatch(data);
         }
     }
 }
