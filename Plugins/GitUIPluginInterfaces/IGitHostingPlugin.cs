@@ -14,6 +14,7 @@ namespace GitUIPluginInterfaces
         bool ConfigurationOk { get; }
 
         bool CurrentWorkingDirRepoIsRelevantToMe { get; }
+        List<IPullRequestsFetcher> GetPullRequestTargetsForCurrentWorkingDirRepo();
     }
 
     public interface IHostedGitRepo
