@@ -1670,6 +1670,7 @@ namespace GitUI
             }
 
             GitUICommands.Instance.StartPullRequestsDialog(repoHost);
+            Initialize();
         }
     }
 }
