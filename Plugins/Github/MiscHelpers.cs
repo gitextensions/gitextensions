@@ -21,6 +21,11 @@ namespace Github
             _out.AppendFormat(message, arguments);
         }
 
+        public void Clear()
+        {
+            _out.Length = 0;
+        }
+
         public override string ToString()
         {
             return _out.ToString();
