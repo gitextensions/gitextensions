@@ -33,6 +33,12 @@ namespace GitUI.RepoHosting
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
         {
             _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
+
+            Init();
+        }
+
+        private void Init()
+        {
             _fetchers = _gitHoster.GetPullRequestTargetsForCurrentWorkingDirRepo();
 
             _selectedOwner.Items.Clear();
@@ -51,8 +57,14 @@ namespace GitUI.RepoHosting
             var fetcher = _selectedOwner.SelectedItem as IPullRequestsFetcher;
             if (fetcher == null)
                 return;
+            _selectedOwner.Enabled = false;
+            ShowLoadingPullRequests();
 
-            SetPullRequestsData(fetcher.Fetch());
+            AsyncHelpers.DoAsync(
+                () => fetcher.Fetch(),
+                (res) => { SetPullRequestsData(res); _selectedOwner.Enabled = true; },
+                (ex) => MessageBox.Show(this, "Failed to fetch pull data! " + ex.Message, "Error")
+            );
         }
 
         private void SetPullRequestsData(List<IPullRequestInformation> infos)
@@ -64,6 +76,14 @@ namespace GitUI.RepoHosting
                 return;
 
             LoadListView();
+        }
+
+        private void ShowLoadingPullRequests()
+        {
+            _pullRequestsList.Items.Clear();
+            var lvi = new ListViewItem("");
+            lvi.SubItems.Add(" : LOADING : ");
+            _pullRequestsList.Items.Add(lvi);
         }
 
         private void LoadListView()
@@ -82,8 +102,6 @@ namespace GitUI.RepoHosting
             }
             if (_pullRequestsList.Items.Count > 0)
                 _pullRequestsList.Items[0].Selected = true;
-
-            //_pullRequestsList_SelectedIndexChanged(null, null);
         }
 
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -126,36 +144,31 @@ namespace GitUI.RepoHosting
             _diffCache = new Dictionary<string, string>();
 
             var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
-            if (fileParts.Count <= 1)
-                _diffViewer.ViewPatch(diffData);
-            else
+            List<GitItemStatus> giss = new List<GitItemStatus>();
+
+            foreach (var part in fileParts)
             {
-                List<GitItemStatus> giss = new List<GitItemStatus>();
-
-                foreach (var part in fileParts)
+                var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
+                if (!match.Success)
                 {
-                    var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
-                    if (!match.Success)
-                    {
-                        MessageBox.Show(this, "Error: Unable to understand patch", "Error");
-                        return;
-                    }
-
-                    var gis = new GitItemStatus()
-                    {
-                        IsChanged = true,
-                        IsNew = false,
-                        IsDeleted = false,
-                        IsTracked = true,
-                        Name = match.Groups[2].Value.Trim()
-                    };
-
-                    giss.Add(gis);
-                    _diffCache.Add(gis.Name, match.Groups[3].Value);
+                    MessageBox.Show(this, "Error: Unable to understand patch", "Error");
+                    return;
                 }
 
-                _fileStatusList.GitItemStatuses = giss;
+                var gis = new GitItemStatus()
+                {
+                    IsChanged = true,
+                    IsNew = false,
+                    IsDeleted = false,
+                    IsTracked = true,
+                    Name = match.Groups[2].Value.Trim()
+                };
+
+                giss.Add(gis);
+                _diffCache.Add(gis.Name, match.Groups[3].Value);
             }
+
+            _fileStatusList.GitItemStatuses = giss;
         }
 
         private void _fetchBtn_Click(object sender, EventArgs e)
