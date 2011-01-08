@@ -114,6 +114,7 @@ namespace GitUI.RepoHosting
 
             if (formProcess.ErrorOccurred())
                 return;
+            Close();
         }
     }
 }
