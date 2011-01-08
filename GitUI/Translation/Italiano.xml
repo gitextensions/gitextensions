@@ -1480,28 +1480,31 @@ Se è un repository centrale (repository senza cartella di lavoro):
           <Value>Indice commit</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>secondi fa</Value>
+          <Value>{0} secondi fa</Value>
         </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>minuti fa</Value>
+          <Value>{0} minuti fa</Value>
         </TranslationItem>
         <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>ora fa</Value>
+          <Value>{0} ora fa</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>ore fa</Value>
+          <Value>{0} ore fa</Value>
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>giorni fa</Value>
+          <Value>{0} giorni fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>{0} giorni fa</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
-          <Value>mese fa</Value>
+          <Value>{0} mese fa</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>mesi fa</Value>
+          <Value>{0} mesi fa</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>anni fa</Value>
+          <Value>{0} anni fa</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filtro</Value>
