@@ -10,6 +10,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Github
 {
@@ -53,6 +54,7 @@ namespace Github
             Settings.AddSetting("password", "");
             Settings.AddSetting("apitoken", "");
             Settings.AddSetting("preferred access method", "https");
+            StartConfigtest();
         }
 
         public void Execute(GitUIBaseEventArgs gitUiCommands)
@@ -99,25 +101,60 @@ namespace Github
         {
             get
             {
-                if (!_configurationOk.HasValue)
+                Monitor.Enter(_configOkLock);
+                try
                 {
-                    if (Auth == null)
-                        _configurationOk = false;
-                    else
+                    if (!_configurationOk.HasValue)
                     {
-                        try
-                        {
-                            SearchForRepo("blkasjflkdjfsalfkjfa"); //This is "fast".
-                            _configurationOk = true;
-                        }
-                        catch
-                        {
+                        if (Auth == null)
                             _configurationOk = false;
+                        else
+                        {
+                            Monitor.Exit(_configOkLock);
+                            StartConfigtest();
+                            Monitor.Enter(_configOkLock);
+                            if (!_configurationOk.HasValue)
+                                throw new ApplicationException("ConfigurationOk still does not have a value");
+                            return _configurationOk.Value;
                         }
                     }
                 }
+                finally
+                {
+                    Monitor.Exit(_configOkLock);
+                }
 
                 return _configurationOk.Value;
+            }
+        }
+
+        ManualResetEvent _configTestEvent = new ManualResetEvent(false);
+        private object _configOkLock = new object();
+
+        private void StartConfigtest()
+        {
+            _configTestEvent.Reset();
+            Action a = DoConfigTest;
+            a.BeginInvoke(null, null);
+            _configTestEvent.WaitOne();
+        }
+
+        private void DoConfigTest()
+        {
+            Monitor.Enter(_configOkLock);
+            try
+            {
+                _configTestEvent.Set();
+                GetMyRepos();
+                _configurationOk = true;
+            }
+            catch
+            {
+                _configurationOk = false;
+            }
+            finally
+            {
+                Monitor.Exit(_configOkLock);
             }
         }
         #endregion
