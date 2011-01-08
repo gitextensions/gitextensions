@@ -76,7 +76,12 @@ namespace Github
             }
         }
 
-        public string CreateUrl(string owner, string repoName, bool readOnly, string password = null)
+        public string CreateUrl(string owner, string repoName, bool readOnly)
+        {
+            return CreateUrl(owner, repoName, readOnly, null);
+        }
+
+        public string CreateUrl(string owner, string repoName, bool readOnly, string password)
         {
             if (readOnly)
                 return string.Format("http://github.com/{0}/{1}.git", owner, repoName);
