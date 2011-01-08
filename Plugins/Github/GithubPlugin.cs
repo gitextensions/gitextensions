@@ -81,6 +81,13 @@ namespace Github
             return r;
         }
 
+        public PullRequest GetPullRequestApi()
+        {
+            var pr = new PullRequest(_basicCacher, _logger);
+            pr.Authenticate(GithubUser);
+            return pr;
+        }
+
         public IList<IHostedGitRepo> GetMyRepos()
         {
             return GetReposOfUser(GithubUser.Name);
@@ -232,10 +239,29 @@ namespace Github
             return Auth.Password;
         }
 
-        public class GithubRepositoryInformation
+        public List<IPullRequestsFetcher> GetPullRequestTargetsForCurrentWorkingDirRepo()
         {
-            public string Owner { get; set; }
-            public string Name { get; set; }
+            List<GithubRepositoryInformation> repoInfos = new List<GithubRepositoryInformation>();
+
+            var remoteNames = GitCommands.GitCommandHelpers.GetRemotes();
+            foreach (var remote in remoteNames.Where(r=>!string.IsNullOrEmpty(r)))
+            {
+                var remoteUrl = GitCommands.GitCommandHelpers.GetSetting("remote." + remote + ".url");
+                if (string.IsNullOrEmpty(remoteUrl))
+                    continue;
+
+                var m = Regex.Match(remoteUrl, @"git(?:@|://)github.com[:/]([^/]+)/(\w+)\.git");
+                if (!m.Success)
+                    m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)(?::[^/@]+)?@github.com/([^/]+)/([\w_\.]+).git");
+                if (m.Success)
+                {
+                    var t = new GithubRepositoryInformation() { Name = m.Groups[1].Value, Owner = m.Groups[2].Value };
+                    if (!repoInfos.Contains(t))
+                        repoInfos.Add(t);
+                }
+            }
+
+            return (from info in repoInfos select (IPullRequestsFetcher)new GithubPullRequestFetcher(info, this)).ToList();
         }
 
 
@@ -259,6 +285,11 @@ namespace Github
 
                 return false;
             }
+        }
+
+        internal string GetLoggerData()
+        {
+            return _logger.ToString();
         }
     }
 }
