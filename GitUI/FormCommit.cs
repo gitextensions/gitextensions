@@ -60,7 +60,7 @@ namespace GitUI
 
         private readonly TranslationString _notOnBranch =
             new TranslationString("You are not working on a branch." + Environment.NewLine +
-                                  "This commit will be unreferenced when switching to another brach and can be lost." +
+                                  "This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch.");
@@ -84,6 +84,8 @@ namespace GitUI
 
         private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
         private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
+        private readonly TranslationString _resetSelectedLines = new TranslationString("Reset selected line(s)");
+        private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -91,6 +93,7 @@ namespace GitUI
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private ToolStripItem _StageSelectedLinesToolStripMenuItem;
+        private ToolStripItem _ResetSelectedLinesToolStripMenuItem;
 
         public FormCommit()
         {
@@ -122,17 +125,38 @@ namespace GitUI
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, new EventHandler(StageSelectedLinesToolStripMenuItemClick));
+            _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, new EventHandler(ResetSelectedLinesToolStripMenuItemClick));
         }
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             // Prepare git command
-            string args = "apply  --cached --whitespace=nowarn";
+            string args = "apply --cached --whitespace=nowarn";
 
             if (_currentItemStaged) //staged
                 args += " --reverse";
 
             string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged);
+
+            if (!string.IsNullOrEmpty(patch))
+            {
+                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                ScanClick(null, null);
+            }
+        }
+
+        private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(_resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
+
+            // Prepare git command
+            string args = "apply --whitespace=nowarn --reverse";
+
+            if (_currentItemStaged) //staged
+                args += " --index";
+
+            string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), true);
 
             if (!string.IsNullOrEmpty(patch))
             {
@@ -535,7 +559,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(output.ToString()))
-                MessageBox.Show(output.ToString(), "Reset changes");
+                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
 
             Initialize();
         }

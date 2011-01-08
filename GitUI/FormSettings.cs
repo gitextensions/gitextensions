@@ -1195,6 +1195,30 @@ namespace GitUI
 
         private void AutoConfigMergeToolcmd()
         {
+            if (GlobalMergeTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
+                    MergetoolPath.Text = "";
+                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
+                {
+                    MergetoolPath.Text = @"C:\Program Files\Beyond Compare 3\bcomp.exe";
+
+                    MergetoolPath.Text = FindFileInFolders("bcomp.exe",
+                                       @"C:\Program Files\Beyond Compare 3 (x86)\",
+                                       @"C:\Program Files\Beyond Compare 3\");
+
+                    if (!File.Exists(MergetoolPath.Text))
+                    {
+                        MergetoolPath.Text = "";
+                        MessageBox.Show("Please enter the path to bcomp.exe and press suggest.", "Suggest mergetool cmd");
+                        return;
+                    }
+                }
+
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"";
+                return;
+            }
+
             if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
             {
                 if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
@@ -1262,7 +1286,7 @@ namespace GitUI
                     }
                 }
 
-                MergeToolCmd.Text = "\"TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                 return;
             }
 
@@ -1346,10 +1370,10 @@ namespace GitUI
             DifftoolPath.Text = GitCommandHelpers.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
             DifftoolCmd.Text = GitCommandHelpers.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
 
-            if (GlobalDiffTool.Text.Trim().Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
-                DiffToolCmdSuggest_Click(null, null);
-
-            ResolveDiffToolPath();
+            if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                ResolveDiffToolPath();
+                
+            DiffToolCmdSuggest_Click(null, null);
         }
 
         private void ResolveDiffToolPath()
@@ -1542,6 +1566,20 @@ namespace GitUI
         {
             if (!Settings.RunningOnWindows())
                 return;
+
+            if (GlobalDiffTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string bcomppath = GitCommandHelpers.GetGlobalSetting("difftool.beyondcompare3.path");
+
+                DifftoolPath.Text = FindFileInFolders("bcomp.exe",
+                   bcomppath,
+                   @"C:\Program Files\Beyond Compare 3 (x86)\",
+                   @"C:\Program Files\Beyond Compare 3\");
+
+                if (File.Exists(DifftoolPath.Text))
+                    DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
+
+            }
 
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -1887,7 +1925,7 @@ namespace GitUI
             return true;
         }
 
-        private const string GitExtensionsShellExName = "GitExtensionsShellEx.dll";
+        private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
         private void SaveScripts()
         {
