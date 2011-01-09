@@ -58,7 +58,7 @@ namespace GitUI.RepoHosting
             if (fetcher == null)
                 return;
             _selectedOwner.Enabled = false;
-            ShowLoadingPullRequests();
+            ResetAllAndShowLoadingPullRequests();
 
             AsyncHelpers.DoAsync(
                 () => fetcher.Fetch(),
@@ -78,8 +78,12 @@ namespace GitUI.RepoHosting
             LoadListView();
         }
 
-        private void ShowLoadingPullRequests()
+        private void ResetAllAndShowLoadingPullRequests()
         {
+            _discussionTB.Text = "";
+            _diffViewer.ViewPatch("");
+            _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
+
             _pullRequestsList.Items.Clear();
             var lvi = new ListViewItem("");
             lvi.SubItems.Add(" : LOADING : ");
