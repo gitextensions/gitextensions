@@ -81,9 +81,9 @@ namespace Github
         public void Close()
         {
             var issueApi = _plugin.GetIssuesApi();
-            issueApi.Close(RepositoryName, Owner, int.Parse(Id));
+            issueApi.Close(RepositoryName, IssueOwner, int.Parse(Id));
+            _plugin.InvalidateCache();
         }
-
 
         PullRequestDiscussion _discussion;
         public IPullRequestDiscussion Discussion
