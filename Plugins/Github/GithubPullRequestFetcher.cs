@@ -20,13 +20,12 @@ namespace Github
 
         public List<IPullRequestInformation> Fetch()
         {
-
             var api = _plugin.GetPullRequestApi();
             var data = api.List(Owner, Name);
             if (data == null)
                 throw new InvalidOperationException("Could not fetch data!" + _plugin.GetLoggerData());
 
-            return (from el in data select (IPullRequestInformation)new GithubPullRequestInformation(el, _plugin)).ToList();
+            return (from el in data select (IPullRequestInformation)new GithubPullRequestInformation(Owner, Name, el, _plugin)).ToList();
         }
 
         private string Owner { get { return Data.Split('/')[0]; } }
