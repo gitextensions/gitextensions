@@ -224,15 +224,19 @@ namespace GitUI.Editor
             var document = TextEditor.Document;
             var markerStrategy = document.MarkerStrategy;
             markerStrategy.RemoveAll(m => true);
+            bool forceAbort = false;
 
             AddExtraPatchHighlighting();
 
-            for (var line = 0; line < document.TotalNumberOfLines; line++)
+            for (var line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
             {
                 var lineSegment = document.GetLineSegment(line);
 
                 if (lineSegment.TotalLength == 0)
                     continue;
+
+                if (line == document.TotalNumberOfLines - 1)
+                    forceAbort = true;
 
                 if (document.GetCharAt(lineSegment.Offset) == '+')
                 {
