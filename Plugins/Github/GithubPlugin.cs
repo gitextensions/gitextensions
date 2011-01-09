@@ -90,6 +90,13 @@ namespace Github
             return pr;
         }
 
+        public Issues GetIssuesApi()
+        {
+            var issues = new Issues(_basicCacher, _logger);
+            issues.Authenticate(GithubUser);
+            return issues;
+        }
+
         public IList<IHostedGitRepo> GetMyRepos()
         {
             return GetReposOfUser(GithubUser.Name);
