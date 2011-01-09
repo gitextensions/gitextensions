@@ -6,6 +6,7 @@ using GitUIPluginInterfaces;
 using GithubSharp.Core.Models;
 using System.Net;
 using System.IO;
+using System.Diagnostics;
 
 namespace Github
 {
@@ -14,7 +15,7 @@ namespace Github
         private PullRequest _pullRequestDetails;
         private GithubPlugin _plugin;
 
-        internal GithubPullRequestInformation(PullRequest pullRequestDetails, GithubPlugin plugin)
+        internal GithubPullRequestInformation(string issueOwner, string repoName, PullRequest pullRequestDetails, GithubPlugin plugin)
         {
             _pullRequestDetails = pullRequestDetails;
             _plugin = plugin;
@@ -24,6 +25,8 @@ namespace Github
             Title = pullRequestDetails.Title;
             Body = pullRequestDetails.Body;
             Id = pullRequestDetails.Number.ToString();
+            IssueOwner = issueOwner;
+            RepositoryName = repoName;
 
             BaseRepo = GithubHostedRepo.Convert(_plugin, _pullRequestDetails.Base.Repository);
             BaseSha = _pullRequestDetails.Base.Sha;
@@ -34,6 +37,8 @@ namespace Github
         }
 
         public string Owner { get; private set; }
+        public string IssueOwner { get; set; }
+        public string RepositoryName { get; private set; }
         public DateTime Created { get; private set; }
         public string Id { get; private set; }
 
@@ -71,5 +76,35 @@ namespace Github
         public string HeadSha { get; private set; }
         public string BaseRef { get; private set; }
         public string HeadRef { get; private set; }
+
+
+        public void Close()
+        {
+            var issueApi = _plugin.GetIssuesApi();
+            issueApi.Close(RepositoryName, Owner, int.Parse(Id));
+        }
+
+
+        PullRequestDiscussion _discussion;
+        public IPullRequestDiscussion Discussion
+        {
+            get 
+            {
+                if (_discussion == null)
+                    _discussion = new PullRequestDiscussion(_plugin, IssueOwner, RepositoryName, Id);
+                return _discussion;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            GithubPullRequestInformation pri = obj as GithubPullRequestInformation;
+            return pri != null && Owner == pri.Owner && RepositoryName == pri.RepositoryName && Id == pri.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return (Owner ?? "").GetHashCode() + (RepositoryName ?? "").GetHashCode() + (Id ?? "").GetHashCode();
+        }
     }
 }
