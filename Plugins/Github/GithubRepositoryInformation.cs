@@ -12,11 +12,8 @@ namespace Github
 
         public override bool Equals(object obj)
         {
-            if ((Owner == null) != (Name == null))
-                return false;
-            if (Owner == null)
-                return true;
-            return Owner.Equals(Name);
+            GithubRepositoryInformation repoInfo = obj as GithubRepositoryInformation;
+            return repoInfo != null && Owner == repoInfo.Owner && Name == repoInfo.Name;
         }
 
         public override int GetHashCode()
@@ -25,3 +22,4 @@ namespace Github
         }
     }
 }
+    
