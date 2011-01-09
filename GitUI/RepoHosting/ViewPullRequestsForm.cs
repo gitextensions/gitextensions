@@ -230,7 +230,15 @@ namespace GitUI.RepoHosting
             if (_currentPullRequestInfo == null)
                 return;
 
-            _currentPullRequestInfo.Close();
+            try
+            {
+                _currentPullRequestInfo.Close();
+                _selectedOwner_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Failed to close!\r\n" + ex.Message, "Close pull request");
+            }
         }
 
         private void _postComment_Click(object sender, EventArgs e)
