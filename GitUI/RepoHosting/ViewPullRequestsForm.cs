@@ -106,27 +106,55 @@ namespace GitUI.RepoHosting
 
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var prevPRI = _currentPullRequestInfo;
+            var prevPri = _currentPullRequestInfo;
             
             if (_pullRequestsList.SelectedItems.Count != 1)
             {
                 _currentPullRequestInfo = null;
-                _pullRequestBody.Text = "";
+                _discussionTB.Text = "";
                 _diffViewer.ViewText("", "");
                 return;
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
-            if (prevPRI == _currentPullRequestInfo)
+            if (prevPri != null && prevPri.Equals(_currentPullRequestInfo))
                 return;
 
             if (_currentPullRequestInfo == null)
                 return;
-            _pullRequestBody.Text = _currentPullRequestInfo.Body;
+            _discussionTB.Text = _currentPullRequestInfo.Body.Trim() + "\r\n";
             _diffViewer.ViewPatch("");
             _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
 
             LoadDiffPatch();
+            LoadDiscussion();
+        }
+
+        private void LoadDiscussion()
+        {
+            AsyncHelpers.DoAsync(
+                () => _currentPullRequestInfo.Discussion,
+                (d) => LoadDiscussion(d),
+                (ex) => MessageBox.Show(this, "Could not load discussion! " + ex.Message, "bah"));
+        }
+
+        private void LoadDiscussion(IPullRequestDiscussion discussion)
+        {
+            _discussionTB.Text = _currentPullRequestInfo.Body.Trim() + "\r\n";
+            StringBuilder outData = new StringBuilder();
+
+            foreach (var entry in discussion.Entries)
+            {
+                outData.AppendLine(string.Format("-------------------------\r\nBy: {0} at {1}", entry.Author, entry.Created));
+                outData.AppendLine(string.Format(entry.Body));
+                ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
+                if (cde != null)
+                    outData.AppendLine(string.Format("Is a commit with SHA1 {0}", cde.Sha));
+            }
+
+            _discussionTB.Text += outData.ToString();
+            _discussionTB.SelectionStart = _discussionTB.Text.Length;
+            _discussionTB.ScrollToCaret();
         }
 
         private void LoadDiffPatch()
@@ -195,6 +223,43 @@ namespace GitUI.RepoHosting
 
             var data = _diffCache[gis.Name];
             _diffViewer.ViewPatch(data);
+        }
+
+        private void _closePullRequestBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentPullRequestInfo == null)
+                return;
+
+            _currentPullRequestInfo.Close();
+        }
+
+        private void _postComment_Click(object sender, EventArgs e)
+        {
+            string text = _postCommentText.Text;
+            if (_currentPullRequestInfo == null || text == null || text.Trim().Length == 0)
+                return;
+
+            try
+            {
+                _currentPullRequestInfo.Discussion.Post(text);
+                _postCommentText.Text = "";
+                _currentPullRequestInfo.Discussion.ForceReload();
+                LoadDiscussion(_currentPullRequestInfo.Discussion);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(this, "Failed to post discussion item! " + ex.Message, "Error");
+            }
+        }
+
+        private void _postCommentText_Enter(object sender, EventArgs e)
+        {
+            this.AcceptButton = _postComment;
+        }
+
+        private void _postCommentText_Leave(object sender, EventArgs e)
+        {
+            this.AcceptButton = null;
         }
     }
 }

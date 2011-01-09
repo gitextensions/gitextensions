@@ -34,22 +34,33 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this._pullRequestBody = new System.Windows.Forms.TextBox();
+            this._discussionTB = new System.Windows.Forms.TextBox();
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
-            this._diffViewer = new GitUI.Editor.FileViewer();
+            this._postCommentText = new System.Windows.Forms.TextBox();
+            this._postComment = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this._closePullRequestBtn = new System.Windows.Forms.Button();
             this._fileStatusList = new GitUI.FileStatusList();
+            this._diffViewer = new GitUI.Editor.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // _selectedOwner
             // 
             this._selectedOwner.DisplayMember = "DisplayData";
             this._selectedOwner.FormattingEnabled = true;
-            this._selectedOwner.Location = new System.Drawing.Point(112, 9);
+            this._selectedOwner.Location = new System.Drawing.Point(112, 6);
             this._selectedOwner.Name = "_selectedOwner";
             this._selectedOwner.Size = new System.Drawing.Size(258, 21);
             this._selectedOwner.TabIndex = 0;
@@ -57,7 +68,8 @@
             // 
             // _pullRequestsList
             // 
-            this._pullRequestsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this._pullRequestsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._pullRequestsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -66,10 +78,10 @@
             this.columnHeader4});
             this._pullRequestsList.FullRowSelect = true;
             this._pullRequestsList.HideSelection = false;
-            this._pullRequestsList.Location = new System.Drawing.Point(12, 36);
+            this._pullRequestsList.Location = new System.Drawing.Point(3, 33);
             this._pullRequestsList.MultiSelect = false;
             this._pullRequestsList.Name = "_pullRequestsList";
-            this._pullRequestsList.Size = new System.Drawing.Size(723, 116);
+            this._pullRequestsList.Size = new System.Drawing.Size(643, 160);
             this._pullRequestsList.TabIndex = 1;
             this._pullRequestsList.UseCompatibleStateImageBehavior = false;
             this._pullRequestsList.View = System.Windows.Forms.View.Details;
@@ -78,11 +90,12 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "#";
+            this.columnHeader1.Width = 41;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Heading";
-            this.columnHeader2.Width = 402;
+            this.columnHeader2.Width = 286;
             // 
             // columnHeader3
             // 
@@ -92,23 +105,26 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "Created";
-            this.columnHeader4.Width = 136;
+            this.columnHeader4.Width = 131;
             // 
-            // _pullRequestBody
+            // _discussionTB
             // 
-            this._pullRequestBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._pullRequestBody.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this._pullRequestBody.Location = new System.Drawing.Point(741, 36);
-            this._pullRequestBody.Multiline = true;
-            this._pullRequestBody.Name = "_pullRequestBody";
-            this._pullRequestBody.ReadOnly = true;
-            this._pullRequestBody.Size = new System.Drawing.Size(446, 116);
-            this._pullRequestBody.TabIndex = 2;
+            this._discussionTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._discussionTB.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this._discussionTB.Location = new System.Drawing.Point(3, 0);
+            this._discussionTB.Multiline = true;
+            this._discussionTB.Name = "_discussionTB";
+            this._discussionTB.ReadOnly = true;
+            this._discussionTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._discussionTB.Size = new System.Drawing.Size(278, 595);
+            this._discussionTB.TabIndex = 2;
             // 
             // _chooseRepo
             // 
             this._chooseRepo.AutoSize = true;
-            this._chooseRepo.Location = new System.Drawing.Point(12, 12);
+            this._chooseRepo.Location = new System.Drawing.Point(12, 9);
             this._chooseRepo.Name = "_chooseRepo";
             this._chooseRepo.Size = new System.Drawing.Size(94, 13);
             this._chooseRepo.TabIndex = 4;
@@ -117,7 +133,7 @@
             // _fetchBtn
             // 
             this._fetchBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._fetchBtn.Location = new System.Drawing.Point(603, 158);
+            this._fetchBtn.Location = new System.Drawing.Point(652, 33);
             this._fetchBtn.Name = "_fetchBtn";
             this._fetchBtn.Size = new System.Drawing.Size(134, 29);
             this._fetchBtn.TabIndex = 5;
@@ -125,77 +141,149 @@
             this._fetchBtn.UseVisualStyleBackColor = true;
             this._fetchBtn.Click += new System.EventHandler(this._fetchBtn_Click);
             // 
-            // _diffViewer
+            // _postCommentText
             // 
-            this._diffViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this._diffViewer.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._diffViewer.IgnoreWhitespaceChanges = false;
-            this._diffViewer.IsReadOnly = true;
-            this._diffViewer.Location = new System.Drawing.Point(3, 0);
-            this._diffViewer.Name = "_diffViewer";
-            this._diffViewer.NumberOfVisibleLines = 3;
-            this._diffViewer.ScrollPos = 0;
-            this._diffViewer.ShowEntireFile = false;
-            this._diffViewer.ShowLineNumbers = true;
-            this._diffViewer.Size = new System.Drawing.Size(777, 403);
-            this._diffViewer.TabIndex = 0;
-            this._diffViewer.TreatAllFilesAsText = false;
+            this._postCommentText.Location = new System.Drawing.Point(3, 601);
+            this._postCommentText.Multiline = true;
+            this._postCommentText.Name = "_postCommentText";
+            this._postCommentText.Size = new System.Drawing.Size(280, 47);
+            this._postCommentText.TabIndex = 6;
+            this._postCommentText.Enter += new System.EventHandler(this._postCommentText_Enter);
+            this._postCommentText.Leave += new System.EventHandler(this._postCommentText_Leave);
+            // 
+            // _postComment
+            // 
+            this._postComment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._postComment.Location = new System.Drawing.Point(168, 654);
+            this._postComment.Name = "_postComment";
+            this._postComment.Size = new System.Drawing.Size(113, 23);
+            this._postComment.TabIndex = 7;
+            this._postComment.Text = "Post comment";
+            this._postComment.UseVisualStyleBackColor = true;
+            this._postComment.Click += new System.EventHandler(this._postComment_Click);
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 193);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this._fileStatusList);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this._diffViewer);
-            this.splitContainer1.Size = new System.Drawing.Size(1174, 406);
-            this.splitContainer1.SplitterDistance = 391;
-            this.splitContainer1.TabIndex = 6;
+            this.splitContainer1.Panel2.Controls.Add(this._discussionTB);
+            this.splitContainer1.Panel2.Controls.Add(this._postComment);
+            this.splitContainer1.Panel2.Controls.Add(this._postCommentText);
+            this.splitContainer1.Size = new System.Drawing.Size(1089, 680);
+            this.splitContainer1.SplitterDistance = 801;
+            this.splitContainer1.TabIndex = 8;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this._closePullRequestBtn);
+            this.splitContainer2.Panel1.Controls.Add(this._selectedOwner);
+            this.splitContainer2.Panel1.Controls.Add(this._fetchBtn);
+            this.splitContainer2.Panel1.Controls.Add(this._pullRequestsList);
+            this.splitContainer2.Panel1.Controls.Add(this._chooseRepo);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Size = new System.Drawing.Size(801, 680);
+            this.splitContainer2.SplitterDistance = 196;
+            this.splitContainer2.TabIndex = 6;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this._fileStatusList);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this._diffViewer);
+            this.splitContainer3.Size = new System.Drawing.Size(801, 480);
+            this.splitContainer3.SplitterDistance = 171;
+            this.splitContainer3.TabIndex = 0;
+            // 
+            // _closePullRequestBtn
+            // 
+            this._closePullRequestBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._closePullRequestBtn.Location = new System.Drawing.Point(652, 164);
+            this._closePullRequestBtn.Name = "_closePullRequestBtn";
+            this._closePullRequestBtn.Size = new System.Drawing.Size(134, 29);
+            this._closePullRequestBtn.TabIndex = 6;
+            this._closePullRequestBtn.Text = "Close pull request";
+            this._closePullRequestBtn.UseVisualStyleBackColor = true;
+            this._closePullRequestBtn.Click += new System.EventHandler(this._closePullRequestBtn_Click);
             // 
             // _fileStatusList
             // 
-            this._fileStatusList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
             this._fileStatusList.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._fileStatusList.GitItemStatuses = null;
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Name = "_fileStatusList";
             this._fileStatusList.Revision = null;
             this._fileStatusList.SelectedItem = null;
-            this._fileStatusList.Size = new System.Drawing.Size(392, 406);
+            this._fileStatusList.Size = new System.Drawing.Size(801, 171);
             this._fileStatusList.TabIndex = 0;
+            // 
+            // _diffViewer
+            // 
+            this._diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._diffViewer.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._diffViewer.IgnoreWhitespaceChanges = false;
+            this._diffViewer.IsReadOnly = true;
+            this._diffViewer.Location = new System.Drawing.Point(0, 0);
+            this._diffViewer.Name = "_diffViewer";
+            this._diffViewer.NumberOfVisibleLines = 3;
+            this._diffViewer.ScrollPos = 0;
+            this._diffViewer.ShowEntireFile = false;
+            this._diffViewer.ShowLineNumbers = true;
+            this._diffViewer.Size = new System.Drawing.Size(801, 305);
+            this._diffViewer.TabIndex = 0;
+            this._diffViewer.TreatAllFilesAsText = false;
             // 
             // ViewPullRequestsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1197, 606);
+            this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this._fetchBtn);
-            this.Controls.Add(this._chooseRepo);
-            this.Controls.Add(this._pullRequestBody);
-            this.Controls.Add(this._pullRequestsList);
-            this.Controls.Add(this._selectedOwner);
             this.Name = "ViewPullRequestsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "View Pull Requests";
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -207,11 +295,16 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.TextBox _pullRequestBody;
+        private System.Windows.Forms.TextBox _discussionTB;
         private Editor.FileViewer _diffViewer;
         private System.Windows.Forms.Label _chooseRepo;
         private System.Windows.Forms.Button _fetchBtn;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private FileStatusList _fileStatusList;
+        private System.Windows.Forms.TextBox _postCommentText;
+        private System.Windows.Forms.Button _postComment;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.Button _closePullRequestBtn;
     }
 }
