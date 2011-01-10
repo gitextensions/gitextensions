@@ -80,7 +80,7 @@ namespace GitUI.RepoHosting
 
         private void ResetAllAndShowLoadingPullRequests()
         {
-            _discussionTB.Text = "";
+            _discussionWB.DocumentText = "";
             _diffViewer.ViewPatch("");
             _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
 
@@ -115,7 +115,7 @@ namespace GitUI.RepoHosting
             if (_pullRequestsList.SelectedItems.Count != 1)
             {
                 _currentPullRequestInfo = null;
-                _discussionTB.Text = "";
+                _discussionWB.DocumentText = "";
                 _diffViewer.ViewText("", "");
                 return;
             }
@@ -126,7 +126,7 @@ namespace GitUI.RepoHosting
 
             if (_currentPullRequestInfo == null)
                 return;
-            _discussionTB.Text = _currentPullRequestInfo.Body.Trim() + "\r\n";
+            _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
             _diffViewer.ViewPatch("");
             _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
 
@@ -144,21 +144,8 @@ namespace GitUI.RepoHosting
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
         {
-            _discussionTB.Text = _currentPullRequestInfo.Body.Trim() + "\r\n";
-            StringBuilder outData = new StringBuilder();
-
-            foreach (var entry in discussion.Entries)
-            {
-                outData.AppendLine(string.Format("-------------------------\r\nBy: {0} at {1}", entry.Author, entry.Created));
-                outData.AppendLine(string.Format(entry.Body));
-                ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
-                if (cde != null)
-                    outData.AppendLine(string.Format("Is a commit with SHA1 {0}", cde.Sha));
-            }
-
-            _discussionTB.Text += outData.ToString();
-            _discussionTB.SelectionStart = _discussionTB.Text.Length;
-            _discussionTB.ScrollToCaret();
+            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion.Entries);
+            _discussionWB.DocumentText = t;
         }
 
         private void LoadDiffPatch()
