@@ -283,7 +283,7 @@ namespace Github
             return Auth.Password;
         }
 
-        public List<IPullRequestsFetcher> GetPullRequestTargetsForCurrentWorkingDirRepo()
+        private static IList<GithubRepositoryInformation> GetCurrentWorkingDirGithubRepos()
         {
             List<GithubRepositoryInformation> repoInfos = new List<GithubRepositoryInformation>();
 
@@ -296,7 +296,7 @@ namespace Github
 
                 var m = Regex.Match(remoteUrl, @"git(?:@|://)github.com[:/]([^/]+)/(\w+)\.git");
                 if (!m.Success)
-                    m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)(?::[^/@]+)?@github.com/([^/]+)/([\w_\.]+).git");
+                    m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+).git");
                 if (m.Success)
                 {
                     var t = new GithubRepositoryInformation() { Name = m.Groups[1].Value, Owner = m.Groups[2].Value };
@@ -305,6 +305,12 @@ namespace Github
                 }
             }
 
+            return repoInfos;
+        }
+
+        public List<IPullRequestsFetcher> GetPullRequestTargetsForCurrentWorkingDirRepo()
+        {
+            var repoInfos = GetCurrentWorkingDirGithubRepos();
             return (from info in repoInfos select (IPullRequestsFetcher)new GithubPullRequestFetcher(info, this)).ToList();
         }
 
@@ -313,21 +319,7 @@ namespace Github
         {
             get
             {
-                var remoteNames = GitCommands.GitCommandHelpers.GetRemotes();
-                foreach (var remote in remoteNames)
-                {
-                    var remoteUrl = GitCommands.GitCommandHelpers.GetSetting("remote." + remote + ".url");
-                    if (string.IsNullOrEmpty(remoteUrl))
-                        continue;
-
-                    var m = Regex.Match(remoteUrl, @"git@github.com:([^/]+)/(\w+)\.git");
-                    if (!m.Success)
-                        m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)(?::[^/@]+)?@github.com/([^/]+)/([\w_\.]+).git");
-                    if (m.Success)
-                        return true;
-                }
-
-                return false;
+                return GetCurrentWorkingDirGithubRepos().Count > 0;
             }
         }
 
