@@ -249,6 +249,7 @@
     <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
+    <Compile Include="RepoHosting\DiscussionHtmlCreator.cs" />
     <Compile Include="RepoHosting\ForkAndCloneForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -34,15 +34,15 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this._discussionTB = new System.Windows.Forms.TextBox();
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
             this._postCommentText = new System.Windows.Forms.TextBox();
             this._postComment = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this._closePullRequestBtn = new System.Windows.Forms.Button();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this._discussionWB = new System.Windows.Forms.WebBrowser();
             this._fileStatusList = new GitUI.FileStatusList();
             this._diffViewer = new GitUI.Editor.FileViewer();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -107,20 +107,6 @@
             this.columnHeader4.Text = "Created";
             this.columnHeader4.Width = 131;
             // 
-            // _discussionTB
-            // 
-            this._discussionTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._discussionTB.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this._discussionTB.Location = new System.Drawing.Point(3, 0);
-            this._discussionTB.Multiline = true;
-            this._discussionTB.Name = "_discussionTB";
-            this._discussionTB.ReadOnly = true;
-            this._discussionTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._discussionTB.Size = new System.Drawing.Size(278, 595);
-            this._discussionTB.TabIndex = 2;
-            // 
             // _chooseRepo
             // 
             this._chooseRepo.AutoSize = true;
@@ -176,7 +162,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this._discussionTB);
+            this.splitContainer1.Panel2.Controls.Add(this._discussionWB);
             this.splitContainer1.Panel2.Controls.Add(this._postComment);
             this.splitContainer1.Panel2.Controls.Add(this._postCommentText);
             this.splitContainer1.Size = new System.Drawing.Size(1089, 680);
@@ -205,6 +191,17 @@
             this.splitContainer2.SplitterDistance = 196;
             this.splitContainer2.TabIndex = 6;
             // 
+            // _closePullRequestBtn
+            // 
+            this._closePullRequestBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._closePullRequestBtn.Location = new System.Drawing.Point(652, 164);
+            this._closePullRequestBtn.Name = "_closePullRequestBtn";
+            this._closePullRequestBtn.Size = new System.Drawing.Size(134, 29);
+            this._closePullRequestBtn.TabIndex = 6;
+            this._closePullRequestBtn.Text = "Close pull request";
+            this._closePullRequestBtn.UseVisualStyleBackColor = true;
+            this._closePullRequestBtn.Click += new System.EventHandler(this._closePullRequestBtn_Click);
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -223,16 +220,18 @@
             this.splitContainer3.SplitterDistance = 171;
             this.splitContainer3.TabIndex = 0;
             // 
-            // _closePullRequestBtn
+            // _discussionWB
             // 
-            this._closePullRequestBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._closePullRequestBtn.Location = new System.Drawing.Point(652, 164);
-            this._closePullRequestBtn.Name = "_closePullRequestBtn";
-            this._closePullRequestBtn.Size = new System.Drawing.Size(134, 29);
-            this._closePullRequestBtn.TabIndex = 6;
-            this._closePullRequestBtn.Text = "Close pull request";
-            this._closePullRequestBtn.UseVisualStyleBackColor = true;
-            this._closePullRequestBtn.Click += new System.EventHandler(this._closePullRequestBtn_Click);
+            this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._discussionWB.IsWebBrowserContextMenuEnabled = false;
+            this._discussionWB.Location = new System.Drawing.Point(3, 0);
+            this._discussionWB.MinimumSize = new System.Drawing.Size(20, 20);
+            this._discussionWB.Name = "_discussionWB";
+            this._discussionWB.Size = new System.Drawing.Size(278, 595);
+            this._discussionWB.TabIndex = 8;
+            this._discussionWB.WebBrowserShortcutsEnabled = false;
             // 
             // _fileStatusList
             // 
@@ -295,7 +294,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.TextBox _discussionTB;
         private Editor.FileViewer _diffViewer;
         private System.Windows.Forms.Label _chooseRepo;
         private System.Windows.Forms.Button _fetchBtn;
@@ -306,5 +304,6 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Button _closePullRequestBtn;
+        private System.Windows.Forms.WebBrowser _discussionWB;
     }
 }
