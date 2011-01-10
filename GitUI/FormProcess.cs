@@ -156,6 +156,8 @@ namespace GitUI
                 //{
                 //    AddOutput(e.Data);
                 //}
+                OutputString.AppendLine(e.Data);
+
                 AddToTimer(e.Data);
                 AddToTimer(Environment.NewLine);
             }

@@ -22,6 +22,7 @@ namespace GitStatistics
         public int NumberTestCodeLines { get; private set; }
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
+
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
@@ -48,7 +49,6 @@ namespace GitStatistics
             var lastUpdate = DateTime.Now;
             var timer = new TimeSpan(0,0,0,0,500);
 
-            var codeFiles = new List<CodeFile>();
             foreach (var filter in filters)
             {
                 foreach (var file in _directory.GetFiles(filter.Trim(), SearchOption.AllDirectories))
@@ -58,7 +58,6 @@ namespace GitStatistics
 
                     var codeFile = new CodeFile(file.FullName);
                     codeFile.CountLines();
-                    codeFiles.Add(codeFile);
 
                     CalculateSums(codeFile);
 
@@ -96,7 +95,7 @@ namespace GitStatistics
             LinesOfCodePerExtension[extension] += codeLines;
             NumberCodeLines += codeLines;
 
-            if (codeFile.IsTestFile)
+            if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 NumberTestCodeLines += codeLines;
             }

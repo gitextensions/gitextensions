@@ -11,6 +11,7 @@ namespace GitStatistics
         protected int NumberCodeFiles;
         private bool _inCodeGeneratedRegion;
         private bool _inCommentBlock;
+        private bool _skipResetFlag;
 
         internal CodeFile(string fullName)
         {
@@ -98,12 +99,19 @@ namespace GitStatistics
                 NumberBlankLines++;
             else if (_inCommentBlock || line.StartsWith("'") || line.StartsWith(@"//"))
                 NumberCommentsLines++;
+            else if (File.Extension.ToLower() == ".py" && line.StartsWith("#"))
+                NumberCommentsLines++;
+            else if (File.Extension.ToLower() == ".rb" && line.StartsWith("#"))
+                NumberCommentsLines++;
 
-            ResetCodeBlockFlags(line);
+            if (!_skipResetFlag)
+                ResetCodeBlockFlags(line);
         }
 
         private void SetCodeBlockFlags(string line)
         {
+            _skipResetFlag = false;
+
             // The number of code-generated lines is an approximation at best, particularly
             // with VS 2003 code.  Change code here if you don't like the way it's working.
             // if (line.Contains("Designer generated code") // Might be cleaner
@@ -115,11 +123,31 @@ namespace GitStatistics
                 line.StartsWith("#Region \" Web Form Designer Generated Code \"")
                 )
                 _inCodeGeneratedRegion = true;
+
             if (line.StartsWith("/*"))
                 _inCommentBlock = true;
-            if (!_inCommentBlock && !_inCodeGeneratedRegion && (
-                                                                   line.StartsWith("[Test")
-                                                               ))
+
+            if (File.Extension.ToLower() == ".pas" || File.Extension.ToLower() == ".inc")
+            {
+                if (line.StartsWith("(*") && !line.StartsWith("(*$"))
+                    _inCommentBlock = true;
+                if (line.StartsWith("{") && !line.StartsWith("{$"))
+                    _inCommentBlock = true;
+            }
+
+            if (File.Extension.ToLower() == ".rb" && line.StartsWith("=begin"))
+                _inCommentBlock = true;
+
+            if (File.Extension.ToLower() == ".py" && !_inCommentBlock)
+            {
+                if (line.StartsWith("'''") || line.StartsWith("\"\"\""))
+                {
+                    _inCommentBlock = true;
+                    _skipResetFlag = true;
+                }
+            }
+
+            if (!_inCommentBlock && !_inCodeGeneratedRegion && line.StartsWith("[Test"))
             {
                 IsTestFile = true;
             }
@@ -129,15 +157,24 @@ namespace GitStatistics
         {
             if (_inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
                 _inCodeGeneratedRegion = false;
+
             if (_inCommentBlock && line.Contains("*/"))
                 _inCommentBlock = false;
-        }
 
-        public bool CheckValidExtension(string fileName)
-        {
-            return true;
-            //return fileName.EndsWith(".cs") || fileName.EndsWith(".vb") ||
-            //    fileName.EndsWith(".cpp") || fileName.EndsWith(".h") || fileName.EndsWith(".hpp");
+            if (File.Extension.ToLower() == ".pas" || File.Extension.ToLower() == ".inc")
+            {
+                if (line.Contains("*)") || line.Contains("}"))
+                    _inCommentBlock = false;
+            }
+
+            if (File.Extension.ToLower() == ".rb" && line.Contains("=end"))
+                _inCommentBlock = false;
+
+            if (File.Extension.ToLower() == ".py")
+            {
+                if (line.Contains("'''") || line.Contains("\"\"\""))
+                    _inCommentBlock = false;
+            }
         }
     }
 }
