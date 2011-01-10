@@ -2081,28 +2081,31 @@ _ReSharper*/
           <Value>Текущие незкомиченные изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>секунд назад</Value>
+          <Value>{0} секунд назад</Value>
         </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>минут назад</Value>
+          <Value>{0} минут назад</Value>
         </TranslationItem>
         <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>час назад</Value>
+          <Value>{0} час назад</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>часа(ов) назад</Value>
+          <Value>{0} часа(ов) назад</Value>
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>дня(ей) назад</Value>
+          <Value>{0} дня(ей) назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>{0} дня(ей) назад</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
           <Value>месяц назад</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>месяцев назад</Value>
+          <Value>{0} месяцев назад</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>лет назад</Value>
+          <Value>{0} лет назад</Value>
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Фильтр</Value>
