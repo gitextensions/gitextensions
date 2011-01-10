@@ -97,13 +97,14 @@ namespace GitUI
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this._NO_TRANSLATE_menuStrip3 = new System.Windows.Forms.MenuStrip();
+            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Message = new GitUI.SpellChecker.EditNetSpell();
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -803,11 +804,22 @@ namespace GitUI
             this._NO_TRANSLATE_menuStrip3.TabIndex = 0;
             this._NO_TRANSLATE_menuStrip3.Text = "menuStrip3";
             // 
+            // commitMessageToolStripMenuItem
+            // 
+            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
+            this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.commitMessageToolStripMenuItem.Text = "Commit &message";
+            this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
+            this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeDialogAfterEachCommitToolStripMenuItem,
-            this.closeDialogAfterAllFilesCommittedToolStripMenuItem});
+            this.closeDialogAfterAllFilesCommittedToolStripMenuItem,
+            this.refreshDialogOnFormFocusToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripMenuItem1.Size = new System.Drawing.Size(61, 26);
@@ -826,16 +838,6 @@ namespace GitUI
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem.Text = "Close dialog when all changes are committed";
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem.Click += new System.EventHandler(this.closeDialogAfterAllFilesCommittedToolStripMenuItem_Click);
-            // 
-            // commitMessageToolStripMenuItem
-            // 
-            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
-            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
-            this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
-            this.commitMessageToolStripMenuItem.Text = "Commit &message";
-            this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
-            this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
             // 
             // Message
             // 
@@ -861,6 +863,13 @@ namespace GitUI
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
+            // refreshDialogOnFormFocusToolStripMenuItem
+            // 
+            this.refreshDialogOnFormFocusToolStripMenuItem.Name = "refreshDialogOnFormFocusToolStripMenuItem";
+            this.refreshDialogOnFormFocusToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
+            this.refreshDialogOnFormFocusToolStripMenuItem.Click += new System.EventHandler(this.refreshDialogOnFormFocusToolStripMenuItem_Click);
+            // 
             // FormCommit
             // 
             this.AcceptButton = this.Commit;
@@ -873,8 +882,8 @@ namespace GitUI
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
             this.Activated += new System.EventHandler(this.FormCommitActivated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
             this.Load += new System.EventHandler(this.FormCommitLoad);
             this.Shown += new System.EventHandler(this.FormCommitShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -981,5 +990,6 @@ namespace GitUI
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
+        private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
     }
 }

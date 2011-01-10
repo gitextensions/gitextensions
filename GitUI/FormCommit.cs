@@ -946,7 +946,8 @@ namespace GitUI
 
         private void FormCommitActivated(object sender, EventArgs e)
         {
-            ScanClick(null, null);
+            if (Settings.RefreshCommitDialogOnFormFocus)
+                ScanClick(null, null);
         }
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
@@ -1032,6 +1033,12 @@ namespace GitUI
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
             Settings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
 
+        }
+
+        private void refreshDialogOnFormFocusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = !refreshDialogOnFormFocusToolStripMenuItem.Checked;
+            Settings.RefreshCommitDialogOnFormFocus = refreshDialogOnFormFocusToolStripMenuItem.Checked;
         }
     }
 }
