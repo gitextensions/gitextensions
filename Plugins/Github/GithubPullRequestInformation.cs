@@ -91,7 +91,7 @@ namespace Github
             get 
             {
                 if (_discussion == null)
-                    _discussion = new PullRequestDiscussion(_plugin, IssueOwner, RepositoryName, Id);
+                    _discussion = new PullRequestDiscussion(_plugin, this, IssueOwner, RepositoryName, Id);
                 return _discussion;
             }
         }

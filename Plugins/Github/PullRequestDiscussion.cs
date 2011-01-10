@@ -13,9 +13,11 @@ namespace Github
         private string _repositoryName;
         private string _id;
         private GithubSharp.Core.Models.PullRequest _pullRequest;
+        private GithubPullRequestInformation _githubPullReqInfo;
 
-        public PullRequestDiscussion(GithubPlugin plugin, string owner, string repositoryName, string id)
+        public PullRequestDiscussion(GithubPlugin plugin, GithubPullRequestInformation githubPullReqInfo, string owner, string repositoryName, string id)
         {
+            _githubPullReqInfo = githubPullReqInfo;
             _plugin = plugin;
             _owner = owner;
             _repositoryName = repositoryName;
@@ -30,6 +32,10 @@ namespace Github
             _pullRequest = pullRequestApi.GetById(_owner, _repositoryName, _id);
 
             Entries = new List<IDiscussionEntry>();
+
+            GithubDiscussionEntry da = new GithubDiscussionEntry(_githubPullReqInfo.Owner, _githubPullReqInfo.Created, _githubPullReqInfo.Body);
+            Entries.Add(da);
+
             foreach (var el in _pullRequest.Discussion)
             {
                 GithubDiscussionEntry de;
