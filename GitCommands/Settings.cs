@@ -306,6 +306,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _refreshCommitDialogOnFormFocus;
+        public static bool RefreshCommitDialogOnFormFocus
+        {
+            get
+            {
+                if (_refreshCommitDialogOnFormFocus == null)
+                    SafeSetBool("refreshcommitdialogonformfocus", true, x => _refreshCommitDialogOnFormFocus = x);
+                return _refreshCommitDialogOnFormFocus.Value;
+            }
+            set
+            {
+                _refreshCommitDialogOnFormFocus = value;
+                Application.UserAppDataRegistry.SetValue("refreshcommitdialogonformfocus", _refreshCommitDialogOnFormFocus);
+            }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
