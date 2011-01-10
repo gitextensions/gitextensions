@@ -21,14 +21,15 @@ namespace GitUI
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
-        private readonly TranslationString _secondsAgo = new TranslationString("seconds ago");
-        private readonly TranslationString _minutesAgo = new TranslationString("minutes ago");
-        private readonly TranslationString _hourAgo = new TranslationString("hour ago");
-        private readonly TranslationString _hoursAgo = new TranslationString("hours ago");
-        private readonly TranslationString _daysAgo = new TranslationString("days ago");
-        private readonly TranslationString _monthAgo = new TranslationString("month ago");
-        private readonly TranslationString _monthsAgo = new TranslationString("months ago");
-        private readonly TranslationString _yearsAgo = new TranslationString("years ago");
+        private readonly TranslationString _secondsAgo = new TranslationString("{0} seconds ago");
+        private readonly TranslationString _minutesAgo = new TranslationString("{0} minutes ago");
+        private readonly TranslationString _hourAgo = new TranslationString("{0} hour ago");
+        private readonly TranslationString _hoursAgo = new TranslationString("{0} hours ago");
+        private readonly TranslationString _dayAgo = new TranslationString("{0} day ago");
+        private readonly TranslationString _daysAgo = new TranslationString("{0} days ago");
+        private readonly TranslationString _monthAgo = new TranslationString("{0} month ago");
+        private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
+        private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
@@ -1254,27 +1255,30 @@ namespace GitUI
             var span = DateTime.Now - time;
 
             if (span.Minutes < 0)
-                return string.Concat(span.Seconds, " ", _secondsAgo.Text);
+                return string.Format(_secondsAgo.Text, span.Seconds);
 
             if (span.TotalHours < 1)
-                return string.Concat(span.Minutes + Math.Round(span.Seconds / 60.0, 0), " ", _minutesAgo.Text);
+                return string.Format(_minutesAgo.Text, span.Minutes + Math.Round(span.Seconds / 60.0, 0));
 
             if (span.TotalHours < 2)
-                return string.Concat("1 ", _hourAgo.Text);
+                return string.Format(_hourAgo.Text, span.Minutes + Math.Round(span.Seconds / 60.0, 0));
 
             if (span.TotalHours < 24)
-                return string.Concat((int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0), " ", _hoursAgo.Text);
+                return string.Format(_hoursAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+
+            if (span.TotalDays + Math.Round(span.Hours / 24.0, 0) < 2)
+                return string.Format(_dayAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 30)
-                return string.Concat((int)span.TotalDays + Math.Round(span.Hours / 24.0, 0), " ", _daysAgo.Text);
+                return string.Format(_daysAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 45)
-                return string.Concat("1 ", _monthAgo.Text);
+                return string.Format(_monthAgo.Text, "1");
 
             if (span.TotalDays < 365)
-                return string.Concat((int)Math.Round(span.TotalDays / 30, 0), " ", _monthsAgo.Text);
+                return string.Format(_monthsAgo.Text, (int)Math.Round(span.TotalDays / 30, 0));
 
-            return string.Concat(string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)), _yearsAgo.Text);
+            return string.Format(_yearsAgo.Text, string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
         }
 
         private void UpdateGraph(GitRevision rev)
