@@ -283,9 +283,9 @@ namespace Github
             return Auth.Password;
         }
 
-        private static IList<GithubRepositoryInformation> GetCurrentWorkingDirGithubRepos()
+        private static IList<GithubHostedRemoteInformation> GetCurrentWorkingDirGithubRepos()
         {
-            List<GithubRepositoryInformation> repoInfos = new List<GithubRepositoryInformation>();
+            List<GithubHostedRemoteInformation> repoInfos = new List<GithubHostedRemoteInformation>();
 
             var remoteNames = GitCommands.GitCommandHelpers.GetRemotes();
             foreach (var remote in remoteNames.Where(r=>!string.IsNullOrEmpty(r)))
@@ -299,7 +299,7 @@ namespace Github
                     m = Regex.Match(remoteUrl, @"https://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+).git");
                 if (m.Success)
                 {
-                    var t = new GithubRepositoryInformation() { Name = m.Groups[1].Value, Owner = m.Groups[2].Value };
+                    var t = new  GithubHostedRemoteInformation() { Name=remote, NameAtGithub = m.Groups[1].Value, Owner = m.Groups[2].Value };
                     if (!repoInfos.Contains(t))
                         repoInfos.Add(t);
                 }

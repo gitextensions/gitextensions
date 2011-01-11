@@ -55,7 +55,7 @@
     <Compile Include="GithubPlugin.cs" />
     <Compile Include="GithubHostedRemote.cs" />
     <Compile Include="GithubPullRequestInformation.cs" />
-    <Compile Include="GithubRepositoryInformation.cs" />
+    <Compile Include="GithubHostedRemoteInformation.cs" />
     <Compile Include="MiscHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PullRequestDiscussion.cs" />

@@ -36,6 +36,10 @@
             this._pullReqTargetsCB = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this._createBtn = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this._yourBranchCB = new System.Windows.Forms.ComboBox();
+            this._remoteBranchTB = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +49,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._titleTB.Location = new System.Drawing.Point(46, 19);
             this._titleTB.Name = "_titleTB";
-            this._titleTB.Size = new System.Drawing.Size(373, 20);
+            this._titleTB.Size = new System.Drawing.Size(464, 20);
             this._titleTB.TabIndex = 0;
             // 
             // label1
@@ -75,9 +79,9 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this._titleTB);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 45);
+            this.groupBox1.Location = new System.Drawing.Point(12, 92);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(425, 195);
+            this.groupBox1.Size = new System.Drawing.Size(516, 167);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pull request data";
@@ -90,22 +94,24 @@
             this._bodyTB.Location = new System.Drawing.Point(46, 45);
             this._bodyTB.Multiline = true;
             this._bodyTB.Name = "_bodyTB";
-            this._bodyTB.Size = new System.Drawing.Size(373, 144);
+            this._bodyTB.Size = new System.Drawing.Size(464, 116);
             this._bodyTB.TabIndex = 3;
             // 
             // _pullReqTargetsCB
             // 
             this._pullReqTargetsCB.DisplayMember = "DisplayData";
+            this._pullReqTargetsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._pullReqTargetsCB.FormattingEnabled = true;
-            this._pullReqTargetsCB.Location = new System.Drawing.Point(138, 14);
+            this._pullReqTargetsCB.Location = new System.Drawing.Point(118, 12);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
-            this._pullReqTargetsCB.Size = new System.Drawing.Size(197, 21);
+            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 21);
             this._pullReqTargetsCB.TabIndex = 4;
+            this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(55, 17);
+            this.label3.Location = new System.Drawing.Point(9, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 5;
@@ -114,18 +120,57 @@
             // _createBtn
             // 
             this._createBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._createBtn.Location = new System.Drawing.Point(325, 246);
+            this._createBtn.Location = new System.Drawing.Point(416, 265);
             this._createBtn.Name = "_createBtn";
             this._createBtn.Size = new System.Drawing.Size(112, 33);
             this._createBtn.TabIndex = 6;
             this._createBtn.Text = "Create";
             this._createBtn.UseVisualStyleBackColor = true;
+            this._createBtn.Click += new System.EventHandler(this._createBtn_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 42);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Your branch:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 69);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(83, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Remote branch:";
+            // 
+            // _yourBranchCB
+            // 
+            this._yourBranchCB.FormattingEnabled = true;
+            this._yourBranchCB.Location = new System.Drawing.Point(118, 39);
+            this._yourBranchCB.Name = "_yourBranchCB";
+            this._yourBranchCB.Size = new System.Drawing.Size(160, 21);
+            this._yourBranchCB.TabIndex = 9;
+            this._yourBranchCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
+            // 
+            // _remoteBranchTB
+            // 
+            this._remoteBranchTB.Location = new System.Drawing.Point(118, 66);
+            this._remoteBranchTB.Name = "_remoteBranchTB";
+            this._remoteBranchTB.Size = new System.Drawing.Size(160, 20);
+            this._remoteBranchTB.TabIndex = 10;
             // 
             // CreatePullRequestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 288);
+            this.ClientSize = new System.Drawing.Size(536, 307);
+            this.Controls.Add(this._remoteBranchTB);
+            this.Controls.Add(this._yourBranchCB);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this._createBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this._pullReqTargetsCB);
@@ -153,5 +198,9 @@
         private System.Windows.Forms.ComboBox _pullReqTargetsCB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button _createBtn;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox _yourBranchCB;
+        private System.Windows.Forms.TextBox _remoteBranchTB;
     }
 }
