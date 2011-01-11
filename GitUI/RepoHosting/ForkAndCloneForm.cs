@@ -18,11 +18,9 @@ namespace GitUI.RepoHosting
     public partial class ForkAndCloneForm : Form
     {
         IGitHostingPlugin _gitHoster;
-        SynchronizationContext _syncContext;
 
         public ForkAndCloneForm(IGitHostingPlugin gitHoster)
         {
-            _syncContext = SynchronizationContext.Current;
             _gitHoster = gitHoster;
             InitializeComponent();
             Init();
@@ -209,6 +207,11 @@ namespace GitUI.RepoHosting
         {
             UpdateCloneInfo(false);
         }
+
+        private void _addRemoteAsTB_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCloneInfo(false);
+        }
         #endregion
 
         private void Clone(IHostedGitRepo repo)
@@ -229,9 +232,9 @@ namespace GitUI.RepoHosting
             Repositories.RepositoryHistory.AddMostRecentRepository(targetDir);
             Settings.WorkingDir = targetDir;
 
-            if (repo.ParentOwner != null)
+            if (_addRemoteAsTB.Text.Trim().Length > 0)
             {
-                var error = GitCommandHelpers.AddRemote(repo.ParentOwner, repo.ParentReadOnlyUrl);
+                var error = GitCommandHelpers.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show(this, error, "Could not add remote");
             }
@@ -272,9 +275,13 @@ namespace GitUI.RepoHosting
             if (repo != null)
             {
                 if (updateCreateDirTB)
+                {
                     _createDirTB.Text = repo.Name;
+                    _addRemoteAsTB.Text = repo.ParentOwner != null ? repo.ParentOwner : "";
+                }
+
                 _cloneBtn.Enabled = true;
-                var moreInfo = repo.ParentOwner != null ? string.Format("\"{0}\" will be added as a remote.", repo.ParentOwner) : "";
+                var moreInfo = !string.IsNullOrEmpty(_addRemoteAsTB.Text) ? string.Format("\"{0}\" will be added as a remote.", _addRemoteAsTB.Text.Trim()) : "";
 
                 if (_tabControl.SelectedTab == _searchReposPage)
                     _cloneInfoText.Text = string.Format("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}", repo.CloneReadWriteUrl, GetTargetDir(repo), moreInfo);
