@@ -42,7 +42,7 @@ namespace Github
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
             var api = _plugin.GetPullRequestApi();
-            var pr = api.Create(Owner, NameAtRemote, remoteBranch, myBranch, title, body);
+            var pr = api.Create(Owner, NameAtRemote, remoteBranch, _plugin.Auth.Username + ":" + myBranch, title, body);
             if (pr == null || pr.Number == 0)
                 throw new InvalidOperationException("CreatePullRequest failed! \r\n" + _plugin.GetLoggerData());
             return pr.Number;
