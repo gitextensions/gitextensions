@@ -55,10 +55,9 @@
             this._searchReposPage = new System.Windows.Forms.TabPage();
             this._searchResultItemDescription = new System.Windows.Forms.TextBox();
             this._cloneSetupGB = new System.Windows.Forms.GroupBox();
-            this._cloneInfoText = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this._addRemoteAsTB = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this._cloneInfoText = new System.Windows.Forms.Label();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -325,7 +324,6 @@
             // 
             this._cloneSetupGB.Controls.Add(this._addRemoteAsTB);
             this._cloneSetupGB.Controls.Add(this.label3);
-            this._cloneSetupGB.Controls.Add(this.label2);
             this._cloneSetupGB.Controls.Add(this._cloneInfoText);
             this._cloneSetupGB.Controls.Add(this._createDirTB);
             this._cloneSetupGB.Controls.Add(this._closeBtn);
@@ -341,21 +339,13 @@
             this._cloneSetupGB.TabStop = false;
             this._cloneSetupGB.Text = "Clone";
             // 
-            // _cloneInfoText
+            // _addRemoteAsTB
             // 
-            this._cloneInfoText.Location = new System.Drawing.Point(10, 96);
-            this._cloneInfoText.Name = "_cloneInfoText";
-            this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
-            this._cloneInfoText.TabIndex = 21;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "label2";
+            this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
+            this._addRemoteAsTB.Name = "_addRemoteAsTB";
+            this._addRemoteAsTB.Size = new System.Drawing.Size(181, 20);
+            this._addRemoteAsTB.TabIndex = 24;
+            this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
             // label3
             // 
@@ -366,13 +356,12 @@
             this.label3.TabIndex = 23;
             this.label3.Text = "Add remote as:";
             // 
-            // _addRemoteAsTB
+            // _cloneInfoText
             // 
-            this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
-            this._addRemoteAsTB.Name = "_addRemoteAsTB";
-            this._addRemoteAsTB.Size = new System.Drawing.Size(181, 20);
-            this._addRemoteAsTB.TabIndex = 24;
-            this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
+            this._cloneInfoText.Location = new System.Drawing.Point(10, 96);
+            this._cloneInfoText.Name = "_cloneInfoText";
+            this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
+            this._cloneInfoText.TabIndex = 21;
             // 
             // ForkAndCloneForm
             // 
@@ -383,6 +372,8 @@
             this.Controls.Add(this._cloneSetupGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ForkAndCloneForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote repository fork and clone";
             this._tabControl.ResumeLayout(false);
@@ -421,6 +412,5 @@
         private System.Windows.Forms.TextBox _searchResultItemDescription;
         private System.Windows.Forms.TextBox _addRemoteAsTB;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
     }
 }

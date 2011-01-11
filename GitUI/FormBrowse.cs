@@ -1672,5 +1672,18 @@ namespace GitUI
             GitUICommands.Instance.StartPullRequestsDialog(repoHost);
             Initialize();
         }
+
+        private void createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
+            if (repoHost == null)
+            {
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                return;
+            }
+
+            GitUICommands.Instance.StartCreatePullRequest(repoHost);
+            Initialize();
+        }
     }
 }

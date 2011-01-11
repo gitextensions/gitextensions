@@ -12,10 +12,16 @@ namespace GitUI.RepoHosting
 {
     public partial class CreatePullRequestForm : Form
     {
-        IGitHostingPlugin _repoHost;
+        private IGitHostingPlugin _repoHost;
+        private IHostedRemote _currentHostedRemote;
+        private string _chooseBranch;
+        private string _chooseRemote;
 
-        public CreatePullRequestForm(IGitHostingPlugin repoHost)
+        public CreatePullRequestForm(IGitHostingPlugin repoHost, string chooseRemote, string chooseBranch)
         {
+            _repoHost = repoHost;
+            _chooseBranch = chooseBranch;
+            _chooseRemote = chooseRemote;
             InitializeComponent();
         }
 
@@ -26,21 +32,86 @@ namespace GitUI.RepoHosting
 
         private void Init()
         {
-            var pullRequestApis = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => !r.IsProbablyOwnedByMe);
+            _createBtn.Enabled = false;
+            LoadRemotes();
+            LoadBranches();
+        }
 
+        private void LoadRemotes()
+        {
+            var hostedRemotes = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => !r.IsProbablyOwnedByMe);
 
-            
             _pullReqTargetsCB.Items.Clear();
-            foreach (var pra in pullRequestApis)
+            foreach (var pra in hostedRemotes)
                 _pullReqTargetsCB.Items.Add(pra);
 
-            if (_selectedOwner)
-
-            if (_selectedOwner.Items.Count > 0)
+            if (_chooseRemote != null)
             {
-                _selectedOwner.SelectedIndex = 0;
-                _selectedOwner_SelectedIndexChanged(null, null);
+                for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
+                {
+                    IHostedRemote ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
+                    if (ihr.Name == _chooseRemote)
+                    {
+                        _pullReqTargetsCB.SelectedIndex = i;
+                        break;
+                    }
+                }
             }
+            else if (_pullReqTargetsCB.Items.Count > 0)
+                _pullReqTargetsCB.SelectedIndex = 0;
+        }
+
+        private void LoadBranches()
+        {
+            var myRemote = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => r.IsProbablyOwnedByMe).FirstOrDefault();
+            if (myRemote == null)
+                return;
+            _yourBranchCB.Items.Clear();
+
+            AsyncHelpers.DoAsync(
+                () => GitCommands.GitCommandHelpers.GetRemoteHeads(myRemote.Name, false, true),
+                (branches) =>
+                {
+                    foreach (var branch in branches)
+                        _yourBranchCB.Items.Add(branch.Name);
+                    _createBtn.Enabled = true;
+                },
+                (ex) => { MessageBox.Show(this, "Failed to load branches. " + ex.Message, "Error"); _createBtn.Enabled = true; } );
+        }
+
+        private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _remoteBranchTB.Text = _yourBranchCB.Text;
+        }
+
+        private void _createBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentHostedRemote == null)
+                return;
+
+            var title = _titleTB.Text.Trim();
+            var body = _bodyTB.Text.Trim();
+            if (title.Length == 0 || body.Length == 0)
+            {
+                MessageBox.Show(this, "You must specify a title and a body.", "Error");
+                return;
+            }
+
+            try
+            {
+                _currentHostedRemote.CreatePullRequest(_yourBranchCB.Text, _remoteBranchTB.Text, title, body);
+                MessageBox.Show(this, "Done.", "Pull request");
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Failed to create pull request.\r\n" + ex.Message, "Error");
+            }
+        }
+
+        private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
         }
     }
 }

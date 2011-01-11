@@ -137,6 +137,7 @@ namespace GitUI
             this.stashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._viewPullRequestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageRemoteRepositoriesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -185,7 +186,7 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this._viewPullRequestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createPullRequestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -1000,7 +1001,8 @@ namespace GitUI
             this.stashToolStripMenuItem,
             this.viewDiffToolStripMenuItem,
             this.patchToolStripMenuItem,
-            this._viewPullRequestsToolStripMenuItem});
+            this._viewPullRequestsToolStripMenuItem,
+            this.createPullRequestToolStripMenuItem});
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             this.commandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.commandsToolStripMenuItem.Text = "Commands";
@@ -1188,6 +1190,13 @@ namespace GitUI
             this.patchToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
             this.patchToolStripMenuItem.Text = "View patch file";
             this.patchToolStripMenuItem.Click += new System.EventHandler(this.PatchToolStripMenuItemClick);
+            // 
+            // _viewPullRequestsToolStripMenuItem
+            // 
+            this._viewPullRequestsToolStripMenuItem.Name = "_viewPullRequestsToolStripMenuItem";
+            this._viewPullRequestsToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
+            this._viewPullRequestsToolStripMenuItem.Text = "View pull requests";
+            this._viewPullRequestsToolStripMenuItem.Click += new System.EventHandler(this._viewPullRequestsToolStripMenuItem_Click);
             // 
             // remotesToolStripMenuItem
             // 
@@ -1550,12 +1559,12 @@ namespace GitUI
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
-            // _viewPullRequestsToolStripMenuItem
+            // createPullRequestToolStripMenuItem
             // 
-            this._viewPullRequestsToolStripMenuItem.Name = "_viewPullRequestsToolStripMenuItem";
-            this._viewPullRequestsToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
-            this._viewPullRequestsToolStripMenuItem.Text = "View pull requests";
-            this._viewPullRequestsToolStripMenuItem.Click += new System.EventHandler(this._viewPullRequestsToolStripMenuItem_Click);
+            this.createPullRequestToolStripMenuItem.Name = "createPullRequestToolStripMenuItem";
+            this.createPullRequestToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
+            this.createPullRequestToolStripMenuItem.Text = "Create pull request";
+            this.createPullRequestToolStripMenuItem.Click += new System.EventHandler(this.createPullRequestToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -1756,5 +1765,6 @@ namespace GitUI
         private ToolStripMenuItem diffContainsToolStripMenuItem;
         private ToolStripMenuItem _gitRepoMenuItem;
         private ToolStripMenuItem _viewPullRequestsToolStripMenuItem;
+        private ToolStripMenuItem createPullRequestToolStripMenuItem;
     }
 }
