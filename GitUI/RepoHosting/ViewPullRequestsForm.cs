@@ -26,7 +26,7 @@ namespace GitUI.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        List<IHostedRemote> _fetchers;
+        List<IHostedRemote> _hostedRemotes;
         List<IPullRequestInformation> _pullRequestsInfo;
         IPullRequestInformation _currentPullRequestInfo;
 
@@ -39,10 +39,10 @@ namespace GitUI.RepoHosting
 
         private void Init()
         {
-            _fetchers = _gitHoster.GetPullRequestTargetsForCurrentWorkingDirRepo();
+            _hostedRemotes = _gitHoster.GetPullRequestTargetsForCurrentWorkingDirRepo();
 
             _selectedOwner.Items.Clear();
-            foreach (var fetcher in _fetchers)
+            foreach (var fetcher in _hostedRemotes)
                 _selectedOwner.Items.Add(fetcher);
 
             if (_selectedOwner.Items.Count > 0)

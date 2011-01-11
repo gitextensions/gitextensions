@@ -7,8 +7,9 @@ namespace GitUIPluginInterfaces
     public interface IHostedRemote
     {
         List<IPullRequestInformation> GetPullRequests();
-        void CreatePullRequest(string title, string body);
+        int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
 
+        string Name { get; } //This is the name of the remote in the local git repository. This might be null
         string Data { get; }
         string DisplayData { get; }
 

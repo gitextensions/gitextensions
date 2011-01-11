@@ -732,7 +732,12 @@ namespace GitUI
 
         public void StartCreatePullRequest(IGitHostingPlugin gitHoster)
         {
-            WrapRepoHostingCall("Create pull request", gitHoster, (gh) => (new RepoHosting.CreatePullRequestForm(gitHoster)).ShowDialog());
+            StartCreatePullRequest(gitHoster, null, null);
+        }
+
+        public void StartCreatePullRequest(IGitHostingPlugin gitHoster, string chooseRemote, string chooseBranch)
+        {
+            WrapRepoHostingCall("Create pull request", gitHoster, (gh) => (new RepoHosting.CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)).ShowDialog());
         }
     }
 }

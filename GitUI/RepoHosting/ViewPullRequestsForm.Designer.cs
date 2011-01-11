@@ -42,9 +42,9 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this._closePullRequestBtn = new System.Windows.Forms.Button();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this._discussionWB = new System.Windows.Forms.WebBrowser();
             this._fileStatusList = new GitUI.FileStatusList();
             this._diffViewer = new GitUI.Editor.FileViewer();
+            this._discussionWB = new System.Windows.Forms.WebBrowser();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -59,6 +59,7 @@
             // _selectedOwner
             // 
             this._selectedOwner.DisplayMember = "DisplayData";
+            this._selectedOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._selectedOwner.FormattingEnabled = true;
             this._selectedOwner.Location = new System.Drawing.Point(112, 6);
             this._selectedOwner.Name = "_selectedOwner";
@@ -220,19 +221,6 @@
             this.splitContainer3.SplitterDistance = 171;
             this.splitContainer3.TabIndex = 0;
             // 
-            // _discussionWB
-            // 
-            this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._discussionWB.IsWebBrowserContextMenuEnabled = false;
-            this._discussionWB.Location = new System.Drawing.Point(3, 0);
-            this._discussionWB.MinimumSize = new System.Drawing.Size(20, 20);
-            this._discussionWB.Name = "_discussionWB";
-            this._discussionWB.Size = new System.Drawing.Size(278, 595);
-            this._discussionWB.TabIndex = 8;
-            this._discussionWB.WebBrowserShortcutsEnabled = false;
-            // 
             // _fileStatusList
             // 
             this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -261,6 +249,19 @@
             this._diffViewer.TabIndex = 0;
             this._diffViewer.TreatAllFilesAsText = false;
             // 
+            // _discussionWB
+            // 
+            this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._discussionWB.IsWebBrowserContextMenuEnabled = false;
+            this._discussionWB.Location = new System.Drawing.Point(3, 0);
+            this._discussionWB.MinimumSize = new System.Drawing.Size(20, 20);
+            this._discussionWB.Name = "_discussionWB";
+            this._discussionWB.Size = new System.Drawing.Size(278, 595);
+            this._discussionWB.TabIndex = 8;
+            this._discussionWB.WebBrowserShortcutsEnabled = false;
+            // 
             // ViewPullRequestsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,6 +269,8 @@
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
             this.Name = "ViewPullRequestsForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "View Pull Requests";
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
