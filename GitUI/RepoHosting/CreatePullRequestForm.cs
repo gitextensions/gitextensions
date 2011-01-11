@@ -33,7 +33,7 @@ namespace GitUI.RepoHosting
         private void Init()
         {
             _createBtn.Enabled = false;
-            _remoteBranchTB.Text = "Loading...";
+            _yourBranchCB.Text = "Loading...";
             LoadRemotes();
             LoadBranches();
         }
@@ -76,7 +76,7 @@ namespace GitUI.RepoHosting
                     foreach (var branch in branches)
                         _yourBranchCB.Items.Add(branch.Name);
                     _createBtn.Enabled = true;
-                    _remoteBranchTB.Text = _chooseBranch ?? "";
+                    _yourBranchCB.Text = _chooseBranch ?? "";
                 },
                 (ex) => { MessageBox.Show(this, "Failed to load branches. " + ex.Message, "Error"); _createBtn.Enabled = true; } );
         }
