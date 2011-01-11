@@ -688,26 +688,6 @@ namespace GitUI
             return false;
         }
 
-        public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
-        {
-            WrapRepoHostingCall("View pull requests", gitHoster,
-                (gh) =>
-                {
-                    var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
-                    fac.ShowDialog();
-                });
-        }
-
-        internal void StartPullRequestsDialog(IGitHostingPlugin gitHoster)
-        {
-            WrapRepoHostingCall("View pull requests", gitHoster, 
-                (gh) => 
-                {
-                    var dlg = new RepoHosting.ViewPullRequestsForm(gitHoster);
-                    dlg.ShowDialog();
-                });
-        }
-
         private static void WrapRepoHostingCall(string name, IGitHostingPlugin gitHoster, Action<IGitHostingPlugin> call)
         {
             if (!gitHoster.ConfigurationOk)
@@ -727,7 +707,32 @@ namespace GitUI
                     MessageBox.Show(string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace), "Error! :(");
                 }
             }
+        }
 
+        public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
+        {
+            WrapRepoHostingCall("View pull requests", gitHoster, (gh) => (new RepoHosting.ForkAndCloneForm(gitHoster)).ShowDialog());
+        }
+
+        internal void StartPullRequestsDialog(IGitHostingPlugin gitHoster)
+        {
+            WrapRepoHostingCall("View pull requests", gitHoster, (gh) => (new RepoHosting.ViewPullRequestsForm(gitHoster)).ShowDialog());
+        }
+
+        public void StartCreatePullRequest()
+        {
+            var relevantHosts = (from gh in RepoHosting.RepoHosts.GitHosters where gh.CurrentWorkingDirRepoIsRelevantToMe select gh).ToList();
+            if (relevantHosts.Count == 0)
+                MessageBox.Show("Could not find any repo hosts for current working directory");
+            else if (relevantHosts.Count == 1)
+                StartCreatePullRequest(relevantHosts.First());
+            else
+                MessageBox.Show("StartCreatePullRequest:Selection not implemented!");
+        }
+
+        public void StartCreatePullRequest(IGitHostingPlugin gitHoster)
+        {
+            WrapRepoHostingCall("Create pull request", gitHoster, (gh) => (new RepoHosting.CreatePullRequestForm(gitHoster)).ShowDialog());
         }
     }
 }
