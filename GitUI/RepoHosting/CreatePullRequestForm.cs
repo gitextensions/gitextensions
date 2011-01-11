@@ -26,11 +26,15 @@ namespace GitUI.RepoHosting
 
         private void Init()
         {
-            _fetchers = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo();
+            var pullRequestApis = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => !r.IsProbablyOwnedByMe);
 
-            _selectedOwner.Items.Clear();
-            foreach (var fetcher in _fetchers)
-                _selectedOwner.Items.Add(fetcher);
+
+            
+            _pullReqTargetsCB.Items.Clear();
+            foreach (var pra in pullRequestApis)
+                _pullReqTargetsCB.Items.Add(pra);
+
+            if (_selectedOwner)
 
             if (_selectedOwner.Items.Count > 0)
             {

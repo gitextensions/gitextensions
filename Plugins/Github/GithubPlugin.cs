@@ -308,10 +308,10 @@ namespace Github
             return repoInfos;
         }
 
-        public List<IPullRequestsFetcher> GetPullRequestTargetsForCurrentWorkingDirRepo()
+        public List<IHostedRemote> GetPullRequestTargetsForCurrentWorkingDirRepo()
         {
             var repoInfos = GetCurrentWorkingDirGithubRepos();
-            return (from info in repoInfos select (IPullRequestsFetcher)new GithubPullRequestFetcher(info, this)).ToList();
+            return (from info in repoInfos select (IHostedRemote)new GithubHostedRemote(info, this)).ToList();
         }
 
 

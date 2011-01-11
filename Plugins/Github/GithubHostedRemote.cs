@@ -7,10 +7,10 @@ using ghApi=GithubSharp.Core.API;
 
 namespace Github
 {
-    class GithubPullRequestFetcher : IPullRequestsFetcher
+    class GithubHostedRemote : IHostedRemote
     {
         GithubPlugin _plugin;
-        public GithubPullRequestFetcher(GithubRepositoryInformation info, GithubPlugin plugin)
+        public GithubHostedRemote(GithubRepositoryInformation info, GithubPlugin plugin)
         {
             _plugin = plugin;
             if (string.IsNullOrEmpty(info.Name) || string.IsNullOrEmpty(info.Owner))
@@ -18,7 +18,7 @@ namespace Github
             Data = info.Name + "/" + info.Owner;
         }
 
-        public List<IPullRequestInformation> Fetch()
+        public List<IPullRequestInformation> GetPullRequests()
         {
             var api = _plugin.GetPullRequestApi();
             var data = api.List(Owner, Name);
@@ -36,6 +36,12 @@ namespace Github
         public string DisplayData
         {
             get { return Data; }
+        }
+
+        public void CreatePullRequest(string title, string body)
+        {
+            var api = _plugin.GetPullRequestApi();
+            api.Create(Owner, Name, title, body);
         }
     }
 }
