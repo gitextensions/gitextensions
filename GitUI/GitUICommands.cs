@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -689,27 +690,25 @@ namespace GitUI
 
         public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
         {
-            if (!gitHoster.ConfigurationOk)
-            {
-                var eventArgs = new GitUIEventArgs(GitUICommands.Instance); 
-                gitHoster.Execute(eventArgs);
-            }
-
-            if (gitHoster.ConfigurationOk)
-            {
-                try
+            WrapRepoHostingCall("View pull requests", gitHoster,
+                (gh) =>
                 {
                     var fac = new RepoHosting.ForkAndCloneForm(gitHoster);
                     fac.ShowDialog();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(string.Format("ERROR: The ForkAndClone form failed. Message: {0}\r\n\r\n{1}", ex.Message, ex.StackTrace), "Error! :(");
-                }
-            }
+                });
         }
 
         internal void StartPullRequestsDialog(IGitHostingPlugin gitHoster)
+        {
+            WrapRepoHostingCall("View pull requests", gitHoster, 
+                (gh) => 
+                {
+                    var dlg = new RepoHosting.ViewPullRequestsForm(gitHoster);
+                    dlg.ShowDialog();
+                });
+        }
+
+        private static void WrapRepoHostingCall(string name, IGitHostingPlugin gitHoster, Action<IGitHostingPlugin> call)
         {
             if (!gitHoster.ConfigurationOk)
             {
@@ -721,14 +720,14 @@ namespace GitUI
             {
                 try
                 {
-                    var dlg = new RepoHosting.ViewPullRequestsForm(gitHoster);
-                    dlg.ShowDialog();
+                    call(gitHoster);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format("ERROR: The ViewPullRequests form failed. Message: {0}\r\n\r\n{1}", ex.Message, ex.StackTrace), "Error! :(");
+                    MessageBox.Show(string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace), "Error! :(");
                 }
             }
+
         }
     }
 }
