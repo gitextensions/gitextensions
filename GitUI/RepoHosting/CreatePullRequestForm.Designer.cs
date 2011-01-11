@@ -92,10 +92,10 @@
             this._bodyTB.Name = "_bodyTB";
             this._bodyTB.Size = new System.Drawing.Size(373, 144);
             this._bodyTB.TabIndex = 3;
-            this._bodyTB.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // _pullReqTargetsCB
             // 
+            this._pullReqTargetsCB.DisplayMember = "DisplayData";
             this._pullReqTargetsCB.FormattingEnabled = true;
             this._pullReqTargetsCB.Location = new System.Drawing.Point(138, 14);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
