@@ -53,7 +53,7 @@
     </Compile>
     <Compile Include="GithubHostedRepo.cs" />
     <Compile Include="GithubPlugin.cs" />
-    <Compile Include="GithubPullRequestFetcher.cs" />
+    <Compile Include="GithubHostedRemote.cs" />
     <Compile Include="GithubPullRequestInformation.cs" />
     <Compile Include="GithubRepositoryInformation.cs" />
     <Compile Include="MiscHelpers.cs" />

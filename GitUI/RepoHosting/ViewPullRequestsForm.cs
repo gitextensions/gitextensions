@@ -26,7 +26,7 @@ namespace GitUI.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        List<IPullRequestsFetcher> _fetchers;
+        List<IHostedRemote> _fetchers;
         List<IPullRequestInformation> _pullRequestsInfo;
         IPullRequestInformation _currentPullRequestInfo;
 
@@ -54,14 +54,14 @@ namespace GitUI.RepoHosting
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var fetcher = _selectedOwner.SelectedItem as IPullRequestsFetcher;
+            var fetcher = _selectedOwner.SelectedItem as IHostedRemote;
             if (fetcher == null)
                 return;
             _selectedOwner.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
             AsyncHelpers.DoAsync(
-                () => fetcher.Fetch(),
+                () => fetcher.GetPullRequests(),
                 (res) => { SetPullRequestsData(res); _selectedOwner.Enabled = true; },
                 (ex) => MessageBox.Show(this, "Failed to fetch pull data! " + ex.Message, "Error")
             );
