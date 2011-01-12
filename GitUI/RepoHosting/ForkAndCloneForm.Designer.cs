@@ -58,6 +58,9 @@
             this._addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this._cloneInfoText = new System.Windows.Forms.Label();
+            this._getFromUserBtn = new System.Windows.Forms.Button();
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this._orLbl = new System.Windows.Forms.Label();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -98,11 +101,11 @@
             // columnHeader8
             // 
             columnHeader8.Text = "Owner";
-            columnHeader8.Width = 130;
+            columnHeader8.Width = 110;
             // 
             // _searchBtn
             // 
-            this._searchBtn.Location = new System.Drawing.Point(219, 9);
+            this._searchBtn.Location = new System.Drawing.Point(230, 9);
             this._searchBtn.Name = "_searchBtn";
             this._searchBtn.Size = new System.Drawing.Size(75, 23);
             this._searchBtn.TabIndex = 1;
@@ -161,7 +164,8 @@
             this._searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader5,
             columnHeader8,
-            columnHeader7});
+            columnHeader7,
+            this.columnHeader6});
             this._searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this._searchResultsLV.HideSelection = false;
             this._searchResultsLV.Location = new System.Drawing.Point(15, 38);
@@ -292,6 +296,8 @@
             // 
             // _searchReposPage
             // 
+            this._searchReposPage.Controls.Add(this._orLbl);
+            this._searchReposPage.Controls.Add(this._getFromUserBtn);
             this._searchReposPage.Controls.Add(this._searchTB);
             this._searchReposPage.Controls.Add(this._searchResultItemDescription);
             this._searchReposPage.Controls.Add(this._searchBtn);
@@ -363,6 +369,30 @@
             this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
             this._cloneInfoText.TabIndex = 21;
             // 
+            // _getFromUserBtn
+            // 
+            this._getFromUserBtn.Location = new System.Drawing.Point(327, 9);
+            this._getFromUserBtn.Name = "_getFromUserBtn";
+            this._getFromUserBtn.Size = new System.Drawing.Size(84, 23);
+            this._getFromUserBtn.TabIndex = 21;
+            this._getFromUserBtn.Text = "Get from user";
+            this._getFromUserBtn.UseVisualStyleBackColor = true;
+            this._getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Is fork";
+            this.columnHeader6.Width = 41;
+            // 
+            // _orLbl
+            // 
+            this._orLbl.AutoSize = true;
+            this._orLbl.Location = new System.Drawing.Point(309, 14);
+            this._orLbl.Name = "_orLbl";
+            this._orLbl.Size = new System.Drawing.Size(16, 13);
+            this._orLbl.TabIndex = 22;
+            this._orLbl.Text = "or";
+            // 
             // ForkAndCloneForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,5 +442,8 @@
         private System.Windows.Forms.TextBox _searchResultItemDescription;
         private System.Windows.Forms.TextBox _addRemoteAsTB;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button _getFromUserBtn;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.Label _orLbl;
     }
 }
