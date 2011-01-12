@@ -6,18 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.RepoHosting
 {
     public partial class CreatePullRequestForm : Form
     {
-        private IGitHostingPlugin _repoHost;
+        private IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
         private string _chooseBranch;
         private string _chooseRemote;
 
-        public CreatePullRequestForm(IGitHostingPlugin repoHost, string chooseRemote, string chooseBranch)
+        public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
             _repoHost = repoHost;
             _chooseBranch = chooseBranch;
@@ -40,7 +40,7 @@ namespace GitUI.RepoHosting
 
         private void LoadRemotes()
         {
-            var hostedRemotes = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => !r.IsProbablyOwnedByMe);
+            var hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo().Where(r => !r.IsOwnedByMe);
 
             _pullReqTargetsCB.Items.Clear();
             foreach (var pra in hostedRemotes)
@@ -64,7 +64,7 @@ namespace GitUI.RepoHosting
 
         private void LoadBranches()
         {
-            var myRemote = _repoHost.GetPullRequestTargetsForCurrentWorkingDirRepo().Where(r => r.IsProbablyOwnedByMe).FirstOrDefault();
+            var myRemote = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo().Where(r => r.IsOwnedByMe).FirstOrDefault();
             if (myRemote == null)
                 return;
             _yourBranchCB.Items.Clear();
@@ -101,7 +101,11 @@ namespace GitUI.RepoHosting
 
             try
             {
-                _currentHostedRemote.CreatePullRequest(_yourBranchCB.Text, _remoteBranchTB.Text, title, body);
+                var hostedRepo = _currentHostedRemote.GetHostedRepository();
+                if (hostedRepo == null)
+                    throw new InvalidOperationException("Failed to get hosted repo interface");
+
+                hostedRepo.CreatePullRequest(_yourBranchCB.Text, _remoteBranchTB.Text, title, body);
                 MessageBox.Show(this, "Done.", "Pull request");
                 Close();
             }

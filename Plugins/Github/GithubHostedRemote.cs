@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using ghApi=GithubSharp.Core.API;
 
 namespace Github
@@ -19,16 +19,6 @@ namespace Github
             Name = info.Name;
         }
 
-        public List<IPullRequestInformation> GetPullRequests()
-        {
-            var api = _plugin.GetPullRequestApi();
-            var data = api.List(Owner, NameAtRemote);
-            if (data == null)
-                throw new InvalidOperationException("Could not fetch data!" + _plugin.GetLoggerData());
-
-            return (from el in data select (IPullRequestInformation)new GithubPullRequestInformation(Owner, NameAtRemote, el, _plugin)).ToList();
-        }
-
         private string Owner { get { return Data.Split('/')[0]; } }
         private string NameAtRemote { get { return Data.Split('/')[1]; } }
         public string Data { get; private set; }
@@ -39,21 +29,17 @@ namespace Github
             get { return Data; }
         }
 
-        public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
-        {
-            var api = _plugin.GetPullRequestApi();
-            var pr = api.Create(Owner, NameAtRemote, remoteBranch, _plugin.Auth.Username + ":" + myBranch, title, body);
-            if (pr == null || pr.Number == 0)
-                throw new InvalidOperationException("CreatePullRequest failed! \r\n" + _plugin.GetLoggerData());
-            return pr.Number;
-        }
-
-        public bool IsProbablyOwnedByMe
+        public bool IsOwnedByMe
         {
             get 
             {
                 return Owner == _plugin.Auth.Username;
             }
+        }
+
+        public IHostedRepository GetHostedRepository()
+        {
+            return _plugin.GetRepository(Owner, NameAtRemote);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
 using System.IO;
 using GitCommands.Repository;
@@ -17,9 +17,9 @@ namespace GitUI.RepoHosting
 {
     public partial class ForkAndCloneForm : Form
     {
-        IGitHostingPlugin _gitHoster;
+        IRepositoryHostPlugin _gitHoster;
 
-        public ForkAndCloneForm(IGitHostingPlugin gitHoster)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster)
         {
             _gitHoster = gitHoster;
             InitializeComponent();
@@ -88,7 +88,7 @@ namespace GitUI.RepoHosting
             _searchResultsLV.Items.Add(new ListViewItem() { Text = " : SEARCHING : " });
 
             AsyncHelpers.DoAsync(
-                () => _gitHoster.SearchForRepo(search),
+                () => _gitHoster.SearchForRepository(search),
                 (repos) =>
                 {
                     _searchResultsLV.Items.Clear();
@@ -117,7 +117,7 @@ namespace GitUI.RepoHosting
                 return;
             }
 
-            var hostedRepo = _searchResultsLV.SelectedItems[0].Tag as IHostedGitRepo;
+            var hostedRepo = _searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
             try
             {
                 hostedRepo.Fork();
@@ -151,7 +151,7 @@ namespace GitUI.RepoHosting
             }
 
             _forkBtn.Enabled = true;
-            var hostedRepo = (IHostedGitRepo)_searchResultsLV.SelectedItems[0].Tag;
+            var hostedRepo = (IHostedRepository)_searchResultsLV.SelectedItems[0].Tag;
             _searchResultItemDescription.Text = hostedRepo.Description;
         }
 
@@ -214,7 +214,7 @@ namespace GitUI.RepoHosting
         }
         #endregion
 
-        private void Clone(IHostedGitRepo repo)
+        private void Clone(IHostedRepository repo)
         {
             string targetDir = GetTargetDir(repo);
             if (targetDir == null)
@@ -242,7 +242,7 @@ namespace GitUI.RepoHosting
             Close();
         }
 
-        private IHostedGitRepo CurrentySelectedGitRepo
+        private IHostedRepository CurrentySelectedGitRepo
         {
             get
             {
@@ -251,14 +251,14 @@ namespace GitUI.RepoHosting
                     if (_searchResultsLV.SelectedItems.Count != 1)
                         return null;
 
-                    return (IHostedGitRepo)_searchResultsLV.SelectedItems[0].Tag;
+                    return (IHostedRepository)_searchResultsLV.SelectedItems[0].Tag;
                 }
                 else
                 {
                     if (_myReposLV.SelectedItems.Count != 1)
                         return null;
 
-                    return (IHostedGitRepo)_myReposLV.SelectedItems[0].Tag;
+                    return (IHostedRepository)_myReposLV.SelectedItems[0].Tag;
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace GitUI.RepoHosting
             }
         }
 
-        private string GetTargetDir(IHostedGitRepo repo)
+        private string GetTargetDir(IHostedRepository repo)
         {
             string targetDir = _destinationTB.Text.Trim();
             if (targetDir.Length == 0)

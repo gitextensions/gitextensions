@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using GithubSharp.Core.Services;
 using GithubSharp.Core.API;
 using GithubSharp.Core;
@@ -21,7 +22,7 @@ namespace Github
         public string ApiToken;
     }
 
-    public class GithubPlugin : IGitHostingPlugin, IPasswordHelper
+    public class GithubPlugin : IRepositoryHostPlugin, IPasswordHelper
     {
         #region cstor
         public GithubPlugin()
@@ -64,18 +65,48 @@ namespace Github
         #endregion
 
         #region IGitHostingPlugin
-        public IList<IHostedGitRepo> SearchForRepo(string search)
+        public IList<IHostedRepository> SearchForRepository(string search)
         {
             var repoApi = GetRepositoryApi();
-            return repoApi.Search(search).Select(r => GithubHostedRepo.Convert(this, r)).Cast<IHostedGitRepo>().ToList();
+            return repoApi.Search(search).Select(r => GithubHostedRepository.Convert(this, r)).Cast<IHostedRepository>().ToList();
         }
 
-        public IList<IHostedGitRepo> GetReposOfUser(string user)
+        public IList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
             var repoApi = GetRepositoryApi();
-            return repoApi.List(user).Select(r => GithubHostedRepo.Convert(this, r)).Cast<IHostedGitRepo>().ToList();
+            return repoApi.List(user).Select(r => GithubHostedRepository.Convert(this, r)).Cast<IHostedRepository>().ToList();
         }
 
+        public IHostedRepository GetRepository(string user, string repositoryName)
+        {
+            var repoApi = GetRepositoryApi();
+            return GithubHostedRepository.Convert(this, repoApi.Get(user, repositoryName));
+        }
+
+        public bool ConfigurationOk { get { return InternalConfigurationOk; } }
+
+        public IList<IHostedRepository> GetMyRepos()
+        {
+            return GetRepositoriesOfUser(GithubUser.Name);
+        }
+
+        public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
+        {
+            var repoInfos = GetCurrentWorkingDirGithubRepos();
+            return (from info in repoInfos select (IHostedRemote)new GithubHostedRemote(info, this)).ToList();
+        }
+
+
+        public bool CurrentWorkingDirRepoIsRelevantToMe
+        {
+            get
+            {
+                return GetCurrentWorkingDirGithubRepos().Count > 0;
+            }
+        }
+        #endregion
+
+        #region API Getters
         public Repository GetRepositoryApi()
         {
             var r = new Repository(_basicCacher, _logger);
@@ -96,79 +127,9 @@ namespace Github
             issues.Authenticate(GithubUser);
             return issues;
         }
-
-        public IList<IHostedGitRepo> GetMyRepos()
-        {
-            return GetReposOfUser(GithubUser.Name);
-        }
-
-        private bool? _configurationOk;
-
-        public bool ConfigurationOk
-        {
-            get
-            {
-                Monitor.Enter(_configOkLock);
-                try
-                {
-                    if (!_configurationOk.HasValue)
-                    {
-                        if (Auth == null)
-                            _configurationOk = false;
-                        else
-                        {
-                            Monitor.Exit(_configOkLock);
-                            StartConfigtest();
-                            Monitor.Enter(_configOkLock);
-                            if (!_configurationOk.HasValue)
-                                throw new ApplicationException("ConfigurationOk still does not have a value");
-                            return _configurationOk.Value;
-                        }
-                    }
-                }
-                finally
-                {
-                    Monitor.Exit(_configOkLock);
-                }
-
-                return _configurationOk.Value;
-            }
-        }
-
-        ManualResetEvent _configTestEvent = new ManualResetEvent(false);
-        private object _configOkLock = new object();
-
-        private void StartConfigtest()
-        {
-            _configTestEvent.Reset();
-            Action a = DoConfigTest;
-            a.BeginInvoke(null, null);
-            _configTestEvent.WaitOne();
-        }
-
-        private void DoConfigTest()
-        {
-            Monitor.Enter(_configOkLock);
-            try
-            {
-                _configTestEvent.Set();
-                GetMyRepos();
-                _configurationOk = true;
-            }
-            catch
-            {
-                _configurationOk = false;
-            }
-            finally
-            {
-                Monitor.Exit(_configOkLock);
-            }
-        }
         #endregion
 
-        BasicCacher _basicCacher = new BasicCacher();
-        ILogProvider _logger = new InMemLogger();
-
+        #region Auth stuff
         GithubSharp.Core.Models.GithubUser _githubUser;
         private GithubSharp.Core.Models.GithubUser GithubUser
         {
@@ -244,12 +205,6 @@ namespace Github
             }
         }
 
-        internal void InvalidateCache()
-        {
-            _basicCacher.Clear();
-        }
-
-
         //This does not work, github does not use basic auth this way on their web pages, it turns out..
         public static string GetApiTokenFromGithub(string username, string password)
         {
@@ -274,13 +229,86 @@ namespace Github
                 return null;
 
             var m = Regex.Match(inputUrl, @"^https://([^/]+)@github.com");
-            if(!m.Success)
+            if (!m.Success)
                 return null;
 
             if (Auth.Username != m.Groups[1].Value)
                 return null;
 
             return Auth.Password;
+        }
+        #endregion
+
+        #region Config test
+        private bool? _configurationOk;
+
+        private bool InternalConfigurationOk
+        {
+            get
+            {
+                Monitor.Enter(_configOkLock);
+                try
+                {
+                    if (!_configurationOk.HasValue)
+                    {
+                        if (Auth == null)
+                            _configurationOk = false;
+                        else
+                        {
+                            Monitor.Exit(_configOkLock);
+                            StartConfigtest();
+                            Monitor.Enter(_configOkLock);
+                            if (!_configurationOk.HasValue)
+                                throw new ApplicationException("ConfigurationOk still does not have a value");
+                            return _configurationOk.Value;
+                        }
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(_configOkLock);
+                }
+
+                return _configurationOk.Value;
+            }
+        }
+
+        ManualResetEvent _configTestEvent = new ManualResetEvent(false);
+        private object _configOkLock = new object();
+        private void StartConfigtest()
+        {
+            _configTestEvent.Reset();
+            Action a = DoConfigTest;
+            a.BeginInvoke(null, null);
+            _configTestEvent.WaitOne();
+        }
+
+        private void DoConfigTest()
+        {
+            Monitor.Enter(_configOkLock);
+            try
+            {
+                _configTestEvent.Set();
+                GetMyRepos();
+                _configurationOk = true;
+            }
+            catch
+            {
+                _configurationOk = false;
+            }
+            finally
+            {
+                Monitor.Exit(_configOkLock);
+            }
+        }
+        #endregion
+
+        #region Misc stuff
+        BasicCacher _basicCacher = new BasicCacher();
+        ILogProvider _logger = new InMemLogger();
+        internal void InvalidateCache()
+        {
+            _basicCacher.Clear();
         }
 
         private static IList<GithubHostedRemoteInformation> GetCurrentWorkingDirGithubRepos()
@@ -308,24 +336,10 @@ namespace Github
             return repoInfos;
         }
 
-        public List<IHostedRemote> GetPullRequestTargetsForCurrentWorkingDirRepo()
-        {
-            var repoInfos = GetCurrentWorkingDirGithubRepos();
-            return (from info in repoInfos select (IHostedRemote)new GithubHostedRemote(info, this)).ToList();
-        }
-
-
-        public bool CurrentWorkingDirRepoIsRelevantToMe
-        {
-            get
-            {
-                return GetCurrentWorkingDirGithubRepos().Count > 0;
-            }
-        }
-
         internal string GetLoggerData()
         {
             return _logger.ToString();
         }
+        #endregion
     }
 }

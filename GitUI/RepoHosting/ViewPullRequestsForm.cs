@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
 using System.Text.RegularExpressions;
 
@@ -14,19 +14,19 @@ namespace GitUI.RepoHosting
 {
     public partial class ViewPullRequestsForm : Form
     {
-        private GitUIPluginInterfaces.IGitHostingPlugin _gitHoster;
+        private IRepositoryHostPlugin _gitHoster;
 
         public ViewPullRequestsForm()
         {
             InitializeComponent();
         }
 
-        public ViewPullRequestsForm(GitUIPluginInterfaces.IGitHostingPlugin gitHoster) : this()
+        public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster) : this()
         {
             _gitHoster = gitHoster;
         }
 
-        List<IHostedRemote> _hostedRemotes;
+        List<IHostedRepository> _hostedRepositories;
         List<IPullRequestInformation> _pullRequestsInfo;
         IPullRequestInformation _currentPullRequestInfo;
 
@@ -39,11 +39,11 @@ namespace GitUI.RepoHosting
 
         private void Init()
         {
-            _hostedRemotes = _gitHoster.GetPullRequestTargetsForCurrentWorkingDirRepo();
+            _hostedRepositories = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList();
 
             _selectedOwner.Items.Clear();
-            foreach (var fetcher in _hostedRemotes)
-                _selectedOwner.Items.Add(fetcher);
+            foreach (var hostedRepo in _hostedRepositories)
+                _selectedOwner.Items.Add(hostedRepo);
 
             if (_selectedOwner.Items.Count > 0)
             {
@@ -54,14 +54,14 @@ namespace GitUI.RepoHosting
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var fetcher = _selectedOwner.SelectedItem as IHostedRemote;
-            if (fetcher == null)
+            var hostedRepo = _selectedOwner.SelectedItem as IHostedRepository;
+            if (hostedRepo == null)
                 return;
             _selectedOwner.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
             AsyncHelpers.DoAsync(
-                () => fetcher.GetPullRequests(),
+                () => hostedRepo.GetPullRequests(),
                 (res) => { SetPullRequestsData(res); _selectedOwner.Enabled = true; },
                 (ex) => MessageBox.Show(this, "Failed to fetch pull data! " + ex.Message, "Error")
             );

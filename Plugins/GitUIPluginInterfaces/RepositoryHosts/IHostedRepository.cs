@@ -2,22 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.RepositoryHosts
 {
-    public interface IGitHostingPlugin : IGitPlugin
-    {
-        IList<IHostedGitRepo> SearchForRepo(string search);
-        IList<IHostedGitRepo> GetReposOfUser(string user);
-
-        IList<IHostedGitRepo> GetMyRepos();
-
-        bool ConfigurationOk { get; }
-
-        bool CurrentWorkingDirRepoIsRelevantToMe { get; }
-        List<IHostedRemote> GetPullRequestTargetsForCurrentWorkingDirRepo();
-    }
-
-    public interface IHostedGitRepo
+    public interface IHostedRepository
     {
         string Owner { get; }
         string Name { get; }
@@ -39,6 +26,11 @@ namespace GitUIPluginInterfaces
         /// Forks the repo owned by somebody else to "my" repos.
         /// </summary>
         /// <returns>The new repo, owne by me.</returns>
-        IHostedGitRepo Fork();
+        IHostedRepository Fork();
+
+        List<IPullRequestInformation> GetPullRequests();
+
+        /// <returns>Pull request number</returns>
+        int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
     }
 }

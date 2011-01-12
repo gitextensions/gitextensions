@@ -7,6 +7,7 @@ using GitUI.Blame;
 using GitUI.Plugin;
 using GitUI.Tag;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using PatchApply;
 
 namespace GitUI
@@ -688,7 +689,7 @@ namespace GitUI
             return false;
         }
 
-        private static void WrapRepoHostingCall(string name, IGitHostingPlugin gitHoster, Action<IGitHostingPlugin> call)
+        private static void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster, Action<IRepositoryHostPlugin> call)
         {
             if (!gitHoster.ConfigurationOk)
             {
@@ -709,12 +710,12 @@ namespace GitUI
             }
         }
 
-        public void StartCloneForkFromHoster(IGitHostingPlugin gitHoster)
+        public void StartCloneForkFromHoster(IRepositoryHostPlugin gitHoster)
         {
             WrapRepoHostingCall("View pull requests", gitHoster, (gh) => (new RepoHosting.ForkAndCloneForm(gitHoster)).ShowDialog());
         }
 
-        internal void StartPullRequestsDialog(IGitHostingPlugin gitHoster)
+        internal void StartPullRequestsDialog(IRepositoryHostPlugin gitHoster)
         {
             WrapRepoHostingCall("View pull requests", gitHoster, (gh) => (new RepoHosting.ViewPullRequestsForm(gitHoster)).ShowDialog());
         }
@@ -730,12 +731,12 @@ namespace GitUI
                 MessageBox.Show("StartCreatePullRequest:Selection not implemented!");
         }
 
-        public void StartCreatePullRequest(IGitHostingPlugin gitHoster)
+        public void StartCreatePullRequest(IRepositoryHostPlugin gitHoster)
         {
             StartCreatePullRequest(gitHoster, null, null);
         }
 
-        public void StartCreatePullRequest(IGitHostingPlugin gitHoster, string chooseRemote, string chooseBranch)
+        public void StartCreatePullRequest(IRepositoryHostPlugin gitHoster, string chooseRemote, string chooseBranch)
         {
             WrapRepoHostingCall("Create pull request", gitHoster, (gh) => (new RepoHosting.CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)).ShowDialog());
         }
