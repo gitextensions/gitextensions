@@ -13,9 +13,9 @@ namespace Github
         public GithubHostedRemote(GithubHostedRemoteInformation info, GithubPlugin plugin)
         {
             _plugin = plugin;
-            if (string.IsNullOrEmpty(info.Name) || string.IsNullOrEmpty(info.Owner))
-                throw new ArgumentException("Neither Name or Owner can be null");
-            Data = info.NameAtGithub + "/" + info.Owner;
+            if (string.IsNullOrEmpty(info.NameAtGithub) || string.IsNullOrEmpty(info.Owner))
+                throw new ArgumentException("Neither NameAtGithub or Owner can be null");
+            Data = info.Owner + "/" + info.NameAtGithub;
             Name = info.Name;
         }
 
