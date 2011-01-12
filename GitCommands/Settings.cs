@@ -312,7 +312,7 @@ namespace GitCommands
             get
             {
                 if (_refreshCommitDialogOnFormFocus == null)
-                    SafeSetBool("refreshcommitdialogonformfocus", true, x => _refreshCommitDialogOnFormFocus = x);
+                    SafeSetBool("refreshcommitdialogonformfocus", false, x => _refreshCommitDialogOnFormFocus = x);
                 return _refreshCommitDialogOnFormFocus.Value;
             }
             set
