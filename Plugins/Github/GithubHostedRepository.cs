@@ -122,6 +122,20 @@ namespace Github
             return Convert(_plugin, tRepo);
         }
 
+        private List<IHostedBranch> _branches;
+        public List<IHostedBranch> Branches
+        {
+            get 
+            {
+                if (_branches == null)
+                {
+                    var repoApi = _plugin.GetRepositoryApi();
+                    _branches = (from b in repoApi.Branches(Name, Owner) select (IHostedBranch)new GithubHostedBranch(b.Name, b.Sha)).ToList();
+                }
+                return _branches;
+            }
+        }
+
         public List<IPullRequestInformation> GetPullRequests()
         {
             var api = _plugin.GetPullRequestApi();
@@ -142,6 +156,13 @@ namespace Github
         }
 
         public string Homepage { get; private set; }
+
+        public override string ToString()
+        {
+            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Owner))
+                return Owner + "/" + Name;
+            return "GithubHostedRepository[NO DATA]";
+        }
 
         public static GithubHostedRepository Convert(GithubPlugin p, GithubSharp.Core.Models.Repository repo)
         {
@@ -170,5 +191,17 @@ namespace Github
                 Homepage = string.Format("https://github.com/{0}/{1}", repo.Username, repo.Name)
             };
         }
+    }
+
+    internal class GithubHostedBranch : IHostedBranch
+    {
+        public GithubHostedBranch(string name, string sha)
+        {
+            Name = name;
+            Sha = sha;
+        }
+
+        public string Name { get; private set; }
+        public string Sha { get; private set; }
     }
 }
