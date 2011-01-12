@@ -251,14 +251,13 @@ namespace GitUI.RepoHosting
             }
         }
 
-        private void _postCommentText_Enter(object sender, EventArgs e)
+        private void _postCommentText_KeyUp(object sender, KeyEventArgs e)
         {
-            this.AcceptButton = _postComment;
-        }
-
-        private void _postCommentText_Leave(object sender, EventArgs e)
-        {
-            this.AcceptButton = null;
+            if (e.KeyCode == Keys.Enter && e.Control)
+            {
+                _postComment_Click(sender, e);
+                e.Handled = true;
+            }
         }
     }
 }
