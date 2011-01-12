@@ -76,38 +76,62 @@ namespace GitUI.RepoHosting
         #region GUI Handlers
         private void _searchBtn_Click(object sender, EventArgs e)
         {
-            _searchResultsLV.Items.Clear();
-            _searchResultsLV_SelectedIndexChanged(sender, e);
-
             var search = _searchTB.Text;
             if (search == null || search.Trim().Length == 0)
                 return;
 
-            _searchBtn.Enabled = false;
-
-            _searchResultsLV.Items.Add(new ListViewItem() { Text = " : SEARCHING : " });
+            PrepareSearch(sender, e);
 
             AsyncHelpers.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
-                (repos) =>
-                {
-                    _searchResultsLV.Items.Clear();
-                    foreach (var repo in repos)
-                    {
-                        var lvi = new ListViewItem();
-                        lvi.Tag = repo;
-                        lvi.Text = repo.Name;
-                        lvi.SubItems.Add(repo.Owner);
-                        lvi.SubItems.Add(repo.Forks.ToString());
-                        _searchResultsLV.Items.Add(lvi);
-                    }
-                    _searchBtn.Enabled = true;
-                },
-                (ex) =>
-                {
-                    MessageBox.Show(this, "Search failed! " + ex.Message, "Error");
+                (repos) => HandleSearchResult(repos),
+                (ex) => { MessageBox.Show(this, "Search failed!\r\n" + ex.Message, "Error"); _searchBtn.Enabled = true; });
+        }
+
+        private void _getFromUserBtn_Click(object sender, EventArgs e)
+        {
+            var search = _searchTB.Text;
+            if (search == null || search.Trim().Length == 0)
+                return;
+            PrepareSearch(sender, e);
+
+            AsyncHelpers.DoAsync(
+                () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
+                (repos) => HandleSearchResult(repos),
+                (ex) => {
+                    if (ex.Message.Contains("404"))
+                        MessageBox.Show(this, "User not found!", "Oops");
+                    else
+                        MessageBox.Show(this, "Could not fetch repositories of user!\r\n" + ex.Message, "Error"); 
+                    _searchBtn.Enabled = true; 
                 });
         }
+
+
+        private void PrepareSearch(object sender, EventArgs e)
+        {
+            _searchResultsLV.Items.Clear();
+            _searchResultsLV_SelectedIndexChanged(sender, e);
+            _searchBtn.Enabled = false;
+            _searchResultsLV.Items.Add(new ListViewItem() { Text = " : SEARCHING : " });
+        }
+
+        private void HandleSearchResult(IList<IHostedRepository> repos)
+        {
+            _searchResultsLV.Items.Clear();
+            foreach (var repo in repos)
+            {
+                var lvi = new ListViewItem();
+                lvi.Tag = repo;
+                lvi.Text = repo.Name;
+                lvi.SubItems.Add(repo.Owner);
+                lvi.SubItems.Add(repo.Forks.ToString());
+                lvi.SubItems.Add(repo.IsAFork ? "Yes" : "No");
+                _searchResultsLV.Items.Add(lvi);
+            }
+            _searchBtn.Enabled = true;
+        }
+
 
         private void _forkBtn_Click(object sender, EventArgs e)
         {
