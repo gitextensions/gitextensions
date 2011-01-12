@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github
 {
-    public class GithubHostedRepo : IHostedGitRepo
+    public class GithubHostedRepository : IHostedRepository
     {
-        private GithubPlugin _githubPlugin;
+        private GithubPlugin _plugin;
 
-        public GithubHostedRepo(GithubPlugin githubPlugin)
+        public GithubHostedRepository(GithubPlugin githubPlugin)
         {
-            _githubPlugin = githubPlugin;
+            _plugin = githubPlugin;
         }
 
         public string Owner { get; private set; }
@@ -23,9 +23,9 @@ namespace Github
         {
             get
             {
-                if (_githubPlugin.Auth == null)
+                if (_plugin.Auth == null)
                     throw new InvalidOperationException("Information not set?");
-                return Owner == _githubPlugin.Auth.Username;
+                return Owner == _plugin.Auth.Username;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Github
             {
                 if (_parent == null && IsAFork)
                 {
-                    var repoApi = _githubPlugin.GetRepositoryApi();
+                    var repoApi = _plugin.GetRepositoryApi();
                     var repo = repoApi.Get(Owner, Name);
                     if (!string.IsNullOrEmpty(repo.Parent))
                         _parent = repo.Parent;
@@ -85,7 +85,7 @@ namespace Github
         {
             if (readOnly)
                 return string.Format("http://github.com/{0}/{1}.git", owner, repoName);
-            else if (_githubPlugin.PreferredAccessMethod == "https")
+            else if (_plugin.PreferredAccessMethod == "https")
                 return string.Format("https://{0}:{2}@github.com/{0}/{1}.git", owner, repoName, password);
             else
                 return string.Format("git@github.com:{0}/{1}.git", owner, repoName);
@@ -95,7 +95,7 @@ namespace Github
         {
             get
             {
-                return CreateUrl(Owner, Name, false, _githubPlugin.Auth.Password);
+                return CreateUrl(Owner, Name, false, _plugin.Auth.Password);
             }
         }
 
@@ -107,26 +107,45 @@ namespace Github
             }
         }
 
-        public IHostedGitRepo Fork()
+        public IHostedRepository Fork()
         {
             if (IsMine)
                 throw new InvalidOperationException("Can not fork a repo that is already yours");
 
-            var repoApi = _githubPlugin.GetRepositoryApi();
+            var repoApi = _plugin.GetRepositoryApi();
             var tRepo = repoApi.Fork(Owner, Name);
-            if (tRepo == null || tRepo.Owner != _githubPlugin.Auth.Username)
+            if (tRepo == null || tRepo.Owner != _plugin.Auth.Username)
                 throw new InvalidOperationException("Some part of the fork failed.");
 
-            _githubPlugin.InvalidateCache();
+            _plugin.InvalidateCache();
 
-            return Convert(_githubPlugin, tRepo);
+            return Convert(_plugin, tRepo);
+        }
+
+        public List<IPullRequestInformation> GetPullRequests()
+        {
+            var api = _plugin.GetPullRequestApi();
+            var data = api.List(Owner, Name);
+            if (data == null)
+                throw new InvalidOperationException("Could not fetch data!" + _plugin.GetLoggerData());
+
+            return (from el in data select (IPullRequestInformation)new GithubPullRequestInformation(Owner, Name, el, _plugin)).ToList();
+        }
+
+        public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
+        {
+            var api = _plugin.GetPullRequestApi();
+            var pr = api.Create(Owner, Name, remoteBranch, _plugin.Auth.Username + ":" + myBranch, title, body);
+            if (pr == null || pr.Number == 0)
+                throw new InvalidOperationException("CreatePullRequest failed! \r\n" + _plugin.GetLoggerData());
+            return pr.Number;
         }
 
         public string Homepage { get; private set; }
 
-        public static GithubHostedRepo Convert(GithubPlugin p, GithubSharp.Core.Models.Repository repo)
+        public static GithubHostedRepository Convert(GithubPlugin p, GithubSharp.Core.Models.Repository repo)
         {
-            return new GithubHostedRepo(p)
+            return new GithubHostedRepository(p)
             {
                 Owner = repo.Owner,
                 Name = repo.Name,
@@ -138,9 +157,9 @@ namespace Github
             };
         }
 
-        public static GithubHostedRepo Convert(GithubPlugin p, GithubSharp.Core.Models.RepositoryFromSearch repo)
+        public static GithubHostedRepository Convert(GithubPlugin p, GithubSharp.Core.Models.RepositoryFromSearch repo)
         {
-            return new GithubHostedRepo(p)
+            return new GithubHostedRepository(p)
             {
                 Owner = repo.Username,
                 Name = repo.Name,
