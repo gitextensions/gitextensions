@@ -10,7 +10,12 @@ namespace GitUI.RepoHosting
 {
     class DiscussionHtmlCreator
     {
-        public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry> entries = null)
+        public static string CreateFor(IPullRequestInformation currentPullRequestInfo)
+        {
+            return CreateFor(currentPullRequestInfo, null);
+        }
+
+        public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry> entries)
         {
             var html = new StringBuilder();
             AddLine(html, "<html><body><style type='text/css'>");
