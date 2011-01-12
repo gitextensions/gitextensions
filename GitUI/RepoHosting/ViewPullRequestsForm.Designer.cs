@@ -58,7 +58,6 @@
             // 
             // _selectedOwner
             // 
-            this._selectedOwner.DisplayMember = "DisplayData";
             this._selectedOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._selectedOwner.FormattingEnabled = true;
             this._selectedOwner.Location = new System.Drawing.Point(112, 6);
