@@ -38,8 +38,8 @@
             this._createBtn = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this._yourBranchCB = new System.Windows.Forms.ComboBox();
-            this._remoteBranchTB = new System.Windows.Forms.TextBox();
+            this._yourBranchesCB = new System.Windows.Forms.ComboBox();
+            this._remoteBranchesCB = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,9 +113,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(9, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 13);
+            this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Pull request to:";
+            this.label3.Text = "Target repository:";
             // 
             // _createBtn
             // 
@@ -142,39 +142,44 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 69);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(83, 13);
+            this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 8;
-            this.label5.Text = "Remote branch:";
+            this.label5.Text = "Target branch:";
             // 
-            // _yourBranchCB
+            // _yourBranchesCB
             // 
-            this._yourBranchCB.FormattingEnabled = true;
-            this._yourBranchCB.Location = new System.Drawing.Point(118, 39);
-            this._yourBranchCB.Name = "_yourBranchCB";
-            this._yourBranchCB.Size = new System.Drawing.Size(160, 21);
-            this._yourBranchCB.TabIndex = 9;
-            this._yourBranchCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
+            this._yourBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._yourBranchesCB.FormattingEnabled = true;
+            this._yourBranchesCB.Location = new System.Drawing.Point(118, 39);
+            this._yourBranchesCB.Name = "_yourBranchesCB";
+            this._yourBranchesCB.Size = new System.Drawing.Size(160, 21);
+            this._yourBranchesCB.TabIndex = 9;
+            this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
-            // _remoteBranchTB
+            // _remoteBranchesCB
             // 
-            this._remoteBranchTB.Location = new System.Drawing.Point(118, 66);
-            this._remoteBranchTB.Name = "_remoteBranchTB";
-            this._remoteBranchTB.Size = new System.Drawing.Size(160, 20);
-            this._remoteBranchTB.TabIndex = 10;
+            this._remoteBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._remoteBranchesCB.FormattingEnabled = true;
+            this._remoteBranchesCB.Location = new System.Drawing.Point(118, 66);
+            this._remoteBranchesCB.Name = "_remoteBranchesCB";
+            this._remoteBranchesCB.Size = new System.Drawing.Size(160, 21);
+            this._remoteBranchesCB.TabIndex = 9;
+            this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // CreatePullRequestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(536, 307);
-            this.Controls.Add(this._remoteBranchTB);
-            this.Controls.Add(this._yourBranchCB);
+            this.Controls.Add(this._remoteBranchesCB);
+            this.Controls.Add(this._yourBranchesCB);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._createBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this._pullReqTargetsCB);
             this.Controls.Add(this.groupBox1);
+            this.MinimumSize = new System.Drawing.Size(552, 345);
             this.Name = "CreatePullRequestForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -200,7 +205,7 @@
         private System.Windows.Forms.Button _createBtn;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox _yourBranchCB;
-        private System.Windows.Forms.TextBox _remoteBranchTB;
+        private System.Windows.Forms.ComboBox _yourBranchesCB;
+        private System.Windows.Forms.ComboBox _remoteBranchesCB;
     }
 }
