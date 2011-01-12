@@ -105,7 +105,7 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "Created";
-            this.columnHeader4.Width = 131;
+            this.columnHeader4.Width = 133;
             // 
             // _chooseRepo
             // 
@@ -129,6 +129,7 @@
             // 
             // _postCommentText
             // 
+            this._postCommentText.AcceptsReturn = true;
             this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._postCommentText.Location = new System.Drawing.Point(3, 601);
@@ -136,8 +137,7 @@
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 47);
             this._postCommentText.TabIndex = 6;
-            this._postCommentText.Enter += new System.EventHandler(this._postCommentText_Enter);
-            this._postCommentText.Leave += new System.EventHandler(this._postCommentText_Leave);
+            this._postCommentText.KeyUp += new System.Windows.Forms.KeyEventHandler(this._postCommentText_KeyUp);
             // 
             // _postComment
             // 
