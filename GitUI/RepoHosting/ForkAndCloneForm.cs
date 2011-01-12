@@ -201,8 +201,11 @@ namespace GitUI.RepoHosting
         {
             if (CurrentySelectedGitRepo == null)
                 return;
-
-            Process.Start(CurrentySelectedGitRepo.Homepage);
+            string hp = CurrentySelectedGitRepo.Homepage;
+            if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
+                MessageBox.Show(this, "No homepage defined", "");
+            else
+                Process.Start(CurrentySelectedGitRepo.Homepage);
         }
 
         private void _closeBtn_Click(object sender, EventArgs e)
