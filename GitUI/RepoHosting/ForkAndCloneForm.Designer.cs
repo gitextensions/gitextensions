@@ -40,6 +40,7 @@
             this._myReposLV = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._searchResultsLV = new System.Windows.Forms.ListView();
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._cloneBtn = new System.Windows.Forms.Button();
             this._destinationTB = new System.Windows.Forms.TextBox();
             this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
@@ -53,14 +54,13 @@
             this._myReposPage = new System.Windows.Forms.TabPage();
             this._helpTextLbl = new System.Windows.Forms.Label();
             this._searchReposPage = new System.Windows.Forms.TabPage();
+            this._orLbl = new System.Windows.Forms.Label();
+            this._getFromUserBtn = new System.Windows.Forms.Button();
             this._searchResultItemDescription = new System.Windows.Forms.TextBox();
             this._cloneSetupGB = new System.Windows.Forms.GroupBox();
             this._addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this._cloneInfoText = new System.Windows.Forms.Label();
-            this._getFromUserBtn = new System.Windows.Forms.Button();
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this._orLbl = new System.Windows.Forms.Label();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -118,7 +118,7 @@
             this._searchTB.Location = new System.Drawing.Point(15, 11);
             this._searchTB.Name = "_searchTB";
             this._searchTB.Size = new System.Drawing.Size(198, 20);
-            this._searchTB.TabIndex = 2;
+            this._searchTB.TabIndex = 0;
             this._searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
             this._searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
             // 
@@ -127,7 +127,7 @@
             this._forkBtn.Location = new System.Drawing.Point(15, 231);
             this._forkBtn.Name = "_forkBtn";
             this._forkBtn.Size = new System.Drawing.Size(150, 23);
-            this._forkBtn.TabIndex = 6;
+            this._forkBtn.TabIndex = 4;
             this._forkBtn.Text = "Fork!";
             this._forkBtn.UseVisualStyleBackColor = true;
             this._forkBtn.Click += new System.EventHandler(this._forkBtn_Click);
@@ -173,10 +173,15 @@
             this._searchResultsLV.Name = "_searchResultsLV";
             this._searchResultsLV.ShowGroups = false;
             this._searchResultsLV.Size = new System.Drawing.Size(397, 187);
-            this._searchResultsLV.TabIndex = 8;
+            this._searchResultsLV.TabIndex = 3;
             this._searchResultsLV.UseCompatibleStateImageBehavior = false;
             this._searchResultsLV.View = System.Windows.Forms.View.Details;
             this._searchResultsLV.SelectedIndexChanged += new System.EventHandler(this._searchResultsLV_SelectedIndexChanged);
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Is fork";
+            this.columnHeader6.Width = 41;
             // 
             // _cloneBtn
             // 
@@ -184,7 +189,7 @@
             this._cloneBtn.Location = new System.Drawing.Point(7, 132);
             this._cloneBtn.Name = "_cloneBtn";
             this._cloneBtn.Size = new System.Drawing.Size(158, 30);
-            this._cloneBtn.TabIndex = 9;
+            this._cloneBtn.TabIndex = 4;
             this._cloneBtn.Text = "Clone";
             this._cloneBtn.UseVisualStyleBackColor = true;
             this._cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
@@ -194,7 +199,7 @@
             this._destinationTB.Location = new System.Drawing.Point(10, 32);
             this._destinationTB.Name = "_destinationTB";
             this._destinationTB.Size = new System.Drawing.Size(294, 20);
-            this._destinationTB.TabIndex = 10;
+            this._destinationTB.TabIndex = 0;
             this._destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
             // 
             // _browseForCloneToDirbtn
@@ -202,7 +207,7 @@
             this._browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 31);
             this._browseForCloneToDirbtn.Name = "_browseForCloneToDirbtn";
             this._browseForCloneToDirbtn.Size = new System.Drawing.Size(75, 23);
-            this._browseForCloneToDirbtn.TabIndex = 11;
+            this._browseForCloneToDirbtn.TabIndex = 1;
             this._browseForCloneToDirbtn.Text = "Browse...";
             this._browseForCloneToDirbtn.UseVisualStyleBackColor = true;
             this._browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
@@ -212,7 +217,7 @@
             this._createDirTB.Location = new System.Drawing.Point(11, 71);
             this._createDirTB.Name = "_createDirTB";
             this._createDirTB.Size = new System.Drawing.Size(183, 20);
-            this._createDirTB.TabIndex = 14;
+            this._createDirTB.TabIndex = 2;
             this._createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
             // 
             // _createDirectoryLbl
@@ -238,7 +243,7 @@
             this._openGitupPageBtn.Location = new System.Drawing.Point(418, 203);
             this._openGitupPageBtn.Name = "_openGitupPageBtn";
             this._openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
-            this._openGitupPageBtn.TabIndex = 19;
+            this._openGitupPageBtn.TabIndex = 5;
             this._openGitupPageBtn.Text = "Open github page";
             this._openGitupPageBtn.UseVisualStyleBackColor = true;
             this._openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
@@ -257,7 +262,7 @@
             this._closeBtn.Location = new System.Drawing.Point(554, 133);
             this._closeBtn.Name = "_closeBtn";
             this._closeBtn.Size = new System.Drawing.Size(91, 30);
-            this._closeBtn.TabIndex = 20;
+            this._closeBtn.TabIndex = 5;
             this._closeBtn.Text = "Close";
             this._closeBtn.UseVisualStyleBackColor = true;
             this._closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
@@ -313,6 +318,25 @@
             this._searchReposPage.Text = "Search for repositories";
             this._searchReposPage.UseVisualStyleBackColor = true;
             // 
+            // _orLbl
+            // 
+            this._orLbl.AutoSize = true;
+            this._orLbl.Location = new System.Drawing.Point(309, 14);
+            this._orLbl.Name = "_orLbl";
+            this._orLbl.Size = new System.Drawing.Size(16, 13);
+            this._orLbl.TabIndex = 22;
+            this._orLbl.Text = "or";
+            // 
+            // _getFromUserBtn
+            // 
+            this._getFromUserBtn.Location = new System.Drawing.Point(327, 9);
+            this._getFromUserBtn.Name = "_getFromUserBtn";
+            this._getFromUserBtn.Size = new System.Drawing.Size(84, 23);
+            this._getFromUserBtn.TabIndex = 2;
+            this._getFromUserBtn.Text = "Get from user";
+            this._getFromUserBtn.UseVisualStyleBackColor = true;
+            this._getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
+            // 
             // _searchResultItemDescription
             // 
             this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -350,7 +374,7 @@
             this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
             this._addRemoteAsTB.Name = "_addRemoteAsTB";
             this._addRemoteAsTB.Size = new System.Drawing.Size(181, 20);
-            this._addRemoteAsTB.TabIndex = 24;
+            this._addRemoteAsTB.TabIndex = 3;
             this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
             // label3
@@ -368,30 +392,6 @@
             this._cloneInfoText.Name = "_cloneInfoText";
             this._cloneInfoText.Size = new System.Drawing.Size(632, 35);
             this._cloneInfoText.TabIndex = 21;
-            // 
-            // _getFromUserBtn
-            // 
-            this._getFromUserBtn.Location = new System.Drawing.Point(327, 9);
-            this._getFromUserBtn.Name = "_getFromUserBtn";
-            this._getFromUserBtn.Size = new System.Drawing.Size(84, 23);
-            this._getFromUserBtn.TabIndex = 21;
-            this._getFromUserBtn.Text = "Get from user";
-            this._getFromUserBtn.UseVisualStyleBackColor = true;
-            this._getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Is fork";
-            this.columnHeader6.Width = 41;
-            // 
-            // _orLbl
-            // 
-            this._orLbl.AutoSize = true;
-            this._orLbl.Location = new System.Drawing.Point(309, 14);
-            this._orLbl.Name = "_orLbl";
-            this._orLbl.Size = new System.Drawing.Size(16, 13);
-            this._orLbl.TabIndex = 22;
-            this._orLbl.Text = "or";
             // 
             // ForkAndCloneForm
             // 
