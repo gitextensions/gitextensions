@@ -16,6 +16,7 @@ namespace GitUI.RepoHosting
         private IHostedRemote _currentHostedRemote;
         private string _chooseBranch;
         private string _chooseRemote;
+        private List<IHostedRemote> _hostedRemotes;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
@@ -33,17 +34,18 @@ namespace GitUI.RepoHosting
         private void Init()
         {
             _createBtn.Enabled = false;
-            _yourBranchCB.Text = "Loading...";
+            _yourBranchesCB.Text = "Loading...";
+            _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
             LoadRemotes();
-            LoadBranches();
+            LoadMyBranches();
         }
 
         private void LoadRemotes()
         {
-            var hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo().Where(r => !r.IsOwnedByMe);
+            var foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe);
 
             _pullReqTargetsCB.Items.Clear();
-            foreach (var pra in hostedRemotes)
+            foreach (var pra in foreignHostedRemotes)
                 _pullReqTargetsCB.Items.Add(pra);
 
             if (_chooseRemote != null)
@@ -60,30 +62,53 @@ namespace GitUI.RepoHosting
             }
             else if (_pullReqTargetsCB.Items.Count > 0)
                 _pullReqTargetsCB.SelectedIndex = 0;
+
+            _pullReqTargetsCB_SelectedIndexChanged(null, null);
         }
 
-        private void LoadBranches()
+        private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var myRemote = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo().Where(r => r.IsOwnedByMe).FirstOrDefault();
-            if (myRemote == null)
-                return;
-            _yourBranchCB.Items.Clear();
+            _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
+
+            _remoteBranchesCB.Items.Clear();
+            _remoteBranchesCB.Text = "Loading...";
 
             AsyncHelpers.DoAsync(
-                () => GitCommands.GitCommandHelpers.GetRemoteHeads(myRemote.Name, false, true),
+                () => _currentHostedRemote.GetHostedRepository().Branches,
                 (branches) =>
                 {
                     foreach (var branch in branches)
-                        _yourBranchCB.Items.Add(branch.Name);
+                        _remoteBranchesCB.Items.Add(branch.Name);
                     _createBtn.Enabled = true;
-                    _yourBranchCB.Text = _chooseBranch ?? "";
+                    if (branches.Count > 0)
+                        _remoteBranchesCB.SelectedIndex = 0;
                 },
-                (ex) => { MessageBox.Show(this, "Failed to load branches. " + ex.Message, "Error"); _createBtn.Enabled = true; } );
+                (ex) => { throw ex; });
+        }
+
+        private void LoadMyBranches()
+        {
+            var myRemote = _hostedRemotes.Where(r => r.IsOwnedByMe).FirstOrDefault();
+            if (myRemote == null)
+                throw new InvalidOperationException("Could not locate a remote that belongs to your user!");
+
+            _yourBranchesCB.Items.Clear();
+
+            AsyncHelpers.DoAsync(
+                () => myRemote.GetHostedRepository().Branches,
+                (branches) =>
+                {
+                    foreach (var branch in branches)
+                        _yourBranchesCB.Items.Add(branch.Name);
+                    _createBtn.Enabled = true;
+                    if (branches.Count > 0)
+                        _yourBranchesCB.SelectedIndex = 0;
+                },
+                (ex) => { throw ex; });
         }
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _remoteBranchTB.Text = _yourBranchCB.Text;
         }
 
         private void _createBtn_Click(object sender, EventArgs e)
@@ -105,7 +130,7 @@ namespace GitUI.RepoHosting
                 if (hostedRepo == null)
                     throw new InvalidOperationException("Failed to get hosted repo interface");
 
-                hostedRepo.CreatePullRequest(_yourBranchCB.Text, _remoteBranchTB.Text, title, body);
+                hostedRepo.CreatePullRequest(_yourBranchesCB.Text, _remoteBranchesCB.Text, title, body);
                 MessageBox.Show(this, "Done.", "Pull request");
                 Close();
             }
@@ -113,11 +138,6 @@ namespace GitUI.RepoHosting
             {
                 MessageBox.Show(this, "Failed to create pull request.\r\n" + ex.Message, "Error");
             }
-        }
-
-        private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
         }
     }
 }
