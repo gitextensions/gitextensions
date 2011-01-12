@@ -176,6 +176,7 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+            _repositoryHostsToolStripMenuItem.Enabled = validWorkingDir;
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
             if (hard)
@@ -1611,6 +1612,7 @@ namespace GitUI
             new FormBisect().ShowDialog();
             Initialize();
         }
+
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus item = DiffFiles.SelectedItem;
@@ -1651,7 +1653,7 @@ namespace GitUI
                 commitToolStripMenuItem1.Checked = true;
         }
 
-        private void _gitRepoMenuItem_Click(object sender, EventArgs e)
+        private void _forkCloneMenuItem_Click(object sender, EventArgs e)
         {
             if (GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0)
             {
@@ -1673,7 +1675,7 @@ namespace GitUI
             Initialize();
         }
 
-        private void createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
+        private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
