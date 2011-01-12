@@ -22,6 +22,9 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         string CloneReadWriteUrl { get; }
         string CloneReadOnlyUrl { get; }
 
+        //Slow op
+        List<IHostedBranch> Branches { get; }
+
         /// <summary>
         /// Forks the repo owned by somebody else to "my" repos.
         /// </summary>
@@ -32,5 +35,11 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         /// <returns>Pull request number</returns>
         int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
+    }
+
+    public interface IHostedBranch
+    {
+        string Name { get; }
+        string Sha { get; }
     }
 }
