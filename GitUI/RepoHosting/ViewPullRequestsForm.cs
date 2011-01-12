@@ -33,6 +33,7 @@ namespace GitUI.RepoHosting
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
         {
             _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
+            _discussionWB.DocumentCompleted += _discussionWB_DocumentCompleted;
 
             Init();
         }
@@ -146,6 +147,11 @@ namespace GitUI.RepoHosting
         {
             var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion.Entries);
             _discussionWB.DocumentText = t;
+        }
+
+        void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
         }
 
         private void LoadDiffPatch()
