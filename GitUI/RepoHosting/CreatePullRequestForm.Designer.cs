@@ -95,7 +95,7 @@
             this._bodyTB.Multiline = true;
             this._bodyTB.Name = "_bodyTB";
             this._bodyTB.Size = new System.Drawing.Size(464, 116);
-            this._bodyTB.TabIndex = 3;
+            this._bodyTB.TabIndex = 1;
             // 
             // _pullReqTargetsCB
             // 
@@ -105,7 +105,7 @@
             this._pullReqTargetsCB.Location = new System.Drawing.Point(118, 12);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
             this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 21);
-            this._pullReqTargetsCB.TabIndex = 4;
+            this._pullReqTargetsCB.TabIndex = 3;
             this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
             // 
             // label3
@@ -123,7 +123,7 @@
             this._createBtn.Location = new System.Drawing.Point(416, 265);
             this._createBtn.Name = "_createBtn";
             this._createBtn.Size = new System.Drawing.Size(112, 33);
-            this._createBtn.TabIndex = 6;
+            this._createBtn.TabIndex = 2;
             this._createBtn.Text = "Create";
             this._createBtn.UseVisualStyleBackColor = true;
             this._createBtn.Click += new System.EventHandler(this._createBtn_Click);
@@ -153,7 +153,7 @@
             this._yourBranchesCB.Location = new System.Drawing.Point(118, 39);
             this._yourBranchesCB.Name = "_yourBranchesCB";
             this._yourBranchesCB.Size = new System.Drawing.Size(160, 21);
-            this._yourBranchesCB.TabIndex = 9;
+            this._yourBranchesCB.TabIndex = 0;
             this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // _remoteBranchesCB
@@ -163,7 +163,7 @@
             this._remoteBranchesCB.Location = new System.Drawing.Point(118, 66);
             this._remoteBranchesCB.Name = "_remoteBranchesCB";
             this._remoteBranchesCB.Size = new System.Drawing.Size(160, 21);
-            this._remoteBranchesCB.TabIndex = 9;
+            this._remoteBranchesCB.TabIndex = 1;
             this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // CreatePullRequestForm

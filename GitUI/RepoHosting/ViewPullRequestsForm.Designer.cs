@@ -122,7 +122,7 @@
             this._fetchBtn.Location = new System.Drawing.Point(652, 33);
             this._fetchBtn.Name = "_fetchBtn";
             this._fetchBtn.Size = new System.Drawing.Size(134, 29);
-            this._fetchBtn.TabIndex = 5;
+            this._fetchBtn.TabIndex = 2;
             this._fetchBtn.Text = "Fetch and Review";
             this._fetchBtn.UseVisualStyleBackColor = true;
             this._fetchBtn.Click += new System.EventHandler(this._fetchBtn_Click);
@@ -136,7 +136,7 @@
             this._postCommentText.Multiline = true;
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 47);
-            this._postCommentText.TabIndex = 6;
+            this._postCommentText.TabIndex = 0;
             this._postCommentText.KeyUp += new System.Windows.Forms.KeyEventHandler(this._postCommentText_KeyUp);
             // 
             // _postComment
@@ -145,7 +145,7 @@
             this._postComment.Location = new System.Drawing.Point(168, 654);
             this._postComment.Name = "_postComment";
             this._postComment.Size = new System.Drawing.Size(113, 23);
-            this._postComment.TabIndex = 7;
+            this._postComment.TabIndex = 1;
             this._postComment.Text = "Post comment";
             this._postComment.UseVisualStyleBackColor = true;
             this._postComment.Click += new System.EventHandler(this._postComment_Click);
@@ -197,7 +197,7 @@
             this._closePullRequestBtn.Location = new System.Drawing.Point(652, 164);
             this._closePullRequestBtn.Name = "_closePullRequestBtn";
             this._closePullRequestBtn.Size = new System.Drawing.Size(134, 29);
-            this._closePullRequestBtn.TabIndex = 6;
+            this._closePullRequestBtn.TabIndex = 3;
             this._closePullRequestBtn.Text = "Close pull request";
             this._closePullRequestBtn.UseVisualStyleBackColor = true;
             this._closePullRequestBtn.Click += new System.EventHandler(this._closePullRequestBtn_Click);
