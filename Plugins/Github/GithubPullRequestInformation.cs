@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using GithubSharp.Core.Models;
 using System.Net;
 using System.IO;
@@ -28,10 +28,10 @@ namespace Github
             IssueOwner = issueOwner;
             RepositoryName = repoName;
 
-            BaseRepo = GithubHostedRepo.Convert(_plugin, _pullRequestDetails.Base.Repository);
+            BaseRepo = GithubHostedRepository.Convert(_plugin, _pullRequestDetails.Base.Repository);
             BaseSha = _pullRequestDetails.Base.Sha;
             BaseRef = _pullRequestDetails.Base.Ref;
-            HeadRepo = GithubHostedRepo.Convert(_plugin, _pullRequestDetails.Head.Repository);
+            HeadRepo = GithubHostedRepository.Convert(_plugin, _pullRequestDetails.Head.Repository);
             HeadSha = _pullRequestDetails.Head.Sha;
             HeadRef = _pullRequestDetails.Head.Ref;
         }
@@ -70,8 +70,8 @@ namespace Github
 
         public string Title { get; private set; }
         public string Body { get; private set; }
-        public IHostedGitRepo BaseRepo { get; private set; }
-        public IHostedGitRepo HeadRepo { get; private set; }
+        public IHostedRepository BaseRepo { get; private set; }
+        public IHostedRepository HeadRepo { get; private set; }
         public string BaseSha { get; private set; }
         public string HeadSha { get; private set; }
         public string BaseRef { get; private set; }

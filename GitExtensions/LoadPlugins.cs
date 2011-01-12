@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitUI;
 using GitUI.Plugin;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using System.Threading;
 using GitUI.RepoHosting;
 
@@ -58,8 +59,8 @@ namespace GitExtensions
                         gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
                         gitPlugin.Register(GitUICommands.Instance);
 
-                        if (gitPlugin is IGitHostingPlugin)
-                            RepoHosts.GitHosters.Add(gitPlugin as IGitHostingPlugin);
+                        if (gitPlugin is IRepositoryHostPlugin)
+                            RepoHosts.GitHosters.Add(gitPlugin as IRepositoryHostPlugin);
                           
                         LoadedPlugins.Plugins.Add(gitPlugin);
                     }

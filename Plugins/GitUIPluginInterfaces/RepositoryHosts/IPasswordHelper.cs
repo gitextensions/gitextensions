@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IPasswordHelper
     {

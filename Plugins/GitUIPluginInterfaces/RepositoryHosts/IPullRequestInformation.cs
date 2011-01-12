@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IPullRequestInformation
     {
@@ -13,8 +13,8 @@ namespace GitUIPluginInterfaces
 
         string DiffData { get; }
 
-        IHostedGitRepo BaseRepo { get; }
-        IHostedGitRepo HeadRepo { get; }
+        IHostedRepository BaseRepo { get; }
+        IHostedRepository HeadRepo { get; }
         string BaseSha { get; }
         string HeadSha { get; }
 
