@@ -37,9 +37,12 @@ namespace Github
             }
         }
 
+        IHostedRepository _hostedRepository;
         public IHostedRepository GetHostedRepository()
         {
-            return _plugin.GetRepository(Owner, NameAtRemote);
+            if (_hostedRepository == null)
+                _hostedRepository = _plugin.GetRepository(Owner, NameAtRemote);
+            return _hostedRepository;
         }
     }
 }
