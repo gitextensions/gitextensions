@@ -170,6 +170,22 @@ namespace GitUI
             }
         }
 
+        public bool RowIsRelative(int aRow)
+        {
+            lock (graphData)
+            {
+                Graph.LaneRow row = graphData[aRow];
+                if (row == null)
+                {
+                    return false;
+                }
+                if (row.Node.Ancestors.Count > 0)
+                    return row.Node.Ancestors[0].IsRelative;
+                else 
+                    return true;
+            }
+        }
+
         public object GetRowData(int aRow)
         {
             lock (graphData)

@@ -370,6 +370,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _revisionGraphDrawNonRelativesTextGray;
+        public static bool RevisionGraphDrawNonRelativesTextGray
+        {
+            get
+            {
+                if (_revisionGraphDrawNonRelativesTextGray == null)
+                    SafeSetBool("revisiongraphdrawnonrelativestextgray", false, x => _revisionGraphDrawNonRelativesTextGray = x);
+                return _revisionGraphDrawNonRelativesTextGray.Value;
+            }
+            set
+            {
+                _revisionGraphDrawNonRelativesTextGray = value;
+                Application.UserAppDataRegistry.SetValue("revisiongraphdrawnonrelativestextgray", _revisionGraphDrawNonRelativesTextGray);
+            }
+        }
+
         public static int RevisionGraphWidth { get; set; }
 
         public static float RevisionGraphThickness { get; set; }
