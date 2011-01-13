@@ -12,13 +12,14 @@ using System.Text.RegularExpressions;
 
 namespace GitUI.RepoHosting
 {
-    public partial class ViewPullRequestsForm : Form
+    public partial class ViewPullRequestsForm : GitExtensionsForm
     {
         private IRepositoryHostPlugin _gitHoster;
 
         public ViewPullRequestsForm()
         {
             InitializeComponent();
+            Translate();
         }
 
         public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster) : this()
