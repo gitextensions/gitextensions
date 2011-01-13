@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace GitUI.RepoHosting
 {
-    public partial class ForkAndCloneForm : Form
+    public partial class ForkAndCloneForm : GitExtensionsForm
     {
         IRepositoryHostPlugin _gitHoster;
 
@@ -23,6 +23,7 @@ namespace GitUI.RepoHosting
         {
             _gitHoster = gitHoster;
             InitializeComponent();
+            Translate();
             Init();
         }
 

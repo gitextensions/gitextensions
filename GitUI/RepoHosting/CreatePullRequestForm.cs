@@ -10,7 +10,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.RepoHosting
 {
-    public partial class CreatePullRequestForm : Form
+    public partial class CreatePullRequestForm : GitExtensionsForm
     {
         private IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
@@ -24,6 +24,7 @@ namespace GitUI.RepoHosting
             _chooseBranch = chooseBranch;
             _chooseRemote = chooseRemote;
             InitializeComponent();
+            Translate();
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
