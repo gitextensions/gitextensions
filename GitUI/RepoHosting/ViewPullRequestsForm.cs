@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,11 +9,22 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
 using System.Text.RegularExpressions;
+using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
 {
     public partial class ViewPullRequestsForm : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
+        private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!\r\n");
+        private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!\r\n");
+        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!\r\n" );
+        private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!\r\n");
+        private readonly TranslationString _strError = new TranslationString("Error");
+        private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
+        #endregion
+
         private IRepositoryHostPlugin _gitHoster;
 
         public ViewPullRequestsForm()
@@ -65,7 +76,7 @@ namespace GitUI.RepoHosting
             AsyncHelpers.DoAsync(
                 () => hostedRepo.GetPullRequests(),
                 (res) => { SetPullRequestsData(res); _selectedOwner.Enabled = true; },
-                (ex) => MessageBox.Show(this, "Failed to fetch pull data! " + ex.Message, "Error")
+                (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
         }
 
@@ -88,7 +99,7 @@ namespace GitUI.RepoHosting
 
             _pullRequestsList.Items.Clear();
             var lvi = new ListViewItem("");
-            lvi.SubItems.Add(" : LOADING : ");
+            lvi.SubItems.Add(_strLoading.Text);
             _pullRequestsList.Items.Add(lvi);
         }
 
@@ -141,7 +152,7 @@ namespace GitUI.RepoHosting
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
                 (d) => LoadDiscussion(d),
-                (ex) => MessageBox.Show(this, "Could not load discussion! " + ex.Message, "bah"));
+                (ex) => MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text));
         }
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
@@ -160,9 +171,8 @@ namespace GitUI.RepoHosting
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
                 (data) => SplitAndLoadDiff(data),
-                (ex) => MessageBox.Show(this, "Failed to load diff stuff! " + ex.Message, "Error"));
+                (ex) => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));
         }
-
 
         Dictionary<string, string> _diffCache;
         private void SplitAndLoadDiff(string diffData)
@@ -177,7 +187,7 @@ namespace GitUI.RepoHosting
                 var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
                 if (!match.Success)
                 {
-                    MessageBox.Show(this, "Error: Unable to understand patch", "Error");
+                    MessageBox.Show(this, "Error: Unable to understand patch", _strError.Text);
                     return;
                 }
 
@@ -235,7 +245,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Failed to close!\r\n" + ex.Message, "Close pull request");
+                MessageBox.Show(this, _strFailedToClosePullRequest.Text + ex.Message, _strError.Text);
             }
         }
 
@@ -254,7 +264,7 @@ namespace GitUI.RepoHosting
             }
             catch(Exception ex)
             {
-                MessageBox.Show(this, "Failed to post discussion item! " + ex.Message, "Error");
+                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
             }
         }
 
