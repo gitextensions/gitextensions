@@ -24,6 +24,10 @@ namespace GitUI.RepoHosting
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
+        }
+
+        private void ForkAndCloneForm_Load(object sender, EventArgs e)
+        {
             Init();
         }
 

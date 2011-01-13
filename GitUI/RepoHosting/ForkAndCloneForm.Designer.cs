@@ -402,9 +402,9 @@
             this.Controls.Add(this._cloneSetupGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ForkAndCloneForm";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote repository fork and clone";
+            this.Load += new System.EventHandler(this.ForkAndCloneForm_Load);
             this._tabControl.ResumeLayout(false);
             this._myReposPage.ResumeLayout(false);
             this._searchReposPage.ResumeLayout(false);
