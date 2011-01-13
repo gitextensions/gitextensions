@@ -795,7 +795,13 @@ namespace GitUI
             else
                 e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
-            Brush foreBrush = new SolidBrush(e.CellStyle.ForeColor);
+            Brush foreBrush;
+
+            if (!Settings.RevisionGraphDrawNonRelativesGray ||!Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
+                foreBrush = new SolidBrush(e.CellStyle.ForeColor);
+            else
+                foreBrush = new SolidBrush(Color.LightGray);
+
             var rowFont = revision.Guid == CurrentCheckout ? HeadFont : NormalFont;
 
             switch (column)
@@ -838,6 +844,7 @@ namespace GitUI
                             }
                         }
                         var text = revision.Message;
+
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                     }
