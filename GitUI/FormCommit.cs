@@ -45,7 +45,6 @@ namespace GitUI
         private readonly TranslationString _enterCommitMessageCaption = new TranslationString("Commit message");
 
         private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
-        private readonly GitCommandsInstance _gitGetUnstagedCommand = new GitCommandsInstance();
 
         private readonly TranslationString _mergeConflicts =
             new TranslationString("There are unresolved mergeconflicts, solve mergeconflicts before committing.");
@@ -88,6 +87,7 @@ namespace GitUI
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
         #endregion
 
+        private readonly GitCommandsInstance _gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
@@ -310,7 +310,7 @@ namespace GitUI
                 MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text);
                 return;
             }
-            if (Message.Text.Length < 3)
+            if (string.IsNullOrEmpty(Message.Text))
             {
                 MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text);
                 return;
@@ -944,6 +944,12 @@ namespace GitUI
             CheckForStagedAndCommit(false, true);
         }
 
+        private void FormCommitActivated(object sender, EventArgs e)
+        {
+            if (Settings.RefreshCommitDialogOnFormFocus)
+                ScanClick(null, null);
+        }
+
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItems.Count == 1)
@@ -1027,6 +1033,12 @@ namespace GitUI
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
             Settings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
 
+        }
+
+        private void refreshDialogOnFormFocusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = !refreshDialogOnFormFocusToolStripMenuItem.Checked;
+            Settings.RefreshCommitDialogOnFormFocus = refreshDialogOnFormFocusToolStripMenuItem.Checked;
         }
     }
 }
