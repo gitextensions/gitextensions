@@ -45,7 +45,6 @@ namespace GitUI
         private readonly TranslationString _enterCommitMessageCaption = new TranslationString("Commit message");
 
         private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
-        private readonly GitCommandsInstance _gitGetUnstagedCommand = new GitCommandsInstance();
 
         private readonly TranslationString _mergeConflicts =
             new TranslationString("There are unresolved mergeconflicts, solve mergeconflicts before committing.");
@@ -88,6 +87,7 @@ namespace GitUI
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
         #endregion
 
+        private readonly GitCommandsInstance _gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
