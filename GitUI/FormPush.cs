@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitUI.RepoHosting;
 
 namespace GitUI
 {
@@ -152,7 +153,11 @@ namespace GitUI
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                 !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccurred())
+            {
                 Close();
+                if (_createPullRequestCB.Checked)
+                    GitUICommands.Instance.StartCreatePullRequest();
+            }
         }
 
         private void PushDestinationDropDown(object sender, EventArgs e)
@@ -230,6 +235,9 @@ namespace GitUI
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
 
             PushAllTags.Checked = Settings.PushAllTags;
+
+            var gitHoster = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
+            _createPullRequestCB.Visible = gitHoster != null;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)

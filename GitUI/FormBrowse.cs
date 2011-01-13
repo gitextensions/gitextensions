@@ -12,6 +12,7 @@ using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using PatchApply;
 using ICSharpCode.TextEditor.Util;
+using GitUI.RepoHosting;
 
 namespace GitUI
 {
@@ -175,6 +176,7 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+            _repositoryHostsToolStripMenuItem.Enabled = validWorkingDir;
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
             if (hard)
@@ -1610,6 +1612,7 @@ namespace GitUI
             new FormBisect().ShowDialog();
             Initialize();
         }
+
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus item = DiffFiles.SelectedItem;
@@ -1648,6 +1651,41 @@ namespace GitUI
             }
             else
                 commitToolStripMenuItem1.Checked = true;
+        }
+
+        private void _forkCloneMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0)
+            {
+                GitUICommands.Instance.StartCloneForkFromHoster(GitUI.RepoHosting.RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
+                Initialize();
+            }
+        }
+
+        private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
+            if (repoHost == null)
+            {
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                return;
+            }
+
+            GitUICommands.Instance.StartPullRequestsDialog(repoHost);
+            Initialize();
+        }
+
+        private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
+            if (repoHost == null)
+            {
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                return;
+            }
+
+            GitUICommands.Instance.StartCreatePullRequest(repoHost);
+            Initialize();
         }
     }
 }
