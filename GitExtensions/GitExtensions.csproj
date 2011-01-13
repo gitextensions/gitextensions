@@ -34,7 +34,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -103,6 +104,10 @@
     <ProjectReference Include="..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj">
       <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
       <Name>DeleteUnusedBranches</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Github\Github.csproj">
+      <Project>{5D0F8E21-48A2-4350-BB14-F8B64F24B948}</Project>
+      <Name>Github</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
