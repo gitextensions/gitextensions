@@ -470,6 +470,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap edit_clear {
+            get {
+                object obj = ResourceManager.GetObject("edit_clear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap entirefile {
             get {
                 object obj = ResourceManager.GetObject("entirefile", resourceCulture);

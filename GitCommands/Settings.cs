@@ -1052,6 +1052,21 @@ namespace GitCommands
             }
         }
 
+        private static string _advancedmergecmd;
+        public static string AdvancedmargeCmd
+        {
+            get
+            {
+                if (_advancedmergecmd == null)
+                    SafeSetString("advancedmergecmd", "", x => _advancedmergecmd = x);
+                return _advancedmergecmd;
+            }
+            set
+            {
+                _advancedmergecmd = value;
+                Application.UserAppDataRegistry.SetValue("advancedmergecmd", _advancedmergecmd != null ? _advancedmergecmd : "");
+            }
+        }
 
 
         public static string GetDictionaryDir()

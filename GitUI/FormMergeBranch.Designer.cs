@@ -32,9 +32,20 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.strategyHelp = new System.Windows.Forms.LinkLabel();
-            this.NonDefaultMergeStrategy = new System.Windows.Forms.RadioButton();
-            this._NO_TRANSLATE_mergeStrategy = new System.Windows.Forms.ComboBox();
+            this.gbxAdvMergeOptions = new System.Windows.Forms.GroupBox();
+            this.tbxAdvMergeOptions = new System.Windows.Forms.TextBox();
+            this.advOptions = new System.Windows.Forms.ToolStrip();
+            this.btnStrategy = new System.Windows.Forms.ToolStripDropDownButton();
+            this.resolvetoolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.recursivetoolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.octopusToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.oursToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.subtreeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnnoff = new System.Windows.Forms.ToolStripButton();
+            this.btnSquash = new System.Windows.Forms.ToolStripButton();
+            this.btnNoCommit = new System.Windows.Forms.ToolStripButton();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.advMergeOptions = new System.Windows.Forms.RadioButton();
             this.currentBranchLabel = new System.Windows.Forms.Label();
             this.noFastForward = new System.Windows.Forms.RadioButton();
             this.fastForward = new System.Windows.Forms.RadioButton();
@@ -44,13 +55,14 @@
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.strategyToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.mergeSquash = new System.Windows.Forms.RadioButton();
-            this.mergeNoCommit = new System.Windows.Forms.RadioButton();
+            this.mergetoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.gbxAdvMergeOptions.SuspendLayout();
+            this.advOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -86,11 +98,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.mergeNoCommit);
-            this.groupBox1.Controls.Add(this.mergeSquash);
-            this.groupBox1.Controls.Add(this.strategyHelp);
-            this.groupBox1.Controls.Add(this.NonDefaultMergeStrategy);
-            this.groupBox1.Controls.Add(this._NO_TRANSLATE_mergeStrategy);
+            this.groupBox1.Controls.Add(this.gbxAdvMergeOptions);
+            this.groupBox1.Controls.Add(this.advMergeOptions);
             this.groupBox1.Controls.Add(this.currentBranchLabel);
             this.groupBox1.Controls.Add(this.noFastForward);
             this.groupBox1.Controls.Add(this.fastForward);
@@ -107,48 +116,168 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
             // 
-            // strategyHelp
+            // gbxAdvMergeOptions
             // 
-            this.strategyHelp.AutoSize = true;
-            this.strategyHelp.Location = new System.Drawing.Point(381, 198);
-            this.strategyHelp.Name = "strategyHelp";
-            this.strategyHelp.Size = new System.Drawing.Size(32, 15);
-            this.strategyHelp.TabIndex = 12;
-            this.strategyHelp.TabStop = true;
-            this.strategyHelp.Text = "Help";
-            this.strategyHelp.Visible = false;
-            this.strategyHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.strategyHelp_LinkClicked);
+            this.gbxAdvMergeOptions.Controls.Add(this.tbxAdvMergeOptions);
+            this.gbxAdvMergeOptions.Controls.Add(this.advOptions);
+            this.gbxAdvMergeOptions.Controls.Add(this.btnClear);
+            this.gbxAdvMergeOptions.Location = new System.Drawing.Point(25, 152);
+            this.gbxAdvMergeOptions.Name = "gbxAdvMergeOptions";
+            this.gbxAdvMergeOptions.Size = new System.Drawing.Size(396, 72);
+            this.gbxAdvMergeOptions.TabIndex = 15;
+            this.gbxAdvMergeOptions.TabStop = false;
+            this.gbxAdvMergeOptions.Text = "Advanced merge options";
+            this.gbxAdvMergeOptions.Visible = false;
             // 
-            // NonDefaultMergeStrategy
+            // tbxAdvMergeOptions
             // 
-            this.NonDefaultMergeStrategy.AutoSize = true;
-            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(13, 196);
-            this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
-            this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(192, 19);
-            this.NonDefaultMergeStrategy.TabIndex = 11;
-            this.NonDefaultMergeStrategy.Text = "Use non-default merge strategy";
-            this.NonDefaultMergeStrategy.UseVisualStyleBackColor = true;
-            this.NonDefaultMergeStrategy.CheckedChanged += new System.EventHandler(this.NonDefaultMergeStrategy_CheckedChanged);
+            this.tbxAdvMergeOptions.AutoCompleteCustomSource.AddRange(new string[] {
+            "--commit",
+            "--no-commit",
+            "--ff",
+            "--no-ff",
+            "--log",
+            "--no-log",
+            "--stat",
+            "--no-stat",
+            "--squash",
+            "--no-squash",
+            "--ff-only",
+            "--strategy=",
+            "--strategy-option=",
+            "--summary",
+            "--no-summary",
+            "--quiet",
+            "--verbose",
+            "--rerere-autoupdate",
+            "--no-rerere-autoupdate",
+            "--abort"});
+            this.tbxAdvMergeOptions.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbxAdvMergeOptions.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbxAdvMergeOptions.Location = new System.Drawing.Point(6, 45);
+            this.tbxAdvMergeOptions.Name = "tbxAdvMergeOptions";
+            this.tbxAdvMergeOptions.Size = new System.Drawing.Size(360, 23);
+            this.tbxAdvMergeOptions.TabIndex = 3;
             // 
-            // _NO_TRANSLATE_mergeStrategy
+            // advOptions
             // 
-            this._NO_TRANSLATE_mergeStrategy.FormattingEnabled = true;
-            this._NO_TRANSLATE_mergeStrategy.Items.AddRange(new object[] {
-            "resolve",
-            "recursive",
-            "octopus",
-            "ours",
-            "subtree"});
-            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(230, 195);
-            this._NO_TRANSLATE_mergeStrategy.Name = "_NO_TRANSLATE_mergeStrategy";
-            this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(145, 23);
-            this._NO_TRANSLATE_mergeStrategy.TabIndex = 10;
-            this._NO_TRANSLATE_mergeStrategy.Visible = false;
+            this.advOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnStrategy,
+            this.btnnoff,
+            this.btnSquash,
+            this.btnNoCommit});
+            this.advOptions.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.advOptions.Location = new System.Drawing.Point(3, 19);
+            this.advOptions.Name = "advOptions";
+            this.advOptions.Size = new System.Drawing.Size(390, 22);
+            this.advOptions.TabIndex = 1;
+            this.advOptions.Text = "toolStrip1";
+            // 
+            // btnStrategy
+            // 
+            this.btnStrategy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnStrategy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resolvetoolStripMenuItem1,
+            this.recursivetoolStripMenuItem1,
+            this.octopusToolStripMenuItem1,
+            this.oursToolStripMenuItem1,
+            this.subtreeToolStripMenuItem1});
+            this.btnStrategy.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnStrategy.Name = "btnStrategy";
+            this.btnStrategy.Size = new System.Drawing.Size(128, 19);
+            this.btnStrategy.Text = "non-default strategy";
+            // 
+            // resolvetoolStripMenuItem1
+            // 
+            this.resolvetoolStripMenuItem1.Name = "resolvetoolStripMenuItem1";
+            this.resolvetoolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.resolvetoolStripMenuItem1.Text = "resolve";
+            this.resolvetoolStripMenuItem1.Click += new System.EventHandler(this.strategyToolStripMenuItem_Click);
+            // 
+            // recursivetoolStripMenuItem1
+            // 
+            this.recursivetoolStripMenuItem1.Name = "recursivetoolStripMenuItem1";
+            this.recursivetoolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.recursivetoolStripMenuItem1.Text = "recursive";
+            this.recursivetoolStripMenuItem1.Click += new System.EventHandler(this.strategyToolStripMenuItem_Click);
+            // 
+            // octopusToolStripMenuItem1
+            // 
+            this.octopusToolStripMenuItem1.Name = "octopusToolStripMenuItem1";
+            this.octopusToolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.octopusToolStripMenuItem1.Text = "octopus";
+            this.octopusToolStripMenuItem1.Click += new System.EventHandler(this.strategyToolStripMenuItem_Click);
+            // 
+            // oursToolStripMenuItem1
+            // 
+            this.oursToolStripMenuItem1.Name = "oursToolStripMenuItem1";
+            this.oursToolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.oursToolStripMenuItem1.Text = "ours";
+            this.oursToolStripMenuItem1.Click += new System.EventHandler(this.strategyToolStripMenuItem_Click);
+            // 
+            // subtreeToolStripMenuItem1
+            // 
+            this.subtreeToolStripMenuItem1.Name = "subtreeToolStripMenuItem1";
+            this.subtreeToolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.subtreeToolStripMenuItem1.Text = "subtree";
+            this.subtreeToolStripMenuItem1.Click += new System.EventHandler(this.strategyToolStripMenuItem_Click);
+            // 
+            // btnnoff
+            // 
+            this.btnnoff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnnoff.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnnoff.Name = "btnnoff";
+            this.btnnoff.Size = new System.Drawing.Size(91, 19);
+            this.btnnoff.Text = "no fast forward";
+            this.btnnoff.ToolTipText = "Always create a new merge commit";
+            this.btnnoff.Click += new System.EventHandler(this.btnnoff_Click);
+            // 
+            // btnSquash
+            // 
+            this.btnSquash.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnSquash.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSquash.Name = "btnSquash";
+            this.btnSquash.Size = new System.Drawing.Size(49, 19);
+            this.btnSquash.Text = "Squash";
+            this.btnSquash.ToolTipText = "single commit on top of current branch";
+            this.btnSquash.Click += new System.EventHandler(this.btnSquash_Click);
+            // 
+            // btnNoCommit
+            // 
+            this.btnNoCommit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnNoCommit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNoCommit.Name = "btnNoCommit";
+            this.btnNoCommit.Size = new System.Drawing.Size(70, 19);
+            this.btnNoCommit.Text = "no commit";
+            this.btnNoCommit.ToolTipText = "merge but do not commit";
+            this.btnNoCommit.Click += new System.EventHandler(this.btnNoCommit_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Image = global::GitUI.Properties.Resources.edit_clear;
+            this.btnClear.Location = new System.Drawing.Point(368, 45);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(22, 23);
+            this.btnClear.TabIndex = 2;
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // advMergeOptions
+            // 
+            this.advMergeOptions.AutoSize = true;
+            this.advMergeOptions.Location = new System.Drawing.Point(13, 150);
+            this.advMergeOptions.Name = "advMergeOptions";
+            this.advMergeOptions.Size = new System.Drawing.Size(158, 19);
+            this.advMergeOptions.TabIndex = 13;
+            this.advMergeOptions.TabStop = true;
+            this.advMergeOptions.Text = "Advanced merge options";
+            this.advMergeOptions.UseVisualStyleBackColor = true;
+            this.advMergeOptions.CheckedChanged += new System.EventHandler(this.advMergeOptions_CheckedChanged);
             // 
             // currentBranchLabel
             // 
             this.currentBranchLabel.AutoSize = true;
-            this.currentBranchLabel.Location = new System.Drawing.Point(126, 42);
+            this.currentBranchLabel.Location = new System.Drawing.Point(126, 39);
             this.currentBranchLabel.Name = "currentBranchLabel";
             this.currentBranchLabel.Size = new System.Drawing.Size(12, 15);
             this.currentBranchLabel.TabIndex = 8;
@@ -157,7 +286,7 @@
             // noFastForward
             // 
             this.noFastForward.AutoSize = true;
-            this.noFastForward.Location = new System.Drawing.Point(13, 121);
+            this.noFastForward.Location = new System.Drawing.Point(13, 125);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(213, 19);
             this.noFastForward.TabIndex = 7;
@@ -168,7 +297,7 @@
             // 
             this.fastForward.AutoSize = true;
             this.fastForward.Checked = true;
-            this.fastForward.Location = new System.Drawing.Point(13, 96);
+            this.fastForward.Location = new System.Drawing.Point(13, 100);
             this.fastForward.Name = "fastForward";
             this.fastForward.Size = new System.Drawing.Size(286, 19);
             this.fastForward.TabIndex = 6;
@@ -178,9 +307,9 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(314, 224);
+            this.Ok.Location = new System.Drawing.Point(335, 227);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
+            this.Ok.Size = new System.Drawing.Size(87, 23);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;
@@ -206,7 +335,7 @@
             // Currentbranch
             // 
             this.Currentbranch.AutoSize = true;
-            this.Currentbranch.Location = new System.Drawing.Point(10, 42);
+            this.Currentbranch.Location = new System.Drawing.Point(10, 39);
             this.Currentbranch.Name = "Currentbranch";
             this.Currentbranch.Size = new System.Drawing.Size(87, 15);
             this.Currentbranch.TabIndex = 1;
@@ -231,26 +360,6 @@
             this.strategyToolTip.UseAnimation = false;
             this.strategyToolTip.UseFading = false;
             // 
-            // mergeSquash
-            // 
-            this.mergeSquash.AutoSize = true;
-            this.mergeSquash.Location = new System.Drawing.Point(13, 146);
-            this.mergeSquash.Name = "mergeSquash";
-            this.mergeSquash.Size = new System.Drawing.Size(348, 19);
-            this.mergeSquash.TabIndex = 13;
-            this.mergeSquash.Text = "Create a single commit on top of the current branch (squash)";
-            this.mergeSquash.UseVisualStyleBackColor = true;
-            // 
-            // mergeNoCommit
-            // 
-            this.mergeNoCommit.AutoSize = true;
-            this.mergeNoCommit.Location = new System.Drawing.Point(13, 171);
-            this.mergeNoCommit.Name = "mergeNoCommit";
-            this.mergeNoCommit.Size = new System.Drawing.Size(253, 19);
-            this.mergeNoCommit.TabIndex = 14;
-            this.mergeNoCommit.Text = "Perform the merge but do not autocommit";
-            this.mergeNoCommit.UseVisualStyleBackColor = true;
-            // 
             // FormMergeBranch
             // 
             this.AcceptButton = this.Ok;
@@ -271,6 +380,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.gbxAdvMergeOptions.ResumeLayout(false);
+            this.gbxAdvMergeOptions.PerformLayout();
+            this.advOptions.ResumeLayout(false);
+            this.advOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -288,11 +401,21 @@
         private System.Windows.Forms.RadioButton noFastForward;
         private System.Windows.Forms.RadioButton fastForward;
         private System.Windows.Forms.Label currentBranchLabel;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_mergeStrategy;
-        private System.Windows.Forms.RadioButton NonDefaultMergeStrategy;
-        private System.Windows.Forms.LinkLabel strategyHelp;
         private System.Windows.Forms.ToolTip strategyToolTip;
-        private System.Windows.Forms.RadioButton mergeSquash;
-        private System.Windows.Forms.RadioButton mergeNoCommit;
+        private System.Windows.Forms.RadioButton advMergeOptions;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.GroupBox gbxAdvMergeOptions;
+        private System.Windows.Forms.ToolStrip advOptions;
+        private System.Windows.Forms.ToolStripButton btnnoff;
+        private System.Windows.Forms.ToolStripButton btnSquash;
+        private System.Windows.Forms.ToolStripButton btnNoCommit;
+        private System.Windows.Forms.ToolStripDropDownButton btnStrategy;
+        private System.Windows.Forms.ToolStripMenuItem resolvetoolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem recursivetoolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem octopusToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem oursToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem subtreeToolStripMenuItem1;
+        private System.Windows.Forms.TextBox tbxAdvMergeOptions;
+        private System.Windows.Forms.ToolTip mergetoolTip;
     }
 }
