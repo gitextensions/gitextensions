@@ -36,6 +36,8 @@ namespace PatchApply
             // Round selection to previous and next line breaks to select the whole lines
             int first_l = diff.LastIndexOf("\n", first, first) + 1;
             int last_l = diff.IndexOf("\n", last);
+            if (last_l == -1)
+                last_l = diff.Length - 1;
 
             // Are we looking at a diff from the working dir or the staging area
             char to_context = staged ? '+' : '-';
