@@ -331,7 +331,7 @@
             // 
             this._getFromUserBtn.Location = new System.Drawing.Point(327, 9);
             this._getFromUserBtn.Name = "_getFromUserBtn";
-            this._getFromUserBtn.Size = new System.Drawing.Size(84, 23);
+            this._getFromUserBtn.Size = new System.Drawing.Size(93, 23);
             this._getFromUserBtn.TabIndex = 2;
             this._getFromUserBtn.Text = "Get from user";
             this._getFromUserBtn.UseVisualStyleBackColor = true;
