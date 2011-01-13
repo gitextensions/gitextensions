@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using GitCommands;
 using ResourceManager.Translation;
+using System.Text;
 
 namespace GitUI
 {
@@ -14,6 +15,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             _defaultBranch = defaultBranch;
+            btnStrategy.ToolTipText = _strategyTooltipText.Text;
         }
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
@@ -28,41 +30,123 @@ namespace GitUI
                 Branches.Text = _defaultBranch;
 
             Branches.Select();
+            tbxAdvMergeOptions.Text = GitCommands.Settings.AdvancedmargeCmd;
+        }
+
+        private void AddMergeOption(string[] options, string[] values, string[] conflitwith)
+        {
+            string mergeOption = tbxAdvMergeOptions.Text;
+            string option1;
+            int pos=-1;
+            int lengthOption=-1;
+            int nextpos=-1;
+            //Build new merge command
+            for (int i = 0; i<options.Length; i++)
+            {
+                if (values != null)
+                {
+                    option1 = "--" + options[i] + "=";
+                    pos = mergeOption.IndexOf(option1);
+                    if (pos > -1)
+                    {
+                        lengthOption = option1.Length;
+                        nextpos = mergeOption.IndexOf("--", pos + 1);
+                        if (nextpos == -1)
+                            nextpos = mergeOption.Length;
+                        else
+                            nextpos--;
+                        mergeOption = mergeOption.Remove(pos, nextpos - pos);
+                        mergeOption = mergeOption.Insert(pos, option1 + values[i]);
+                    }
+                    else
+                        mergeOption += " " + option1 + values[i];
+
+                }
+                else
+                {
+                    option1 = "--" + options[i];
+                    pos = mergeOption.IndexOf(option1);
+                    if (pos == -1)
+                        mergeOption += " " + option1;
+                }
+
+            }
+            //remove conflit option
+            if (conflitwith != null)
+                for (int i = 0; i < conflitwith.Length; i++)
+                {
+                    option1 = "--" + conflitwith[i];
+                    pos = mergeOption.IndexOf(option1);
+                    if (pos > -1)
+                    {
+                        lengthOption = option1.Length;
+                        nextpos = mergeOption.IndexOf("--", pos + 1);
+                        if (nextpos == -1)
+                            nextpos = mergeOption.Length;
+                        else
+                            nextpos--;
+                        if (pos > 0)
+                            pos--;//for delete space before --
+                        mergeOption = mergeOption.Remove(pos, nextpos - pos);
+                    }
+
+                }
+            tbxAdvMergeOptions.Text = mergeOption;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.AllowMerge merge = GitCommandHelpers.AllowMerge.Empty;
-            //if ((fastForward.Checked) || (NonDefaultMergeStrategy.Checked))
-              //  merge = GitCommandHelpers.AllowMerge.Empty;
+            GitCommandHelpers.AllowMerge merge = GitCommandHelpers.AllowMerge.FastForward;
             if (noFastForward.Checked)
                 merge = GitCommandHelpers.AllowMerge.NoFastForward;
-            if (mergeSquash.Checked)
-                merge = GitCommandHelpers.AllowMerge.Squash;
-            if (mergeNoCommit.Checked)
-                merge = GitCommandHelpers.AllowMerge.NoCommit;
-            
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, merge, _NO_TRANSLATE_mergeStrategy.Text));
+            else if (advMergeOptions.Checked)
+                merge = GitCommandHelpers.AllowMerge.Advanced;
+
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, merge, tbxAdvMergeOptions.Text));
             process.ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
 
             if (!process.ErrorOccurred())
                 Close();
+            GitCommands.Settings.AdvancedmargeCmd = tbxAdvMergeOptions.Text;
         }
 
-        private void NonDefaultMergeStrategy_CheckedChanged(object sender, EventArgs e)
+         private void btnStrategy_ButtonClick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_mergeStrategy.Visible = NonDefaultMergeStrategy.Checked;
-            strategyHelp.Visible = NonDefaultMergeStrategy.Checked;
-
-            if (!_NO_TRANSLATE_mergeStrategy.Visible)
-                _NO_TRANSLATE_mergeStrategy.Text = "";
         }
 
-        private void strategyHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void advMergeOptions_CheckedChanged(object sender, EventArgs e)
         {
-            strategyToolTip.SetToolTip(strategyHelp, _strategyTooltipText.Text);
+            gbxAdvMergeOptions.Visible = advMergeOptions.Checked;
         }
+
+        private void strategyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ToolStripMenuItem tsmiSender = (System.Windows.Forms.ToolStripMenuItem)sender;
+            AddMergeOption(new string[] { "strategy" }, new string[] { tsmiSender.Text }, null); 
+        }
+
+        private void btnSquash_Click(object sender, EventArgs e)
+        {
+            AddMergeOption(new string[] { "squash" }, null, new string[] { "no-ff" }); 
+        }
+
+        private void btnNoCommit_Click(object sender, EventArgs e)
+        {
+            AddMergeOption(new string[] { "no-ff", "no-commit" }, null, new string[] { "squash" }); 
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            tbxAdvMergeOptions.Text = "";
+        }
+
+        private void btnnoff_Click(object sender, EventArgs e)
+        {
+            AddMergeOption(new string[] { "no-ff"}, null, new string[] { "no-commit" , "squash" }); 
+        }
+
+
     }
 }

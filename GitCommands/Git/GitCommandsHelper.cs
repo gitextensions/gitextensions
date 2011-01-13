@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -2323,23 +2323,22 @@ namespace GitCommands
             return output;
         }
 
-        public enum AllowMerge { Empty, NoFastForward, Squash, NoCommit };
+        public enum AllowMerge { FastForward, NoFastForward, Advanced };
 
-        public static string MergeBranchCmd(string branch, AllowMerge methodeMerge, string strategy)
+        public static string MergeBranchCmd(string branch, AllowMerge methodeMerge, string AdvancedMerge)
         {
             StringBuilder command = new StringBuilder("merge");
 
             if (methodeMerge == AllowMerge.NoFastForward)
                 command.Append(" --no-ff");
-            else if (methodeMerge == AllowMerge.Squash)
-                command.Append(" --squash");
-            else if (methodeMerge == AllowMerge.NoCommit)
-                command.Append(" --no-ff --no-commit");
-
-            if (!string.IsNullOrEmpty(strategy))
+            else if (methodeMerge == AllowMerge.Advanced)
             {
-                command.Append(" --strategy=");
-                command.Append(strategy);
+                if (!string.IsNullOrEmpty(AdvancedMerge))
+                {
+                    if (!AdvancedMerge.StartsWith(" "))
+                        command.Append(" ");
+                    command.Append(AdvancedMerge);
+                }
             }
 
             command.Append(" ");

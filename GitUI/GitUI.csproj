@@ -1029,6 +1029,7 @@
     <None Include="Icons\_81.png" />
     <None Include="Icons\_82.png" />
     <None Include="Icons\arrow_refresh.png" />
+    <None Include="Resources\edit_clear.png" />
     <None Include="Icons\39.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
