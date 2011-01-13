@@ -7,11 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
+using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
 {
     public partial class CreatePullRequestForm : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _strLoading = new TranslationString("Loading...");
+        private readonly TranslationString _strCouldNotLocateARemoteThatBelongsToYourUser = new TranslationString("Could not locate a remote that belongs to your user!");
+        private readonly TranslationString _strYouMustSpecifyATitleAndABody = new TranslationString("You must specify a title and a body.");
+        private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
+        private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
+        private readonly TranslationString _strDone = new TranslationString("Done");
+        private readonly TranslationString _strError = new TranslationString("Error");
+        #endregion
+
         private IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
         private string _chooseBranch;
@@ -35,7 +46,7 @@ namespace GitUI.RepoHosting
         private void Init()
         {
             _createBtn.Enabled = false;
-            _yourBranchesCB.Text = "Loading...";
+            _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
             LoadRemotes();
             LoadMyBranches();
@@ -72,7 +83,7 @@ namespace GitUI.RepoHosting
             _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
 
             _remoteBranchesCB.Items.Clear();
-            _remoteBranchesCB.Text = "Loading...";
+            _remoteBranchesCB.Text = _strLoading.Text;
 
             AsyncHelpers.DoAsync(
                 () => _currentHostedRemote.GetHostedRepository().Branches,
@@ -91,7 +102,7 @@ namespace GitUI.RepoHosting
         {
             var myRemote = _hostedRemotes.Where(r => r.IsOwnedByMe).FirstOrDefault();
             if (myRemote == null)
-                throw new InvalidOperationException("Could not locate a remote that belongs to your user!");
+                throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
 
             _yourBranchesCB.Items.Clear();
 
@@ -121,23 +132,21 @@ namespace GitUI.RepoHosting
             var body = _bodyTB.Text.Trim();
             if (title.Length == 0 || body.Length == 0)
             {
-                MessageBox.Show(this, "You must specify a title and a body.", "Error");
+                MessageBox.Show(this, _strYouMustSpecifyATitleAndABody.Text , _strError.Text);
                 return;
             }
 
             try
             {
                 var hostedRepo = _currentHostedRemote.GetHostedRepository();
-                if (hostedRepo == null)
-                    throw new InvalidOperationException("Failed to get hosted repo interface");
 
                 hostedRepo.CreatePullRequest(_yourBranchesCB.Text, _remoteBranchesCB.Text, title, body);
-                MessageBox.Show(this, "Done.", "Pull request");
+                MessageBox.Show(this, _strDone.Text, _strPullRequest.Text);
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Failed to create pull request.\r\n" + ex.Message, "Error");
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + ex.Message, _strError.Text);
             }
         }
     }
