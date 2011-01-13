@@ -58,7 +58,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                Trace.WriteLine(ex.Message);
+                MessageBox.Show(this, "Exception: " + ex.Message, "Clone failed");
             }
         }
 
