@@ -92,6 +92,9 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
+      <Component Id="GithubSharp.Core.dll" Guid="*">
+        <File Source="..\bin\GithubSharp.Core.dll"/>
+      </Component>
       <Component Id="NetSpell.SpellChecker.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
@@ -157,6 +160,9 @@
       </Component>
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
+      </Component>
+      <Component Id="Github.dll" Guid="*">
+        <File Source="..\Plugins\Github\bin\Release\Github.dll"/>
       </Component>
     </DirectoryRef>
 
@@ -404,6 +410,8 @@
       <ComponentRef Id="GitStatistics.dll"/>
       <ComponentRef Id="Gource.dll"/>
       <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
+      <ComponentRef Id="Github.dll"/>
+      <ComponentRef Id="GithubSharp.Core.dll"/>
 
       <ComponentRef Id="gitssh_openssh.reg"/>
       <ComponentRef Id="gitssh_putty.reg"/>
