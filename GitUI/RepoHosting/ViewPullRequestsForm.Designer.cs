@@ -62,7 +62,7 @@
             this._selectedOwner.FormattingEnabled = true;
             this._selectedOwner.Location = new System.Drawing.Point(112, 6);
             this._selectedOwner.Name = "_selectedOwner";
-            this._selectedOwner.Size = new System.Drawing.Size(258, 21);
+            this._selectedOwner.Size = new System.Drawing.Size(258, 23);
             this._selectedOwner.TabIndex = 0;
             this._selectedOwner.SelectedIndexChanged += new System.EventHandler(this._selectedOwner_SelectedIndexChanged);
             // 
@@ -112,7 +112,7 @@
             this._chooseRepo.AutoSize = true;
             this._chooseRepo.Location = new System.Drawing.Point(12, 9);
             this._chooseRepo.Name = "_chooseRepo";
-            this._chooseRepo.Size = new System.Drawing.Size(94, 13);
+            this._chooseRepo.Size = new System.Drawing.Size(106, 15);
             this._chooseRepo.TabIndex = 4;
             this._chooseRepo.Text = "Choose repository:";
             // 
@@ -263,12 +263,11 @@
             // 
             // ViewPullRequestsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
             this.Name = "ViewPullRequestsForm";
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "View Pull Requests";
