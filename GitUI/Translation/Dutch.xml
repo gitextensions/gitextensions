@@ -751,6 +751,12 @@ _ReSharper*/
         <TranslationItem Name="button1" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>Wijzigingen terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_undoChangesIn" Property="Text">
+          <Value>Wijzigingen terugzetten in: {0}?</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRemotes">
@@ -1463,11 +1469,11 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="_hoursAgo" Property="Text">
           <Value>{0} uren geleden</Value>
         </TranslationItem>
-        <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>{0} dagen geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_dayAgo" Property="Text">
           <Value>{0} dag geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>{0} dagen geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
           <Value>{0} maand geleden</Value>
@@ -2653,6 +2659,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
           <Value>Sluit dialoog wanneer alle wijzigingen zijn gecommit</Value>
         </TranslationItem>
+        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
+          <Value>Ververs dialoog op focus</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
 
@@ -2751,8 +2760,14 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="_unstageSelectedLines" Property="Text">
           <Value>Geselecteerde regel(s) terugzetten</Value>
         </TranslationItem>
+        <TranslationItem Name="_resetSelectedLines" Property="Text">
+          <Value>Geselecteerde wijzigingen terugzetten</Value>
+        </TranslationItem>
         <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
           <Value>Geselecteerde regel(s) klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Geselecteerde wijzigingen terugzetten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3161,6 +3176,12 @@ welke deze externe vertakking volgt?</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Value>Uitchecken na aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>Selecteer 1 revisie om de vertakking op aan te maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>Vertakking</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
