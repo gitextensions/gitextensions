@@ -735,7 +735,7 @@ namespace GitCommands
 
         public static string ShowSha1(string sha1)
         {
-            return RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding + " " + sha1);
+            return RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
         }
 
         public static string UserCommitCount()
@@ -2228,7 +2228,7 @@ namespace GitCommands
             return
                 RunCachableCmd(
                     Settings.GitCommand,
-                    string.Format("show --encoding=" + Settings.Encoding + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
+                    string.Format("show --encoding=" + Settings.Encoding.HeaderName + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
         }
 
         public static string GetFileText(string id)
