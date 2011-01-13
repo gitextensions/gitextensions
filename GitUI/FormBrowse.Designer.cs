@@ -142,6 +142,10 @@ namespace GitUI
             this.PuTTYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startAuthenticationAgentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateOrImportKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._repositoryHostsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._forkCloneRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._viewPullRequestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._createPullRequestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.submodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -847,6 +851,7 @@ namespace GitUI
             this.gitToolStripMenuItem,
             this.commandsToolStripMenuItem,
             this.remotesToolStripMenuItem,
+            this._repositoryHostsToolStripMenuItem,
             this.submodulesToolStripMenuItem,
             this.pluginsToolStripMenuItem,
             this.settingsToolStripMenuItem1,
@@ -1225,6 +1230,37 @@ namespace GitUI
             this.generateOrImportKeyToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.generateOrImportKeyToolStripMenuItem.Text = "Generate or import key";
             this.generateOrImportKeyToolStripMenuItem.Click += new System.EventHandler(this.GenerateOrImportKeyToolStripMenuItemClick);
+            // 
+            // _repositoryHostsToolStripMenuItem
+            // 
+            this._repositoryHostsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._forkCloneRepositoryToolStripMenuItem,
+            this._viewPullRequestsToolStripMenuItem,
+            this._createPullRequestsToolStripMenuItem});
+            this._repositoryHostsToolStripMenuItem.Name = "_repositoryHostsToolStripMenuItem";
+            this._repositoryHostsToolStripMenuItem.Size = new System.Drawing.Size(106, 20);
+            this._repositoryHostsToolStripMenuItem.Text = "Repository hosts";
+            // 
+            // _forkCloneRepositoryToolStripMenuItem
+            // 
+            this._forkCloneRepositoryToolStripMenuItem.Name = "_forkCloneRepositoryToolStripMenuItem";
+            this._forkCloneRepositoryToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this._forkCloneRepositoryToolStripMenuItem.Text = "Fork/Clone repository";
+            this._forkCloneRepositoryToolStripMenuItem.Click += new System.EventHandler(this._forkCloneMenuItem_Click);
+            // 
+            // _viewPullRequestsToolStripMenuItem
+            // 
+            this._viewPullRequestsToolStripMenuItem.Name = "_viewPullRequestsToolStripMenuItem";
+            this._viewPullRequestsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this._viewPullRequestsToolStripMenuItem.Text = "View pull requests";
+            this._viewPullRequestsToolStripMenuItem.Click += new System.EventHandler(this._viewPullRequestsToolStripMenuItem_Click);
+            // 
+            // _createPullRequestsToolStripMenuItem
+            // 
+            this._createPullRequestsToolStripMenuItem.Name = "_createPullRequestsToolStripMenuItem";
+            this._createPullRequestsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this._createPullRequestsToolStripMenuItem.Text = "Create pull requests";
+            this._createPullRequestsToolStripMenuItem.Click += new System.EventHandler(this._createPullRequestToolStripMenuItem_Click);
             // 
             // submodulesToolStripMenuItem
             // 
@@ -1736,5 +1772,9 @@ namespace GitUI
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripMenuItem diffContainsToolStripMenuItem;
+        private ToolStripMenuItem _repositoryHostsToolStripMenuItem;
+        private ToolStripMenuItem _forkCloneRepositoryToolStripMenuItem;
+        private ToolStripMenuItem _viewPullRequestsToolStripMenuItem;
+        private ToolStripMenuItem _createPullRequestsToolStripMenuItem;
     }
 }

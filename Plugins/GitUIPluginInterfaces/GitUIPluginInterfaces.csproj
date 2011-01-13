@@ -56,12 +56,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IGitCommands.cs" />
+    <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />
     <Compile Include="IGitSubmodule.cs" />
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="GitUIBaseEventArgs.cs" />
+    <Compile Include="RepositoryHosts\IHostedRepository.cs" />
+    <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
+    <Compile Include="RepositoryHosts\IHostedRemote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
