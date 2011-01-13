@@ -49,6 +49,9 @@
         <TranslationItem Name="createRepository" Property="Text">
           <Value>Maak een nieuwe opslagplaats</Value>
         </TranslationItem>
+        <TranslationItem Name="cloneFork" Property="Text">
+          <Value>Kloon/fork {0} opslagplaats</Value>
+        </TranslationItem>
         <TranslationItem Name="develop" Property="Text">
           <Value>Coderen</Value>
         </TranslationItem>
@@ -662,6 +665,18 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Value>Wijziging bevat (traag)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
+          <Value>Opslagplaats host</Value>
+        </TranslationItem>
+        <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
+          <Value>Kloon/fork opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
+          <Value>Bekijk binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
+          <Value>Maak binnenhaal verzoek</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1319,6 +1334,122 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Aantal commits</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ForkAndCloneForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fork en kloon externe opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Error</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value> : LADEN : </Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYes" Property="Text">
+          <Value>Ja</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNo" Property="Text">
+          <Value>Nee</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToGetRepos" Property="Text">
+          <Value>Kan opslagplaatsen niet ophalen. Gebruikersnaam/ApiToken foutief?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
+          <Value>{0} zal gekloont worden naar {1}.
+U heeft rechten om commits te verzenden. {2}
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneInfo" Property="Text">
+          <Value>{0} zal gekloont worden naar {1}.
+U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {2}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillBeAddedAsARemote" Property="Text">
+          <Value>"{0}" zal worden toegevoegd als externe opslagplaats.
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
+          <Value>Kan geen externe opslagplaats toevoegen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNoHomepageDefined" Property="Text">
+          <Value>Geen homepage gedefinieerd</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToFork" Property="Text">
+          <Value>Fork mislukt:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearchFailed" Property="Text">
+          <Value>Zoeken mislukt!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strUserNotFound" Property="Text">
+          <Value>Gebruiker niet gevonden!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
+          <Value>Kan de opslagplaatsen van de gebruiker niet ophalen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearching" Property="Text">
+          <Value> : ZOEKEN : </Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSelectOneItem" Property="Text">
+          <Value>U moet exact 1 item selecteren</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCloneFolderCanNotBeEmpty" Property="Text">
+          <Value>Kloon folder mag niet leeg zijn.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchBtn" Property="Text">
+          <Value>Zoeken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_forkBtn" Property="Text">
+          <Value>Fork!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneBtn" Property="Text">
+          <Value>Kloon</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Prive</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browseForCloneToDirbtn" Property="Text">
+          <Value>Bladeren..</Value>
+        </TranslationItem>
+        <TranslationItem Name="_descriptionLbl" Property="Text">
+          <Value>Omschrijving: </Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Doel folder:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_openGitupPageBtn" Property="Text">
+          <Value>Open github pagina</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeBtn" Property="Text">
+          <Value>Sluiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createDirectoryLbl" Property="Text">
+          <Value>Maak de directorie:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_myReposPage" Property="Text">
+          <Value>Mijn opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchReposPage" Property="Text">
+          <Value>Zoeken naar opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneSetupGB" Property="Text">
+          <Value>Kloon</Value>
+        </TranslationItem>
+        <TranslationItem Name="_helpTextLbl" Property="Text">
+          <Value>Als u een fork wilt maken van een opslagplaats welke beheerd wordt door een ander, ga naar het "Zoeken naar opslagplaatsen" tabblad.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Voeg externe toe als:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_getFromUserBtn" Property="Text">
+          <Value>Ophalen van gebruiker</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader6" Property="Text">
+          <Value>Is fork</Value>
+        </TranslationItem>
+        <TranslationItem Name="_orLbl" Property="Text">
+          <Value>of</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2405,6 +2536,46 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="CreatePullRequestForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Maak binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Titel:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Inhoud:</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Binnenhaal verzoek gegevens</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Doel opslagplaats:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createBtn" Property="Text">
+          <Value>Aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Uw vertakking:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Doel vertakking:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>Laden...</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strPullRequest" Property="Text">
+          <Value>Binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strDone" Property="Text">
+          <Value>Klaar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Error</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPuttyError">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2501,6 +2672,9 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Selecteer vertakkingen om te verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
+          <Value>Maak binnenhaal verzoek na verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
@@ -3057,6 +3231,34 @@ stash
         </TranslationItem>
         <TranslationItem Name="containedInNoTag" Property="Text">
           <Value>Komt in geen labels voor</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPullRequestsForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Bekijk binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Door</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Aangemaakt</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseRepo" Property="Text">
+          <Value>Kies opslagplaats:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchBtn" Property="Text">
+          <Value>Ophalen en reviewen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_postComment" Property="Text">
+          <Value>Post commentaar</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closePullRequestBtn" Property="Text">
+          <Value>Sluit binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Error</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
