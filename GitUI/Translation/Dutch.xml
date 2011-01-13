@@ -1955,6 +1955,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Value>Download woordenboek</Value>
         </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
+          <Value>Teken niet gerelateerde teksten grijs</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -2762,6 +2765,9 @@ Weet u zeker dat u wilt doorgaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetSelectedLines" Property="Text">
           <Value>Geselecteerde wijzigingen terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
+          <Value>Weet u zeker dat u de wijzigingen van de geselecteerde regels wilt terugzetten?</Value>
         </TranslationItem>
         <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
           <Value>Geselecteerde regel(s) klaarzetten</Value>
