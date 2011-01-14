@@ -59,9 +59,7 @@ namespace GitUI
             this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new GitUI.FileStatusList();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this._NO_TRANSLATE_menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolStaged = new System.Windows.Forms.ToolStrip();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,6 +71,7 @@ namespace GitUI
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rescanChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.splitLeftBottom = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.AddFiles = new System.Windows.Forms.Button();
@@ -110,8 +109,7 @@ namespace GitUI
             this.splitLeft.Panel2.SuspendLayout();
             this.splitLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
-            this.tableLayoutPanel5.SuspendLayout();
-            this._NO_TRANSLATE_menuStrip1.SuspendLayout();
+            this.toolStaged.SuspendLayout();
             this.splitLeftBottom.Panel1.SuspendLayout();
             this.splitLeftBottom.Panel2.SuspendLayout();
             this.splitLeftBottom.SuspendLayout();
@@ -276,7 +274,7 @@ namespace GitUI
             // 
             this.splitLeft.Panel1.Controls.Add(this.Loading);
             this.splitLeft.Panel1.Controls.Add(this.Unstaged);
-            this.splitLeft.Panel1.Controls.Add(this.tableLayoutPanel5);
+            this.splitLeft.Panel1.Controls.Add(this.toolStaged);
             // 
             // splitLeft.Panel2
             // 
@@ -312,41 +310,19 @@ namespace GitUI
             this.Unstaged.Size = new System.Drawing.Size(397, 256);
             this.Unstaged.TabIndex = 10;
             // 
-            // tableLayoutPanel5
+            // toolStaged
             // 
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this._NO_TRANSLATE_menuStrip1, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 1;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 28);
-            this.tableLayoutPanel5.TabIndex = 1;
-            // 
-            // progressBar
-            // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(201, 3);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(193, 22);
-            this.progressBar.TabIndex = 1;
-            this.progressBar.Visible = false;
-            // 
-            // _NO_TRANSLATE_menuStrip1
-            // 
-            this._NO_TRANSLATE_menuStrip1.BackColor = System.Drawing.SystemColors.Control;
-            this._NO_TRANSLATE_menuStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.workingToolStripMenuItem});
-            this._NO_TRANSLATE_menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this._NO_TRANSLATE_menuStrip1.Name = "_NO_TRANSLATE_menuStrip1";
-            this._NO_TRANSLATE_menuStrip1.Size = new System.Drawing.Size(198, 28);
-            this._NO_TRANSLATE_menuStrip1.TabIndex = 2;
-            this._NO_TRANSLATE_menuStrip1.Text = "menuStrip1";
+            this.toolStaged.AutoSize = false;
+            this.toolStaged.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStaged.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.workingToolStripMenuItem,
+            this.toolStripProgressBar1});
+            this.toolStaged.Location = new System.Drawing.Point(0, 0);
+            this.toolStaged.Name = "toolStaged";
+            this.toolStaged.Padding = new System.Windows.Forms.Padding(1, 1, 1, 2);
+            this.toolStaged.Size = new System.Drawing.Size(397, 28);
+            this.toolStaged.TabIndex = 12;
+            this.toolStaged.Text = "toolStrip1";
             // 
             // workingToolStripMenuItem
             // 
@@ -364,7 +340,7 @@ namespace GitUI
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.workingToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(144, 25);
             this.workingToolStripMenuItem.Text = "Working dir changes";
             // 
             // showIgnoredFilesToolStripMenuItem
@@ -436,6 +412,13 @@ namespace GitUI
             this.rescanChangesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.rescanChangesToolStripMenuItem.Text = "Rescan changes";
             this.rescanChangesToolStripMenuItem.Click += new System.EventHandler(this.RescanChangesToolStripMenuItemClick);
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(190, 22);
+            this.toolStripProgressBar1.Visible = false;
             // 
             // splitLeftBottom
             // 
@@ -805,10 +788,8 @@ namespace GitUI
             this.splitLeft.Panel2.ResumeLayout(false);
             this.splitLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this._NO_TRANSLATE_menuStrip1.ResumeLayout(false);
-            this._NO_TRANSLATE_menuStrip1.PerformLayout();
+            this.toolStaged.ResumeLayout(false);
+            this.toolStaged.PerformLayout();
             this.splitLeftBottom.Panel1.ResumeLayout(false);
             this.splitLeftBottom.Panel2.ResumeLayout(false);
             this.splitLeftBottom.ResumeLayout(false);
@@ -877,9 +858,7 @@ namespace GitUI
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
         private PictureBox Loading;
         private FileStatusList Unstaged;
-        private TableLayoutPanel tableLayoutPanel5;
-        private ProgressBar progressBar;
-        private MenuStrip _NO_TRANSLATE_menuStrip1;
+        private ToolStrip toolStaged;
         private ToolStripMenuItem workingToolStripMenuItem;
         private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
@@ -891,5 +870,6 @@ namespace GitUI
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
         private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private ToolStripMenuItem rescanChangesToolStripMenuItem;
+        private ToolStripProgressBar toolStripProgressBar1;
     }
 }
