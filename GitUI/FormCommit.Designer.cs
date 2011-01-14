@@ -98,7 +98,6 @@ namespace GitUI
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
-            this.Scan = new System.Windows.Forms.Button();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -539,7 +538,7 @@ namespace GitUI
             this.splitRight.Panel2.Controls.Add(this.toolCommit);
             this.splitRight.Panel2.Controls.Add(this.flowCommitButtons);
             this.splitRight.Size = new System.Drawing.Size(517, 644);
-            this.splitRight.SplitterDistance = 479;
+            this.splitRight.SplitterDistance = 502;
             this.splitRight.TabIndex = 0;
             // 
             // SolveMergeconflicts
@@ -570,7 +569,7 @@ namespace GitUI
             this.SelectedDiff.ScrollPos = 0;
             this.SelectedDiff.ShowEntireFile = false;
             this.SelectedDiff.ShowLineNumbers = true;
-            this.SelectedDiff.Size = new System.Drawing.Size(517, 479);
+            this.SelectedDiff.Size = new System.Drawing.Size(517, 502);
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TreatAllFilesAsText = false;
             // 
@@ -582,7 +581,7 @@ namespace GitUI
             this.Message.Margin = new System.Windows.Forms.Padding(0);
             this.Message.MistakeFont = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(342, 133);
+            this.Message.Size = new System.Drawing.Size(342, 110);
             this.Message.TabIndex = 4;
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
             this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
@@ -652,11 +651,10 @@ namespace GitUI
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.Amend);
             this.flowCommitButtons.Controls.Add(this.Reset);
-            this.flowCommitButtons.Controls.Add(this.Scan);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
             this.flowCommitButtons.Name = "flowCommitButtons";
-            this.flowCommitButtons.Size = new System.Drawing.Size(175, 161);
+            this.flowCommitButtons.Size = new System.Drawing.Size(175, 138);
             this.flowCommitButtons.TabIndex = 1;
             // 
             // Commit
@@ -707,18 +705,6 @@ namespace GitUI
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             // 
-            // Scan
-            // 
-            this.Scan.Image = ((System.Drawing.Image)(resources.GetObject("Scan.Image")));
-            this.Scan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Scan.Location = new System.Drawing.Point(1, 131);
-            this.Scan.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.Scan.Name = "Scan";
-            this.Scan.Size = new System.Drawing.Size(171, 26);
-            this.Scan.TabIndex = 12;
-            this.Scan.Text = "&Rescan changes";
-            this.Scan.UseVisualStyleBackColor = true;
-            this.Scan.Click += new System.EventHandler(this.ScanClick);
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -786,7 +772,6 @@ namespace GitUI
         private Button CommitAndPush;
         private Button Amend;
         private Button Reset;
-        private Button Scan;
         private ToolStrip toolCommit;
         private ToolStripDropDownButton commitMessageToolStripMenuItem;
         private ToolStripDropDownButton toolStripMenuItem3;

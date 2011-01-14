@@ -100,7 +100,7 @@ namespace GitUI
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-            this.splitRight.Panel2MinSize = 160;
+            this.splitRight.Panel2MinSize = 130;
             Translate();
 
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
@@ -368,9 +368,9 @@ namespace GitUI
 
         private void ScanClick(object sender, EventArgs e)
         {
-            Scan.Enabled = false;
+            toolRefreshItem.Enabled = false;
             Initialize();
-            Scan.Enabled = true;
+            toolRefreshItem.Enabled = true;
         }
 
         private void StageClick(object sender, EventArgs e)
