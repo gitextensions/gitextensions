@@ -1267,8 +1267,8 @@ namespace GitUI
             if (span.TotalHours < 1)
                 return string.Format(_minutesAgo.Text, span.Minutes + Math.Round(span.Seconds / 60.0, 0));
 
-            if (span.TotalHours < 2)
-                return string.Format(_hourAgo.Text, span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+            if (span.TotalHours + Math.Round(span.Minutes / 60.0, 0) < 2)
+                return string.Format(_hourAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
 
             if (span.TotalHours < 24)
                 return string.Format(_hoursAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
