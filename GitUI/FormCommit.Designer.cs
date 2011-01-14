@@ -39,7 +39,7 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCommit));
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
@@ -101,13 +101,13 @@ namespace GitUI
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Message = new GitUI.SpellChecker.EditNetSpell();
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.splitMain.Panel1.SuspendLayout();
+            this.splitMain.Panel2.SuspendLayout();
+            this.splitMain.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -134,25 +134,25 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
-            // splitContainer1
+            // splitMain
             // 
-            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitMain.BackColor = System.Drawing.SystemColors.Control;
+            this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitMain.Location = new System.Drawing.Point(0, 0);
+            this.splitMain.Name = "splitMain";
             // 
-            // splitContainer1.Panel1
+            // splitMain.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Panel1.Controls.Add(this.Ok);
+            this.splitMain.Panel1.Controls.Add(this.splitContainer2);
+            this.splitMain.Panel1.Controls.Add(this.Ok);
             // 
-            // splitContainer1.Panel2
+            // splitMain.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(918, 644);
-            this.splitContainer1.SplitterDistance = 397;
-            this.splitContainer1.TabIndex = 0;
+            this.splitMain.Panel2.Controls.Add(this.splitContainer3);
+            this.splitMain.Size = new System.Drawing.Size(918, 644);
+            this.splitMain.SplitterDistance = 397;
+            this.splitMain.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -839,6 +839,13 @@ namespace GitUI
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem.Text = "Close dialog when all changes are committed";
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem.Click += new System.EventHandler(this.closeDialogAfterAllFilesCommittedToolStripMenuItem_Click);
             // 
+            // refreshDialogOnFormFocusToolStripMenuItem
+            // 
+            this.refreshDialogOnFormFocusToolStripMenuItem.Name = "refreshDialogOnFormFocusToolStripMenuItem";
+            this.refreshDialogOnFormFocusToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
+            this.refreshDialogOnFormFocusToolStripMenuItem.Click += new System.EventHandler(this.refreshDialogOnFormFocusToolStripMenuItem_Click);
+            // 
             // Message
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -863,13 +870,6 @@ namespace GitUI
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
-            // refreshDialogOnFormFocusToolStripMenuItem
-            // 
-            this.refreshDialogOnFormFocusToolStripMenuItem.Name = "refreshDialogOnFormFocusToolStripMenuItem";
-            this.refreshDialogOnFormFocusToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
-            this.refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
-            this.refreshDialogOnFormFocusToolStripMenuItem.Click += new System.EventHandler(this.refreshDialogOnFormFocusToolStripMenuItem_Click);
-            // 
             // FormCommit
             // 
             this.AcceptButton = this.Commit;
@@ -877,7 +877,7 @@ namespace GitUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(918, 644);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitMain);
             this.MainMenuStrip = this._NO_TRANSLATE_menuStrip1;
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -886,9 +886,9 @@ namespace GitUI
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
             this.Load += new System.EventHandler(this.FormCommitLoad);
             this.Shown += new System.EventHandler(this.FormCommitShown);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
+            this.splitMain.Panel1.ResumeLayout(false);
+            this.splitMain.Panel2.ResumeLayout(false);
+            this.splitMain.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -925,7 +925,7 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitMain;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
