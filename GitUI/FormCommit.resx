@@ -118,36 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="UnstagedFileContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>458, 17</value>
+    <value>245, 17</value>
   </metadata>
   <metadata name="fileTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>623, 17</value>
+    <value>410, 17</value>
   </metadata>
   <metadata name="gitItemStatusBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>729, 17</value>
+    <value>516, 17</value>
   </metadata>
   <metadata name="toolStaged.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>230, 17</value>
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="toolUnstaged.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>719, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="rescanChangesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAg1JREFUOE+Nk+1P
-        UmEYxvmL+lBtrjabWznyDXWd1aaTVWDRJPvgoqENxSMiHvGczuAggXAizBdomBIqICxgOEAgjKWV09U/
-        cpXPN3YweD7ez/X8rvt+rt0yWRNnsxpEE7LLJaOBp+DiTGNI4vceuJwF2rAaAx/6cM/ThR6hHZq1h3js
-        GwQXWbgc4ihzoNN68HkL3F9t8FTscP6r2QoLYHNmmDNToOwK8NusFCIUF7GYM8FfdWGpxOJtmYf90Aou
-        PwcmS8OUMWDyix7dVjksQXMtIHa2A0PyJd4dLcFdtsGancXwqhJtszdw03Ad13RX0Mt1oJNph3HFIHVn
-        0jOwpKeI43yGxoCTgi3K1Qh7jJ3Qucfqz69eHwLl7kav/S5xciUcEqFtiye11HkCydM49n9EEfu+g91v
-        nyGLHe9irxpBpBJGuLSFT4UQEUf/hCWgtbIfgyJFzORMGxSMvH5XKycezBxM1FyKOReJ8uKP2NwcdNsv
-        8Hz5mRQQ+Oknj42pV1AGKDx4r0C/qwMjQRWYNE0itWSncd/RB19SrAWEfq2DzuixeuwhkXqPHDWRTqfG
-        SaQq/xC0zjruoZMNvN4fg7cikEiFIos3+XkwByYYE+PQfhxGP9+FEYcGpdNi/fnFggujm0+g2XiEO0wr
-        btEtaJm4ituTrdAIaohxT+OduFgc1bKysfB/K+pLeZsC/AUI02kuZywdMgAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="toolUnstaged.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>230, 36</value>
-  </metadata>
   <data name="SolveMergeconflicts.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -164,7 +149,7 @@
 </value>
   </data>
   <metadata name="toolCommit.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>341, 17</value>
+    <value>128, 17</value>
   </metadata>
   <data name="Scan.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
