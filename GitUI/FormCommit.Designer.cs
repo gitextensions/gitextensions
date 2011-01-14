@@ -212,7 +212,7 @@ namespace GitUI
             // 
             this.filenameToClipboardToolStripMenuItem.Name = "filenameToClipboardToolStripMenuItem";
             this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.filenameToClipboardToolStripMenuItem.Text = "Filename to clipboard";
+            this.filenameToClipboardToolStripMenuItem.Text = "Copy Filename";
             this.filenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
             // 
             // fileTooltip
