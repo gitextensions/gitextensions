@@ -168,8 +168,8 @@ namespace GitUI
 
         private void Initialize()
         {
-            UnstageFiles.Enabled = false;
-            AddFiles.Enabled = false;
+            toolUnstageItem.Enabled = false;
+            toolStageItem.Enabled = false;
             filesListedToCommitToolStripMenuItem.Enabled = false;
             workingToolStripMenuItem.Enabled = false;
 
@@ -183,7 +183,7 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
             Loading.Visible = true;
-            AddFiles.Enabled = false;
+            toolStageItem.Enabled = false;
 
             InitializedStagedAsync();
 
@@ -234,10 +234,10 @@ namespace GitUI
             Unstaged.GitItemStatuses =
                 GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
             Loading.Visible = false;
-            AddFiles.Enabled = true;
+            toolStageItem.Enabled = true;
 
-            UnstageFiles.Enabled = true;
-            AddFiles.Enabled = true;
+            toolUnstageItem.Enabled = true;
+            toolStageItem.Enabled = true;
             filesListedToCommitToolStripMenuItem.Enabled = true;
             workingToolStripMenuItem.Enabled = true;
         }
@@ -380,8 +380,8 @@ namespace GitUI
 
         private void Stage(ICollection<GitItemStatus> gitItemStatusses)
         {
-            UnstageFiles.Enabled = false;
-            AddFiles.Enabled = false;
+            toolUnstageItem.Enabled = false;
+            toolStageItem.Enabled = false;
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -433,8 +433,8 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            UnstageFiles.Enabled = true;
-            AddFiles.Enabled = true;
+            toolUnstageItem.Enabled = true;
+            toolStageItem.Enabled = true;
 
             Commit.Enabled = true;
             Amend.Enabled = true;
@@ -448,8 +448,8 @@ namespace GitUI
 
         private void UnstageFilesClick(object sender, EventArgs e)
         {
-            UnstageFiles.Enabled = false;
-            AddFiles.Enabled = false;
+            toolUnstageItem.Enabled = false;
+            toolStageItem.Enabled = false;
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -517,8 +517,8 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            UnstageFiles.Enabled = true;
-            AddFiles.Enabled = true;
+            toolUnstageItem.Enabled = true;
+            toolStageItem.Enabled = true;
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
