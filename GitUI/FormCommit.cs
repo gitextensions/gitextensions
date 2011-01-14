@@ -1041,5 +1041,12 @@ namespace GitUI
             refreshDialogOnFormFocusToolStripMenuItem.Checked = !refreshDialogOnFormFocusToolStripMenuItem.Checked;
             Settings.RefreshCommitDialogOnFormFocus = refreshDialogOnFormFocusToolStripMenuItem.Checked;
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) { 
+            if (keyData == Keys.F5) 
+                ScanClick(null, null);
+
+            return base.ProcessCmdKey(ref msg, keyData); 
+        } 
     }
 }
