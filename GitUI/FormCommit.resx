@@ -151,8 +151,8 @@
   <data name="SolveMergeconflicts.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALBQAA
-        CwUByY3ISQAAAeJJREFUOE+dU8srRGEcvSymRCkbkcIWiRUbyUIpZWMzYjEp45E3C4ViFLOiiYxkFu6I
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK/wAA
+        Cv8BNGKaggAAAeJJREFUOE+dU8srRGEcvSymRCkbkcIWiRUbyUIpZWMzYjEp45E3C4ViFLOiiYxkFu6I
         SJRICqOQR0qx8EoW/gF5LGamHL9zn+Ox8tWpM+ec35nvfve7CgDlzpURC4f8bhUcCMIGyKnRs7KcVX4U
         uO/rs/CptgHHAeBsS4dwavSkwG2WfCu4qUtvee4qAE4WgL15YLUbrwOFGsg1TTxmmGVJbIGD7TiX4c1x
         YHkQOFXFNxY5NXqSMXbisAquatM6IoEmYGcSWOwFlnrk31bsAnJq9CTDLGesguu69BOEfMBan4SadQRq
@@ -163,8 +163,8 @@
         IMcAObW/v0Yexn/xBTt/gz9QYHXTAAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="_NO_TRANSLATE_menuStrip3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1046, 56</value>
+  <metadata name="toolCommit.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1253, 36</value>
   </metadata>
   <data name="Scan.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
