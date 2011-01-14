@@ -98,6 +98,9 @@ namespace GitUI
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -119,20 +122,23 @@ namespace GitUI
             // UnstagedFileContext
             // 
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ViewFileHistoryToolStripItem,
             this.ResetChanges,
             this.resetPartOfFileToolStripMenuItem,
-            this.editFileToolStripMenuItem,
-            this.deleteFileToolStripMenuItem,
-            this.addFileTogitignoreToolStripMenuItem,
-            this.toolStripSeparator4,
+            this.toolStripSeparator8,
+            this.ViewFileHistoryToolStripItem,
+            this.toolStripSeparator7,
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openWithDifftoolToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.editFileToolStripMenuItem,
+            this.deleteFileToolStripMenuItem,
+            this.toolStripSeparator9,
+            this.addFileTogitignoreToolStripMenuItem,
             this.toolStripSeparator5,
             this.filenameToClipboardToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            this.UnstagedFileContext.Size = new System.Drawing.Size(194, 236);
+            this.UnstagedFileContext.Size = new System.Drawing.Size(194, 276);
             // 
             // ViewFileHistoryToolStripItem
             // 
@@ -705,6 +711,21 @@ namespace GitUI
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(190, 6);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(190, 6);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(190, 6);
+            // 
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -804,5 +825,8 @@ namespace GitUI
         private ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private ToolStripButton toolRefreshItem;
         private ToolStripSeparator toolStripSeparator6;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripSeparator toolStripSeparator9;
     }
 }
