@@ -385,15 +385,15 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                progressBar.Visible = true;
-                progressBar.Maximum = gitItemStatusses.Count * 2;
-                progressBar.Value = 0;
+                toolStripProgressBar1.Visible = true;
+                toolStripProgressBar1.Maximum = gitItemStatusses.Count * 2;
+                toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
 
                 foreach (var gitItemStatus in gitItemStatusses)
                 {
-                    progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                     files.Add(gitItemStatus);
                 }
 
@@ -425,9 +425,9 @@ namespace GitUI
 
                 Unstaged.GitItemStatuses = unStagedFiles;
 
-                progressBar.Value = progressBar.Maximum;
+                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
-                progressBar.Visible = false;
+                toolStripProgressBar1.Visible = false;
             }
             catch (Exception ex)
             {
@@ -461,19 +461,19 @@ namespace GitUI
                 }
                 else
                 {
-                    progressBar.Visible = true;
-                    progressBar.Maximum = Staged.SelectedItems.Count * 2;
-                    progressBar.Value = 0;
+                    toolStripProgressBar1.Visible = true;
+                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count * 2;
+                    toolStripProgressBar1.Value = 0;
 
                     var files = new List<GitItemStatus>();
                     var allFiles = new List<GitItemStatus>();
 
                     foreach (var item in Staged.SelectedItems)
                     {
-                        progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                         if (!item.IsNew)
                         {
-                            progressBar.Value = Math.Min(progressBar.Maximum - 1, progressBar.Value + 1);
+                            toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                             GitCommandHelpers.UnstageFileToRemove(item.Name);
                         }
                         else
@@ -509,9 +509,9 @@ namespace GitUI
                     Staged.GitItemStatuses = stagedFiles;
                     Unstaged.GitItemStatuses = unStagedFiles;
 
-                    progressBar.Value = progressBar.Maximum;
+                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 }
-                progressBar.Visible = false;
+                toolStripProgressBar1.Visible = false;
             }
             catch (Exception ex)
             {
