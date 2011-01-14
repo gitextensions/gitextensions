@@ -17,6 +17,9 @@ namespace PatchApply
             // Ported from the git-gui tcl code to C#
             // see lib/diff.tcl
 
+            if (text.EndsWith("\n\\ No newline at end of file\n"))
+                text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
+
             // Devide diff into header and patch
             int patch_pos = text.IndexOf("@@");
             string header = text.Substring(0, patch_pos);
@@ -152,6 +155,12 @@ namespace PatchApply
                     // set $next_l to the beginning of the next 
                     // line after $i_l
                     int next_l = diff.IndexOf("\n", i_l) + 1;
+                    if (next_l == 0)
+                    {
+                        next_l = diff.Length;
+                        m--;
+                        n--;
+                    }
 
                     // get character at $i_l 
                     char c1 = diff[i_l];
@@ -231,7 +240,7 @@ namespace PatchApply
                 // update $patch (makes sure $pre_context gets appended)
                 patch += pre_context;
                 // update $wholepatch with the current hunk
-                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m + " @@\n" + patch;
+                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
 
                 // set $first_l to first line after the next @@ line
                 first_l = diff.IndexOf("\n", i_l) + 1;
