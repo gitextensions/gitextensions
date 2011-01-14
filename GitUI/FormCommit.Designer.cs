@@ -60,7 +60,7 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new GitUI.FileStatusList();
             this.toolStaged = new System.Windows.Forms.ToolStrip();
-            this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -319,7 +319,7 @@ namespace GitUI
             this.toolStripProgressBar1});
             this.toolStaged.Location = new System.Drawing.Point(0, 0);
             this.toolStaged.Name = "toolStaged";
-            this.toolStaged.Padding = new System.Windows.Forms.Padding(1, 1, 1, 2);
+            this.toolStaged.Padding = new System.Windows.Forms.Padding(2, 1, 1, 1);
             this.toolStaged.Size = new System.Drawing.Size(397, 28);
             this.toolStaged.TabIndex = 12;
             this.toolStaged.Text = "toolStrip1";
@@ -339,8 +339,7 @@ namespace GitUI
             this.rescanChangesToolStripMenuItem});
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
-            this.workingToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.workingToolStripMenuItem.Size = new System.Drawing.Size(144, 25);
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(145, 23);
             this.workingToolStripMenuItem.Text = "Working dir changes";
             // 
             // showIgnoredFilesToolStripMenuItem
@@ -417,7 +416,7 @@ namespace GitUI
             // 
             this.toolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(190, 22);
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(190, 23);
             this.toolStripProgressBar1.Visible = false;
             // 
             // splitLeftBottom
@@ -859,7 +858,8 @@ namespace GitUI
         private PictureBox Loading;
         private FileStatusList Unstaged;
         private ToolStrip toolStaged;
-        private ToolStripMenuItem workingToolStripMenuItem;
+        private ToolStripProgressBar toolStripProgressBar1;
+        private ToolStripDropDownButton workingToolStripMenuItem;
         private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator3;
@@ -870,6 +870,5 @@ namespace GitUI
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
         private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private ToolStripMenuItem rescanChangesToolStripMenuItem;
-        private ToolStripProgressBar toolStripProgressBar1;
     }
 }
