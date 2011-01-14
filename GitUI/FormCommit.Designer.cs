@@ -57,7 +57,8 @@ namespace GitUI
             this.Cancel = new System.Windows.Forms.Button();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.splitLeft = new System.Windows.Forms.SplitContainer();
-            this.splitLeftTop = new System.Windows.Forms.SplitContainer();
+            this.Loading = new System.Windows.Forms.PictureBox();
+            this.Unstaged = new GitUI.FileStatusList();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this._NO_TRANSLATE_menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -72,8 +73,6 @@ namespace GitUI
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rescanChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Loading = new System.Windows.Forms.PictureBox();
-            this.Unstaged = new GitUI.FileStatusList();
             this.splitLeftBottom = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.AddFiles = new System.Windows.Forms.Button();
@@ -110,12 +109,9 @@ namespace GitUI
             this.splitLeft.Panel1.SuspendLayout();
             this.splitLeft.Panel2.SuspendLayout();
             this.splitLeft.SuspendLayout();
-            this.splitLeftTop.Panel1.SuspendLayout();
-            this.splitLeftTop.Panel2.SuspendLayout();
-            this.splitLeftTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.tableLayoutPanel5.SuspendLayout();
             this._NO_TRANSLATE_menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.splitLeftBottom.Panel1.SuspendLayout();
             this.splitLeftBottom.Panel2.SuspendLayout();
             this.splitLeftBottom.SuspendLayout();
@@ -278,7 +274,9 @@ namespace GitUI
             // 
             // splitLeft.Panel1
             // 
-            this.splitLeft.Panel1.Controls.Add(this.splitLeftTop);
+            this.splitLeft.Panel1.Controls.Add(this.Loading);
+            this.splitLeft.Panel1.Controls.Add(this.Unstaged);
+            this.splitLeft.Panel1.Controls.Add(this.tableLayoutPanel5);
             // 
             // splitLeft.Panel2
             // 
@@ -287,27 +285,32 @@ namespace GitUI
             this.splitLeft.SplitterDistance = 284;
             this.splitLeft.TabIndex = 3;
             // 
-            // splitLeftTop
+            // Loading
             // 
-            this.splitLeftTop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitLeftTop.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitLeftTop.Location = new System.Drawing.Point(0, 0);
-            this.splitLeftTop.Margin = new System.Windows.Forms.Padding(0);
-            this.splitLeftTop.Name = "splitLeftTop";
-            this.splitLeftTop.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            this.Loading.Location = new System.Drawing.Point(0, 28);
+            this.Loading.Name = "Loading";
+            this.Loading.Size = new System.Drawing.Size(397, 256);
+            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Loading.TabIndex = 11;
+            this.Loading.TabStop = false;
             // 
-            // splitLeftTop.Panel1
+            // Unstaged
             // 
-            this.splitLeftTop.Panel1.Controls.Add(this.tableLayoutPanel5);
-            // 
-            // splitLeftTop.Panel2
-            // 
-            this.splitLeftTop.Panel2.Controls.Add(this.Loading);
-            this.splitLeftTop.Panel2.Controls.Add(this.Unstaged);
-            this.splitLeftTop.Size = new System.Drawing.Size(397, 284);
-            this.splitLeftTop.SplitterDistance = 25;
-            this.splitLeftTop.SplitterWidth = 1;
-            this.splitLeftTop.TabIndex = 1;
+            this.Unstaged.ContextMenuStrip = this.UnstagedFileContext;
+            this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Unstaged.Font = new System.Drawing.Font("Tahoma", 9.75F);
+            this.Unstaged.GitItemStatuses = null;
+            this.Unstaged.Location = new System.Drawing.Point(0, 28);
+            this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Unstaged.Name = "Unstaged";
+            this.Unstaged.Revision = null;
+            this.Unstaged.SelectedItem = null;
+            this.Unstaged.Size = new System.Drawing.Size(397, 256);
+            this.Unstaged.TabIndex = 10;
             // 
             // tableLayoutPanel5
             // 
@@ -316,20 +319,20 @@ namespace GitUI
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel5.Controls.Add(this.progressBar, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this._NO_TRANSLATE_menuStrip1, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 25);
-            this.tableLayoutPanel5.TabIndex = 0;
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(397, 28);
+            this.tableLayoutPanel5.TabIndex = 1;
             // 
             // progressBar
             // 
             this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar.Location = new System.Drawing.Point(201, 3);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(193, 19);
+            this.progressBar.Size = new System.Drawing.Size(193, 22);
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
@@ -341,7 +344,7 @@ namespace GitUI
             this.workingToolStripMenuItem});
             this._NO_TRANSLATE_menuStrip1.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_menuStrip1.Name = "_NO_TRANSLATE_menuStrip1";
-            this._NO_TRANSLATE_menuStrip1.Size = new System.Drawing.Size(198, 25);
+            this._NO_TRANSLATE_menuStrip1.Size = new System.Drawing.Size(198, 28);
             this._NO_TRANSLATE_menuStrip1.TabIndex = 2;
             this._NO_TRANSLATE_menuStrip1.Text = "menuStrip1";
             // 
@@ -361,7 +364,7 @@ namespace GitUI
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.workingToolStripMenuItem.Size = new System.Drawing.Size(144, 21);
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.workingToolStripMenuItem.Text = "Working dir changes";
             // 
             // showIgnoredFilesToolStripMenuItem
@@ -433,33 +436,6 @@ namespace GitUI
             this.rescanChangesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.rescanChangesToolStripMenuItem.Text = "Rescan changes";
             this.rescanChangesToolStripMenuItem.Click += new System.EventHandler(this.RescanChangesToolStripMenuItemClick);
-            // 
-            // Loading
-            // 
-            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-            this.Loading.Location = new System.Drawing.Point(0, 0);
-            this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(397, 258);
-            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Loading.TabIndex = 2;
-            this.Loading.TabStop = false;
-            // 
-            // Unstaged
-            // 
-            this.Unstaged.ContextMenuStrip = this.UnstagedFileContext;
-            this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Unstaged.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.Unstaged.GitItemStatuses = null;
-            this.Unstaged.Location = new System.Drawing.Point(0, 0);
-            this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Unstaged.Name = "Unstaged";
-            this.Unstaged.Revision = null;
-            this.Unstaged.SelectedItem = null;
-            this.Unstaged.Size = new System.Drawing.Size(397, 258);
-            this.Unstaged.TabIndex = 0;
             // 
             // splitLeftBottom
             // 
@@ -813,7 +789,6 @@ namespace GitUI
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(918, 644);
             this.Controls.Add(this.splitMain);
-            this.MainMenuStrip = this._NO_TRANSLATE_menuStrip1;
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
@@ -829,14 +804,11 @@ namespace GitUI
             this.splitLeft.Panel1.ResumeLayout(false);
             this.splitLeft.Panel2.ResumeLayout(false);
             this.splitLeft.ResumeLayout(false);
-            this.splitLeftTop.Panel1.ResumeLayout(false);
-            this.splitLeftTop.Panel2.ResumeLayout(false);
-            this.splitLeftTop.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
             this._NO_TRANSLATE_menuStrip1.ResumeLayout(false);
             this._NO_TRANSLATE_menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.splitLeftBottom.Panel1.ResumeLayout(false);
             this.splitLeftBottom.Panel2.ResumeLayout(false);
             this.splitLeftBottom.ResumeLayout(false);
@@ -861,42 +833,25 @@ namespace GitUI
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.SplitContainer splitLeft;
         private System.Windows.Forms.SplitContainer splitRight;
-        private FileStatusList Unstaged;
         private FileStatusList Staged;
         private System.Windows.Forms.Button AddFiles;
-        private System.Windows.Forms.SplitContainer splitLeftTop;
         private System.Windows.Forms.SplitContainer splitLeftBottom;
         private System.Windows.Forms.BindingSource gitItemStatusBindingSource;
         private System.Windows.Forms.Button UnstageFiles;
-        private System.Windows.Forms.PictureBox Loading;
-        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.ContextMenuStrip UnstagedFileContext;
         private System.Windows.Forms.ToolStripMenuItem ResetChanges;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.Button SolveMergeconflicts;
-        private System.Windows.Forms.MenuStrip _NO_TRANSLATE_menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem workingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editGitIgnoreToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.MenuStrip _NO_TRANSLATE_menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem filesListedToCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
         private FileViewer SelectedDiff;
-        private System.Windows.Forms.ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private System.Windows.Forms.Button Cancel;
-        private System.Windows.Forms.ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rescanChangesToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
@@ -920,5 +875,21 @@ namespace GitUI
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
+        private PictureBox Loading;
+        private FileStatusList Unstaged;
+        private TableLayoutPanel tableLayoutPanel5;
+        private ProgressBar progressBar;
+        private MenuStrip _NO_TRANSLATE_menuStrip1;
+        private ToolStripMenuItem workingToolStripMenuItem;
+        private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
+        private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
+        private ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
+        private ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
+        private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
+        private ToolStripMenuItem rescanChangesToolStripMenuItem;
     }
 }
