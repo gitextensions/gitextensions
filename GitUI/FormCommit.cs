@@ -100,6 +100,7 @@ namespace GitUI
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+            this.splitRight.Panel2MinSize = 160;
             Translate();
 
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
