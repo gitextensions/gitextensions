@@ -91,7 +91,8 @@ namespace GitUI
             this.SelectedDiff = new GitUI.Editor.FileViewer();
             this.Message = new GitUI.SpellChecker.EditNetSpell();
             this.toolCommit = new System.Windows.Forms.ToolStrip();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,7 +102,6 @@ namespace GitUI
             this.Amend = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
             this.Scan = new System.Windows.Forms.Button();
-            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -682,20 +682,31 @@ namespace GitUI
             this.toolStripMenuItem3});
             this.toolCommit.Location = new System.Drawing.Point(175, 0);
             this.toolCommit.Name = "toolCommit";
-            this.toolCommit.Padding = new System.Windows.Forms.Padding(0, 1, 0, 3);
+            this.toolCommit.Padding = new System.Windows.Forms.Padding(1, 1, 3, 3);
             this.toolCommit.Size = new System.Drawing.Size(342, 28);
             this.toolCommit.Stretch = true;
             this.toolCommit.TabIndex = 5;
             // 
+            // commitMessageToolStripMenuItem
+            // 
+            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
+            this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(129, 21);
+            this.commitMessageToolStripMenuItem.Text = "Commit &message";
+            this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
+            this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
+            // 
             // toolStripMenuItem3
             // 
+            this.toolStripMenuItem3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripMenuItem3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeDialogAfterEachCommitToolStripMenuItem,
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem,
             this.refreshDialogOnFormFocusToolStripMenuItem});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(61, 24);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(62, 21);
             this.toolStripMenuItem3.Text = "Options";
             // 
             // closeDialogAfterEachCommitToolStripMenuItem
@@ -794,16 +805,6 @@ namespace GitUI
             this.Scan.Text = "&Rescan changes";
             this.Scan.UseVisualStyleBackColor = true;
             this.Scan.Click += new System.EventHandler(this.ScanClick);
-            // 
-            // commitMessageToolStripMenuItem
-            // 
-            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
-            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
-            this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(129, 21);
-            this.commitMessageToolStripMenuItem.Text = "Commit &message";
-            this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
-            this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
             // 
             // FormCommit
             // 
@@ -914,10 +915,10 @@ namespace GitUI
         private Button Reset;
         private Button Scan;
         private ToolStrip toolCommit;
-        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripDropDownButton commitMessageToolStripMenuItem;
+        private ToolStripDropDownButton toolStripMenuItem3;
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
-        private ToolStripDropDownButton commitMessageToolStripMenuItem;
     }
 }
