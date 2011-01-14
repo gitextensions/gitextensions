@@ -84,7 +84,7 @@ namespace GitUI
             this.Staged = new GitUI.FileStatusList();
             this.Cancel = new System.Windows.Forms.Button();
             this.Ok = new System.Windows.Forms.Button();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitRight = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.SelectedDiff = new GitUI.Editor.FileViewer();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -123,9 +123,9 @@ namespace GitUI
             this.splitContainer5.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this._NO_TRANSLATE_menuStrip2.SuspendLayout();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
+            this.splitRight.Panel1.SuspendLayout();
+            this.splitRight.Panel2.SuspendLayout();
+            this.splitRight.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
@@ -149,7 +149,7 @@ namespace GitUI
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.splitContainer3);
+            this.splitMain.Panel2.Controls.Add(this.splitRight);
             this.splitMain.Size = new System.Drawing.Size(918, 644);
             this.splitMain.SplitterDistance = 397;
             this.splitMain.TabIndex = 0;
@@ -601,26 +601,26 @@ namespace GitUI
             this.Ok.Text = "Commit";
             this.Ok.UseVisualStyleBackColor = true;
             // 
-            // splitContainer3
+            // splitRight
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitRight.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitRight.Location = new System.Drawing.Point(0, 0);
+            this.splitRight.Name = "splitRight";
+            this.splitRight.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer3.Panel1
+            // splitRight.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.SolveMergeconflicts);
-            this.splitContainer3.Panel1.Controls.Add(this.SelectedDiff);
+            this.splitRight.Panel1.Controls.Add(this.SolveMergeconflicts);
+            this.splitRight.Panel1.Controls.Add(this.SelectedDiff);
             // 
-            // splitContainer3.Panel2
+            // splitRight.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.tableLayoutPanel6);
-            this.splitContainer3.Panel2MinSize = 134;
-            this.splitContainer3.Size = new System.Drawing.Size(517, 644);
-            this.splitContainer3.SplitterDistance = 479;
-            this.splitContainer3.TabIndex = 0;
+            this.splitRight.Panel2.Controls.Add(this.tableLayoutPanel6);
+            this.splitRight.Panel2MinSize = 134;
+            this.splitRight.Size = new System.Drawing.Size(517, 644);
+            this.splitRight.SplitterDistance = 479;
+            this.splitRight.TabIndex = 0;
             // 
             // SolveMergeconflicts
             // 
@@ -908,9 +908,9 @@ namespace GitUI
             this.tableLayoutPanel4.PerformLayout();
             this._NO_TRANSLATE_menuStrip2.ResumeLayout(false);
             this._NO_TRANSLATE_menuStrip2.PerformLayout();
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            this.splitContainer3.ResumeLayout(false);
+            this.splitRight.Panel1.ResumeLayout(false);
+            this.splitRight.Panel2.ResumeLayout(false);
+            this.splitRight.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel7.ResumeLayout(false);
@@ -928,7 +928,7 @@ namespace GitUI
         private System.Windows.Forms.SplitContainer splitMain;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.SplitContainer splitLeft;
-        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.SplitContainer splitRight;
         private FileStatusList Unstaged;
         private FileStatusList Staged;
         private System.Windows.Forms.Button Commit;
