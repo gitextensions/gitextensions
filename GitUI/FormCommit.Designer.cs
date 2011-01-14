@@ -87,22 +87,19 @@ namespace GitUI
             this.splitRight = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.SelectedDiff = new GitUI.Editor.FileViewer();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.Scan = new System.Windows.Forms.Button();
-            this.Reset = new System.Windows.Forms.Button();
-            this.Amend = new System.Windows.Forms.Button();
-            this.Commit = new System.Windows.Forms.Button();
-            this.CommitAndPush = new System.Windows.Forms.Button();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.Message = new GitUI.SpellChecker.EditNetSpell();
             this._NO_TRANSLATE_menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Message = new GitUI.SpellChecker.EditNetSpell();
+            this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
+            this.Commit = new System.Windows.Forms.Button();
+            this.CommitAndPush = new System.Windows.Forms.Button();
+            this.Amend = new System.Windows.Forms.Button();
+            this.Reset = new System.Windows.Forms.Button();
+            this.Scan = new System.Windows.Forms.Button();
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitMain.Panel1.SuspendLayout();
@@ -126,11 +123,8 @@ namespace GitUI
             this.splitRight.Panel1.SuspendLayout();
             this.splitRight.Panel2.SuspendLayout();
             this.splitRight.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel7.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this._NO_TRANSLATE_menuStrip3.SuspendLayout();
+            this.flowCommitButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -616,7 +610,9 @@ namespace GitUI
             // 
             // splitRight.Panel2
             // 
-            this.splitRight.Panel2.Controls.Add(this.tableLayoutPanel6);
+            this.splitRight.Panel2.Controls.Add(this.Message);
+            this.splitRight.Panel2.Controls.Add(this._NO_TRANSLATE_menuStrip3);
+            this.splitRight.Panel2.Controls.Add(this.flowCommitButtons);
             this.splitRight.Panel2MinSize = 134;
             this.splitRight.Size = new System.Drawing.Size(517, 644);
             this.splitRight.SplitterDistance = 479;
@@ -654,154 +650,28 @@ namespace GitUI
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TreatAllFilesAsText = false;
             // 
-            // tableLayoutPanel6
+            // Message
             // 
-            this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 175F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel7, 1, 0);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 1;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(517, 161);
-            this.tableLayoutPanel6.TabIndex = 2;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.Scan, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.Reset, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.Amend, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.Commit, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.CommitAndPush, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(175, 161);
-            this.tableLayoutPanel2.TabIndex = 0;
-            // 
-            // Scan
-            // 
-            this.Scan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Scan.Image = ((System.Drawing.Image)(resources.GetObject("Scan.Image")));
-            this.Scan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Scan.Location = new System.Drawing.Point(1, 131);
-            this.Scan.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.Scan.Name = "Scan";
-            this.Scan.Size = new System.Drawing.Size(171, 26);
-            this.Scan.TabIndex = 3;
-            this.Scan.Text = "&Rescan changes";
-            this.Scan.UseVisualStyleBackColor = true;
-            this.Scan.Click += new System.EventHandler(this.ScanClick);
-            // 
-            // Reset
-            // 
-            this.Reset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Reset.Location = new System.Drawing.Point(1, 99);
-            this.Reset.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(171, 26);
-            this.Reset.TabIndex = 5;
-            this.Reset.Text = "Reset changes";
-            this.Reset.UseVisualStyleBackColor = true;
-            this.Reset.Click += new System.EventHandler(this.ResetClick);
-            // 
-            // Amend
-            // 
-            this.Amend.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Amend.Location = new System.Drawing.Point(1, 67);
-            this.Amend.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(171, 26);
-            this.Amend.TabIndex = 7;
-            this.Amend.Text = "&Amend last commit";
-            this.Amend.UseVisualStyleBackColor = true;
-            this.Amend.Click += new System.EventHandler(this.AmendClick);
-            // 
-            // Commit
-            // 
-            this.Commit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Commit.Image = global::GitUI.Properties.Resources._10;
-            this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Commit.Location = new System.Drawing.Point(1, 3);
-            this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(171, 26);
-            this.Commit.TabIndex = 2;
-            this.Commit.Text = "&Commit";
-            this.Commit.UseVisualStyleBackColor = true;
-            this.Commit.Click += new System.EventHandler(this.CommitClick);
-            // 
-            // CommitAndPush
-            // 
-            this.CommitAndPush.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitAndPush.Image = global::GitUI.Properties.Resources._31;
-            this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
-            this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.CommitAndPush.Name = "CommitAndPush";
-            this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
-            this.CommitAndPush.TabIndex = 8;
-            this.CommitAndPush.Text = "C&ommit && push";
-            this.CommitAndPush.UseVisualStyleBackColor = true;
-            this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
-            // 
-            // tableLayoutPanel7
-            // 
-            this.tableLayoutPanel7.ColumnCount = 1;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel3, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.Message, 0, 1);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(175, 0);
-            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 2;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(342, 161);
-            this.tableLayoutPanel7.TabIndex = 1;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_menuStrip3, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(342, 30);
-            this.tableLayoutPanel3.TabIndex = 1;
+            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Message.Font = new System.Drawing.Font("Tahoma", 9.75F);
+            this.Message.Location = new System.Drawing.Point(175, 29);
+            this.Message.Margin = new System.Windows.Forms.Padding(0);
+            this.Message.MistakeFont = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Underline);
+            this.Message.Name = "Message";
+            this.Message.Size = new System.Drawing.Size(342, 132);
+            this.Message.TabIndex = 4;
             // 
             // _NO_TRANSLATE_menuStrip3
             // 
+            this._NO_TRANSLATE_menuStrip3.AutoSize = false;
             this._NO_TRANSLATE_menuStrip3.BackColor = System.Drawing.SystemColors.Control;
-            this._NO_TRANSLATE_menuStrip3.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem,
             this.toolStripMenuItem1});
-            this._NO_TRANSLATE_menuStrip3.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_menuStrip3.Location = new System.Drawing.Point(175, 0);
             this._NO_TRANSLATE_menuStrip3.Name = "_NO_TRANSLATE_menuStrip3";
-            this._NO_TRANSLATE_menuStrip3.Size = new System.Drawing.Size(342, 30);
-            this._NO_TRANSLATE_menuStrip3.TabIndex = 0;
+            this._NO_TRANSLATE_menuStrip3.Size = new System.Drawing.Size(342, 29);
+            this._NO_TRANSLATE_menuStrip3.TabIndex = 3;
             this._NO_TRANSLATE_menuStrip3.Text = "menuStrip3";
             // 
             // commitMessageToolStripMenuItem
@@ -809,7 +679,7 @@ namespace GitUI
             this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(128, 25);
             this.commitMessageToolStripMenuItem.Text = "Commit &message";
             this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
             this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
@@ -822,7 +692,7 @@ namespace GitUI
             this.refreshDialogOnFormFocusToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(61, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(61, 25);
             this.toolStripMenuItem1.Text = "Options";
             // 
             // closeDialogAfterEachCommitToolStripMenuItem
@@ -846,18 +716,81 @@ namespace GitUI
             this.refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
             this.refreshDialogOnFormFocusToolStripMenuItem.Click += new System.EventHandler(this.refreshDialogOnFormFocusToolStripMenuItem_Click);
             // 
-            // Message
+            // flowCommitButtons
             // 
-            this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.Message.Location = new System.Drawing.Point(0, 30);
-            this.Message.Margin = new System.Windows.Forms.Padding(0);
-            this.Message.MistakeFont = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Underline);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(342, 131);
-            this.Message.TabIndex = 0;
-            this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
-            this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
+            this.flowCommitButtons.AutoSize = true;
+            this.flowCommitButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowCommitButtons.Controls.Add(this.Commit);
+            this.flowCommitButtons.Controls.Add(this.CommitAndPush);
+            this.flowCommitButtons.Controls.Add(this.Amend);
+            this.flowCommitButtons.Controls.Add(this.Reset);
+            this.flowCommitButtons.Controls.Add(this.Scan);
+            this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
+            this.flowCommitButtons.Name = "flowCommitButtons";
+            this.flowCommitButtons.Size = new System.Drawing.Size(175, 161);
+            this.flowCommitButtons.TabIndex = 1;
+            // 
+            // Commit
+            // 
+            this.Commit.Image = global::GitUI.Properties.Resources._10;
+            this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Commit.Location = new System.Drawing.Point(1, 3);
+            this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(171, 26);
+            this.Commit.TabIndex = 3;
+            this.Commit.Text = "&Commit";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.CommitClick);
+            // 
+            // CommitAndPush
+            // 
+            this.CommitAndPush.Image = global::GitUI.Properties.Resources._31;
+            this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
+            this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.CommitAndPush.Name = "CommitAndPush";
+            this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
+            this.CommitAndPush.TabIndex = 9;
+            this.CommitAndPush.Text = "C&ommit && push";
+            this.CommitAndPush.UseVisualStyleBackColor = true;
+            this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
+            // 
+            // Amend
+            // 
+            this.Amend.Location = new System.Drawing.Point(1, 67);
+            this.Amend.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Amend.Name = "Amend";
+            this.Amend.Size = new System.Drawing.Size(171, 26);
+            this.Amend.TabIndex = 10;
+            this.Amend.Text = "&Amend last commit";
+            this.Amend.UseVisualStyleBackColor = true;
+            this.Amend.Click += new System.EventHandler(this.AmendClick);
+            // 
+            // Reset
+            // 
+            this.Reset.Location = new System.Drawing.Point(1, 99);
+            this.Reset.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Reset.Name = "Reset";
+            this.Reset.Size = new System.Drawing.Size(171, 26);
+            this.Reset.TabIndex = 11;
+            this.Reset.Text = "Reset changes";
+            this.Reset.UseVisualStyleBackColor = true;
+            this.Reset.Click += new System.EventHandler(this.ResetClick);
+            // 
+            // Scan
+            // 
+            this.Scan.Image = ((System.Drawing.Image)(resources.GetObject("Scan.Image")));
+            this.Scan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Scan.Location = new System.Drawing.Point(1, 131);
+            this.Scan.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Scan.Name = "Scan";
+            this.Scan.Size = new System.Drawing.Size(171, 26);
+            this.Scan.TabIndex = 12;
+            this.Scan.Text = "&Rescan changes";
+            this.Scan.UseVisualStyleBackColor = true;
+            this.Scan.Click += new System.EventHandler(this.ScanClick);
             // 
             // fileTooltip
             // 
@@ -872,7 +805,6 @@ namespace GitUI
             // 
             // FormCommit
             // 
-            this.AcceptButton = this.Commit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Cancel;
@@ -910,14 +842,11 @@ namespace GitUI
             this._NO_TRANSLATE_menuStrip2.PerformLayout();
             this.splitRight.Panel1.ResumeLayout(false);
             this.splitRight.Panel2.ResumeLayout(false);
+            this.splitRight.Panel2.PerformLayout();
             this.splitRight.ResumeLayout(false);
-            this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
             this._NO_TRANSLATE_menuStrip3.ResumeLayout(false);
             this._NO_TRANSLATE_menuStrip3.PerformLayout();
+            this.flowCommitButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -931,7 +860,6 @@ namespace GitUI
         private System.Windows.Forms.SplitContainer splitRight;
         private FileStatusList Unstaged;
         private FileStatusList Staged;
-        private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.SplitContainer splitLeftTop;
         private System.Windows.Forms.SplitContainer splitLeftBottom;
@@ -955,27 +883,17 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
         private FileViewer SelectedDiff;
-        private EditNetSpell Message;
         private System.Windows.Forms.ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.MenuStrip _NO_TRANSLATE_menuStrip3;
-        private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rescanChangesToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-        private System.Windows.Forms.Button Scan;
-        private System.Windows.Forms.Button Reset;
-        private System.Windows.Forms.Button Amend;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
@@ -985,11 +903,19 @@ namespace GitUI
         private System.Windows.Forms.ToolTip fileTooltip;
         private System.Windows.Forms.ToolStripMenuItem resetPartOfFileToolStripMenuItem;
         private ToolStripMenuItem editFileToolStripMenuItem;
-        private Button CommitAndPush;
         private ToolStripMenuItem ViewFileHistoryToolStripItem;
+        private EditNetSpell Message;
+        private MenuStrip _NO_TRANSLATE_menuStrip3;
+        private ToolStripMenuItem commitMessageToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
+        private FlowLayoutPanel flowCommitButtons;
+        private Button Commit;
+        private Button CommitAndPush;
+        private Button Amend;
+        private Button Reset;
+        private Button Scan;
     }
 }
