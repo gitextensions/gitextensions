@@ -170,7 +170,6 @@ namespace GitUI
         {
             toolUnstageItem.Enabled = false;
             toolStageItem.Enabled = false;
-            filesListedToCommitToolStripMenuItem.Enabled = false;
             workingToolStripMenuItem.Enabled = false;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -238,7 +237,6 @@ namespace GitUI
 
             toolUnstageItem.Enabled = true;
             toolStageItem.Enabled = true;
-            filesListedToCommitToolStripMenuItem.Enabled = true;
             workingToolStripMenuItem.Enabled = true;
         }
 
@@ -733,22 +731,6 @@ namespace GitUI
                 return;
             new FormProcess("clean -f").ShowDialog();
             Initialize();
-        }
-
-        private void StageChunkOfFileToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (Unstaged.SelectedItems.Count != 1)
-            {
-                MessageBox.Show(_onlyStageChunkOfSingleFileError.Text, _stageChunkOfFileCaption.Text);
-                return;
-            }
-
-            foreach (var gitItemStatus in Unstaged.SelectedItems)
-            {
-                GitCommandHelpers.RunRealCmd(Settings.GitCommand,
-                                                   string.Format("add -p \"{0}\"", gitItemStatus.Name));
-                Initialize();
-            }
         }
 
         private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
