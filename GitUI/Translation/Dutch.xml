@@ -2728,15 +2728,6 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>&amp;Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>Klaarzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="UnstageFiles" Property="Text">
-          <Value>Terugzetten</Value>
-        </TranslationItem>
         <TranslationItem Name="ResetChanges" Property="Text">
           <Value>Wijzigingen ongedaan maken</Value>
         </TranslationItem>
@@ -2746,62 +2737,8 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Er zijn niet opgeloste samenvoeg conflicten</Value>
         </TranslationItem>
-        <TranslationItem Name="workingToolStripMenuItem" Property="Text">
-          <Value>Wijzigingen in werk directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
-          <Value>Verwijder geselecteerde bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
-          <Value>Wijzigingen in geselecteerde bestanden ongedaan maken</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
-          <Value>Wijzigingen in alle bestanden ongedaan maken.</Value>
-        </TranslationItem>
-        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
-          <Value>Wijzig genegeerde bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="Text">
-          <Value>Klaargezette bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="stageAllToolStripMenuItem" Property="Text">
-          <Value>Alles klaarzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="unstageAllToolStripMenuItem" Property="Text">
-          <Value>Alles terugzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
-          <Value>Verwijder alle niet gevolgde bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="stageChunkOfFileToolStripMenuItem" Property="Text">
-          <Value>Deel van een bestand klaarzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>Annuleren</Value>
-        </TranslationItem>
-        <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
-          <Value>Toon genegeerde bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
-          <Value>Commit &amp;melding</Value>
-        </TranslationItem>
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Value>Voeg bestand toe aan .gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
-          <Value>Toon niet gevolgde bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="rescanChangesToolStripMenuItem" Property="Text">
-          <Value>Wijzigingen scannen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Scan" Property="Text">
-          <Value>&amp;Wijzigingen scannen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>Reset wijzigingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Amend" Property="Text">
-          <Value>&amp;Wijzig laatste commit</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Open</Value>
@@ -2821,13 +2758,31 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
           <Value>Wijzig bestand</Value>
         </TranslationItem>
-        <TranslationItem Name="CommitAndPush" Property="Text">
-          <Value>Commit &amp;&amp; &amp;verzend</Value>
-        </TranslationItem>
         <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
           <Value>Bekijk bestands geschiedenis</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem1" Property="Text">
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>&amp;Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitAndPush" Property="Text">
+          <Value>Commit &amp;&amp; &amp;verzend</Value>
+        </TranslationItem>
+        <TranslationItem Name="Amend" Property="Text">
+          <Value>&amp;Wijzig laatste commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Reset wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
+          <Value>Commit &amp;melding</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="ToolTipText">
+          <Value>Commit bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="Text">
+          <Value>Opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="ToolTipText">
           <Value>Opties</Value>
         </TranslationItem>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
@@ -2838,6 +2793,63 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         </TranslationItem>
         <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
           <Value>Ververs dialoog op focus</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="Text">
+          <Value>Wijzigingen in werk directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="ToolTipText">
+          <Value>Gewijzigde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
+          <Value>Toon genegeerde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Toon niet gevolgde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>Verwijder geselecteerde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>Wijzigingen in geselecteerde bestanden ongedaan maken</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
+          <Value>Wijzigingen in alle bestanden ongedaan maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
+          <Value>Wijzig genegeerde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Verwijder alle niet gevolgde bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="Text">
+          <Value>Klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="ToolTipText">
+          <Value>Klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="Text">
+          <Value>Terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
+          <Value>Terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="Text">
+          <Value>Klaargezette bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="ToolTipText">
+          <Value>Klaargezette bestanden</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageAllToolStripMenuItem" Property="Text">
+          <Value>Alles klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="unstageAllToolStripMenuItem" Property="Text">
+          <Value>Alles terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageChunkOfFileToolStripMenuItem" Property="Text">
+          <Value>Deel van een bestand klaarzetten</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
@@ -3238,6 +3250,9 @@ stash
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Bekijk binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Bericht</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader3" Property="Text">
           <Value>Door</Value>
