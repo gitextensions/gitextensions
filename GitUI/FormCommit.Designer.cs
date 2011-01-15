@@ -78,13 +78,12 @@ namespace GitUI
             this.Staged = new GitUI.FileStatusList();
             this.Cancel = new System.Windows.Forms.Button();
             this.toolbarStaged = new System.Windows.Forms.ToolStrip();
-            this.filesListedToCommitToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
-            this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.stageChunkOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStageAllItem = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStageItem = new System.Windows.Forms.ToolStripButton();
             this.toolUnstageItem = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolUnstageAllItem = new System.Windows.Forms.ToolStripButton();
             this.Ok = new System.Windows.Forms.Button();
             this.splitRight = new System.Windows.Forms.SplitContainer();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
@@ -101,10 +100,6 @@ namespace GitUI
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
-            this.toolUnstageAllItem = new System.Windows.Forms.ToolStripButton();
-            this.toolStageAllItem = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -463,57 +458,34 @@ namespace GitUI
             this.toolbarStaged.AutoSize = false;
             this.toolbarStaged.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarStaged.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.filesListedToCommitToolStripMenuItem,
             this.toolStageAllItem,
             this.toolStripSeparator10,
             this.toolStageItem,
-            this.toolUnstageItem,
+            this.toolUnstageAllItem,
             this.toolStripSeparator11,
-            this.toolUnstageAllItem});
+            this.toolUnstageItem});
             this.toolbarStaged.Location = new System.Drawing.Point(0, 0);
             this.toolbarStaged.Name = "toolbarStaged";
             this.toolbarStaged.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.toolbarStaged.Size = new System.Drawing.Size(397, 28);
             this.toolbarStaged.TabIndex = 13;
             // 
-            // filesListedToCommitToolStripMenuItem
+            // toolStageAllItem
             // 
-            this.filesListedToCommitToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.filesListedToCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stageAllToolStripMenuItem,
-            this.unstageAllToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.stageChunkOfFileToolStripMenuItem});
-            this.filesListedToCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
-            this.filesListedToCommitToolStripMenuItem.Name = "filesListedToCommitToolStripMenuItem";
-            this.filesListedToCommitToolStripMenuItem.Size = new System.Drawing.Size(96, 23);
-            this.filesListedToCommitToolStripMenuItem.Text = "Staged files";
+            this.toolStageAllItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStageAllItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStageAllItem.Image = global::GitUI.Properties.Resources.double_arrow_down;
+            this.toolStageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStageAllItem.Name = "toolStageAllItem";
+            this.toolStageAllItem.Size = new System.Drawing.Size(23, 23);
+            this.toolStageAllItem.Text = "Stage All";
+            this.toolStageAllItem.Click += new System.EventHandler(this.StageAllToolStripMenuItemClick);
             // 
-            // stageAllToolStripMenuItem
+            // toolStripSeparator10
             // 
-            this.stageAllToolStripMenuItem.Name = "stageAllToolStripMenuItem";
-            this.stageAllToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.stageAllToolStripMenuItem.Text = "Stage all";
-            this.stageAllToolStripMenuItem.Click += new System.EventHandler(this.StageAllToolStripMenuItemClick);
-            // 
-            // unstageAllToolStripMenuItem
-            // 
-            this.unstageAllToolStripMenuItem.Name = "unstageAllToolStripMenuItem";
-            this.unstageAllToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.unstageAllToolStripMenuItem.Text = "Unstage all";
-            this.unstageAllToolStripMenuItem.Click += new System.EventHandler(this.UnstageAllToolStripMenuItemClick);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
-            // 
-            // stageChunkOfFileToolStripMenuItem
-            // 
-            this.stageChunkOfFileToolStripMenuItem.Name = "stageChunkOfFileToolStripMenuItem";
-            this.stageChunkOfFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.stageChunkOfFileToolStripMenuItem.Text = "Stage chunk of file";
-            this.stageChunkOfFileToolStripMenuItem.Click += new System.EventHandler(this.StageChunkOfFileToolStripMenuItemClick);
+            this.toolStripSeparator10.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 26);
             // 
             // toolStageItem
             // 
@@ -529,7 +501,6 @@ namespace GitUI
             // 
             // toolUnstageItem
             // 
-            this.toolUnstageItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolUnstageItem.AutoSize = false;
             this.toolUnstageItem.Image = global::GitUI.Properties.Resources._31;
             this.toolUnstageItem.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -538,6 +509,21 @@ namespace GitUI
             this.toolUnstageItem.Text = "Unstage";
             this.toolUnstageItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolUnstageItem.Click += new System.EventHandler(this.UnstageFilesClick);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 26);
+            // 
+            // toolUnstageAllItem
+            // 
+            this.toolUnstageAllItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolUnstageAllItem.Image = global::GitUI.Properties.Resources.double_arrow_up;
+            this.toolUnstageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolUnstageAllItem.Name = "toolUnstageAllItem";
+            this.toolUnstageAllItem.Size = new System.Drawing.Size(23, 23);
+            this.toolUnstageAllItem.Text = "Unstage All";
+            this.toolUnstageAllItem.Click += new System.EventHandler(this.UnstageAllToolStripMenuItemClick);
             // 
             // Ok
             // 
@@ -734,40 +720,6 @@ namespace GitUI
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             // 
-            // toolUnstageAllItem
-            // 
-            this.toolUnstageAllItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolUnstageAllItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolUnstageAllItem.Image = global::GitUI.Properties.Resources.double_arrow_up;
-            this.toolUnstageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolUnstageAllItem.Name = "toolUnstageAllItem";
-            this.toolUnstageAllItem.Size = new System.Drawing.Size(23, 23);
-            this.toolUnstageAllItem.Text = "Unstage All";
-            this.toolUnstageAllItem.Click += new System.EventHandler(this.UnstageAllToolStripMenuItemClick);
-            // 
-            // toolStageAllItem
-            // 
-            this.toolStageAllItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStageAllItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStageAllItem.Image = global::GitUI.Properties.Resources.double_arrow_down;
-            this.toolStageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStageAllItem.Name = "toolStageAllItem";
-            this.toolStageAllItem.Size = new System.Drawing.Size(23, 23);
-            this.toolStageAllItem.Text = "Stage All";
-            this.toolStageAllItem.Click += new System.EventHandler(this.StageAllToolStripMenuItemClick);
-            // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 26);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 26);
-            // 
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -860,11 +812,6 @@ namespace GitUI
         private Button Cancel;
         private ToolStripButton toolStageItem;
         private ToolStripButton toolUnstageItem;
-        private ToolStripDropDownButton filesListedToCommitToolStripMenuItem;
-        private ToolStripMenuItem stageAllToolStripMenuItem;
-        private ToolStripMenuItem unstageAllToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem stageChunkOfFileToolStripMenuItem;
         private ToolStripButton toolRefreshItem;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripSeparator toolStripSeparator8;
