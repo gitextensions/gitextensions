@@ -1065,6 +1065,8 @@
     <None Include="Icons\_82.png" />
     <None Include="Icons\arrow_refresh.png" />
     <None Include="Icons\39.png" />
+    <None Include="Resources\double_arrow_up.png" />
+    <None Include="Resources\double_arrow_down.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />
