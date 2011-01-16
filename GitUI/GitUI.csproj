@@ -602,11 +602,11 @@
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
-    <Compile Include="OpenDirectory.cs">
+    <Compile Include="FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenDirectory.Designer.cs">
-      <DependentUpon>OpenDirectory.cs</DependentUpon>
+    <Compile Include="FormOpenDirectory.Designer.cs">
+      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
     <Compile Include="OpenWith.cs" />
     <Compile Include="PatchGrid.cs">
@@ -989,8 +989,8 @@
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenDirectory.resx">
-      <DependentUpon>OpenDirectory.cs</DependentUpon>
+    <EmbeddedResource Include="FormOpenDirectory.resx">
+      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="PatchGrid.resx">
