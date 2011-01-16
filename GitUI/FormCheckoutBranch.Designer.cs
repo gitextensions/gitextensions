@@ -51,6 +51,8 @@ namespace GitUI
             // 
             this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(158, 42);
             this.Branches.Name = "Branches";
