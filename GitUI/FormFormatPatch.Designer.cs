@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class FormFormatPath
+    partial class FormFormatPatch
     {
         /// <summary>
         /// Required designer variable.
