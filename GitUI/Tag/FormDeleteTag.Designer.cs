@@ -47,6 +47,8 @@
             // 
             // Tags
             // 
+            this.Tags.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Tags.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
