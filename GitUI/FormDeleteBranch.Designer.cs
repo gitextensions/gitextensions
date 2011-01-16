@@ -51,6 +51,8 @@
             // 
             // Branches
             // 
+            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(146, 93);
             this.Branches.Name = "Branches";
