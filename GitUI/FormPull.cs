@@ -48,6 +48,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            Remotes.DataSource = GitCommandHelpers.GetRemotes();
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -260,11 +262,6 @@ namespace GitUI
         private void StashClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartStashDialog();
-        }
-
-        private void RemotesDropDown(object sender, EventArgs e)
-        {
-            Remotes.DataSource = GitCommandHelpers.GetRemotes();
         }
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
