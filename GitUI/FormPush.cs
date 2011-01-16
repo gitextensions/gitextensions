@@ -47,6 +47,8 @@ namespace GitUI
             _currentBranch = GitCommandHelpers.GetSelectedBranch();
             InitializeComponent();
             Translate();
+
+            Remotes.DataSource = GitCommandHelpers.GetRemotes();
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -243,11 +245,6 @@ namespace GitUI
         private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
-        }
-
-        private void RemotesDropDown(object sender, EventArgs e)
-        {
-            Remotes.DataSource = GitCommandHelpers.GetRemotes();
         }
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
