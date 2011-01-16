@@ -50,6 +50,8 @@
             // 
             // Directory
             // 
+            this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.Directory.FormattingEnabled = true;
             this.Directory.Location = new System.Drawing.Point(98, 6);
             this.Directory.Name = "Directory";
