@@ -234,12 +234,13 @@
             // 
             this.Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(128, 19);
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(300, 23);
             this.Remotes.TabIndex = 2;
-            this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
             this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
             this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
