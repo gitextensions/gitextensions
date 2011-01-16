@@ -128,6 +128,8 @@
             // 
             // _NO_TRANSLATE_mergeStrategy
             // 
+            this._NO_TRANSLATE_mergeStrategy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_mergeStrategy.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_mergeStrategy.FormattingEnabled = true;
             this._NO_TRANSLATE_mergeStrategy.Items.AddRange(new object[] {
             "resolve",
