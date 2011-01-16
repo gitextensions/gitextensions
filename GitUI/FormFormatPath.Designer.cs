@@ -159,6 +159,8 @@
             // 
             // OutputPath
             // 
+            this.OutputPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.OutputPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.OutputPath.Location = new System.Drawing.Point(254, 11);
             this.OutputPath.Name = "OutputPath";
             this.OutputPath.Size = new System.Drawing.Size(403, 21);
