@@ -143,6 +143,8 @@
             // 
             // _NO_TRANSLATE_From
             // 
+            this._NO_TRANSLATE_From.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_From.FormattingEnabled = true;
             this._NO_TRANSLATE_From.Location = new System.Drawing.Point(158, 17);
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
@@ -154,6 +156,8 @@
             // 
             // _NO_TRANSLATE_To
             // 
+            this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_To.FormattingEnabled = true;
             this._NO_TRANSLATE_To.Location = new System.Drawing.Point(158, 45);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
