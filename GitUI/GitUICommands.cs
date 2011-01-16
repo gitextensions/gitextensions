@@ -375,7 +375,7 @@ namespace GitUI
             if (!InvokeEvent(PreApplyPatch))
                 return true;
 
-            MergePatch form = new MergePatch();
+            FormApplyPatch form = new FormApplyPatch();
             form.ShowDialog();
 
             InvokeEvent(PostApplyPatch);
