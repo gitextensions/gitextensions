@@ -388,7 +388,7 @@ namespace GitUI
             if (!InvokeEvent(PreFormatPatch))
                 return true;
 
-            FormFormatPath form = new FormFormatPath();
+            FormFormatPatch form = new FormFormatPatch();
             form.ShowDialog();
 
             InvokeEvent(PostFormatPatch);

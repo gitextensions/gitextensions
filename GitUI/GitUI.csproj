@@ -428,11 +428,11 @@
     <Compile Include="FormFileHistory.Designer.cs">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFormatPath.cs">
+    <Compile Include="FormFormatPatch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFormatPath.Designer.cs">
-      <DependentUpon>FormFormatPath.cs</DependentUpon>
+    <Compile Include="FormFormatPatch.Designer.cs">
+      <DependentUpon>FormFormatPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="FormGitIgnore.cs">
       <SubType>Form</SubType>
@@ -865,8 +865,8 @@
       <DependentUpon>FormFixHome.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormFormatPath.resx">
-      <DependentUpon>FormFormatPath.cs</DependentUpon>
+    <EmbeddedResource Include="FormFormatPatch.resx">
+      <DependentUpon>FormFormatPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormGitIgnore.resx">

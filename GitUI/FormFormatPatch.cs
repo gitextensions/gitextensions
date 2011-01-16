@@ -6,9 +6,9 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormFormatPath : GitExtensionsForm
+    public partial class FormFormatPatch : GitExtensionsForm
     {
-        public FormFormatPath()
+        public FormFormatPatch()
         {
             InitializeComponent(); Translate();
         }
