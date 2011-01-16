@@ -416,7 +416,6 @@ namespace GitUI
             // 
             // toolStripBranches
             // 
-            this.toolStripBranches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.toolStripBranches.Name = "toolStripBranches";
             this.toolStripBranches.Size = new System.Drawing.Size(150, 25);
             this.toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
@@ -465,7 +464,6 @@ namespace GitUI
             // 
             // toolStripTextBoxFilter
             // 
-            this.toolStripTextBoxFilter.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.toolStripTextBoxFilter.ForeColor = System.Drawing.Color.Black;
             this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
             this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
