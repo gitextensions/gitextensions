@@ -54,7 +54,7 @@ namespace GitUI
             {
                 _dashboard = new Dashboard();
                 _dashboard.WorkingDirChanged += DashboardWorkingDirChanged;
-                splitContainer2.Panel2.Controls.Add(_dashboard);
+                Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
             }
             _dashboard.Visible = true;
