@@ -64,6 +64,8 @@
             // 
             // PatchFile
             // 
+            this.PatchFile.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(166, 10);
             this.PatchFile.Name = "PatchFile";
             this.PatchFile.Size = new System.Drawing.Size(281, 21);
@@ -185,6 +187,8 @@
             // 
             // PatchDir
             // 
+            this.PatchDir.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.PatchDir.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(166, 36);
             this.PatchDir.Name = "PatchDir";
@@ -249,14 +253,14 @@
             this.SolveMergeconflicts.Visible = false;
             this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
             // 
-            // MergePatch
+            // FormApplyPatch
             // 
             this.AcceptButton = this.Apply;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "MergePatch";
+            this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
             this.Load += new System.EventHandler(this.MergePatch_Load);
