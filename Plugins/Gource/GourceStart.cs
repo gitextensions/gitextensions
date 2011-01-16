@@ -88,7 +88,7 @@ namespace Gource
             WorkingDir.Text = folderDialog.SelectedPath;
         }
 
-        private static void LinkLabel1Click(object sender, EventArgs e)
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://code.google.com/p/gource/");
         }
