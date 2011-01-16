@@ -5,9 +5,9 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class MergePatch : GitExtensionsForm
+    public partial class FormApplyPatch : GitExtensionsForm
     {
-        public MergePatch()
+        public FormApplyPatch()
         {
             InitializeComponent(); Translate();
             EnableButtons();
