@@ -45,8 +45,8 @@
             // 
             // _NO_TRANSLATE_Directory
             // 
-            this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
             this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(85, 10);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
