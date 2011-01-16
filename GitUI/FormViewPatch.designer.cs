@@ -171,6 +171,8 @@ namespace PatchApply
             // 
             // PatchFileNameEdit
             // 
+            this.PatchFileNameEdit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.PatchFileNameEdit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFileNameEdit.Location = new System.Drawing.Point(93, 9);
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
             this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 23);
