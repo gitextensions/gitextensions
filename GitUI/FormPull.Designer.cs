@@ -151,13 +151,14 @@
             // 
             // Remotes
             // 
+            this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Remotes.FormattingEnabled = true;
             this.Remotes.Location = new System.Drawing.Point(148, 19);
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(268, 21);
             this.Remotes.TabIndex = 1;
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
-            this.Remotes.DropDown += new System.EventHandler(this.RemotesDropDown);
             // 
             // BrowseSource
             // 
