@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class MergePatch
+    partial class FormApplyPatch
     {
         /// <summary>
         /// Required designer variable.
