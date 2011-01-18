@@ -687,46 +687,6 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Patch toepassen</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text">
-          <Value>Patch toepassen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>Conflicten oplossen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Skip" Property="Text">
-          <Value>Patch overslaan</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Patch afbreken</Value>
-        </TranslationItem>
-        <TranslationItem Name="Resolved" Property="Text">
-          <Value>Conflicten opgelost</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>Bestanden toevoegen</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseDir" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="PatchDirMode" Property="Text">
-          <Value>Patch directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="PatchFileMode" Property="Text">
-          <Value>Patch bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>Er zijn niet opgeloste conflicten</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormRevertCommitSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -909,16 +869,43 @@ Kies een directory.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Bekijk patch bestand</Value>
+          <Value>Patch toepassen</Value>
         </TranslationItem>
         <TranslationItem Name="BrowsePatch" Property="Text">
           <Value>Bladeren</Value>
         </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text">
-          <Value>Patch</Value>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Patch toepassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Conflicten oplossen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>Patch overslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Patch afbreken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>Conflicten opgelost</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Bestanden toevoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDir" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchDirMode" Property="Text">
+          <Value>Patch directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchFileMode" Property="Text">
+          <Value>Patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Er zijn niet opgeloste conflicten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -999,34 +986,6 @@ Kies een directory.</Value>
         </TranslationItem>
         <TranslationItem Name="force" Property="Text">
           <Value>Forceer</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Maak patch</Value>
-        </TranslationItem>
-        <TranslationItem Name="SelectedBranch" Property="Text">
-          <Value>Vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="FormatPatch" Property="Text">
-          <Value>Maak patch(es)</Value>
-        </TranslationItem>
-        <TranslationItem Name="SendToMail" Property="Text">
-          <Value>Mail patches naar</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveToDir" Property="Text">
-          <Value>Sla patches op in directorie</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Onderwerp</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1151,6 +1110,22 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="Stop" Property="Text">
           <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Open repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Load" Property="Text">
+          <Value>Open</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1617,22 +1592,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Open">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Open repository</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Directorie</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="Load" Property="Text">
-          <Value>Open</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2237,6 +2196,19 @@ de git help documentatie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Bekijk patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Value>Patch</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTagSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2324,6 +2296,34 @@ Voorbeeld:
 Henk Westhuis &lt;Henk@.(none)&gt;
 Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 </Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFormatPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Maak patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="SelectedBranch" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>Maak patch(es)</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>Mail patches naar</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>Sla patches op in directorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Onderwerp</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2836,20 +2836,17 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
           <Value>Terugzetten</Value>
         </TranslationItem>
-        <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="Text">
-          <Value>Klaargezette bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="filesListedToCommitToolStripMenuItem" Property="ToolTipText">
-          <Value>Klaargezette bestanden</Value>
-        </TranslationItem>
-        <TranslationItem Name="stageAllToolStripMenuItem" Property="Text">
+        <TranslationItem Name="toolStageAllItem" Property="Text">
           <Value>Alles klaarzetten</Value>
         </TranslationItem>
-        <TranslationItem Name="unstageAllToolStripMenuItem" Property="Text">
+        <TranslationItem Name="toolStageAllItem" Property="ToolTipText">
+          <Value>Alles klaarzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageAllItem" Property="Text">
           <Value>Alles terugzetten</Value>
         </TranslationItem>
-        <TranslationItem Name="stageChunkOfFileToolStripMenuItem" Property="Text">
-          <Value>Deel van een bestand klaarzetten</Value>
+        <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
+          <Value>Alles terugzetten</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
@@ -3271,6 +3268,9 @@ stash
         </TranslationItem>
         <TranslationItem Name="_closePullRequestBtn" Property="Text">
           <Value>Sluit binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_refreshCommentsBtn" Property="Text">
+          <Value>Verversen</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
           <Value>Error</Value>
