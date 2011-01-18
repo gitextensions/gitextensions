@@ -2697,9 +2697,9 @@ namespace GitUI
             this.Name = "FormSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
-            this.Load += new System.EventHandler(this.FormSettigns_Load);
-            this.Shown += new System.EventHandler(this.FormSettigns_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettigns_FormClosing);
+            this.Load += new System.EventHandler(this.FormSettings_Load);
+            this.Shown += new System.EventHandler(this.FormSettings_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.LocalSettings.ResumeLayout(false);
             this.LocalSettings.PerformLayout();
             this.groupBox10.ResumeLayout(false);
