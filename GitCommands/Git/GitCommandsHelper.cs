@@ -1433,14 +1433,27 @@ namespace GitCommands
 
         public static string Commit(bool amend)
         {
-            return RunCmd(Settings.GitCommand, CommitCmd(amend));
+            return Commit(amend, "");
+        }
+
+        public static string Commit(bool amend, string author)
+        {
+            return RunCmd(Settings.GitCommand, CommitCmd(amend, author));
         }
 
         public static string CommitCmd(bool amend)
         {
+            return CommitCmd(amend, "");
+        }
+
+        public static string CommitCmd(bool amend, string author)
+        {
             string command = "commit";
             if (amend)
                 command += " --amend";
+
+            if (!string.IsNullOrEmpty(author))
+                command += " --author=\"" + author + "\"";
 
             var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE\"";
             command += " -F \"" + path;
