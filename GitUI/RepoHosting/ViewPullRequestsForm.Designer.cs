@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._selectedOwner = new System.Windows.Forms.ComboBox();
+            this._selectHostedRepoCB = new System.Windows.Forms.ComboBox();
             this._pullRequestsList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -44,6 +44,7 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this._fileStatusList = new GitUI.FileStatusList();
             this._diffViewer = new GitUI.Editor.FileViewer();
+            this._refreshCommentsBtn = new System.Windows.Forms.Button();
             this._discussionWB = new System.Windows.Forms.WebBrowser();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -56,15 +57,15 @@
             this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // _selectedOwner
+            // _selectHostedRepoCB
             // 
-            this._selectedOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._selectedOwner.FormattingEnabled = true;
-            this._selectedOwner.Location = new System.Drawing.Point(112, 6);
-            this._selectedOwner.Name = "_selectedOwner";
-            this._selectedOwner.Size = new System.Drawing.Size(258, 23);
-            this._selectedOwner.TabIndex = 0;
-            this._selectedOwner.SelectedIndexChanged += new System.EventHandler(this._selectedOwner_SelectedIndexChanged);
+            this._selectHostedRepoCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._selectHostedRepoCB.FormattingEnabled = true;
+            this._selectHostedRepoCB.Location = new System.Drawing.Point(112, 6);
+            this._selectHostedRepoCB.Name = "_selectHostedRepoCB";
+            this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 23);
+            this._selectHostedRepoCB.TabIndex = 0;
+            this._selectHostedRepoCB.SelectedIndexChanged += new System.EventHandler(this._selectedOwner_SelectedIndexChanged);
             // 
             // _pullRequestsList
             // 
@@ -131,9 +132,9 @@
             // 
             this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this._postCommentText.Location = new System.Drawing.Point(3, 601);
+            this._postCommentText.Location = new System.Drawing.Point(3, 582);
             this._postCommentText.Name = "_postCommentText";
-            this._postCommentText.Size = new System.Drawing.Size(280, 47);
+            this._postCommentText.Size = new System.Drawing.Size(280, 66);
             this._postCommentText.TabIndex = 0;
             this._postCommentText.KeyUp += new System.Windows.Forms.KeyEventHandler(this._postCommentText_KeyUp);
             // 
@@ -160,6 +161,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this._refreshCommentsBtn);
             this.splitContainer1.Panel2.Controls.Add(this._discussionWB);
             this.splitContainer1.Panel2.Controls.Add(this._postComment);
             this.splitContainer1.Panel2.Controls.Add(this._postCommentText);
@@ -177,7 +179,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this._closePullRequestBtn);
-            this.splitContainer2.Panel1.Controls.Add(this._selectedOwner);
+            this.splitContainer2.Panel1.Controls.Add(this._selectHostedRepoCB);
             this.splitContainer2.Panel1.Controls.Add(this._fetchBtn);
             this.splitContainer2.Panel1.Controls.Add(this._pullRequestsList);
             this.splitContainer2.Panel1.Controls.Add(this._chooseRepo);
@@ -246,6 +248,16 @@
             this._diffViewer.TabIndex = 0;
             this._diffViewer.TreatAllFilesAsText = false;
             // 
+            // _refreshCommentsBtn
+            // 
+            this._refreshCommentsBtn.Location = new System.Drawing.Point(3, 654);
+            this._refreshCommentsBtn.Name = "_refreshCommentsBtn";
+            this._refreshCommentsBtn.Size = new System.Drawing.Size(75, 23);
+            this._refreshCommentsBtn.TabIndex = 9;
+            this._refreshCommentsBtn.Text = "Refresh";
+            this._refreshCommentsBtn.UseVisualStyleBackColor = true;
+            this._refreshCommentsBtn.Click += new System.EventHandler(this._refreshCommentsBtn_Click);
+            // 
             // _discussionWB
             // 
             this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -255,7 +267,7 @@
             this._discussionWB.Location = new System.Drawing.Point(3, 0);
             this._discussionWB.MinimumSize = new System.Drawing.Size(20, 20);
             this._discussionWB.Name = "_discussionWB";
-            this._discussionWB.Size = new System.Drawing.Size(278, 595);
+            this._discussionWB.Size = new System.Drawing.Size(278, 576);
             this._discussionWB.TabIndex = 8;
             this._discussionWB.WebBrowserShortcutsEnabled = false;
             // 
@@ -266,7 +278,6 @@
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
             this.Name = "ViewPullRequestsForm";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "View Pull Requests";
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
@@ -287,7 +298,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox _selectedOwner;
+        private System.Windows.Forms.ComboBox _selectHostedRepoCB;
         private System.Windows.Forms.ListView _pullRequestsList;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -304,5 +315,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Button _closePullRequestBtn;
         private System.Windows.Forms.WebBrowser _discussionWB;
+        private System.Windows.Forms.Button _refreshCommentsBtn;
     }
 }
