@@ -669,7 +669,7 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Applica patch</Value>
@@ -978,7 +978,7 @@ Per favore scegliere una cartella.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
+    <TranslationCategory Name="FormFormatPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Formatta patch</Value>

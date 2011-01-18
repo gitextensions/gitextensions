@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
     <TranslationCategory Name="FormSubmodules">
@@ -1657,7 +1657,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Aplicar parche</Value>
@@ -1954,7 +1954,7 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
+    <TranslationCategory Name="FormFormatPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Formato de parche</Value>

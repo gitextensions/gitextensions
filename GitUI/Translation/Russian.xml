@@ -1382,7 +1382,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
+    <TranslationCategory Name="FormFormatPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Формировать патч</Value>
@@ -1913,7 +1913,7 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Применить патч</Value>
