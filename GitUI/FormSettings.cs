@@ -321,14 +321,6 @@ namespace GitUI
             }
         }
 
-        private void UserName_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void UserEmail_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
@@ -537,14 +529,6 @@ namespace GitUI
             //Only save local settings when we are inside a valid working dir
             if (Settings.ValidWorkingDir())
                 localConfig.Save();
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
         }
 
         private static string GetRegistryValue(RegistryKey root, string subkey, string key)

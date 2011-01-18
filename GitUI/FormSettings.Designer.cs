@@ -468,7 +468,6 @@ namespace GitUI
             this.UserEmail.Name = "UserEmail";
             this.UserEmail.Size = new System.Drawing.Size(280, 21);
             this.UserEmail.TabIndex = 3;
-            this.UserEmail.TextChanged += new System.EventHandler(this.UserEmail_TextChanged);
             // 
             // UserName
             // 
@@ -476,7 +475,6 @@ namespace GitUI
             this.UserName.Name = "UserName";
             this.UserName.Size = new System.Drawing.Size(280, 21);
             this.UserName.TabIndex = 1;
-            this.UserName.TextChanged += new System.EventHandler(this.UserName_TextChanged);
             // 
             // label2
             // 
@@ -2167,7 +2165,6 @@ namespace GitUI
             this.GlobalUserName.Name = "GlobalUserName";
             this.GlobalUserName.Size = new System.Drawing.Size(236, 21);
             this.GlobalUserName.TabIndex = 2;
-            this.GlobalUserName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label4
             // 
@@ -2186,7 +2183,6 @@ namespace GitUI
             this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "User name";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // Ssh
             // 
