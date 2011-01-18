@@ -36,7 +36,7 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
-            this._postCommentText = new System.Windows.Forms.TextBox();
+            this._postCommentText = new GitUI.SpellChecker.EditNetSpell();
             this._postComment = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -129,11 +129,9 @@
             // 
             // _postCommentText
             // 
-            this._postCommentText.AcceptsReturn = true;
             this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._postCommentText.Location = new System.Drawing.Point(3, 601);
-            this._postCommentText.Multiline = true;
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 47);
             this._postCommentText.TabIndex = 0;
@@ -299,7 +297,7 @@
         private System.Windows.Forms.Label _chooseRepo;
         private System.Windows.Forms.Button _fetchBtn;
         private FileStatusList _fileStatusList;
-        private System.Windows.Forms.TextBox _postCommentText;
+        private GitUI.SpellChecker.EditNetSpell _postCommentText;
         private System.Windows.Forms.Button _postComment;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
