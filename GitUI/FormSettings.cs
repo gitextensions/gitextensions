@@ -837,7 +837,7 @@ namespace GitUI
             Rescan_Click(null, null);
         }
 
-        private void FormSettigns_Load(object sender, EventArgs e)
+        private void FormSettings_Load(object sender, EventArgs e)
         {
             EnableSettings();
 
@@ -1310,7 +1310,7 @@ namespace GitUI
 
         }
 
-        private void FormSettigns_Shown(object sender, EventArgs e)
+        private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             this.WindowState = FormWindowState.Normal;
@@ -1320,7 +1320,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             if (DialogResult != DialogResult.Abort && !Save())
