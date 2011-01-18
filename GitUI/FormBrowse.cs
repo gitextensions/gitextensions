@@ -176,7 +176,8 @@ namespace GitUI
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
             toolStripSplitStash.Enabled = validWorkingDir;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
-            _repositoryHostsToolStripMenuItem.Enabled = validWorkingDir;
+            _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+            _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
             if (hard)
