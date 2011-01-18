@@ -166,11 +166,18 @@ namespace GitUI
             }
         }
 
+        private void EnableStageButtons(bool enable)
+        {
+            toolUnstageItem.Enabled = enable;
+            toolUnstageAllItem.Enabled = enable;
+            toolStageItem.Enabled = enable;
+            toolStageAllItem.Enabled = enable;
+            workingToolStripMenuItem.Enabled = enable;
+        }
+
         private void Initialize()
         {
-            toolUnstageItem.Enabled = false;
-            toolStageItem.Enabled = false;
-            workingToolStripMenuItem.Enabled = false;
+            EnableStageButtons(false);
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -182,8 +189,7 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
             Loading.Visible = true;
-            toolStageItem.Enabled = false;
-
+            
             InitializedStagedAsync();
 
             Commit.Focus();
@@ -233,10 +239,8 @@ namespace GitUI
             Unstaged.GitItemStatuses =
                 GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
             Loading.Visible = false;
-            toolStageItem.Enabled = true;
 
-            toolUnstageItem.Enabled = true;
-            toolStageItem.Enabled = true;
+            EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
         }
 
@@ -378,8 +382,7 @@ namespace GitUI
 
         private void Stage(ICollection<GitItemStatus> gitItemStatusses)
         {
-            toolUnstageItem.Enabled = false;
-            toolStageItem.Enabled = false;
+            EnableStageButtons(false);
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -431,8 +434,7 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            toolUnstageItem.Enabled = true;
-            toolStageItem.Enabled = true;
+            EnableStageButtons(true);           
 
             Commit.Enabled = true;
             Amend.Enabled = true;
@@ -446,8 +448,7 @@ namespace GitUI
 
         private void UnstageFilesClick(object sender, EventArgs e)
         {
-            toolUnstageItem.Enabled = false;
-            toolStageItem.Enabled = false;
+            EnableStageButtons(false);
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -515,8 +516,7 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            toolUnstageItem.Enabled = true;
-            toolStageItem.Enabled = true;
+            EnableStageButtons(true);
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
