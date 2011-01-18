@@ -1438,10 +1438,14 @@ namespace GitCommands
 
         public static string CommitCmd(bool amend)
         {
-            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE\"";
+            string command = "commit";
             if (amend)
-                return "commit --amend -F \"" + path;
-            return "commit  -F \"" + path;
+                command += " --amend";
+
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE\"";
+            command += " -F \"" + path;
+
+            return command;
         }
 
         public static string Patch(string patchFile)
