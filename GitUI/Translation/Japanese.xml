@@ -620,7 +620,7 @@ _ReSharper*/</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="MergePatch">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>パッチを適用</Value>
@@ -929,7 +929,7 @@ _ReSharper*/</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFormatPath">
+    <TranslationCategory Name="FormFormatPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Git形式のパッチ</Value>
