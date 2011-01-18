@@ -54,13 +54,19 @@ namespace GitUI.RepoHosting
         private void Init()
         {
             _isFirstLoad = true;
-            _hostedRepositories = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList();
 
-            _selectHostedRepoCB.Items.Clear();
-            foreach (var hostedRepo in _hostedRepositories)
-                _selectHostedRepoCB.Items.Add(hostedRepo);
+            AsyncHelpers.DoAsync(
+                () => _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList(),
+                (repos) =>
+                {
+                    _hostedRepositories = repos;
+                    _selectHostedRepoCB.Items.Clear();
+                    foreach (var hostedRepo in _hostedRepositories)
+                        _selectHostedRepoCB.Items.Add(hostedRepo);
 
-            SelectNextHostedRepository();
+                    SelectNextHostedRepository();
+                },
+                (ex) => MessageBox.Show(this, ex.Message, _strError.Text));
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
