@@ -14,6 +14,10 @@ namespace PatchApply
 
         public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
         {
+            //When there is no patch, return nothing
+            if (string.IsNullOrEmpty(text))
+                return null;
+
             // Ported from the git-gui tcl code to C#
             // see lib/diff.tcl
 
