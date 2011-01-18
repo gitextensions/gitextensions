@@ -547,7 +547,7 @@ namespace GitUI
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool enableItems = false;
-            var item = GitTree.SelectedNode.Tag;
+            var item = (GitTree.SelectedNode != null) ? GitTree.SelectedNode.Tag : null;
 
             if (item is GitItem)
                 if (((GitItem)item).ItemType == "blob")
@@ -557,6 +557,8 @@ namespace GitUI
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
+            copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
+            fileHistoryToolStripMenuItem.Enabled = enableItems;
         }
 
         public void OpenOnClick(object sender, EventArgs e)
