@@ -81,6 +81,11 @@ namespace GitUI
             quickSearchTimer.Tick += QuickSearchTimerTick;
 
             Revisions.Loading += RevisionsLoading;
+
+            //Allow to drop patch file on revisiongrid
+            Revisions.DragEnter += new DragEventHandler(Revisions_DragEnter);
+            Revisions.DragDrop += new DragEventHandler(Revisions_DragDrop);
+            Revisions.AllowDrop = true;
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
@@ -797,7 +802,7 @@ namespace GitUI
 
             Brush foreBrush;
 
-            if (!Settings.RevisionGraphDrawNonRelativesGray ||!Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
+            if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
                 foreBrush = new SolidBrush(e.CellStyle.ForeColor);
             else
                 foreBrush = new SolidBrush(Color.LightGray);
@@ -1437,5 +1442,57 @@ namespace GitUI
             new RunScript(sender.ToString(), this);
             RefreshRevisions();
         }
+
+        #region Drag/drop patch files on revision grid
+
+        void Revisions_DragDrop(object sender, DragEventArgs e)
+        {
+            System.Array fileNameArray = e.Data.GetData(DataFormats.FileDrop) as System.Array;
+            if (fileNameArray != null)
+            {
+                if (fileNameArray.Length > 10)
+                {
+                    //Some users need to be protected against themselves!
+                    MessageBox.Show("For you own protection dropping more than 10 patch files at once is blocked!");
+                    return;
+                }
+
+                foreach (object fileNameObject in fileNameArray)
+                {
+                    string fileName = fileNameObject as string;
+
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        //Start apply patch dialog for each dropped patch file...
+                        GitUICommands.Instance.StartApplyPatchDialog(fileName);
+                    }
+                }
+            }
+        }
+
+        void Revisions_DragEnter(object sender, DragEventArgs e)
+        {
+            System.Array fileNameArray = e.Data.GetData(DataFormats.FileDrop) as System.Array;
+            if (fileNameArray != null)
+            {
+                foreach (object fileNameObject in fileNameArray)
+                {
+                    string fileName = fileNameObject as string;
+
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        //Allow drop (copy, not move) patch files
+                        e.Effect = DragDropEffects.Copy;
+                    }
+                    else
+                    {
+                        //When a non-patch file is dragged, do not allow it
+                        e.Effect = DragDropEffects.None;
+                        return;
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
