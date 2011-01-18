@@ -1300,16 +1300,6 @@ namespace GitUI
             }
         }
 
-        private void GlobalMergeTool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ShowRevisionGraph_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1344,11 +1334,6 @@ namespace GitUI
             {
                 MessageBox.Show("No dictionary files found in: " + GitCommands.Settings.GetDictionaryDir());
             }
-        }
-
-        private void Dictionary_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
@@ -1533,16 +1518,6 @@ namespace GitUI
                 MergeToolCmd.Enabled = true;
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox5_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
             GravatarService.ClearImageCache();
@@ -1589,24 +1564,9 @@ namespace GitUI
                 DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
         }
 
-        private void GlobalDiffTool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new FormTranslate().ShowDialog();
-        }
-
-        private void TabPageGit_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox7_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void otherHomeBrowse_Click(object sender, EventArgs e)
@@ -2134,11 +2094,6 @@ namespace GitUI
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
-        }
-
-        private void argumentsLabel_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
