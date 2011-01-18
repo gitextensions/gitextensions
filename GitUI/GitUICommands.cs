@@ -372,10 +372,16 @@ namespace GitUI
 
         public bool StartApplyPatchDialog()
         {
+            return StartApplyPatchDialog(null);
+        }
+
+        public bool StartApplyPatchDialog(string patchFile)
+        {
             if (!InvokeEvent(PreApplyPatch))
                 return true;
 
             FormApplyPatch form = new FormApplyPatch();
+            form.SetPatchFile(patchFile);
             form.ShowDialog();
 
             InvokeEvent(PostApplyPatch);
