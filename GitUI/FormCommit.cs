@@ -327,7 +327,7 @@ namespace GitUI
             {
                 SetCommitMessageFromTextBox(Message.Text);
 
-                var form = new FormProcess(GitCommandHelpers.CommitCmd(amend));
+                var form = new FormProcess(GitCommandHelpers.CommitCmd(amend, toolAuthor.Text));
                 form.ShowDialog();
 
                 NeedRefresh = true;
@@ -1029,6 +1029,17 @@ namespace GitUI
                 ScanClick(null, null);
 
             return base.ProcessCmdKey(ref msg, keyData); 
+        }
+
+        private void toolAuthor_TextChanged(object sender, EventArgs e)
+        {
+            toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = !string.IsNullOrEmpty(toolAuthor.Text);
+        }
+
+        private void toolAuthorLabelItem_Click(object sender, EventArgs e)
+        {
+            toolAuthor.Text = "";
+            toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         } 
     }
 }

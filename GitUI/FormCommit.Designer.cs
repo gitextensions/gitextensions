@@ -92,6 +92,9 @@ namespace GitUI
             this.toolbarCommit = new System.Windows.Forms.ToolStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -632,6 +635,9 @@ namespace GitUI
             // 
             this.toolStripMenuItem3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripMenuItem3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolAuthorLabelItem,
+            this.toolAuthor,
+            this.toolStripSeparator2,
             this.closeDialogAfterEachCommitToolStripMenuItem,
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem,
             this.refreshDialogOnFormFocusToolStripMenuItem});
@@ -639,6 +645,26 @@ namespace GitUI
             this.toolStripMenuItem3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripMenuItem3.Size = new System.Drawing.Size(57, 23);
             this.toolStripMenuItem3.Text = "Options";
+            // 
+            // toolAuthorLabelItem
+            // 
+            this.toolAuthorLabelItem.Enabled = false;
+            this.toolAuthorLabelItem.Name = "toolAuthorLabelItem";
+            this.toolAuthorLabelItem.Size = new System.Drawing.Size(314, 22);
+            this.toolAuthorLabelItem.Text = "Author: (Format: \"name <mail>\")";
+            this.toolAuthorLabelItem.Click += new System.EventHandler(this.toolAuthorLabelItem_Click);
+            // 
+            // toolAuthor
+            // 
+            this.toolAuthor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.toolAuthor.Name = "toolAuthor";
+            this.toolAuthor.Size = new System.Drawing.Size(230, 23);
+            this.toolAuthor.TextChanged += new System.EventHandler(this.toolAuthor_TextChanged);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(311, 6);
             // 
             // closeDialogAfterEachCommitToolStripMenuItem
             // 
@@ -824,5 +850,8 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripSeparator toolStripSeparator11;
         private ToolStripButton toolUnstageAllItem;
+        private ToolStripMenuItem toolAuthorLabelItem;
+        private ToolStripTextBox toolAuthor;
+        private ToolStripSeparator toolStripSeparator2;
     }
 }
