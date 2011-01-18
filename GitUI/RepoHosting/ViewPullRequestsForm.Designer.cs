@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._selectHostedRepoCB = new System.Windows.Forms.ComboBox();
             this._pullRequestsList = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
             this._postCommentText = new GitUI.SpellChecker.EditNetSpell();
@@ -63,7 +64,7 @@
             this._selectHostedRepoCB.FormattingEnabled = true;
             this._selectHostedRepoCB.Location = new System.Drawing.Point(112, 6);
             this._selectHostedRepoCB.Name = "_selectHostedRepoCB";
-            this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 23);
+            this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 21);
             this._selectHostedRepoCB.TabIndex = 0;
             this._selectHostedRepoCB.SelectedIndexChanged += new System.EventHandler(this._selectedOwner_SelectedIndexChanged);
             // 
@@ -113,7 +114,7 @@
             this._chooseRepo.AutoSize = true;
             this._chooseRepo.Location = new System.Drawing.Point(12, 9);
             this._chooseRepo.Name = "_chooseRepo";
-            this._chooseRepo.Size = new System.Drawing.Size(106, 15);
+            this._chooseRepo.Size = new System.Drawing.Size(99, 13);
             this._chooseRepo.TabIndex = 4;
             this._chooseRepo.Text = "Choose repository:";
             // 
@@ -132,7 +133,9 @@
             // 
             this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this._postCommentText.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._postCommentText.Location = new System.Drawing.Point(3, 582);
+            this._postCommentText.MistakeFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Underline);
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 66);
             this._postCommentText.TabIndex = 0;
@@ -223,7 +226,7 @@
             // _fileStatusList
             // 
             this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._fileStatusList.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._fileStatusList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this._fileStatusList.GitItemStatuses = null;
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Name = "_fileStatusList";
@@ -235,7 +238,7 @@
             // _diffViewer
             // 
             this._diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._diffViewer.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._diffViewer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this._diffViewer.IgnoreWhitespaceChanges = false;
             this._diffViewer.IsReadOnly = true;
             this._diffViewer.Location = new System.Drawing.Point(0, 0);
@@ -250,6 +253,7 @@
             // 
             // _refreshCommentsBtn
             // 
+            this._refreshCommentsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._refreshCommentsBtn.Location = new System.Drawing.Point(3, 654);
             this._refreshCommentsBtn.Name = "_refreshCommentsBtn";
             this._refreshCommentsBtn.Size = new System.Drawing.Size(75, 23);
@@ -273,7 +277,7 @@
             // 
             // ViewPullRequestsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
@@ -283,7 +287,6 @@
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
