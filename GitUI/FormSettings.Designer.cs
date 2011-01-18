@@ -736,7 +736,6 @@ namespace GitUI
             this.TabPageGit.TabIndex = 7;
             this.TabPageGit.Text = "Git";
             this.TabPageGit.UseVisualStyleBackColor = true;
-            this.TabPageGit.Click += new System.EventHandler(this.TabPageGit_Click);
             // 
             // groupBox8
             // 
@@ -828,7 +827,6 @@ namespace GitUI
             this.groupBox7.TabIndex = 9;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Git";
-            this.groupBox7.Enter += new System.EventHandler(this.groupBox7_Enter);
             // 
             // label50
             // 
@@ -1180,7 +1178,6 @@ namespace GitUI
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(169, 21);
             this.Dictionary.TabIndex = 15;
-            this.Dictionary.SelectedIndexChanged += new System.EventHandler(this.Dictionary_SelectedIndexChanged);
             this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
             // 
             // label22
@@ -1231,7 +1228,6 @@ namespace GitUI
             this.ShowRevisionGraph.Size = new System.Drawing.Size(15, 14);
             this.ShowRevisionGraph.TabIndex = 10;
             this.ShowRevisionGraph.UseVisualStyleBackColor = true;
-            this.ShowRevisionGraph.CheckedChanged += new System.EventHandler(this.ShowRevisionGraph_CheckedChanged);
             // 
             // CloseProcessDialog
             // 
@@ -1433,7 +1429,6 @@ namespace GitUI
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Application Icon";
-            this.groupBox5.Enter += new System.EventHandler(this.groupBox5_Enter);
             // 
             // RandomIcon
             // 
@@ -1445,7 +1440,6 @@ namespace GitUI
             this.RandomIcon.TabStop = true;
             this.RandomIcon.Text = "Random";
             this.RandomIcon.UseVisualStyleBackColor = true;
-            this.RandomIcon.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // YellowIcon
             // 
@@ -1984,7 +1978,6 @@ namespace GitUI
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(164, 21);
             this.GlobalDiffTool.TabIndex = 24;
-            this.GlobalDiffTool.SelectedIndexChanged += new System.EventHandler(this.GlobalDiffTool_SelectedIndexChanged);
             this.GlobalDiffTool.TextChanged += new System.EventHandler(this.ExternalDiffTool_TextChanged);
             // 
             // label41
@@ -2096,7 +2089,6 @@ namespace GitUI
             this.GlobalMergeTool.Name = "GlobalMergeTool";
             this.GlobalMergeTool.Size = new System.Drawing.Size(164, 21);
             this.GlobalMergeTool.TabIndex = 12;
-            this.GlobalMergeTool.SelectedIndexChanged += new System.EventHandler(this.GlobalMergeTool_SelectedIndexChanged);
             this.GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
             // PathToKDiff3
@@ -2443,7 +2435,6 @@ namespace GitUI
             this.argumentsLabel.Size = new System.Drawing.Size(63, 13);
             this.argumentsLabel.TabIndex = 14;
             this.argumentsLabel.Text = "Arguments:";
-            this.argumentsLabel.Click += new System.EventHandler(this.argumentsLabel_Click);
             // 
             // commandLabel
             // 
