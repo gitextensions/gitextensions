@@ -26,6 +26,7 @@ namespace GitUI.RepoHosting
         #endregion
 
         private IRepositoryHostPlugin _gitHoster;
+        private bool _isFirstLoad;
 
         public ViewPullRequestsForm()
         {
@@ -52,36 +53,43 @@ namespace GitUI.RepoHosting
 
         private void Init()
         {
+            _isFirstLoad = true;
             _hostedRepositories = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList();
 
-            _selectedOwner.Items.Clear();
+            _selectHostedRepoCB.Items.Clear();
             foreach (var hostedRepo in _hostedRepositories)
-                _selectedOwner.Items.Add(hostedRepo);
+                _selectHostedRepoCB.Items.Add(hostedRepo);
 
-            if (_selectedOwner.Items.Count > 0)
-            {
-                _selectedOwner.SelectedIndex = 0;
-                _selectedOwner_SelectedIndexChanged(null, null);
-            }
+            SelectNextHostedRepository();
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var hostedRepo = _selectedOwner.SelectedItem as IHostedRepository;
+            var hostedRepo = _selectHostedRepoCB.SelectedItem as IHostedRepository;
             if (hostedRepo == null)
                 return;
-            _selectedOwner.Enabled = false;
+            _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
             AsyncHelpers.DoAsync(
                 () => hostedRepo.GetPullRequests(),
-                (res) => { SetPullRequestsData(res); _selectedOwner.Enabled = true; },
+                (res) => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
                 (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
         }
 
         private void SetPullRequestsData(List<IPullRequestInformation> infos)
         {
+            if (_isFirstLoad)
+            {
+                _isFirstLoad = false;
+                if (infos != null && infos.Count == 0 && _hostedRepositories.Count > 0)
+                {
+                    SelectNextHostedRepository();
+                    return;
+                }
+            }
+
             _pullRequestsInfo = infos;
             _pullRequestsList.Items.Clear();
 
@@ -89,6 +97,18 @@ namespace GitUI.RepoHosting
                 return;
 
             LoadListView();
+        }
+
+        private void SelectNextHostedRepository()
+        {
+            if (_selectHostedRepoCB.Items.Count == 0)
+                return;
+
+            int i = _selectHostedRepoCB.SelectedIndex+1;
+            if (i >= _selectHostedRepoCB.Items.Count)
+                i = 0;
+            _selectHostedRepoCB.SelectedIndex = i;
+            _selectedOwner_SelectedIndexChanged(null, null);
         }
 
         private void ResetAllAndShowLoadingPullRequests()
@@ -274,6 +294,22 @@ namespace GitUI.RepoHosting
             {
                 _postComment_Click(sender, e);
                 e.Handled = true;
+            }
+        }
+
+        private void _refreshCommentsBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentPullRequestInfo == null)
+                return;
+
+            try
+            {
+                _currentPullRequestInfo.Discussion.ForceReload();
+                LoadDiscussion(_currentPullRequestInfo.Discussion);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
             }
         }
     }
