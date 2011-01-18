@@ -33,7 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this._bodyTB = new System.Windows.Forms.TextBox();
+            this._bodyTB = new GitUI.SpellChecker.EditNetSpell();
             this._pullReqTargetsCB = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this._createBtn = new System.Windows.Forms.Button();
@@ -93,7 +93,6 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._bodyTB.Location = new System.Drawing.Point(46, 45);
-            this._bodyTB.Multiline = true;
             this._bodyTB.Name = "_bodyTB";
             this._bodyTB.Size = new System.Drawing.Size(464, 116);
             this._bodyTB.TabIndex = 1;
@@ -199,7 +198,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox _bodyTB;
+        private GitUI.SpellChecker.EditNetSpell _bodyTB;
         private System.Windows.Forms.ComboBox _pullReqTargetsCB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button _createBtn;
