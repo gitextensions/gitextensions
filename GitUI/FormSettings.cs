@@ -321,14 +321,6 @@ namespace GitUI
             }
         }
 
-        private void UserName_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void UserEmail_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
@@ -537,14 +529,6 @@ namespace GitUI
             //Only save local settings when we are inside a valid working dir
             if (Settings.ValidWorkingDir())
                 localConfig.Save();
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
         }
 
         private static string GetRegistryValue(RegistryKey root, string subkey, string key)
@@ -853,7 +837,7 @@ namespace GitUI
             Rescan_Click(null, null);
         }
 
-        private void FormSettigns_Load(object sender, EventArgs e)
+        private void FormSettings_Load(object sender, EventArgs e)
         {
             EnableSettings();
 
@@ -1316,17 +1300,7 @@ namespace GitUI
             }
         }
 
-        private void GlobalMergeTool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ShowRevisionGraph_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FormSettigns_Shown(object sender, EventArgs e)
+        private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             this.WindowState = FormWindowState.Normal;
@@ -1336,7 +1310,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void FormSettigns_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             if (DialogResult != DialogResult.Abort && !Save())
@@ -1360,11 +1334,6 @@ namespace GitUI
             {
                 MessageBox.Show("No dictionary files found in: " + GitCommands.Settings.GetDictionaryDir());
             }
-        }
-
-        private void Dictionary_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
@@ -1549,16 +1518,6 @@ namespace GitUI
                 MergeToolCmd.Enabled = true;
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox5_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
             GravatarService.ClearImageCache();
@@ -1605,24 +1564,9 @@ namespace GitUI
                 DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
         }
 
-        private void GlobalDiffTool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new FormTranslate().ShowDialog();
-        }
-
-        private void TabPageGit_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox7_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void otherHomeBrowse_Click(object sender, EventArgs e)
@@ -2150,11 +2094,6 @@ namespace GitUI
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
-        }
-
-        private void argumentsLabel_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
