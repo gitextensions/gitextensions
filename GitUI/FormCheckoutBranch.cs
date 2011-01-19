@@ -56,12 +56,17 @@ namespace GitUI
                     var remoteName = GitCommandHelpers.GetRemoteName(Branches.Text, GitCommandHelpers.GetRemotes());
                     var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
 
+                    MessageBoxIcon icon = MessageBoxIcon.Question;
+
                     //try to determine the 'best' name for a local branch, check if the local
                     //name for the remote branch is already used
                     if (LocalBranchExists(localBranchName))
+                    {
                         localBranchName = string.Concat(remoteName, "_", localBranchName);
+                        icon = MessageBoxIcon.Exclamation;
+                    }
 
-                    var result = MessageBox.Show(string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel);
+                    var result = MessageBox.Show(string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
 
                     if (result == DialogResult.Cancel)
                         return;
