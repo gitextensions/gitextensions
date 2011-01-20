@@ -15,7 +15,7 @@ namespace GitUI
         TranslationString openRepository = new TranslationString("Open repository");
         TranslationString cloneRepository = new TranslationString("Clone repository");
         TranslationString createRepository = new TranslationString("Create new repository");
-        TranslationString cloneFork = new TranslationString("Clone/fork {0} repository");
+        TranslationString cloneFork = new TranslationString("Clone {0} repository");
         TranslationString develop = new TranslationString("Develop");
         TranslationString donate = new TranslationString("Donate");
         TranslationString translate = new TranslationString("Translate");
@@ -25,14 +25,56 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
 
-            RecentRepositories.DashboardItemClick += new EventHandler(dashboardItem_Click);
+            RecentRepositories.DashboardItemClick += dashboardItem_Click;
             RecentRepositories.DisableContextMenu();
-            RecentRepositories.DashboardCategoryChanged += new EventHandler(dashboardCategory_DashboardCategoryChanged);
+            RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
             //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
 
             var image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
                 pictureBox1.Image = image;
+
+            this.Load += Dashboard_Load;
+        }
+
+        void Dashboard_Load(object sender, EventArgs e)
+        {
+            DonateCategory.Dock = DockStyle.Top;
+            //Show buttons
+            CommonActions.DisableContextMenu();
+            DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
+            openItem.Click += openItem_Click;
+            CommonActions.AddItem(openItem);
+
+            DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
+            cloneItem.Click += cloneItem_Click;
+            CommonActions.AddItem(cloneItem);
+
+            foreach (var el in GitUI.RepoHosting.RepoHosts.GitHosters)
+            {
+                var gitHoster = el;
+                DashboardItem di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
+                di.Click += (repoSender, eventArgs) => { GitUICommands.Instance.StartCloneForkFromHoster(gitHoster); };
+                CommonActions.AddItem(di);
+            }
+            
+            DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
+            createItem.Click += createItem_Click;
+            CommonActions.AddItem(createItem);
+
+            DonateCategory.DisableContextMenu();
+            DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
+            GitHubItem.Click += GitHubItem_Click;
+            DonateCategory.AddItem(GitHubItem);
+            DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
+            DonateItem.Click += DonateItem_Click;
+            DonateCategory.AddItem(DonateItem);
+            DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
+            TranslateItem.Click += TranslateItem_Click;
+            DonateCategory.AddItem(TranslateItem);
+            DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
+            IssuesItem.Click += IssuesItem_Click;
+            DonateCategory.AddItem(IssuesItem);
         }
          
         public event EventHandler WorkingDirChanged;
@@ -50,14 +92,12 @@ namespace GitUI
                                                           Location = new Point(0, y),
                                                           Width = splitContainer5.Panel2.Width
                                                       };
-            dashboardCategory.DashboardItemClick += new EventHandler(dashboardItem_Click);
             splitContainer5.Panel2.Controls.Add(dashboardCategory);
             dashboardCategory.BringToFront();
             y += dashboardCategory.Height;
 
-            //Recalculate hieght when list is changed
-            //entry.ListChanged += entry_ListChanged;
-            dashboardCategory.DashboardCategoryChanged += new EventHandler(dashboardCategory_DashboardCategoryChanged);
+            dashboardCategory.DashboardItemClick += dashboardItem_Click;
+            dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
 
             return y;
         }
@@ -96,7 +136,10 @@ namespace GitUI
 
                     if (currentDashboardCategory != null && !Repositories.RepositoryCategories.Contains(currentDashboardCategory.RepositoryCategory))
                     {
+                        currentDashboardCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
+                        currentDashboardCategory.DashboardItemClick -= dashboardItem_Click;
                         splitContainer5.Panel2.Controls.RemoveAt(i);
+                        currentDashboardCategory.Dispose();
                     }
                 }
                 
@@ -134,8 +177,6 @@ namespace GitUI
 
         public override void Refresh()
         {
-            base.Refresh();
-
             initialized = false;
             ShowRecentRepositories();
         }
@@ -150,7 +191,7 @@ namespace GitUI
             }
             try
             {
-                SuspendLayout();
+                splitContainer5.Visible = false;
 
                 //Make sure the dashboard is only initialized once
                 if (!initialized)
@@ -158,8 +199,14 @@ namespace GitUI
                     //Remove favourites
                     for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
                     {
-                        if (splitContainer5.Panel2.Controls[i - 1] is DashboardCategory)
+                        DashboardCategory dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
+                        if (dashboarCategory != null)
+                        {
+                            dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
+                            dashboarCategory.DashboardItemClick -= dashboardItem_Click;
                             splitContainer5.Panel2.Controls.RemoveAt(i - 1);
+                            dashboarCategory.Dispose();
+                        }
                     }
 
                     //Show favourites
@@ -168,45 +215,6 @@ namespace GitUI
                     {
                         y = AddDashboardEntry(y, entry);
                     }
-
-                    //Clear buttons
-                    CommonActions.Clear();
-                    DonateCategory.Clear();
-                    DonateCategory.Dock = DockStyle.Top;
-                    //Show buttons
-                    CommonActions.DisableContextMenu();
-                    DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
-                    openItem.Click += new EventHandler(openItem_Click);
-                    CommonActions.AddItem(openItem);
-                    DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
-                    cloneItem.Click += new EventHandler(cloneItem_Click);
-                    CommonActions.AddItem(cloneItem);
-                    DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
-                    createItem.Click += new EventHandler(createItem_Click);
-                    CommonActions.AddItem(createItem);
-
-                    foreach (var el in GitUI.RepoHosting.RepoHosts.GitHosters)
-                    {
-                        var gitHoster = el;
-                        DashboardItem di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
-                        di.Click += (sender, e) => { GitUICommands.Instance.StartCloneForkFromHoster(gitHoster); };
-                        CommonActions.AddItem(di);
-                    }
-                
-
-                    DonateCategory.DisableContextMenu();
-                    DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
-                    GitHubItem.Click += new EventHandler(GitHubItem_Click);
-                    DonateCategory.AddItem(GitHubItem);
-                    DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
-                    DonateItem.Click += new EventHandler(DonateItem_Click);
-                    DonateCategory.AddItem(DonateItem);
-                    DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
-                    TranslateItem.Click += new EventHandler(TranslateItem_Click);
-                    DonateCategory.AddItem(TranslateItem);
-                    DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
-                    IssuesItem.Click += new EventHandler(IssuesItem_Click);
-                    DonateCategory.AddItem(IssuesItem);
 
                     splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
 
@@ -219,7 +227,7 @@ namespace GitUI
             }
             finally
             {
-                ResumeLayout(true);
+                splitContainer5.Visible = true;
             }
         }
 

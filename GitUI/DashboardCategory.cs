@@ -62,7 +62,7 @@ namespace GitUI
                 foreach (Repository repository in m_repositoryCategory.Repositories)
                 {
                     DashboardItem dashboardItem = new DashboardItem(repository);
-                    dashboardItem.Click += new EventHandler(dashboardItem_Click);
+                    dashboardItem.Click += dashboardItem_Click;
                     AddItem(dashboardItem);                    
 
                     if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
@@ -258,8 +258,13 @@ namespace GitUI
         {
             for (int i = Controls.Count; i > 0; i--)
             {
-                if (Controls[i - 1] is DashboardItem)
+                DashboardItem dashboardItem = Controls[i - 1]  as DashboardItem;
+                if (dashboardItem is DashboardItem)
+                {
+                    dashboardItem.Click -= dashboardItem_Click;
                     Controls.RemoveAt(i - 1);
+                    dashboardItem.Dispose();
+                }
             }
             top = 26;
             this.Height = top;
