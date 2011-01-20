@@ -24,7 +24,7 @@ namespace GitUI.SpellChecker
        
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
-        private WordDictionary _wordDictionary;
+        private static WordDictionary _wordDictionary = null;
 
         public EditNetSpell()
         {
@@ -100,12 +100,17 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
-            _wordDictionary =
-                new WordDictionary(components)
-                    {
-                        DictionaryFile = Settings.GetDictionaryDir() + Settings.Dictionary + ".dic"
-                    };
-            
+            string dictionaryFile = string.Concat(Settings.GetDictionaryDir(), Settings.Dictionary, ".dic");
+
+            if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
+            {
+                _wordDictionary =
+                    new WordDictionary(components)
+                        {
+                            DictionaryFile = dictionaryFile
+                        };
+            }
+
             _spelling.Dictionary = _wordDictionary;
         }
 
