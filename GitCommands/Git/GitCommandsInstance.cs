@@ -92,21 +92,27 @@ namespace GitCommands
 
         private void ProcessExited(object sender, EventArgs e)
         {
-            if (myProcess != null)
+            try
             {
-                ExitCode = myProcess.ExitCode;
-                if (Exited != null)
+                if (myProcess != null)
                 {
-                    //The process is exited already, but this command waits also until all output is recieved.
-                    //Only WaitForExit when someone is conntected to the exited event. For some reason a
-                    //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                    //we wait for exit, probably a timing issue... 
-                    myProcess.WaitForExit();
+                    ExitCode = myProcess.ExitCode;
+                    if (Exited != null)
+                    {
+                        //The process is exited already, but this command waits also until all output is recieved.
+                        //Only WaitForExit when someone is conntected to the exited event. For some reason a
+                        //null reference is thrown sometimes when staging/unstaging in the commit dialog when
+                        //we wait for exit, probably a timing issue... 
+                        myProcess.WaitForExit();
 
-                    Exited(this, e);
+                        Exited(this, e);
+                    }
+
+                    myProcess = null;
                 }
-
-                myProcess = null;
+            }
+            catch
+            {
             }
         }
 

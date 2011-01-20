@@ -753,7 +753,7 @@ namespace GitUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = null;
+            this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(918, 644);
             this.Controls.Add(this.splitMain);
             this.Name = "FormCommit";

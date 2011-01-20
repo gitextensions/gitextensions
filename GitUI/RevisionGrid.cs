@@ -38,7 +38,7 @@ namespace GitUI
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
-        private GitRevision _initialSelectedRevision;
+        private string _initialSelectedRevision = null;
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
         private string _quickSearchString;
@@ -115,7 +115,10 @@ namespace GitUI
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
-            _initialSelectedRevision = initialSelectedRevision;
+            if (initialSelectedRevision != null)
+                _initialSelectedRevision = initialSelectedRevision.Guid;
+            else
+                _initialSelectedRevision = null;
         }
 
         public event EventHandler ActionOnRepositoryPerformed;
@@ -585,11 +588,7 @@ namespace GitUI
                 }
 
 
-                if (_revisionGraphCommand != null)
-                {
-                    _revisionGraphCommand.Dispose();
-                    _revisionGraphCommand = null;
-                }
+                DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();
 
@@ -675,11 +674,25 @@ namespace GitUI
                      string.IsNullOrEmpty(InMemMessageFilter));
         }
 
+        private void DisposeRevisionGraphCommand()
+        {
+            if (_revisionGraphCommand != null)
+            {
+                //Dispose command, it is not needed anymore
+                _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
+                _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
+                _revisionGraphCommand.Error -= _revisionGraphCommand_Error;
+
+                _revisionGraphCommand.Dispose();
+                _revisionGraphCommand = null;
+            }
+        }
+
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
         {
             _isLoading = false;
 
-            if (_revisionGraphCommand.Revisions.Count == 0 &&
+            if (_revisionGraphCommand.RevisionCount == 0 &&
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
@@ -689,6 +702,7 @@ namespace GitUI
                                           NoCommits.Visible = true;
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
+                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
             else
@@ -699,16 +713,18 @@ namespace GitUI
                                           UpdateGraph(null);
                                           Loading.Visible = false;
                                           SelectInitialRevision();
+                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
         }
 
         private void SelectInitialRevision()
         {
-            if (Revisions.SelectedRows.Count != 0 || _initialSelectedRevision == null) return;
-            for (var i = 0; i < _revisionGraphCommand.Revisions.Count; i++)
+            if (string.IsNullOrEmpty(_initialSelectedRevision) || Revisions.SelectedRows.Count != 0) return;
+
+            for (var i = 0; i < Revisions.RowCount; i++)
             {
-                if (_revisionGraphCommand.Revisions[i].Guid == _initialSelectedRevision.Guid)
+                if (((GitRevision)Revisions.GetRowData(i)).Guid == _initialSelectedRevision)
                     SetSelectedIndex(i);
             }
         }
