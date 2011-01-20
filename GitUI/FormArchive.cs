@@ -29,7 +29,7 @@ namespace GitUI
         {
             if (revisionGrid1.GetRevisions().Count != 1)
             {
-                MessageBox.Show("Select 1 revision to archive", "Archive");
+                MessageBox.Show(this, "Select 1 revision to archive", "Archive", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             string revision = revisionGrid1.GetRevisions()[0].TreeGuid;

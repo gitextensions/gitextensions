@@ -92,12 +92,12 @@ namespace GitUI
             this.toolbarCommit = new System.Windows.Forms.ToolStrip();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
             this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
@@ -646,26 +646,6 @@ namespace GitUI
             this.toolStripMenuItem3.Size = new System.Drawing.Size(57, 23);
             this.toolStripMenuItem3.Text = "Options";
             // 
-            // toolAuthorLabelItem
-            // 
-            this.toolAuthorLabelItem.Enabled = false;
-            this.toolAuthorLabelItem.Name = "toolAuthorLabelItem";
-            this.toolAuthorLabelItem.Size = new System.Drawing.Size(298, 22);
-            this.toolAuthorLabelItem.Text = "Author: (Format: \"name <mail>\")";
-            this.toolAuthorLabelItem.Click += new System.EventHandler(this.toolAuthorLabelItem_Click);
-            // 
-            // toolAuthor
-            // 
-            this.toolAuthor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.toolAuthor.Name = "toolAuthor";
-            this.toolAuthor.Size = new System.Drawing.Size(230, 21);
-            this.toolAuthor.TextChanged += new System.EventHandler(this.toolAuthor_TextChanged);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(295, 6);
-            // 
             // closeDialogAfterEachCommitToolStripMenuItem
             // 
             this.closeDialogAfterEachCommitToolStripMenuItem.Name = "closeDialogAfterEachCommitToolStripMenuItem";
@@ -686,6 +666,26 @@ namespace GitUI
             this.refreshDialogOnFormFocusToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
             this.refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
             this.refreshDialogOnFormFocusToolStripMenuItem.Click += new System.EventHandler(this.refreshDialogOnFormFocusToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(295, 6);
+            // 
+            // toolAuthorLabelItem
+            // 
+            this.toolAuthorLabelItem.Enabled = false;
+            this.toolAuthorLabelItem.Name = "toolAuthorLabelItem";
+            this.toolAuthorLabelItem.Size = new System.Drawing.Size(298, 22);
+            this.toolAuthorLabelItem.Text = "Author: (Format: \"name <mail>\")";
+            this.toolAuthorLabelItem.Click += new System.EventHandler(this.toolAuthorLabelItem_Click);
+            // 
+            // toolAuthor
+            // 
+            this.toolAuthor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.toolAuthor.Name = "toolAuthor";
+            this.toolAuthor.Size = new System.Drawing.Size(230, 21);
+            this.toolAuthor.TextChanged += new System.EventHandler(this.toolAuthor_TextChanged);
             // 
             // flowCommitButtons
             // 

@@ -51,7 +51,7 @@ namespace GitUI
                 else
                     if (Hard.Checked)
                     {
-                        if (MessageBox.Show(resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             new FormProcess(GitCommandHelpers.ResetHardCmd(Revision.Guid)).ShowDialog();
                         }
