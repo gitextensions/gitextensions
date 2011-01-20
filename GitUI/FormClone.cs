@@ -58,7 +58,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Exception: " + ex.Message, "Clone failed");
+                MessageBox.Show(this, "Exception: " + ex.Message, "Clone failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -67,7 +67,7 @@ namespace GitUI
             return MessageBox.Show(
                 "The repository has been cloned successfully." + Environment.NewLine +
                 "Do you want to open the new repository \"" + dirTo + "\" now?", "Open",
-                MessageBoxButtons.YesNo) == DialogResult.Yes;
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         private static bool AskIfSubmodulesShouldBeInitialized()
@@ -77,7 +77,7 @@ namespace GitUI
                 "Do you want to initialize the submodules?" + Environment.NewLine +
                 Environment.NewLine +
                 "This will initialize and update all submodules recursive.", "Submodules",
-                MessageBoxButtons.YesNo) == DialogResult.Yes;
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         private static void InitSubmodules()

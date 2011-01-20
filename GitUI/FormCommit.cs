@@ -148,7 +148,7 @@ namespace GitUI
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+            if (MessageBox.Show(_resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             // Prepare git command
@@ -298,7 +298,7 @@ namespace GitUI
         {
             if (Staged.GitItemStatuses.Count == 0)
             {
-                if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo) ==
+                if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                     DialogResult.No)
                     return;
             }
@@ -310,17 +310,17 @@ namespace GitUI
         {
             if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text);
+                MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (string.IsNullOrEmpty(Message.Text))
             {
-                MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text);
+                MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
             if (GitCommandHelpers.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
-                MessageBox.Show(_notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
+                MessageBox.Show(_notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 return;
 
             try
@@ -527,7 +527,7 @@ namespace GitUI
         private void ResetSoftClick(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItem == null ||
-                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
+                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
                 DialogResult.Yes)
                 return;
 
