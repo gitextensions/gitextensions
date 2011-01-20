@@ -104,7 +104,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
-                MessageBox.Show("No string specified to look for!");
+                MessageBox.Show(this, "No string specified to look for!", "Find", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return null;
             }
             _lastSearchWasBackward = searchBackward;
@@ -125,7 +125,7 @@ namespace GitUI
             if (range != null)
                 SelectResult(range);
             else if (messageIfNotFound != null)
-                MessageBox.Show(messageIfNotFound);
+                MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return range;
         }
 
@@ -174,7 +174,7 @@ namespace GitUI
                     group.AddMarker(m);
                 }
                 if (count == 0)
-                    MessageBox.Show("Search text not found.");
+                    MessageBox.Show(this, "Search text not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     Close();
             }

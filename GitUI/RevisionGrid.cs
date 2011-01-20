@@ -1208,7 +1208,7 @@ namespace GitUI
                 return;
 
             if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision",
-                                MessageBoxButtons.YesNo) != DialogResult.Yes)
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog();
             ForceRefreshRevisions();

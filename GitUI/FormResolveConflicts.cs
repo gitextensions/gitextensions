@@ -117,7 +117,7 @@ namespace GitUI
 
             if (!GitCommandHelpers.InTheMiddleOfPatch() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
-                if (MessageBox.Show(allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     GitUICommands.Instance.StartCommitDialog();
                 }
@@ -163,7 +163,7 @@ namespace GitUI
 
                 if (mergeScripts.Length > 0)
                 {
-                    if (MessageBox.Show(string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator.ToString() + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator.ToString() + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         //get timestamp of file before merge. This is an extra check to verify if merge was successfull
                         DateTime lastWriteTimeBeforeMerge = DateTime.Now;
@@ -173,7 +173,7 @@ namespace GitUI
                         int exitCode;
                         GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
 
-                        if (MessageBox.Show(string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
 
                             DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
@@ -233,7 +233,7 @@ namespace GitUI
                 {
                     if (configSection.GetValue("path").Trim().Equals(filename.Trim()))
                     {
-                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
                             Initialize();
@@ -316,7 +316,7 @@ namespace GitUI
                 if ((exitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
                     (exitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                 {
-                    if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         stageFile(filename);
                     }

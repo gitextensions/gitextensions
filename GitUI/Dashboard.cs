@@ -228,13 +228,6 @@ namespace GitUI
             new FormTranslate().ShowDialog();
         }
 
-
-        void cloneForkGithubItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(this, "Heyyooo");
-            System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
-        }
-
         void GitHubItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
