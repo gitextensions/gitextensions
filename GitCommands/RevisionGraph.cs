@@ -18,16 +18,7 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler Error;
         public event EventHandler Updated;
-        public List<GitRevision> Revisions
-        {
-            get
-            {
-                lock (revisions)
-                {
-                    return new List<GitRevision>(revisions);
-                }
-            }
-        }
+        public int RevisionCount { get; set; }
 
         public class RevisionGraphUpdatedEventArgs : EventArgs
         {
@@ -55,8 +46,6 @@ namespace GitCommands
         private Encoding logoutputEncoding = null;
 
         private Thread backgroundThread = null;
-
-        private List<GitRevision> revisions = new List<GitRevision>();
 
         private enum ReadStep
         {
@@ -127,10 +116,7 @@ namespace GitCommands
         {
             try
             {
-                lock (revisions)
-                {
-                    revisions.Clear();
-                }
+                RevisionCount = 0;
 
                 heads = GitCommandHelpers.GetHeads(true);
 
@@ -206,19 +192,16 @@ namespace GitCommands
 
         void finishRevision()
         {
-            lock (revisions)
+            if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
             {
-                if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
+                if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
                 {
-                    if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
-                    {
-                        if (revision != null)
-                            revisions.Add(revision);
-                        Updated(this, new RevisionGraphUpdatedEventArgs(revision));
-                    }
+                    if (revision != null)
+                        RevisionCount++;
+                    Updated(this, new RevisionGraphUpdatedEventArgs(revision));
                 }
-                nextStep = ReadStep.Commit;
             }
+            nextStep = ReadStep.Commit;
         }
 
         void dataReceived(string line)
