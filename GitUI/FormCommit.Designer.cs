@@ -320,6 +320,7 @@ namespace GitUI
             // 
             // toolbarUnstaged
             // 
+            this.toolbarUnstaged.AutoSize = false;
             this.toolbarUnstaged.BackColor = System.Drawing.SystemColors.Control;
             this.toolbarUnstaged.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarUnstaged.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -330,7 +331,7 @@ namespace GitUI
             this.toolbarUnstaged.Location = new System.Drawing.Point(0, 0);
             this.toolbarUnstaged.Name = "toolbarUnstaged";
             this.toolbarUnstaged.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.toolbarUnstaged.Size = new System.Drawing.Size(397, 25);
+            this.toolbarUnstaged.Size = new System.Drawing.Size(397, 28);
             this.toolbarUnstaged.Stretch = true;
             this.toolbarUnstaged.TabIndex = 12;
             this.toolbarUnstaged.Text = "toolStrip1";
@@ -769,7 +770,6 @@ namespace GitUI
             this.splitMain.Panel2.ResumeLayout(false);
             this.splitMain.ResumeLayout(false);
             this.splitLeft.Panel1.ResumeLayout(false);
-            this.splitLeft.Panel1.PerformLayout();
             this.splitLeft.Panel2.ResumeLayout(false);
             this.splitLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
