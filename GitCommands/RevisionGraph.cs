@@ -198,7 +198,8 @@ namespace GitCommands
                 {
                     if (revision != null)
                         RevisionCount++;
-                    Updated(this, new RevisionGraphUpdatedEventArgs(revision));
+                    if (Updated != null)
+                        Updated(this, new RevisionGraphUpdatedEventArgs(revision));
                 }
             }
             nextStep = ReadStep.Commit;
