@@ -65,6 +65,7 @@ namespace GitUI.Editor
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
+        public event EventHandler TextChanged;
 
         public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
@@ -111,6 +112,9 @@ namespace GitUI.Editor
         {
             if (patchHighlighting)
                 _internalFileViewer.AddPatchHighlighting();
+
+            if (TextChanged != null)
+                TextChanged(sender, e);
         }
 
         public bool IsReadOnly
