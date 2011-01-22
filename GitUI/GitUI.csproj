@@ -1067,6 +1067,7 @@
     <None Include="Icons\39.png" />
     <None Include="Resources\double_arrow_up.png" />
     <None Include="Resources\double_arrow_down.png" />
+    <None Include="Icons\45.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />

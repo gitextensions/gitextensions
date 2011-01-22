@@ -6,11 +6,15 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormEditor : GitExtensionsForm
     {
+        private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
+        private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
+
         public FormEditor()
         {
             InitializeComponent();
@@ -51,18 +55,40 @@ namespace GitUI
         {
             try
             {
-                if (!string.IsNullOrEmpty(_fileName))
-                    File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.Encoding);
+                if (MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SaveChanges();
+                }
+
+                SavePosition("fileeditor");
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show("Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                if (MessageBox.Show("Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
             }
+        }
 
-            SavePosition("fileeditor");
+        private void toolStripSaveButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SaveChanges()
+        {
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.Encoding);
+            }
         }
     }
 }
