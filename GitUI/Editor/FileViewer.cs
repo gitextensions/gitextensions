@@ -65,7 +65,7 @@ namespace GitUI.Editor
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
-        public event EventHandler TextChanged;
+        public new event EventHandler TextChanged;
 
         public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
