@@ -9,6 +9,8 @@ namespace GitCommands
 {
     public sealed class GitCommandsInstance : IGitCommands, IDisposable
     {
+        private object processLock = new object();
+
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
@@ -42,8 +44,10 @@ namespace GitCommands
 
                 process.Exited += ProcessExited;
                 process.Start();
-                myProcess = process;
-
+                lock (processLock)
+                {
+                    myProcess = process;
+                }
                 if (!StreamOutput)
                 {
                     process.BeginErrorReadLine();
@@ -60,20 +64,24 @@ namespace GitCommands
 
         public void Kill()
         {
-            //If there was another process running, kill it
-            if (myProcess == null)
-                return;
-            try
+            lock (processLock)
             {
-                if (!myProcess.HasExited)
+                //If there was another process running, kill it
+                if (myProcess == null)
+                    return;
+                try
                 {
-                    myProcess.Kill();
+                    if (!myProcess.HasExited)
+                    {
+                        myProcess.Exited -= ProcessExited;
+                        myProcess.Kill();
+                    }
+                    myProcess.Close();
                 }
-                myProcess.Close();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex);
+                }
             }
         }
 
@@ -108,7 +116,10 @@ namespace GitCommands
                         Exited(this, e);
                     }
 
-                    myProcess = null;
+                    lock (processLock)
+                    {
+                        myProcess = null;
+                    }
                 }
             }
             catch
