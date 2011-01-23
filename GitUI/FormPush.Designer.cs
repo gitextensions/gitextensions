@@ -125,12 +125,13 @@
             // 
             // Branch
             // 
+            this.Branch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(127, 19);
             this.Branch.Name = "Branch";
             this.Branch.Size = new System.Drawing.Size(173, 23);
             this.Branch.TabIndex = 0;
-            this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             // 
             // PushAllBranches
@@ -276,12 +277,13 @@
             // 
             // RemoteBranch
             // 
+            this.RemoteBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.RemoteBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.RemoteBranch.FormattingEnabled = true;
             this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
             this.RemoteBranch.Name = "RemoteBranch";
             this.RemoteBranch.Size = new System.Drawing.Size(162, 23);
             this.RemoteBranch.TabIndex = 1;
-            this.RemoteBranch.DropDown += new System.EventHandler(this.RemoteBranchDropDown);
             // 
             // LoadSSHKey
             // 
@@ -298,12 +300,13 @@
             // 
             // TagComboBox
             // 
+            this.TagComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.TagComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.TagComboBox.FormattingEnabled = true;
             this.TagComboBox.Location = new System.Drawing.Point(160, 19);
             this.TagComboBox.Name = "TagComboBox";
             this.TagComboBox.Size = new System.Drawing.Size(297, 23);
             this.TagComboBox.TabIndex = 18;
-            this.TagComboBox.DropDown += new System.EventHandler(this.TagDropDown);
             // 
             // groupBox3
             // 

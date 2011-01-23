@@ -50,6 +50,9 @@ namespace GitUI
 
             Remotes.DataSource = GitCommandHelpers.GetRemotes();
             FillPushDestinationDropDown();
+
+            UpdateBranchDropDown();
+            UpdateRemoteBranchDropDown();
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -190,11 +193,6 @@ namespace GitUI
             Branch.Text = curBranch;
         }
 
-        private void BranchDropDown(object sender, EventArgs e)
-        {
-            UpdateBranchDropDown();
-        }
-
         private void PullClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartPullDialog();
@@ -211,11 +209,6 @@ namespace GitUI
             foreach (var head in GitCommandHelpers.GetHeads(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
-        }
-
-        private void RemoteBranchDropDown(object sender, EventArgs e)
-        {
-            UpdateRemoteBranchDropDown();
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -345,11 +338,6 @@ namespace GitUI
             TagComboBox.DataSource = tags;
         }
 
-        private void TagDropDown(object sender, EventArgs e)
-        {
-            FillTagDropDown();
-        }
-
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)
         {
             ForcePushTags.Checked = ForcePushBranches.Checked;
@@ -457,8 +445,15 @@ namespace GitUI
 
 		private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
 		{
-			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
-				UpdateMultiBranchView();
+            if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
+                UpdateMultiBranchView();
+            else if (TabControlTagBranch.SelectedTab == TagTab)
+                FillTagDropDown();
+            else
+            {
+                UpdateBranchDropDown();
+                UpdateRemoteBranchDropDown();
+            }
 		}
 
 		private void BranchGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
