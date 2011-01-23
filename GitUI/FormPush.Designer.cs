@@ -105,13 +105,14 @@
             // 
             this.PushDestination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.PushDestination.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.PushDestination.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.PushDestination.Enabled = false;
             this.PushDestination.FormattingEnabled = true;
             this.PushDestination.Location = new System.Drawing.Point(128, 48);
             this.PushDestination.Name = "PushDestination";
             this.PushDestination.Size = new System.Drawing.Size(300, 23);
             this.PushDestination.TabIndex = 4;
-            this.PushDestination.DropDown += new System.EventHandler(this.PushDestinationDropDown);
             // 
             // label2
             // 
