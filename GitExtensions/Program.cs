@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -222,9 +223,10 @@ namespace GitExtensions
 
         private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
         {
-            foreach (string arg in args)
-                if (arg.StartsWith(paramName + "="))
-                    return args[2].Replace(paramName + "=", "");
+            if (args.Any(arg => arg.StartsWith(paramName + "=")))
+            {
+                return args[2].Replace(paramName + "=", "");
+            }
 
             return string.Empty;
         }

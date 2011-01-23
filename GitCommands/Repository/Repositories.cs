@@ -28,21 +28,14 @@ namespace GitCommands.Repository
             {
                 if (_repositoryHistory == null)
                 {
-                    try
+                    object setting = Application.UserAppDataRegistry.GetValue("history");
+                    if (setting != null)
                     {
-                        object setting = Application.UserAppDataRegistry.GetValue("history");
-                        if (setting != null)
-                        {
-                            Repositories.DeserializeHistoryFromXml(setting.ToString());
-                        }
+                        DeserializeHistoryFromXml(setting.ToString());
                     }
-                    catch
-                    { }
                 }
 
-                if (_repositoryHistory == null)
-                    _repositoryHistory = new RepositoryHistory();
-                return _repositoryHistory;
+                return _repositoryHistory ?? (_repositoryHistory = new RepositoryHistory());
             }
             private set
             {
