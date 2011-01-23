@@ -24,8 +24,9 @@ namespace GitExtensions
                 gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
                 gitPlugin.Register(GitUICommands.Instance);
 
-                if (gitPlugin is IRepositoryHostPlugin)
-                    RepoHosts.GitHosters.Add(gitPlugin as IRepositoryHostPlugin);
+                var gitRepositoryHostPlugin = gitPlugin as IRepositoryHostPlugin;
+                if (gitRepositoryHostPlugin != null)
+                    RepoHosts.GitHosters.Add(gitRepositoryHostPlugin);
 
                 LoadedPlugins.Plugins.Add(gitPlugin);
             }

@@ -12,6 +12,13 @@ namespace PatchApply
         public string PatchFileName { get; set; }
         public string DirToPatch { get; set; }
 
+        private PatchProcessor patchProcessor;
+
+        public PatchManager()
+        {
+            patchProcessor = new PatchProcessor();
+        }
+        
         public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
         {
             //When there is no patch, return nothing
@@ -262,7 +269,7 @@ namespace PatchApply
         {
             try
             {
-                StreamReader re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
+                var re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
                 // string retval = re.ReadToEnd();
                 // GetMD5Hash(retval);
                 string retval = "";
@@ -280,8 +287,8 @@ namespace PatchApply
             }
             catch
             {
+                return "";
             }
-            return "";
         }
 
         public void SavePatch()
@@ -296,7 +303,7 @@ namespace PatchApply
                     File.Delete(path);
                 }
                 else
-                {                    
+                {
                     Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny(((String)"\\/").ToCharArray())));
                     TextWriter tw = new StreamWriter(DirToPatch + patch.FileNameA, false);
                     tw.Write(patch.FileTextB);
@@ -307,7 +314,7 @@ namespace PatchApply
 
         public string GetMD5Hash(string input)
         {
-            byte[] bs = GetUTF8EncodedBytes(input);
+            IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
             var s = new System.Text.StringBuilder();
             foreach (byte b in bs)
             {
@@ -316,7 +323,7 @@ namespace PatchApply
             return s.ToString();
         }
 
-        private byte[] GetUTF8EncodedBytes(string input)
+        private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
         {
             var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
             byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
@@ -356,7 +363,7 @@ namespace PatchApply
 
         private void handleChangeFilePatchType(Patch patch, string[] patchLines)
         {
-            List<string> fileLines = new List<string>();
+            var fileLines = new List<string>();
             foreach (string s in LoadFile(patch.FileNameA).Split('\n'))
             {
                 fileLines.Add(s);
@@ -372,7 +379,6 @@ namespace PatchApply
                     string pos = line.Substring(3, line.LastIndexOf("@@") - 3).Trim();
                     string[] addrem = pos.Split('+', '-');
                     string[] oldLines = addrem[1].Split(',');
-                    string[] newLines = addrem[2].Split(',');
 
                     lineNumber = Int32.Parse(oldLines[0]) - 1;
 
@@ -489,8 +495,10 @@ namespace PatchApply
         {
             try
             {
-                StringReader stream = new StringReader(text);
-                LoadPatchStream(stream, applyPatch);
+                using (var stream = new StringReader(text))
+                {
+                    LoadPatchStream(stream, applyPatch);
+                }
             }
             catch
             {
@@ -502,8 +510,10 @@ namespace PatchApply
         {
             try
             {
-                StreamReader re = new StreamReader(PatchFileName, Settings.Encoding);
-                LoadPatchStream(re, applyPatch);
+                using (var re = new StreamReader(PatchFileName, Settings.Encoding))
+                {
+                    LoadPatchStream(re, applyPatch);
+                }
             }
             catch
             {
@@ -512,12 +522,11 @@ namespace PatchApply
 
         public void LoadPatchStream(TextReader reader, bool applyPatch)
         {
-            patches = new List<Patch>();
             Patch patch = null;
-           
+
             string input = reader.ReadLine();
 
-            processInput(reader, input, patch);
+            patches = patchProcessor.ProcessInput(reader, input, patch);
 
             reader.Close();
 
@@ -528,200 +537,6 @@ namespace PatchApply
             {
                 if (patchApply.Apply)
                     ApplyPatch(patchApply);
-            }
-        }
-
-        private void processInput(TextReader re, string input, Patch patch)
-        {
-            bool gitPatch = false;
-            while (input != null)
-            {
-                //diff --git a/FileA b/FileB
-                //new patch found
-                if (input.StartsWith("diff --git "))
-                {
-                    gitPatch = true;
-                    patch = new Patch();
-                    patches.Add(patch);
-
-                    Match match = Regex.Match(input, "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
-
-                    patch.FileNameA = match.Groups[1].Value;
-                    patch.FileNameB = match.Groups[2].Value;
-                    //patch.FileNameA = input.Substring(input.LastIndexOf(" a/") + 3, input.LastIndexOf(" b/") - (input.LastIndexOf(" a/") + 3));
-                    //patch.FileNameB = input.Substring(input.LastIndexOf(" b/") + 3);
-
-                    //The next line tells us what kind of patch
-                    //new file mode xxxxxx means new file
-                    //delete file mode xxxxxx means delete file
-                    //index means -> no new and no delete, edit
-                    if ((input = re.ReadLine()) != null)
-                    {
-                        //WTF! No change
-                        if (input.StartsWith("diff --git "))
-                        {
-                            //No change? lets continue to the next line
-                            continue;
-                        }
-
-                        //new file!
-                        if (input.StartsWith("new file mode "))
-                            patch.Type = Patch.PatchType.NewFile;
-                        else
-                            if (input.StartsWith("deleted file mode "))
-                                patch.Type = Patch.PatchType.DeleteFile;
-                            else
-                                patch.Type = Patch.PatchType.ChangeFile;
-
-                        //we need to move to the line that says 'index'
-                        //because we are not sure if we are there yet because
-                        //we might point at the new or delete line lines
-                        if (!input.StartsWith("index "))
-                            if ((input = re.ReadLine()) == null)
-                                break;
-                    }
-
-                    //The next lines tells us more about the change itself
-                    //Read the next
-                    if ((input = re.ReadLine()) != null)
-                    {
-                        //Binary files a/FileA and /dev/null differ
-                        //means the file is deleted but the changes are not listed explicid
-                        if (input.StartsWith("Binary files a/") && input.EndsWith(" and /dev/null differ"))
-                        {
-                            patch.File = Patch.FileType.Binary;
-
-                            //Check if the type was set correctly
-                            if (patch.Type != Patch.PatchType.DeleteFile)
-                                throw new Exception("Change not parsed correct: " + input);
-
-                            patch = null;
-
-                            if ((input = re.ReadLine()) == null)
-                                break;
-
-                            //Continue loop, we do not get more info about this change
-                            continue;
-                        }
-
-                        //Binary files a/FileA and /dev/null differ
-                        //means the file is deleted but the changes are not listed explicid
-                        if (input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ"))
-                        {
-                            patch.File = Patch.FileType.Binary;
-
-                            //Check if the type was set correctly
-                            if (patch.Type != Patch.PatchType.NewFile)
-                                throw new Exception("Change not parsed correct: " + input);
-
-                            //TODO: NOT SUPPORTED!
-                            patch.Apply = false;
-
-                            patch = null;
-
-                            if ((input = re.ReadLine()) == null)
-                                break;
-
-                            continue;
-                        }
-
-                        //GIT binary patch
-                        //means the file is binairy 
-                        if (input.StartsWith("GIT binary patch"))
-                        {
-                            patch.File = Patch.FileType.Binary;
-
-                            //TODO: NOT SUPPORTED!
-                            patch.Apply = false;
-
-                            patch = null;
-
-                            if ((input = re.ReadLine()) == null)
-                                break;
-
-                            continue;
-                        }
-                    }
-
-                    continue;
-                }
-
-                if (!gitPatch || gitPatch && patch != null)
-                {
-                    //The previous check checked only if the file was binary
-                    //--- /dev/null
-                    //means there is no old file, so this should be a new file
-                    if (input.StartsWith("--- /dev/null"))
-                    {
-                        if (!gitPatch)
-                        {
-                            patch = new Patch();
-                            patches.Add(patch);
-                        }
-
-                        if (gitPatch && patch.Type != Patch.PatchType.NewFile)
-                            throw new Exception("Change not parsed correct: " + input);
-
-                        //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
-                            break;
-
-                    }
-
-                    //line starts with --- means, old file name
-                    if (input.StartsWith("--- a/") && !input.StartsWith("--- /dev/null"))
-                    {
-                        if (!gitPatch)
-                        {
-                            patch = new Patch();
-                            patches.Add(patch);
-                        }
-
-                        if (gitPatch && patch.FileNameA != (input.Substring(6).Trim()))
-                            throw new Exception("Old filename not parsed correct: " + input);
-
-                        patch.FileNameA = (input.Substring(6).Trim());
-
-                        //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
-                            break;
-
-                    }
-
-                    //If there is no 'newfile', reset files
-                    if (input.StartsWith("+++ /dev/null"))
-                    {
-                        if (gitPatch && patch.Type != Patch.PatchType.DeleteFile)
-                            throw new Exception("Change not parsed correct: " + input);
-
-                        //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
-                            break;
-                    }
-
-
-                    //line starts with +++ means, new file name
-                    //we expect a new file now!
-                    if (input.StartsWith("+++ ") && !input.StartsWith("+++ /dev/null"))
-                    {
-                        Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
-
-                        if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
-                            throw new Exception("New filename not parsed correct: " + input);
-
-                        patch.FileNameB = (regexMatch.Groups[1].Value.Trim());
-
-                        //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
-                            break;
-                    }
-                }
-
-                if (patch != null)
-                    patch.AppendTextLine(input);
-
-                if ((input = re.ReadLine()) == null)
-                    break;
             }
         }
 

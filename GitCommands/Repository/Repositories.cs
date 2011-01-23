@@ -59,20 +59,15 @@ namespace GitCommands.Repository
             {
                 if (_repositoryCategories == null)
                 {
-                    try
+                    object setting = Application.UserAppDataRegistry.GetValue("repositories");
+                    if (setting != null)
                     {
-                        object setting = Application.UserAppDataRegistry.GetValue("repositories");
-                        if (setting != null)
-                        {
-                            Repositories.DeserializeRepositories(setting.ToString());
-                        }
+                        DeserializeRepositories(setting.ToString());
                     }
-                    catch
-                    { }
+
                 }
-                if (_repositoryCategories == null)
-                    _repositoryCategories = new BindingList<RepositoryCategory>();
-                return _repositoryCategories;
+
+                return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>());
             }
             private set
             {
