@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Diagnostics;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
@@ -18,7 +17,7 @@ namespace GitUI
         {
             syncContext = SynchronizationContext.Current;
 
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
             KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
         }
@@ -31,10 +30,10 @@ namespace GitUI
         }
 
         public StringBuilder OutputString = new StringBuilder();
-        public ProcessStart ProcessCallback = null;
-        public ProcessAbort AbortCallback = null;
-        private bool errorOccurred = false;
-        private bool showOnError = false;
+        public ProcessStart ProcessCallback;
+        public ProcessAbort AbortCallback;
+        private bool errorOccurred;
+        private bool showOnError;
 
         public bool ErrorOccurred()
         {
@@ -44,28 +43,30 @@ namespace GitUI
         public void SetProgress(string text)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
-            {
-                int index = text.IndexOf('%');
-                int progressValue;
-                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
+            SendOrPostCallback method = o =>
                 {
-                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                        ProgressBar.Style = ProgressBarStyle.Blocks;
-                    ProgressBar.Value = Math.Min(100, progressValue);
-
-                    if (TaskbarManager.IsPlatformSupported)
+                    int index = text.IndexOf('%');
+                    int progressValue;
+                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
                     {
-                        try
+                        if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                            ProgressBar.Style = ProgressBarStyle.Blocks;
+                        ProgressBar.Value = Math.Min(100, progressValue);
+
+                        if (TaskbarManager.IsPlatformSupported)
                         {
-                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                            try
+                            {
+                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                            }
+                            catch (InvalidOperationException)
+                            {
+                            }
                         }
-                        catch (InvalidOperationException) { }
                     }
-                }
-                this.Text = text;
-            });
+                    Text = text;
+                };
             syncContext.Send(method, this);
         }
 
@@ -74,18 +75,18 @@ namespace GitUI
             lock (ProcessOutputTimer.linesToAdd)
             {
                 ProcessOutputTimer.addLine(text);
-            } 
+            }
         }
 
         public void AddOutputCrossThread(string text)
-        {         
-            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
-            {
-                Output.Text += text;            
-                Output.SelectionStart = Output.Text.Length;
-                Output.ScrollToCaret();
-                Output.Visible = true;
-            });
+        {
+            SendOrPostCallback method = o =>
+                {
+                    Output.Text += text;
+                    Output.SelectionStart = Output.Text.Length;
+                    Output.ScrollToCaret();
+                    Output.Visible = true;
+                };
             syncContext.Send(method, this);
         }
 
@@ -110,10 +111,9 @@ namespace GitUI
             {
                 try
                 {
-                    if (isSuccess)
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                    else
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
+                    TaskbarManager.Instance.SetProgressState(isSuccess
+                                                                 ? TaskbarProgressBarState.Normal
+                                                                 : TaskbarProgressBarState.Error);
 
                     TaskbarManager.Instance.SetProgressValue(100, 100);
                 }
@@ -179,7 +179,7 @@ namespace GitUI
             Start();
         }
 
-        private void FormStatus_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private static void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
             {

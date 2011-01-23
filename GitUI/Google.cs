@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
+﻿using System.Net;
 using System.Web;
-using GitCommands;
 
 namespace GitUI
 {
@@ -23,21 +18,20 @@ namespace GitUI
             string translateFrom,
             string translateTo)
         {
-            string url = "http://ajax.googleapis.com/ajax/services/language/translate";
-            WebClient webClient = new WebClient();
-            webClient.Proxy = WebRequest.DefaultWebProxy;
-            webClient.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            webClient.Encoding = System.Text.Encoding.UTF8;
+            const string url = "http://ajax.googleapis.com/ajax/services/language/translate";
+            var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy, Encoding = System.Text.Encoding.UTF8 };
+
             webClient.QueryString.Add("v", "1.0");
             webClient.QueryString.Add("q", HttpUtility.UrlEncode(input));
             webClient.QueryString.Add("langpair", string.Format("{0}|{1}", translateFrom, translateTo));
             webClient.QueryString.Add("ie", "UTF8");
             webClient.QueryString.Add("key", "ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg");
+            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
             string result = webClient.DownloadString(url);
 
-            string startString = "{\"translatedText\":\"";
-            string detectedSourceLanguageString = "\",\"detectedSourceLanguage\":";
-            string endString = "\"}";
+            const string startString = "{\"translatedText\":\"";
+            const string detectedSourceLanguageString = "\",\"detectedSourceLanguage\":";
+            const string endString = "\"}";
 
             int startOffset = result.IndexOf(startString) + startString.Length;
             int length = result.IndexOf(detectedSourceLanguageString, startOffset) - startOffset;

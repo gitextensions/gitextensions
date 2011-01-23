@@ -54,7 +54,7 @@ namespace GitUI
             if (revisions.Count == 2)
             {
                 selectedPatch =
-                    GitCommands.GitCommandHelpers
+                    GitCommandHelpers
                         .GetSingleDiff(
                             revisions[0].Guid,
                             revisions[1].Guid,
@@ -65,7 +65,7 @@ namespace GitUI
             {
                 var revision = revisions[0];
                 selectedPatch =
-                    GitCommands.GitCommandHelpers
+                    GitCommandHelpers
                         .GetSingleDiff(
                             revision.Guid,
                             revision.ParentGuids[0],

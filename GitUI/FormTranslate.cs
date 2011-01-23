@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using System.Reflection;
 using ResourceManager.Translation;
 using ResourceManager;
-using System.Net;
 using System.Globalization;
 
 namespace GitUI
@@ -16,11 +13,11 @@ namespace GitUI
     public partial class FormTranslate : GitExtensionsForm
     {
         //TranslationStrings
-        TranslationString translateProgressText = new TranslationString("Translated {0} out of {1}");
-        TranslationString allText = new TranslationString("All");
-        TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
-        TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
-        TranslationString saveAsText = new TranslationString("Save as");
+        readonly TranslationString translateProgressText = new TranslationString("Translated {0} out of {1}");
+        readonly TranslationString allText = new TranslationString("All");
+        readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
+        readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
+        readonly TranslationString saveAsText = new TranslationString("Save as");
 
         public class TranslateItem : INotifyPropertyChanged
         {
@@ -48,10 +45,10 @@ namespace GitUI
 
         private List<TranslateItem> translate;
 
-        Translation neutralTranslation = new Translation();
+        readonly Translation neutralTranslation = new Translation();
         Translator translator;
 
-        private bool changesMade = false;
+        private bool changesMade;
 
         public FormTranslate()
         {
@@ -65,7 +62,7 @@ namespace GitUI
             LoadTranslation();
             FillTranslateGrid(allText.Text);
 
-            foreach(CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
+            foreach (CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
                 if (!_NO_TRANSLATE_languageCode.Items.Contains(cultureInfo.TwoLetterISOLanguageName))
                 {
@@ -73,7 +70,7 @@ namespace GitUI
                 }
             }
 
-            FormClosing += new FormClosingEventHandler(FormTranslate_FormClosing);
+            FormClosing += FormTranslate_FormClosing;
         }
 
         void FormTranslate_FormClosing(object sender, FormClosingEventArgs e)
@@ -83,19 +80,14 @@ namespace GitUI
 
         private void UpdateProgress()
         {
-            int translatedCount = 0;
-            foreach (TranslateItem translateItem in translate)
-            {
-                if (!string.IsNullOrEmpty(translateItem.TranslatedValue))
-                    translatedCount++;
-            }
+            int translatedCount = translate.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue));
             var progresMsg = string.Format(translateProgressText.Text, translatedCount, translate.Count);
             if (translateProgress.Text != progresMsg)
             {
                 translateProgress.Text = progresMsg;
-                toolStrip1.Refresh();    
+                toolStrip1.Refresh();
             }
-            
+
         }
 
         private void LoadTranslation()
@@ -107,11 +99,13 @@ namespace GitUI
 
                 foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
                 {
-                    TranslateItem translateItem = new TranslateItem();
-                    translateItem.Category = translationCategory.Name;
-                    translateItem.Name = translationItem.Name;
-                    translateItem.Property = translationItem.Property;
-                    translateItem.NeutralValue = translationItem.Value;
+                    var translateItem = new TranslateItem
+                                            {
+                                                Category = translationCategory.Name,
+                                                Name = translationItem.Name,
+                                                Property = translationItem.Property,
+                                                NeutralValue = translationItem.Value
+                                            };
 
                     if (translator != null)
                         translateItem.TranslatedValue = translator.GetString(translationCategory.Name, translateItem.Name, translateItem.Property);
@@ -128,23 +122,10 @@ namespace GitUI
             if (translate == null)
                 return;
 
-            List<TranslateItem> filterTranslate = new List<TranslateItem>();
-
             translateItemBindingSource.DataSource = null;
 
-            foreach (TranslateItem translateItem in translate)
-            {
-                if (!string.IsNullOrEmpty(filter) &&
-                    !filter.Equals(allText.Text) &&
-                    !filter.Equals(translateItem.Category))
-                    continue;
 
-                //Skip translated items if filter is on
-                if (hideTranslatedItems.Checked && !string.IsNullOrEmpty(translateItem.TranslatedValue))
-                    continue;
-
-                filterTranslate.Add(translateItem);
-            }
+            var filterTranslate = translate.Where(translateItem => string.IsNullOrEmpty(filter) || filter.Equals(allText.Text) || filter.Equals(translateItem.Category)).Where(translateItem => !hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)).ToList();
 
             translateItemBindingSource.DataSource = filterTranslate;
 
@@ -177,23 +158,23 @@ namespace GitUI
                                     object control = null;
 
 
-                                    if (type == this.GetType())
+                                    if (type == GetType())
                                         control = this;
                                     else
                                         // try to find parameter less constructor first
                                         foreach (ConstructorInfo constructor in type.GetConstructors())
                                         {
                                             if (constructor.GetParameters().Length == 0)
-                                                control = (object)Activator.CreateInstance(type);
+                                                control = Activator.CreateInstance(type);
                                         }
 
                                     if (control == null && type.GetConstructors().Length > 0)
                                     {
                                         ConstructorInfo parameterConstructor = type.GetConstructors()[0];
-                                        List<object> parameters = new List<object>(parameterConstructor.GetParameters().Length);
+                                        var parameters = new List<object>(parameterConstructor.GetParameters().Length);
                                         for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
                                             parameters.Add(null);
-                                        control = (object)parameterConstructor.Invoke(parameters.ToArray());
+                                        control = parameterConstructor.Invoke(parameters.ToArray());
                                     }
 
                                     if (control == null)
@@ -221,7 +202,7 @@ namespace GitUI
                                         if (fieldInfo.Name.StartsWith("_NO_TRANSLATE_"))
                                             continue;
 
-                                        Component component = fieldInfo.GetValue(control) as Component;
+                                        var component = fieldInfo.GetValue(control) as Component;
 
                                         if (component != null)
                                         {
@@ -229,7 +210,7 @@ namespace GitUI
                                             {
                                                 if (propertyInfo.PropertyType == typeof(string) && ShouldBeTranslated(propertyInfo))
                                                 {
-                                                    string value = (string)propertyInfo.GetValue(component, null);
+                                                    var value = (string)propertyInfo.GetValue(component, null);
 
                                                     //Only translate properties that have a neutral value
                                                     if (!string.IsNullOrEmpty(value))
@@ -312,8 +293,7 @@ namespace GitUI
 
         private void SaveAs()
         {
-            Translation foreignTranslation = new Translation();
-            foreignTranslation.LanguageCode = GetSelectedLanguageCode();
+            var foreignTranslation = new Translation { LanguageCode = GetSelectedLanguageCode() };
             foreach (TranslateItem translateItem in translate)
             {
                 //Item is not translated (yet), skip it
@@ -322,13 +302,11 @@ namespace GitUI
 
                 if (!foreignTranslation.HasTranslationCategory(translateItem.Category))
                     foreignTranslation.AddTranslationCategory(new TranslationCategory(translateItem.Category));
-                
+
                 foreignTranslation.GetTranslationCategory(translateItem.Category).AddTranslationItem(new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue));
             }
 
-            SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.Title = saveAsText.Text;
-            fileDialog.FileName = translations.Text + ".xml";
+            var fileDialog = new SaveFileDialog { Title = saveAsText.Text, FileName = translations.Text + ".xml" };
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -342,13 +320,13 @@ namespace GitUI
             AskForSave();
             changesMade = false;
 
-            translator = new Translator((string)translations.Text);
+            translator = new Translator(translations.Text);
             LoadTranslation();
             FillTranslateGrid(allText.Text);
 
             try
             {
-                CultureInfo culture = new CultureInfo(translator.LanguageCode);
+                var culture = new CultureInfo(translator.LanguageCode);
                 _NO_TRANSLATE_languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
             }
             catch
@@ -382,10 +360,7 @@ namespace GitUI
 
         private void toolStripButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (_toolStripButton1.Checked)
-                splitContainer2.Panel2Collapsed = true;
-            else
-                splitContainer2.Panel2Collapsed = false;
+            splitContainer2.Panel2Collapsed = _toolStripButton1.Checked;
         }
 
         private void translatedText_TextChanged(object sender, EventArgs e)
@@ -410,7 +385,7 @@ namespace GitUI
                     splitContainer2.Panel2Collapsed = false;
                 }
 
-                TranslateItem translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+                var translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
 
                 if (translateItem == null) return;
 
@@ -474,10 +449,10 @@ namespace GitUI
 
             if (translateGrid.SelectedRows.Count == 1)
             {
-                TranslateItem translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
+                var translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
 
                 translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
-                
+
                 translateGrid_Click(null, null);
                 translateGrid.Refresh();
             }

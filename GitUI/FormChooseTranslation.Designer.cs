@@ -63,7 +63,7 @@
             this.Name = "FormChooseTranslation";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Choose language";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChooseTranslation_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(FormChooseTranslation_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

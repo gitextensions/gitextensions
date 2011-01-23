@@ -36,7 +36,7 @@ namespace GitUI
             if (IsMerge && !autoParent.Checked)
             {
                 GitRevision[] ParentsRevisions = GitCommandHelpers.GetParents(RevisionGrid.GetRevisions()[0].Guid);
-                FormCherryPickMerge choose = new FormCherryPickMerge(ParentsRevisions);
+                var choose = new FormCherryPickMerge(ParentsRevisions);
                 choose.ShowDialog();
                 if (choose.OkClicked)
                     arguments = "-m " + (choose.ParentsList.SelectedItems[0].Index + 1);

@@ -84,9 +84,9 @@
             this.Name = "DashboardItem";
             this.Size = new System.Drawing.Size(723, 35);
             this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
-            this.Leave += new System.EventHandler(this.DashboardItem_Leave);
-            this.Resize += new System.EventHandler(this.DashboardItem_Resize);
-            this.Enter += new System.EventHandler(this.DashboardItem_Enter);
+            this.Leave += new System.EventHandler(DashboardItem_Leave);
+            this.Resize += new System.EventHandler(DashboardItem_Resize);
+            this.Enter += new System.EventHandler(DashboardItem_Enter);
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
             this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             ((System.ComponentModel.ISupportInitialize)(this.Icon)).EndInit();

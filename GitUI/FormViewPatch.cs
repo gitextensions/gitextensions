@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using GitCommands;
 using GitUI;
 
 namespace PatchApply
@@ -34,7 +26,7 @@ namespace PatchApply
         {
             if (GridChangedFiles.SelectedRows.Count == 0) return;
 
-            Patch patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
+            var patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
             CurrentPatch = patch;
 
             if (patch == null) return;
@@ -61,11 +53,12 @@ namespace PatchApply
 
         private string SelectPatchFile(string initialDirectory)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter =
-               "Patch file (*.Patch)|*.Patch";
-            dialog.InitialDirectory = initialDirectory;
-            dialog.Title = "Select patch file";
+            var dialog = new OpenFileDialog
+                             {
+                                 Filter = "Patch file (*.Patch)|*.Patch",
+                                 InitialDirectory = initialDirectory,
+                                 Title = "Select patch file"
+                             };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
         }
 
@@ -89,12 +82,12 @@ namespace PatchApply
             }
         }
 
-        private void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
+        private static void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void ViewPatch_Load(object sender, EventArgs e)
+        private static void ViewPatch_Load(object sender, EventArgs e)
         {
 
         }

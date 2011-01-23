@@ -460,7 +460,7 @@
             this.conflictDescription.Size = new System.Drawing.Size(366, 53);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
-            this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
+            this.conflictDescription.Click += new System.EventHandler(conflictDescription_Click);
             // 
             // pictureBox1
             // 

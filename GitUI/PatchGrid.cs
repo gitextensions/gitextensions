@@ -10,15 +10,15 @@ namespace GitUI
         public PatchGrid()
         {
             InitializeComponent(); Translate();
-            Patches.CellPainting += new DataGridViewCellPaintingEventHandler(Patches_CellPainting);
+            Patches.CellPainting += Patches_CellPainting;
         }
 
-        void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private static void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
@@ -37,9 +37,9 @@ namespace GitUI
         {
             if (Patches.SelectedRows.Count != 1) return;
 
-            PatchFile patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
+            var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            ViewPatch viewPatch = new ViewPatch();
+            var viewPatch = new ViewPatch();
             viewPatch.LoadPatch(patchFile.FullName);
             viewPatch.ShowDialog();
         }
