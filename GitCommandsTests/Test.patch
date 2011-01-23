@@ -1,0 +1,2371 @@
+---
+ GitCommands/Git/GitCommandsHelper.cs   |  240 +++----
+ GitCommands/GitCommands.csproj         |    1 +
+ GitCommands/Repository/Repositories.cs |   17 +-
+ GitCommands/Strings.cs                 |   19 +-
+ GitCommands/patch/PatchFile.cs         |  157 +---
+ GitCommands/patch/PatchManager.cs      | 1289 ++++++++++++++------------------
+ GitCommands/patch/PatchProcessor.cs    |  207 +++++
+ GitExtensions/PluginExtraction.cs      |    5 +-
+ GitExtensions/Program.cs               |    5 +-
+ GitUI/DvcsGraph.cs                     |   14 +-
+ GitCommands/Checkout.cs  				|   32 ---
+ 10 files changed, 940 insertions(+), 1014 deletions(-)
+ rewrite GitCommands/patch/PatchFile.cs (76%)
+ create mode 100644 GitCommands/patch/PatchProcessor.cs
+ delete mode 100644 GitCommands/Checkout.cs
+diff --git a/GitCommands/Checkout.cs b/GitCommands/Checkout.cs
+deleted file mode 100644
+index 2586c8e..0000000
+--- a/GitCommands/Checkout.cs
++++ /dev/null
+@@ -1,32 +0,0 @@
+-﻿using System;
+-using System.Collections.Generic;
+-
+-using System.Text;
+-
+-namespace GitCommands
+-{
+-    public class CheckoutDto
+-    {
+-        public string Name { get; set; }
+-        public string Result { get; set; }
+-
+-        public CheckoutDto(string name)
+-        {
+-            this.Name = name;
+-        }
+-    }
+-
+-    public class Checkout
+-    {
+-        public CheckoutDto Dto { get; set; }
+-        public Checkout(CheckoutDto dto)
+-        {
+-            this.Dto = dto;
+-        }
+-
+-        public void Execute()
+-        {
+-            Dto.Result = GitCommandHelpers.RunCmd(Settings.GitCommand, "checkout " + Dto.Name);
+-        }
+-    }
+-}
+diff --git a/GitCommands/Git/GitCommandsHelper.cs b/GitCommands/Git/GitCommandsHelper.cs
+index 974b03a..a189310 100644
+--- a/GitCommands/Git/GitCommandsHelper.cs
++++ b/GitCommands/Git/GitCommandsHelper.cs
+@@ -23,7 +23,7 @@ namespace GitCommands
+         public static IList<string> GetSubmodulesNames()
+         {
+             IList<string> submodulesNames = new List<string>();
+-            ConfigFile configFile = new ConfigFile(Settings.WorkingDir + ".gitmodules");
++            var configFile = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+             foreach (ConfigSection configSection in configFile.GetConfigSections())
+             {
+                 submodulesNames.Add(configSection.SubSection);
+@@ -34,13 +34,13 @@ namespace GitCommands
+ 
+         public static string GetGlobalSetting(string setting)
+         {
+-            var configFile = GitCommandHelpers.GetGlobalConfig();
++            var configFile = GetGlobalConfig();
+             return configFile.GetValue(setting);
+         }
+ 
+         public static void SetGlobalSetting(string setting, string value)
+         {
+-            var configFile = GitCommandHelpers.GetGlobalConfig();
++            var configFile = GetGlobalConfig();
+             configFile.SetValue(setting, value);
+             configFile.Save();
+         }
+@@ -81,8 +81,7 @@ namespace GitCommands
+ 
+         public static Encoding GetLogoutputEncoding()
+         {
+-            string encodingString;
+-            encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
++            string encodingString = GetLocalConfig().GetValue("i18n.logoutputencoding");
+             if (string.IsNullOrEmpty(encodingString))
+                 encodingString = GetGlobalConfig().GetValue("i18n.logoutputencoding");
+             if (string.IsNullOrEmpty(encodingString))
+@@ -100,10 +99,8 @@ namespace GitCommands
+                     throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                 }
+             }
+-            else
+-            {
+-                return Encoding.UTF8;
+-            }
++
++            return Encoding.UTF8;
+         }
+ 
+         public static string RunCmd(string cmd)
+@@ -201,19 +198,19 @@ namespace GitCommands
+             Settings.GitLog.Log(cmd + " " + arguments);
+             //process used to execute external commands
+ 
+-            var info = new ProcessStartInfo()
+-            {
+-                UseShellExecute = true,
+-                ErrorDialog = false,
+-                RedirectStandardOutput = false,
+-                RedirectStandardInput = false,
+-                CreateNoWindow = false,
+-                FileName = cmd,
+-                Arguments = arguments,
+-                WorkingDirectory = Settings.WorkingDir,
+-                WindowStyle = ProcessWindowStyle.Normal,
+-                LoadUserProfile = true
+-            };
++            var info = new ProcessStartInfo
++                           {
++                               UseShellExecute = true,
++                               ErrorDialog = false,
++                               RedirectStandardOutput = false,
++                               RedirectStandardInput = false,
++                               CreateNoWindow = false,
++                               FileName = cmd,
++                               Arguments = arguments,
++                               WorkingDirectory = Settings.WorkingDir,
++                               WindowStyle = ProcessWindowStyle.Normal,
++                               LoadUserProfile = true
++                           };
+ 
+             if (waitForExit)
+             {
+@@ -234,17 +231,17 @@ namespace GitCommands
+             {
+                 SetEnvironmentVariable();
+ 
+-                var processInfo = new ProcessStartInfo()
+-                {
+-                    UseShellExecute = false,
+-                    RedirectStandardOutput = false,
+-                    FileName = cmd,
+-                    WorkingDirectory = Settings.WorkingDir,
+-                    Arguments = arguments,
+-                    CreateNoWindow = true
+-                };
+-
+-                using (var process = new Process() { StartInfo = processInfo })
++                var processInfo = new ProcessStartInfo
++                                      {
++                                          UseShellExecute = false,
++                                          RedirectStandardOutput = false,
++                                          FileName = cmd,
++                                          WorkingDirectory = Settings.WorkingDir,
++                                          Arguments = arguments,
++                                          CreateNoWindow = true
++                                      };
++
++                using (var process = new Process { StartInfo = processInfo })
+                 {
+                     process.Start();
+                 }
+@@ -257,16 +254,16 @@ namespace GitCommands
+ 
+         internal static ProcessStartInfo CreateProcessStartInfo()
+         {
+-            return new ProcessStartInfo()
+-            {
+-                UseShellExecute = false,
+-                ErrorDialog = false,
+-                RedirectStandardOutput = true,
+-                RedirectStandardInput = true,
+-                RedirectStandardError = true,
+-                StandardOutputEncoding = Settings.Encoding,
+-                StandardErrorEncoding = Settings.Encoding
+-            };
++            return new ProcessStartInfo
++                       {
++                           UseShellExecute = false,
++                           ErrorDialog = false,
++                           RedirectStandardOutput = true,
++                           RedirectStandardInput = true,
++                           RedirectStandardError = true,
++                           StandardOutputEncoding = Settings.Encoding,
++                           StandardErrorEncoding = Settings.Encoding
++                       };
+         }
+ 
+         internal static bool UseSsh(string arguments)
+@@ -346,17 +343,6 @@ namespace GitCommands
+             }
+         }
+ 
+-        private static int CreateAndStartProcess(string argument, string cmd)
+-        {
+-            string stdOutput, stdError;
+-            return CreateAndStartProcess(argument, cmd, out stdOutput, out stdError);
+-        }
+-
+-        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
+-        {
+-            return  CreateAndStartProcess(arguments, cmd, out stdOutput, out stdError, null);
+-        }
+-
+         private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError, string stdInput)
+         {
+             if (string.IsNullOrEmpty(cmd))
+@@ -398,21 +384,21 @@ namespace GitCommands
+             Settings.GitLog.Log(cmd + " " + arguments);
+             //process used to execute external commands
+ 
+-            var info = new ProcessStartInfo()
+-            {
+-                UseShellExecute = true,
+-                ErrorDialog = true,
+-                RedirectStandardOutput = false,
+-                RedirectStandardInput = false,
+-                RedirectStandardError = false,
+-
+-                LoadUserProfile = true,
+-                CreateNoWindow = false,
+-                FileName = cmd,
+-                Arguments = arguments,
+-                WorkingDirectory = Settings.WorkingDir,
+-                WindowStyle = ProcessWindowStyle.Hidden
+-            };
++            var info = new ProcessStartInfo
++                           {
++                               UseShellExecute = true,
++                               ErrorDialog = true,
++                               RedirectStandardOutput = false,
++                               RedirectStandardInput = false,
++                               RedirectStandardError = false,
++
++                               LoadUserProfile = true,
++                               CreateNoWindow = false,
++                               FileName = cmd,
++                               Arguments = arguments,
++                               WorkingDirectory = Settings.WorkingDir,
++                               WindowStyle = ProcessWindowStyle.Hidden
++                           };
+ 
+             try
+             {
+@@ -449,7 +435,7 @@ namespace GitCommands
+ 
+         private static IEnumerable<string> GetUnmergedFileListing()
+         {
+-            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+         }
+ 
+         public static bool HandleConflictSelectBase(string fileName)
+@@ -504,14 +490,14 @@ namespace GitCommands
+                 var fileline = file.Split(new[] { ' ', '\t' });
+                 if (fileline.Length < 3)
+                     continue;
+-                Directory.SetCurrentDirectory(GitCommands.Settings.WorkingDir);
+-                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(fileline[1])) //Ugly, has implementation info.
++                Directory.SetCurrentDirectory(Settings.WorkingDir);
++                using (var ms = (MemoryStream)GetFileStream(fileline[1])) //Ugly, has implementation info.
+                 {
+-                  using (FileStream fileOut = File.Create(saveAs))
+-                  {
+-                    byte[] buf = ms.GetBuffer();
+-                    fileOut.Write(buf, 0, buf.Length);
+-                  }
++                    using (FileStream fileOut = File.Create(saveAs))
++                    {
++                        byte[] buf = ms.GetBuffer();
++                        fileOut.Write(buf, 0, buf.Length);
++                    }
+                 }
+                 return true;
+             }
+@@ -591,29 +577,23 @@ namespace GitCommands
+         {
+             filename = FixPath(filename);
+ 
+-            string[] fileNames = new string[3];
++            var fileNames = new string[3];
+ 
+-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             foreach (var file in unmerged)
+             {
+-                string fileStage = null;
+                 int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
+-                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
+-                else
+-                    fileStage = "";
++                string fileStage = findSecondWhitespace >= 0 ? file.Substring(findSecondWhitespace).Trim() : "";
+ 
+                 findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+ 
+-                if (findSecondWhitespace >= 0)
+-                    fileStage = fileStage.Substring(findSecondWhitespace).Trim();
+-                else
+-                    fileStage = "";
++                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
+ 
+                 int stage;
+                 if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                 {
+-                    fileNames[stage-1] = fileStage.Substring(2);
++                    fileNames[stage - 1] = fileStage.Substring(2);
+                 }
+             }
+ 
+@@ -692,10 +672,10 @@ namespace GitCommands
+         {
+             string output = RunCmd(Settings.GitCommand, "log -n 1 --format=format:%P \"" + commit + "\"");
+             string[] Parents = output.Split(' ');
+-            GitRevision[] ParentsRevisions = new GitRevision[Parents.Length];
++            var ParentsRevisions = new GitRevision[Parents.Length];
+             for (int i = 0; i < Parents.Length; i++)
+             {
+-                string formatString =
++                const string formatString =
+                     /* Tree           */ "%T%n" +
+                     /* Author Name    */ "%aN%n" +
+                     /* Author Date    */ "%ai%n" +
+@@ -703,14 +683,16 @@ namespace GitCommands
+                     /* Committer Date */ "%ci%n" +
+                     /* Commit Message */ "%s";
+                 string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
+-                var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
++                var RevInfo = RunCmd(Settings.GitCommand, cmd);
+                 string[] Infos = RevInfo.Split('\n');
+-                GitRevision Revision = new GitRevision { 
++                var Revision = new GitRevision
++                {
+                     Guid = Parents[i],
+                     TreeGuid = Infos[0],
+                     Author = Infos[1],
+                     Committer = Infos[3],
+-                    Message = Infos[5] };
++                    Message = Infos[5]
++                };
+                 DateTime Date;
+                 DateTime.TryParse(Infos[2], out Date);
+                 Revision.AuthorDate = Date;
+@@ -1082,7 +1064,7 @@ namespace GitCommands
+             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
+                 fromBranch = "HEAD";
+ 
+-            toBranch = toBranch.Replace(" ", "");
++            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
+ 
+             var sforce = "";
+             if (force)
+@@ -1101,17 +1083,17 @@ namespace GitCommands
+             return string.Format("push {0}{1}\"{2}\" {3}", sforce, strack, path.Trim(), fromBranch);
+         }
+ 
+-		public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
+-		{
+-			path = FixPath(path);
++        public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
++        {
++            path = FixPath(path);
+ 
+-			string cmd = string.Format("push \"{0}\"", path.Trim());
++            string cmd = string.Format("push \"{0}\"", path.Trim());
+ 
+-			foreach (GitPushAction action in pushActions)
+-				cmd += " " + action.Format();
++            foreach (GitPushAction action in pushActions)
++                cmd += " " + action.Format();
+ 
+-			return cmd;
+-		}
++            return cmd;
++        }
+ 
+         public static string PushTagCmd(string path, string tag, bool all)
+         {
+@@ -1349,16 +1331,14 @@ namespace GitCommands
+         {
+             if (good)
+                 return "bisect good";
+-            else
+-                return "bisect bad";
++            return "bisect bad";
+         }
+ 
+         public static string MarkRevisionBisectCmd(bool good, string revision)
+         {
+             if (good)
+                 return "bisect good " + revision;
+-            else
+-                return "bisect bad " + revision;
++            return "bisect bad " + revision;
+         }
+ 
+         public static string StopBisectCmd()
+@@ -1618,7 +1598,7 @@ namespace GitCommands
+         {
+             var result = RunCachableCmd(Settings.GitCommand, "diff -z --name-status \"" + to + "\" \"" + from + "\"");
+ 
+-            var files = result.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var files = result.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             var diffFiles = new List<GitItemStatus>();
+             for (int n = 0; n + 1 < files.Length; n = n + 2)
+@@ -1645,7 +1625,7 @@ namespace GitCommands
+             var status = RunCmd(Settings.GitCommand,
+                                 "ls-files -z --others --directory --no-empty-directory --exclude-standard");
+ 
+-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var statusStrings = status.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             var gitItemStatusList = new List<GitItemStatus>();
+ 
+@@ -1671,7 +1651,7 @@ namespace GitCommands
+         {
+             var status = RunCmd(Settings.GitCommand, "ls-files -z --modified --exclude-standard");
+ 
+-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var statusStrings = status.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             var gitItemStatusList = new List<GitItemStatus>();
+ 
+@@ -1722,7 +1702,7 @@ namespace GitCommands
+ 
+         public static List<GitItemStatus> GetAllChangedFilesFromString(string status)
+         {
+-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var statusStrings = status.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             var gitItemStatusList = new List<GitItemStatus>();
+ 
+@@ -1751,7 +1731,7 @@ namespace GitCommands
+         {
+             var status = RunCmd(Settings.GitCommand, "ls-files -z --deleted --exclude-standard");
+ 
+-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++            var statusStrings = status.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+ 
+             var gitItemStatusList = new List<GitItemStatus>();
+ 
+@@ -1801,7 +1781,7 @@ namespace GitCommands
+             }
+             else
+             {
+-                var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++                var statusStrings = status.Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                 for (int n = 0; n + 1 < statusStrings.Length; n = n + 2)
+                 {
+                     if (string.IsNullOrEmpty(statusStrings[n]))
+@@ -2110,7 +2090,7 @@ namespace GitCommands
+         public static string[] GetFiles(string filePattern)
+         {
+             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
+-                .Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
++                .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+         }
+ 
+         public static List<GitItem> GetFileChanges(string file)
+@@ -2160,13 +2140,13 @@ namespace GitCommands
+         static public string[] GetFullTree(string id)
+         {
+             string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+-            return tree.Split(new char[] { '\0', '\n' });
++            return tree.Split(new[] { '\0', '\n' });
+         }
+         public static List<IGitItem> GetTree(string id)
+         {
+             var tree = RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
+ 
+-            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
++            var itemsStrings = tree.Split(new[] { '\0', '\n' });
+ 
+             var items = new List<IGitItem>();
+ 
+@@ -2276,20 +2256,20 @@ namespace GitCommands
+                 Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob \"" + id + "\"");
+                 //process used to execute external commands
+ 
+-                var info = new ProcessStartInfo()
+-                {
+-                    UseShellExecute = false,
+-                    ErrorDialog = false,
+-                    RedirectStandardOutput = true,
+-                    RedirectStandardInput = false,
+-                    RedirectStandardError = false,
+-                    CreateNoWindow = true,
+-                    FileName = "\"" + Settings.GitCommand + "\"",
+-                    Arguments = "cat-file blob \"" + id + "\"",
+-                    WorkingDirectory = Settings.WorkingDir,
+-                    WindowStyle = ProcessWindowStyle.Normal,
+-                    LoadUserProfile = true
+-                };
++                var info = new ProcessStartInfo
++                               {
++                                   UseShellExecute = false,
++                                   ErrorDialog = false,
++                                   RedirectStandardOutput = true,
++                                   RedirectStandardInput = false,
++                                   RedirectStandardError = false,
++                                   CreateNoWindow = true,
++                                   FileName = "\"" + Settings.GitCommand + "\"",
++                                   Arguments = "cat-file blob \"" + id + "\"",
++                                   WorkingDirectory = Settings.WorkingDir,
++                                   WindowStyle = ProcessWindowStyle.Normal,
++                                   LoadUserProfile = true
++                               };
+ 
+                 using (var process = Process.Start(info))
+                 {
+@@ -2342,7 +2322,7 @@ namespace GitCommands
+ 
+         public static string MergeBranchCmd(string branch, bool allowFastForward, string strategy)
+         {
+-            StringBuilder command = new StringBuilder("merge");
++            var command = new StringBuilder("merge");
+ 
+             if (!allowFastForward)
+                 command.Append(" --no-ff");
+diff --git a/GitCommands/GitCommands.csproj b/GitCommands/GitCommands.csproj
+index 3b30d31..6c87a66 100644
+--- a/GitCommands/GitCommands.csproj
++++ b/GitCommands/GitCommands.csproj
+@@ -67,6 +67,7 @@
+     <Compile Include="Config\ConfigFile.cs" />
+     <Compile Include="Config\ConfigSection.cs" />
+     <Compile Include="Git\GitCommandCache.cs" />
++    <Compile Include="Patch\PatchProcessor.cs" />
+     <Compile Include="Repository\Repository.cs" />
+     <Compile Include="Repository\RepositoryCategory.cs" />
+     <Compile Include="Git\GitBlame.cs" />
+diff --git a/GitCommands/Repository/Repositories.cs b/GitCommands/Repository/Repositories.cs
+index a30b1fe..54f5219 100644
+--- a/GitCommands/Repository/Repositories.cs
++++ b/GitCommands/Repository/Repositories.cs
+@@ -59,20 +59,15 @@ namespace GitCommands.Repository
+             {
+                 if (_repositoryCategories == null)
+                 {
+-                    try
++                    object setting = Application.UserAppDataRegistry.GetValue("repositories");
++                    if (setting != null)
+                     {
+-                        object setting = Application.UserAppDataRegistry.GetValue("repositories");
+-                        if (setting != null)
+-                        {
+-                            Repositories.DeserializeRepositories(setting.ToString());
+-                        }
++                        DeserializeRepositories(setting.ToString());
+                     }
+-                    catch
+-                    { }
++
+                 }
+-                if (_repositoryCategories == null)
+-                    _repositoryCategories = new BindingList<RepositoryCategory>();
+-                return _repositoryCategories;
++
++                return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>());
+             }
+             private set
+             {
+diff --git a/GitCommands/Strings.cs b/GitCommands/Strings.cs
+index 0825554..a022725 100644
+--- a/GitCommands/Strings.cs
++++ b/GitCommands/Strings.cs
+@@ -1,7 +1,4 @@
+-﻿using System;
+-using System.Collections.Generic;
+-using System.Text;
+-using ResourceManager.Translation;
++﻿using ResourceManager.Translation;
+ using ResourceManager;
+ 
+ namespace GitCommands
+@@ -10,7 +7,7 @@ namespace GitCommands
+     {
+         public Strings()
+         {
+-            Translator translator = new Translator(Settings.Translation);
++            var translator = new Translator(Settings.Translation);
+             translator.TranslateControl(this);
+         }
+ 
+@@ -44,11 +41,11 @@ namespace GitCommands
+             return new Strings().commitHashText.Text;
+         }
+ 
+-        private TranslationString dateText = new TranslationString("Date");
+-        private TranslationString authorText = new TranslationString("Author");
+-        private TranslationString authorDateText = new TranslationString("Author date");
+-        private TranslationString committerText = new TranslationString("Committer");
+-        private TranslationString committerDateText = new TranslationString("Commit date");
+-        private TranslationString commitHashText = new TranslationString("Commit hash");
++        private readonly TranslationString dateText = new TranslationString("Date");
++        private readonly TranslationString authorText = new TranslationString("Author");
++        private readonly TranslationString authorDateText = new TranslationString("Author date");
++        private readonly TranslationString committerText = new TranslationString("Committer");
++        private readonly TranslationString committerDateText = new TranslationString("Commit date");
++        private readonly TranslationString commitHashText = new TranslationString("Commit hash");
+     }
+ }
+diff --git a/GitCommands/patch/PatchFile.cs b/GitCommands/patch/PatchFile.cs
+dissimilarity index 76%
+index 21441af..aed051f 100644
+--- a/GitCommands/patch/PatchFile.cs
++++ b/GitCommands/patch/PatchFile.cs
+@@ -1,116 +1,41 @@
+-﻿using System;
+-using System.Collections.Generic;
+-using System.Text;
+-using System.IO;
+-
+-namespace PatchApply
+-{
+-    public class PatchFile
+-    {
+-        private string fullName;
+-        public string FullName
+-        {
+-            get
+-            {
+-                return fullName;
+-            }
+-            set
+-            {
+-                fullName = value;
+-            }
+-        }
+-        private string name;
+-        public string Name
+-        {
+-            get
+-            {
+-                return name;
+-            }
+-            set
+-            {
+-                name = value;
+-            }
+-        }
+-        private string author;
+-        public string Author
+-        {
+-            get
+-            {
+-                return author;
+-            }
+-            set
+-            {
+-                author = value;
+-            }
+-        }
+-        private string subject;
+-        public string Subject
+-        {
+-            get
+-            {
+-                return subject;
+-            }
+-            set
+-            {
+-                subject = value;
+-            }
+-        }
+-        private string date;
+-        public string Date
+-        {
+-            get
+-            {
+-                return date;
+-            }
+-            set
+-            {
+-                date = value;
+-            }
+-        }
+-
+-        public string Status
+-        {
+-            get
+-            {
+-                if (IsNext)
+-                {
+-                    return "Next to apply";
+-                }
+-                if (IsSkipped)
+-                {
+-                    return "Skipped";
+-                }
+-                if (!File.Exists(FullName))
+-                {
+-                    return "Applied";
+-                }
+-                return "";
+-            }
+-        }
+-
+-        private bool isNext;
+-        public bool IsNext
+-        {
+-            get
+-            {
+-                return isNext;
+-            }
+-            set
+-            {
+-                isNext = value;
+-            }
+-        }
+-        private bool isSkipped;
+-        public bool IsSkipped
+-        {
+-            get
+-            {
+-                return isSkipped;
+-            }
+-            set
+-            {
+-                isSkipped = value;
+-            }
+-        }  
+-    }
+-}
++﻿using System.IO;
++
++namespace PatchApply
++{
++    public class PatchFile
++    {
++        public string FullName { get; set; }
++
++        public string Name { get; set; }
++
++        public string Author { get; set; }
++
++        public string Subject { get; set; }
++
++        public string Date { get; set; }
++
++        public bool IsNext { get; set; }
++
++        public bool IsSkipped { get; set; }
++
++        public string Status
++        {
++            get
++            {
++                if (IsNext)
++                {
++                    return "Next to apply";
++                }
++                if (IsSkipped)
++                {
++                    return "Skipped";
++                }
++                if (!File.Exists(FullName))
++                {
++                    return "Applied";
++                }
++                return "";
++            }
++        }
++    }
++}
+diff --git a/GitCommands/patch/PatchManager.cs b/GitCommands/patch/PatchManager.cs
+index 531e77b..d5dc637 100644
+--- a/GitCommands/patch/PatchManager.cs
++++ b/GitCommands/patch/PatchManager.cs
+@@ -1,753 +1,568 @@
+-﻿using System;
+-using System.Collections.Generic;
+-using System.IO;
+-using GitCommands;
+-using System.Text.RegularExpressions;
+-
+-namespace PatchApply
+-{
+-    public class PatchManager
+-    {
+-        public List<Patch> patches = new List<Patch>();
+-        public string PatchFileName { get; set; }
+-        public string DirToPatch { get; set; }
+-
+-        public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
++﻿using System;
++using System.Collections.Generic;
++using System.IO;
++using GitCommands;
++using System.Text.RegularExpressions;
++
++namespace PatchApply
++{
++    public class PatchManager
++    {
++        public List<Patch> patches = new List<Patch>();
++        public string PatchFileName { get; set; }
++        public string DirToPatch { get; set; }
++
++        private PatchProcessor patchProcessor;
++
++        public PatchManager()
++        {
++            patchProcessor = new PatchProcessor();
++        }
++        
++        public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
+         {
+             //When there is no patch, return nothing
+             if (string.IsNullOrEmpty(text))
+-                return null;
+-
+-            // Ported from the git-gui tcl code to C#
++                return null;
++
++            // Ported from the git-gui tcl code to C#
+             // see lib/diff.tcl
+ 
+             if (text.EndsWith("\n\\ No newline at end of file\n"))
+-                text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
+-
+-            // Devide diff into header and patch
+-            int patch_pos = text.IndexOf("@@");
+-            string header = text.Substring(0, patch_pos);
+-            string diff = text.Substring(patch_pos);
+-
+-            // Get selection position and length
+-            int first = selectionPosition - patch_pos;
+-            int last = first + selectionLength;
+-
+-            //Make sure the header is not in the selection
+-            if (first < 0)
+-            {
+-                last += first;
+-                first = 0;
+-            }
+-
+-            // Round selection to previous and next line breaks to select the whole lines
+-            int first_l = diff.LastIndexOf("\n", first, first) + 1;
++                text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
++
++            // Devide diff into header and patch
++            int patch_pos = text.IndexOf("@@");
++            string header = text.Substring(0, patch_pos);
++            string diff = text.Substring(patch_pos);
++
++            // Get selection position and length
++            int first = selectionPosition - patch_pos;
++            int last = first + selectionLength;
++
++            //Make sure the header is not in the selection
++            if (first < 0)
++            {
++                last += first;
++                first = 0;
++            }
++
++            // Round selection to previous and next line breaks to select the whole lines
++            int first_l = diff.LastIndexOf("\n", first, first) + 1;
+             int last_l = diff.IndexOf("\n", last);
+             if (last_l == -1)
+-                last_l = diff.Length - 1;
+-
+-            // Are we looking at a diff from the working dir or the staging area
+-            char to_context = staged ? '+' : '-';
+-
+-            // this will hold the entire patch at the end
+-            string wholepatch = "";
+-
+-            // loop until $first_l has reached $last_l
+-            // ($first_l is modified inside the loop!)
+-            while (first_l < last_l)
+-            {
+-                // search from $first_l backwards for lines starting with @@
+-                int i_l = diff.LastIndexOf("\n@@", first_l, first_l);
+-                if (i_l == -1 && diff.Substring(0, 2) != "@@")
+-                {
+-                    // if there's not a @@ above, then the selected range
+-                    // must have come before the first @@
+-                    i_l = diff.IndexOf("\n@@", first_l, last_l - first_l);
+-                    if (i_l == -1)
+-                    {
+-                        // if the @@ is not even in the selected range then
+-                        // any further action is useless because there is no
+-                        // selected data that can be applied
+-                        return null;
+-                    }
+-                }
+-                i_l++;
+-                // $i_l is now at the beginning of the first @@ line in 
+-                // front of first_l
+-
+-                // pick start line number from hunk header
+-                // example: hh = "@@ -604,58 +604,105 @@ foo bar"
+-                string hh = diff.Substring(i_l, diff.IndexOf("\n", i_l) - i_l);
+-                // example: hh = "@@ -604"
+-                hh = hh.Split(',')[0];
+-                // example: hlh = "604"
+-                string hln = hh.Split('-')[1];
+-
+-                // There is a special situation to take care of. Consider this
+-                // hunk:
+-                //
+-                //    @@ -10,4 +10,4 @@
+-                //     context before
+-                //    -old 1
+-                //    -old 2
+-                //    +new 1
+-                //    +new 2
+-                //     context after
+-                //
+-                // We used to keep the context lines in the order they appear in
+-                // the hunk. But then it is not possible to correctly stage only
+-                // "-old 1" and "+new 1" - it would result in this staged text:
+-                //
+-                //    context before
+-                //    old 2
+-                //    new 1
+-                //    context after
+-                //
+-                // (By symmetry it is not possible to *un*stage "old 2" and "new
+-                // 2".)
+-                //
+-                // We resolve the problem by introducing an asymmetry, namely,
+-                // when a "+" line is *staged*, it is moved in front of the
+-                // context lines that are generated from the "-" lines that are
+-                // immediately before the "+" block. That is, we construct this
+-                // patch:
+-                //
+-                //    @@ -10,4 +10,5 @@
+-                //     context before
+-                //    +new 1
+-                //     old 1
+-                //     old 2
+-                //     context after
+-                //
+-                // But we do *not* treat "-" lines that are *un*staged in a
+-                // special way.
+-                //
+-                // With this asymmetry it is possible to stage the change "old
+-                // 1" -> "new 1" directly, and to stage the change "old 2" ->
+-                // "new 2" by first staging the entire hunk and then unstaging
+-                // the change "old 1" -> "new 1".
+-                //
+-                // Applying multiple lines adds complexity to the special
+-                // situation.  The pre_context must be moved after the entire
+-                // first block of consecutive staged "+" lines, so that
+-                // staging both additions gives the following patch:
+-                //
+-                //    @@ -10,4 +10,6 @@
+-                //     context before
+-                //    +new 1
+-                //    +new 2
+-                //     old 1
+-                //     old 2
+-                //     context after
+-
+-                // This is non-empty if and only if we are _staging_ changes;
+-                // then it accumulates the consecutive "-" lines (after
+-                // converting them to context lines) in order to be moved after
+-                // "+" change lines.
+-                string pre_context = "";
+-
+-                int n = 0;
+-                int m = 0;
+-                // move $i_l to the first line after the @@ line $i_l pointed at
+-                i_l = diff.IndexOf("\n", i_l) + 1;
+-                string patch = "";
+-
+-                // while $i_l is not at the end of the file and not 
+-                // at the next @@ line
+-                while (i_l < diff.Length - 1 && diff.Substring(i_l, 2) != "@@")
+-                {
+-                    // set $next_l to the beginning of the next 
+-                    // line after $i_l
++                last_l = diff.Length - 1;
++
++            // Are we looking at a diff from the working dir or the staging area
++            char to_context = staged ? '+' : '-';
++
++            // this will hold the entire patch at the end
++            string wholepatch = "";
++
++            // loop until $first_l has reached $last_l
++            // ($first_l is modified inside the loop!)
++            while (first_l < last_l)
++            {
++                // search from $first_l backwards for lines starting with @@
++                int i_l = diff.LastIndexOf("\n@@", first_l, first_l);
++                if (i_l == -1 && diff.Substring(0, 2) != "@@")
++                {
++                    // if there's not a @@ above, then the selected range
++                    // must have come before the first @@
++                    i_l = diff.IndexOf("\n@@", first_l, last_l - first_l);
++                    if (i_l == -1)
++                    {
++                        // if the @@ is not even in the selected range then
++                        // any further action is useless because there is no
++                        // selected data that can be applied
++                        return null;
++                    }
++                }
++                i_l++;
++                // $i_l is now at the beginning of the first @@ line in 
++                // front of first_l
++
++                // pick start line number from hunk header
++                // example: hh = "@@ -604,58 +604,105 @@ foo bar"
++                string hh = diff.Substring(i_l, diff.IndexOf("\n", i_l) - i_l);
++                // example: hh = "@@ -604"
++                hh = hh.Split(',')[0];
++                // example: hlh = "604"
++                string hln = hh.Split('-')[1];
++
++                // There is a special situation to take care of. Consider this
++                // hunk:
++                //
++                //    @@ -10,4 +10,4 @@
++                //     context before
++                //    -old 1
++                //    -old 2
++                //    +new 1
++                //    +new 2
++                //     context after
++                //
++                // We used to keep the context lines in the order they appear in
++                // the hunk. But then it is not possible to correctly stage only
++                // "-old 1" and "+new 1" - it would result in this staged text:
++                //
++                //    context before
++                //    old 2
++                //    new 1
++                //    context after
++                //
++                // (By symmetry it is not possible to *un*stage "old 2" and "new
++                // 2".)
++                //
++                // We resolve the problem by introducing an asymmetry, namely,
++                // when a "+" line is *staged*, it is moved in front of the
++                // context lines that are generated from the "-" lines that are
++                // immediately before the "+" block. That is, we construct this
++                // patch:
++                //
++                //    @@ -10,4 +10,5 @@
++                //     context before
++                //    +new 1
++                //     old 1
++                //     old 2
++                //     context after
++                //
++                // But we do *not* treat "-" lines that are *un*staged in a
++                // special way.
++                //
++                // With this asymmetry it is possible to stage the change "old
++                // 1" -> "new 1" directly, and to stage the change "old 2" ->
++                // "new 2" by first staging the entire hunk and then unstaging
++                // the change "old 1" -> "new 1".
++                //
++                // Applying multiple lines adds complexity to the special
++                // situation.  The pre_context must be moved after the entire
++                // first block of consecutive staged "+" lines, so that
++                // staging both additions gives the following patch:
++                //
++                //    @@ -10,4 +10,6 @@
++                //     context before
++                //    +new 1
++                //    +new 2
++                //     old 1
++                //     old 2
++                //     context after
++
++                // This is non-empty if and only if we are _staging_ changes;
++                // then it accumulates the consecutive "-" lines (after
++                // converting them to context lines) in order to be moved after
++                // "+" change lines.
++                string pre_context = "";
++
++                int n = 0;
++                int m = 0;
++                // move $i_l to the first line after the @@ line $i_l pointed at
++                i_l = diff.IndexOf("\n", i_l) + 1;
++                string patch = "";
++
++                // while $i_l is not at the end of the file and not 
++                // at the next @@ line
++                while (i_l < diff.Length - 1 && diff.Substring(i_l, 2) != "@@")
++                {
++                    // set $next_l to the beginning of the next 
++                    // line after $i_l
+                     int next_l = diff.IndexOf("\n", i_l) + 1;
+                     if (next_l == 0)
+                     {
+                         next_l = diff.Length;
+                         m--;
+                         n--;
+-                    }
+-
+-                    // get character at $i_l 
+-                    char c1 = diff[i_l];
+-
+-                    // if $i_l is in selected range and the line starts 
+-                    // with either - or + this is a line to stage/unstage
+-                    if (first_l <= i_l && i_l < last_l && (c1 == '-' || c1 == '+'))
+-                    {
+-                        // set $ln to the content of the line at $i_l
+-                        string ln = diff.Substring(i_l, next_l - i_l);
+-                        // if line starts with -
+-                        if (c1 == '-')
+-                        {
+-                            // increase n counter by one
+-                            n++;
+-                            // update $patch
+-                            patch += pre_context + ln;
+-                            // reset $pre_context
+-                            pre_context = "";
+-
+-                            // if line starts with +
+-                        }
+-                        else
+-                        {
+-                            // increase m counter by one
+-                            m++;
+-                            // update $patch
+-                            patch += ln;
+-                        }
+-
+-                        // if the line doesn't start with either - or +
+-                        // this is a context line 
+-                    }
+-                    else if (c1 != '-' && c1 != '+')
+-                    {
+-                        // set $ln to the content of the line at $i_l
+-                        string ln = diff.Substring(i_l, next_l - i_l);
+-                        // update $patch
+-                        patch += pre_context + ln;
+-                        // increase counters by one each
+-                        n++;
+-                        m++;
+-                        // reset $pre_context
+-                        pre_context = "";
+-
+-                        // if the line starts with $to_context (see earlier)
+-                        // the sign at the beginning should be stripped
+-                    }
+-                    else if (c1 == to_context)
+-                    {
+-                        // turn change line into context line
+-                        string ln = diff.Substring(i_l + 1, next_l - i_l - 1);
+-                        if (c1 == '-')
+-                            pre_context += " " + ln;
+-                        else
+-                            patch += " " + ln;
+-                        // increase counters by one each
+-                        n++;
+-                        m++;
+-
+-                        // if the line starts with the opposite sign of
+-                        // $to_context this line should be removed
+-                    }
+-                    else
+-                    {
+-                        // a change in the opposite direction of
+-                        // to_context which is outside the range of
+-                        // lines to apply.
+-                        patch += pre_context;
+-                        pre_context = "";
+-                    }
+-                    // set $i_l to the next line
+-                    i_l = next_l;
+-                }
+-                // finished current hunk (reached @@ or file/diff end)
+-
+-                // update $patch (makes sure $pre_context gets appended)
+-                patch += pre_context;
++                    }
++
++                    // get character at $i_l 
++                    char c1 = diff[i_l];
++
++                    // if $i_l is in selected range and the line starts 
++                    // with either - or + this is a line to stage/unstage
++                    if (first_l <= i_l && i_l < last_l && (c1 == '-' || c1 == '+'))
++                    {
++                        // set $ln to the content of the line at $i_l
++                        string ln = diff.Substring(i_l, next_l - i_l);
++                        // if line starts with -
++                        if (c1 == '-')
++                        {
++                            // increase n counter by one
++                            n++;
++                            // update $patch
++                            patch += pre_context + ln;
++                            // reset $pre_context
++                            pre_context = "";
++
++                            // if line starts with +
++                        }
++                        else
++                        {
++                            // increase m counter by one
++                            m++;
++                            // update $patch
++                            patch += ln;
++                        }
++
++                        // if the line doesn't start with either - or +
++                        // this is a context line 
++                    }
++                    else if (c1 != '-' && c1 != '+')
++                    {
++                        // set $ln to the content of the line at $i_l
++                        string ln = diff.Substring(i_l, next_l - i_l);
++                        // update $patch
++                        patch += pre_context + ln;
++                        // increase counters by one each
++                        n++;
++                        m++;
++                        // reset $pre_context
++                        pre_context = "";
++
++                        // if the line starts with $to_context (see earlier)
++                        // the sign at the beginning should be stripped
++                    }
++                    else if (c1 == to_context)
++                    {
++                        // turn change line into context line
++                        string ln = diff.Substring(i_l + 1, next_l - i_l - 1);
++                        if (c1 == '-')
++                            pre_context += " " + ln;
++                        else
++                            patch += " " + ln;
++                        // increase counters by one each
++                        n++;
++                        m++;
++
++                        // if the line starts with the opposite sign of
++                        // $to_context this line should be removed
++                    }
++                    else
++                    {
++                        // a change in the opposite direction of
++                        // to_context which is outside the range of
++                        // lines to apply.
++                        patch += pre_context;
++                        pre_context = "";
++                    }
++                    // set $i_l to the next line
++                    i_l = next_l;
++                }
++                // finished current hunk (reached @@ or file/diff end)
++
++                // update $patch (makes sure $pre_context gets appended)
++                patch += pre_context;
+                 // update $wholepatch with the current hunk
+-                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
+-
+-                // set $first_l to first line after the next @@ line
+-                first_l = diff.IndexOf("\n", i_l) + 1;
+-                if (first_l == 0)
+-                    break;
+-            }
+-            // we are almost done, $wholepatch should no contain all the 
+-            // (modified) hunks
+-
+-            return header + wholepatch;
+-        }
+-
+-
+-        public string LoadFile(string fileName)
+-        {
+-            try
+-            {
+-                StreamReader re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
+-                // string retval = re.ReadToEnd();
+-                // GetMD5Hash(retval);
+-                string retval = "";
+-                string line;
+-                while ((line = re.ReadLine()) != null)
+-                {
+-                    retval += line + "\n"; ;
+-                }
+-                re.Close();
+-
+-                if (retval.Length > 0 && retval[retval.Length - 1] == '\n')
+-                    retval = retval.Remove(retval.Length - 1, 1);
+-
+-                return retval;
+-            }
+-            catch
+-            {
+-            }
+-            return "";
+-        }
+-
+-        public void SavePatch()
+-        {
+-            foreach (Patch patch in patches)
+-            {
+-                if (!patch.Apply)
+-                    continue;
+-                string path = DirToPatch + patch.FileNameA;
+-                if (patch.Type == Patch.PatchType.DeleteFile)
+-                {
+-                    File.Delete(path);
+-                }
+-                else
+-                {                    
+-                    Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny(((String)"\\/").ToCharArray())));
+-                    TextWriter tw = new StreamWriter(DirToPatch + patch.FileNameA, false);
+-                    tw.Write(patch.FileTextB);
+-                    tw.Close();
+-                }
+-            }
+-        }
+-
+-        public string GetMD5Hash(string input)
+-        {
+-            byte[] bs = GetUTF8EncodedBytes(input);
+-            var s = new System.Text.StringBuilder();
+-            foreach (byte b in bs)
+-            {
+-                s.Append(b.ToString("x2").ToLower());
+-            }
+-            return s.ToString();
+-        }
+-
+-        private byte[] GetUTF8EncodedBytes(string input)
+-        {
+-            var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
+-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+-            bs = x.ComputeHash(bs);
+-            return bs;
+-        }
+-
+-
+-        public void ApplyPatch(Patch patch)
+-        {
+-            patch.FileTextB = "";
+-            patch.Rate = 100;
+-
+-            if (patch.Type == Patch.PatchType.DeleteFile)
+-            {
+-                handleDeletePatchType(patch);
+-                return;
+-            }
+-
+-            if (patch.Text == null)
+-                return;
+-
+-            string[] patchLines = patch.Text.Split('\n');
+-
+-            if (patch.Type == Patch.PatchType.NewFile)
+-            {
+-                handleNewFilePatchType(patch, patchLines);
+-                return;
+-            }
+-
+-            if (patch.Type == Patch.PatchType.ChangeFile)
+-            {
+-                handleChangeFilePatchType(patch, patchLines);
+-                return;
+-            }
+-        }
+-
+-        private void handleChangeFilePatchType(Patch patch, string[] patchLines)
+-        {
+-            List<string> fileLines = new List<string>();
+-            foreach (string s in LoadFile(patch.FileNameA).Split('\n'))
+-            {
+-                fileLines.Add(s);
+-            }
+-
+-            int lineNumber = 0;
+-            foreach (string line in patchLines)
+-            {
+-                //Parse fist line
+-                //@@ -1,4 +1,4 @@
+-                if (line.StartsWith("@@") && line.LastIndexOf("@@") > 0)
+-                {
+-                    string pos = line.Substring(3, line.LastIndexOf("@@") - 3).Trim();
+-                    string[] addrem = pos.Split('+', '-');
+-                    string[] oldLines = addrem[1].Split(',');
+-                    string[] newLines = addrem[2].Split(',');
+-
+-                    lineNumber = Int32.Parse(oldLines[0]) - 1;
+-
+-                    //line = line.Substring(line.LastIndexOf("@@") + 3));
+-                    continue;
+-                }
+-
+-                if (line.StartsWith(" "))
+-                {
+-                    //Do some extra checks
+-                    if (line.Length > 0)
+-                    {
+-                        if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
+-                            patch.Rate -= 20;
+-                    }
+-                    else
+-                    {
+-                        if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
+-                            patch.Rate -= 20;
+-                    }
+-
+-                    lineNumber++;
+-                }
+-                if (line.StartsWith("-"))
+-                {
+-                    if (line.Length > 0)
+-                    {
+-                        if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
+-                            patch.Rate -= 20;
+-                    }
+-                    else
+-                    {
+-                        if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
+-                            patch.Rate -= 20;
+-                    }
+-
+-                    patch.Bookmarks.Add(lineNumber);
+-
+-                    if (fileLines.Count > lineNumber)
+-                        fileLines.RemoveAt(lineNumber);
+-                    else
+-                        patch.Rate -= 20;
+-
+-                    //lineNumber++;
+-                }
+-                if (line.StartsWith("+"))
+-                {
+-                    string insertLine = "";
+-                    if (line.Length > 1)
+-                        insertLine = line.Substring(1);
+-
+-                    //Is the patch allready applied?
+-                    if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
+-                    {
+-                        patch.Rate -= 20;
+-                    }
+-
+-                    fileLines.Insert(lineNumber, insertLine);
+-                    patch.Bookmarks.Add(lineNumber);
+-
+-                    lineNumber++;
+-                }
+-            }
+-            foreach (string patchedLine in fileLines)
+-            {
+-                patch.FileTextB += patchedLine + "\n";
+-            }
+-            if (patch.FileTextB.Length > 0 && patch.FileTextB[patch.FileTextB.Length - 1] == '\n')
+-                patch.FileTextB = patch.FileTextB.Remove(patch.FileTextB.Length - 1, 1);
+-
+-            if (patch.Rate != 100)
+-                patch.Apply = false;
+-        }
+-
+-        private void handleNewFilePatchType(Patch patch, string[] patchLines)
+-        {
+-            foreach (string line in patchLines)
+-            {
+-                if (line.Length > 0 && line.StartsWith("+"))
+-                {
+-                    if (line.Length > 4 && line.StartsWith("+ï»¿"))
+-                        patch.AppendText(line.Substring(4));
+-                    else
+-                        if (line.Length > 1)
+-                            patch.FileTextB += line.Substring(1);
+-
+-                    patch.FileTextB += "\n";
+-                }
+-            }
+-            if (patch.FileTextB.Length > 0 && patch.FileTextB[patch.FileTextB.Length - 1] == '\n')
+-                patch.FileTextB = patch.FileTextB.Remove(patch.FileTextB.Length - 1, 1);
+-            patch.Rate = 100;
+-
+-            if (File.Exists(DirToPatch + patch.FileNameB))
+-            {
+-                patch.Rate -= 40;
+-                patch.Apply = false;
+-            }
+-        }
+-
+-        private void handleDeletePatchType(Patch patch)
+-        {
+-            patch.FileTextB = "";
+-            patch.Rate = 100;
+-
+-            if (!File.Exists(DirToPatch + patch.FileNameA))
+-            {
+-                patch.Rate -= 40;
+-                patch.Apply = false;
+-            }
+-        }
+-
+-        public void LoadPatch(string text, bool applyPatch)
+-        {
+-            try
+-            {
+-                StringReader stream = new StringReader(text);
+-                LoadPatchStream(stream, applyPatch);
+-            }
+-            catch
+-            {
+-            }
+-
+-        }
+-
+-        public void LoadPatchFile(bool applyPatch)
+-        {
+-            try
+-            {
+-                StreamReader re = new StreamReader(PatchFileName, Settings.Encoding);
+-                LoadPatchStream(re, applyPatch);
+-            }
+-            catch
+-            {
+-            }
+-        }
+-
+-        public void LoadPatchStream(TextReader reader, bool applyPatch)
+-        {
+-            patches = new List<Patch>();
+-            Patch patch = null;
+-           
+-            string input = reader.ReadLine();
+-
+-            processInput(reader, input, patch);
+-
+-            reader.Close();
+-
+-            if (!applyPatch)
+-                return;
+-
+-            foreach (Patch patchApply in patches)
+-            {
+-                if (patchApply.Apply)
+-                    ApplyPatch(patchApply);
+-            }
+-        }
+-
+-        private void processInput(TextReader re, string input, Patch patch)
+-        {
+-            bool gitPatch = false;
+-            while (input != null)
+-            {
+-                //diff --git a/FileA b/FileB
+-                //new patch found
+-                if (input.StartsWith("diff --git "))
+-                {
+-                    gitPatch = true;
+-                    patch = new Patch();
+-                    patches.Add(patch);
+-
+-                    Match match = Regex.Match(input, "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
+-
+-                    patch.FileNameA = match.Groups[1].Value;
+-                    patch.FileNameB = match.Groups[2].Value;
+-                    //patch.FileNameA = input.Substring(input.LastIndexOf(" a/") + 3, input.LastIndexOf(" b/") - (input.LastIndexOf(" a/") + 3));
+-                    //patch.FileNameB = input.Substring(input.LastIndexOf(" b/") + 3);
+-
+-                    //The next line tells us what kind of patch
+-                    //new file mode xxxxxx means new file
+-                    //delete file mode xxxxxx means delete file
+-                    //index means -> no new and no delete, edit
+-                    if ((input = re.ReadLine()) != null)
+-                    {
+-                        //WTF! No change
+-                        if (input.StartsWith("diff --git "))
+-                        {
+-                            //No change? lets continue to the next line
+-                            continue;
+-                        }
+-
+-                        //new file!
+-                        if (input.StartsWith("new file mode "))
+-                            patch.Type = Patch.PatchType.NewFile;
+-                        else
+-                            if (input.StartsWith("deleted file mode "))
+-                                patch.Type = Patch.PatchType.DeleteFile;
+-                            else
+-                                patch.Type = Patch.PatchType.ChangeFile;
+-
+-                        //we need to move to the line that says 'index'
+-                        //because we are not sure if we are there yet because
+-                        //we might point at the new or delete line lines
+-                        if (!input.StartsWith("index "))
+-                            if ((input = re.ReadLine()) == null)
+-                                break;
+-                    }
+-
+-                    //The next lines tells us more about the change itself
+-                    //Read the next
+-                    if ((input = re.ReadLine()) != null)
+-                    {
+-                        //Binary files a/FileA and /dev/null differ
+-                        //means the file is deleted but the changes are not listed explicid
+-                        if (input.StartsWith("Binary files a/") && input.EndsWith(" and /dev/null differ"))
+-                        {
+-                            patch.File = Patch.FileType.Binary;
+-
+-                            //Check if the type was set correctly
+-                            if (patch.Type != Patch.PatchType.DeleteFile)
+-                                throw new Exception("Change not parsed correct: " + input);
+-
+-                            patch = null;
+-
+-                            if ((input = re.ReadLine()) == null)
+-                                break;
+-
+-                            //Continue loop, we do not get more info about this change
+-                            continue;
+-                        }
+-
+-                        //Binary files a/FileA and /dev/null differ
+-                        //means the file is deleted but the changes are not listed explicid
+-                        if (input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ"))
+-                        {
+-                            patch.File = Patch.FileType.Binary;
+-
+-                            //Check if the type was set correctly
+-                            if (patch.Type != Patch.PatchType.NewFile)
+-                                throw new Exception("Change not parsed correct: " + input);
+-
+-                            //TODO: NOT SUPPORTED!
+-                            patch.Apply = false;
+-
+-                            patch = null;
+-
+-                            if ((input = re.ReadLine()) == null)
+-                                break;
+-
+-                            continue;
+-                        }
+-
+-                        //GIT binary patch
+-                        //means the file is binairy 
+-                        if (input.StartsWith("GIT binary patch"))
+-                        {
+-                            patch.File = Patch.FileType.Binary;
+-
+-                            //TODO: NOT SUPPORTED!
+-                            patch.Apply = false;
+-
+-                            patch = null;
+-
+-                            if ((input = re.ReadLine()) == null)
+-                                break;
+-
+-                            continue;
+-                        }
+-                    }
+-
+-                    continue;
+-                }
+-
+-                if (!gitPatch || gitPatch && patch != null)
+-                {
+-                    //The previous check checked only if the file was binary
+-                    //--- /dev/null
+-                    //means there is no old file, so this should be a new file
+-                    if (input.StartsWith("--- /dev/null"))
+-                    {
+-                        if (!gitPatch)
+-                        {
+-                            patch = new Patch();
+-                            patches.Add(patch);
+-                        }
+-
+-                        if (gitPatch && patch.Type != Patch.PatchType.NewFile)
+-                            throw new Exception("Change not parsed correct: " + input);
+-
+-                        //This line is parsed, NEXT!
+-                        if ((input = re.ReadLine()) == null)
+-                            break;
+-
+-                    }
+-
+-                    //line starts with --- means, old file name
+-                    if (input.StartsWith("--- a/") && !input.StartsWith("--- /dev/null"))
+-                    {
+-                        if (!gitPatch)
+-                        {
+-                            patch = new Patch();
+-                            patches.Add(patch);
+-                        }
+-
+-                        if (gitPatch && patch.FileNameA != (input.Substring(6).Trim()))
+-                            throw new Exception("Old filename not parsed correct: " + input);
+-
+-                        patch.FileNameA = (input.Substring(6).Trim());
+-
+-                        //This line is parsed, NEXT!
+-                        if ((input = re.ReadLine()) == null)
+-                            break;
+-
+-                    }
+-
+-                    //If there is no 'newfile', reset files
+-                    if (input.StartsWith("+++ /dev/null"))
+-                    {
+-                        if (gitPatch && patch.Type != Patch.PatchType.DeleteFile)
+-                            throw new Exception("Change not parsed correct: " + input);
+-
+-                        //This line is parsed, NEXT!
+-                        if ((input = re.ReadLine()) == null)
+-                            break;
+-                    }
+-
+-
+-                    //line starts with +++ means, new file name
+-                    //we expect a new file now!
+-                    if (input.StartsWith("+++ ") && !input.StartsWith("+++ /dev/null"))
+-                    {
+-                        Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
+-
+-                        if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
+-                            throw new Exception("New filename not parsed correct: " + input);
+-
+-                        patch.FileNameB = (regexMatch.Groups[1].Value.Trim());
+-
+-                        //This line is parsed, NEXT!
+-                        if ((input = re.ReadLine()) == null)
+-                            break;
+-                    }
+-                }
+-
+-                if (patch != null)
+-                    patch.AppendTextLine(input);
+-
+-                if ((input = re.ReadLine()) == null)
+-                    break;
+-            }
+-        }
+-
+-        /// <summary>
+-        /// Counts number of characters on all lines in file up to line number specified.
+-        /// Currently doesn't check if line > lines.Length.
+-        /// Probably not be including newline characters in the count.
+-        /// Not set up to handle DOS (CR LF) line endings.
+-        /// 
+-        /// Assumes file is a text file and that line < lines.Length
+-        /// </summary>
+-        /// <param name="file">file we want to contain lines from</param>
+-        /// <param name="line">line number we want to count up to</param>
+-        /// <returns></returns>
+-        public int LineToChar(string file, int line)
+-        {
+-            string[] lines = file.Split('\n');
+-
+-            int retVal = 0;
+-
+-            for (int n = 0; n < line; n++)
+-            {
+-                retVal += lines[n].Length;
+-            }
+-
+-            return retVal;
+-        }
+-    }
++                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
++
++                // set $first_l to first line after the next @@ line
++                first_l = diff.IndexOf("\n", i_l) + 1;
++                if (first_l == 0)
++                    break;
++            }
++            // we are almost done, $wholepatch should no contain all the 
++            // (modified) hunks
++
++            return header + wholepatch;
++        }
++
++
++        public string LoadFile(string fileName)
++        {
++            try
++            {
++                var re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
++                // string retval = re.ReadToEnd();
++                // GetMD5Hash(retval);
++                string retval = "";
++                string line;
++                while ((line = re.ReadLine()) != null)
++                {
++                    retval += line + "\n"; ;
++                }
++                re.Close();
++
++                if (retval.Length > 0 && retval[retval.Length - 1] == '\n')
++                    retval = retval.Remove(retval.Length - 1, 1);
++
++                return retval;
++            }
++            catch
++            {
++                return "";
++            }
++        }
++
++        public void SavePatch()
++        {
++            foreach (Patch patch in patches)
++            {
++                if (!patch.Apply)
++                    continue;
++                string path = DirToPatch + patch.FileNameA;
++                if (patch.Type == Patch.PatchType.DeleteFile)
++                {
++                    File.Delete(path);
++                }
++                else
++                {
++                    Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny(((String)"\\/").ToCharArray())));
++                    TextWriter tw = new StreamWriter(DirToPatch + patch.FileNameA, false);
++                    tw.Write(patch.FileTextB);
++                    tw.Close();
++                }
++            }
++        }
++
++        public string GetMD5Hash(string input)
++        {
++            IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
++            var s = new System.Text.StringBuilder();
++            foreach (byte b in bs)
++            {
++                s.Append(b.ToString("x2").ToLower());
++            }
++            return s.ToString();
++        }
++
++        private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
++        {
++            var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
++            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
++            bs = x.ComputeHash(bs);
++            return bs;
++        }
++
++
++        public void ApplyPatch(Patch patch)
++        {
++            patch.FileTextB = "";
++            patch.Rate = 100;
++
++            if (patch.Type == Patch.PatchType.DeleteFile)
++            {
++                handleDeletePatchType(patch);
++                return;
++            }
++
++            if (patch.Text == null)
++                return;
++
++            string[] patchLines = patch.Text.Split('\n');
++
++            if (patch.Type == Patch.PatchType.NewFile)
++            {
++                handleNewFilePatchType(patch, patchLines);
++                return;
++            }
++
++            if (patch.Type == Patch.PatchType.ChangeFile)
++            {
++                handleChangeFilePatchType(patch, patchLines);
++                return;
++            }
++        }
++
++        private void handleChangeFilePatchType(Patch patch, string[] patchLines)
++        {
++            var fileLines = new List<string>();
++            foreach (string s in LoadFile(patch.FileNameA).Split('\n'))
++            {
++                fileLines.Add(s);
++            }
++
++            int lineNumber = 0;
++            foreach (string line in patchLines)
++            {
++                //Parse fist line
++                //@@ -1,4 +1,4 @@
++                if (line.StartsWith("@@") && line.LastIndexOf("@@") > 0)
++                {
++                    string pos = line.Substring(3, line.LastIndexOf("@@") - 3).Trim();
++                    string[] addrem = pos.Split('+', '-');
++                    string[] oldLines = addrem[1].Split(',');
++
++                    lineNumber = Int32.Parse(oldLines[0]) - 1;
++
++                    //line = line.Substring(line.LastIndexOf("@@") + 3));
++                    continue;
++                }
++
++                if (line.StartsWith(" "))
++                {
++                    //Do some extra checks
++                    if (line.Length > 0)
++                    {
++                        if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
++                            patch.Rate -= 20;
++                    }
++                    else
++                    {
++                        if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
++                            patch.Rate -= 20;
++                    }
++
++                    lineNumber++;
++                }
++                if (line.StartsWith("-"))
++                {
++                    if (line.Length > 0)
++                    {
++                        if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
++                            patch.Rate -= 20;
++                    }
++                    else
++                    {
++                        if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
++                            patch.Rate -= 20;
++                    }
++
++                    patch.Bookmarks.Add(lineNumber);
++
++                    if (fileLines.Count > lineNumber)
++                        fileLines.RemoveAt(lineNumber);
++                    else
++                        patch.Rate -= 20;
++
++                    //lineNumber++;
++                }
++                if (line.StartsWith("+"))
++                {
++                    string insertLine = "";
++                    if (line.Length > 1)
++                        insertLine = line.Substring(1);
++
++                    //Is the patch allready applied?
++                    if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
++                    {
++                        patch.Rate -= 20;
++                    }
++
++                    fileLines.Insert(lineNumber, insertLine);
++                    patch.Bookmarks.Add(lineNumber);
++
++                    lineNumber++;
++                }
++            }
++            foreach (string patchedLine in fileLines)
++            {
++                patch.FileTextB += patchedLine + "\n";
++            }
++            if (patch.FileTextB.Length > 0 && patch.FileTextB[patch.FileTextB.Length - 1] == '\n')
++                patch.FileTextB = patch.FileTextB.Remove(patch.FileTextB.Length - 1, 1);
++
++            if (patch.Rate != 100)
++                patch.Apply = false;
++        }
++
++        private void handleNewFilePatchType(Patch patch, string[] patchLines)
++        {
++            foreach (string line in patchLines)
++            {
++                if (line.Length > 0 && line.StartsWith("+"))
++                {
++                    if (line.Length > 4 && line.StartsWith("+ï»¿"))
++                        patch.AppendText(line.Substring(4));
++                    else
++                        if (line.Length > 1)
++                            patch.FileTextB += line.Substring(1);
++
++                    patch.FileTextB += "\n";
++                }
++            }
++            if (patch.FileTextB.Length > 0 && patch.FileTextB[patch.FileTextB.Length - 1] == '\n')
++                patch.FileTextB = patch.FileTextB.Remove(patch.FileTextB.Length - 1, 1);
++            patch.Rate = 100;
++
++            if (File.Exists(DirToPatch + patch.FileNameB))
++            {
++                patch.Rate -= 40;
++                patch.Apply = false;
++            }
++        }
++
++        private void handleDeletePatchType(Patch patch)
++        {
++            patch.FileTextB = "";
++            patch.Rate = 100;
++
++            if (!File.Exists(DirToPatch + patch.FileNameA))
++            {
++                patch.Rate -= 40;
++                patch.Apply = false;
++            }
++        }
++
++        public void LoadPatch(string text, bool applyPatch)
++        {
++            try
++            {
++                using (var stream = new StringReader(text))
++                {
++                    LoadPatchStream(stream, applyPatch);
++                }
++            }
++            catch
++            {
++            }
++
++        }
++
++        public void LoadPatchFile(bool applyPatch)
++        {
++            try
++            {
++                using (var re = new StreamReader(PatchFileName, Settings.Encoding))
++                {
++                    LoadPatchStream(re, applyPatch);
++                }
++            }
++            catch
++            {
++            }
++        }
++
++        public void LoadPatchStream(TextReader reader, bool applyPatch)
++        {
++            Patch patch = null;
++
++            string input = reader.ReadLine();
++
++            patches = patchProcessor.ProcessInput(reader, input, patch);
++
++            reader.Close();
++
++            if (!applyPatch)
++                return;
++
++            foreach (Patch patchApply in patches)
++            {
++                if (patchApply.Apply)
++                    ApplyPatch(patchApply);
++            }
++        }
++
++        /// <summary>
++        /// Counts number of characters on all lines in file up to line number specified.
++        /// Currently doesn't check if line > lines.Length.
++        /// Probably not be including newline characters in the count.
++        /// Not set up to handle DOS (CR LF) line endings.
++        /// 
++        /// Assumes file is a text file and that line < lines.Length
++        /// </summary>
++        /// <param name="file">file we want to contain lines from</param>
++        /// <param name="line">line number we want to count up to</param>
++        /// <returns></returns>
++        public int LineToChar(string file, int line)
++        {
++            string[] lines = file.Split('\n');
++
++            int retVal = 0;
++
++            for (int n = 0; n < line; n++)
++            {
++                retVal += lines[n].Length;
++            }
++
++            return retVal;
++        }
++    }
+ }
+\ No newline at end of file
+diff --git a/GitCommands/patch/PatchProcessor.cs b/GitCommands/patch/PatchProcessor.cs
+new file mode 100644
+index 0000000..681fe7b
+--- /dev/null
++++ b/GitCommands/patch/PatchProcessor.cs
+@@ -0,0 +1,207 @@
++using System;
++using System.Collections.Generic;
++using System.IO;
++using System.Text.RegularExpressions;
++
++namespace PatchApply
++{
++    public class PatchProcessor
++    {
++        public List<Patch> ProcessInput(TextReader re, string input, Patch patch)
++        {
++            var patches = new List<Patch>();
++            bool gitPatch = false;
++            while (input != null)
++            {
++                //diff --git a/FileA b/FileB
++                //new patch found
++                if (input.StartsWith("diff --git "))
++                {
++                    gitPatch = true;
++                    patch = new Patch();
++                    patches.Add(patch);
++
++                    Match match = Regex.Match(input,
++                                              "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
++
++                    patch.FileNameA = match.Groups[1].Value;
++                    patch.FileNameB = match.Groups[2].Value;
++                    //patch.FileNameA = input.Substring(input.LastIndexOf(" a/") + 3, input.LastIndexOf(" b/") - (input.LastIndexOf(" a/") + 3));
++                    //patch.FileNameB = input.Substring(input.LastIndexOf(" b/") + 3);
++
++                    //The next line tells us what kind of patch
++                    //new file mode xxxxxx means new file
++                    //delete file mode xxxxxx means delete file
++                    //index means -> no new and no delete, edit
++                    if ((input = re.ReadLine()) != null)
++                    {
++                        //WTF! No change
++                        if (input.StartsWith("diff --git "))
++                        {
++                            //No change? lets continue to the next line
++                            continue;
++                        }
++
++                        //new file!
++                        if (input.StartsWith("new file mode "))
++                            patch.Type = Patch.PatchType.NewFile;
++                        else if (input.StartsWith("deleted file mode "))
++                            patch.Type = Patch.PatchType.DeleteFile;
++                        else
++                            patch.Type = Patch.PatchType.ChangeFile;
++
++                        //we need to move to the line that says 'index'
++                        //because we are not sure if we are there yet because
++                        //we might point at the new or delete line lines
++                        if (!input.StartsWith("index "))
++                            if ((input = re.ReadLine()) == null)
++                                break;
++                    }
++
++                    //The next lines tells us more about the change itself
++                    //Read the next
++                    if ((input = re.ReadLine()) != null)
++                    {
++                        //Binary files a/FileA and /dev/null differ
++                        //means the file is deleted but the changes are not listed explicid
++                        if (input.StartsWith("Binary files a/") && input.EndsWith(" and /dev/null differ"))
++                        {
++                            patch.File = Patch.FileType.Binary;
++
++                            //Check if the type was set correctly
++                            if (patch.Type != Patch.PatchType.DeleteFile)
++                                throw new Exception("Change not parsed correct: " + input);
++
++                            patch = null;
++
++                            if ((input = re.ReadLine()) == null)
++                                break;
++
++                            //Continue loop, we do not get more info about this change
++                            continue;
++                        }
++
++                        //Binary files a/FileA and /dev/null differ
++                        //means the file is deleted but the changes are not listed explicid
++                        if (input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ"))
++                        {
++                            patch.File = Patch.FileType.Binary;
++
++                            //Check if the type was set correctly
++                            if (patch.Type != Patch.PatchType.NewFile)
++                                throw new Exception("Change not parsed correct: " + input);
++
++                            //TODO: NOT SUPPORTED!
++                            patch.Apply = false;
++
++                            patch = null;
++
++                            if ((input = re.ReadLine()) == null)
++                                break;
++
++                            continue;
++                        }
++
++                        //GIT binary patch
++                        //means the file is binairy 
++                        if (input.StartsWith("GIT binary patch"))
++                        {
++                            patch.File = Patch.FileType.Binary;
++
++                            //TODO: NOT SUPPORTED!
++                            patch.Apply = false;
++
++                            patch = null;
++
++                            if ((input = re.ReadLine()) == null)
++                                break;
++
++                            continue;
++                        }
++                    }
++
++                    continue;
++                }
++
++                if (!gitPatch || patch != null)
++                {
++                    //The previous check checked only if the file was binary
++                    //--- /dev/null
++                    //means there is no old file, so this should be a new file
++                    if (input.StartsWith("--- /dev/null"))
++                    {
++                        if (!gitPatch)
++                        {
++                            patch = new Patch();
++                            patches.Add(patch);
++                        }
++
++                        if (gitPatch && patch.Type != Patch.PatchType.NewFile)
++                            throw new Exception("Change not parsed correct: " + input);
++
++                        //This line is parsed, NEXT!
++                        if ((input = re.ReadLine()) == null)
++                            break;
++
++                    }
++
++                    //line starts with --- means, old file name
++                    if (input.StartsWith("--- a/") && !input.StartsWith("--- /dev/null"))
++                    {
++                        if (!gitPatch)
++                        {
++                            patch = new Patch();
++                            patches.Add(patch);
++                        }
++
++                        if (gitPatch && patch.FileNameA != (input.Substring(6).Trim()))
++                            throw new Exception("Old filename not parsed correct: " + input);
++
++                        patch.FileNameA = (input.Substring(6).Trim());
++
++                        //This line is parsed, NEXT!
++                        if ((input = re.ReadLine()) == null)
++                            break;
++
++                    }
++
++                    //If there is no 'newfile', reset files
++                    if (input.StartsWith("+++ /dev/null"))
++                    {
++                        if (gitPatch && patch.Type != Patch.PatchType.DeleteFile)
++                            throw new Exception("Change not parsed correct: " + input);
++
++                        //This line is parsed, NEXT!
++                        if ((input = re.ReadLine()) == null)
++                            break;
++                    }
++
++
++                    //line starts with +++ means, new file name
++                    //we expect a new file now!
++                    if (input.StartsWith("+++ ") && !input.StartsWith("+++ /dev/null"))
++                    {
++                        Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
++
++                        if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
++                            throw new Exception("New filename not parsed correct: " + input);
++
++                        patch.FileNameB = (regexMatch.Groups[1].Value.Trim());
++
++                        //This line is parsed, NEXT!
++                        if ((input = re.ReadLine()) == null)
++                            break;
++                    }
++                }
++
++                if (patch != null)
++                    patch.AppendTextLine(input);
++
++                if ((input = re.ReadLine()) == null)
++                    break;
++            }
++
++            return patches;
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/GitExtensions/PluginExtraction.cs b/GitExtensions/PluginExtraction.cs
+index 9277613..d02605a 100644
+--- a/GitExtensions/PluginExtraction.cs
++++ b/GitExtensions/PluginExtraction.cs
+@@ -24,8 +24,9 @@ namespace GitExtensions
+                 gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
+                 gitPlugin.Register(GitUICommands.Instance);
+ 
+-                if (gitPlugin is IRepositoryHostPlugin)
+-                    RepoHosts.GitHosters.Add(gitPlugin as IRepositoryHostPlugin);
++                var gitRepositoryHostPlugin = gitPlugin as IRepositoryHostPlugin;
++                if (gitRepositoryHostPlugin != null)
++                    RepoHosts.GitHosters.Add(gitRepositoryHostPlugin);
+ 
+                 LoadedPlugins.Plugins.Add(gitPlugin);
+             }
+diff --git a/GitExtensions/Program.cs b/GitExtensions/Program.cs
+index a191c6f..88eaad6 100644
+--- a/GitExtensions/Program.cs
++++ b/GitExtensions/Program.cs
+@@ -34,7 +34,10 @@ namespace GitExtensions
+ 
+             if (string.IsNullOrEmpty(Settings.Translation))
+             {
+-                new FormChooseTranslation().ShowDialog();
++                using (var formChoose = new FormChooseTranslation())
++                {
++                    formChoose.ShowDialog();
++                }
+             }
+ 
+             try
+diff --git a/GitUI/DvcsGraph.cs b/GitUI/DvcsGraph.cs
+index f879a5d..1f827a6 100644
+--- a/GitUI/DvcsGraph.cs
++++ b/GitUI/DvcsGraph.cs
+@@ -90,10 +90,12 @@ namespace GitUI
+             syncContext = SynchronizationContext.Current;
+             graphData = new Graph();
+ 
+-            backgroundThread = new Thread(backgroundThreadEntry);
+-            backgroundThread.IsBackground = true;
+-            backgroundThread.Priority = ThreadPriority.BelowNormal;
+-            backgroundThread.Name = "DvcsGraph.backgroundThread";
++            backgroundThread = new Thread(backgroundThreadEntry)
++                                   {
++                                       IsBackground = true,
++                                       Priority = ThreadPriority.BelowNormal,
++                                       Name = "DvcsGraph.backgroundThread"
++                                   };
+             backgroundThread.Start();
+ 
+             InitializeComponent();
+@@ -351,7 +353,7 @@ namespace GitUI
+                     }
+                 }
+ 
+-                return (i == graphData.Count ? -1 : i);
++                return i == graphData.Count ? -1 : i;
+             }
+         }
+ 
+@@ -637,7 +639,7 @@ namespace GitUI
+                 if (dataGridColumnGraph.Visible)
+                 {
+                     int laneCount = 2;
+-                    if (graphData != null /* && FirstDisplayedCell != null*/)
++                    if (graphData != null)
+                     {
+                         int width = 1;
+                         int start = VerticalScrollBar.Value / rowHeight;
+-- 
+1.7.3.1.msysgit.0
+
