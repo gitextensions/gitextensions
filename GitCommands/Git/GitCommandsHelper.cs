@@ -1544,7 +1544,7 @@ namespace GitCommands
             var patchManager = new PatchManager();
             patchManager.LoadPatch(RunCmd(Settings.GitCommand, "stash show -p " + stashName), false);
 
-            return patchManager.patches;
+            return patchManager.Patches;
         }
 
         public static List<GitStash> GetStashes()
@@ -1582,7 +1582,7 @@ namespace GitCommands
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
-            return patchManager.patches.Count > 0 ? patchManager.patches[0] : null;
+            return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
         }
 
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
@@ -1591,7 +1591,7 @@ namespace GitCommands
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
-            return patchManager.patches;
+            return patchManager.Patches;
         }
 
         public static List<GitItemStatus> GetDiffFiles(string from, string to)

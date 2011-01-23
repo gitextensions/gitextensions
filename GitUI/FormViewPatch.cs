@@ -75,7 +75,7 @@ namespace PatchApply
                 PatchManager.PatchFileName = PatchFileNameEdit.Text;
                 PatchManager.LoadPatchFile(false);
 
-                GridChangedFiles.DataSource = PatchManager.patches;
+                GridChangedFiles.DataSource = PatchManager.Patches;
             }
             catch
             {
