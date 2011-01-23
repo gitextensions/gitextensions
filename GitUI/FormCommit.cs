@@ -132,6 +132,14 @@ namespace GitUI
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, new EventHandler(ResetSelectedLinesToolStripMenuItemClick));
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            _gitGetUnstagedCommand.Exited -= GitCommandsExited;
+            _gitGetUnstagedCommand.Dispose();
+
+            base.OnClosing(e);
+        }
+
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             // Prepare git command
