@@ -87,7 +87,7 @@ namespace GitUI
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
         #endregion
 
-        private readonly GitCommandsInstance _gitGetUnstagedCommand = new GitCommandsInstance();
+        private readonly GitCommandsInstance _gitGetUnstagedCommand;
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
@@ -121,6 +121,9 @@ namespace GitUI
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.KeyDown += Staged_KeyDown;
             Staged.DoubleClick += Staged_DoubleClick;
+
+            _gitGetUnstagedCommand = new GitCommandsInstance();
+            _gitGetUnstagedCommand.Exited += GitCommandsExited;
 
             Unstaged.Focus();
 
@@ -182,7 +185,6 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
 
             // Load unstaged files
-            _gitGetUnstagedCommand.Exited += GitCommandsExited;
             var allChangedFilesCmd =
                 GitCommandHelpers.GetAllChangedFilesCmd(
                     !showIgnoredFilesToolStripMenuItem.Checked,
