@@ -52,6 +52,7 @@
             this.Stash = new System.Windows.Forms.Button();
             this.Mergetool = new System.Windows.Forms.Button();
             this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.checkPullAll = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -100,6 +101,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkPullAll);
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
@@ -323,6 +325,17 @@
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
             // 
+            // checkPullAll
+            // 
+            this.checkPullAll.AutoSize = true;
+            this.checkPullAll.Location = new System.Drawing.Point(102, 20);
+            this.checkPullAll.Name = "checkPullAll";
+            this.checkPullAll.Size = new System.Drawing.Size(40, 19);
+            this.checkPullAll.TabIndex = 6;
+            this.checkPullAll.Text = "All";
+            this.checkPullAll.UseVisualStyleBackColor = true;
+            this.checkPullAll.CheckedChanged += new System.EventHandler(this.checkPullAll_CheckedChanged);
+            // 
             // FormPull
             // 
             this.AcceptButton = this.Pull;
@@ -376,5 +389,6 @@
         private System.Windows.Forms.ToolTip Tooltip;
         private System.Windows.Forms.Label _NO_TRANSLATE_localBranch;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkPullAll;
     }
 }

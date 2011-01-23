@@ -155,7 +155,7 @@ namespace GitUI
             else
             {
                 LoadPuttyKey();
-                source = Remotes.Text;
+                source = checkPullAll.Checked ? "--all" : Remotes.Text;
             }
 
             var stashed = false;
@@ -274,6 +274,7 @@ namespace GitUI
             BrowseSource.Enabled = false;
             Remotes.Enabled = true;
             AddRemote.Enabled = true;
+            checkPullAll.Enabled = true;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
@@ -286,6 +287,7 @@ namespace GitUI
             BrowseSource.Enabled = true;
             Remotes.Enabled = false;
             AddRemote.Enabled = false;
+            checkPullAll.Enabled = false;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
@@ -322,6 +324,11 @@ namespace GitUI
         {
             Branches.DataSource = null;
             _heads = null;
+        }
+
+        private void checkPullAll_CheckedChanged(object sender, EventArgs e)
+        {
+            Remotes.Enabled = !checkPullAll.Checked;
         }
     }
 }
