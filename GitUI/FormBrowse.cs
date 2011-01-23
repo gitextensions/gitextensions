@@ -178,6 +178,12 @@ namespace GitUI
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+
+            //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+            _repositoryHostsToolStripMenuItem.Visible = GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0;
+            if (GitUI.RepoHosting.RepoHosts.GitHosters.Count == 1)
+                _repositoryHostsToolStripMenuItem.Text = GitUI.RepoHosting.RepoHosts.GitHosters[0].Description;
+
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
             if (hard)
@@ -1663,6 +1669,10 @@ namespace GitUI
                 GitUICommands.Instance.StartCloneForkFromHoster(GitUI.RepoHosting.RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
                 Initialize();
             }
+            else
+            {
+                MessageBox.Show(this, "No repository host plugin loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1670,7 +1680,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1683,7 +1693,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error");
+                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

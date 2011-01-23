@@ -404,15 +404,6 @@
       <ComponentRef Id="checksettings.reg"/>
       <ComponentRef Id="InstallDir.reg"/>
 
-      <ComponentRef Id="AutoCheckForUpdates.dll"/>
-      <ComponentRef Id="DeleteUnusedBranches.dll"/>
-      <ComponentRef Id="AutoCompileSubmodules.dll"/>
-      <ComponentRef Id="GitStatistics.dll"/>
-      <ComponentRef Id="Gource.dll"/>
-      <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
-      <ComponentRef Id="Github.dll"/>
-      <ComponentRef Id="GithubSharp.Core.dll"/>
-
       <ComponentRef Id="gitssh_openssh.reg"/>
       <ComponentRef Id="gitssh_putty.reg"/>
       <ComponentRef Id="plink.exe"/>
@@ -427,7 +418,30 @@
       <ComponentRef Id="UserManual.startmenu"/>
 
       <ComponentRef Id="English.gif"/>
-      
+
+      <Feature Id="Plugins" Title="Plugins" Level="1">
+        <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
+          <ComponentRef Id="AutoCheckForUpdates.dll"/>
+        </Feature>
+        <Feature Id="DeleteUnusedBranches" Title="Delete unused branches" Level="1">
+          <ComponentRef Id="DeleteUnusedBranches.dll"/>
+        </Feature>
+        <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
+          <ComponentRef Id="AutoCompileSubmodules.dll"/>
+        </Feature>
+        <Feature Id="Statistics" Title="Statistics" Level="1">
+          <ComponentRef Id="GitStatistics.dll"/>
+        </Feature>
+        <Feature Id="Gource" Title="Gource visualization" Level="1">
+          <ComponentRef Id="Gource.dll"/>
+          <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
+        </Feature>
+        <Feature Id="Github" Title="Github integration" Level="1">
+          <ComponentRef Id="Github.dll"/>
+          <ComponentRef Id="GithubSharp.Core.dll"/>
+        </Feature>
+      </Feature>
+
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="CowHeadBlue.ico"/>
         <ComponentRef Id="CowHeadGreen.ico"/>
