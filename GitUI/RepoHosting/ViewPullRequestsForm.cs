@@ -66,7 +66,7 @@ namespace GitUI.RepoHosting
 
                     SelectNextHostedRepository();
                 },
-                (ex) => MessageBox.Show(this, ex.Message, _strError.Text));
+                (ex) => MessageBox.Show(this, ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error));
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)

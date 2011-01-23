@@ -146,7 +146,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

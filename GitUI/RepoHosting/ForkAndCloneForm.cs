@@ -96,7 +96,7 @@ namespace GitUI.RepoHosting
 
                 (ex) =>
                 {
-                    MessageBox.Show(this, _strFailedToGetRepos.Text + ex.Message, _strError.Text);
+                    MessageBox.Show(this, _strFailedToGetRepos.Text + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Close();
                 });
         }
